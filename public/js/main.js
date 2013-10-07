@@ -39,7 +39,8 @@ require.config({
         Backbone: './libs/backbone',
         less: './libs/less-1.4.1.min',
         templates: '../templates',
-        text: './libs/text'
+        text: './libs/text',
+        common: 'common'
     },
     shim: {
         'Backbone': ['Underscore', 'jQuery'],

@@ -28,6 +28,7 @@ var Project = function (logWriter, mongoose) {
             name: { type: String, default: 'New' },
             status: { type: String, default: 'New' }
         },
+        color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
@@ -455,6 +456,9 @@ var Project = function (logWriter, mongoose) {
                                 console.log(err);
                                 logWriter.log("Project.js getProjects findETasksById tasks.find " + err);
                                 response.send(500, { error: "Can't find Projects" });
+                            } else if (taskss.length == 0) {
+                                res['data'] = _projects;
+                                response.send(res);
                             } else {
                                 _projects[count].task.tasks = taskss;
                                 var _resultProgress = returnProgress(taskss);
@@ -486,6 +490,8 @@ var Project = function (logWriter, mongoose) {
 
     function update(_id, data, res) {
         try {
+            delete data._id;
+            console.log(data);
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);

@@ -4,9 +4,10 @@ define([
     "collections/Projects/ProjectsCollection",
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
-    "custom"
+    "custom",
+    "common"
 ],
-    function (EditTemplate, AccountsDdCollection, ProjectsCollection, CustomersCollection, WorkflowsCollection, Custom) {
+    function (EditTemplate, AccountsDdCollection, ProjectsCollection, CustomersCollection, WorkflowsCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -70,28 +71,15 @@ define([
             		}
 
             		var idCustomer = $(this.el).find("#customerDd option:selected").val();
-            		var customer = this.customersDdCollection.get(idCustomer);
 
-            		if (!customer) {
-            		    customer = null;
-            		}
-            		else {
-            		    customer = customer.toJSON();
-            		}
-            		var idManager = $(this.el).find("#managerDd option:selected").val();
-            		var projectmanager = this.accountsDdCollection.get(idManager);
-            		if (!projectmanager) {
-            		    projectmanager = null;
-            		} else {
-            		    projectmanager = projectmanager.toJSON();
-            		}
-            		var idWorkflow = $(this.el).find("#workflowDd option:selected").val();
-            		var workflow = this.workflowsDdCollection.get(idWorkflow);
-            		if (!workflow) {
-            		    workflow = null;
-            		} else {
-            		    workflow = workflow.toJSON();
-            		}
+            		var customer = common.toObject(idCustomer, this.customersDdCollection);
+
+            		var idManager = $("#managerDd option:selected").val();
+            		var projectmanager = common.toObject(idManager, this.accountDdCollection);
+
+            		var idWorkflow = $("#workflowDd option:selected").val();
+            		var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+
             		var $userNodes = $("#usereditDd option:selected"), users = [];
             		$userNodes.each(function (key, val) {
             		    users.push({
@@ -103,19 +91,9 @@ define([
 	                
 	                currentModel.set({
 	                    projectname: projectname,
-	                    customer: {
-	                        id: customer._id,
-	                        type: customer.type,
-	                        name: customer.name.last + ' ' + customer.name.first
-	                    },
-	                    projectmanager: {
-	                        uid: projectmanager._id,
-	                        uname: projectmanager.name.last + ' ' + projectmanager.name.first
-	                    },
-	                    workflow: {
-	                        name: workflow.name,
-	                        status: workflow.status
-	                    },
+	                    customer: customer,
+	                    projectmanager: projectmanager,
+	                    workflow: workflow,
 	                    teams: {
 	                        users: users
 	                    }

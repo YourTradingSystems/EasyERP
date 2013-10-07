@@ -37,11 +37,7 @@ var allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header("Access-Control-Request-Headers", "*");
     res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
-    //res.header('Access-Control-Allow-Credentials', true);
-    //res.header('Access-Control-Allow-Origin', req.headers.origin);
-    //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    //res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
-    next();
+     next();
     //} else {
     //    res.send(401);
     //}
@@ -260,7 +256,7 @@ app.put('/Projects/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data);
 });
 
-app.delete('/Projec ts/:_id', function (req, res) {
+app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;

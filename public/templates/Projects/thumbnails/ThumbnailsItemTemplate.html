@@ -1,4 +1,4 @@
 <h2><%=projectname%></h2>
-<p><%=projectmanager.uname%></p>
+<p><%=(projectmanager && (projectmanager != null)) ? projectmanager.uname : ''%></p>
 <p><%=workflow.name%></p>
 <p><a id="<%=_id%>" class="tasksByProject" href="#home/content-Tasks/kanban/<%= _id %>"><%=task.tasks.length%> Tasks</a></p>

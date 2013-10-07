@@ -7,7 +7,7 @@ define([
     'custom',
     "GanttChart"
 ],
-function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, ThumbnailsItemView, Custom) {
+function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, ThumbnailsItemView, Custom, GanttChart) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {

@@ -8,12 +8,12 @@
         <div class="half-block left">
         	<div class="half-block left">
 	        	<p><label for="projectmanager">Project Manager</label></p>
-	        	<p><label for="workflow">Workflow Status</label></p>
+	        	<p><label for="customer">Customer</label></p>
 	        	<p><label for="privacy">Privacy / Visibility </label></p>
 	        </div>
         	<div class="half-block left">
-	        	<p><%=projectmanager.uname%></p>
-		        <p><%=workflow.name%></p>
+	        	<p><%=(projectmanager && (projectmanager != null)) ? projectmanager.uname : ''%></p>
+		        <p><%=(customer && (customer != null)) ? customer.name : ''%></p>
 		        <p><%=privacy%> </p>
 			</div>
      	</div>
