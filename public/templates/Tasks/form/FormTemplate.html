@@ -1,0 +1,42 @@
+<div class="formHeader">
+    <button class="red" id="Done">
+        <span>Done</span>
+    </button>
+    <button class="red" id="Cancel">
+        <span>Cancel Task</span>
+    </button>
+    <ul class="breadcrumb">
+    </ul>
+</div>
+<div class="form-holder">
+    <form class="form" data-id="<%=_id%>">
+        <h2><%=summary%></h2>
+        <div class="half-block left">
+            <div class="half-block left">
+                <p>
+                    <label>Project</label>
+                </p>
+                <p>
+                    <label>Assigned to</label>
+                </p>
+                <p>
+                    <label>Workflow</label>
+                </p>
+                <p>
+                    <label>Deadline</label>
+                </p>
+                <p>
+                    <label>Tags</label>
+                </p>
+            </div>
+            <div class="half-block left">
+                <p><a id="<%=project.pId%>" href="#"><%=project.projectName%></a></p>
+                <p><%=assignedto.uname%></p>
+                <p><%=workflow.name%></p>
+                <p><%=deadline%></p>
+                <p><%=tags%></p>
+            </div>
+        </div>
+    </form>
+</div>
+

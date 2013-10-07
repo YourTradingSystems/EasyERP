@@ -1,0 +1,114 @@
+<div class="form-holder">
+
+    <form method="post" action="" id="createTaskForm" class="form">
+        <fieldset>
+            <p>
+                <label for="summary">Task summary </label>
+                <input type="text" class="title-input blueback" name="summary" id="summary" required />
+            </p>
+
+            <p>
+                <label for="projectDd">Project </label>
+                <select id="projectDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% projectsDdCollection.each(function(option){ %>
+                        <option value="<%= option.get('_id') %>"><%= option.get('projectname') %> </option>
+                    <% }); %>
+                </select>
+            </p>
+
+            <p>
+                <label for="assignedTo">Assigned to </label>
+                <select id="assignedTo" required>
+                    <option selected="selected" value="0">Select...</option>
+                    <% accountDdCollection.each(function(option){ %>
+                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
+                    <% }); %>
+                </select>
+            </p>
+
+            <p>
+                <label for="deadline">Deadline </label>
+                <input type="date" name="deadline" id="deadline" required />
+            </p>
+
+            <p>
+                <label for="tags">Tags </label>
+                <input type="text" name="tags" id="tags" />
+            </p>
+            
+            <div id="tabs">
+                <div>
+                    <ul id="tabList">
+                        <li>
+                            <a href="#" class="selected">Description</a></li>
+                        <li>
+                            <a href="#">Extra Info</a></li>
+                    </ul>
+                </div>
+                <br />
+                <div class="tab">
+                    <p>
+                        <label for="description">Description </label>
+                        <input type="text" name="description" id="description" required />
+                    </p>
+                </div>
+                <div class="tab">
+                    <p>
+                        <label for="priority">Priority </label>
+                        <select id="priority">
+                            <option selected="selected" value="0">Select...</option>
+                            <% priorityCollection.each(function(option){ %>
+                            <!--<option value="<%= option.get('_id') %>"><%= option.get('priority') %></option>-->
+                            <option value="<%= option.get('priority') %>"><%= option.get('priority') %></option>
+                            <% }); %>
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="sequence">Sequense </label>
+                        <input class="extrainfo" type="text" name="sequence" id="sequence" required />
+                    </p>
+
+                    <p>
+                        <label for="StartDate">Start Date </label>
+                        <input class="extrainfo" type="date" name="StartDate" id="StartDate" required />
+                    </p>
+
+                    <p>
+                        <label for="EndDate">End Date </label>
+                        <input class="extrainfo" type="date" name="EndDate" id="EndDate" required />
+                    </p>
+
+                    <p>
+                        <label for="customerDd">Customer</label>
+                        <select id="customerDd">
+                            <option selected="selected" value="0">Select...</option>
+                            <% customersDdCollection.each(function(option){ %>
+                            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %> (<%= option.get('type') %>)</option>
+                            <% }); %>
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="workflowDd">Task Workflow</label>
+                        <select id="workflowDd">
+                            <option selected="selected" value="0">Select...</option>
+                            <% workflowsDdCollection.each(function(option){ %>
+                            <option value="<%= option.get('_id') %>"><%= option.get('name') %> (<%= option.get('status') %>)</option>
+                            <% }); %>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="loged">Loged</label>
+                        <input type="text" name="loged" id="loged" placeholder="LogedTime in hours"/>
+                    </p>
+                    <p>
+                        <label for="estimated">Estimeted</label>
+                        <input type="text" name="loged" id="estimated" placeholder="EstimatedTime in hours" />
+                    </p>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

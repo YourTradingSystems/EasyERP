@@ -1,0 +1,9 @@
+
+   <select id="companiesList" size="3">
+       <% profilesCollection.each(function(profile){ %>
+            <option class='profile'> <%= profile.get('profileName') %>  </option>
+       <% }) %>
+   </select>
+
+   <div id="modulesContent"></div>
+

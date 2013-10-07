@@ -1,0 +1,102 @@
+<div class="formHeader">
+    <button class="red" id="convertToOpportunity">Convert to Opportunity</button>
+    <button id="cancelCase">Cancel Case</button>
+    <button id="reset">Reset</button>
+    <ul class="breadcrumb">
+    </ul>
+</div>
+<div class="form-holder">
+    <form class="form" id="leadForm" data-id="<%=_id%>">
+        <h2><%=name%></h2>
+        <p>
+            <label>Company Name</label>
+            <span><%=company.name%></span>
+        </p>
+        <p>
+            <label>Customer</label>
+            <span><%=customer.name%></span>
+        </p>
+        <p>
+            <label>Address</label>
+            <span><%=address.street%></span>
+            <span><%=address.city%></span>
+            <span><%=address.state%></span>
+            <span><%=address.zip%></span>
+            <span><%=address.country%></span>
+        </p>
+        <p>
+            <label>Salesperson</label>
+            <span><%=salesPerson.name%></span>
+        </p>
+        <p>
+            <label>Sales Team</label>
+            <span><%=salesTeam.name%></span>
+        </p>
+        <p>
+            <label>Contact Name</label>
+            <span><%=contactName.first%> <%=contactName.last%></span>
+        </p>
+        <p>
+            <label>Email</label>
+            <a href="mailto:<%=email%>"><%=email%></a>
+        </p>
+        <p>
+            <label>Function</label>
+            <span><%=func%></span>
+        </p>
+        <p>
+            <label>Phone</label>
+            <span><%=phones.phone%></span>
+        </p>
+        <p>
+            <label>Mobile</label>
+            <span><%=phones.mobile%></span>
+        </p>
+        <p>
+            <label>Fax</label>
+            <span><%=fax%></span>
+        </p>
+        <p>
+            <label>Priority</label>
+            <span><%=priority%></span>
+        </p>
+        <p>
+            <label>Categories</label>
+            <br />
+        </p>
+         <div id="tabs">
+                <div>
+                    <ul id="tabList">
+                        <li>
+                            <a href="#" class="selected">Internal Notes</a></li>
+                        <li>
+                            <a href="#">Extra Info</a></li>
+                    </ul>
+                </div>
+                <div class="tab">
+                    <textarea><%=internalNotes%></textarea>
+                </div>
+                <div class="tab">
+                    <h2>Categorization</h2>
+                    <p>
+                        <label>Status</label>
+                        <span><%=workflow.status%></span>
+                    </p>
+                    <h2>Misc</h2>
+                    <p>
+                        <label>Active</label>
+                        <input type="checkbox" <%= (active)? checked='checked':''%> id="active" />
+                    </p>
+                    <p>
+                        <label>Referred By</label>
+                        <span><%=reffered%></span>
+                    </p>
+                    <h2>Mailings</h2>
+                    <p>
+                        <label>Opt-Out</label>
+                        <input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" />
+                    </p>
+                </div>
+            </div>
+    </form>
+</div>

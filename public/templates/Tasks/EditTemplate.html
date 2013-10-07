@@ -1,0 +1,127 @@
+﻿<div class="formHeader">
+    <button class="red" id="Done">
+        <span>Done</span>
+    </button>
+    <button class="red" id="Cancel">
+        <span>Cancel Task</span>
+    </button>
+    <ul class="breadcrumb">
+    </ul>
+</div>
+<div class="form-holder">
+    <form method="post" action="" id="createTaskForm" class="form" data-id="<%=model._id%>">
+            <p>
+            	<input type="text" name="summary" class="input-title blueback" id="summary" value="<%=model.summary%>" required />
+           	</p>
+           	<div>
+           	<div class="half-block left">
+	        	<div class="half-block left">
+	        		<p><label for="projectDd">Project </label></p>
+	        		<p><label for="assignedTo">Assigned to </label></p>
+	        	</div>
+	        	<div class="half-block left">
+	        		 <p>
+	        		 	<select id="projectDd">
+	                    	<option value="0">Select...</option>
+	                   		<% projectsDdCollection.each(function(option){ %>
+	                    	<option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.project.pId) ? 'selected="selected"' : ''%>><%= option.get('projectname') %></option> 
+	                   		 <% }); %>
+               		 	</select>
+               		 </p>
+               		 <p>
+               		  <select id="assignedTo">
+		                    <option value="<%=model.assignedto.uid%>">Select...</option>
+		                    <% accountsDdCollection.each(function(option){ %>
+		                     <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.assignedto.uid) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+		                    <% }); %>
+		                </select>
+               		 </p>
+	        	</div>
+        	</div>
+        	<div class="half-block left">
+        		<div class="half-block left">
+        			<p><label for="tags">Tags </label></p>
+        			 <p><label for="deadline">Deadline </label></p>
+        		</div>
+        		<div class="half-block left">
+        			<p><input type="text" name="tags" id="tags" value="<%=model.tags%>"/></p>
+        			    <p><input type="text" name="deadline" id="deadline" value="<%=model.deadline%>" required /></p>
+        		</div>
+        		
+        	</div>
+        	<div class="clearfix"></div>
+        	</div>
+            <div id="tabs">
+                <div>
+                    <ul id="tabList">
+                        <li>
+                            <a href="#" class="selected">Description</a></li>
+                        <li>
+                            <a href="#">Extra Info</a></li>
+                    </ul>
+
+                </div>
+                <br />
+                <div class="tab">
+                        <textarea type="text" name="description" placeholder="Add a Description" id="description" value="<%=model.description%>" required />
+                </div>
+                <div class="tab">
+                    <p>
+                        <label for="priority">Priority </label>
+                        <select id="priority">
+                            <option value="<%=model.extrainfo.priority%>"Select...</option>
+                            <% priorityCollection.each(function(option){ %>
+                            <option value="<%= option.get('priority') %>" <%= (option.get('priority') == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.get('priority') %></option>
+                            <% }); %>
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="sequence">Sequense </label>
+                        <input class="extrainfo" type="text" name="sequence" id="sequence" value="<%=model.extrainfo.sequence%>" required />
+                    </p>
+
+                    <p>
+                        <label for="StartDate">Start Date </label>
+                        <input class="extrainfo" type="text" name="StartDate" id="StartDate" value="<%=model.extrainfo.StartDate%>" required />
+                    </p>
+
+                    <p>
+                        <label for="EndDate">End Date </label>
+                        <input class="extrainfo" type="text" name="EndDate" id="EndDate" value="<%=model.extrainfo.EndDate%>" required />
+                    </p>
+
+                 
+
+                     <p>
+                        <label for="customerDd">Customer</label>
+                        <select id="customerDd">
+                            <option value="<%=model.extrainfo.customer.id%>">Select...</option>
+                            <% customersDdCollection.each(function(option){ %>
+                            <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.extrainfo.customer.id) ? 'selected="selected"' : ''%>><%= option.get('name').first %> <%= option.get('name').last %> (<%= option.get('type') %>)</option>
+                            <% }); %>
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="workflowDd">Task Workflow</label>
+                        <select id="workflowDd">
+                            <option value="<%=model.workflow.name%>">Select...</option>
+                            <% workflowsDdCollection.each(function(option){ %>
+                            <option value="<%= option.get('_id') %>" <%= (option.get('name') == model.workflow.name) ? 'selected="selected"' : ''%>><%= option.get('name') %> (<%= option.get('status') %>)</option>
+                            <% }); %>
+               
+                        </select>
+                    </p>
+                        <p>
+                        <label for="loged">Loged</label>
+                        <input type="text" name="loged" id="loged" value="<%=model.loged%>"/>
+                    </p>
+                    <p>
+                        <label for="estimated">Estimeted</label>
+                        <input type="text" name="loged" id="estimated" value="<%=model.estimated%>" />
+                    </p>
+                </div>
+            </div>
+    </form>
+</div>

@@ -1,0 +1,144 @@
+<div class="form-holder">
+    <form class="form" id="employeeForm">
+        <h2><%=name.first%> <%=name.last%></h2>
+        <p>
+            <label>Tags</label>
+            <span><%=tags%></span>
+        </p>
+        <div id="tabs">
+            <div>
+                <ul id="tabList">
+                    <li>
+                        <a href="#" class="selected">Public Information</a></li>
+                    <li>
+                        <a href="#">Personal Information</a></li>
+                    <li>
+                        <a href="#">HR Settings</a></li>
+                </ul>
+            </div>
+            <div class="tab">
+                <p>
+                    <label>Work Address </label>
+                    <span>
+                        <%=waddress.street%>
+                    </span>
+                    <span>
+                        <%=waddress.city%>
+                    </span>
+                    <span>
+                        <%=waddress.state%>
+                    </span>
+                    <span>
+                        <%=waddress.zip%>
+                    </span>
+                    <span>
+                        <%=waddress.country%>
+                    </span>
+                </p>
+                <p>
+                    <label>Work Email </label>
+                    <span>
+                        <a href="mailto:<%=wemail%>" target="_blank"><%=wemail%></a>
+                    </span>
+                </p>
+                <p>
+                    <label>Work Phone </label>
+                    <span><%=wphones.phone%></span>
+                </p>
+                <p>
+                    <label>Work Mobile </label>
+                    <span><%=wphones.mobile%></span>
+                </p>
+                <p>
+                    <label>Office Location </label>
+                    <span><%=officeLocation%></span>
+                </p>
+                <p>
+                    <label>Related User </label>
+                    <span><%=relatedUser.login%></span>
+                </p>
+                <p>
+                    <label>Visibility </label>
+                    <span><%=visibility%></span>
+                </p>
+                <p>
+                    <label>Department </label>
+                    <span><%=department.departmentName%></span>
+                </p>
+                <p>
+                    <label>Job </label>
+                    <span><%=job.jobPositionName%></span>
+                </p>
+                <p>
+                    <label>Manager </label>
+                    <span><%=manager.employeeName%></span>
+                </p>
+                <p>
+                    <label>Coach </label>
+                    <span><%=coach.employeeName%></span>
+                </p>
+            </div>
+            <div class="tab">
+                <h2>Citizenship & Other Info</h2>
+                <p>
+                    <label>Natinality </label>
+                    <span><%=nationality%></span>
+                </p>
+                <p>
+                    <label>Identification No </label>
+                    <span><%=identNo%></span>
+                </p>
+                <p>
+                    <label>Passport No </label>
+                    <span><%=passportNo%></span>
+                </p>
+                <p>
+                    <label>Bank Account Number </label>
+                    <span><%=bankAccountNo%></span>
+                </p>
+                <p>
+                    <label>Other Id </label>
+                    <span><%=otherId%></span>
+                </p>
+                <h2>Status</h2>
+                <p>
+                    <label>Gender </label>
+                </p>
+                <p>
+                    <label>Marital Status </label>
+                </p>
+                <h2>Contact Information</h2>
+                <p>
+                    <label>Home Address </label>
+                    <span>
+                        <%=homeAddress.street%>
+                    </span>
+                    <span>
+                        <%=homeAddress.city%>
+                    </span>
+                    <span>
+                        <%=homeAddress.state%>
+                    </span>
+                    <span>
+                        <%=homeAddress.zip%>
+                    </span>
+                    <span>
+                        <%=homeAddress.country%>
+                    </span>
+                </p>
+                <h2>Birth</h2>
+                <p>
+                    <label>Date Of Birth </label>
+                    <span><%=dateBirth%></span>
+                </p>
+            </div>
+            <div class="tab">
+                <h2>Active</h2>
+                <p>
+                    <label>Active </label>
+                    <input type="checkbox" <%=(active)? checked='checked':''%> name="active" id="active" />
+                </p>
+            </div>
+        </div>
+    </form>
+</div>

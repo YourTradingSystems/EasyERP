@@ -1,0 +1,46 @@
+<div class="form-holder">
+
+    <form method="post" action="" id="createUserForm" class="form">
+        <fieldset>
+
+            <p>
+                <label for="login">User Name</label>
+                <input type="text" name="login" id="login" value="<%= model.ulogin %>" required />
+            </p>
+
+            <p>
+                <label for="password">Password </label>
+                <input type="password" name="password" id="password" value="<%= model.upass %>" required />
+            </p>
+            <p>
+                <label for="confirmpassword">Confirm Password</label>
+                <input type="password" name="confirmpassword" id="confirmpassword" required />
+            </p>
+
+            <p>
+                <label for="email">Email </label>
+                <input type="text" name="email" id="email" value="<%= model.uemail %>" required />
+            </p>
+            <p>
+                <label for="companiesDd">Company</label>
+                <select id="companiesDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% companiesCollection.each(function(option){ %>
+                    <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.company.id) ? 'selected="selected"' : ''%> > <%= option.get('cname') %></option>
+                    <% }); %>
+                </select>
+            </p><br/>
+            <p>
+                <label for="profilesDd">Profile</label>
+                <select id="profilesDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% profilesCollection.each(function(option){ %>
+                    <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.profile.id) ? 'selected="selected"' : ''%> ><%= option.get('profileName')%></option>
+                    <% }) %>
+                </select>
+            </p>
+        </fieldset>
+        <input type="submit" class="submit" value="Create" />
+
+    </form>
+</div>

@@ -1,0 +1,48 @@
+<div class="form-holder">
+    <div class="form">
+        <img style="width:100px;height:100px; border:1px solid black;" src=<%=photoUrl%>/>
+        <p>
+            <label><%=name.first%> <%=name.last%> </label>
+        </p>
+        <p>
+            <address>Address:
+                <%=address.street1%>
+                <%=address.city%>
+                <%=address.state%>
+                <%=address.zip%>
+                <%=address.country%>
+            </address>
+        </p>
+        <p>
+            <label>Company: <%=company.name%></label>
+        </p>
+        <p>
+            <label>Website: <%=website%></label>
+        </p>
+        <p>
+            <label>Job Position: <%=jobPosition%></label>
+        </p>
+        <p>
+            <label>Phone: <%=phones.phone%></label>
+        </p>
+        <p>
+            <label>Mobile: <%=phones.mobile%></label>
+        </p>
+        <p>
+            <label>Fax: <%=phones.fax%></label>
+        </p>
+        <p>
+            <label>Title: <%=title%></label>
+        </p>
+
+        <div>
+            <span>Sales & Purchases</span>
+            <p>
+                <label>Customer: <input type="checkbox" <% if(salesPurchases.isCustomer) { %> checked="checked" <% } %>  /> </label>
+                <label>Supplier: <input type="checkbox" <% if(salesPurchases.isSupplier) { %> checked="checked" <% } %>  /> </label>
+                <label>Active: <input type="checkbox" <% if(salesPurchases.active) { %> checked="checked" <% } %>  /> </label>
+
+            </p>
+        </div>
+    </div>
+</div>

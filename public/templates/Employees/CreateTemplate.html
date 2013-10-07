@@ -1,0 +1,186 @@
+<div class="form-holder">
+    <form method="post" action="" id="createEmployeeForm" class="form">
+        <fieldset>
+            <p>
+                <label for="name">First Name</label>
+                <input type="text" class="title-input blueback name" id="first" required />
+            </p>
+            <p>
+                <label for="name">Last Name</label>
+                <input type="text" class="title-input blueback name" id="last" required />
+            </p>
+            <p>
+                <label for="tags">Tags</label>
+                <select id="tags">
+                    <option selected="selected" value="0">Select...</option>
+                </select>
+            </p>
+            <div id="tabs">
+                <div>
+                    <ul id="tabList">
+                        <li>
+                            <a href="#" class="selected">Public Information</a></li>
+                        <li>
+                            <a href="#">Personal Information</a></li>
+                        <li>
+                            <a href="#">HR Settings</a></li>
+                    </ul>
+                </div>
+                <div class="tab">
+                    <!--<div class="half-block left">-->
+                    <p>
+                        <label>Working Address</label>
+                        <input type="text" class="waddress" name="street" placeholder="Street..."/>
+                        <input type="text" class="waddress" name="city" placeholder="City"/>
+                        <input type="text" class="waddress" name="state" placeholder="State"/>
+                        <input type="text" class="waddress" name="zip" placeholder="ZIP"/>
+                        <input type="text" class="waddress" name="country" placeholder="Country"/>
+                    </p>
+
+                    <p>
+                        <label for="wemail">Work Email</label>
+                        <input type="text" name="wemail" id="wemail" />
+                    </p>
+                    <!--</div>-->
+                    <!--<div class="half-block left">-->
+                    <p>
+                        <label for="phone">Work Phone</label>
+                        <input type="text" name="phone" id="phone" />
+                    </p>
+
+                    <p>
+                        <label for="mobile">Work Mobile</label>
+                        <input type="text" name="mobile" id="mobile" />
+                    </p>
+                    <p>
+                        <label for="officeLocation">Office Location</label>
+                        <input type="text" name="officeLocation" id="officeLocation" />
+                    </p>
+                    <p>
+                        <label for="relatedUser">Related User</label>
+                        <select id="relatedUser">
+                            <option selected="selected" value="0">Select...</option>
+                            <% usersCollection.each(function(option){ %>
+                           
+                            <option value="<%= option.get('_id') %>"><%= option.get('ulogin')%></option>
+                            <% }); %>
+                       
+                        </select>
+                    </p>
+                    <p>
+                        <label for="visibility">Visibility</label>
+                        <select id="visibility">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="department">Department</label>
+                        <select id="department">
+                            <option selected="selected" value="0">Select...</option>
+                            <% departmentsCollection.each(function(option){ %>
+                           
+                            <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
+                            <% }); %>
+                       
+                        </select>
+                    </p>
+                    <p>
+                        <label for="job">Job</label>
+                        <select id="job">
+                            <option selected="selected" value="0">Select...</option>
+                            <% jobPositionsCollection.each(function(option){ %>
+                           
+                            <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
+                            <% }); %>
+                       
+                        </select>
+                    </p>
+                    <p>
+                        <label for="manager">Manager</label>
+                        <select id="manager">
+                            <option selected="selected" value="0">Select...</option>
+                            <% accountsDdCollection.each(function(option){ %>
+                               
+                            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
+                            <% }); %>
+                       
+                        </select>
+                    </p>
+                    <p>
+                        <label for="coach">Coach</label>
+                        <select id="coach">
+                            <option selected="selected" value="0">Select...</option>
+                            <% accountsDdCollection.each(function(option){ %>
+                               
+                            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
+                            <% }); %>
+                       
+                        </select>
+                    </p>
+                    <!--</div>-->
+                </div>
+                <div class="tab">
+                    <h2>Citizenship & Other Info</h2>
+                    <p>
+                        <label for="nationality">Nationality</label>
+                        <select id="nationality">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="identNo">Identification No</label>
+                        <input type="text" name="identNo" id="identNo" />
+                    </p>
+                    <p>
+                        <label for="passportNo">Passport No</label>
+                        <input type="text" name="passportNo" id="passportNo" />
+                    </p>
+                    <p>
+                        <label for="bankAccountNo">Bank Account No</label>
+                        <select id="bankAccountNo">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="otherId">Other Id</label>
+                        <input type="text" name="otherId" id="otherId" />
+                    </p>
+                    <h2>Status</h2>
+                    <p>
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="maritalStatus">Marital Status</label>
+                        <select id="maritalStatus">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <h2>Contact Information</h2>
+                    
+                    <p>
+                        <label>Home Address</label>
+                        <input type="text" class="homeAddress" name="street" placeholder="Street..."/>
+                        <input type="text" class="homeAddress" name="city" placeholder="City"/>
+                        <input type="text" class="homeAddress" name="state" placeholder="State"/>
+                        <input type="text" class="homeAddress" name="zip" placeholder="ZIP"/>
+                        <input type="text" class="homeAddress" name="country" placeholder="Country"/>
+                    </p>
+                    <h2>Birth</h2>
+                    <p>
+                        <label for="dateBirth">Date of Birth</label>
+                        <input type="date" name="dateBirth" id="dateBirth" />
+                    </p>
+                </div>
+                <div class="tab">
+                    <p>
+                        <label for="active">Active</label>
+                        <input type="checkbox" name="active" id="active" />
+                    </p>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

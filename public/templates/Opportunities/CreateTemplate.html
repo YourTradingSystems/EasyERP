@@ -1,0 +1,94 @@
+<div class="form-holder">
+
+    <form method="post" action="" id="leadForm" class="form">
+        <fieldset>
+            <p>
+                <label for="name">Subject </label>
+                <input type="text" class="title-input blueback" id="name" required />
+            </p>
+
+            <p>
+                <label for="expectedRevenue">Expected Revenue</label>
+                <input type="text" id="expectedRevenueValue" value="0.00" />
+                at
+                <input type="text" id="expectedRevenueProgress" value="0" />%
+            </p>
+
+            <p>
+                <label for="customer">Customer</label>
+                <select id="customer">
+                    <option selected="selected" value="0">Select...</option>
+                    <% customersCollection.each(function(option){ %>
+                   
+                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
+                    <% }); %>
+               
+                </select>
+            </p>
+
+            <p>
+                <label for="email">Email </label>
+                <input type="email" id="email" />
+            </p>
+
+            <p>
+                <label for="phone">Phone </label>
+                <input type="text" id="phone" />
+            </p>
+
+            <p>
+                <label for="salesPerson">Salesperson</label>
+                <select id="salesPerson">
+                    <option selected="selected" value="0">Select...</option>
+                    <% employeesCollection.each(function(option){ %>
+                   
+                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
+                    <% }); %>
+               
+                </select>
+            </p>
+            <p>
+                <label for="salesTeam">Sales Team</label>
+                <select id="salesTeam">
+                    <option selected="selected" value="0">Select...</option>
+                    <% departmentsCollection.each(function(option){ %>
+                   
+                    <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
+                    <% }); %>
+               
+                </select>
+            </p>
+
+            <p>
+                <label for="nextAction">Next Action </label>
+                <input type="date" id="nextActionDate" />
+                <input type="text" id="nextActionDescription" />
+            </p>
+
+            <p>
+                <label for="expectedClosing">Expected Closing </label>
+                <input type="date" id="expectedClosing" />
+            </p>
+
+            <p>
+                <label for="priority">Priority </label>
+                <select id="priority">
+                    <option selected="selected" value="0">Select...</option>
+                    <% priorityCollection.each(function(option){ %>
+                   
+                    <option value="<%= option.get('priority') %>"><%= option.get('priority')%></option>
+                    <% }); %>
+               
+                </select>
+            </p>
+
+            <p>
+                <label for="categories">Categories</label>
+            </p>
+            <p>
+                <label for="internalNotes">Internal Notes</label>
+                <textarea id="internalNotes"></textarea>
+            </p>
+        </fieldset>
+    </form>
+</div>

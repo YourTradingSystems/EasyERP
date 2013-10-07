@@ -1,0 +1,46 @@
+<div class="form-holder">
+    <div class="form">
+        <p>
+            <label><%=cname%> </label>
+        </p>
+        <p>
+            <address>Address:
+                <%=caddress.street1%>
+                <%=caddress.street2%>
+                <%=caddress.city%>
+                <%=caddress.state%>
+                <%=caddress.zip%>
+                <%=caddress.country%>
+            </address>
+        </p>
+        <p>
+            <label>Website: <%=cwebsite%></label>
+        </p>
+        <p>
+            <label>Contacts: <%=contacts%></label>
+        </p>
+        <p>
+            <label>Phone: <%=cphones.phone%></label>
+        </p>
+        <p>
+            <label>Mobile: <%=cphones.mobile%></label>
+        </p>
+        <p>
+            <label>Fax: <%=cphones.fax%></label>
+        </p>
+        <p>
+            <label>InternalNotes: <%=cinternalNotes%></label>
+        </p>
+
+        <div>
+            <span>Sales & Purchases</span>
+            <p>
+                <label>Customer: <input type="checkbox" checked=<%=csalesPurchases.isCustomer%> /> </label>
+                <label>Supplier: <input type="checkbox" checked=<%=csalesPurchases.isSupplier%> /> </label>
+                <label>Active: <input type="checkbox" checked=<%=csalesPurchases.active%> /> </label>
+
+            </p>
+        </div>
+    </div>
+
+</div>

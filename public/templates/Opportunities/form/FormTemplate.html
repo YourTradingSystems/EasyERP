@@ -1,0 +1,115 @@
+<div class="formHeader">
+    <button id="won" class="red">Mark Won</button>
+    <button id="lost" class="red">Mark Lost</button>
+    <ul class="breadcrumb">
+    </ul>
+</div>
+<div class="form-holder">
+    <form class="form" id="leadForm" data-id="<%=_id%>">
+        <h2><%=name%></h2>
+        <h2><%=expectedRevenue.value%> <%=expectedRevenue.currency%> at <%=expectedRevenue.progress%>%</h2>
+
+        <p>
+            <label>Email</label>
+            <span><%=email%></span>
+        </p>
+        <p>
+            <label>Phone</label>
+            <span><%=phone%></span>
+        </p>
+        <p>
+            <label>Salesperson</label>
+            <span><%=salesPerson.name%></span>
+        </p>
+        <p>
+            <label>Sales Team</label>
+            <span><%=salesTeam.name%></span>
+        </p>
+        <p>
+            <label>Next Action</label>
+            <span><%=nextAction.date%> - <%=nextAction.desc%></span>
+        </p>
+        <p>
+            <label>Expected Closing</label>
+            <span><%=expectedClosing%></span>
+        </p>
+        <p>
+            <label>Priority</label>
+            <span><%=priority%></span>
+        </p>
+        <p>
+            <label>Categories</label>
+        </p>
+        <div id="tabs">
+            <div>
+                <ul id="tabList">
+                    <li>
+                        <a href="#" class="selected">Internal Notes</a></li>
+                    <li>
+                        <a href="#">Lead</a></li>
+                </ul>
+            </div>
+            <div class="tab">
+                <textarea id="internalNotes"><%=internalNotes%></textarea>
+            </div>
+            <div class="tab">
+                <p>
+                    <label for="customer">Customer Name</label>
+                    <span><%=customer.name%></span>
+                </p>
+                <p>
+                    <label for="name">Address</label>
+                </p>
+                <p>
+                    <label for="name">Contact Name</label>
+                    <input type="text" id="leadContactNameFirst" placeholder="First" />
+                    <input type="text" id="leadContactNameLast" placeholder="Last" />
+                </p>
+                <p>
+                    <label for="func">Function</label>
+                    <input type="text" id="func" />
+                </p>
+                <p>
+                    <label for="mobile">Mobile </label>
+                    <input type="text" id="mobile" />
+                </p>
+                <p>
+                    <label for="name">Fax</label>
+                    <input type="text" id="fax" />
+                </p>
+                <h2>Misc</h2>
+                <p>
+                    <label>Active</label>
+                    <input type="checkbox" checked="checked" id="active" />
+                </p>
+                <p>
+                    <label>Days To Open</label>
+                    <span>0.00</span>
+                </p>
+                <p>
+                    <label>Days To Close</label>
+                    <span>0.00</span>
+                </p>
+                <p>
+                    <label>Referred By</label>
+                    <input type="text" id="reffered" />
+                </p>
+                <h2>Mailings</h2>
+                <p>
+                    <label>Opt-Out</label>
+                    <input type="checkbox" id="optout" />
+                </p>
+                <h2>References</h2>
+                <p>
+                    <label>Reference</label>
+                    <input type="text" id="reference" />
+                </p>
+                <p>
+                    <label>Reference 2</label>
+                    <input type="text" id="reference2" />
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+

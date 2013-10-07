@@ -1,0 +1,68 @@
+<div class="formHeader">
+    <button class="red" id="hire"><span>Hire & Create Employee</span></button>
+    <button class="red" id="refuse"><span>Refuse</span></button>
+    <ul class="breadcrumb">
+    </ul>
+</div>
+<div class="form-holder">
+    <form class="form" id="applicationForm" data-id="<%=_id%>">
+        <h2><%=subject%></h2>
+        <h2><%=name.first%> <%=name.last%></h2>
+        <p>
+            <label>Email</label>
+            <span><%=wemail%></span>
+        </p>
+        <p>
+            <label>Phone</label>
+            <span><%=wphones.phone%></span>
+        </p>
+        <p>
+            <label>Mobile</label>
+            <span><%=wphones.mobile%></span>
+        </p>
+        <p>
+            <label>Degree</label>
+            <span><%=degree.name%></span>
+        </p>
+        <h3>Job</h3>
+        <p>
+            <label>Applied Job</label>
+            <span><%=job.jobPositionName%></span>
+        </p>
+        <p>
+            <label>Department</label>
+            <span><%=department.departmentName%></span>
+        </p>
+        <p>
+            <label>Tags</label>
+            <span><%=tags%></span>
+        </p>
+        <h3>Application Summary</h3>
+        <p>
+            <label>Responsible</label>
+            <span><%=relatedUser.login%></span>
+        </p>
+        <p>
+            <label>Next Action</label>
+            <span><%=nextAction%></span>
+        </p>
+        <p>
+            <label>Source</label>
+            <span><%=source.name%></span>
+        </p>
+        <p>
+            <label>Referred By</label>
+            <span><%=referredBy%></span>
+        </p>
+        <h3>Contract</h3>
+        <p>
+            <label>Expected Salary</label>
+            <span><%=expectedSalary%></span>
+        </p>
+        <p>
+            <label>Proposed Salary</label>
+            <span><%=proposedSalary%></span>
+        </p>
+    </form>
+</div>
+

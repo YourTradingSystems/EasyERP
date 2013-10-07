@@ -1,0 +1,55 @@
+<div class="formHeader">
+    <ul class="breadcrumb">
+    </ul>
+</div>
+<div class="form-holder">
+    <form method="post" action="" id="createProjectForm" class="form" data-id="<%=model._id%>">
+        <fieldset>
+            <p>
+                <label for="projectName">Project Name</label><br/>
+                <input type="text" name="projectName" id="projectName" required value="<%=model.projectname%>"/>
+
+            </p>
+
+            <p>
+                <label for="managerDd">Project Manager</label>
+                <select id="managerDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% accountsDdCollection.each(function(option){ %>
+                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.projectmanager.uid) ? 'selected' : ''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+                    <% }); %>
+                </select>
+            </p>
+            
+            <p>
+                <label for="customerDd">Project Customer</label>
+                <select id="customerDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% customersDdCollection.each(function(option){ %>
+                        <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.customer.id) ? 'selected' : ''%> ><%= option.get('name').first %> <%= option.get('name').last %> (<%= option.get('type') %>)</option>
+                    <% }); %>
+                </select>
+            </p>
+            
+            <p>
+                <label for="workflowDd">Project Workflow</label>
+                <select id="workflowDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% workflowsDdCollection.each(function(option){ %>
+                        <option value="<%= option.get('_id') %>"  <%= (option.get('name') == model.workflow.name) ? 'selected' : ''%> ><%= option.get('name') %> (<%= option.get('status') %>)</option>
+                    <% }); %>
+                </select>
+            </p>
+            
+            <p>
+                <label for="usereditDd">Users Can Edit Project</label></br>
+                <select id="usereditDd" size="3" multiple>
+                    <option selected="selected" value="0">No one...</option>
+                    <% accountsDdCollection.each(function(option){ %>
+                        <option value="<%= option.get('_id') %>"><%= option.get('uname') %></option>
+                    <% }); %>
+                </select>
+            </p>
+        </fieldset>
+    </form>
+</div>

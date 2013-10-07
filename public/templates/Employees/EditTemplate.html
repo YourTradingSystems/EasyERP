@@ -1,0 +1,203 @@
+<div class="form-holder">
+    <form method="post" action="" id="editEmployeeForm" class="form">
+        <fieldset>
+            <p>
+                <label for="name">First Name</label>
+                <input type="text" class="title-input blueback name" id="first" value="<%=model.name.first%>" required />
+            </p>
+            <p>
+                <label for="name">Last Name</label>
+                <input type="text" class="title-input blueback name" id="last" value="<%=model.name.last%>" required />
+            </p>
+            <p>
+                <label for="tags">Tags</label>
+                <select id="tags">
+                    <option selected="selected" value="0">Select...</option>
+                </select>
+            </p>
+
+            <div id="tabs">
+                <div>
+                    <ul id="tabList">
+                        <li>
+                            <a href="#" class="selected">Public Information</a></li>
+                        <li>
+                            <a href="#">Personal Information</a></li>
+                        <li>
+                            <a href="#">HR Settings</a></li>
+                    </ul>
+                </div>
+                <div class="tab">
+
+                    <!--<div class="half-block left">-->
+                    <label>Working Address</label>
+                    <p>
+                        <label>Street</label>
+                        <input type="text" class="waddress" name="street" value="<%=model.waddress.street%>" />
+                    </p>
+                    <p>
+                        <label>City</label>
+                        <input type="text" class="waddress" name="city" value="<%=model.waddress.city%>" />
+                    </p>
+                    <p>
+                        <label>State</label>
+                        <input type="text" class="waddress" name="state" value="<%=model.waddress.state%>"/>
+                    <p>
+                        <label>Zip</label>
+                        <input type="text" class="waddress" name="zip" value="<%=model.waddress.zip%>"/>
+                    </p>
+                    <p>
+                        <label>Country</label>
+                        <input type="text" class="waddress" name="country" value="<%=model.waddress.country%>" />
+                    </p>
+
+
+                    <p>
+                        <label for="wemail">Work Email</label>
+                        <input type="text" name="wemail" id="wemail" value="<%=model.wemail%>" required />
+                    </p>
+                    <!--</div>-->
+                    <!--<div class="half-block left">-->
+                    <p>
+                        <label for="phone">Work Phone</label>
+                        <input type="text" name="phone" id="phone" value="<%=model.wphones.phone%>" required />
+                    </p>
+
+                    <p>
+                        <label for="mobile">Work Mobile</label>
+                        <input type="text" name="mobile" id="mobile" value="<%=model.wphones.mobile%>" required />
+                    </p>
+                    <p>
+                        <label for="officeLocation">Office Location</label>
+                        <input type="text" name="officeLocation" id="officeLocation" value="<%=model.officeLocation%>" required />
+                    </p>
+                    <p>
+                        <label for="relatedUser">Related User</label>
+                        <select id="relatedUser">
+                            <option selected="selected" value="0">Select...</option>
+                            <% usersCollection.each(function(option){ %>
+                           
+                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)? 'selected="selected"':''%>><%= option.get('ulogin')%></option>
+                            <% }); %>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="visibility">Visibility</label>
+                        <select id="visibility">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="department">Department</label>
+                        <select id="department">
+                            <option value="0">Select...</option>
+                            <% departmentsCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.departmentId)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                             <% }); %>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="job">Job</label>
+                        <select id="job">
+                            <option selected="selected" value="0">Select...</option>
+                            <% jobPositionsCollection.each(function(option){ %>
+                           
+                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.job.jobPositionId)? 'selected="selected"':''%>><%= option.get('name')%></option>
+                            <% }); %>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="manager">Manager</label>
+                        <select id="manager">
+                            <option selected="selected" value="0">Select...</option>
+                            <% accountsDdCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.manager.employeeId) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                            <% }); %>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="coach">Coach</label>
+                        <select id="coach">
+                            <option selected="selected" value="0">Select...</option>
+                            <% accountsDdCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.coach.employeeId) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                            <% }); %>
+                        </select>
+                    </p>
+                </div>
+                <div class="tab">
+                    <h2>Citizenship & Other Info</h2>
+                    <p>
+                        <label for="nationality">Nationality</label>
+                        <select id="nationality">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="identNo">Identification No</label>
+                        <input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required />
+                    </p>
+                    <p>
+                        <label for="passportNo">Passport No</label>
+                        <input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required />
+                    </p>
+                    <p>
+                        <label for="bankAccountNo">Bank Account No</label>
+                        <select id="bankAccountNo">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="otherId">Other Id</label>
+                        <input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required />
+                    </p>
+                    <h2>Status</h2>
+                    <p>
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="maritalStatus">Marital Status</label>
+                        <select id="maritalStatus">
+                            <option selected="selected" value="0">Select...</option>
+                        </select>
+                    </p>
+                    <h2>Contact Information</h2>
+                    <label>Home Address</label>
+                    <p>
+                        <label>Street</label>
+                        <input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" />
+                    </p>
+                    <p>
+                        <label>City</label>
+                        <input type="text" class="homeAddress" name="city" value="<%=model.homeAddress.city%>"/>
+                    </p>
+                    <p>
+                        <label>State</label>
+                        <input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>"/>
+                    </p>
+                    <p>
+                        <label>Zip</label>
+                        <input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>"/>
+                    </p>
+                    <p>
+                        <label>Country</label>
+                        <input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>"/>
+                    </p>
+                    <h2>Birth</h2>
+                    <p>
+                        <label for="dateBirth">Date of Birth</label>
+                        <input type="text" name="dateBirth" id="dateBirth" value="<%=model.dateBirth%>" required />
+                    </p>
+                </div>
+                <div class="tab">
+                    <p>
+                        <label for="active">Active</label>
+                        <input type="checkbox" <%= (model.active)? checked='checked':''%> name="active" id="active" />
+                    </p>
+                </div>
+        </fieldset>
+    </form>
+</div>
