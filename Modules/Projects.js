@@ -95,12 +95,12 @@ var Project = function (logWriter, mongoose) {
 
     var returnDuration = function (StartDate, EndDate) {
         var days = 0;
-        if(StartDate && EndDate){
-        var startDate = new Date(StartDate);
-        var endDate = new Date(EndDate); 
-        var tck = endDate - startDate;
-        var realDays = (((tck / 1000) / 60) / 60) / 24;
-        days = realDays.toFixed(1);
+        if (StartDate && EndDate) {
+            var startDate = new Date(StartDate);
+            var endDate = new Date(EndDate);
+            var tck = endDate - startDate;
+            var realDays = (((tck / 1000) / 60) / 60) / 24;
+            days = realDays.toFixed(1);
         }
         return days;
     };
@@ -156,7 +156,7 @@ var Project = function (logWriter, mongoose) {
                     //     { 'info.StartDate': { $gt: task.extrainfo.StartDate } }])
                     .exec(function (err, _project) {
                         if (_project) {
-                            if ( _project.info.StartDat && _project.info.EndDate) {
+                            if ( !_project.info.StartDat && !_project.info.EndDate) {
                                 project.update(
                                     {
                                         _id: _project._id
@@ -468,9 +468,6 @@ var Project = function (logWriter, mongoose) {
                                 console.log(err);
                                 logWriter.log("Project.js getProjects findETasksById tasks.find " + err);
                                 response.send(500, { error: "Can't find Projects" });
-                            } else if (taskss.length == 0) {
-                                res['data'] = _projects;
-                                response.send(res);
                             } else {
                                 _projects[count].task.tasks = taskss;
                                 var _resultProgress = returnProgress(taskss);
@@ -478,6 +475,7 @@ var Project = function (logWriter, mongoose) {
                                 _projects[count].remaining = _resultProgress.remaining;
                                 _projects[count].progress = _resultProgress.progress;
                                 count++;
+                                findTasksById(_projects, count);
                             }
                         }
                         catch (Exception) {
@@ -555,12 +553,14 @@ var Project = function (logWriter, mongoose) {
 
     function createTask(data, res) {
         try {
-            if (typeof (data.summary) == 'undefined') {
+            console.log(data);
+            if (!data.summary) {
                 logWriter.log('Task.create Incorrect Incoming Data');
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
                 return;
             } else {
-                tasks.find({ $and: [{ summary: data.summary }, { 'project.pId': data.project.pId }] }, function (error, doc) {
+                var projectPid = (data.project) ? data.project._id : '';
+                tasks.find({ $and: [{ summary: data.summary }, { 'project.pId': projectPid }] }, function (error, doc) {
                     if (error) {
                         console.log(error);
                         logWriter.log("Project.js createTask tasks.find " + error);
@@ -580,8 +580,8 @@ var Project = function (logWriter, mongoose) {
                     _task = new tasks();
                     _task.summary = data.summary;
                     if (data.project) {
-                        if (data.project._Id) {
-                            _task.project.pId = data.project.pId;
+                        if (data.project._id) {
+                            _task.project.pId = data.project._id;
                         }
                         if (data.project.projectName) {
                             _task.project.projectName = data.project.projectName;

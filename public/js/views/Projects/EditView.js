@@ -81,7 +81,7 @@ define([
             		}
 
             		var idManager = $("#managerDd option:selected").val();
-            		var _projectmanager = common.toObject(idManager, this.accountDdCollection);
+            		var _projectmanager = common.toObject(idManager, this.accountsDdCollection);
             		var projectmanager = {};
             		if (_projectmanager) {
             		    projectmanager.id = _projectmanager._id;
