@@ -23,7 +23,7 @@ var JobPosition = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data) == 'undefined') {
+            if (data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
                 res.send(400, { error: 'JobPosition.create Incorrect Incoming Data' });
                 return;
@@ -40,42 +40,42 @@ var JobPosition = function (logWriter, mongoose) {
                             res.send(400, { error: 'An jobPosition with the same Name already exists' });
                         }
                     } else if (doc.length === 0) {
-                        savetoDB(data);
+                        savetoDb(data);
                     }
                 });
             }
-            function savetoDB(data) {
+            function savetoDb(data) {
                 try {
                     _job = new job();
-                    if (typeof (data.name) != 'undefined') {
+                    if (data.name) {
                         _job.name = data.name;
                     }
-                    if (typeof (data.expectedRecruitment) != 'undefined') {
+                    if (data.expectedRecruitment) {
                         _job.expectedRecruitment = data.expectedRecruitment;
                     }
-                    if (typeof (data.interviewForm) != 'undefined') {
-                        if (typeof (data.interviewForm.id) != 'undefined') {
+                    if (data.interviewForm) {
+                        if (data.interviewForm.id) {
                             _job.interviewForm.id = data.interviewForm.id;
                         }
-                        if (typeof (data.interviewForm.name) != 'undefined') {
+                        if (data.interviewForm.name) {
                             _job.interviewForm.name = data.interviewForm.name;
                         }
                     }
-                    if (typeof (data.department) != 'undefined') {
-                        if (typeof (data.department.id) != 'undefined') {
+                    if (data.department) {
+                        if (data.department.id) {
                             _job.department.id = data.department.id;
                         }
-                        if (typeof (data.department.name) != 'undefined') {
+                        if (data.department.name) {
                             _job.department.name = data.department.name;
                         }
                     }
-                    if (typeof (data.description) != 'undefined') {
+                    if (data.description) {
                         _job.description = data.description;
                     }
-                    if (typeof (data.requirements) != 'undefined') {
+                    if (data.requirements) {
                         _job.requirements = data.requirements;
                     }
-                    _job.save(function (err, _jobPosition) {
+                    _job.save(function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log("JobPosition.js create savetoDB _job.save " + err);
@@ -102,13 +102,13 @@ var JobPosition = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        job.find({}, function (err, jobPositions) {
+        job.find({}, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
-                res['data'] = jobPositions;
+                res['data'] = result;
                 response.send(res);
             }
         });

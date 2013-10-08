@@ -7,7 +7,7 @@ var Degrees = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data.name) == 'undefined') {
+            if (data.name) {
                 logWriter.log('Degree.create Incorrect Incoming Data');
                 res.send(400, { error: 'Degree.create Incorrect Incoming Data' });
                 return;
@@ -23,7 +23,7 @@ var Degrees = function (logWriter, mongoose) {
                                 _degree = new degree();
                                 _degree._id = data.name;
                                 _degree.name = data.name;
-                                _degree.save(function (err, degreess) {
+                                _degree.save(function (err, result) {
                                     if (err) {
                                         console.log(err);
                                         res.send(500, { error: 'Degree.save BD error' });

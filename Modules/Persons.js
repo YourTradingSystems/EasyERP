@@ -58,12 +58,12 @@ var Persons = function (logWriter, mongoose) {
     return {
         create: function (data, res) {
             try {
-                if (typeof (data) == 'undefined') {
+                if (data) {
                     logWriter.log('Person.create Incorrect Incoming Data');
                     res.send(400, { error: 'Person.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    var query = ((data.email == '') || (data.email == 'undefined'))
+                    var query = (data.email)
                         ? { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }] }
                         : { email: data.email };
                     Person.find(query, function (error, doc) {
@@ -82,112 +82,112 @@ var Persons = function (logWriter, mongoose) {
                 function savetoBd(data) {
                     try {
                         _person = new Person();
-                        if (typeof (data.email) != 'undefined') {
+                        if (data.email) {
                             _person.email = data.email;
                         }
-                        if (typeof (data.photoUrl) != 'undefined') {
+                        if (data.photoUrl) {
                             _person.photoUrl = data.photoUrl;
                         }
-                        if (typeof (data.name) != 'undefined') {
-                            if (typeof (data.name.first) != 'undefined') {
+                        if (data.name) {
+                            if (data.name.first) {
                                 _person.name.first = data.name.first;
                             }
-                            if (typeof (data.name.last) != 'undefined') {
+                            if (data.name.last) {
                                 _person.name.last = data.name.last;
                             }
                         }
-                        if (typeof (data.company) != 'undefined') {
-                            if (typeof (data.company.id) != 'undefined') {
+                        if (data.company) {
+                            if (data.company.id) {
                                 _person.company.id = data.company.id;
                             }
-                            if (typeof (data.company.name) != 'undefined') {
+                            if (data.company.name) {
                                 _person.company.name = data.company.name;
                             }
                         }
-                        if (typeof (data.timezone) != 'undefined') {
+                        if (data.timezone) {
                             _person.timezone = data.timezone;
                         }
-                        if (typeof (data.address) != 'undefined') {
-                            if (typeof (data.address.street1) != 'undefined') {
+                        if (data.address) {
+                            if (data.address.street1) {
                                 _person.address.street1 = data.address.street1;
                             }
-                            if (typeof (data.address.street2) != 'undefined') {
+                            if (data.address.street2) {
                                 _person.address.street2 = data.address.street2;
                             }
-                            if (typeof (data.address.city) != 'undefined') {
+                            if (data.address.city) {
                                 _person.address.city = data.address.city;
                             }
-                            if (typeof (data.address.state) != 'undefined') {
+                            if (data.address.state) {
                                 _person.address.state = data.address.state;
                             }
-                            if (typeof (data.address.zip) != 'undefined') {
+                            if (data.address.zip) {
                                 _person.address.zip = data.address.zip;
                             }
-                            if (typeof (data.address.country) != 'undefined') {
+                            if (data.address.country) {
                                 _person.address.country = data.address.country;
                             }
                         }
-                        if (typeof (data.website) != 'undefined') {
+                        if (data.website) {
                             _person.website = data.website;
                         }
-                        if (typeof (data.jobPosition) != 'undefined') {
+                        if (data.jobPosition) {
                             _person.jobPosition = data.jobPosition;
                         }
-                        if (typeof (data.phones) != 'undefined') {
-                            if (typeof (data.phones.phone) != 'undefined') {
+                        if (data.phones) {
+                            if (data.phones.phone) {
                                 _person.phones.phone = data.phones.phone;
                             }
-                            if (typeof (data.phones.mobile) != 'undefined') {
+                            if (data.phones.mobile) {
                                 _person.phones.mobile = data.phones.mobile;
                             }
-                            if (typeof (data.phones.fax) != 'undefined') {
+                            if (data.phones.fax) {
                                 _person.phones.fax = data.phones.fax;
                             }
                         }
-                        if (typeof (data.title) != 'undefined') {
+                        if (data.title) {
                             _person.title = data.title;
                         }
-                        if (typeof (data.salesPurchases) != 'undefined') {
-                            if (typeof (data.salesPurchases.active) != 'undefined') {
+                        if (data.salesPurchases) {
+                            if (data.salesPurchases.active) {
                                 _person.salesPurchases.active = data.salesPurchases.active;
                             }
-                            if (typeof (data.salesPurchases.language) != 'undefined') {
+                            if (data.salesPurchases.language) {
                                 _person.salesPurchases.language = data.salesPurchases.language;
                             }
-                            if (typeof (data.salesPurchases.isCustomer) != 'undefined') {
+                            if (data.salesPurchases.isCustomer) {
                                 _person.salesPurchases.isCustomer = data.salesPurchases.isCustomer;
                             }
-                            if (typeof (data.salesPurchases.isSupplier) != 'undefined') {
+                            if (data.salesPurchases.isSupplier) {
                                 _person.salesPurchases.isSupplier = data.salesPurchases.isSupplier;
                             }
-                            if (typeof (data.salesPurchases.salesPerson) != 'undefined') {
+                            if (data.salesPurchases.salesPerson) {
                                 _person.salesPurchases.salesPerson = data.salesPurchases.salesPerson;
                             }
-                            if (typeof (data.salesPurchases.salesTeam) != 'undefined') {
+                            if (data.salesPurchases.salesTeam) {
                                 _person.salesPurchases.salesTeam = data.salesPurchases.salesTeam;
                             }
-                            if (typeof (data.salesPurchases.reference) != 'undefined') {
+                            if (data.salesPurchases.reference) {
                                 _person.salesPurchases.reference = data.salesPurchases.reference;
                             }
-                            if (typeof (data.salesPurchases.date) != 'undefined') {
+                            if (data.salesPurchases.date) {
                                 _person.salesPurchases.date = data.salesPurchases.date;
                             }
-                            if (typeof (data.salesPurchases.receiveMessages) != 'undefined') {
+                            if (data.salesPurchases.receiveMessages) {
                                 _person.salesPurchases.receiveMessages = data.usalesPurchases.receiveMessages;
                             }
                         }
-                        if (typeof (data.relatedUser) != 'undefined') {
-                            if (typeof (data.relatedUser.uid) != 'undefined') {
+                        if (data.relatedUser) {
+                            if (data.relatedUser.uid) {
                                 _person.relatedUser.uid = data.relatedUser.uid;
                             }
-                            if (typeof (data.relatedUser.ulogin) != 'undefined') {
+                            if (data.relatedUser.ulogin) {
                                 _person.relatedUser.ulogin = data.relatedUser.ulogin;
                             }
                         }
-                        if (typeof (data.history) != 'undefined') {
+                        if (data.history) {
                             _person.history = data.history;
                         }
-                        _person.save(function (err, person) {
+                        _person.save(function (err, result) {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Person.js create savetoBd _person.save " + err);
@@ -232,13 +232,13 @@ var Persons = function (logWriter, mongoose) {
             res['data'] = [];
             var query = Person.find({});
             query.sort({ "name.last": 1 });
-            query.exec(function (err, persons) {
+            query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Person.js get Person.find " + err);
                     response.send(500, { error: "Can't find Person" });
                 } else {
-                    res['data'] = persons;
+                    res['data'] = result;
                     response.send(res);
                 }
             });

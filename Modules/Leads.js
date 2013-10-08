@@ -13,7 +13,6 @@ var Leads = function (logWriter, mongoose) {
         },
         address: {
             street: { type: String, default: '' },
-            //street2: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
@@ -84,120 +83,120 @@ var Leads = function (logWriter, mongoose) {
             function savetoDB(data) {
                 try {
                     _lead = new lead();
-                    if ((typeof (data.name) != 'undefined') && (data.name != null)) {
+                    if (data.name) {
                         _lead.name = data.name;
                     }
-                    if ((typeof (data.company) != 'undefined') && (data.customer != null)) {
-                        if (typeof (data.company.id) != 'undefined') {
+                    if (data.company) {
+                        if (data.company.id) {
                             _lead.company.id = data.company.id;
                         }
-                        if (typeof (data.company.name) != 'undefined') {
+                        if (data.company.name) {
                             _lead.company.name = data.company.name;
                         }
                     }
-                    if ((typeof (data.customer) != 'undefined') && (data.customer != null)) {
-                        if (typeof (data.customer.id) != 'undefined') {
+                    if (data.customer) {
+                        if (data.customer.id) {
                             _lead.customer.id = data.customer.id;
                         }
-                        if (typeof (data.customer.name) != 'undefined') {
+                        if (data.customer.name) {
                             _lead.customer.name = data.customer.name;
                         }
                     }
-                    if ((typeof (data.address) != 'undefined') && (data.address != null)) {
-                        if (typeof (data.address.street) != 'undefined') {
+                    if(data.address) {
+                        if (data.address.street) {
                             _lead.address.street = data.address.street;
                         }
-                        if (typeof (data.address.city) != 'undefined') {
+                        if (data.address.city) {
                             _lead.address.city = data.address.city;
                         }
-                        if (typeof (data.address.state) != 'undefined') {
+                        if (data.address.state) {
                             _lead.address.state = data.address.state;
                         }
-                        if (typeof (data.address.zip) != 'undefined') {
+                        if (data.address.zip) {
                             _lead.address.zip = data.address.zip;
                         }
-                        if (typeof (data.address.country) != 'undefined') {
+                        if (data.address.country) {
                             _lead.address.country = data.address.country;
                         }
                     }
-                    if ((typeof (data.salesPerson) != 'undefined') && (data.salesPerson != null)) {
-                        if (typeof (data.salesPerson.id) != 'undefined') {
+                    if (data.salesPerson) {
+                        if (data.salesPerson.id) {
                             _lead.salesPerson.id = data.salesPerson.id;
                         }
-                        if (typeof (data.salesPerson.name) != 'undefined') {
+                        if (data.salesPerson.name) {
                             _lead.salesPerson.name = data.salesPerson.name;
                         }
                     }
-                    if ((typeof (data.salesTeam) != 'undefined') && (data.salesTeam != null)) {
-                        if (typeof (data.salesTeam.id) != 'undefined') {
+                    if (data.salesTeam) {
+                        if (data.salesTeam.id) {
                             _lead.salesTeam.id = data.salesTeam.id;
                         }
-                        if (typeof (data.salesTeam.name) != 'undefined') {
+                        if (data.salesTeam.name) {
                             _lead.salesTeam.name = data.salesTeam.name;
                         }
                     }
-                    if ((typeof (data.contactName) != 'undefined') && (data.contactName != null)) {
-                        if (typeof (data.contactName.first) != 'undefined') {
+                    if (data.contactName) {
+                        if (data.contactName.first) {
                             _lead.contactName.first = data.contactName.first;
                         }
-                        if (typeof (data.contactName.last) != 'undefined') {
+                        if (data.contactName.last) {
                             _lead.contactName.last = data.contactName.last;
                         }
                     }
-                    if (typeof (data.email) != 'undefined') {
+                    if (data.email) {
                         _lead.email = data.email;
                     }
-                    if (typeof (data.func) != 'undefined') {
+                    if (data.func) {
                         _lead.func = data.func;
                     }
-                    if ((typeof (data.phones) != 'undefined') && (data.phones != null)) {
-                        if (typeof (data.phones.phone) != 'undefined') {
+                    if (data.phones) {
+                        if (data.phones.phone) {
                             _lead.phones.phone = data.phones.phone;
                         }
-                        if (typeof (data.phones.mobile) != 'undefined') {
+                        if (data.phones.mobile) {
                             _lead.phones.mobile = data.phones.mobile;
                         }
                     }
-                    if (typeof (data.fax) != 'undefined') {
+                    if (data.fax) {
                         _lead.fax = data.fax;
                     }
-                    if ((typeof (data.workflow) != 'undefined') && (data.workflow != null)) {
-                        if (typeof (data.workflow.id) != 'undefined') {
+                    if (data.workflow) {
+                        if (data.workflow.id) {
                             _lead.workflow.id = data.workflow.id;
                         }
-                        if (typeof (data.workflow.name) != 'undefined') {
+                        if (data.workflow.name) {
                             _lead.workflow.name = data.workflow.name;
                         }
                     }
-                    if ((typeof (data.priority) != 'undefined') && (data.priority != null)) {
-                        if (typeof (data.priority.id) != 'undefined') {
+                    if (data.priority) {
+                        if (data.priority.id) {
                             _lead.priority.id = data.priority.id;
                         }
-                        if (typeof (data.priority.name) != 'undefined') {
+                        if (data.priority.name) {
                             _lead.priority.name = data.priority.name;
                         }
                     }
-                    if ((typeof (data.categories) != 'undefined') && (data.categories != null)) {
-                        if (typeof (data.categories.id) != 'undefined') {
+                    if (data.categories) {
+                        if (data.categories.id) {
                             _lead.categories.id = data.categories.id;
                         }
-                        if (typeof (data.categories.name) != 'undefined') {
+                        if (data.categories.name) {
                             _lead.categories.name = data.categories.name;
                         }
                     }
-                    if (typeof (data.active) != 'undefined') {
+                    if (data.active) {
                         _lead.active = data.active;
                     }
-                    if (typeof (data.optout) != 'undefined') {
+                    if (data.optout) {
                         _lead.optout = data.optout;
                     }
-                    if (typeof (data.reffered) != 'undefined') {
+                    if (data.reffered) {
                         _lead.reffered = data.reffered;
                     }
-                    if (typeof (data.internalNotes) != 'undefined') {
+                    if (data.internalNotes) {
                         _lead.internalNotes = data.internalNotes;
                     }
-                    _lead.save(function (err, _leadd) {
+                    _lead.save(function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Leads.js create savetoDB _lead.save " + err);

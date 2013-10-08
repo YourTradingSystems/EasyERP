@@ -18,8 +18,7 @@ var Profile = function (logWriter, mongoose) {
     function create(data, func) {
         try {
             console.log('createProfile');
-
-            if (typeof (data.profileName) == 'undefined') {
+            if (data.profileName) {
                 logWriter.log('Profile.create Incorrect Incoming Data');
                 res.send(400, { error: 'Profile.create Incorrect Incoming Data' });
                 return;
@@ -47,33 +46,33 @@ var Profile = function (logWriter, mongoose) {
             function saveProfileToDb(data) {
                 try {
                     _profile = new profile();
-                    if ((typeof (data.profileName) != 'undefined') && (data.profileName != null)) {
+                    if (data.profileName) {
                         _profile.profileName = data.profileName;
                     }
-                    if ((typeof (data.profileDescription) != 'undefined') && (data.profileName != null)) {
+                    if (data.profileDescription) {
                         _profile.profileDescription = data.profileDescription;
                     }
-                    if ((typeof (data.profileAccess) != 'undefined') && (data.profileAccess != null)) {
-                        if ((typeof (data.profileAccess.module) != 'undefined') && (data.profileAccess.module != null)) {
-                            if (typeof (data.profileAccess.module.mid) != 'undefined') {
+                    if (data.profileAccess) {
+                        if (data.profileAccess.module) {
+                            if (data.profileAccess.module.mid) {
                                 _profile.profileAccess.module.mid = data.profileAccess.module.mid;
                             }
-                            if (typeof (data.profileAccess.mname) != 'undefined') {
+                            if (data.profileAccess.mname) {
                                 _profile.profileAccess.module.mname = data.profileAccess.module.mname;
                             }
                         }
-                        if (typeof (data.profileAccess.access) != 'undefined') {
+                        if (data.profileAccess.access) {
                             _profile.profileAccess.access = data.profileAccess.access;
                         }
                     }
-                    _profile.save(function (err, profilee) {
+                    _profile.save(function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Profile.js saveProfileToDb _profile.save" + err);
                                 func(500);
                             }
-                            if (profilee) {
+                            if (result) {
                                 console.log("Data Profile saved sucscess");
                                 func(201);
                             }

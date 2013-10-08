@@ -15,7 +15,7 @@ var Workflow = function (logWriter, mongoose) {
 
         create: function (data, func) {
             try {
-                if (data != null) {
+                if (data) {
                     workflow.findById(data.name, function (err, workflows) {
                         if (err) {
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
@@ -54,7 +54,7 @@ var Workflow = function (logWriter, mongoose) {
             try {
                 var res = {};
                 res['data'] = [];
-                if (data != null) {
+                if (data) {
                     workflow.findById(data.id, function (err, workflows) {
                         if (err) {
                             console.log(err);

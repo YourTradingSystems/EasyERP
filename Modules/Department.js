@@ -17,7 +17,7 @@ var Department = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data) == 'undefined') {
+            if (data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
                 res.send(400, { error: 'JobPosition.create Incorrect Incoming Data' });
                 return;
@@ -41,27 +41,27 @@ var Department = function (logWriter, mongoose) {
             function saveDepartmentToDB(data) {
                 try {
                     _department = new department();
-                    if ((typeof (data.departmentName) != 'undefined') && (data.departmentName != null)) {
+                    if (data.departmentName) {
                         _department.departmentName = data.departmentName;
                     }
-                    if ((typeof (data.parentDepartment) != 'undefined') && (data.parentDepartment != null)) {
-                        if (typeof (data.parentDepartment.departmentId) != 'undefined') {
+                    if (data.parentDepartment) {
+                        if (data.parentDepartment.departmentId) {
                             _department.parentDepartment.departmentId = data.parentDepartment.departmentId;
                         }
-                        if (typeof (data.parentDepartment.departmentName) != 'undefined') {
+                        if (data.parentDepartment.departmentName) {
                             _department.parentDepartment.departmentName = data.parentDepartment.departmentName;
                         }
                     }
 
-                    if ((typeof (data.departmentManager) != 'undefined') && (data.departmentManager != null)) {
-                        if (typeof (data.departmentManager.uid) != 'undefined') {
+                    if (data.departmentManager){
+                        if(data.departmentManager.uid) {
                             _department.departmentManager.uid = data.departmentManager.uid;
                         }
-                        if (typeof (data.departmentManager.uname) != 'undefined') {
+                        if (data.departmentManager.uname) {
                             _department.departmentManager.uname = data.departmentManager.uname;
                         }
                     }
-                    _department.save(function (err, departmentt) {
+                    _department.save(function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Department.js saveDepartmentToDb _department.save" + err);
@@ -91,22 +91,20 @@ var Department = function (logWriter, mongoose) {
         res['result']['status'] = '2';
         res['result']['description'] = 'An error was find';
         res['data'] = [];
-        department.find({}, { _id: 1, departmentName: 1 }, function (err, Departments) {
+        department.find({}, { _id: 1, departmentName: 1 }, function(err, result) {
             try {
                 if (err) {
                     console.log(err);
                     logWriter.log("Department.js getDepartmentsForDd Department.find " + err);
                     res['result']['description'] = err;
                     func(res);
-                } else
-                    if (departments) {
-                        res['result']['status'] = '0';
-                        res['result']['description'] = 'returned Departments is success';
-                        res['data'] = departments;
-                        func(res);
-                    }
-            }
-            catch (Exception) {
+                } else if (result) {
+                    res['result']['status'] = '0';
+                    res['result']['description'] = 'returned Departments is success';
+                    res['data'] = result;
+                    func(res);
+                }
+            } catch(Exception) {
                 logWriter.log("Department.js getDepartmentsForDd try Department.find " + Exception);
             }
         });
@@ -115,13 +113,13 @@ var Department = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        department.find({}, function (err, Departments) {
+        department.find({}, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Department.js getDepartments Department.find " + err);
                 response.send(500, { error: "Can't find Department" });
             } else {
-                res['data'] = Departments;
+                res['data'] = result;
                 response.send(res);
             }
         });
@@ -130,7 +128,7 @@ var Department = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            department.update({ _id: _id }, data, function (err, Departments) {
+            department.update({ _id: _id }, data, function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Department.js update Department.update " + err);
@@ -148,7 +146,7 @@ var Department = function (logWriter, mongoose) {
     };
 
     function remove(_id, res) {
-        department.remove({ _id: _id }, function (err, Departments) {
+        department.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Department.js remove department.remove " + err);

@@ -107,171 +107,171 @@ var Employee = function (logWriter, mongoose) {
             function savetoDB(data) {
                 try {
                     _employee = new employee();
-                    if (typeof (data.isEmployee) != 'undefined') {
+                    if (data.isEmployee) {
                         _employee.isEmployee = data.isEmployee;
                     }
-                    if (typeof (data.name) != 'undefined') {
-                        if (typeof (data.name.first) != 'undefined') {
+                    if (data.name) {
+                        if (data.name.first) {
                             _employee.name.first = data.name.first;
                         }
-                        if (typeof (data.name.last) != 'undefined') {
+                        if (data.name.last) {
                             _employee.name.last = data.name.last;
                         }
                     }
-                    if (typeof (data.subject) != 'undefined') {
+                    if (data.subject) {
                         _employee.subject = data.subject;
                     }
-                    if (typeof (data.tags) != 'undefined') {
+                    if (data.tags) {
                         _employee.tags = data.tags;
                     }
-                    if (typeof (data.waddress) != 'undefined') {
-                        if (typeof (data.waddress.street) != 'undefined') {
+                    if (data.waddress) {
+                        if (data.waddress.street) {
                             _employee.waddress.street = data.waddress.street;
                         }
-                        if (typeof (data.waddress.city) != 'undefined') {
+                        if (data.waddress.city) {
                             _employee.waddress.city = data.waddress.city;
                         }
-                        if (typeof (data.waddress.state) != 'undefined') {
+                        if (data.waddress.state) {
                             _employee.waddress.state = data.waddress.state;
                         }
-                        if (typeof (data.waddress.zip) != 'undefined') {
+                        if (data.waddress.zip) {
                             _employee.waddress.zip = data.waddress.zip;
                         }
-                        if (typeof (data.waddress.country) != 'undefined') {
+                        if (data.waddress.country) {
                             _employee.waddress.country = data.waddress.country;
                         }
                     }
-                    if (typeof (data.wemail) != 'undefined') {
+                    if (data.wemail) {
                         _employee.wemail = data.wemail;
                     }
-                    if (typeof (data.wphones) != 'undefined') {
-                        if (typeof (data.wphones.phone) != 'undefined') {
+                    if (data.wphones) {
+                        if (data.wphones.phone) {
                             _employee.wphones.phone = data.wphones.phone;
                         }
-                        if (typeof (data.wphones.mobile) != 'undefined') {
+                        if (data.wphones.mobile) {
                             _employee.wphones.mobile = data.wphones.mobile;
                         }
                     }
-                    if (typeof (data.officeLocation) != 'undefined') {
+                    if (data.officeLocation) {
                         _employee.officeLocation = data.officeLocation;
                     }
-                    if (typeof (data.relatedUser) != 'undefined') {
-                        if (typeof (data.relatedUser.id) != 'undefined') {
+                    if (data.relatedUser) {
+                        if (data.relatedUser.id) {
                             _employee.relatedUser.id = data.relatedUser.id;
                         }
-                        if (typeof (data.relatedUser.login) != 'undefined') {
+                        if (data.relatedUser.login) {
                             _employee.relatedUser.login = data.relatedUser.login;
                         }
                     }
-                    if (typeof (data.visibility) != 'undefined') {
+                    if (data.visibility) {
                         _employee.visibility = data.visibility;
                     }
-                    if ((typeof (data.department) != 'undefined') && data.department != null) {
-                        if (typeof (data.department.departmentId) != 'undefined') {
+                    if (data.department) {
+                        if (data.department.departmentId) {
                             _employee.department.departmentId = data.department.departmentId;
                         }
-                        if (typeof (data.department.departmentName) != 'undefined') {
+                        if (data.department.departmentName) {
                             _employee.department.departmentName = data.department.departmentName;
                         }
                     }
-                    if (typeof (data.job) != 'undefined') {
-                        if (typeof (data.job.jobPositionId) != 'undefined') {
+                    if (data.job) {
+                        if (data.job.jobPositionId) {
                             _employee.job.jobPositionId = data.job.jobPositionId;
                         }
-                        if (typeof (data.job.jobPositionName) != 'undefined') {
+                        if (data.job.jobPositionName) {
                             _employee.job.jobPositionName = data.job.jobPositionName;
                         }
                     }
-                    if ((typeof (data.manager) != 'undefined') && data.manager != null) {
-                        if (typeof (data.manager.employeeId) != 'undefined') {
+                    if (data.manager) {
+                        if (data.manager.employeeId) {
                             _employee.manager.employeeId = data.manager.employeeId;
                         }
-                        if (typeof (data.manager.employeeName) != 'undefined') {
+                        if (data.manager.employeeName) {
                             _employee.manager.employeeName = data.manager.employeeName;
                         }
                     }
-                    if ((typeof (data.coach) != 'undefined') && data.coach != null) {
-                        if (typeof (data.coach.employeeId) != 'undefined') {
+                    if (data.coach) {
+                        if (data.coach.employeeId) {
                             _employee.coach.employeeId = data.coach.employeeId;
                         }
-                        if (typeof (data.coach.employeeName) != 'undefined') {
+                        if (data.coach.employeeName) {
                             _employee.coach.employeeName = data.coach.employeeName;
                         }
                     }
-                    if (typeof (data.nationality) != 'undefined') {
+                    if (data.nationality) {
                         _employee.nationality = data.nationality;
                     }
-                    if (typeof (data.identNo) != 'undefined') {
+                    if (data.identNo) {
                         _employee.identNo = data.identNo;
                     }
-                    if (typeof (data.passportNo) != 'undefined') {
+                    if (data.passportNo) {
                         _employee.passportNo = data.passportNo;
                     }
-                    if (typeof (data.bankAccountNo) != 'undefined') {
+                    if (data.bankAccountNo) {
                         _employee.bankAccountNo = data.bankAccountNo;
                     }
-                    if (typeof (data.otherId) != 'undefined') {
+                    if (data.otherId) {
                         _employee.otherId = data.otherId;
                     }
-                    if ((typeof (data.homeAddress) != 'undefined') && data.homeAddress != null) {
-                        if (typeof (data.homeAddress.street) != 'undefined') {
+                    if (data.homeAddress) {
+                        if (data.homeAddress.street) {
                             _employee.homeAddress.street = data.homeAddress.street;
                         }
-                        if (typeof (data.homeAddress.city) != 'undefined') {
+                        if (data.homeAddress.city) {
                             _employee.homeAddress.city = data.homeAddress.city;
                         }
-                        if (typeof (data.homeAddress.state) != 'undefined') {
+                        if (data.homeAddress.state) {
                             _employee.homeAddress.state = data.homeAddress.state;
                         }
-                        if (typeof (data.homeAddress.zip) != 'undefined') {
+                        if (data.homeAddress.zip) {
                             _employee.homeAddress.zip = data.homeAddress.zip;
                         }
-                        if (typeof (data.homeAddress.country) != 'undefined') {
+                        if (data.homeAddress.country) {
                             _employee.homeAddress.country = data.homeAddress.country;
                         }
                     }
-                    if (typeof (data.dateBirth) != 'undefined') {
+                    if (data.dateBirth) {
                         _employee.dateBirth = data.dateBirth;
                     }
-                    if (typeof (data.nextAction) != 'undefined') {
+                    if (data.nextAction) {
                         _employee.nextAction = data.nextAction;
                     }
-                    if (typeof (data.source) != 'undefined') {
-                        if (typeof (data.source.custommerId) != 'undefined') {
+                    if (data.source) {
+                        if (data.source.custommerId) {
                             _employee.source.id = data.source.id;
                         }
-                        if (typeof (data.source.name) != 'undefined') {
+                        if (data.source.name) {
                             _employee.source.name = data.source.name;
                         }
                     }
-                    if (typeof (data.referredBy) != 'undefined') {
+                    if (data.referredBy) {
                         _employee.referredBy = data.referredBy;
                     }
-                    if (typeof (data.active) != 'undefined') {
+                    if (data.active) {
                         _employee.active = data.active;
                     }
-                    if (typeof (data.workflow) != 'undefined') {
-                        if (typeof (data.workflow.name) != 'undefined') {
+                    if (data.workflow) {
+                        if (data.workflow.name) {
                             _employee.workflow.name = data.workflow.name;
                         }
-                        if (typeof (data.workflow.status) != 'undefined') {
+                        if (data.workflow.status) {
                             _employee.workflow.status = data.workflow.status;
                         }
                     }
-                    if (typeof (data.otherInfo) != 'undefined') {
+                    if (data.otherInfo) {
                         _employee.otherInfo = data.otherInfo;
                     }
-                    if (typeof (data.expectedSalary) != 'undefined') {
+                    if (data.expectedSalary) {
                         _employee.expectedSalary = data.expectedSalary;
                     }
-                    if (typeof (data.proposedSalary) != 'undefined') {
+                    if (data.proposedSalary) {
                         _employee.proposedSalary = data.proposedSalary;
                     }
-                    if (typeof (data.color) != 'undefined') {
+                    if (data.color) {
                         _employee.color = data.color;
                     }
                     ///////////////////////////////////////////////////
-                    _employee.save(function (err, employees) {
+                    _employee.save(function(err, employees) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -280,14 +280,11 @@ var Employee = function (logWriter, mongoose) {
                             } else {
                                 res.send(201, { success: 'A new Employees crate success' });
                             }
-                        }
-                        catch (error) {
+                        } catch(error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
                         }
                     });
-
-                }
-                catch (error) {
+                } catch(error) {
                     console.log(error);
                     logWriter.log("Employees.js create savetoBd " + error);
                     res.send(500, { error: 'Employees.save  error' });

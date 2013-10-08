@@ -8,7 +8,7 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data) == 'undefined') {
+            if (data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
                 res.send(400, { error: 'JobPosition.create Incorrect Incoming Data' });
                 return;
@@ -24,7 +24,7 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
                                 _sourcesofapplicants = new sourcesofapplicants();
                                 _sourcesofapplicants._id = data.name;
                                 _sourcesofapplicants.name = data.name;
-                                _sourcesofapplicants.save(function (err, soa) {
+                                _sourcesofapplicants.save(function (err, result) {
                                     if (err) {
                                         console.log(err);
                                         res.send(500, { error: 'SourcesOfApplicants.save BD error' });
@@ -54,14 +54,14 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        sourcesofapplicants.find({}, function (err, soa) {
+        sourcesofapplicants.find({}, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Sourcesofapplicants.js getSourcesofapplicants sourcesofapplicants.find " + err);
                 response.send(500, { error: "Can't find Sourcesofapplicants" });
             } else {
                 res['data'] = soa;
-                response.send(res);
+                response.send(result);
             }
         });
     };
@@ -69,7 +69,7 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            sourcesofapplicants.update({ _id: _id }, data, function (err, soa) {
+            sourcesofapplicants.update({ _id: _id }, data, function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Sourcesofapplicants.js update sourcesofapplicants.update" + err);
@@ -87,7 +87,7 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
     };
 
     function remove(_id, res) {
-        sourcesofapplicants.remove({ _id: _id }, function (err, soa) {
+        sourcesofapplicants.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Sourcesofapplicants.js remove sourcesofapplicants.remove " + err);

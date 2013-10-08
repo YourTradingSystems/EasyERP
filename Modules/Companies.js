@@ -41,14 +41,14 @@ var Company = function (logWriter, mongoose) {
     var company = mongoose.model('Companies', CompanySchema);
 
     return {
-        create: function (data, res) {
+        create: function(data, res) {
             try {
-                if (typeof (data) == 'undefined') {
+                if (typeof(data) == 'undefined') {
                     logWriter.log('Company.create Incorrect Incoming Data');
                     res.send(400, { error: 'Company.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    company.find({ cname: data.cname }, function (error, doc) {
+                    company.find({ cname: data.cname }, function(error, doc) {
                         if (error) {
                             logWriter.log("Company.js. create Company.find" + error);
                             res.send(500, { error: 'Company.create find error' });
@@ -62,91 +62,92 @@ var Company = function (logWriter, mongoose) {
                         }
                     });
                 }
+
                 function savetoBd(data) {
                     try {
                         _company = new company();
-                        if (typeof (data.isOwnCompany) != 'undefined') {
+                        if (data.isOwnCompany) {
                             _company.isOwnCompany = data.isOwnCompany;
                         }
-                        if (typeof (data.cemail) != 'undefined') {
+                        if (data.cemail) {
                             _company.cemail = data.cemail;
                         }
-                        if (typeof (data.cname) != 'undefined') {
+                        if (data.cname) {
                             _company.cname = data.cname;
                         }
-                        if (typeof (data.cinternalNotes) != 'undefined') {
+                        if (data.cinternalNotes) {
                             _company.cinternalNotes = data.cinternalNotes;
                         }
-                        if (typeof (data.caddress) != 'undefined') {
-                            if (typeof (data.caddress.street1) != 'undefined') {
+                        if (data.caddress) {
+                            if (data.caddress.street1) {
                                 _company.caddress.street1 = data.caddress.street1;
                             }
-                            if (typeof (data.caddress.street2) != 'undefined') {
+                            if (data.caddress.street2) {
                                 _company.caddress.street2 = data.caddress.street2;
                             }
-                            if (typeof (data.caddress.city) != 'undefined') {
+                            if (data.caddress.city) {
                                 _company.caddress.city = data.caddress.city;
                             }
-                            if (typeof (data.caddress.state) != 'undefined') {
+                            if (data.caddress.state) {
                                 _company.caddress.state = data.caddress.state;
                             }
-                            if (typeof (data.caddress.zip) != 'undefined') {
+                            if (data.caddress.zip) {
                                 _company.caddress.zip = data.caddress.zip;
                             }
-                            if (typeof (data.caddress.country) != 'undefined') {
+                            if (data.caddress.country) {
                                 _company.caddress.country = data.caddress.country;
                             }
                         }
-                        if (typeof (data.cwebsite) != 'undefined') {
+                        if (data.cwebsite) {
                             _company.cwebsite = data.cwebsite;
                         }
-                        if (typeof (data.cphones) != 'undefined') {
-                            if (typeof (data.cphones.phone) != 'undefined') {
+                        if (data.cphones) {
+                            if (data.cphones.phone) {
                                 _company.cphones.phone = data.cphones.phone;
                             }
-                            if (typeof (data.cphones.mobile) != 'undefined') {
+                            if (data.cphones.mobile) {
                                 _company.cphones.mobile = data.cphones.mobile;
                             }
-                            if (typeof (data.cphones.fax) != 'undefined') {
+                            if (data.cphones.fax) {
                                 _company.cphones.fax = data.cphones.fax;
                             }
                         }
-                        if (typeof (data.cinternalNotes) != 'undefined') {
+                        if (data.cinternalNotes) {
                             _company.cinternalNotes = data.cinternalNotes;
                         }
-                        if (typeof (data.csalesPurchases) != 'undefined') {
-                            if (typeof (data.csalesPurchases.active) != 'undefined') {
+                        if (data.csalesPurchases) {
+                            if (data.csalesPurchases.active) {
                                 _company.csalesPurchases.active = data.csalesPurchases.active;
                             }
-                            if (typeof (data.csalesPurchases.language) != 'undefined') {
+                            if (data.csalesPurchases.language) {
                                 _company.csalesPurchases.language = data.csalesPurchases.language;
                             }
-                            if (typeof (data.csalesPurchases.isCustomer) != 'undefined') {
+                            if (data.csalesPurchases.isCustomer) {
                                 _company.csalesPurchases.isCustomer = data.csalesPurchases.isCustomer;
                             }
-                            if (typeof (data.csalesPurchases.isSupplier) != 'undefined') {
+                            if (data.csalesPurchases.isSupplier) {
                                 _company.csalesPurchases.isSupplier = data.csalesPurchases.isSupplier;
                             }
-                            if (typeof (data.csalesPurchases.salesPerson) != 'undefined') {
+                            if (data.csalesPurchases.salesPerson) {
                                 _company.csalesPurchases.salesPerson = data.csalesPurchases.salesPerson;
                             }
-                            if (typeof (data.csalesPurchases.salesTeam) != 'undefined') {
+                            if (data.csalesPurchases.salesTeam) {
                                 _company.csalesPurchases.salesTeam = data.csalesPurchases.salesTeam;
                             }
-                            if (typeof (data.csalesPurchases.reference) != 'undefined') {
+                            if (data.csalesPurchases.reference) {
                                 _company.csalesPurchases.reference = data.csalesPurchases.reference;
                             }
-                            if (typeof (data.csalesPurchases.date) != 'undefined') {
+                            if (data.csalesPurchases.date) {
                                 _company.csalesPurchases.date = data.csalesPurchases.date;
                             }
-                            if (typeof (data.csalesPurchases.receiveMessages) != 'undefined') {
+                            if (data.csalesPurchases.receiveMessages) {
                                 _company.csalesPurchases.receiveMessages = data.csalesPurchases.receiveMessages;
                             }
                         }
-                        if (typeof (data.chistory) != 'undefined') {
+                        if (data.chistory) {
                             _company.chistory = data.chistory;
                         }
-                        _company.save(function (err, company) {
+                        _company.save(function(err, result) {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Company.js create savetoBd _company.save" + err);
@@ -155,15 +156,13 @@ var Company = function (logWriter, mongoose) {
                                 res.send(201, { success: 'A new Company crate success' });
                             }
                         });
-                    }
-                    catch (error) {
+                    } catch(error) {
                         console.log(error);
                         logWriter.log("Company.js create savetoBd" + error);
                         res.send(500, { error: 'Company .save Script error' });
                     }
                 }
-            }
-            catch (Exception) {
+            } catch(Exception) {
                 console.log(Exception);
                 logWriter.log("Company.js  " + Exception);
                 res.send(500, { error: 'Company .save Script error' });
