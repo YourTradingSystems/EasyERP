@@ -95,12 +95,12 @@ var Project = function (logWriter, mongoose) {
 
     var returnDuration = function (StartDate, EndDate) {
         var days = 0;
-        if(StartDate && EndDate){
-        var startDate = new Date(StartDate);
-        var endDate = new Date(EndDate); 
-        var tck = endDate - startDate;
-        var realDays = (((tck / 1000) / 60) / 60) / 24;
-        days = realDays.toFixed(1);
+        if (StartDate && EndDate) {
+            var startDate = new Date(StartDate);
+            var endDate = new Date(EndDate);
+            var tck = endDate - startDate;
+            var realDays = (((tck / 1000) / 60) / 60) / 24;
+            days = realDays.toFixed(1);
         }
         return days;
     };
