@@ -7,9 +7,10 @@ define([
     "collections/Workflows/WorkflowsCollection",
     "collections/Priority/TaskPriority",
     "models/TaskModel",
+    "common",
     "custom"
 ],
-    function (CreateTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, TaskModel, Custom) {
+    function (CreateTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, TaskModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -59,20 +60,10 @@ define([
                 var summary = $("#summary").val();
 
                 var idProject = this.$("#projectDd option:selected").val();
-                var projectObj = this.projectsDdCollection.get(idProject);
-                var project = {};
-                if (projectObj) {
-                    project.projectName = projectObj.get("name");
-                    project.pId = idProject;
-                }
-
-                var assignedto = {};
+                var project = common.toObject(idProject, this.projectsDdCollection);
+               
                 var idAssignedTo = this.$("#assignedTo option:selected").val();
-                var unameAssignedTo = this.accountDdCollection.get(idAssignedTo);
-                if (unameAssignedTo) {
-                    assignedto.uname = unameAssignedTo.get('name').first + " " + unameAssignedTo.get('name').last;
-                    assignedto.uid = idAssignedTo;
-                }
+                var unameAssignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
 
                 var deadlineSt = $.trim($("#deadline").val());
                 var deadline = "";
@@ -99,19 +90,11 @@ define([
                 }
 
                 var idCustomer = this.$("#customerDd option:selected").val();
-                var customerObj = this.customersDdCollection.get(idCustomer);
-                var customer = {};
-                if (customerObj) {
-                    customer.name = customerObj.get("name").first + " " + customerObj.get("name").last;
-                    customer.id = idCustomer;
-                    customer.type = customerObj.get("type");
-                }
+                var customer = common.toObject(idCustomer, this.customersDdCollection);
+                
 
                 var idWorkflow = this.$("#workflowDd option:selected").val();
-                var workflow = this.workflowsDdCollection.get(idWorkflow);
-                if (workflow) {
-                    workflow = workflow.toJSON();
-                }
+                var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
 
                 var estimated = $("#estimated").val();
 

@@ -41,8 +41,10 @@ define([
                 }
 
                 var idCustomer = $(this.el).find("#customerDd option:selected").val();
-
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
+                if (!customer) {
+                    console.log(projectModel.defaults.customer);
+                }
 
                 var idManager = $("#managerDd option:selected").val();
                 var projectmanager = common.toObject(idManager, this.accountDdCollection);

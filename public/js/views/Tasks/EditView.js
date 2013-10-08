@@ -6,9 +6,10 @@
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
     "collections/Priority/TaskPriority",
+    "common",
     "custom"
 ],
-    function (EditTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, Custom) {
+    function (EditTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
