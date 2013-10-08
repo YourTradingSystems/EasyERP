@@ -5,8 +5,8 @@ var Profile = function (logWriter, mongoose) {
         profileDescription: { type: String, default: 'No description' },
         profileAccess: [{
             module: {
-                mid: { type: Number, default: '' },
-                mname: { type: String, default: '' }
+                id: { type: Number, default: '' },
+                name: { type: String, default: '' }
             },
             access: { type: [Boolean], default: [false, false, false] }
         }]
@@ -18,7 +18,7 @@ var Profile = function (logWriter, mongoose) {
     function create(data, func) {
         try {
             console.log('createProfile');
-            if (data.profileName) {
+            if (!data.profileName) {
                 logWriter.log('Profile.create Incorrect Incoming Data');
                 res.send(400, { error: 'Profile.create Incorrect Incoming Data' });
                 return;
@@ -55,10 +55,10 @@ var Profile = function (logWriter, mongoose) {
                     if (data.profileAccess) {
                         if (data.profileAccess.module) {
                             if (data.profileAccess.module.mid) {
-                                _profile.profileAccess.module.mid = data.profileAccess.module.mid;
+                                _profile.profileAccess.module.id = data.profileAccess.module.mid;
                             }
                             if (data.profileAccess.mname) {
-                                _profile.profileAccess.module.mname = data.profileAccess.module.mname;
+                                _profile.profileAccess.module.name = data.profileAccess.module.mname;
                             }
                         }
                         if (data.profileAccess.access) {
@@ -91,9 +91,9 @@ var Profile = function (logWriter, mongoose) {
                 }
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Profile.js  create " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Profile.js  create " + exception);
             res.send(500, { error: 'Profile.create find error' });
         }
     };
@@ -101,15 +101,15 @@ var Profile = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        profile.find({}, function (err, profiles) {
-            if (err || profiles.length == 0) {
+        profile.find({}, function (err, result) {
+            if (err || result.length == 0) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Profile.js getProfiles profile.find " + err);
                 }
                 response.send(404, { error: "Can't find Profile" });
             } else {
-                res['data'] = profiles;
+                res['data'] = result;
                 response.send(res);
             }
         });
@@ -118,7 +118,7 @@ var Profile = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            profile.update({ _id: _id }, data, function (err, profilee) {
+            profile.update({ _id: _id }, data, function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Profile.js update profile.update" + err);
@@ -128,15 +128,15 @@ var Profile = function (logWriter, mongoose) {
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Profile.js update " + Exception);
-            res.send(500, { error: Exception });
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Profile.js update " + exception);
+            res.send(500, { error: exception });
         }
     };
 
     function remove(_id, res) {
-        profile.remove({ _id: _id }, function (err, profilee) {
+        profile.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Profile.js remove profile.remove " + err);
@@ -149,9 +149,13 @@ var Profile = function (logWriter, mongoose) {
 
     return {
         ctreate: create,
+        
         get: get,
+        
         update: update,
+        
         remove: remove,
+        
         profile: profile
     };
 

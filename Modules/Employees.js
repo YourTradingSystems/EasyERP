@@ -9,7 +9,7 @@ var Employee = function (logWriter, mongoose) {
             last: { type: String, default: 'User' }
         },
         tags: { type: Array, default: [] },
-        waddress: {
+        workAddress: {
             street: { type: String, default: '' },
             //street2: { type: String, default: '' },
             city: { type: String, default: '' },
@@ -17,8 +17,8 @@ var Employee = function (logWriter, mongoose) {
             zip: { type: String, default: '' },
             country: { type: String, default: '' }
         },
-        wemail: { type: String, default: '' },
-        wphones: {
+        workEmail: { type: String, default: '' },
+        workPhones: {
             mobile: { type: String, default: '' },
             phone: { type: String, default: '' }
         },
@@ -29,20 +29,20 @@ var Employee = function (logWriter, mongoose) {
         },
         visibility: { type: Boolean, default: false },
         department: {
-            departmentId: { type: String, default: '' },
-            departmentName: { type: String, default: '' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
-        job: {
-            jobPositionId: { type: String, default: '' },
-            jobPositionName: { type: String, default: '' }
+        jobPosition: {
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         manager: {
-            employeeId: { type: String, default: '' },
-            employeeName: { type: String, default: '' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         coach: {
-            employeeId: { type: String, default: '' },
-            employeeName: { type: String, default: '' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         nationality: { type: String, default: '' },
         identNo: Number,
@@ -80,7 +80,7 @@ var Employee = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data) == 'undefined') {
+            if (!data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
                 res.send(400, { error: 'JobPosition.create Incorrect Incoming Data' });
                 return;
@@ -100,11 +100,12 @@ var Employee = function (logWriter, mongoose) {
                             res.send(400, { error: 'An Employees with the same Name already exists' });
                         }
                     } else if (doc.length === 0) {
-                        savetoDB(data);
+                        savetoDb(data);
                     }
                 });
             }
-            function savetoDB(data) {
+
+            function savetoDb(data) {
                 try {
                     _employee = new employee();
                     if (data.isEmployee) {
@@ -124,40 +125,40 @@ var Employee = function (logWriter, mongoose) {
                     if (data.tags) {
                         _employee.tags = data.tags;
                     }
-                    if (data.waddress) {
-                        if (data.waddress.street) {
-                            _employee.waddress.street = data.waddress.street;
+                    if (data.workAddress) {
+                        if (data.workAddress.street) {
+                            _employee.workAddress.street = data.workAddress.street;
                         }
-                        if (data.waddress.city) {
-                            _employee.waddress.city = data.waddress.city;
+                        if (data.workAddress.city) {
+                            _employee.workAddress.city = data.workAddress.city;
                         }
-                        if (data.waddress.state) {
-                            _employee.waddress.state = data.waddress.state;
+                        if (data.workAddress.state) {
+                            _employee.workAddress.state = data.workAddress.state;
                         }
-                        if (data.waddress.zip) {
-                            _employee.waddress.zip = data.waddress.zip;
+                        if (data.workAddress.zip) {
+                            _employee.workAddress.zip = data.workAddress.zip;
                         }
-                        if (data.waddress.country) {
-                            _employee.waddress.country = data.waddress.country;
+                        if (data.workAddress.country) {
+                            _employee.workAddress.country = data.workAddress.country;
                         }
                     }
-                    if (data.wemail) {
-                        _employee.wemail = data.wemail;
+                    if (data.workEmail) {
+                        _employee.workEmail = data.workEmail;
                     }
-                    if (data.wphones) {
-                        if (data.wphones.phone) {
-                            _employee.wphones.phone = data.wphones.phone;
+                    if (data.workPhones) {
+                        if (data.workPhones.phone) {
+                            _employee.workPhones.phone = data.workPhones.phone;
                         }
-                        if (data.wphones.mobile) {
-                            _employee.wphones.mobile = data.wphones.mobile;
+                        if (data.workPhones.mobile) {
+                            _employee.workPhones.mobile = data.workPhones.mobile;
                         }
                     }
                     if (data.officeLocation) {
                         _employee.officeLocation = data.officeLocation;
                     }
                     if (data.relatedUser) {
-                        if (data.relatedUser.id) {
-                            _employee.relatedUser.id = data.relatedUser.id;
+                        if (data.relatedUser._id) {
+                            _employee.relatedUser.id = data.relatedUser._id;
                         }
                         if (data.relatedUser.login) {
                             _employee.relatedUser.login = data.relatedUser.login;
@@ -167,35 +168,35 @@ var Employee = function (logWriter, mongoose) {
                         _employee.visibility = data.visibility;
                     }
                     if (data.department) {
-                        if (data.department.departmentId) {
-                            _employee.department.departmentId = data.department.departmentId;
+                        if (data.department._id) {
+                            _employee.department.id = data.department._id;
                         }
-                        if (data.department.departmentName) {
-                            _employee.department.departmentName = data.department.departmentName;
+                        if (data.department.name) {
+                            _employee.department.name = data.department.name;
                         }
                     }
-                    if (data.job) {
-                        if (data.job.jobPositionId) {
-                            _employee.job.jobPositionId = data.job.jobPositionId;
+                    if (data.jobPosition) {
+                        if (data.jobPosition._id) {
+                            _employee.jobPosition.id = data.jobPosition._id;
                         }
-                        if (data.job.jobPositionName) {
-                            _employee.job.jobPositionName = data.job.jobPositionName;
+                        if (data.jobPosition.name) {
+                            _employee.jobPosition.name = data.jobPosition.name;
                         }
                     }
                     if (data.manager) {
-                        if (data.manager.employeeId) {
-                            _employee.manager.employeeId = data.manager.employeeId;
+                        if (data.manager._id) {
+                            _employee.manager.id = data.manager._id;
                         }
-                        if (data.manager.employeeName) {
-                            _employee.manager.employeeName = data.manager.employeeName;
+                        if (data.manager.name) {
+                            _employee.manager.name = data.manager.name;
                         }
                     }
                     if (data.coach) {
-                        if (data.coach.employeeId) {
-                            _employee.coach.employeeId = data.coach.employeeId;
+                        if (data.coach._id) {
+                            _employee.coach.id = data.coach._id;
                         }
-                        if (data.coach.employeeName) {
-                            _employee.coach.employeeName = data.coach.employeeName;
+                        if (data.coach.name) {
+                            _employee.coach.name = data.coach.name;
                         }
                     }
                     if (data.nationality) {
@@ -237,8 +238,8 @@ var Employee = function (logWriter, mongoose) {
                         _employee.nextAction = data.nextAction;
                     }
                     if (data.source) {
-                        if (data.source.custommerId) {
-                            _employee.source.id = data.source.id;
+                        if (data.source._id) {
+                            _employee.source.id = data.source._id;
                         }
                         if (data.source.name) {
                             _employee.source.name = data.source.name;
@@ -271,14 +272,14 @@ var Employee = function (logWriter, mongoose) {
                         _employee.color = data.color;
                     }
                     ///////////////////////////////////////////////////
-                    _employee.save(function(err, employees) {
+                    _employee.save(function(err, result) {
                         try {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Employees.js create savetoBd _employee.save " + err);
                                 res.send(500, { error: 'Employees.save BD error' });
                             } else {
-                                res.send(201, { success: 'A new Employees crate success' });
+                                res.send(201, { success: 'A new Employees create success' });
                             }
                         } catch(error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
@@ -291,9 +292,9 @@ var Employee = function (logWriter, mongoose) {
                 }
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Employees.js  " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Employees.js  " + exception);
             res.send(500, { error: 'Employees.save  error' });
         }
     };//End create 
@@ -304,13 +305,13 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
-        query.exec(function (err, employeess) {
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('Employees.js get Employee.find' + description);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
-                res['data'] = employeess;
+                res['data'] = result;
                 response.send(res);
             }
         });
@@ -322,13 +323,13 @@ var Employee = function (logWriter, mongoose) {
         var query = employee.find();
         query.where('isEmployee', true);
         query.select('_id name');
-        query.exec(function (err, employeess) {
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('Employees.js get Employee.find' + err);
                 response.send(500, { error: "Can't find Employee" });
             } else {
-                res['data'] = employeess;
+                res['data'] = result;
                 response.send(res);
             }
         });
@@ -354,7 +355,7 @@ var Employee = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            employee.update({ _id: _id }, data, function (err, employees) {
+            employee.update({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
@@ -364,20 +365,20 @@ var Employee = function (logWriter, mongoose) {
                         res.send(200, { success: 'Employees updated success' });
                     }
                 }
-                catch (Exception) {
-                    logWriter.log("Employees.js getEmployees employee.find " + Exception);
+                catch (exception) {
+                    logWriter.log("Employees.js getEmployees employee.find " + exception);
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Employees.js update " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Employees.js update " + exception);
             res.send(500, { error: 'Employees updated error' });
         }
     };// end update
 
     function remove(_id, res) {
-        employee.remove({ _id: _id }, function (err, employees) {
+        employee.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Employees.js remove employee.remove " + err);

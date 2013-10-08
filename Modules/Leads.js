@@ -34,9 +34,9 @@ var Leads = function (logWriter, mongoose) {
         func: { type: String, default: '' },
         phones: {
             mobile: { type: String, default: '' },
-            phone: { type: String, default: '' }
+            phone: { type: String, default: '' },
+            fax: { type: String, default: '' }
         },
-        fax: { type: String, default: '' },
         workflow: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -50,7 +50,7 @@ var Leads = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         active: { type: Boolean, default: true },
-        optout: { type: Boolean, default: false },
+        optOut: { type: Boolean, default: false },
         reffered: { type: String, default: '' },
         internalNotes: { type: String, default: '' }
     }, { collection: 'Leads' });
@@ -59,7 +59,7 @@ var Leads = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data) == 'undefined') {
+            if (!data) {
                 logWriter.log('Leads.create Incorrect Incoming Data');
                 res.send(400, { error: 'Leads.create Incorrect Incoming Data' });
                 return;
@@ -76,27 +76,27 @@ var Leads = function (logWriter, mongoose) {
                             res.send(400, { error: 'An Leads with the same Name already exists' });
                         }
                     } else if (doc.length === 0) {
-                        savetoDB(data);
+                        savetoDb(data);
                     }
                 });
             }
-            function savetoDB(data) {
+            function savetoDb(data) {
                 try {
                     _lead = new lead();
                     if (data.name) {
                         _lead.name = data.name;
                     }
                     if (data.company) {
-                        if (data.company.id) {
-                            _lead.company.id = data.company.id;
+                        if (data.company._id) {
+                            _lead.company.id = data.company._id;
                         }
                         if (data.company.name) {
                             _lead.company.name = data.company.name;
                         }
                     }
                     if (data.customer) {
-                        if (data.customer.id) {
-                            _lead.customer.id = data.customer.id;
+                        if (data.customer._id) {
+                            _lead.customer.id = data.customer._id;
                         }
                         if (data.customer.name) {
                             _lead.customer.name = data.customer.name;
@@ -120,16 +120,16 @@ var Leads = function (logWriter, mongoose) {
                         }
                     }
                     if (data.salesPerson) {
-                        if (data.salesPerson.id) {
-                            _lead.salesPerson.id = data.salesPerson.id;
+                        if (data.salesPerson._id) {
+                            _lead.salesPerson.id = data.salesPerson._id;
                         }
                         if (data.salesPerson.name) {
                             _lead.salesPerson.name = data.salesPerson.name;
                         }
                     }
                     if (data.salesTeam) {
-                        if (data.salesTeam.id) {
-                            _lead.salesTeam.id = data.salesTeam.id;
+                        if (data.salesTeam._id) {
+                            _lead.salesTeam.id = data.salesTeam._id;
                         }
                         if (data.salesTeam.name) {
                             _lead.salesTeam.name = data.salesTeam.name;
@@ -156,29 +156,29 @@ var Leads = function (logWriter, mongoose) {
                         if (data.phones.mobile) {
                             _lead.phones.mobile = data.phones.mobile;
                         }
-                    }
-                    if (data.fax) {
-                        _lead.fax = data.fax;
+                        if (data.fax) {
+                            _lead.phones.fax = data.phones.fax;
+                        }
                     }
                     if (data.workflow) {
-                        if (data.workflow.id) {
-                            _lead.workflow.id = data.workflow.id;
+                        if (data.workflow._id) {
+                            _lead.workflow.id = data.workflow._id;
                         }
                         if (data.workflow.name) {
                             _lead.workflow.name = data.workflow.name;
                         }
                     }
                     if (data.priority) {
-                        if (data.priority.id) {
-                            _lead.priority.id = data.priority.id;
+                        if (data.priority._id) {
+                            _lead.priority.id = data.priority._id;
                         }
                         if (data.priority.name) {
                             _lead.priority.name = data.priority.name;
                         }
                     }
                     if (data.categories) {
-                        if (data.categories.id) {
-                            _lead.categories.id = data.categories.id;
+                        if (data.categories._id) {
+                            _lead.categories.id = data.categories._id;
                         }
                         if (data.categories.name) {
                             _lead.categories.name = data.categories.name;
@@ -187,8 +187,8 @@ var Leads = function (logWriter, mongoose) {
                     if (data.active) {
                         _lead.active = data.active;
                     }
-                    if (data.optout) {
-                        _lead.optout = data.optout;
+                    if (data.optOut) {
+                        _lead.optOut = data.optOut;
                     }
                     if (data.reffered) {
                         _lead.reffered = data.reffered;
@@ -213,9 +213,9 @@ var Leads = function (logWriter, mongoose) {
                 }
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Leads.js  " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Leads.js  " + exception);
             res.send(500, { error: 'lead.save  error' });
         }
     };
@@ -223,13 +223,13 @@ var Leads = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        lead.find({}, function (err, _lead) {
+        lead.find({}, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('Leads.js get lead.find' + err);
                 response.send(500, { error: "Can't find Leads" });
             } else {
-                res['data'] = _lead;
+                res['data'] = result;
                 console.log(res);
                 response.send(res);
             }
@@ -249,9 +249,9 @@ var Leads = function (logWriter, mongoose) {
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Leads.js update " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Leads.js update " + exception);
             res.send(500, { error: 'Leads updated error' });
         }
     };// end update

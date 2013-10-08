@@ -7,7 +7,7 @@ var Degrees = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (data.name) {
+            if (!data.name) {
                 logWriter.log('Degree.create Incorrect Incoming Data');
                 res.send(400, { error: 'Degree.create Incorrect Incoming Data' });
                 return;
@@ -29,13 +29,13 @@ var Degrees = function (logWriter, mongoose) {
                                         res.send(500, { error: 'Degree.save BD error' });
                                         logWriter.log('Degree.js create degree.find _degree.save ' + err);
                                     } else {
-                                        res.send(201, { success: 'A new Degree crate success' });
+                                        res.send(201, { success: 'A new Degree create success' });
                                     }
                                 });
                             }
-                            catch (Exception) {
-                                console.log(Exception);
-                                logWriter.log("Degree.js  create " + Exception);
+                            catch (exception) {
+                                console.log(exception);
+                                logWriter.log("Degree.js  create " + exception);
                                 res.send(500, { error: 'Degree.save  error' });
                             }
                         }
@@ -43,9 +43,9 @@ var Degrees = function (logWriter, mongoose) {
                 });
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Degree.js  create " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Degree.js  create " + exception);
             res.send(500, { error: 'Degree.save  error' });
         }
     };

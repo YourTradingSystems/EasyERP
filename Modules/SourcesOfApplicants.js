@@ -8,16 +8,16 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (data) {
+            if (!data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
                 res.send(400, { error: 'JobPosition.create Incorrect Incoming Data' });
                 return;
             } else {
-                sourcesofapplicants.findById(data.name, function (err, soa) {
+                sourcesofapplicants.findById(data.name, function (err, result) {
                     if (err) {
                         logWriter.log('SourcesOfApplicants.js create workflow.find ' + err);
                     } else {
-                        if (soa) {
+                        if (result) {
                             res.send(400, { error: 'An SourcesOfApplicants with the same Name already exists' });
                         } else {
                             try {
@@ -79,9 +79,9 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("SourcesofApplicants.js update " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("SourcesofApplicants.js update " + exception);
             res.send(500, { error: 'SourcesofApplicants updated error' });
         }
     };

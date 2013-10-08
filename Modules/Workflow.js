@@ -45,8 +45,8 @@ var Workflow = function (logWriter, mongoose) {
                     });
                 }
             }
-            catch (Exception) {
-                logWriter.log("Workflow.js  create " + Exception);
+            catch (exception) {
+                logWriter.log("Workflow.js  create " + exception);
             }
         },
 
@@ -55,21 +55,21 @@ var Workflow = function (logWriter, mongoose) {
                 var res = {};
                 res['data'] = [];
                 if (data) {
-                    workflow.findById(data.id, function (err, workflows) {
+                    workflow.findById(data.id, function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
                             response.send(500, { error: "Can't find Workflow" });
                         } else {
-                            res['data'] = workflows;
+                            res['data'] = result;
                             response.send(res);
                         }
                     });
                 }
             }
-            catch (Exception) {
-                console.log(Exception);
-                logWriter.log("Workflow.js  create " + Exception);
+            catch (exception) {
+                console.log(exception);
+                logWriter.log("Workflow.js  create " + exception);
                 response.send(500, { error: "Can't find Workflow" });
             }
         }

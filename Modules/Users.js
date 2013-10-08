@@ -6,9 +6,9 @@ var Users = function (logWriter, mongoose) {
     var crypto = require('crypto');
 
     var userSchema = mongoose.Schema({
-        ulogin: { type: String, default: 'demoUser' },
-        uemail: { type: String, default: '' },
-        upass: { type: String, default: '' },
+        login: { type: String, default: 'demoUser' },
+        email: { type: String, default: '' },
+        pass: { type: String, default: '' },
         profile: {
             company: {
                 id: { type: String, default: '' },
@@ -29,12 +29,12 @@ var Users = function (logWriter, mongoose) {
             try {
                 var shaSum = crypto.createHash('sha256');
                 var res = {};
-                if (data) {
+                if (!data) {
                     logWriter.log('Person.create Incorrect Incoming Data');
                     res.send(400, { error: 'User.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    User.find({ ulogin: data.ulogin }, function (error, doc) {
+                    User.find({ login: data.login }, function (error, doc) {
                         try {
                             if (error) {
                                 console.log(error);
@@ -65,34 +65,34 @@ var Users = function (logWriter, mongoose) {
                         if (data.isUser) {
                             _user.isUser = data.isUser;
                         }
-                        if  (data.profile) {
+                        if (data.profile) {
                             if (data.profile.company) {
-                                if (data.profile.company.id) {
-                                    _user.profile.company.id = data.profile.company.id;
+                                if (data.profile.company._id) {
+                                    _user.profile.company.id = data.profile.company._id;
                                 }
-                                if(data.profile.company.name) {
+                                if (data.profile.company.name) {
                                     _user.profile.company.name = data.profile.company.name;
                                 }
                             }
                             if (data.profile.profile) {
-                                if (data.profile.profile.id) {
-                                    _user.profile.profile.id = data.profile.profile.id;
+                                if (data.profile.profile._id) {
+                                    _user.profile.profile.id = data.profile.profile._id;
                                 }
                                 if (data.profile.profile.name) {
                                     _user.profile.profile.name = data.profile.profile.name;
                                 }
                             }
                         }
-                        if (data.ulogin) {
-                            _user.ulogin = data.ulogin;
+                        if (data.login) {
+                            _user.login = data.login;
                         }
-                        if (data.upass) {
-                            shaSum.update(data.upass);
-                            _user.upass = shaSum.digest('hex');
+                        if (data.pass) {
+                            shaSum.update(data.pass);
+                            _user.pass = shaSum.digest('hex');
                         }
 
-                        if (data.uemail)  {
-                            _user.uemail = data.uemail;
+                        if (data.email) {
+                            _user.email = data.email;
                         }
 
                         _user.save(function (err, result) {
@@ -113,9 +113,9 @@ var Users = function (logWriter, mongoose) {
                     }
                 }
             }
-            catch (Exception) {
-                console.log(Exception);
-                logWriter.log("User.js  " + Exception);
+            catch (exception) {
+                console.log(exception);
+                logWriter.log("User.js  " + exception);
                 res.send(500, { error: 'User.create save error' });
             }
         },//End create
@@ -123,14 +123,14 @@ var Users = function (logWriter, mongoose) {
         login: function (req, data, func) {
             try {
                 if (data != null) {
-                    if (data.ulogin || data.uemail) {
-                        User.find({ $or: [{ ulogin: data.ulogin }, { uemail: data.uemail }] }, function (err, _users) {
+                    if (data.login || data.email) {
+                        User.find({ $or: [{ ulogin: data.login }, { uemail: data.email }] }, function (err, _users) {
                             try {
                                 if (_users && _users.length !== 0) {
                                     //Провірка по username
                                     var shaSum = crypto.createHash('sha256');
-                                    shaSum.update(data.upass);
-                                    if (((_users[0].ulogin == data.ulogin) || (_users[0].uemail == data.ulogin)) && (_users[0].upass == shaSum.digest('hex'))) {
+                                    shaSum.pdate(data.pass);
+                                    if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {
                                         req.session.loggedIn = true;
                                         req.session.uId = _users[0]._id;
                                         func(200);
@@ -158,8 +158,8 @@ var Users = function (logWriter, mongoose) {
                     func(400);
                 }//End If data != null
             }
-            catch (Exception) {
-                logWriter.log("Users.js  login" + Exception);
+            catch (exception) {
+                logWriter.log("Users.js  login" + exception);
                 func(500);
             }
         },//End login
@@ -194,9 +194,9 @@ var Users = function (logWriter, mongoose) {
                     }
                 });
             }
-            catch (Exception) {
-                console.log(Exception);
-                logWriter.log("Profile.js update " + Exception);
+            catch (exception) {
+                console.log(exception);
+                logWriter.log("Profile.js update " + exception);
                 res.send(500, { error: 'User.update BD error' });
             }
         },
