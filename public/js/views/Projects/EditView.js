@@ -71,11 +71,24 @@ define([
             		}
 
             		var idCustomer = $(this.el).find("#customerDd option:selected").val();
-
-            		var customer = common.toObject(idCustomer, this.customersDdCollection);
+            		var _customer = common.toObject(idCustomer, this.customersDdCollection);
+            		var customer = {};
+            		if (_customer) {
+            		    customer.id = _customer._id;
+            		    customer.name = _customer.name.first + ' ' + _customer.name.last;
+            		} else {
+            		    customer = currentModel.defaults.customer;
+            		}
 
             		var idManager = $("#managerDd option:selected").val();
-            		var projectmanager = common.toObject(idManager, this.accountDdCollection);
+            		var _projectmanager = common.toObject(idManager, this.accountDdCollection);
+            		var projectmanager = {};
+            		if (_projectmanager) {
+            		    projectmanager.id = _projectmanager._id;
+            		    projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
+            		} else {
+            		    projectmanager = currentModel.defaults.projectmanager;
+            		}
 
             		var idWorkflow = $("#workflowDd option:selected").val();
             		var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
