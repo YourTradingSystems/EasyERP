@@ -20,9 +20,9 @@ var config = {
     port: db.port,
     reapInterval: 500000
     //mongoose_connection: mongoose.connections[0]
-}
+};
 
-var allowCrossDomain = function (req, res, next) {
+var allowCrossDomain = function(req, res, next) {
     //var allowedHost = [
     //    'http://backbonetutorials.com',
     //    'http://localhost'
@@ -45,7 +45,7 @@ var allowCrossDomain = function (req, res, next) {
     //} else {
     //    res.send(401);
     //}
-}
+};
 app.configure(function () {
     app.set('view engine', 'jade');
     app.use(express.static(__dirname + '/public'));
