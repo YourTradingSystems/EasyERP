@@ -63,7 +63,7 @@ define([
                 var project = common.toObject(idProject, this.projectsDdCollection);
                
                 var idAssignedTo = this.$("#assignedTo option:selected").val();
-                var unameAssignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
+                var assignedto = common.toObject(idAssignedTo, this.accountDdCollection);
 
                 var deadlineSt = $.trim($("#deadline").val());
                 var deadline = "";

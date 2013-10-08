@@ -90,6 +90,9 @@ define([
 
                     var idWorkflow = $("#workflowDd option:selected").val();
                     var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+                    if (!workflow) {
+                        workflow = currentModel.defaults.workflow;
+                    }
 
                     var $userNodes = $("#usereditDd option:selected"), users = [];
                     $userNodes.each(function (key, val) {

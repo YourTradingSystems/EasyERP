@@ -11,8 +11,8 @@
 <div class="form-holder">
     <form class="form" data-id="<%=_id%>">
         <h2><%=summary%></h2>
-        <div class="half-block left">
-            <div class="half-block left">
+        <!--<div class="half-block left">
+            <div class="half-block left">-->
                 <p>
                     <label>Project</label>
                 </p>
@@ -28,15 +28,15 @@
                 <p>
                     <label>Tags</label>
                 </p>
-            </div>
-            <div class="half-block left">
+            <!--</div>
+            <div class="half-block left">-->
                 <p><a id="<%=project.pId%>" href="#"><%=project.projectName%></a></p>
                 <p><%=assignedto.uname%></p>
                 <p><%=workflow.name%></p>
                 <p><%=deadline%></p>
                 <p><%=tags%></p>
-            </div>
-        </div>
+          <!--  </div>
+        </div>-->
         <div id="tabs">
             <div>
                 <ul id="tabList">
@@ -74,7 +74,7 @@
                 </p>
                 <p>
                     <label for="estimated">Estimated</label>
-                    <span><%=extraainfo.estimated%></span>
+                    <span><%=extrainfo.estimated%></span>
                 </p>
                 <h2>Gantt View</h2>
                 <p>

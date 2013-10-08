@@ -31,7 +31,6 @@
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
                 
                 this.render();
-
             },
 
             events: {
@@ -108,24 +107,24 @@
                     }
 
                     var idProject = this.$("#projectDd option:selected").val();
-                    var project = this.projectsDdCollection.get(idProject);
-                    if (!project) {
-                        project = null;
+                    var _project = this.projectsDdCollection.get(idProject);
+                    var project = {};
+                    if (_project) {
+                        project.id = _project._id;
+                        project.name = _project.projectname;
                     } else {
-                        project = project.toJSON();
+                        project = currentModel.defaults.project;
                     }
 
                     var assignedto = {};
                     var idAssignedTo = this.$("#assignedTo option:selected").val();
-                    var unameAssignedTo = this.accountsDdCollection.get(idAssignedTo);
-                    if (!unameAssignedTo) {
-                        assignedto = null;
+                    var _assignedto = this.accountsDdCollection.get(idAssignedTo);
+                    if (_assignedto) {
+                        assignedto.uname = _assignedto.name.first + " " + _assignedto.name.last;
+                        assignedto.uid = _assignedto._id;
+                    } else {
+                        assignedto = currentModel.defaults.assignedto;
                     }
-                    else {
-                        assignedto.uname = unameAssignedTo.get('name').first + " " + unameAssignedTo.get('name').last;
-                        assignedto.uid = idAssignedTo;
-                    }
-
 
                     var deadlineSt = $.trim($("#deadline").val());
                     var deadline = "";
@@ -170,20 +169,19 @@
                     }
 
                     var idCustomer = this.$("#customerDd option:selected").val();
-                    var customer = this.customersDdCollection.get(idCustomer);
-                    console.log(idCustomer);
-                    if (!customer) {
-                        customer = null;
+                    var _customer = this.customersDdCollection.get(idCustomer);
+                    var customer = {};
+                    if (_customer) {
+                        customer.id = _customer._id;
+                        customer.name = _customer.name.first+" "+_customer.name.last;
                     } else {
-                        customer = customer.toJSON();
+                        customer = currentModel.defaults.customer;
                     }
 
                     var idWorkflow = this.$("#workflowDd option:selected").val();
                     var workflow = this.workflowsDdCollection.get(idWorkflow);
                     if (!workflow) {
-                        workflow = null;
-                    } else {
-                        workflow = workflow.toJSON();
+                        workflow = currentModel.defaults.workflow;
                     }
 
                     var estimated = $("#estimated").val();
