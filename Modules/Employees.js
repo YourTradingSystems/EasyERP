@@ -80,7 +80,7 @@ var Employee = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (data) {
+            if (!data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
                 res.send(400, { error: 'JobPosition.create Incorrect Incoming Data' });
                 return;

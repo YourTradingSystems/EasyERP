@@ -2,9 +2,10 @@ define([
     "text!templates/Persons/CreateTemplate.html",
     "collections/Companies/CompaniesCollection",
     "collections/Persons/PersonsCollection",
-    "models/PersonModel"
+    "models/PersonModel",
+    "common"
 ],
-    function (CreateTemplate, CompaniesCollection, PersonsCollection, PersonModel) {
+    function (CreateTemplate, CompaniesCollection, PersonsCollection, PersonModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -26,15 +27,15 @@ define([
                 var self = this;
                 var mid = 39;
 
+                var idCompany = $(this.el).find('#companiesDd option:selected').val();
+                var company = common.toObject(idCompany, this.companiesCollection);
+
                 var data = {
                     name: {
                         first: $('#firstName').val(),
                         last: $('#lastName').val()
                     },
-                    company: {
-                        id: $('#companiesDd option:selected').val(),
-                        name: $('#companiesDd option:selected').text()
-                    },
+                    company: company,
                     address: {
                         street1: $('#addressInput').val(),
                         street2: $('#additional').val(),
