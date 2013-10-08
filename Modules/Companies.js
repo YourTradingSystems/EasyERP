@@ -3,24 +3,24 @@ var Company = function (logWriter, mongoose) {
     var CompanySchema = mongoose.Schema({
         image: { type: String, default: '' },
         isOwnCompany: { type: Boolean, default: false },
-        cemail: { type: String, default: '' },
-        cname: { type: String, default: 'emptyCompany' },
-        caddress: {
+        email: { type: String, default: '' },
+        name: { type: String, default: 'emptyCompany' },
+        address: {
             street1: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
             country: { type: String, default: '' }
         },
-        cwebsite: { type: String, default: '' },
+        website: { type: String, default: '' },
         contacts: { type: Array, default: [] },
-        cphones: {
+        phones: {
             phone: { type: String, default: '' },
             mobile: { type: String, default: '' },
             fax: { type: String, default: '' },
         },
-        cinternalNotes: { type: String, default: '' },
-        csalesPurchases: {
+        internalNotes: { type: String, default: '' },
+        salesPurchases: {
             isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
             salesPerson: { type: String, default: '' },
@@ -32,10 +32,10 @@ var Company = function (logWriter, mongoose) {
             receiveMessages: { type: Number, default: 0 }
         },
         social: {
-            FB: { type: String, default: '' },
-            LI: { type: String, default: '' }
+            fb: { type: String, default: '' },
+            li: { type: String, default: '' }
         },
-        chistory: { type: Array, default: [] }
+        history: { type: Array, default: [] }
     }, { collection: 'Companies' });
 
     var company = mongoose.model('Companies', CompanySchema);
@@ -43,21 +43,21 @@ var Company = function (logWriter, mongoose) {
     return {
         create: function(data, res) {
             try {
-                if (typeof(data) == 'undefined') {
+                if (!data) {
                     logWriter.log('Company.create Incorrect Incoming Data');
                     res.send(400, { error: 'Company.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    company.find({ cname: data.cname }, function(error, doc) {
+                    company.find({ cname: data.name }, function(error, result) {
                         if (error) {
                             logWriter.log("Company.js. create Company.find" + error);
                             res.send(500, { error: 'Company.create find error' });
                         }
-                        if (doc.length > 0) {
-                            if (doc[0].ulogin === data.ulogin) {
+                        if (result) {
+                            if (doc[0].name === data.name) {
                                 res.send(400, { error: 'An company with the same Name already exists' });
                             }
-                        } else if (doc.length === 0) {
+                        } else if (result.length === 0) {
                             savetoBd(data);
                         }
                     });
@@ -69,83 +69,83 @@ var Company = function (logWriter, mongoose) {
                         if (data.isOwnCompany) {
                             _company.isOwnCompany = data.isOwnCompany;
                         }
-                        if (data.cemail) {
-                            _company.cemail = data.cemail;
+                        if (data.email) {
+                            _company.email = data.email;
                         }
                         if (data.cname) {
-                            _company.cname = data.cname;
+                            _company.name = data.name;
                         }
                         if (data.cinternalNotes) {
-                            _company.cinternalNotes = data.cinternalNotes;
+                            _company.internalNotes = data.internalNotes;
                         }
-                        if (data.caddress) {
-                            if (data.caddress.street1) {
-                                _company.caddress.street1 = data.caddress.street1;
+                        if (data.address) {
+                            if (data.address.street1) {
+                                _company.address.street1 = data.address.street1;
                             }
-                            if (data.caddress.street2) {
-                                _company.caddress.street2 = data.caddress.street2;
+                            if (data.address.street2) {
+                                _company.address.street2 = data.address.street2;
                             }
-                            if (data.caddress.city) {
-                                _company.caddress.city = data.caddress.city;
+                            if (data.address.city) {
+                                _company.address.city = data.address.city;
                             }
                             if (data.caddress.state) {
-                                _company.caddress.state = data.caddress.state;
+                                _company.address.state = data.address.state;
                             }
-                            if (data.caddress.zip) {
-                                _company.caddress.zip = data.caddress.zip;
+                            if (data.address.zip) {
+                                _company.address.zip = data.address.zip;
                             }
-                            if (data.caddress.country) {
-                                _company.caddress.country = data.caddress.country;
-                            }
-                        }
-                        if (data.cwebsite) {
-                            _company.cwebsite = data.cwebsite;
-                        }
-                        if (data.cphones) {
-                            if (data.cphones.phone) {
-                                _company.cphones.phone = data.cphones.phone;
-                            }
-                            if (data.cphones.mobile) {
-                                _company.cphones.mobile = data.cphones.mobile;
-                            }
-                            if (data.cphones.fax) {
-                                _company.cphones.fax = data.cphones.fax;
+                            if (data.address.country) {
+                                _company.address.country = data.address.country;
                             }
                         }
-                        if (data.cinternalNotes) {
-                            _company.cinternalNotes = data.cinternalNotes;
+                        if (data.website) {
+                            _company.website = data.website;
                         }
-                        if (data.csalesPurchases) {
-                            if (data.csalesPurchases.active) {
-                                _company.csalesPurchases.active = data.csalesPurchases.active;
+                        if (data.phones) {
+                            if (data.phones.phone) {
+                                _company.phones.phone = data.phones.phone;
                             }
-                            if (data.csalesPurchases.language) {
-                                _company.csalesPurchases.language = data.csalesPurchases.language;
+                            if (data.phones.mobile) {
+                                _company.phones.mobile = data.phones.mobile;
                             }
-                            if (data.csalesPurchases.isCustomer) {
-                                _company.csalesPurchases.isCustomer = data.csalesPurchases.isCustomer;
-                            }
-                            if (data.csalesPurchases.isSupplier) {
-                                _company.csalesPurchases.isSupplier = data.csalesPurchases.isSupplier;
-                            }
-                            if (data.csalesPurchases.salesPerson) {
-                                _company.csalesPurchases.salesPerson = data.csalesPurchases.salesPerson;
-                            }
-                            if (data.csalesPurchases.salesTeam) {
-                                _company.csalesPurchases.salesTeam = data.csalesPurchases.salesTeam;
-                            }
-                            if (data.csalesPurchases.reference) {
-                                _company.csalesPurchases.reference = data.csalesPurchases.reference;
-                            }
-                            if (data.csalesPurchases.date) {
-                                _company.csalesPurchases.date = data.csalesPurchases.date;
-                            }
-                            if (data.csalesPurchases.receiveMessages) {
-                                _company.csalesPurchases.receiveMessages = data.csalesPurchases.receiveMessages;
+                            if (data.phones.fax) {
+                                _company.phones.fax = data.phones.fax;
                             }
                         }
-                        if (data.chistory) {
-                            _company.chistory = data.chistory;
+                        if (data.internalNotes) {
+                            _company.internalNotes = data.internalNotes;
+                        }
+                        if (data.salesPurchases) {
+                            if (data.salesPurchases.active) {
+                                _company.salesPurchases.active = data.salesPurchases.active;
+                            }
+                            if (data.salesPurchases.language) {
+                                _company.salesPurchases.language = data.salesPurchases.language;
+                            }
+                            if (data.salesPurchases.isCustomer) {
+                                _company.salesPurchases.isCustomer = data.salesPurchases.isCustomer;
+                            }
+                            if (data.salesPurchases.isSupplier) {
+                                _company.salesPurchases.isSupplier = data.salesPurchases.isSupplier;
+                            }
+                            if (data.salesPurchases.salesPerson) {
+                                _company.salesPurchases.salesPerson = data.salesPurchases.salesPerson;
+                            }
+                            if (data.salesPurchases.salesTeam) {
+                                _company.salesPurchases.salesTeam = data.salesPurchases.salesTeam;
+                            }
+                            if (data.salesPurchases.reference) {
+                                _company.salesPurchases.reference = data.salesPurchases.reference;
+                            }
+                            if (data.salesPurchases.date) {
+                                _company.salesPurchases.date = data.salesPurchases.date;
+                            }
+                            if (data.salesPurchases.receiveMessages) {
+                                _company.salesPurchases.receiveMessages = data.salesPurchases.receiveMessages;
+                            }
+                        }
+                        if (data.history) {
+                            _company.history = data.history;
                         }
                         _company.save(function(err, result) {
                             if (err) {
@@ -153,7 +153,7 @@ var Company = function (logWriter, mongoose) {
                                 logWriter.log("Company.js create savetoBd _company.save" + err);
                                 res.send(500, { error: 'Company .save BD error' });
                             } else {
-                                res.send(201, { success: 'A new Company crate success' });
+                                res.send(201, { success: 'A new Company create success' });
                             }
                         });
                     } catch(error) {

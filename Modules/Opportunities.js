@@ -13,7 +13,9 @@ var Opportunities = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         email: { type: String, default: '' },
-        phone: { type: String, default: '' },
+        phones: {
+            phone: { type: String, default: '' }
+        },
         salesPerson: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -29,7 +31,8 @@ var Opportunities = function (logWriter, mongoose) {
         },
         expectedClosing: { type: Date, default: null },
         priority: {
-            priority: { type: String, default: 'Normal' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         categories: {
             id: { type: String, default: '' },
@@ -45,7 +48,7 @@ var Opportunities = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (typeof (data) == 'undefined') {
+            if (!data) {
                 logWriter.log('Opprtunities.create Incorrect Incoming Data');
                 res.send(400, { error: 'Opprtunities.create Incorrect Incoming Data' });
                 return;
@@ -62,11 +65,11 @@ var Opportunities = function (logWriter, mongoose) {
                             res.send(400, { error: 'An Opprtunities with the same Name already exists' });
                         }
                     } else if (doc.length === 0) {
-                        savetoDB(data);
+                        savetoDb(data);
                     }
                 });
             }
-            function savetoDB(data) {
+            function savetoDb(data) {
                 try {
                     _opportunitie = new opportunitie();
                     if (data.name) {
@@ -87,8 +90,8 @@ var Opportunities = function (logWriter, mongoose) {
                         _opportunitie.creationDate = data.creationDate;
                     }
                     if (data.customer) {
-                        if (data.customer.id) {
-                            _opportunitie.customer.id = data.customer.id;
+                        if (data.customer._id) {
+                            _opportunitie.customer.id = data.customer._id;
                         }
                         if (data.customer.name) {
                             _opportunitie.customer.name = data.customer.name;
@@ -97,20 +100,22 @@ var Opportunities = function (logWriter, mongoose) {
                     if (data.email) {
                         _opportunitie.email = data.email;
                     }
-                    if (data.phone) {
-                        _opportunitie.phone = data.phone;
+                    if (data.phones) {
+                        if (data.phones.phone) {
+                            _opportunitie.phones.phone = data.phones.phone;
+                        }
                     }
                     if (data.salesPerson) {
-                        if (data.salesPerson.id) {
-                            _opportunitie.salesPerson.id = data.salesPerson.id;
+                        if (data.salesPerson._id) {
+                            _opportunitie.salesPerson.id = data.salesPerson._id;
                         }
                         if (data.customer.name) {
                             _opportunitie.salesPerson.name = data.salesPerson.name;
                         }
                     }
                     if (data.salesTeam) {
-                        if (data.salesTeam.id) {
-                            _opportunitie.salesTeam.id = data.salesTeam.id;
+                        if (data.salesTeam._id) {
+                            _opportunitie.salesTeam.id = data.salesTeam._id;
                         }
                         if (data.salesTeam.name) {
                             _opportunitie.salesTeam.name = data.salesTeam.name;
@@ -131,13 +136,16 @@ var Opportunities = function (logWriter, mongoose) {
                         _opportunitie.expectedClosing = data.expectedClosing;
                     }
                     if (data.priority) {
-                        if (data.priority.priority) {
-                            _opportunitie.priority.priority = data.priority.priority;
+                        if (data.priority._id) {
+                            _opportunitie.priority.id = data.priority._id;
+                        }
+                        if (data.priority.name) {
+                            _opportunitie.priority.name = data.priority.name;
                         }
                     }
                     if (data.categories) {
-                        if (data.categories.id) {
-                            _opportunitie.categories.id = data.categories.id;
+                        if (data.categories._id) {
+                            _opportunitie.categories.id = data.categories._id;
                         }
                         if (data.categories.name) {
                             _opportunitie.categories.name = data.categories.name;
@@ -157,7 +165,7 @@ var Opportunities = function (logWriter, mongoose) {
                             logWriter.log("Opportunities.js create savetoDB _opportunitie.save " + err);
                             res.send(500, { error: 'Opportunities.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new Opportunities crate success' });
+                            res.send(201, { success: 'A new Opportunities create success' });
                         }
                     });
                 }
@@ -168,9 +176,9 @@ var Opportunities = function (logWriter, mongoose) {
                 }
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Opportunities.js  " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Opportunities.js  " + exception);
             res.send(500, { error: 'opportunitie.save  error' });
         }
     };
@@ -203,9 +211,9 @@ var Opportunities = function (logWriter, mongoose) {
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Opportunities.js update " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Opportunities.js update " + exception);
             res.send(500, { error: 'Opportunities updated error' });
         }
     };// end update
