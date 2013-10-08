@@ -13,8 +13,8 @@ var Project = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         projectmanager: {
-            id: { type: String, default: '00000' },
-            name: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         teams: { users: { type: Array, default: [] }, Teams: { type: Array, default: [] } },
         info: {

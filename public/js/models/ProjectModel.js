@@ -15,8 +15,8 @@ define(function () {
                 name: ''
             },
             projectmanager: {
-                uid: '',
-                uname: ''
+                id: '',
+                name: ''
             },
             teams: {
                 users: [],
