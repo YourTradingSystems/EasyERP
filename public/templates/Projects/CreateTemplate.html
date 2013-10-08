@@ -47,7 +47,7 @@
                             <select id="workflowDd">
                                 <option selected="selected" value="0">Select...</option>
                                 <% workflowsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('name') %> (<%= option.get('status') %>)</option>
+                                <option value="<%= option.get('_id') %>" <%= (option.get('name') == 'New') ? 'selected' : ''%>><%= option.get('name') %> (<%= option.get('status') %>)</option>
                                 <% }); %>
                             </select>
                         </p>

@@ -16,7 +16,7 @@
                 <select id="managerDd">
                     <option selected="selected" value="0">Select...</option>
                     <% accountsDdCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.projectmanager.uid) ? 'selected' : ''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.projectmanager.id) ? 'selected' : ''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
                     <% }); %>
                 </select>
             </p>
