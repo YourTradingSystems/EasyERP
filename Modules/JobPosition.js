@@ -54,16 +54,16 @@ var JobPosition = function (logWriter, mongoose) {
                         _job.expectedRecruitment = data.expectedRecruitment;
                     }
                     if (data.interviewForm) {
-                        if (data.interviewForm.id) {
-                            _job.interviewForm.id = data.interviewForm.id;
+                        if (data.interviewForm._id) {
+                            _job.interviewForm.id = data.interviewForm._id;
                         }
                         if (data.interviewForm.name) {
                             _job.interviewForm.name = data.interviewForm.name;
                         }
                     }
                     if (data.department) {
-                        if (data.department.id) {
-                            _job.department.id = data.department.id;
+                        if (data.department._id) {
+                            _job.department.id = data.department._id;
                         }
                         if (data.department.name) {
                             _job.department.name = data.department.name;
@@ -81,7 +81,7 @@ var JobPosition = function (logWriter, mongoose) {
                             logWriter.log("JobPosition.js create savetoDB _job.save " + err);
                             res.send(500, { error: 'JobPosition.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new JobPosition crate success' });
+                            res.send(201, { success: 'A new JobPosition create success' });
                         }
                     });
                 }
@@ -92,9 +92,9 @@ var JobPosition = function (logWriter, mongoose) {
                 }
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("JobPosition.js  " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("JobPosition.js  " + exception);
             res.send(500, { error: 'JobPosition.save  error' });
         }
     };//End create
@@ -127,9 +127,9 @@ var JobPosition = function (logWriter, mongoose) {
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("JobPosition.js update " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("JobPosition.js update " + exception);
             res.send(500, { error: 'JobPosition updated error' });
         }
     };// end update

@@ -43,8 +43,8 @@ var Persons = function (logWriter, mongoose) {
             receiveMessages: { type: Number, default: 0 }
         },
         relatedUser: {
-            uid: { type: String, default: '' },
-            ulogin: { type: String, default: '' }
+            id: { type: String, default: '' },
+            login: { type: String, default: '' }
         },
         social: {
             FB: { type: String, default: '' },
@@ -177,11 +177,11 @@ var Persons = function (logWriter, mongoose) {
                             }
                         }
                         if (data.relatedUser) {
-                            if (data.relatedUser.uid) {
-                                _person.relatedUser.uid = data.relatedUser.uid;
+                            if (data.relatedUser._id) {
+                                _person.relatedUser.id = data.relatedUser.id;
                             }
-                            if (data.relatedUser.ulogin) {
-                                _person.relatedUser.ulogin = data.relatedUser.ulogin;
+                            if (data.relatedUser.login) {
+                                _person.relatedUser.login = data.relatedUser.login;
                             }
                         }
                         if (data.history) {
@@ -215,7 +215,7 @@ var Persons = function (logWriter, mongoose) {
         getForDd: function (response) {
             var res = {};
             res['data'] = [];
-            Person.find({ 'relatedUser.uid': { $ne: '' } }, { _id: 1, name: 1 }, function (err, persons) {
+            Person.find({ 'relatedUser.id': { $ne: '' } }, { _id: 1, name: 1 }, function (err, persons) {
                 if (err) {
                     response.send(500, { error: "Can't find Person" });
                     console.log(err);

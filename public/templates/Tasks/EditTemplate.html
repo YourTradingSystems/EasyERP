@@ -24,7 +24,7 @@
 	        		 	<select id="projectDd">
 	                    	<option value="0">Select...</option>
 	                   		<% projectsDdCollection.each(function(option){ %>
-	                    	<option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.project.pId) ? 'selected="selected"' : ''%>><%= option.get('projectname') %></option> 
+	                    	<option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.project.id) ? 'selected="selected"' : ''%>><%= option.get('name') %></option> 
 	                   		 <% }); %>
                		 	</select>
                		 </p>

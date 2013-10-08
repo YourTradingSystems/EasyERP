@@ -3,14 +3,13 @@ var Department = function (logWriter, mongoose) {
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
         parentDepartment: {
-            departmentId: { type: String, default: '' },
-            departmentName: { type: String, default: '' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         departmentManager: {
-            uid: { type: String, default: '' },
-            uname: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '' },
+            name: { type: String, default: 'emptyUser' }
         }
-
     }, { collection: 'Department' });
 
     var department = mongoose.model('Department', DepartmentSchema);
@@ -33,32 +32,32 @@ var Department = function (logWriter, mongoose) {
                     }
                     else {
                         if (doc.length === 0) {
-                            saveDepartmentToDB(data);
+                            saveToDb(data);
                         }
                     }
                 });
             }
-            function saveDepartmentToDB(data) {
+            function saveToDb(data) {
                 try {
                     _department = new department();
                     if (data.departmentName) {
                         _department.departmentName = data.departmentName;
                     }
                     if (data.parentDepartment) {
-                        if (data.parentDepartment.departmentId) {
-                            _department.parentDepartment.departmentId = data.parentDepartment.departmentId;
+                        if (data.parentDepartment._id) {
+                            _department.parentDepartment.id = data.parentDepartment._id;
                         }
-                        if (data.parentDepartment.departmentName) {
-                            _department.parentDepartment.departmentName = data.parentDepartment.departmentName;
+                        if (data.parentDepartment.name) {
+                            _department.parentDepartment.name = data.parentDepartment.name;
                         }
                     }
 
-                    if (data.departmentManager){
-                        if(data.departmentManager.uid) {
-                            _department.departmentManager.uid = data.departmentManager.uid;
+                    if (data.departmentManager) {
+                        if (data.departmentManager._id) {
+                            _department.departmentManager.id = data.departmentManager._id;
                         }
-                        if (data.departmentManager.uname) {
-                            _department.departmentManager.uname = data.departmentManager.uname;
+                        if (data.departmentManager.name) {
+                            _department.departmentManager.name = data.departmentManager.name;
                         }
                     }
                     _department.save(function (err, result) {
@@ -67,7 +66,7 @@ var Department = function (logWriter, mongoose) {
                             logWriter.log("Department.js saveDepartmentToDb _department.save" + err);
                             res.send(500, { error: 'Department.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new Department crate success' });
+                            res.send(201, { success: 'A new Department create success' });
                         }
                     });
                 }
@@ -78,9 +77,9 @@ var Department = function (logWriter, mongoose) {
                 }
             }
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Department.js  create " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Department.js  create " + exception);
             res.send(500, { error: 'Department.save  error' });
         }
     };
@@ -91,7 +90,7 @@ var Department = function (logWriter, mongoose) {
         res['result']['status'] = '2';
         res['result']['description'] = 'An error was find';
         res['data'] = [];
-        department.find({}, { _id: 1, departmentName: 1 }, function(err, result) {
+        department.find({}, { _id: 1, departmentName: 1 }, function (err, result) {
             try {
                 if (err) {
                     console.log(err);
@@ -104,7 +103,7 @@ var Department = function (logWriter, mongoose) {
                     res['data'] = result;
                     func(res);
                 }
-            } catch(Exception) {
+            } catch (Exception) {
                 logWriter.log("Department.js getDepartmentsForDd try Department.find " + Exception);
             }
         });
@@ -138,9 +137,9 @@ var Department = function (logWriter, mongoose) {
                 }
             });
         }
-        catch (Exception) {
-            console.log(Exception);
-            logWriter.log("Department.js update " + Exception);
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Department.js update " + exception);
             res.send(500, { error: 'Department updated error' });
         }
     };

@@ -114,7 +114,7 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
             $.each($("input:checked"), function (index, checkbox) {
                 var project = self.collection.where({ id: checkbox.value })[0];
 
-                /*project.set("projectname", 'testEDIT');
+                /*project.set("projectName", 'testEDIT');
         		
         		project.save({},{
         			headers: {

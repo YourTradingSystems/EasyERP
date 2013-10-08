@@ -256,7 +256,7 @@ app.put('/Projects/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data);
 });
 
-app.delete('/Projec ts/:_id', function (req, res) {
+app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;

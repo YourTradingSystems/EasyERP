@@ -43,8 +43,8 @@ define([
                     var objDepartmentManager = this.accountDdCollection.get(managerId);
                     var departmentManager = {};
                     if (objDepartmentManager) {
-                        departmentManager.uname = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
-                        departmentManager.uid = managerId;
+                        departmentManager.name = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
+                        departmentManager.id = managerId;
                     }
 
                     currentModel.set({

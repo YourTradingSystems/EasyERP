@@ -55,7 +55,7 @@
                             <select id="usereditDd" size="3" multiple>
                                 <option selected="selected" value="0">No one...</option>
                                 <% accountDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('uname') %></option>
+                                <option value="<%= option.get('_id') %>"><%= option.get('name').first + ' ' + option.get('name').last%></option>
                                 <% }); %>
                             </select>
                         </p>

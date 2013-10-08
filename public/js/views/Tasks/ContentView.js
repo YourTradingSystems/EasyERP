@@ -76,7 +76,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             }
             else {
                 _.each(this.collection.models, function (item) {
-                    if (item.get("project").pId == projectId) models.push(item)
+                    if (item.get("project").id == projectId) models.push(item)
                 }, this);
             }
             switch (viewType) {

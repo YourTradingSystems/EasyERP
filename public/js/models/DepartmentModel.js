@@ -9,8 +9,8 @@
                 departmentName: null
             },
             departmentManager: {
-                uid: null,
-                uname: ''
+                id: null,
+                name: ''
             }
         },
 

@@ -98,7 +98,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
         	    console.log(self.collection.findWhere({ id: checkbox.value }));
         	    var companies = self.collection.get(checkbox.value);
         		
-        		/*project.set("projectname", 'testEDIT');
+        		/*project.set("projectName", 'testEDIT');
         		
         		project.save({},{
         			headers: {

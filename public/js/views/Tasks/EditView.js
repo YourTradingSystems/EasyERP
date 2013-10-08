@@ -111,19 +111,19 @@
                     var project = {};
                     if (_project) {
                         project.id = _project._id;
-                        project.name = _project.projectname;
+                        project.name = _project.projectName;
                     } else {
                         project = currentModel.defaults.project;
                     }
 
-                    var assignedto = {};
+                    var assignedTo = {};
                     var idAssignedTo = this.$("#assignedTo option:selected").val();
-                    var _assignedto = this.accountsDdCollection.get(idAssignedTo);
-                    if (_assignedto) {
-                        assignedto.uname = _assignedto.name.first + " " + _assignedto.name.last;
-                        assignedto.uid = _assignedto._id;
+                    var _assignedTo = this.accountsDdCollection.get(idAssignedTo);
+                    if (_assignedTo) {
+                        assignedTo.name = _assignedTo.name.first + " " + _assignedTo.name.last;
+                        assignedTo.id = _assignedTo._id;
                     } else {
-                        assignedto = currentModel.defaults.assignedto;
+                        assignedTo = currentModel.defaults.assignedTo;
                     }
 
                     var deadlineSt = $.trim($("#deadline").val());
@@ -200,11 +200,11 @@
 
                     currentModel.set({
                         summary: summary,
-                        assignedto: assignedto,
+                        assignedTo: assignedTo,
                         workflow: workflow,
                         project: {
-                            pId: idProject,
-                            projectName: project.projectname
+                            id: idProject,
+                            name: project.name
                         },
                         tags: tags,
                         deadline: deadline,

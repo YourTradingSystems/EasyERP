@@ -7,7 +7,7 @@ var Degrees = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (data.name) {
+            if (!data.name) {
                 logWriter.log('Degree.create Incorrect Incoming Data');
                 res.send(400, { error: 'Degree.create Incorrect Incoming Data' });
                 return;

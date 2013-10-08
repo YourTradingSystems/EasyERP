@@ -178,7 +178,7 @@ var Company = function (logWriter, mongoose) {
                     'description': 'No user was finde with this Login'
                 };
 
-                if (uid != null) {
+                if (id != null) {
                     company.findById(id, function (err, _company) {
                         try {
                             console.log(_company);

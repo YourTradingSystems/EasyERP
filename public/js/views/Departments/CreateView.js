@@ -47,8 +47,8 @@ define([
                 var objDepartmentManager = common.toObject(managerId, this.accountDdCollection);
                 var departmentManager = {};
                 if (objDepartmentManager !== "{}") {
-                    departmentManager.uname = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
-                    departmentManager.uid = managerId;
+                    departmentManager.name = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
+                    departmentManager.id = managerId;
                 }
 
                 departmentModel.save({
