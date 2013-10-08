@@ -60,14 +60,12 @@ define([
                 var itemIndex = Custom.getCurrentII() - 1;
 
                 if (itemIndex != -1) {
+
                     var currentModel = this.collection.models[itemIndex];
 
                     var mid = 39;
 
-                    var projectName = $("#projectName").val();
-                    if ($.trim(projectName) == "") {
-                        projectName = "New Project";
-                    }
+                    var projectname = $("#projectName").val();
 
                     var idCustomer = $(this.el).find("#customerDd option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersDdCollection);

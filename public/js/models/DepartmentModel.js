@@ -5,8 +5,8 @@
         defaults: {
             departmentName: 'emptyDepartment',
             parentDepartment: {
-                departmentId: null,
-                departmentName: null
+                id: null,
+                name: null
             },
             departmentManager: {
                 id: null,

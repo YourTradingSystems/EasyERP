@@ -36,20 +36,10 @@ define([
                 var departmentName = $.trim($("#departmentName").val());
 
                 var departmentId = this.$("#parentDepartment option:selected").val();
-                var objParentDepartment = common.toObject(departmentId, this.departmentsCollection);
-                var parentDepartment = {};
-                if (objParentDepartment !== "{}") {
-                    parentDepartment.departmentName = objParentDepartment.get('departmentName');
-                    parentDepartment.departmentId = departmentId;
-                }
+                var parentDepartment = common.toObject(departmentId, this.departmentsCollection);
 
                 var managerId = this.$("#departmentManager option:selected").val();
-                var objDepartmentManager = common.toObject(managerId, this.accountDdCollection);
-                var departmentManager = {};
-                if (objDepartmentManager !== "{}") {
-                    departmentManager.name = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
-                    departmentManager.id = managerId;
-                }
+                var departmentManager = common.toObject(managerId, this.accountDdCollection);
 
                 departmentModel.save({
                     departmentName: departmentName,
