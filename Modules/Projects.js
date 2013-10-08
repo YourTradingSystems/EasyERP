@@ -13,8 +13,8 @@ var Project = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         projectmanager: {
-            uid: { type: String, default: '00000' },
-            uname: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '00000' },
+            name: { type: String, default: 'emptyUser' }
         },
         teams: { users: { type: Array, default: [] }, Teams: { type: Array, default: [] } },
         info: {
@@ -28,6 +28,7 @@ var Project = function (logWriter, mongoose) {
             name: { type: String, default: 'New' },
             status: { type: String, default: 'New' }
         },
+        color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
@@ -41,8 +42,8 @@ var Project = function (logWriter, mongoose) {
             projectName: String
         },
         assignedto: {
-            uid: { type: String, default: '00000' },
-            uname: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '00000' },
+            name: { type: String, default: 'emptyUser' }
         },
         deadline: { type: Date, default: null },
         tags: [String],
@@ -93,12 +94,14 @@ var Project = function (logWriter, mongoose) {
     };
 
     var returnDuration = function (StartDate, EndDate) {
+        var days = 0;
+        if(StartDate && EndDate){
         var startDate = new Date(StartDate);
-        var endDate = new Date(EndDate);
-        var tck = 0;
-        tck = endDate - startDate;
+        var endDate = new Date(EndDate); 
+        var tck = endDate - startDate;
         var realDays = (((tck / 1000) / 60) / 60) / 24;
-        var days = realDays.toFixed(1);
+        days = realDays.toFixed(1);
+        }
         return days;
     };
 
@@ -153,8 +156,7 @@ var Project = function (logWriter, mongoose) {
                     //     { 'info.StartDate': { $gt: task.extrainfo.StartDate } }])
                     .exec(function (err, _project) {
                         if (_project) {
-                            if ((typeof (_project.info.StartDate) == 'undefined' || _project.info.StartDate == null) &&
-                                (typeof (_project.info.EndDate) == 'undefined' || _project.info.EndDate == null)) {
+                            if ( _project.info.StartDat && _project.info.EndDate) {
                                 project.update(
                                     {
                                         _id: _project._id
@@ -263,12 +265,11 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
-    var projectFormatDate = function (_projects, count, bool) {
+    var projectFormatDate = function(_projects, count, bool) {
         try {
             if (bool) {
                 if (_projects.length > count) {
                     var startday = _projects[count].info.StartDate.getDate();
-                    ;
                     var startmonth = _project[count].info.StartDate.getMonth() + 1;
                     var startyear = _project[count].info.StartDate.getFullYear();
                     var startdate = startday + "/" + startmonth + "/" + startyear;
@@ -283,7 +284,6 @@ var Project = function (logWriter, mongoose) {
                     console.log("StartDate: " + startdate + " EndDate: " + enddate);
                     console.log('================================================');
                     count++;
-
                     projectFormatDate(_projects, count, true);
                 } else {
                     projectFormatDate(_projects, count, false);
@@ -291,7 +291,7 @@ var Project = function (logWriter, mongoose) {
             } else {
                 return _projects;
             }
-        } catch (Exeption) {
+        } catch(exeption) {
 
         }
     };
@@ -302,18 +302,16 @@ var Project = function (logWriter, mongoose) {
             if (bool) {
                 if (_tasks.length > count) {
                     var startday = _tasks[count].extrainfo.StartDate.getDate();
-                    ;
                     var startmonth = _tasks[count].extrainfo.StartDate.getMonth() + 1;
                     var startyear = _tasks[count].extrainfo.StartDate.getFullYear();
                     var startdate = startday + "/" + startmonth + "/" + startyear;
                     _tasks[count].info.StartDate = startdate;
                     var endday = _tasks[count].extrainfo.EndDate.getDate();
-                    ;
                     var endmounth = _tasks[count].extrainfo.EndDate.getMounth() + 1;
                     var endyear = _tasks[count].extrainfo.EndDate.getFullYear();
                     var enddate = endday + "/" + endmounth + "/" + endyear;
                     _tasks[count].extrainfo.EndDate = enddate;
-                    console.log('=======Tasks Date Was Formated=================');
+                    console.log('========Tasks Date Was Formated=================');
                     console.log("StartDate: " + startdate + " EndDate: " + enddate);
                     console.log('================================================');
                     count++;
@@ -324,13 +322,14 @@ var Project = function (logWriter, mongoose) {
             } else {
                 return _tasks;
             }
-        } catch (Exeption) {
+        } catch (exeption) {
 
         }
     };
 
     function create(data, res) {
         try {
+            console.log(data);
             if (typeof (data.projectname) == 'undefined') {
                 logWriter.log('Project.create Incorrect Incoming Data');
                 res.send(400, { error: 'Project.create Incorrect Incoming Data' });
@@ -352,46 +351,60 @@ var Project = function (logWriter, mongoose) {
             function saveProjectToBd(data) {
                 try {
                     _project = new project();
-                    if ((typeof (data.projectname) != 'undefined') && (data.projectname != null)) {
+                    if (data.projectname) {
                         _project.projectname = data.projectname;
                     }
-                    if ((typeof (data.task) != 'undefined') && (data.task != null)) {
+                    if (data.task) {
                         _project.task = data.task;
                     }
-                    if ((typeof (data.privacy) != 'undefined') && (data.privacy != null)) {
+                    if (data.privacy) {
                         _project.privacy = data.privacy;
                     }
-                    if ((typeof (data.teams) != 'undefined') && (data.teams != null)) {
+                    if (data.teams) {
                         _project.teams = data.teams;
                     }
-                    if ((typeof (data.info) != 'undefined') && (data.info != null)) {
-                        if ((typeof (data.info.StartDate) != 'undefined') && data.info.StartDate != null) {
+                    if (data.info) {
+                        if (data.info.StartDate) {
                             _project.info.StartDate = data.info.StartDate;
                         }
-                        if ((typeof (data.info.EndDate) != 'undefined') && data.info.EndDate != null) {
+                        if (data.info.EndDate) {
                             _project.info.EndDate = data.info.EndDate;
                         }
-                        if (typeof (data.info.sequence) != 'undefined') {
+                        if (data.info.sequenc) {
                             _project.info.sequence = data.info.sequence;
                         }
-                        if (typeof (data.info.parent) != 'undefined') {
+                        if (data.info.parent) {
                             _project.info.parent = data.info.parent;
                         }
 
                     }
-                    if ((typeof (data.workflow) != 'undefined') && (data.workflow != null)) {
-                        if (typeof (data.workflow.name) != 'undefined') {
+                    if (data.workflow) {
+                        if (data.workflow.name) {
                             _project.workflow.name = data.workflow.name;
                         }
-                        if (typeof (data.workflow.status) != 'undefined') {
+                        if (data.workflow.status) {
                             _project.workflow.status = data.workflow.status;
                         }
                     }
-                    if ((typeof (data.customer) != 'undefined') && (data.customer != null)) {
-                        _project.customer = data.customer;
+                    if (data.customer) {
+                        if (data.customer._id) {
+                            _project.customer.id = data.customer._id;
+                        }
+                        if (data.customer._id) {
+                            _project.customer.id = data.customer._id;
+                        }
                     }
-                    if ((typeof (data.projectmanager) != 'undefined') && (data.projectmanager != null)) {
-                        _project.projectmanager = data.projectmanager;
+                    if (data.projectmanager) {
+                        if (data.projectmanager._id) {
+                            _project.projectmanager.id = data.projectmanager._id;
+                        }
+                        if (data.projectmanager.name) {
+                            _project.projectmanager.name = (data.projectmanager.name.first) 
+                                ? ((data.projectmanager.name.last) 
+                                    ? data.projectmanager.name.first + ' ' + data.projectmanager.name.last
+                                    : data.projectmanager.name.first) 
+                                : '';
+                        }
                     }
                     _project.save(function (err, projectt) {
                         if (err) {
@@ -455,6 +468,9 @@ var Project = function (logWriter, mongoose) {
                                 console.log(err);
                                 logWriter.log("Project.js getProjects findETasksById tasks.find " + err);
                                 response.send(500, { error: "Can't find Projects" });
+                            } else if (taskss.length == 0) {
+                                res['data'] = _projects;
+                                response.send(res);
                             } else {
                                 _projects[count].task.tasks = taskss;
                                 var _resultProgress = returnProgress(taskss);
@@ -486,6 +502,8 @@ var Project = function (logWriter, mongoose) {
 
     function update(_id, data, res) {
         try {
+            delete data._id;
+            console.log(data);
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
@@ -561,72 +579,71 @@ var Project = function (logWriter, mongoose) {
                 try {
                     _task = new tasks();
                     _task.summary = data.summary;
-                    if (typeof (data.project) != 'undefined') {
-                        if (typeof (data.project.pId) != 'undefined') {
+                    if (data.project) {
+                        if (data.project.pId) {
                             _task.project.pId = data.project.pId;
                         }
-                        if (typeof (data.project.projectName) != 'undefined') {
+                        if (data.project.projectName) {
                             _task.project.projectName = data.project.projectName;
                         }
                     }
-                    if (typeof (data.assignedto) != 'undefined') {
-                        if (typeof (data.assignedto.uid) != 'undefined') {
+                    if (data.assignedto) {
+                        if (data.assignedto.uid) {
                             _task.assignedto.uid = data.assignedto.uid;
                         }
-                        if (typeof (data.assignedto.uname) != 'undefined') {
+                        if (data.assignedto.uname) {
                             _task.assignedto.uname = data.assignedto.uname;
                         }
                     }
-                    if (typeof (data.deadline) != 'undefined') {
+                    if (data.deadline) {
                         _task.deadline = data.deadline;
                     }
-                    if (typeof (data.tags) != 'undefined') {
+                    if(data.tags) {
                         _task.tags = data.tags;
                     }
-                    if (typeof (data.description) != 'undefined') {
+                    if(data.description) {
                         _task.description = data.description;
                     }
-                    if (typeof (data.extrainfo) != 'undefined') {
-                        if (typeof (data.extrainfo.priority) != 'undefined') {
+                    if  (data.extrainfo) {
+                        if(data.extrainfo.priority)  {
                             _task.extrainfo.priority = data.extrainfo.priority;
                         }
-                        if (typeof (data.extrainfo.sequence) != 'undefined') {
+                        if (data.extrainfo.sequence) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
                         }
-                        if (typeof (data.extrainfo.customer) != 'undefined') {
-                            if (typeof (data.extrainfo.customer.id) != 'undefined') {
+                        if (data.extrainfo.customer) {
+                            if(data.extrainfo.customer.id)  {
                                 _task.extrainfo.customer.id = data.extrainfo.customer.id;
                             }
-                            if (typeof (data.extrainfo.customer.name) != 'undefined') {
+                            if(data.extrainfo.customer.name) {
                                 _task.extrainfo.customer.name = data.extrainfo.customer.name;
                             }
                         }
-                        if ((typeof (data.extrainfo.StartDate) != 'undefined') && data.extrainfo.StartDate != null) {
+                        if(data.extrainfo.StartDate) {
                             _task.extrainfo.StartDate = data.extrainfo.StartDate;
                         }
-                        if ((typeof (data.extrainfo.EndDate) != 'undefined') && data.extrainfo.EndDate != null) {
+                        if (data.extrainfo.EndDate) {
                             _task.extrainfo.EndDate = data.extrainfo.EndDate;
                         }
-                        if ((typeof (data.extrainfo.StartDate) != 'undefined') && (typeof (data.extrainfo.EndDate) != 'undefined')) {
+                        if (data.extrainfo.StartDate) {
                             _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
                         }
                     }
-                    if (typeof (data.workflow) != 'undefined') {
-                        if (typeof (data.workflow.name) != 'undefined') {
+                    if (data.workflow)  {
+                        if (data.workflow.name)  {
                             _task.workflow.name = data.workflow.name;
                         }
-                        if (typeof (data.workflow.status) != 'undefined') {
+                        if (data.workflow.status) {
                             _task.workflow.status = data.workflow.status;
                         }
                     }
-                    if (typeof (data.estimated) != 'undefined') {
+                    if  (data.estimated) {
                         _task.estimated = data.estimated;
                     }
-                    if (typeof (data.loged) != 'undefined') {
+                    if(data.loged) {
                         _task.loged = data.loged;
                     }
-                    if ((typeof (data.estimated) != 'undefined') &&
-                        (typeof (data.loged) != 'undefined')) {
+                    if (data.estimated) {
                         _task.remaining = data.estimated - data.loged;
                         if (_task.remaining != 0) {
                             _task.progress = Math.round((_task.loged / _task.remaining) * 100);
