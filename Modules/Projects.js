@@ -580,7 +580,7 @@ var Project = function (logWriter, mongoose) {
                     _task = new tasks();
                     _task.summary = data.summary;
                     if (data.project) {
-                        if (data.project.pId) {
+                        if (data.project._Id) {
                             _task.project.pId = data.project.pId;
                         }
                         if (data.project.projectName) {
