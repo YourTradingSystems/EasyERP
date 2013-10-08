@@ -13,8 +13,8 @@ var Project = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         projectmanager: {
-            uid: { type: String, default: '00000' },
-            uname: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '00000' },
+            name: { type: String, default: 'emptyUser' }
         },
         teams: { users: { type: Array, default: [] }, Teams: { type: Array, default: [] } },
         info: {
@@ -42,8 +42,8 @@ var Project = function (logWriter, mongoose) {
             projectName: String
         },
         assignedto: {
-            uid: { type: String, default: '00000' },
-            uname: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '00000' },
+            name: { type: String, default: 'emptyUser' }
         },
         deadline: { type: Date, default: null },
         tags: [String],
@@ -332,6 +332,7 @@ var Project = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
+            console.log(data);
             if (typeof (data.projectname) == 'undefined') {
                 logWriter.log('Project.create Incorrect Incoming Data');
                 res.send(400, { error: 'Project.create Incorrect Incoming Data' });
@@ -391,8 +392,17 @@ var Project = function (logWriter, mongoose) {
                     if ((typeof (data.customer) != 'undefined') && (data.customer != null)) {
                         _project.customer = data.customer;
                     }
-                    if ((typeof (data.projectmanager) != 'undefined') && (data.projectmanager != null)) {
-                        _project.projectmanager = data.projectmanager;
+                    if (data.projectmanager) {
+                        if (data.projectmanager._id) {
+                            _project.projectmanager.id = data.projectmanager._id;
+                        }
+                        if (data.projectmanager.name) {
+                            _project.projectmanager.name = (data.projectmanager.name.first) 
+                                ? ((data.projectmanager.name.last) 
+                                    ? data.projectmanager.name.first + ' ' + data.projectmanager.name.last
+                                    : data.projectmanager.name.first) 
+                                : '';
+                        }
                     }
                     _project.save(function (err, projectt) {
                         if (err) {

@@ -36,7 +36,11 @@ var Module = function (logWriter, mongoose, users, profile) {
             var query = _module.find({ 'users.user': uId });
             //query.sort({ sequence: 1 });
             query.select({
-                _id: 1, mname: 1, parrent: 1, link: 1
+                _id: 1,
+                mname: 1,
+                parrent: 1,
+                link: 1,
+                href: 1
             });
             query.exec(function (err, moduless) {
                 try {
