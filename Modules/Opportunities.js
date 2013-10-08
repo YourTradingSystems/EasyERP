@@ -69,89 +69,89 @@ var Opportunities = function (logWriter, mongoose) {
             function savetoDB(data) {
                 try {
                     _opportunitie = new opportunitie();
-                    if ((typeof (data.name) != 'undefined') && (data.name != null)) {
+                    if (data.name) {
                         _opportunitie.name = data.name;
                     }
-                    if ((typeof (data.expectedRevenue) != 'undefined') && (data.expectedRevenue != null)) {
-                        if (typeof (data.expectedRevenue.value) != 'undefined') {
+                    if (data.expectedRevenue) {
+                        if (data.expectedRevenue.value) {
                             _opportunitie.expectedRevenue.value = data.expectedRevenue.value;
                         }
-                        if (typeof (data.expectedRevenue.progress) != 'undefined') {
+                        if (data.expectedRevenue.progress) {
                             _opportunitie.expectedRevenue.progress = data.expectedRevenue.progress;
                         }
-                        if (typeof (data.expectedRevenue.currency) != 'undefined') {
+                        if (data.expectedRevenue.currency) {
                             _opportunitie.expectedRevenue.currency = data.expectedRevenue.currency;
                         }
                     }
-                    if ((typeof (data.creationDate) != 'undefined') && (data.creationDate != null)) {
+                    if (data.creationDate) {
                         _opportunitie.creationDate = data.creationDate;
                     }
-                    if ((typeof (data.customer) != 'undefined') && (data.customer != null)) {
-                        if (typeof (data.customer.id) != 'undefined') {
+                    if (data.customer) {
+                        if (data.customer.id) {
                             _opportunitie.customer.id = data.customer.id;
                         }
-                        if (typeof (data.customer.name) != 'undefined') {
+                        if (data.customer.name) {
                             _opportunitie.customer.name = data.customer.name;
                         }
                     }
-                    if (typeof (data.email) != 'undefined') {
+                    if (data.email) {
                         _opportunitie.email = data.email;
                     }
-                    if (typeof (data.phone) != 'undefined') {
+                    if (data.phone) {
                         _opportunitie.phone = data.phone;
                     }
-                    if ((typeof (data.salesPerson) != 'undefined') && (data.salesPerson != null)) {
-                        if (typeof (data.salesPerson.id) != 'undefined') {
+                    if (data.salesPerson) {
+                        if (data.salesPerson.id) {
                             _opportunitie.salesPerson.id = data.salesPerson.id;
                         }
-                        if (typeof (data.customer.name) != 'undefined') {
+                        if (data.customer.name) {
                             _opportunitie.salesPerson.name = data.salesPerson.name;
                         }
                     }
-                    if ((typeof (data.salesTeam) != 'undefined') && (data.salesTeam != null)) {
-                        if (typeof (data.salesTeam.id) != 'undefined') {
+                    if (data.salesTeam) {
+                        if (data.salesTeam.id) {
                             _opportunitie.salesTeam.id = data.salesTeam.id;
                         }
-                        if (typeof (data.salesTeam.name) != 'undefined') {
+                        if (data.salesTeam.name) {
                             _opportunitie.salesTeam.name = data.salesTeam.name;
                         }
                     }
-                    if (typeof (data.internalNotes) != 'undefined') {
+                    if (data.internalNotes) {
                         _opportunitie.internalNotes = data.internalNotes;
                     }
-                    if ((typeof (data.nextAction) != 'undefined') && (data.nextAction != null)) {
-                        if (typeof (data.nextAction.desc) != 'undefined') {
+                    if (data.nextAction) {
+                        if (data.nextAction.desc) {
                             _opportunitie.nextAction.desc = data.nextAction.desc;
                         }
-                        if (typeof (data.nextAction.date) != 'undefined') {
+                        if (data.nextAction.date) {
                             _opportunitie.nextAction.date = data.nextAction.date;
                         }
                     }
-                    if (typeof (data.expectedClosing) != 'undefined') {
+                    if (data.expectedClosing) {
                         _opportunitie.expectedClosing = data.expectedClosing;
                     }
-                    if ((typeof (data.priority) != 'undefined') && (data.priority != null)) {
-                        if (typeof (data.priority.priority) != 'undefined') {
+                    if (data.priority) {
+                        if (data.priority.priority) {
                             _opportunitie.priority.priority = data.priority.priority;
                         }
                     }
-                    if ((typeof (data.categories) != 'undefined') && (data.categories != null)) {
-                        if (typeof (data.categories.id) != 'undefined') {
+                    if (data.categories) {
+                        if (data.categories.id) {
                             _opportunitie.categories.id = data.categories.id;
                         }
-                        if (typeof (data.categories.name) != 'undefined') {
+                        if (data.categories.name) {
                             _opportunitie.categories.name = data.categories.name;
                         }
                     }
-                    if ((typeof (data.workflow) != 'undefined') && (data.workflow != null)) {
-                        if (typeof (data.workflow.name) != 'undefined') {
+                    if (data.workflow) {
+                        if (data.workflow.name) {
                             _opportunitie.workflow.name = data.workflow.name;
                         }
-                        if (typeof (data.workflow.status) != 'undefined') {
+                        if (data.workflow.status) {
                             _opportunitie.workflow.status = data.workflow.status;
                         }
                     }
-                    _opportunitie.save(function (err, opportun) {
+                    _opportunitie.save(function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Opportunities.js create savetoDB _opportunitie.save " + err);
@@ -178,13 +178,13 @@ var Opportunities = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        opportunitie.find({}, function (err, Opportunitie) {
+        opportunitie.find({}, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('Opportunities.js get job.find' + err);
                 response.send(500, { error: "Can't find Opportunities" });
             } else {
-                res['data'] = Opportunitie;
+                res['data'] = result;
                 response.send(res);
             }
         });

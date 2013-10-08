@@ -40,8 +40,10 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
             "click .foldUnfold": "openDropDown",
             "click .fold": "foldUnfoldColumn",
             "click .breadcrumb a, #refuse": "changeWorkflow",
-            "click #hire": "isEmployee"
+            "click #hire": "isEmployee",
+            "click #top-bar-deleteBtn": "deleteForm"
         },
+
 
         render: function () {
             var that = this;

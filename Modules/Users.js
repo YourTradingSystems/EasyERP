@@ -29,7 +29,7 @@ var Users = function (logWriter, mongoose) {
             try {
                 var shaSum = crypto.createHash('sha256');
                 var res = {};
-                if (typeof (data) == 'undefined') {
+                if (data) {
                     logWriter.log('Person.create Incorrect Incoming Data');
                     res.send(400, { error: 'User.create Incorrect Incoming Data' });
                     return;
@@ -62,40 +62,40 @@ var Users = function (logWriter, mongoose) {
                 function savetoBd(data) {
                     try {
                         _user = new User();
-                        if (typeof (data.isUser) != 'undefined') {
+                        if (data.isUser) {
                             _user.isUser = data.isUser;
                         }
-                        if ((typeof (data.profile) != 'undefined') && data.profile != null) {
-                            if ((typeof (data.profile.company) != 'undefined') && data.profile.company != null) {
-                                if (typeof (data.profile.company.id) != 'undefined') {
+                        if  (data.profile) {
+                            if (data.profile.company) {
+                                if (data.profile.company.id) {
                                     _user.profile.company.id = data.profile.company.id;
                                 }
-                                if (typeof (data.profile.company.name) != 'undefined') {
+                                if(data.profile.company.name) {
                                     _user.profile.company.name = data.profile.company.name;
                                 }
                             }
-                            if ((typeof (data.profile.profile) != 'undefined') && data.profile.profile != null) {
-                                if (typeof (data.profile.profile.id) != 'undefined') {
+                            if (data.profile.profile) {
+                                if (data.profile.profile.id) {
                                     _user.profile.profile.id = data.profile.profile.id;
                                 }
-                                if (typeof (data.profile.profile.name) != 'undefined') {
+                                if (data.profile.profile.name) {
                                     _user.profile.profile.name = data.profile.profile.name;
                                 }
                             }
                         }
-                        if (typeof (data.ulogin) != 'undefined') {
+                        if (data.ulogin) {
                             _user.ulogin = data.ulogin;
                         }
-                        if (typeof (data.upass) != 'undefined') {
+                        if (data.upass) {
                             shaSum.update(data.upass);
                             _user.upass = shaSum.digest('hex');
                         }
 
-                        if (typeof (data.uemail) != 'undefined') {
+                        if (data.uemail)  {
                             _user.uemail = data.uemail;
                         }
 
-                        _user.save(function (err, user) {
+                        _user.save(function (err, result) {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("User.js create savetoBd _user.save " + err);
@@ -123,7 +123,7 @@ var Users = function (logWriter, mongoose) {
         login: function (req, data, func) {
             try {
                 if (data != null) {
-                    if ((data.ulogin != "") || (data.uemail != "")) {
+                    if (data.ulogin || data.uemail) {
                         User.find({ $or: [{ ulogin: data.ulogin }, { uemail: data.uemail }] }, function (err, _users) {
                             try {
                                 if (_users && _users.length !== 0) {
@@ -167,14 +167,14 @@ var Users = function (logWriter, mongoose) {
         get: function (response) {
             var res = {};
             res['data'] = [];
-            User.find({}, { __v: 0, upass: 0 }, function (err, users) {
+            User.find({}, { __v: 0, upass: 0 }, function (err, result) {
                 if (err) {
                     //func();
                     console.log(err);
                     logWriter.log("Users.js get User.find " + err);
                     response.send(500, { error: 'User get BD error' });
                 } else {
-                    res['data'] = users;
+                    res['data'] = result;
                     response.send(res);
                 }
             });
@@ -183,7 +183,7 @@ var Users = function (logWriter, mongoose) {
         update: function (_id, data, res) {
             try {
                 delete data._id;
-                User.update({ _id: _id }, data, function (err, user) {
+                User.update({ _id: _id }, data, function (err, result) {
 
                     if (err) {
                         console.log(err);
@@ -202,7 +202,7 @@ var Users = function (logWriter, mongoose) {
         },
 
         remove: function (_id, res) {
-            User.remove({ _id: _id }, function (err, _user) {
+            User.remove({ _id: _id }, function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Users.js remove user.remove " + err);
