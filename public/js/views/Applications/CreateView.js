@@ -7,9 +7,10 @@ define([
     "collections/Degrees/DegreesCollection",
     "collections/SourceOfApplicants/SourceOfApplicantsCollection",
     "models/ApplicationModel",
+    "common",
     "custom"
 ],
-    function (CreateTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, ApplicationModel, Custom) {
+    function (CreateTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, ApplicationModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -29,6 +30,7 @@ define([
                 this.sourceOfApplicantsCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.applicationsCollection = options.collection;
+                //this.bind('submit', _.bind(this.saveItem, this));
                 this.render();
             },
 
@@ -77,13 +79,8 @@ define([
                     name: degreeId
                 };
 
-                var relatedUser = {};
                 var relatedUserId = this.$("#relatedUser option:selected").val();
-                var objRelatedUser = this.employeesCollection.get(relatedUserId);
-                if (objRelatedUser) {
-                    relatedUser.id = relatedUserId;
-                    relatedUser.login = objRelatedUser.get('name');
-                }
+                var relatedUser = common.toObject(relatedUserId, this.employeesCollection);
 
                 var nextActionSt = $.trim($("#nextAction").val());
                 var nextAction = "";
@@ -100,20 +97,10 @@ define([
                 var referredBy = $.trim($("#referredBy").val());
 
                 var departmentId = this.$("#department option:selected").val();
-                var objDepartment = this.departmentsCollection.get(departmentId);
-                var department = {};
-                if (objDepartment) {
-                    department.departmentName = objDepartment.get('departmentName');
-                    department.departmentId = departmentId;
-                }
+                var department = common.toObject(departmentId, this.departmentsCollection);
 
                 var jobId = this.$("#job option:selected").val();
-                var objJob = this.jobPositionsCollection.get(jobId);
-                var job = {};
-                if (objJob) {
-                    job.jobPositionId = jobId;
-                    job.jobPositionName = objJob.get('name');
-                }
+                var job = common.toObject(jobId, this.jobPositionsCollection);
 
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());

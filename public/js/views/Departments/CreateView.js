@@ -3,9 +3,10 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
     "models/DepartmentModel",
+    "common",
     "custom"
 ],
-    function (CreateTemplate, DepartmentsCollection, AccountsDdCollection, DepartmentModel, Custom) {
+    function (CreateTemplate, DepartmentsCollection, AccountsDdCollection, DepartmentModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -35,17 +36,17 @@ define([
                 var departmentName = $.trim($("#departmentName").val());
 
                 var departmentId = this.$("#parentDepartment option:selected").val();
-                var objParentDepartment = this.departmentsCollection.get(departmentId);
+                var objParentDepartment = common.toObject(departmentId, this.departmentsCollection);
                 var parentDepartment = {};
-                if (objParentDepartment) {
+                if (objParentDepartment !== "{}") {
                     parentDepartment.departmentName = objParentDepartment.get('departmentName');
                     parentDepartment.departmentId = departmentId;
                 }
 
                 var managerId = this.$("#departmentManager option:selected").val();
-                var objDepartmentManager = this.accountDdCollection.get(managerId);
+                var objDepartmentManager = common.toObject(managerId, this.accountDdCollection);
                 var departmentManager = {};
-                if (objDepartmentManager) {
+                if (objDepartmentManager !== "{}") {
                     departmentManager.uname = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
                     departmentManager.uid = managerId;
                 }

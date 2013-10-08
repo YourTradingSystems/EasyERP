@@ -43,8 +43,19 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             "click .checkbox": "checked",
             "click .foldUnfold": "openDropDown",
             "click .fold": "foldUnfoldColumn",
-            "click .form a": "gotoProjectForm",
-            "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow"
+            "click .form p > a": "gotoProjectForm",
+            "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
+            "click #tabList a": "switchTab"
+        },
+
+        switchTab: function (e) {
+            e.preventDefault();
+            var link = this.$("#tabList a");
+            if (link.hasClass("selected")) {
+                link.removeClass("selected");
+            }
+            var index = link.index($(e.target).addClass("selected"));
+            this.$(".tab").hide().eq(index).show();
         },
 
         gotoProjectForm: function (e) {
@@ -144,6 +155,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         } else {
                             var currentModel = models[itemIndex];
                             currentModel.on('change', this.render, this);
+                            console.log(currentModel);
                             //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
                             this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
 

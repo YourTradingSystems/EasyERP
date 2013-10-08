@@ -85,8 +85,8 @@ define(['libs/date.format'], function (dateformat) {
 
         var testIndex = new RegExp(/^[1-9]{1}[0-9]*$/), itemIndex;
         if (testIndex.test(App.currentItemIndex) == false) {
-            App.currentItemIndex = 1;
-            itemIndex = 1;
+            App.currentItemIndex = 0;
+            itemIndex = 0;
         } else {
             itemIndex = App.currentItemIndex;
         }
