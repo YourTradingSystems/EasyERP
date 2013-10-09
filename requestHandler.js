@@ -767,7 +767,7 @@ var requestHandler = function (mongoose) {
     function createEvent(req, res, data) {
         console.log("Requst createDepartment is success");
         if (req.session && req.session.loggedIn) {
-            events.create(data.department, res);
+            events.create(data.event, res);
         } else {
             res.send(401);
         }
