@@ -43,8 +43,8 @@ var Persons = function (logWriter, mongoose) {
             receiveMessages: { type: Number, default: 0 }
         },
         relatedUser: {
-            uid: { type: String, default: '' },
-            ulogin: { type: String, default: '' }
+            id: { type: String, default: '' },
+            login: { type: String, default: '' }
         },
         social: {
             FB: { type: String, default: '' },
@@ -58,12 +58,12 @@ var Persons = function (logWriter, mongoose) {
     return {
         create: function (data, res) {
             try {
-                if (data) {
+                if (!data) {
                     logWriter.log('Person.create Incorrect Incoming Data');
                     res.send(400, { error: 'Person.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    var query = (data.email)
+                    var query = (!data.email)
                         ? { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }] }
                         : { email: data.email };
                     Person.find(query, function (error, doc) {
@@ -81,6 +81,7 @@ var Persons = function (logWriter, mongoose) {
                 }
                 function savetoBd(data) {
                     try {
+                        console.log(data);
                         _person = new Person();
                         if (data.email) {
                             _person.email = data.email;
@@ -97,8 +98,8 @@ var Persons = function (logWriter, mongoose) {
                             }
                         }
                         if (data.company) {
-                            if (data.company.id) {
-                                _person.company.id = data.company.id;
+                            if (data.company._id) {
+                                _person.company.id = data.company._id;
                             }
                             if (data.company.name) {
                                 _person.company.name = data.company.name;
@@ -177,11 +178,11 @@ var Persons = function (logWriter, mongoose) {
                             }
                         }
                         if (data.relatedUser) {
-                            if (data.relatedUser.uid) {
-                                _person.relatedUser.uid = data.relatedUser.uid;
+                            if (data.relatedUser._id) {
+                                _person.relatedUser.id = data.relatedUser._id;
                             }
-                            if (data.relatedUser.ulogin) {
-                                _person.relatedUser.ulogin = data.relatedUser.ulogin;
+                            if (data.relatedUser.login) {
+                                _person.relatedUser.login = data.relatedUser.login;
                             }
                         }
                         if (data.history) {
@@ -215,7 +216,7 @@ var Persons = function (logWriter, mongoose) {
         getForDd: function (response) {
             var res = {};
             res['data'] = [];
-            Person.find({ 'relatedUser.uid': { $ne: '' } }, { _id: 1, name: 1 }, function (err, persons) {
+            Person.find({ 'relatedUser.id': { $ne: '' } }, { _id: 1, name: 1 }, function (err, persons) {
                 if (err) {
                     response.send(500, { error: "Can't find Person" });
                     console.log(err);
@@ -269,6 +270,7 @@ var Persons = function (logWriter, mongoose) {
 
         update: function (_id, data, res) {
             try {
+                console.log(data);
                 delete data._id;
                 Person.update({ _id: _id }, data, function (err, persons) {
                     if (err) {

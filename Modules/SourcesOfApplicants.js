@@ -60,7 +60,7 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
                 logWriter.log("Sourcesofapplicants.js getSourcesofapplicants sourcesofapplicants.find " + err);
                 response.send(500, { error: "Can't find Sourcesofapplicants" });
             } else {
-                res['data'] = soa;
+                res['data'] = result;
                 response.send(result);
             }
         });

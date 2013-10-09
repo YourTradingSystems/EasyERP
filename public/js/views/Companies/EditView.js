@@ -24,39 +24,24 @@ define([
 
                     var mid = 39;
 
-                    var cname = $("#cname").val();
-                    if ($.trim(cname) == "") {
-                        cname = "My Company";
-                    }
+                    var name = $("#name").val();
 
-                    var cemail = $("#cemail").val();
-                    if ($.trim(cemail) == "") {
-                        cemail = "my@mail.com";
-                    }
+                    var email = $("#email").val();
 
                     var phone = $("#phone").val();
-                    if ($.trim(phone) == "") {
-                        phone = "";
-                    }
 
                     var mobile = $("#mobile").val();
-                    if ($.trim(mobile) == "") {
-                        mobile = "";
-                    }
 
                     var fax = $("#fax").val();
-                    if ($.trim(fax) == "") {
-                        fax = "";
-                    }
 
                     currentModel.set({
-                        cname: cname,
-                        cemail: cemail,
-                        cphones: {
+                        name: name,
+                        email: email,
+                        phones: {
                             phone: phone,
-                            mobile: mobile
+                            mobile: mobile,
+                            fax: fax
                         },
-                        fax: fax
                     });
 
                     currentModel.save({}, {

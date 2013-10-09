@@ -78,9 +78,9 @@
         <div>
             <span>Sales & Purchases</span>
             <p>
-                <label>Customer: <input type="checkbox" <% if(model.salesPurchases.isCustomer) { %> checked="checked" <% } %>  /> </label>
-                <label>Supplier: <input type="checkbox" <% if(model.salesPurchases.isSupplier) { %> checked="checked" <% } %>  /> </label>
-                <label>Active: <input type="checkbox" <% if(model.salesPurchases.active) { %> checked="checked" <% } %>  /> </label>
+                <label>Customer: <input type="checkbox" <% if(model.salesPurchases.isCustomer) { %> checked="checked" <% } %>  id="isCustomerInput"/> </label>
+                <label>Supplier: <input type="checkbox" <% if(model.salesPurchases.isSupplier) { %> checked="checked" <% } %>  id="isSupplierInput"/> </label>
+                <label>Active: <input type="checkbox" <% if(model.salesPurchases.active) { %> checked="checked" <% } %>  id="isActiveInput"/> </label>
             </p>
         </div>
 

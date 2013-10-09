@@ -12,55 +12,40 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
-               this.companyCollection = options.collection;
-               this.render();
+                this.companyCollection = options.collection;
+                this.render();
             },
 
-            close: function(){
+            close: function () {
                 this._modelBinder.unbind();
             },
 
             saveItem: function () {
                 var self = this;
-            	var mid = 39;
+                var mid = 39;
 
-            	var companyModel = new CompanyModel();
-            	
-            	var cname = $("#cname").val();
-            	if ($.trim(cname) == "")
-                {
-            	    //cname = "My Company";
-                }
-               
-            	var cemail = $("#cemail").val();
-            	if ($.trim(cemail) == "") {
-            	    cemail = "my@mail.com";
-            	}
-                
-            	var phone = $("#phone").val();
-            	if ($.trim(phone) == "") {
-            	    phone = "";
-            	}
-                
-            	var mobile = $("#mobile").val();
-            	if ($.trim(mobile) == "") {
-            	    mobile = "";
-            	}
-                
-            	var fax = $("#fax").val();
-            	if ($.trim(fax) == "") {
-            	    fax = "";
-            	}
-               
-            	companyModel.save({
-                        cname: cname,
-                        cemail: cemail,
-                        cphones: {
-                            phone: phone,
-                            mobile: mobile
-                        },
+                var companyModel = new CompanyModel();
+
+                var name = $("#name").val();
+
+                var email = $("#email").val();
+
+                var phone = $("#phone").val();
+
+                var mobile = $("#mobile").val();
+
+                var fax = $("#fax").val();
+
+                companyModel.save({
+                    name: name,
+                    email: email,
+                    phones: {
+                        phone: phone,
+                        mobile: mobile,
                         fax: fax
                     },
+
+                },
                     {
                         headers: {
                             mid: mid
@@ -73,7 +58,7 @@ define([
                             Backbone.history.navigate("home", { trigger: true });
                         }
                     });
-                
+
             },
 
             render: function () {

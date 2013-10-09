@@ -3,7 +3,7 @@ define(function () {
         idAttribute: "_id",
 
         defaults: {
-            projectname: 'Project 1',
+            projectName: 'Project 1',
             task: {
                 avaliable: false,
                 tasks: []

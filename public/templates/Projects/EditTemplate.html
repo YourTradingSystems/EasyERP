@@ -7,7 +7,7 @@
         <fieldset>
             <p>
                 <label for="projectName">Project Name</label><br/>
-                <input type="text" name="projectName" id="projectName" required value="<%=model.projectname%>"/>
+                <input type="text" name="projectName" id="projectName" required value="<%=model.projectName%>"/>
 
             </p>
 
@@ -46,7 +46,7 @@
                 <select id="usereditDd" size="3" multiple>
                     <option selected="selected" value="0">No one...</option>
                     <% accountsDdCollection.each(function(option){ %>
-                        <option value="<%= option.get('_id') %>"><%= option.get('uname') %></option>
+                        <option value="<%= option.get('_id') %>"><%= option.get('name') %></option>
                     <% }); %>
                 </select>
             </p>

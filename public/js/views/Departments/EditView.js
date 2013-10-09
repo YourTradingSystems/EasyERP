@@ -2,9 +2,10 @@ define([
     "text!templates/Departments/EditTemplate.html",
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
+    "common",
     "custom"
 ],
-    function (EditTemplate, DepartmentsCollection, AccountsDdCollection, Custom) {
+    function (EditTemplate, DepartmentsCollection, AccountsDdCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -33,18 +34,23 @@ define([
                     var departmentName = $.trim($("#departmentName").val());
 
                     var departmentId = this.$("#parentDepartment option:selected").val();
-                    var objParentDepartment = this.departmentsCollection.get(departmentId);
+                    var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
                     var parentDepartment = {};
-                    if (objParentDepartment) {
-                        parentDepartment.departmentName = objParentDepartment.get('departmentName');
-                        parentDepartment.departmentId = departmentId;
+                    if (_parentDepartment) {
+                        parentDepartment.name = _parentDepartment.departmentName;
+                        parentDepartment.id = _parentDepartment._id;
+                    } else {
+                        parentDepartment = currentModel.defaults.parentDepartment;
                     }
+
                     var managerId = this.$("#departmentManager option:selected").val();
-                    var objDepartmentManager = this.accountDdCollection.get(managerId);
+                    var _departmentManager = common.toObject(managerId, this.accountDdCollection);
                     var departmentManager = {};
-                    if (objDepartmentManager) {
-                        departmentManager.uname = objDepartmentManager.get('name').first + " " + objDepartmentManager.get('name').last;
-                        departmentManager.uid = managerId;
+                    if (_departmentManager) {
+                        departmentManager.name = _departmentManager.name.first + " " + _departmentManager.name.last;
+                        departmentManager.id = _departmentManager._id;
+                    } else {
+                        departmentManager = currentModel.defaults.departmentManager;
                     }
 
                     currentModel.set({

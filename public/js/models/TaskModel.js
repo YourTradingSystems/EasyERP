@@ -5,12 +5,12 @@ define(function () {
         defaults: {
             summary: '',
             project: {
-                pId: '',
-                projectName: ''
+                id: '',
+                name: ''
             },
-            assignedto: {
-                uid: '00000',
-                uname: 'emptyUser'
+            assignedTo: {
+                id: '00000',
+                name: 'emptyUser'
             },
             deadline: null,
             tags: [],

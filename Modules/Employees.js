@@ -63,7 +63,7 @@ var Employee = function (logWriter, mongoose) {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
-        referredBy: { type: String, default: '' }, 
+        referredBy: { type: String, default: '' },
         active: { type: Boolean, default: true },
         workflow: {
             name: { type: String, default: '' },
@@ -74,7 +74,7 @@ var Employee = function (logWriter, mongoose) {
         proposedSalary: Number,
         color: { type: String, default: '#4d5a75' },
         creationDate: { type: Date, default: Date.now }
-    }, { collection: 'Employees' }); 
+    }, { collection: 'Employees' });
 
     var employee = mongoose.model('Employees', employeeSchema);
 
@@ -272,7 +272,7 @@ var Employee = function (logWriter, mongoose) {
                         _employee.color = data.color;
                     }
                     ///////////////////////////////////////////////////
-                    _employee.save(function(err, result) {
+                    _employee.save(function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -281,11 +281,11 @@ var Employee = function (logWriter, mongoose) {
                             } else {
                                 res.send(201, { success: 'A new Employees create success' });
                             }
-                        } catch(error) {
+                        } catch (error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
                         }
                     });
-                } catch(error) {
+                } catch (error) {
                     console.log(error);
                     logWriter.log("Employees.js create savetoBd " + error);
                     res.send(500, { error: 'Employees.save  error' });

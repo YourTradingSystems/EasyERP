@@ -77,7 +77,7 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom) {
             $.each($("tbody input:checked"), function (index, checkbox) {
                 var project = self.collection.get(checkbox.value);
 
-                /*project.set("projectname", 'testEDIT');
+                /*project.set("projectName", 'testEDIT');
         		
         		project.save({},{
         			headers: {

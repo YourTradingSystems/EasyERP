@@ -60,14 +60,12 @@ define([
                 var itemIndex = Custom.getCurrentII() - 1;
 
                 if (itemIndex != -1) {
+
                     var currentModel = this.collection.models[itemIndex];
 
                     var mid = 39;
 
                     var projectname = $("#projectName").val();
-                    if ($.trim(projectname) == "") {
-                        projectname = "New Project";
-                    }
 
                     var idCustomer = $(this.el).find("#customerDd option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersDdCollection);
@@ -97,14 +95,14 @@ define([
                     var $userNodes = $("#usereditDd option:selected"), users = [];
                     $userNodes.each(function (key, val) {
                         users.push({
-                            uid: val.value,
-                            uname: val.innerHTML
+                            id: val.value,
+                            name: val.innerHTML
                         });
                     });
 
 
                     currentModel.set({
-                        projectname: projectname,
+                        projectName: projectName,
                         customer: customer,
                         projectmanager: projectmanager,
                         workflow: workflow,

@@ -52,9 +52,9 @@ var Department = function (logWriter, mongoose) {
                         }
                     }
 
-                    if (data.departmentManager){
-                        if(data.departmentManager.id) {
-                            _department.departmentManager.uid = data.departmentManager.id;
+                    if (data.departmentManager) {
+                        if (data.departmentManager._id) {
+                            _department.departmentManager.id = data.departmentManager._id;
                         }
                         if (data.departmentManager.name) {
                             _department.departmentManager.name = data.departmentManager.name;
@@ -90,7 +90,7 @@ var Department = function (logWriter, mongoose) {
         res['result']['status'] = '2';
         res['result']['description'] = 'An error was find';
         res['data'] = [];
-        department.find({}, { _id: 1, departmentName: 1 }, function(err, result) {
+        department.find({}, { _id: 1, departmentName: 1 }, function (err, result) {
             try {
                 if (err) {
                     console.log(err);
@@ -103,7 +103,7 @@ var Department = function (logWriter, mongoose) {
                     res['data'] = result;
                     func(res);
                 }
-            } catch(Exception) {
+            } catch (Exception) {
                 logWriter.log("Department.js getDepartmentsForDd try Department.find " + Exception);
             }
         });

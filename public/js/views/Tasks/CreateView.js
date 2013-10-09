@@ -63,7 +63,7 @@ define([
                 var project = common.toObject(idProject, this.projectsDdCollection);
                
                 var idAssignedTo = this.$("#assignedTo option:selected").val();
-                var assignedto = common.toObject(idAssignedTo, this.accountDdCollection);
+                var assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
 
                 var deadlineSt = $.trim($("#deadline").val());
                 var deadline = "";
@@ -104,7 +104,7 @@ define([
 
                 taskModel.save({
                     summary: summary,
-                    assignedto: assignedto,
+                    assignedTo: assignedTo,
                     workflow: workflow,
                     project: project,
                     tags: tags,

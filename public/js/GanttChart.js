@@ -141,9 +141,9 @@ define([
             },
             {
                 name: "assigned", label: "Assigned to", align: "center", width: 100, template: function (item) {
-                    if (!item.assignedto)
+                    if (!item.assignedTo)
                         return "Nobody";
-                    return item.assignedto;
+                    return item.assignedTo;
                 }
             }
         ];

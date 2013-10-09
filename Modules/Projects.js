@@ -1,7 +1,7 @@
 var Project = function (logWriter, mongoose) {
 
     var ProjectSchema = mongoose.Schema({
-        projectname: { type: String, default: 'emptyProject' },
+        projectName: { type: String, default: 'emptyProject' },
         task: {
             avaliable: { type: Boolean, default: false },
             tasks: { type: Array, default: [] }
@@ -38,10 +38,10 @@ var Project = function (logWriter, mongoose) {
     var TasksSchema = mongoose.Schema({
         summary: { type: String, default: '' },
         project: {
-            pId: String,
-            projectName: String
+            id: String,
+            name: String
         },
-        assignedto: {
+        assignedTo: {
             id: { type: String, default: '00000' },
             name: { type: String, default: 'emptyUser' }
         },
@@ -149,7 +149,7 @@ var Project = function (logWriter, mongoose) {
             return false;
         } else {
             try {
-                project.findById(task.project.pId)
+                project.findById(task.project.id)
                     //.where('info.EndDate')
                     //.lte(task.extrainfo.EndDate)
                     //.or([{ 'info.EndDate': { $lt: task.extrainfo.EndDate } },
@@ -330,12 +330,12 @@ var Project = function (logWriter, mongoose) {
     function create(data, res) {
         try {
             console.log(data);
-            if (typeof (data.projectname) == 'undefined') {
+            if (!data.projectName) {
                 logWriter.log('Project.create Incorrect Incoming Data');
                 res.send(400, { error: 'Project.create Incorrect Incoming Data' });
                 return;
             } else {
-                project.find({ projectname: data.projectname }, function (error, doc) {
+                project.find({ projectName: data.projectName }, function (error, doc) {
                     if (error) {
                         console.log(error);
                         logWriter.log("Project.js create project.find " + error);
@@ -351,8 +351,8 @@ var Project = function (logWriter, mongoose) {
             function saveProjectToBd(data) {
                 try {
                     _project = new project();
-                    if (data.projectname) {
-                        _project.projectname = data.projectname;
+                    if (data.projectName) {
+                        _project.projectName = data.projectName;
                     }
                     if (data.task) {
                         _project.task = data.task;
@@ -390,8 +390,15 @@ var Project = function (logWriter, mongoose) {
                         if (data.customer._id) {
                             _project.customer.id = data.customer._id;
                         }
-                        if (data.customer._id) {
-                            _project.customer.id = data.customer._id;
+                        if (data.customer.name) {
+                            _project.customer.name = (data.customer.name.first)
+                                ? ((data.customer.name.last)
+                                    ? data.customer.name.first + ' ' + data.customer.name.last
+                                    : data.customer.name.first)
+                                : '';
+                        }
+                        if (data.customer.type) {
+                            _project.customer.type = data.customer.type;
                         }
                     }
                     if (data.projectmanager) {
@@ -434,7 +441,7 @@ var Project = function (logWriter, mongoose) {
     function getForDd(response) {
         var res = {};
         res['data'] = [];
-        project.find({}, { _id: 1, projectname: 1 }, function (err, projects) {
+        project.find({}, { _id: 1, projectName: 1 }, function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js getProjectsForDd project.find " + err);
@@ -462,7 +469,7 @@ var Project = function (logWriter, mongoose) {
         var findTasksById = function (_projects, count) {//рекурсивна функція
             try {
                 if (_projects.length > count) {
-                    tasks.find({ 'project.pId': _projects[count]._id }, function (err, taskss) {
+                    tasks.find({ 'project.id': _projects[count]._id }, function (err, taskss) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -533,7 +540,7 @@ var Project = function (logWriter, mongoose) {
     };
 
     function removeTasksByPorjectID(_id) {
-        tasks.find({ 'project.pId': _id }, function (err, taskss) {
+        tasks.find({ 'project.id': _id }, function (err, taskss) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js removeTasksByPorjectID task.find " + err);
@@ -559,8 +566,8 @@ var Project = function (logWriter, mongoose) {
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
                 return;
             } else {
-                var projectPid = (data.project) ? data.project._id : '';
-                tasks.find({ $and: [{ summary: data.summary }, { 'project.pId': projectPid }] }, function (error, doc) {
+                var projectId = (data.project) ? data.project._id : '';
+                tasks.find({ $and: [{ summary: data.summary }, { 'project.id': projectId }] }, function (error, doc) {
                     if (error) {
                         console.log(error);
                         logWriter.log("Project.js createTask tasks.find " + error);
@@ -581,18 +588,18 @@ var Project = function (logWriter, mongoose) {
                     _task.summary = data.summary;
                     if (data.project) {
                         if (data.project._id) {
-                            _task.project.pId = data.project._id;
+                            _task.project.id = data.project._id;
                         }
                         if (data.project.projectName) {
-                            _task.project.projectName = data.project.projectName;
+                            _task.project.name = data.project.projectName;
                         }
                     }
-                    if (data.assignedto) {
-                        if (data.assignedto.uid) {
-                            _task.assignedto.uid = data.assignedto.uid;
+                    if (data.assignedTo) {
+                        if (data.assignedTo._id) {
+                            _task.assignedTo.id = data.assignedTo._id;
                         }
-                        if (data.assignedto.uname) {
-                            _task.assignedto.uname = data.assignedto.uname;
+                        if (data.assignedTo.name) {
+                            _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.first;
                         }
                     }
                     if (data.deadline) {
@@ -612,11 +619,11 @@ var Project = function (logWriter, mongoose) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
                         }
                         if (data.extrainfo.customer) {
-                            if(data.extrainfo.customer.id)  {
-                                _task.extrainfo.customer.id = data.extrainfo.customer.id;
+                            if(data.extrainfo.customer._id)  {
+                                _task.extrainfo.customer.id = data.extrainfo.customer._id;
                             }
                             if(data.extrainfo.customer.name) {
-                                _task.extrainfo.customer.name = data.extrainfo.customer.name;
+                                _task.extrainfo.customer.name = data.extrainfo.customer.name.first + ' ' + data.extrainfo.customer.name.last;
                             }
                         }
                         if(data.extrainfo.StartDate) {
@@ -741,7 +748,7 @@ var Project = function (logWriter, mongoose) {
         res['result']['status'] = '2';
         res['result']['description'] = 'An error was find';
         res['data'] = [];
-        tasks.find({ project: data.pid }, function (err, taskss) {
+        tasks.find({ project: data.id }, function (err, taskss) {
             try {
                 if (err) {
                     //func();

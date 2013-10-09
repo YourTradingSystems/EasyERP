@@ -5,24 +5,24 @@
         defaults: {
             image: '',
             isOwnCompany: false,
-            cemail: '',
-            cname: 'emptyCompany',
-            caddress: {
+            email: '',
+            name: 'emptyCompany',
+            address: {
                 street1: '',
                 city: '',
                 state: '',
                 zip: '',
                 country: ''
             },
-            cwebsite: '',
+            website: '',
             contacts: [],
-            cphones: {
+            phones: {
                 phone: '',
                 mobile: '',
                 fax: ''
             },
-            cinternalNotes: '',
-            csalesPurchases: {
+            internalNotes: '',
+            salesPurchases: {
                 isCustomer: false,
                 isSupplier: false,
                 salesPerson: '',
@@ -34,10 +34,10 @@
                 receiveMessages: 0
             },
             social: {
-                FB: '',
-                LI: ''
+                fb: '',
+                li: ''
             },
-            chistory: []
+            history: []
         },
 
         urlRoot: function () {

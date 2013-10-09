@@ -305,7 +305,7 @@ define(['libs/date.format'], function (dateformat) {
                 if (project.task.tasks.length > 0) {
                     projects.push({
                         'id': project._id || project.id,
-                        'text': project.projectname,
+                        'text': project.projectName,
                         'start_date': dateFormat(new Date(jsonCollection[0].info.StartDate), "dd-mm-yyyy"),
                         'duration': project.estimated,
                         'progress': project.progress / 100,
@@ -330,7 +330,7 @@ define(['libs/date.format'], function (dateformat) {
             if (jsonCollection[i].task.tasks.length > 0) {
                 projects.push({
                     'id': jsonCollection[i]._id || jsonCollection[i].id,
-                    'text': jsonCollection[i].projectname,
+                    'text': jsonCollection[i].projectName,
                     'start_date': new Date(jsonCollection[i].info.StartDate),
                     'duration': jsonCollection[i].info.duration,
                     'progress': jsonCollection[i].progress / 100,
@@ -345,7 +345,7 @@ define(['libs/date.format'], function (dateformat) {
                         'start_date': new Date(task.extrainfo.StartDate),
                         'duration': task.estimated,
                         'progress': task.progress / 100,
-                        'assignedto': task.assignedto.uname,
+                        'assignedTo': task.assignedTo.name,
                         'parent': jsonCollection[i].id || jsonCollection[i]._id
                     });
                 }

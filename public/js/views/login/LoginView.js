@@ -19,8 +19,8 @@ define([
         login: function(event){
         	event.preventDefault();
         	var data = {
-        			ulogin: this.$("#ulogin").val(),
-        			upass: this.$("#upass").val()
+        			login: this.$("#ulogin").val(),
+        			pass: this.$("#upass").val()
         	};
         	$.ajax({
         	    url: "/login",

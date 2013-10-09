@@ -102,16 +102,17 @@ define([
 
 
             }
-        	
-        	$.each($("input:checked"), function(index, checkbox){
-        		var id = $(checkbox).val();
-                var person = self.collection.get(id);
+            $.each($("tbody input:checked"), function (index, checkbox) {
+                var person = self.collection.get(checkbox.value);
 
-                person.destroy({headers: {
-        			mid: mid
-        		}});
-        	});
-        	
+                person.destroy({
+                    headers: {
+                        mid: mid
+                    }
+                },
+        		{ wait: true }
+        		);
+            });
         	this.collection.trigger('reset');
         }
     });

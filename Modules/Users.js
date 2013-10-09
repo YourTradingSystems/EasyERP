@@ -124,12 +124,12 @@ var Users = function (logWriter, mongoose) {
             try {
                 if (data != null) {
                     if (data.login || data.email) {
-                        User.find({ $or: [{ ulogin: data.login }, { uemail: data.email }] }, function (err, _users) {
+                        User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                             try {
                                 if (_users && _users.length !== 0) {
                                     //Провірка по username
                                     var shaSum = crypto.createHash('sha256');
-                                    shaSum.pdate(data.pass);
+                                    shaSum.update(data.pass);
                                     if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {
                                         req.session.loggedIn = true;
                                         req.session.uId = _users[0]._id;
