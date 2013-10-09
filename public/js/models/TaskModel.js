@@ -9,8 +9,8 @@ define(function () {
                 name: ''
             },
             assignedTo: {
-                id: '00000',
-                name: 'emptyUser'
+                id: '',
+                name: ''
             },
             deadline: null,
             tags: [],

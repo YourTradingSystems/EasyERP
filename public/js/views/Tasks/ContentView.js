@@ -10,10 +10,11 @@ define([
     'views/Tasks/thumbnails/ThumbnailsItemView',
     'views/Tasks/kanban/KanbanItemView',
     'custom',
+    'common',
     "GanttChart"
 ],
 
-function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, TasksCollection, WorkflowsCollection, ProjectsCollection, TasksListItemView, TasksThumbnailsItemView, TasksKanbanItemView, Custom, GanttChart) {
+function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, TasksCollection, WorkflowsCollection, ProjectsCollection, TasksListItemView, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -154,6 +155,13 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             this.$el.html('<h2>No tasks found</h2>');
                         } else {
                             var currentModel = models[itemIndex];
+
+                            var extrainfo = currentModel.get('extrainfo');
+                            extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
+                            extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
+                            deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
+                            currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
+
                             currentModel.on('change', this.render, this);
                             console.log(currentModel);
                             //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });

@@ -7,7 +7,13 @@
         return _tempObject;
     };
 
+    var ISODateToDate = function (ISODate) {
+        var date = ISODate.split('T')[0];
+        return date;
+    };
+
     return {
-        toObject: toObject
+        toObject: toObject,
+        ISODateToDate: ISODateToDate
     }
 });
