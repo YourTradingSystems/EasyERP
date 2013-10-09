@@ -63,7 +63,7 @@ var Employee = function (logWriter, mongoose) {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
-        referredBy: { type: String, default: '' },
+        referredBy: { type: String, default: '' }, 
         active: { type: Boolean, default: true },
         workflow: {
             name: { type: String, default: '' },
@@ -74,7 +74,7 @@ var Employee = function (logWriter, mongoose) {
         proposedSalary: Number,
         color: { type: String, default: '#4d5a75' },
         creationDate: { type: Date, default: Date.now }
-    }, { collection: 'Employees' });
+    }, { collection: 'Employees' }); 
 
     var employee = mongoose.model('Employees', employeeSchema);
 
