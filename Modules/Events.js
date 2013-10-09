@@ -4,7 +4,7 @@ var Events = function (logWriter, mongoose) {
     var eventsSchema = mongoose.Schema({
         subject: { type: String, default: '' },
         description: {type: String, default: ''},
-        type: { type: string, default: '' },     
+        type: { type: String, default: '' },     
         startDate: Date,
         endDate: Date,
         assignTo: {
