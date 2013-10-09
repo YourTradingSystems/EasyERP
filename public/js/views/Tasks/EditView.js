@@ -118,7 +118,7 @@
 
                     var assignedTo = {};
                     var idAssignedTo = this.$("#assignedTo option:selected").val();
-                    var _assignedTo = this.accountsDdCollection.get(idAssignedTo);
+                    var _assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
                     if (_assignedTo) {
                         assignedTo.name = _assignedTo.name.first + " " + _assignedTo.name.last;
                         assignedTo.id = _assignedTo._id;
@@ -168,14 +168,14 @@
                         EndDate = new Date(Date.parse(endDateSt)).toISOString();
                     }
 
-                    var idCustomer = this.$("#customerDd option:selected").val();
-                    var _customer = this.customersDdCollection.get(idCustomer);
+                    var idCustomer = $(this.el).find("#customerDd option:selected").val();
+                    var _customer = common.toObject(idCustomer, this.customersDdCollection);
                     var customer = {};
                     if (_customer) {
                         customer.id = _customer._id;
-                        customer.name = _customer.name.first+" "+_customer.name.last;
+                        customer.name = _customer.name.first + ' ' + _customer.name.last;
                     } else {
-                        customer = currentModel.defaults.customer;
+                        customer = currentModel.defaults.extrainfo.customer;
                     }
 
                     var idWorkflow = this.$("#workflowDd option:selected").val();
@@ -193,31 +193,26 @@
                         loged = 0;
                     }
                     
-                    var priority = $("#priority").val();
-                    if ($.trim(priority) == "") {
-                        priority = null;
+                    var idPriority = this.$("#priority option:selected").val();
+                    var _priority = common.toObject(idPriority, this.priorityCollection);
+                    if (_priority) {
+                        priority = _priority.priority
+                    } else {
+                        priority = currentModel.defaults.extrainfo.priority;
                     }
 
                     currentModel.set({
                         summary: summary,
                         assignedTo: assignedTo,
                         workflow: workflow,
-                        project: {
-                            id: idProject,
-                            name: project.name
-                        },
+                        project: project,
                         tags: tags,
                         deadline: deadline,
                         description: description,
                         extrainfo: {
                             priority: priority,
                             sequence: sequence,
-                            customer:
-                                {
-                                    id: idCustomer,
-                                    name: customer.name,
-                                    type: customer.type
-                                },
+                            customer: customer,
                             StartDate: StartDate,
                             EndDate: EndDate
                         },
@@ -239,11 +234,6 @@
                 }
             },
 
-            ISODateToDate: function (ISODate) {
-                var date = ISODate.split('T')[0].replace(/-/g, '/');
-                return date;
-            },
-
             render: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
 
@@ -252,11 +242,12 @@
                 }
                 else {
                     var currentModel = this.tasksCollection.models[itemIndex];
-                    currentModel.on('change', this.render, this);
-                    //var extrainfo = currentModel.get('extrainfo');
-                    //extrainfo['StartDate'] = this.ISODateToDate(currentModel.get('extrainfo').StartDate);
-                    //extrainfo['EndDate'] = this.ISODateToDate(currentModel.get('extrainfo').EndDate);
-                    //currentModel.set({ deadline: this.ISODateToDate(currentModel.get('deadline')), extrainfo: extrainfo }, { silent: true });
+                    //currentModel.on('change', this.render, this);
+                    var extrainfo = currentModel.get('extrainfo');
+                    extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
+                    extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
+                    deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
+                    currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
                     this.$el.html(_.template(EditTemplate, {
                         model: currentModel.toJSON(), projectsDdCollection: this.projectsDdCollection, accountsDdCollection: this.accountsDdCollection,
                         customersDdCollection: this.customersDdCollection, workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection

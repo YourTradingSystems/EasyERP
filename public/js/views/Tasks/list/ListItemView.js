@@ -1,8 +1,8 @@
 define([
     "text!templates/Tasks/list/ListItemTemplate.html",
-    'custom'
+    'common'
 ],
-    function (TasksItemTemplate, Custom) {
+    function (TasksItemTemplate, common) {
 
         var TasksItemView = Backbone.View.extend({
             tagName: "tr",
@@ -24,6 +24,12 @@ define([
             template: _.template(TasksItemTemplate),
 
             render: function () {
+
+                var extrainfo = this.model.get('extrainfo');
+                extrainfo['StartDate'] = (this.model.get('extrainfo').StartDate) ? common.ISODateToDate(this.model.get('extrainfo').StartDate) : '';
+                extrainfo['EndDate'] = (this.model.get('extrainfo').EndDate) ? common.ISODateToDate(this.model.get('extrainfo').EndDate) : '';
+                this.model.set({ extrainfo: extrainfo }, { silent: true });
+
                 var index = this.model.collection.indexOf(this.model);
                 this.$el.attr("data-index", index);
                 this.$el.html(this.template(this.model.toJSON()));

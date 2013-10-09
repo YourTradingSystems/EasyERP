@@ -100,7 +100,8 @@ define([
 
                 var loged = $("#loged").val();
 
-                var priority = $("#priority").val();
+                var idPriority = this.$("#priority option:selected").val();
+                var priority = common.toObject(idCustomer, this.customersDdCollection);
 
                 taskModel.save({
                     summary: summary,

@@ -42,10 +42,10 @@ var Project = function (logWriter, mongoose) {
             name: String
         },
         assignedTo: {
-            id: { type: String, default: '00000' },
-            name: { type: String, default: 'emptyUser' }
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
-        deadline: { type: Date, default: null },
+        deadline: Date,
         tags: [String],
         description: String,
         extrainfo: {
@@ -156,7 +156,7 @@ var Project = function (logWriter, mongoose) {
                     //     { 'info.StartDate': { $gt: task.extrainfo.StartDate } }])
                     .exec(function (err, _project) {
                         if (_project) {
-                            if ( !_project.info.StartDat && !_project.info.EndDate) {
+                            if (!_project.info.StartDat && !_project.info.EndDate) {
                                 project.update(
                                     {
                                         _id: _project._id
@@ -265,7 +265,7 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
-    var projectFormatDate = function(_projects, count, bool) {
+    var projectFormatDate = function (_projects, count, bool) {
         try {
             if (bool) {
                 if (_projects.length > count) {
@@ -291,39 +291,42 @@ var Project = function (logWriter, mongoose) {
             } else {
                 return _projects;
             }
-        } catch(exeption) {
+        } catch (exeption) {
 
         }
     };
 
-    var taskFormatDate = function (_tasks, count, bool) {
+    var taskFormatDate = function (_tasks, count) {
         try {
-
-            if (bool) {
-                if (_tasks.length > count) {
+            if (_tasks.length > count) {
+                if (_tasks[count].extrainfo.StartDate) {
                     var startday = _tasks[count].extrainfo.StartDate.getDate();
                     var startmonth = _tasks[count].extrainfo.StartDate.getMonth() + 1;
                     var startyear = _tasks[count].extrainfo.StartDate.getFullYear();
                     var startdate = startday + "/" + startmonth + "/" + startyear;
-                    _tasks[count].info.StartDate = startdate;
+                    _tasks[count].extrainfo.StartDate = startdate;
+                    console.log(startdate);
+                } else {
+                    _tasks[count].extrainfo.StartDate = '';
+                }
+                if (_tasks[count].extrainfo.EndDate) {
                     var endday = _tasks[count].extrainfo.EndDate.getDate();
-                    var endmounth = _tasks[count].extrainfo.EndDate.getMounth() + 1;
+                    var endmounth = _tasks[count].extrainfo.EndDate.getMonth() + 1;
                     var endyear = _tasks[count].extrainfo.EndDate.getFullYear();
                     var enddate = endday + "/" + endmounth + "/" + endyear;
                     _tasks[count].extrainfo.EndDate = enddate;
-                    console.log('========Tasks Date Was Formated=================');
-                    console.log("StartDate: " + startdate + " EndDate: " + enddate);
-                    console.log('================================================');
-                    count++;
-                    taskFormatDate(_tasks, count, true);
+                    console.log(enddate);
                 } else {
-                    taskFormatDate(_tasks, count, false);
+                    _tasks[count].extrainfo.EndDate = '';
                 }
+                count++;
+                taskFormatDate(_tasks, count);
             } else {
+                console.log(_tasks);
                 return _tasks;
             }
         } catch (exeption) {
-
+            console.log(exeption);
         }
     };
 
@@ -406,10 +409,10 @@ var Project = function (logWriter, mongoose) {
                             _project.projectmanager.id = data.projectmanager._id;
                         }
                         if (data.projectmanager.name) {
-                            _project.projectmanager.name = (data.projectmanager.name.first) 
-                                ? ((data.projectmanager.name.last) 
+                            _project.projectmanager.name = (data.projectmanager.name.first)
+                                ? ((data.projectmanager.name.last)
                                     ? data.projectmanager.name.first + ' ' + data.projectmanager.name.last
-                                    : data.projectmanager.name.first) 
+                                    : data.projectmanager.name.first)
                                 : '';
                         }
                     }
@@ -584,6 +587,7 @@ var Project = function (logWriter, mongoose) {
             }
             function saveTaskToBd(data) {
                 try {
+                    console.log(data);
                     _task = new tasks();
                     _task.summary = data.summary;
                     if (data.project) {
@@ -605,28 +609,28 @@ var Project = function (logWriter, mongoose) {
                     if (data.deadline) {
                         _task.deadline = data.deadline;
                     }
-                    if(data.tags) {
+                    if (data.tags) {
                         _task.tags = data.tags;
                     }
-                    if(data.description) {
+                    if (data.description) {
                         _task.description = data.description;
                     }
-                    if  (data.extrainfo) {
-                        if(data.extrainfo.priority)  {
+                    if (data.extrainfo) {
+                        if (data.extrainfo.priority) {
                             _task.extrainfo.priority = data.extrainfo.priority;
                         }
                         if (data.extrainfo.sequence) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
                         }
                         if (data.extrainfo.customer) {
-                            if(data.extrainfo.customer._id)  {
+                            if (data.extrainfo.customer._id) {
                                 _task.extrainfo.customer.id = data.extrainfo.customer._id;
                             }
-                            if(data.extrainfo.customer.name) {
+                            if (data.extrainfo.customer.name) {
                                 _task.extrainfo.customer.name = data.extrainfo.customer.name.first + ' ' + data.extrainfo.customer.name.last;
                             }
                         }
-                        if(data.extrainfo.StartDate) {
+                        if (data.extrainfo.StartDate) {
                             _task.extrainfo.StartDate = data.extrainfo.StartDate;
                         }
                         if (data.extrainfo.EndDate) {
@@ -636,24 +640,24 @@ var Project = function (logWriter, mongoose) {
                             _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
                         }
                     }
-                    if (data.workflow)  {
-                        if (data.workflow.name)  {
+                    if (data.workflow) {
+                        if (data.workflow.name) {
                             _task.workflow.name = data.workflow.name;
                         }
                         if (data.workflow.status) {
                             _task.workflow.status = data.workflow.status;
                         }
                     }
-                    if  (data.estimated) {
+                    if (data.estimated) {
                         _task.estimated = data.estimated;
                     }
-                    if(data.loged) {
+                    if (data.loged) {
                         _task.loged = data.loged;
                     }
                     if (data.estimated) {
                         _task.remaining = data.estimated - data.loged;
                         if (_task.remaining != 0) {
-                            _task.progress = Math.round((_task.loged / _task.remaining) * 100);
+                            _task.progress = Math.round((data.loged / data.estimated) * 100);
                         }
                     }
                     _task.save(function (err, _task) {
@@ -720,8 +724,9 @@ var Project = function (logWriter, mongoose) {
                 logWriter.log("Project.js getTasks project.find " + err);
                 response.send(500, { error: "Can't find Tasks" });
             } else {
-                taskFormatDate(_tasks, 0, true);
+                //res['data'] = taskFormatDate(_tasks, 0);
                 res['data'] = _tasks;
+                //console.log(res['data']);
                 response.send(res);
             }
         });

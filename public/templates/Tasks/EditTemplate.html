@@ -24,15 +24,15 @@
 	        		 	<select id="projectDd">
 	                    	<option value="0">Select...</option>
 	                   		<% projectsDdCollection.each(function(option){ %>
-	                    	<option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.project.id) ? 'selected="selected"' : ''%>><%= option.get('name') %></option> 
+	                    	<option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.project.id) ? 'selected="selected"' : ''%>><%= option.get('projectName') %></option> 
 	                   		 <% }); %>
                		 	</select>
                		 </p>
                		 <p>
                		  <select id="assignedTo">
-		                    <option value="<%=model.assignedto.uid%>">Select...</option>
+		                    <option value="<%=model.assignedTo.id%>">Select...</option>
 		                    <% accountsDdCollection.each(function(option){ %>
-		                     <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.assignedto.uid) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+		                     <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.assignedTo.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
 		                    <% }); %>
 		                </select>
                		 </p>
@@ -45,7 +45,7 @@
         		</div>
         		<div class="half-block left">
         			<p><input type="text" name="tags" id="tags" value="<%=model.tags%>"/></p>
-        			    <p><input type="text" name="deadline" id="deadline" value="<%=model.deadline%>" required /></p>
+        			    <p><input type="date" name="deadline" id="deadline" value="<%= model.deadline %>" required /></p>
         		</div>
         		
         	</div>
@@ -83,12 +83,12 @@
 
                     <p>
                         <label for="StartDate">Start Date </label>
-                        <input class="extrainfo" type="text" name="StartDate" id="StartDate" value="<%=model.extrainfo.StartDate%>" required />
+                        <input class="extrainfo" type="date" name="StartDate" id="StartDate" value="<%= model.extrainfo.StartDate %>" required />
                     </p>
 
                     <p>
                         <label for="EndDate">End Date </label>
-                        <input class="extrainfo" type="text" name="EndDate" id="EndDate" value="<%=model.extrainfo.EndDate%>" required />
+                        <input class="extrainfo" type="date" name="EndDate" id="EndDate" value="<%= model.extrainfo.EndDate %>" required />
                     </p>
 
                  
