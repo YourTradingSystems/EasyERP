@@ -580,6 +580,35 @@ app.delete('/Opportunities/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeOpportunitie(req, res, id, data);
 });
+//-------------------Events--------------------------------
+//---------------------Opportunities---------------------
+app.post('/Events', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.event = req.body;
+    requestHandler.createEvent(req, res, data);
+});
+
+app.get('/Events', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getEvents(req, res, data);
+});
+
+app.put('/Events/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.event = req.body;
+    requestHandler.updateEvent(req, res, id, data);
+});
+
+app.delete('/Events/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeEvent(req, res, id, data);
+});
 
 app.listen(8088);
 

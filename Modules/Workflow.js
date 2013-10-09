@@ -12,7 +12,6 @@ var Workflow = function (logWriter, mongoose) {
     var workflow = mongoose.model('workflows', workflowSchema);
 
     return {
-
         create: function (data, func) {
             try {
                 if (data) {
