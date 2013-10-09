@@ -2,6 +2,7 @@ var requestHandler = function (mongoose) {
     var fs = require("fs"),
         logWriter = require("./Modules/additions/logWriter.js")(fs),
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
+        events = require("./Modules/Events.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose),
         persons = require("./Modules/Persons.js")(logWriter, mongoose),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
@@ -252,7 +253,6 @@ var requestHandler = function (mongoose) {
     };
 
     //---------------END----Project-------------------------------
-
     //---------------------Tasks-------------------------------
 
     function createTask(req, res, data) {
@@ -347,6 +347,7 @@ var requestHandler = function (mongoose) {
     };
 
     //------------------END---Tasks------------------------------
+    //------------------Workflow---------------------------------
     function getWorkflow(req, res, data) {
         console.log("Requst getWorkflow is success");
         if (req.session && req.session.loggedIn) {
@@ -449,7 +450,6 @@ var requestHandler = function (mongoose) {
     };
 
     //---------END------JobPosition-----------------------------------
-
     //---------------------Employee--------------------------------
     function createEmployee(req, res, data) {
         console.log("Requst createEmployee is success");
@@ -762,6 +762,43 @@ var requestHandler = function (mongoose) {
             res.send(401);
         }
     }
+    
+    //--------------------Events--------------------------------
+    function createEvent(req, res, data) {
+        console.log("Requst createDepartment is success");
+        if (req.session && req.session.loggedIn) {
+            events.create(data.department, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getEvents(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            events.get(res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function updateEvent(req, res, id, data) {
+        console.log("Requst updateDepartment is success");
+        if (req.session && req.session.loggedIn) {
+            events.update(id, data.event, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function removeEvent(req, res, id, data) {
+        console.log("Requst removeDepartment is success");
+        if (req.session && req.session.loggedIn) {
+            events.remove(id, res);
+        } else {
+            res.send(401);
+        }
+    }
+    //---------END------Events----------------------------------
 
     return {
 
@@ -848,7 +885,12 @@ var requestHandler = function (mongoose) {
         createOpportunitie: createOpportunitie,
         getOpportunities: getOpportunities,
         updateOpportunitie: updateOpportunitie,
-        removeOpportunitie: removeOpportunitie
+        removeOpportunitie: removeOpportunitie,
+        
+        createEvent: createEvent,
+        getEvents: getEvents,
+        updateEvent: updateEvent,
+        removeEvent: removeEvent
     }
 }
 //---------EXPORTS----------------------------------------
