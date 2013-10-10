@@ -1,46 +1,82 @@
 <div class="form-holder">
-    <div class="form">
+    <div class="form" id="createEmployeeForm">
+        <h2><%=name%></h2>
         <p>
-            <label><%=name%> </label>
+            <label>Address</label>
+            <span><%=address.street%></span>
+            <span><%=address.city%></span>
+            <span><%=address.state%></span>
+            <span><%=address.zip%></span>
+            <span><%=address.country%></span>
         </p>
         <p>
-            <address>Address:
-                <%=address.street1%>
-                <%=address.street2%>
-                <%=address.city%>
-                <%=address.state%>
-                <%=address.zip%>
-                <%=address.country%>
-            </address>
+            <label>Website</label>
+            <span><%=website%></span>
         </p>
         <p>
-            <label>Website: <%=website%></label>
+            <label>Phone </label>
+            <span><%=phones.phone%></span>
         </p>
         <p>
-            <label>Contacts: <%=contacts%></label>
+            <label>Mobile </label>
+            <span><%=phones.mobile%></span>
         </p>
         <p>
-            <label>Phone: <%=phones.phone%></label>
+            <label>Fax </label>
+            <span><%=phones.fax%></span>
         </p>
-        <p>
-            <label>Mobile: <%=phones.mobile%></label>
-        </p>
-        <p>
-            <label>Fax: <%=phones.fax%></label>
-        </p>
-        <p>
-            <label>InternalNotes: <%=internalNotes%></label>
-        </p>
+        <br />
+        <div id="tabs">
+            <div>
+                <ul id="tabList">
+                    <li>
+                        <a href="#" class="selected">Internal Notes</a></li>
+                    <li>
+                        <a href="#">Sales & Purchases</a></li>
+                    <li>
+                        <a href="#">History</a></li>
+                </ul>
+            </div>
 
-        <div>
-            <span>Sales & Purchases</span>
-            <p>
-                <label>Customer: <input type="checkbox" checked=<%=salesPurchases.isCustomer%> /> </label>
-                <label>Supplier: <input type="checkbox" checked=<%=salesPurchases.isSupplier%> /> </label>
-                <label>Active: <input type="checkbox" checked=<%=salesPurchases.active%> /> </label>
+            <div class="tab">
+                <p>
+                    <textarea><%=internalNotes%></textarea>
+                </p>
+            </div>
 
-            </p>
+            <div class="tab">
+                <p>
+                    <label>Sales Person </label>
+                    <span><%=salesPurchases.salesPerson.name%></span>
+                </p>
+                <p>
+                    <label>Sales Team </label>
+                    <span><%=salesPurchases.salesTeam.name%></span>
+                </p>
+                <p>
+                    <label>Reference </label>
+                    <span><%=salesPurchases.reference%></span>
+                </p>
+                <p>
+                    <label>Language </label>
+                    <span><%=salesPurchases.language%></span>
+                </p>
+                <p>
+                    <label>Date </label>
+                    <span><%=salesPurchases.date%></span>
+                </p>
+                <p>
+                    <label>Customer</label>
+                    <input type="checkbox" <%=(salesPurchases.isCustomer)? "checked='checked'":''%> /> </p>
+                <p>
+                    <label>Supplier</label>
+                    <input type="checkbox" <%=(salesPurchases.isSupplier)? "checked='checked'":''%> /> </p>
+                <p>
+                    <label>Active </label>
+                    <input type="checkbox" <%=(salesPurchases.active)? "checked='checked'":''%> />
+                </p>
+            </div>
+            <div class="tab"></div>
         </div>
     </div>
-
 </div>

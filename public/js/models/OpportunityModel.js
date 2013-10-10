@@ -6,7 +6,7 @@
             name: '',
             expectedRevenue: {
                 value: '',
-                currency:'',
+                currency: '',
                 progress: ''
             },
             customer: {
@@ -26,10 +26,10 @@
             internalNotes: '',
             nextAction: {
                 date: null,
-                desc:''
+                desc: ''
             },
             expectedClosing: null,
-            priority: 'Normal',
+            priority: 'Trivial',
             categories: '',
             workflow: {
                 name: 'New',

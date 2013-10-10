@@ -11,10 +11,9 @@
             </p>
             <p>
                 <label for="tags">Tags</label>
-                <select id="tags">
-                    <option selected="selected" value="0">Select...</option>
-                </select>
+                <input type="text" id="tags" />
             </p>
+            <br />
             <div id="tabs">
                 <div>
                     <ul id="tabList">
@@ -30,27 +29,27 @@
                     <!--<div class="half-block left">-->
                     <p>
                         <label>Working Address</label>
-                        <input type="text" class="waddress" name="street" placeholder="Street..."/>
-                        <input type="text" class="waddress" name="city" placeholder="City"/>
-                        <input type="text" class="waddress" name="state" placeholder="State"/>
-                        <input type="text" class="waddress" name="zip" placeholder="ZIP"/>
-                        <input type="text" class="waddress" name="country" placeholder="Country"/>
+                        <input type="text" class="workAddress" name="street" placeholder="Street..." />
+                        <input type="text" class="workAddress" name="city" placeholder="City" />
+                        <input type="text" class="workAddress" name="state" placeholder="State" />
+                        <input type="text" class="workAddress" name="zip" placeholder="ZIP" />
+                        <input type="text" class="workAddress" name="country" placeholder="Country" />
                     </p>
 
                     <p>
-                        <label for="wemail">Work Email</label>
-                        <input type="text" name="wemail" id="wemail" />
+                        <label for="workEmail">Work Email</label>
+                        <input type="text" id="workEmail" />
                     </p>
                     <!--</div>-->
                     <!--<div class="half-block left">-->
                     <p>
                         <label for="phone">Work Phone</label>
-                        <input type="text" name="phone" id="phone" />
+                        <input type="text" id="phone" />
                     </p>
 
                     <p>
                         <label for="mobile">Work Mobile</label>
-                        <input type="text" name="mobile" id="mobile" />
+                        <input type="text" id="mobile" />
                     </p>
                     <p>
                         <label for="officeLocation">Office Location</label>
@@ -62,7 +61,7 @@
                             <option selected="selected" value="0">Select...</option>
                             <% usersCollection.each(function(option){ %>
                            
-                            <option value="<%= option.get('_id') %>"><%= option.get('ulogin')%></option>
+                            <option value="<%= option.get('_id') %>"><%= option.get('login')%></option>
                             <% }); %>
                        
                         </select>
@@ -85,8 +84,8 @@
                         </select>
                     </p>
                     <p>
-                        <label for="job">Job</label>
-                        <select id="job">
+                        <label for="jobPosition">Job</label>
+                        <select id="jobPosition">
                             <option selected="selected" value="0">Select...</option>
                             <% jobPositionsCollection.each(function(option){ %>
                            
@@ -159,14 +158,14 @@
                         </select>
                     </p>
                     <h2>Contact Information</h2>
-                    
+
                     <p>
                         <label>Home Address</label>
-                        <input type="text" class="homeAddress" name="street" placeholder="Street..."/>
-                        <input type="text" class="homeAddress" name="city" placeholder="City"/>
-                        <input type="text" class="homeAddress" name="state" placeholder="State"/>
-                        <input type="text" class="homeAddress" name="zip" placeholder="ZIP"/>
-                        <input type="text" class="homeAddress" name="country" placeholder="Country"/>
+                        <input type="text" class="homeAddress" name="street" placeholder="Street..." />
+                        <input type="text" class="homeAddress" name="city" placeholder="City" />
+                        <input type="text" class="homeAddress" name="state" placeholder="State" />
+                        <input type="text" class="homeAddress" name="zip" placeholder="ZIP" />
+                        <input type="text" class="homeAddress" name="country" placeholder="Country" />
                     </p>
                     <h2>Birth</h2>
                     <p>

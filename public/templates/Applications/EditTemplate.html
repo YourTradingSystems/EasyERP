@@ -27,12 +27,12 @@
 
             <p>
                 <label for="phone">Phone </label>
-                <input type="text" id="phone" value="<%=model.wphones.phone%>"/>
+                <input type="text" id="phone" value="<%=model.workPhones.phone%>"/>
             </p>
 
             <p>
                 <label for="mobile">Mobile </label>
-                <input type="text" id="mobile" value="<%=model.wphones.mobile%>"/>
+                <input type="text" id="mobile" value="<%=model.workPhones.mobile%>"/>
             </p>
 
              <p>
@@ -50,7 +50,7 @@
                 <select id="relatedUser">
                     <option selected="selected" value="0">Select...</option>
                     <% employeesCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)?'selected="selected"':''%>><%= option.get('name')%></option>
+                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)?'selected="selected"':''%>><%= option.get('name').first%> <%= option.get('name').last%></option>
                     <% }); %>
                 </select>
             </p>

@@ -7,9 +7,10 @@
     "collections/Degrees/DegreesCollection",
     "collections/SourceOfApplicants/SourceOfApplicantsCollection",
     "collections/Workflows/WorkflowsCollection",
+    "common",
     "custom"
 ],
-    function (EditTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, WorkflowsCollection, Custom) {
+    function (EditTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, WorkflowsCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -116,12 +117,14 @@
                         name: degreeId
                     };
 
-                    var relatedUser = {};
                     var relatedUserId = this.$("#relatedUser option:selected").val();
-                    var objRelatedUser = this.employeesCollection.get(relatedUserId);
-                    if (objRelatedUser) {
-                        relatedUser.id = relatedUserId;
-                        relatedUser.login = objRelatedUser.get('name');
+                    var _relatedUser = common.toObject(relatedUserId, this.employeesCollection);
+                    var relatedUser = {};
+                    if (_relatedUser) {
+                        relatedUser.id = _relatedUser._id;
+                        relatedUser.login = _relatedUser.name.first + ' ' + _relatedUser.name.last;
+                    } else {
+                        relatedUser = currentModel.defaults.relatedUser;
                     }
 
                     var nextActionSt = $.trim($("#nextAction").val());
@@ -139,19 +142,23 @@
                     var referredBy = $.trim($("#referredBy").val());
 
                     var departmentId = this.$("#department option:selected").val();
-                    var objDepartment = this.departmentsCollection.get(departmentId);
+                    var _department = common.toObject(departmentId, this.departmentsCollection);
                     var department = {};
-                    if (objDepartment) {
-                        department.departmentName = objDepartment.get('departmentName');
-                        department.departmentId = departmentId;
+                    if (_department) {
+                        department.id = _department._id;
+                        department.name = _department.departmentName;
+                    } else {
+                        department = currentModel.defaults.department;
                     }
 
                     var jobId = this.$("#job option:selected").val();
-                    var objJob = this.jobPositionsCollection.get(jobId);
-                    var job = {};
-                    if (objJob) {
-                        job.jobPositionId = jobId;
-                        job.jobPositionName = objJob.get('name');
+                    var _jobPosition = common.toObject(jobId, this.jobPositionsCollection);
+                    var jobPosition = {};
+                    if (_jobPosition) {
+                        jobPosition.id = _jobPosition._id;
+                        jobPosition.name = _jobPosition.name;
+                    } else {
+                        jobPosition = currentModel.defaults.jobPosition;
                     }
 
                     var expectedSalary = $.trim($("#expectedSalary").val());
@@ -170,7 +177,7 @@
                         source: source,
                         referredBy: referredBy,
                         department: department,
-                        job: job,
+                        jobPosition: jobPosition,
                         expectedSalary: expectedSalary,
                         proposedSalary: proposedSalary,
                         tags: tags,

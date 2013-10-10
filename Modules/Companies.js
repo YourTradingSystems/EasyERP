@@ -6,7 +6,7 @@ var Company = function (logWriter, mongoose) {
         email: { type: String, default: '' },
         name: { type: String, default: 'emptyCompany' },
         address: {
-            street1: { type: String, default: '' },
+            street: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
@@ -23,8 +23,14 @@ var Company = function (logWriter, mongoose) {
         salesPurchases: {
             isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
-            salesPerson: { type: String, default: '' },
-            salesTeam: { type: String, default: '' },
+            salesPerson: {
+                id: {type: String, default: ''},
+                name: { type: String, default: '' }
+            },
+            salesTeam: {
+                id: { type: String, default: '' },
+                name: { type: String, default: '' }
+            },
             active: { type: Boolean, default: true },
             reference: { type: String, default: '' },
             language: { type: String, default: 'English' },
@@ -48,16 +54,16 @@ var Company = function (logWriter, mongoose) {
                     res.send(400, { error: 'Company.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    company.find({ cname: data.name }, function(error, result) {
+                    company.find({ name: data.name }, function (error, doc) {
                         if (error) {
                             logWriter.log("Company.js. create Company.find" + error);
                             res.send(500, { error: 'Company.create find error' });
                         }
-                        if (result) {
+                        if (doc.length != 0) {
                             if (doc[0].name === data.name) {
                                 res.send(400, { error: 'An company with the same Name already exists' });
                             }
-                        } else if (result.length === 0) {
+                        } else if (doc.length === 0) {
                             savetoBd(data);
                         }
                     });
@@ -72,23 +78,20 @@ var Company = function (logWriter, mongoose) {
                         if (data.email) {
                             _company.email = data.email;
                         }
-                        if (data.cname) {
+                        if (data.name) {
                             _company.name = data.name;
                         }
-                        if (data.cinternalNotes) {
+                        if (data.internalNotes) {
                             _company.internalNotes = data.internalNotes;
                         }
                         if (data.address) {
-                            if (data.address.street1) {
-                                _company.address.street1 = data.address.street1;
-                            }
-                            if (data.address.street2) {
-                                _company.address.street2 = data.address.street2;
+                            if (data.address.street) {
+                                _company.address.street = data.address.street;
                             }
                             if (data.address.city) {
                                 _company.address.city = data.address.city;
                             }
-                            if (data.caddress.state) {
+                            if (data.address.state) {
                                 _company.address.state = data.address.state;
                             }
                             if (data.address.zip) {
@@ -129,10 +132,12 @@ var Company = function (logWriter, mongoose) {
                                 _company.salesPurchases.isSupplier = data.salesPurchases.isSupplier;
                             }
                             if (data.salesPurchases.salesPerson) {
-                                _company.salesPurchases.salesPerson = data.salesPurchases.salesPerson;
+                                _company.salesPurchases.salesPerson.id = data.salesPurchases.salesPerson._id;
+                                _company.salesPurchases.salesPerson.name = data.salesPurchases.salesPerson.name.first + ' ' + data.salesPurchases.salesPerson.name.last;
                             }
                             if (data.salesPurchases.salesTeam) {
-                                _company.salesPurchases.salesTeam = data.salesPurchases.salesTeam;
+                                _company.salesPurchases.salesTeam.id = data.salesPurchases.salesTeam._id;
+                                _company.salesPurchases.salesTeam.name = data.salesPurchases.salesTeam.departmentName;
                             }
                             if (data.salesPurchases.reference) {
                                 _company.salesPurchases.reference = data.salesPurchases.reference;
@@ -295,6 +300,7 @@ var Company = function (logWriter, mongoose) {
 
         update: function (id, data, res) {
             try {
+                console.log(data);
                 delete data._id;
                 company.update({ _id: id }, data, function (err, companies) {
 

@@ -47,8 +47,8 @@ var Department = function (logWriter, mongoose) {
                         if (data.parentDepartment._id) {
                             _department.parentDepartment.id = data.parentDepartment._id;
                         }
-                        if (data.parentDepartment.name) {
-                            _department.parentDepartment.name = data.parentDepartment.name;
+                        if (data.parentDepartment.departmentName) {
+                            _department.parentDepartment.name = data.parentDepartment.departmentName;
                         }
                     }
 
@@ -57,7 +57,7 @@ var Department = function (logWriter, mongoose) {
                             _department.departmentManager.id = data.departmentManager._id;
                         }
                         if (data.departmentManager.name) {
-                            _department.departmentManager.name = data.departmentManager.name;
+                            _department.departmentManager.name = data.departmentManager.name.first + " " + data.departmentManager.name.last;
                         }
                     }
                     _department.save(function (err, result) {

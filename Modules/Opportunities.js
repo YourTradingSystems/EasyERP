@@ -30,10 +30,7 @@ var Opportunities = function (logWriter, mongoose) {
             date: { type: Date, default: null }
         },
         expectedClosing: { type: Date, default: null },
-        priority: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        priority: { type: String, default: 'Trivial' },
         categories: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -109,16 +106,16 @@ var Opportunities = function (logWriter, mongoose) {
                         if (data.salesPerson._id) {
                             _opportunitie.salesPerson.id = data.salesPerson._id;
                         }
-                        if (data.customer.name) {
-                            _opportunitie.salesPerson.name = data.salesPerson.name;
+                        if (data.salesPerson.name) {
+                            _opportunitie.salesPerson.name = data.salesPerson.name.first + ' ' + data.salesPerson.name.last;
                         }
                     }
                     if (data.salesTeam) {
                         if (data.salesTeam._id) {
                             _opportunitie.salesTeam.id = data.salesTeam._id;
                         }
-                        if (data.salesTeam.name) {
-                            _opportunitie.salesTeam.name = data.salesTeam.name;
+                        if (data.salesTeam.departmentName) {
+                            _opportunitie.salesTeam.name = data.salesTeam.departmentName;
                         }
                     }
                     if (data.internalNotes) {
@@ -136,11 +133,8 @@ var Opportunities = function (logWriter, mongoose) {
                         _opportunitie.expectedClosing = data.expectedClosing;
                     }
                     if (data.priority) {
-                        if (data.priority._id) {
-                            _opportunitie.priority.id = data.priority._id;
-                        }
-                        if (data.priority.name) {
-                            _opportunitie.priority.name = data.priority.name;
+                        if (data.priority) {
+                            _opportunitie.priority = data.priority;
                         }
                     }
                     if (data.categories) {

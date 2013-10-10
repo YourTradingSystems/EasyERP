@@ -9,15 +9,15 @@
                 last: 'Employee'
             },
             tags: [],
-            waddress: {
+            workAddress: {
                 street: '',
                 city: '',
                 state: '',
                 zip: '',
                 country: ''
             },
-            wemail: '',
-            wphones: {
+            workEmail: '',
+            workPhones: {
                 mobile: '',
                 phone: ''
             },
@@ -26,26 +26,26 @@
                 id: '',
                 login: ''
             },
-            visibility: false,
+            visibility: 'Public',
             department: {
-                departmentId: '',
-                departmentName: ''
+                id: '',
+                name: ''
             },
-            job: {
-                jobPositionId: '',
-                jobPositionName: ''
+            jobPosition: {
+                id: '',
+                name: ''
             },
             manager: {
-                employeeId: '',
-                employeeName: ''
+                id: '',
+                name: ''
             },
             coach: {
-                employeeId: '',
-                employeeName: ''
+                id: '',
+                name: ''
             },
             nationality: '',
-            identNo: 0,
-            passportNo: 0,
+            identNo: '',
+            passportNo: '',
             bankAccountNo: '',
             otherId: '',
             homeAddress: {

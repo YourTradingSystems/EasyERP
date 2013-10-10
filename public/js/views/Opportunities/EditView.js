@@ -6,9 +6,10 @@
     "collections/Departments/DepartmentsCollection",
     "collections/Priority/TaskPriority",
     "collections/Workflows/WorkflowsCollection",
+    "common",
     "custom"
 ],
-    function (EditTemplate, OpportunitiesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, WorkflowsCollection, Custom) {
+    function (EditTemplate, OpportunitiesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, WorkflowsCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -55,38 +56,43 @@
                     }
 
                     var customerId = this.$("#customer option:selected").val();
-                    var objCustomer = this.customersCollection.get(customerId);
+                    var _customer = common.toObject(customerId, this.customersCollection);
                     var customer = {};
-                    if (objCustomer) {
-                        customer.id = customerId;
-                        customer.name = objCustomer.get('name').first + " " + objCustomer.get('name').last;
+                    if (_customer) {
+                        customer.id = _customer._id;
+                        customer.name = _customer.name.first + ' ' + _customer.name.last;
+                    } else {
+                        customer = currentModel.defaults.customer;
                     }
 
                     var email = $.trim($("#email").val());
                     var phone = $.trim($("#phone").val());
 
                     var salesPersonId = this.$("#salesPerson option:selected").val();
-                    var objSalesPerson = this.employeesCollection.get(salesPersonId);
+                    var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
                     var salesPerson = {};
-                    if (objSalesPerson) {
-                        salesPerson.id = salesPersonId;
-                        salesPerson.name = objSalesPerson.get('name').first + " " + objSalesPerson.get('name').last;
+                    if (_salesPerson) {
+                        salesPerson.id = _salesPerson._id;
+                        salesPerson.name = _salesPerson.name.first + ' ' + _salesPerson.name.last;
+                    } else {
+                        salesPerson = currentModel.defaults.salesPerson;
                     }
 
                     var salesTeamId = this.$("#salesTeam option:selected").val();
-                    var objSalesTeam = this.departmentsCollection.get(salesTeamId);
+                    var _salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
                     var salesTeam = {};
-                    if (objSalesTeam) {
-                        salesTeam.id = salesTeamId;
-                        salesTeam.name = objSalesTeam.get('departmentName');
+                    if (_salesTeam) {
+                        salesTeam.id = _salesTeam._id;
+                        salesTeam.name = _salesTeam.departmentName;
+                    } else {
+                        salesTeam = currentModel.defaults.salesTeam;
                     }
 
                     var nextActionSt = $.trim($("#nextActionDate").val());
                     var nextActionDescription = $.trim($("#nextActionDescription").val());
                     var nextActionDate = "";
                     if (nextActionSt) {
-                        //nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
-                        nextActionDate = nextActionSt;
+                        nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
                     }
                     var nextAction = {
                         date: nextActionDate,
@@ -102,6 +108,7 @@
                     var priority = $("#priority").val();
 
                     var internalNotes = $.trim($("#internalNotes").val());
+
 
                     currentModel.set({
                         name: name,
