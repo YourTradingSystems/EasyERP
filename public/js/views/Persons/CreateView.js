@@ -17,7 +17,6 @@ define([
                 this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = options.collection;
 
-
                 this.bind('reset', _.bind(this.render, this));
                 this.render();
             },
