@@ -10,8 +10,8 @@
                 last: 'Application'
             },
             tags: [],
-            wemail: '',
-            wphones: {
+            workEmail: '',
+            workPhones: {
                 mobile: '',
                 phone: ''
             },
@@ -24,12 +24,12 @@
                 login: ''
             },
             department: {
-                departmentId: '',
-                departmentName: ''
+                id: '',
+                name: ''
             },
-            job: {
-                jobPositionId: '',
-                jobPositionName: ''
+            jobPosition: {
+                id: '',
+                name: ''
             },
             nextAction: null,
             source: {

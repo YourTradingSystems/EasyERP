@@ -5,9 +5,10 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
     "collections/Users/UsersCollection",
+    "common",
     "custom"
 ],
-    function (EditTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, Custom) {
+    function (EditTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -24,7 +25,6 @@ define([
                 this.accountsDdCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = options.collection;
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
-
                 this.render();
             },
 
@@ -58,17 +58,19 @@ define([
                         last: last
                     };
 
-                    var waddress = {};
-                    $("p").find(".waddress").each(function () {
+                    var workAddress = {};
+                    $("p").find(".workAddress").each(function () {
                         var el = $(this);
-                        waddress[el.attr("name")] = el.val();
+                        workAddress[el.attr("name")] = el.val();
                     });
 
-                    var wemail = $.trim($("#wemail").val());
+                    var tags = $.trim($("#tags").val()).split(',');
+
+                    var workEmail = $.trim($("#workEmail").val());
 
                     var phone = $.trim($("#phone").val());
                     var mobile = $.trim($("#mobile").val());
-                    var wphones = {
+                    var workPhones = {
                         phone: phone,
                         mobile: mobile
                     };
@@ -76,43 +78,53 @@ define([
                     var officeLocation = $.trim($("#officeLocation").val());
 
                     var relatedUserId = this.$("#relatedUser option:selected").val();
-                    var objRelatedUser = this.usersCollection.get(relatedUserId);
+                    var _relatedUser = common.toObject(relatedUserId, this.usersCollection);
                     var relatedUser = {};
-                    if (objRelatedUser) {
-                        relatedUser.id = relatedUserId;
-                        relatedUser.login = objRelatedUser.get('ulogin');
+                    if (_relatedUser) {
+                        relatedUser.id = _relatedUser._id;
+                        relatedUser.login = _relatedUser.login;
+                    } else {
+                        relatedUser = currentModel.defaults.relatedUser;
                     }
 
                     var departmentId = this.$("#department option:selected").val();
-                    var objDepartment = this.departmentsCollection.get(departmentId);
+                    var _department = common.toObject(departmentId, this.departmentsCollection);
                     var department = {};
-                    if (objDepartment) {
-                        department.departmentName = objDepartment.get('departmentName');
-                        department.departmentId = departmentId;
+                    if (_department) {
+                        department.id = _department._id;
+                        department.name = _department.login;
+                    } else {
+                        department = currentModel.defaults.department;
                     }
 
-                    var jobId = this.$("#job option:selected").val();
-                    var objJob = this.jobPositionsCollection.get(jobId);
-                    var job = {};
-                    if (objJob) {
-                        job.jobPositionId = jobId;
-                        job.jobPositionName = objJob.get('name');
+                    var jobPositionId = this.$("#jobPosition option:selected").val();
+                    var _jobPosition = common.toObject(jobPositionId, this.jobPositionsCollection);
+                    var jobPosition = {};
+                    if (_jobPosition) {
+                        jobPosition.id = _jobPosition._id;
+                        jobPosition.name = _jobPosition.name;
+                    } else {
+                        jobPosition = currentModel.defaults.jobPosition;
                     }
 
                     var managerId = this.$("#manager option:selected").val();
-                    var objManager = this.accountsDdCollection.get(managerId);
+                    var _manager = common.toObject(managerId, this.accountsDdCollection);
                     var manager = {};
-                    if (objManager) {
-                        manager.employeeName = objManager.get('name').first + " " + objManager.get('name').last;
-                        manager.employeeId = managerId;
+                    if (_manager) {
+                        manager.id = _manager._id;
+                        manager.name = _manager.name.first + ' ' + _manager.name.last;
+                    } else {
+                        manager = currentModel.defaults.manager;
                     }
 
                     var coachId = this.$("#coach option:selected").val();
-                    var objCoach = this.accountsDdCollection.get(coachId);
+                    var _coach = common.toObject(coachId, this.accountsDdCollection);
                     var coach = {};
-                    if (objCoach) {
-                        coach.employeeName = objCoach.get('name').first + " " + objCoach.get('name').last;
-                        coach.employeeId = coachId;
+                    if (_coach) {
+                        coach.id = _coach._id;
+                        coach.name = _coach.name.first + ' ' + _coach.name.last;
+                    } else {
+                        coach = currentModel.defaults.coach;
                     }
 
                     var identNo = parseInt($.trim($("#identNo").val()));
@@ -126,7 +138,6 @@ define([
                         var el = $(this);
                         homeAddress[el.attr("name")] = el.val();
                     });
-                    console.log(homeAddress);
 
                     var dateBirthSt = $.trim($("#dateBirth").val());
                     var dateBirth = "";
@@ -134,30 +145,30 @@ define([
                         dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                     }
 
-                    var active;
-                    if ($("#active").is(":checked")) { console.log("true"); active = true; }
-                    else { active = false; }
+                    var active = ($("#active").is(":checked")) ? true : false;
 
                     currentModel.set({
                         name: name,
-                        wemail: wemail,
-                        wphones: wphones,
+                        workAddress: workAddress,
+                        workEmail: workEmail,
+                        workPhones: workPhones,
                         officeLocation: officeLocation,
                         relatedUser: relatedUser,
                         department: department,
-                        job: job,
+                        jobPosition: jobPosition,
                         manager: manager,
                         coach: coach,
                         identNo: identNo,
                         passportNo: passportNo,
                         otherId: otherId,
+                        homeAddress: homeAddress,
                         dateBirth: dateBirth,
                         active: active
                     });
 
                     currentModel.save({}, {
                         headers: {
-                           mid: mid
+                            mid: mid
                         },
                         wait: true,
                         success: function (model) {

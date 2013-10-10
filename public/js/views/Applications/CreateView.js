@@ -30,7 +30,6 @@ define([
                 this.sourceOfApplicantsCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.applicationsCollection = options.collection;
-                //this.bind('submit', _.bind(this.saveItem, this));
                 this.render();
             },
 
@@ -100,7 +99,7 @@ define([
                 var department = common.toObject(departmentId, this.departmentsCollection);
 
                 var jobId = this.$("#job option:selected").val();
-                var job = common.toObject(jobId, this.jobPositionsCollection);
+                var jobPosition = common.toObject(jobId, this.jobPositionsCollection);
 
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());
@@ -118,7 +117,7 @@ define([
                     source: source,
                     referredBy: referredBy,
                     department: department,
-                    job: job,
+                    jobPosition: jobPosition,
                     expectedSalary: expectedSalary,
                     proposedSalary: proposedSalary,
                     tags: tags,

@@ -8,7 +8,7 @@
             email: '',
             name: 'emptyCompany',
             address: {
-                street1: '',
+                street: '',
                 city: '',
                 state: '',
                 zip: '',
@@ -25,13 +25,18 @@
             salesPurchases: {
                 isCustomer: false,
                 isSupplier: false,
-                salesPerson: '',
-                salesTeam: '',
+                salesPerson: {
+                    id: '',
+                    name: ''
+                },
+                salesTeam: {
+                    id: '',
+                    name: ''
+                },
                 active: true,
                 reference: '',
                 language: 'English',
                 date: null,
-                receiveMessages: 0
             },
             social: {
                 fb: '',
