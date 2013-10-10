@@ -54,9 +54,9 @@ var Leads = function (logWriter, mongoose) {
         reffered: { type: String, default: '' },
         internalNotes: { type: String, default: '' }
     }, { collection: 'Leads' });
-
+    
     var lead = mongoose.model('Leads', leadsSchema);
-
+    
     function create(data, res) {
         try {
             if (!data) {
@@ -102,7 +102,7 @@ var Leads = function (logWriter, mongoose) {
                             _lead.customer.name = data.customer.name;
                         }
                     }
-                    if(data.address) {
+                    if (data.address) {
                         if (data.address.street) {
                             _lead.address.street = data.address.street;
                         }
