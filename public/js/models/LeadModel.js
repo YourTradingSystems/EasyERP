@@ -38,7 +38,7 @@
                 phone: ''
             },
             fax: '',
-            priority: '',
+            priority: 'Trivial',
             categories: {
                 id: '',
                 name: ''

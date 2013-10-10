@@ -245,7 +245,7 @@ var Company = function (logWriter, mongoose) {
             res['result']['description'] = 'An error was find';
             res['data'] = [];
             var query = (data.isOwnCompany) ? { isOwnCompany: true } : {};
-            Company.find(query, { _id: 1, cname: 1 }, function (err, companies) {
+            Company.find(query, { _id: 1, name: 1 }, function (err, companies) {
                 try {
                     if (err) {
                         //func();
@@ -273,7 +273,7 @@ var Company = function (logWriter, mongoose) {
             var res = {};
             res['data'] = [];
             var query = company.find({});
-            query.sort({ cname: 1 });
+            query.sort({ name: 1 });
             query.exec(function (err, companies) {
                 if (err) {
                     console.log(err);

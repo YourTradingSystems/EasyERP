@@ -7,9 +7,10 @@ define([
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Priority/TaskPriority",
-    "custom"
+    "custom",
+    'common'
 ],
-    function (EditTemplate, LeadsCollection, WorkflowsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, Custom) {
+    function (EditTemplate, LeadsCollection, WorkflowsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -113,20 +114,24 @@ define([
 
                     var name = $.trim($("#name").val());
 
-                    var companyId = this.$("#company option:selected").val();
-                    var objCompany = this.companiesCollection.get(companyId);
+                    var companyId = $(this.el).find("#company option:selected").val();
+                    var _company = common.toObject(companyId, this.companiesCollection);
                     var company = {};
-                    if (objCompany) {
-                        company.id = companyId;
-                        company.name = objCompany.get('cname');
+                    if (_company) {
+                        company.id = _company._id;
+                        company.name = _company.name;
+                    } else {
+                        company = currentModel.defaults.company;
                     }
 
-                    var customerId = this.$("#customer option:selected").val();
-                    var objCustomer = this.customersCollection.get(customerId);
+                    var idCustomer = $(this.el).find("#customer option:selected").val();
+                    var _customer = common.toObject(idCustomer, this.customersCollection);
                     var customer = {};
-                    if (objCustomer) {
-                        customer.id = customerId;
-                        customer.name = objCustomer.get('name').first + " " + objCustomer.get('name').last;
+                    if (_customer) {
+                        customer.id = _customer._id;
+                        customer.name = _customer.name.first + ' ' + _customer.name.last;
+                    } else {
+                        customer = currentModel.defaults.customer;
                     }
 
                     var address = {};
@@ -136,19 +141,23 @@ define([
                     });
 
                     var salesPersonId = this.$("#salesPerson option:selected").val();
-                    var objSalesPerson = this.employeesCollection.get(salesPersonId);
+                    var objSalesPerson = common.toObject(salesPersonId, this.employeesCollection);
                     var salesPerson = {};
                     if (objSalesPerson) {
                         salesPerson.id = salesPersonId;
-                        salesPerson.name = objSalesPerson.get('name').first + " " + objSalesPerson.get('name').last;
+                        salesPerson.name = objSalesPerson.name.first + " " + objSalesPerson.name.last;
+                    } else {
+                        salesPerson = currentModel.defaults.salesPerson;
                     }
-
+                    
                     var salesTeamId = this.$("#salesTeam option:selected").val();
-                    var objSalesTeam = this.departmentsCollection.get(salesTeamId);
+                    var objSalesTeam = common.toObject(salesTeamId, this.departmentsCollection);
                     var salesTeam = {};
                     if (objSalesTeam) {
                         salesTeam.id = salesTeamId;
-                        salesTeam.name = objSalesTeam.get('departmentName');
+                        salesTeam.name = objSalesTeam.departmentName;
+                    } else {
+                        salesTeam = currentModel.defaults.salesTeam;
                     }
 
                     var first = $.trim($("#first").val());
