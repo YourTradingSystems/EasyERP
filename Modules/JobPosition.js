@@ -16,7 +16,9 @@ var JobPosition = function (logWriter, mongoose) {
         workflow: {
             name: { type: String, default: 'No Recruitment' },
             status: { type: String, default: 'New' }
-        }
+        },
+        numberOfEmployees: { type: Number, default: 0 },
+        totalForecastedEmployees: { type: Number, default: 0 }
     }, { collection: 'JobPosition' });
 
     var job = mongoose.model('JobPosition', jobPositionSchema);
