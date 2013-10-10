@@ -72,11 +72,13 @@ define([
                     var requirements = $.trim($("#requirements").val());
 
                     var departmentId = this.$("#department option:selected").val();
-                    var objDepartment = this.departmentsCollection.get(departmentId);
+                    var _department = common.toObject(idManager, this.departmentsCollection);
                     var department = {};
-                    if (objDepartment) {
-                        department.name = objDepartment.get('departmentName');
-                        department.id = departmentId;
+                    if (_department) {
+                        department.id = _department._id;
+                        department.name = _department.departmentName;
+                    } else {
+                        department = currentModel.defaults.department;
                     }
 
                     currentModel.set({

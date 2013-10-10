@@ -7,9 +7,9 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Priority/TaskPriority",
     "models/LeadModel",
-    "custom"
+    "common"
 ],
-    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, LeadModel, Custom) {
+    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, LeadModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -63,7 +63,7 @@ define([
                 var company = {};
                 if (objCompany) {
                     company.id = companyId;
-                    company.name = objCompany.get('cname');
+                    company.name = objCompany.get('name');
                 }
 
                 var customerId = this.$("#customer option:selected").val();

@@ -402,7 +402,7 @@ var Employee = function (logWriter, mongoose) {
 
         getApplications: getApplications,
 
-        Employee: Employee
+        employee: employee
     };
 };
 
