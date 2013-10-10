@@ -11,11 +11,9 @@
             </p>
             <p>
                 <label for="tags">Tags</label>
-                <select id="tags">
-                    <option selected="selected" value="0">Select...</option>
-                </select>
+                <input type="text" id="tags" value="<%=model.tags%>" />
             </p>
-
+            <br />
             <div id="tabs">
                 <div>
                     <ul id="tabList">
@@ -28,44 +26,42 @@
                     </ul>
                 </div>
                 <div class="tab">
-
                     <!--<div class="half-block left">-->
                     <label>Working Address</label>
                     <p>
                         <label>Street</label>
-                        <input type="text" class="waddress" name="street" value="<%=model.waddress.street%>" />
+                        <input type="text" class="workAddress" name="street" value="<%=model.workAddress.street%>" />
                     </p>
                     <p>
                         <label>City</label>
-                        <input type="text" class="waddress" name="city" value="<%=model.waddress.city%>" />
+                        <input type="text" class="workAddress" name="city" value="<%=model.workAddress.city%>" />
                     </p>
                     <p>
                         <label>State</label>
-                        <input type="text" class="waddress" name="state" value="<%=model.waddress.state%>"/>
+                        <input type="text" class="workAddress" name="state" value="<%=model.workAddress.state%>"/>
                     <p>
                         <label>Zip</label>
-                        <input type="text" class="waddress" name="zip" value="<%=model.waddress.zip%>"/>
+                        <input type="text" class="workAddress" name="zip" value="<%=model.workAddress.zip%>"/>
                     </p>
                     <p>
                         <label>Country</label>
-                        <input type="text" class="waddress" name="country" value="<%=model.waddress.country%>" />
+                        <input type="text" class="workAddress" name="country" value="<%=model.workAddress.country%>" />
                     </p>
 
-
                     <p>
-                        <label for="wemail">Work Email</label>
-                        <input type="text" name="wemail" id="wemail" value="<%=model.wemail%>" required />
+                        <label for="workEmail">Work Email</label>
+                        <input type="text" id="workEmail" value="<%=model.workEmail%>" required />
                     </p>
                     <!--</div>-->
                     <!--<div class="half-block left">-->
                     <p>
                         <label for="phone">Work Phone</label>
-                        <input type="text" name="phone" id="phone" value="<%=model.wphones.phone%>" required />
+                        <input type="text" name="phone" id="phone" value="<%=model.workPhones.phone%>" required />
                     </p>
 
                     <p>
                         <label for="mobile">Work Mobile</label>
-                        <input type="text" name="mobile" id="mobile" value="<%=model.wphones.mobile%>" required />
+                        <input type="text" name="mobile" id="mobile" value="<%=model.workPhones.mobile%>" required />
                     </p>
                     <p>
                         <label for="officeLocation">Office Location</label>
@@ -77,7 +73,7 @@
                             <option selected="selected" value="0">Select...</option>
                             <% usersCollection.each(function(option){ %>
                            
-                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)? 'selected="selected"':''%>><%= option.get('ulogin')%></option>
+                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)? 'selected="selected"':''%>><%= option.get('login')%></option>
                             <% }); %>
                         </select>
                     </p>
@@ -92,17 +88,17 @@
                         <select id="department">
                             <option value="0">Select...</option>
                             <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.departmentId)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
                              <% }); %>
                         </select>
                     </p>
                     <p>
-                        <label for="job">Job</label>
-                        <select id="job">
+                        <label for="jobPosition">Job</label>
+                        <select id="jobPosition">
                             <option selected="selected" value="0">Select...</option>
                             <% jobPositionsCollection.each(function(option){ %>
                            
-                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.job.jobPositionId)? 'selected="selected"':''%>><%= option.get('name')%></option>
+                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.jobPosition.id)? 'selected="selected"':''%>><%= option.get('name')%></option>
                             <% }); %>
                         </select>
                     </p>
@@ -111,7 +107,7 @@
                         <select id="manager">
                             <option selected="selected" value="0">Select...</option>
                             <% accountsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.manager.employeeId) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.manager.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
                             <% }); %>
                         </select>
                     </p>
@@ -120,7 +116,7 @@
                         <select id="coach">
                             <option selected="selected" value="0">Select...</option>
                             <% accountsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.coach.employeeId) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.coach.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
                             <% }); %>
                         </select>
                     </p>
@@ -195,7 +191,7 @@
                 <div class="tab">
                     <p>
                         <label for="active">Active</label>
-                        <input type="checkbox" <%= (model.active)? checked='checked':''%> name="active" id="active" />
+                        <input type="checkbox" <%= (model.active)? "checked='checked'":''%> name="active" id="active" />
                     </p>
                 </div>
         </fieldset>

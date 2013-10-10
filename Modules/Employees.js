@@ -27,7 +27,7 @@ var Employee = function (logWriter, mongoose) {
             id: { type: String, default: '' },
             login: { type: String, default: '' }
         },
-        visibility: { type: Boolean, default: false },
+        visibility: { type: String, default: 'Public' },
         department: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -45,8 +45,8 @@ var Employee = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         nationality: { type: String, default: '' },
-        identNo: Number,
-        passportNo: Number,
+        identNo: String,
+        passportNo: String,
         bankAccountNo: { type: String, default: '' },
         otherId: { type: String, default: '' },
         homeAddress: {
@@ -188,7 +188,7 @@ var Employee = function (logWriter, mongoose) {
                             _employee.manager.id = data.manager._id;
                         }
                         if (data.manager.name) {
-                            _employee.manager.name = data.manager.name;
+                            _employee.manager.name = data.manager.name.first + ' '  + data.manager.name.last;
                         }
                     }
                     if (data.coach) {
@@ -196,7 +196,7 @@ var Employee = function (logWriter, mongoose) {
                             _employee.coach.id = data.coach._id;
                         }
                         if (data.coach.name) {
-                            _employee.coach.name = data.coach.name;
+                            _employee.coach.name = data.coach.name.first + ' ' + data.coach.name.last;
                         }
                     }
                     if (data.nationality) {
@@ -402,7 +402,7 @@ var Employee = function (logWriter, mongoose) {
 
         getApplications: getApplications,
 
-        Employee: Employee
+        employee: employee
     };
 };
 

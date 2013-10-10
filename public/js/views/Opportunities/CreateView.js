@@ -6,9 +6,10 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Priority/TaskPriority",
     "models/OpportunityModel",
+    "common",
     "custom"
 ],
-    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, Custom) {
+    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, common, Custom) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
@@ -62,31 +63,16 @@ define([
                 }
 
                 var customerId = this.$("#customer option:selected").val();
-                var objCustomer = this.customersCollection.get(customerId);
-                var customer = {};
-                if (objCustomer) {
-                    customer.id = customerId;
-                    customer.name = objCustomer.get('name').first + " " + objCustomer.get('name').last;
-                }
+                var customer = common.toObject(customerId, this.customersCollection);
 
                 var email = $.trim($("#email").val());
                 var phone = $.trim($("#phone").val());
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
-                var objSalesPerson = this.employeesCollection.get(salesPersonId);
-                var salesPerson = {};
-                if (objSalesPerson) {
-                    salesPerson.id = salesPersonId;
-                    salesPerson.name = objSalesPerson.get('name').first + " " + objSalesPerson.get('name').last;
-                }
+                var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-                var objSalesTeam = this.departmentsCollection.get(salesTeamId);
-                var salesTeam = {};
-                if (objSalesTeam) {
-                    salesTeam.id = salesTeamId;
-                    salesTeam.name = objSalesTeam.get('departmentName');
-                }
+                var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var nextActionSt = $.trim($("#nextActionDate").val());
                 var nextActionDescription = $.trim($("#nextActionDescription").val());

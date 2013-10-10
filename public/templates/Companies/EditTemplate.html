@@ -1,38 +1,115 @@
 <div class="form-holder">
 
-    
-
-    <form method="post" action="" id="createCompanyForm" class="form">
+    <form method="post" action="" id="editEmployeeForm" class="form">
         <fieldset>
             <p>
                 <label for="name">Company Name</label><br/>
                 <input type="text" name="name" id="name" required value="<%=model.name%>"/>
-
             </p>
 
             <p>
-                <label for="email">email</label><br/>
-                <input type="text" name="email" id="email" required value="<%=model.email%>"/>
+                <label>Address</label>
+                <input type="text" class="address" name="street" placeholder="Street..."  value="<%=model.address.street%>"/>
+                <input type="text" class="address" name="city" placeholder="City" value="<%=model.address.city%>"/>
+                <input type="text" class="address" name="state" placeholder="State" value="<%=model.address.state%>"/>
+                <input type="text" class="address" name="zip" placeholder="ZIP" value="<%=model.address.zip%>"/>
+                <input type="text" class="address" name="country" placeholder="Country" value="<%=model.address.country%>"/>
+            </p>
 
+            <p>
+                <label for="website">Website</label>
+                <input type="text" id="website" value="<%=model.website%>"/>
+            </p>
+
+            <p>
+                <label for="email">Email</label><br/>
+                <input type="text" name="email" id="email" value="<%=model.email%>"/>
             </p>
             
             <p>
                 <label for="phone">Phone</label><br/>
-                <input type="text" name="phone" id="phone" value="<%=model.cphones.phone%>"/>
-
+                <input type="text" name="phone" id="phone" value="<%=model.phones.phone%>"/>
             </p>
             
             <p>
                 <label for="mobile">Mobile</label><br/>
-                <input type="text" name="mobile" id="mobile" value="<%=model.cphones.mobile%>"/>
-
+                <input type="text" name="mobile" id="mobile" value="<%=model.phones.mobile%>"/>
             </p>
             
             <p>
                 <label for="fax">Fax</label><br/>
-                <input type="text" name="fax" id="fax" value="<%=model.cphones.fax%>"/>
-
+                <input type="text" name="fax" id="fax" value="<%=model.phones.fax%>"/>
             </p>
+            <br />
+            <div id="tabs">
+                <div>
+                    <ul id="tabList">
+                        <li>
+                            <a href="#" class="selected">Internal Notes</a></li>
+                        <li>
+                            <a href="#">Sales & Purchases</a></li>
+                        <li>
+                            <a href="#">History</a></li>
+                    </ul>
+                </div>
+
+                <div class="tab">
+                    <textarea id="internalNotes" placeholder="Put an internal note..."><%=model.internalNotes%></textarea>
+                </div>
+                <div class="tab">
+                    <p>
+                        <label for="salesPerson">Salesperson</label>
+                        <select id="salesPerson">
+                            <option selected="selected" value="0">Select...</option>
+                            <% employeesCollection.each(function(option){ %>
+                   
+                            <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.salesPurchases.salesPerson.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+                            <% }); %>
+               
+                        </select>
+                    </p>
+                    <p>
+                        <label for="salesTeam">Sales Team</label>
+                        <select id="salesTeam">
+                            <option selected="selected" value="0">Select...</option>
+                            <% departmentsCollection.each(function(option){ %>
+                   
+                             <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.salesPurchases.salesTeam.id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
+                            <% }); %>
+               
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="reference">Reference</label>
+                        <input type="text" id="reference" value="<%=model.salesPurchases.reference%>"/>
+                    </p>
+
+                    <p>
+                        <label for="language">Language</label>
+                        <select id="language">
+                            <option>English</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="date">Date</label>
+                        <input type="date" id="date" value="<%=model.salesPurchases.date%>"/>
+                    </p>
+                    <p>
+                        <label for="isCustomer">Customer</label>
+                        <input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/>
+                    </p>
+                    <p>
+                        <label for="isSupplier">Supplier </label>
+                        <input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/>
+                    </p>
+                    <p>
+                        <label for="active">Active</label>
+                        <input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> />
+                    </p>
+                </div>
+                <div class="tab"></div>
+            </div>
         </fieldset>
     </form>
 </div>

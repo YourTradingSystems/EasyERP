@@ -6,9 +6,10 @@ define([
     "collections/Customers/AccountsDdCollection",
     "collections/Users/UsersCollection",
     "models/EmployeeModel",
+    "common",
     "custom"
 ],
-    function (CreateTemplate, EmployeesCollection, DepartmentsCollection, JobPositionsCollection, AccountsDdCollection, UsersCollection, EmployeeModel, Custom) {
+    function (CreateTemplate, EmployeesCollection, DepartmentsCollection, JobPositionsCollection, AccountsDdCollection, UsersCollection, EmployeeModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -23,7 +24,7 @@ define([
                 this.jobPositionsCollection = new JobPositionsCollection();
                 this.jobPositionsCollection.bind('reset', _.bind(this.render, this));
                 this.accountsDdCollection = new AccountsDdCollection();
-                this.accountsDdCollection.bind('reset',  _.bind(this.render, this));
+                this.accountsDdCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = options.collection;
                 //this.render();
@@ -60,17 +61,19 @@ define([
                     last: last
                 };
 
-                var waddress = {};
-                $("p").find(".waddress").each(function () {
+                var workAddress = {};
+                $("p").find(".workAddress").each(function () {
                     var el = $(this);
-                    waddress[el.attr("name")] = el.val();
+                    workAddress[el.attr("name")] = el.val();
                 });
 
-                var wemail = $.trim($("#wemail").val());
+                var tags = $.trim($("#tags").val()).split(',');
+
+                var workEmail = $.trim($("#workEmail").val());
 
                 var phone = $.trim($("#phone").val());
                 var mobile = $.trim($("#mobile").val());
-                var wphones = {
+                var workPhones = {
                     phone: phone,
                     mobile: mobile
                 };
@@ -78,44 +81,19 @@ define([
                 var officeLocation = $.trim($("#officeLocation").val());
 
                 var relatedUserId = this.$("#relatedUser option:selected").val();
-                var objRelatedUser = this.usersCollection.get(relatedUserId);
-                var relatedUser = {};
-                if (objRelatedUser) {
-                    relatedUser.id = relatedUserId;
-                    relatedUser.login = objRelatedUser.get('ulogin');
-                }
+                var relatedUser = common.toObject(relatedUserId, this.usersCollection);
 
                 var departmentId = this.$("#department option:selected").val();
-                var objDepartment = this.departmentsCollection.get(departmentId);
-                var department = {};
-                if (objDepartment) {
-                    department.departmentName = objDepartment.get('departmentName');
-                    department.departmentId = departmentId;
-                }
+                var department = common.toObject(departmentId, this.departmentsCollection);
 
-                var jobId = this.$("#job option:selected").val();
-                var objJob = this.jobPositionsCollection.get(jobId);
-                var job = {};
-                if (objJob) {
-                    job.jobPositionId = jobId;
-                    job.jobPositionName = objJob.get('name');
-                }
+                var jobPositionId = this.$("#jobPosition option:selected").val();
+                var jobPosition = common.toObject(jobPositionId, this.jobPositionsCollection);
 
                 var managerId = this.$("#manager option:selected").val();
-                var objManager = this.accountsDdCollection.get(managerId);
-                var manager = {};
-                if (objManager) {
-                    manager.employeeName = objManager.get('name').first + " " + objManager.get('name').last;
-                    manager.employeeId = managerId;
-                }
+                var manager = common.toObject(managerId, this.accountsDdCollection);
 
                 var coachId = this.$("#coach option:selected").val();
-                var objCoach = this.accountsDdCollection.get(coachId);
-                var coach = {};
-                if (objCoach) {
-                    coach.employeeName = objCoach.get('name').first + " " + objCoach.get('name').last;
-                    coach.employeeId = coachId;
-                }
+                var coach = common.toObject(coachId, this.accountsDdCollection);
 
                 var identNo = parseInt($.trim($("#identNo").val()));
 
@@ -135,19 +113,17 @@ define([
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 }
 
-                var active;
-                if ($("#active").is(":checked")) { console.log("true"); active = true; }
-                else { active = false; }
+                var active = ($("#active").is(":checked")) ? true : false;
 
                 employeeModel.save({
                     name: name,
-                    waddress: waddress,
-                    wemail: wemail,
-                    wphones: wphones,
+                    workAddress: workAddress,
+                    workEmail: workEmail,
+                    workPhones: workPhones,
                     officeLocation: officeLocation,
                     relatedUser: relatedUser,
                     department: department,
-                    job: job,
+                    jobPosition: jobPosition,
                     manager: manager,
                     coach: coach,
                     identNo: identNo,

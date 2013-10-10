@@ -12,7 +12,7 @@
                         <select id="parentDepartment">
                             <option selected="selected" value="0">Select...</option>
                              <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.parentDepartment.departmentId)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.parentDepartment.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
                              <% }); %>
                         </select>
                     </p>
@@ -20,7 +20,7 @@
                         <select id="departmentManager">
                             <option selected="selected" value="0">Select...</option>
                              <% accountDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.departmentManager.uid) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.departmentManager.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
                             <% }); %>
                         </select>
                     </p>

@@ -20,34 +20,34 @@
                 <p>
                     <label>Work Address </label>
                     <span>
-                        <%=waddress.street%>
+                        <%=workAddress.street%>
                     </span>
                     <span>
-                        <%=waddress.city%>
+                        <%=workAddress.city%>
                     </span>
                     <span>
-                        <%=waddress.state%>
+                        <%=workAddress.state%>
                     </span>
                     <span>
-                        <%=waddress.zip%>
+                        <%=workAddress.zip%>
                     </span>
                     <span>
-                        <%=waddress.country%>
+                        <%=workAddress.country%>
                     </span>
                 </p>
                 <p>
                     <label>Work Email </label>
                     <span>
-                        <a href="mailto:<%=wemail%>" target="_blank"><%=wemail%></a>
+                        <a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a>
                     </span>
                 </p>
                 <p>
                     <label>Work Phone </label>
-                    <span><%=wphones.phone%></span>
+                    <span><%=workPhones.phone%></span>
                 </p>
                 <p>
                     <label>Work Mobile </label>
-                    <span><%=wphones.mobile%></span>
+                    <span><%=workPhones.mobile%></span>
                 </p>
                 <p>
                     <label>Office Location </label>
@@ -63,19 +63,19 @@
                 </p>
                 <p>
                     <label>Department </label>
-                    <span><%=department.departmentName%></span>
+                    <span><%=department.name%></span>
                 </p>
                 <p>
                     <label>Job </label>
-                    <span><%=job.jobPositionName%></span>
+                    <span><%=jobPosition.name%></span>
                 </p>
                 <p>
                     <label>Manager </label>
-                    <span><%=manager.employeeName%></span>
+                    <span><%=manager.name%></span>
                 </p>
                 <p>
                     <label>Coach </label>
-                    <span><%=coach.employeeName%></span>
+                    <span><%=coach.name%></span>
                 </p>
             </div>
             <div class="tab">
@@ -136,7 +136,7 @@
                 <h2>Active</h2>
                 <p>
                     <label>Active </label>
-                    <input type="checkbox" <%=(active)? checked='checked':''%> name="active" id="active" />
+                    <input type="checkbox" <%=(active)? "checked='checked'":''%> name="active" id="active" />
                 </p>
             </div>
         </div>

@@ -2,9 +2,9 @@ define([
     "text!templates/JobPositions/CreateTemplate.html",
     "collections/Departments/DepartmentsCollection",
     "models/JobPositionModel",
-    "custom"
+    "common"
 ],
-    function (CreateTemplate, DepartmentsCollection, JobPositionModel, Custom) {
+    function (CreateTemplate, DepartmentsCollection, JobPositionModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -39,13 +39,16 @@ define([
 
                 var requirements = $.trim($("#requirements").val());
 
-                var departmentId = this.$("#department option:selected").val();
-                var objDepartment = this.departmentsCollection.get(departmentId);
-                var department = {};
-                if (objDepartment) {
-                    department.name = objDepartment.get('departmentName');
-                    department.id = departmentId;
-                }
+                //var departmentId = this.$("#department option:selected").val();
+                //var objDepartment = this.departmentsCollection.get(departmentId);
+                //var department = {};
+                //if (objDepartment) {
+                //    department.name = objDepartment.get('departmentName');
+                //    department.id = departmentId;
+                //}
+                var departmentId = $("#department option:selected").val();
+                var department = common.toObject(departmentId, this.departmentsCollection);
+
                 console.log(department);
 
                 jobPositionModel.save({

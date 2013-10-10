@@ -1,4 +1,4 @@
-var JobPosition = function (logWriter, mongoose) {
+var JobPosition = function (logWriter, mongoose, employee) {
 
     var jobPositionSchema = mongoose.Schema({
         name: { type: String, default: '' },
@@ -8,8 +8,8 @@ var JobPosition = function (logWriter, mongoose) {
             name: String
         },
         department: {
-            id: String,
-            name: String
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
         },
         description: String,
         requirements: String,
@@ -67,8 +67,8 @@ var JobPosition = function (logWriter, mongoose) {
                         if (data.department._id) {
                             _job.department.id = data.department._id;
                         }
-                        if (data.department.name) {
-                            _job.department.name = data.department.name;
+                        if (data.department.departmentName) {
+                            _job.department.name = data.department.departmentName;
                         }
                     }
                     if (data.description) {
@@ -110,10 +110,29 @@ var JobPosition = function (logWriter, mongoose) {
                 logWriter.log('JobPosition.js get job.find' + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
-                res['data'] = result;
-                response.send(res);
+                getTotalEmployees(result, 0);
+                //console.log(res);
+                //response.send(res);
             }
         });
+        var getTotalEmployees = function (jobPositions, count) {
+            if (jobPositions && jobPositions.length > count) {
+                employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
+                    if (err) {
+                        console.log(err);
+                        res['data'] = jobPositions;
+                        response.send(res);
+                    } else {
+                        jobPositions[count].numberOfEmployees = _employees.length;
+                        count++;
+                        getTotalEmployees(jobPositions, count);
+                    }
+                });
+            } else {
+                res['data'] = jobPositions;
+                response.send(res);
+            }
+        }
     }; //end get
 
     function update(_id, data, res) {
