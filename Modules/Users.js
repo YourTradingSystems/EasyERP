@@ -122,7 +122,7 @@ var Users = function (logWriter, mongoose) {
 
         login: function (req, data, func) {
             try {
-                if (data != null) {
+                if (data) {
                     if (data.login || data.email) {
                         User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                             try {
