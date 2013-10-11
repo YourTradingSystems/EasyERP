@@ -3355,7 +3355,9 @@ scheduler.addEvent = function(start_date, end_date, text, id, extra_data) {
 		ev.end_date = end_date;
 		ev.text = text;
 		ev.id = id;
-	}
+    }
+    if(start_date._id)
+        ev.id = start_date._id;
 	ev.id = ev.id || scheduler.uid();
 	ev.text = ev.text || "";
 

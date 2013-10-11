@@ -9,8 +9,6 @@ define([
             },
 
             initialize: function () {
-                console.log("Employees Collection Init");
-
                 var mid = 39;
 
                 this.fetch({
@@ -28,16 +26,7 @@ define([
 
             parse: function (response) {
                 return response.data;
-            },
-
-            fetchSuccess: function (collection, response) {
-                console.log("Employees fetchSuccess");
-            },
-
-            fetchError: function (error) {
-
             }
-
         });
 
         return EmployeesCollection;
