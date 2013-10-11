@@ -104,7 +104,9 @@ var JobPosition = function (logWriter, mongoose, employee) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        job.find({}, function (err, result) {
+        var query = job.find({});
+        query.sort({ name: 1 });
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);

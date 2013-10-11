@@ -216,7 +216,9 @@ var Persons = function (logWriter, mongoose) {
         getForDd: function (response) {
             var res = {};
             res['data'] = [];
-            Person.find({ 'relatedUser.id': { $ne: '' } }, { _id: 1, name: 1 }, function (err, persons) {
+            var query = Person.find({ 'relatedUser.id': { $ne: '' } }, { _id: 1, name: 1 });
+            query.sort({ name: 1 });
+            query.exec(function (err, persons) {
                 if (err) {
                     response.send(500, { error: "Can't find Person" });
                     console.log(err);
@@ -232,7 +234,7 @@ var Persons = function (logWriter, mongoose) {
             var res = {};
             res['data'] = [];
             var query = Person.find({});
-            query.sort({ "name.last": 1 });
+            query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -249,7 +251,9 @@ var Persons = function (logWriter, mongoose) {
             var res = {};
             res['data'] = [];
             //Person.find({ 'salesPurchases.isCustomer': true }, { _id: 1, name: 1 }, function (err, persons) {
-            Person.find({ 'salesPurchases.isCustomer': true }, function (err, persons) {
+            var query = Person.find({ 'salesPurchases.isCustomer': true });
+            query.sort({ "name.first": 1 });
+            query.exec(function (err, persons) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Person.js getCustomersForDd Person.find " + err);

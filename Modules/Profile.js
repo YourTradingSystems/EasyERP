@@ -101,7 +101,9 @@ var Profile = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        profile.find({}, function (err, result) {
+        var query = profile.find({});
+        query.sort({profileName: 1 });
+        query.exec(function (err, result) {
             if (err || result.length == 0) {
                 if (err) {
                     console.log(err);

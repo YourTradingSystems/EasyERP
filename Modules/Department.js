@@ -90,7 +90,9 @@ var Department = function (logWriter, mongoose) {
         res['result']['status'] = '2';
         res['result']['description'] = 'An error was find';
         res['data'] = [];
-        department.find({}, { _id: 1, departmentName: 1 }, function (err, result) {
+        var query = department.find({}, { _id: 1, departmentName: 1 });
+        query.sort({ departmentName: 1 });
+        query.exec( function (err, result) {
             try {
                 if (err) {
                     console.log(err);
@@ -112,7 +114,9 @@ var Department = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        department.find({}, function (err, result) {
+        var query = department.find({});
+        query.sort({ departmentName: 1 });
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Department.js getDepartments Department.find " + err);

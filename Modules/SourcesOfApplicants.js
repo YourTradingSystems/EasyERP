@@ -54,14 +54,16 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        sourcesofapplicants.find({}, function (err, result) {
+        var query = sourcesofapplicants.find({});
+        query.sort({ name: 1 });
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Sourcesofapplicants.js getSourcesofapplicants sourcesofapplicants.find " + err);
                 response.send(500, { error: "Can't find Sourcesofapplicants" });
             } else {
                 res['data'] = result;
-                response.send(result);
+                response.send(res);
             }
         });
     };
