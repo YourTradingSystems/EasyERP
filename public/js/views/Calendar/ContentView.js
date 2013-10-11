@@ -22,7 +22,7 @@ function (CalendarTemplate, Calendar, EventsCollection) {
             this.$el.html(this.template());
 
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);
-            //Calendar.initMiniCalendar("miniCalendar");
+            Calendar.initMiniCalendar("miniCalendar");
             return this;
         }
     });

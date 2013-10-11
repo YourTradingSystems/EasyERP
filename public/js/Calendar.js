@@ -61,6 +61,9 @@ define([
             scheduler.templates.event_bar_text = function(start, end, ev){
                 return ev.subject || "New Event";
             };
+            scheduler.templates.event_text = function(start, end, ev){
+                return ev.subject || "New Event";
+            };
             /*scheduler.templates.event_date = function(start, end, ev){
 
             }*/
