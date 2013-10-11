@@ -171,8 +171,8 @@ var Employee = function (logWriter, mongoose) {
                         if (data.department._id) {
                             _employee.department.id = data.department._id;
                         }
-                        if (data.department.name) {
-                            _employee.department.name = data.department.name;
+                        if (data.department.departmentName) {
+                            _employee.department.name = data.department.departmentName;
                         }
                     }
                     if (data.jobPosition) {

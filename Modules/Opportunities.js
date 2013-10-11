@@ -35,6 +35,7 @@ var Opportunities = function (logWriter, mongoose) {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
+        color: { type: String, default: '#4d5a75' },
         workflow: {
             status: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -71,6 +72,9 @@ var Opportunities = function (logWriter, mongoose) {
                     _opportunitie = new opportunitie();
                     if (data.name) {
                         _opportunitie.name = data.name;
+                    }
+                    if (data.color) {
+                        _opportunitie.color = data.color;
                     }
                     if (data.expectedRevenue) {
                         if (data.expectedRevenue.value) {

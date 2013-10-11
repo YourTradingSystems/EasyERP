@@ -37,6 +37,7 @@ var Company = function (logWriter, mongoose) {
             date: { type: Date, default: null },
             receiveMessages: { type: Number, default: 0 }
         },
+        color: { type: String, default: '#4d5a75' },
         social: {
             fb: { type: String, default: '' },
             li: { type: String, default: '' }
@@ -80,6 +81,9 @@ var Company = function (logWriter, mongoose) {
                         }
                         if (data.name) {
                             _company.name = data.name;
+                        }
+                        if (data.color) {
+                            _company.color = data.color;
                         }
                         if (data.internalNotes) {
                             _company.internalNotes = data.internalNotes;

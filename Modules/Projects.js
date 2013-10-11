@@ -360,6 +360,9 @@ var Project = function (logWriter, mongoose) {
                     if (data.task) {
                         _project.task = data.task;
                     }
+                    if (data.color) {
+                        _project.color = data.color;
+                    }
                     if (data.privacy) {
                         _project.privacy = data.privacy;
                     }

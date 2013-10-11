@@ -4,18 +4,20 @@
 </div>
 <div class="form-holder">
     <form class="form" data-id="<%=_id%>">
+        <div class="inner">
         <h2><%=projectName%></h2>
         <div class="half-block left">
-        	<div class="half-block left">
-	        	<p><label for="projectmanager">Project Manager</label></p>
-	        	<p><label for="customer">Customer</label></p>
-	        	<p><label for="privacy">Privacy / Visibility </label></p>
-	        </div>
-        	<div class="half-block left">
-	        	<p><%=projectmanager.name%></p>
-		        <p><%=customer.name%></p>
-		        <p><%=privacy%> </p>
-			</div>
-     	</div>
+            <div class="half-block left">
+                <p><label for="projectmanager">Project Manager</label></p>
+                <p><label for="customer">Customer</label></p>
+                <p><label for="privacy">Privacy / Visibility </label></p>
+            </div>
+            <div class="half-block left">
+                <p><%=projectmanager.name%></p>
+                <p><%=customer.name%></p>
+                <p><%=privacy%> </p>
+            </div>
+        </div>
+        </div>
     </form>
 </div>
