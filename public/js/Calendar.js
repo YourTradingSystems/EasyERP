@@ -3,7 +3,7 @@ define([
     "collections/Employees/EmployeesCollection",
     "models/EventModel"
 ],
-    function(EventsCollection, EmployeesCollection, EventModel){
+function(EventsCollection, EventModel, EmployeesCollection){
     var saveEventId;
     var miniCalendar;
 
@@ -48,7 +48,10 @@ define([
         scheduler.config.event_duration = 60;
         scheduler.config.auto_end_date = true;
         scheduler.config.drag_move = true;
-
+        //scheduler.config.server_utc = true;
+        scheduler.config.cascade_event_display = true;
+        scheduler.config.cascade_event_count = 4;
+        scheduler.config.cascade_event_margin = 30;
 
         scheduler.config.lightbox.sections = [
             {name:"eventType", height:40, type:"select", map_to:"eventType", options:eventTypeOptions},
@@ -81,15 +84,40 @@ define([
                     scheduler.formSection('subject').setValue('');
                     return false;
                 }
+                attachEventColor(id,data);
                 return true;
             });
         }
-        //if(!scheduler.checkEvent("onBeforeLightbox")){
-        //    scheduler.attachEvent("onBeforeLightbox", function(){
-
-        //    });
-        //}
+       /* if(!scheduler.checkEvent("onBeforeLightbox")){
+            *//*scheduler.attachEvent("onBeforeLightbox",function(){
+                alert('df');
+                *//**//*employeesCollection.fetch({success: function(){
+                    alert('df');
+                }});*//**//*
+            });*//*
+        }*/
     };
+
+    var attachEventColor = function(id, data){
+        var event = scheduler.getEvent(id);
+        if(event){
+            switch (data.eventType){
+                case "call":
+                    event.color = "green";
+                    event.textColor = "white";
+                    break;
+                case "meeting":
+                    event.color = "yellow";
+                    event.textColor = "black";
+                    break;
+                case "todo":
+                    event.color = "blue";
+                    event.textColor = "white";
+                    break;
+            }
+            scheduler.updateEvent(id);
+        }
+    }
 
     //used to populate array of select options "Assigned to" on the lightbox
     var populatePersons = function(){

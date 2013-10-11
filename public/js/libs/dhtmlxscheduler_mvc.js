@@ -69,7 +69,6 @@ scheduler.backbone = function(events){
 		var ev = events.get(id);
 		var upd = sanitize(scheduler.getEvent(id));
 		ev.save(upd);
-
 		return true;
 	});
 	if(!scheduler.checkEvent("onEventDeleted")){

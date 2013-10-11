@@ -4,11 +4,13 @@ var Events = function (logWriter, mongoose) {
     var eventsSchema = mongoose.Schema({
         _id: Number,
         subject: { type: String, default: '' },
-        description: { type: String, default: '' },
+        description: {type: String, default: ''},
         eventType: { type: String, default: '' },
         start_date: Date,
         end_date: Date,
-        assignTo: { type: String, default: '' },
+        color: {type:String, default:''},
+        textColor: {type:String, default:''},
+        assignTo: { type:String, default:''},
         status: { type: String, default: '' }
     }, { collection: 'Events' });
 
@@ -37,20 +39,26 @@ var Events = function (logWriter, mongoose) {
                     if (data.description) {
                         _event.description = data.description;
                     }
-                    if (data.start_date) {
-                        _event.start_date = data.start_date;
+                   if (data.start_date) {
+                       _event.start_date = data.start_date;
                     }
-                    if (data.end_date) {
-                        _event.end_date = data.end_date;
-                    }
-                    if (data.status) {
-                        _event.status = data.status;
-                    }
-                    if (data.eventType) {
-                        _event.eventType = data.eventType;
-                    }
+                   if (data.end_date) {
+                       _event.end_date= data.end_date;
+                   }
+                   if (data.status) {
+                       _event.status = data.status;
+                   }
+                   if (data.eventType) {
+                       _event.eventType = data.eventType;
+                   }
+                   if (data.color) {
+                       _event.color = data.color;
+                   }
+                   if (data.textColor) {
+                       _event.textColor = data.textColor;
+                   }
                     ///////////////////////////////////////////////////
-                    _event.save(function (err, result) {
+                    _event.save(function(err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -59,17 +67,17 @@ var Events = function (logWriter, mongoose) {
                             } else {
                                 res.send(201, { success: 'A new event was created successfully' });
                             }
-                        } catch (error) {
+                        } catch(error) {
                             logWriter.log("Events.js create savetoBd _event.save " + error);
                         }
                     });
-                } catch (error) {
+                } catch(error) {
                     console.log(error);
                     logWriter.log("Events.js create savetoBd " + error);
                     res.send(500, { error: 'Events.save  error' });
                 }
             }
-        } catch (exception) {
+        } catch(exception) {
             console.log(exception);
             logWriter.log("Events.js  " + exception);
             res.send(500, { error: 'Events.save  error' });
@@ -98,7 +106,7 @@ var Events = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            event.findById(_id, function (err, result) {
+            event.findById(_id , function (err, result) {
                 if (err) {
 
                 }
@@ -122,7 +130,7 @@ var Events = function (logWriter, mongoose) {
                     create(data, res);
                 }
             });
-
+          
         }
         catch (exception) {
             console.log(exception);
