@@ -765,7 +765,7 @@ var requestHandler = function (mongoose) {
     
     //--------------------Events--------------------------------
     function createEvent(req, res, data) {
-        console.log("Requst createDepartment is success");
+        console.log("Requst createEvent is success");
         if (req.session && req.session.loggedIn) {
             events.create(data.event, res);
         } else {
@@ -774,6 +774,7 @@ var requestHandler = function (mongoose) {
     }
 
     function getEvents(req, res, data) {
+        console.log("Requst getEvents is success");
         if (req.session && req.session.loggedIn) {
             events.get(res);
         } else {
@@ -782,7 +783,7 @@ var requestHandler = function (mongoose) {
     }
 
     function updateEvent(req, res, id, data) {
-        console.log("Requst updateDepartment is success");
+        console.log("Requst updateEvent is success");
         if (req.session && req.session.loggedIn) {
             events.update(id, data.event, res);
         } else {
@@ -791,7 +792,7 @@ var requestHandler = function (mongoose) {
     }
 
     function removeEvent(req, res, id, data) {
-        console.log("Requst removeDepartment is success");
+        console.log("Requst removeEvents is success");
         if (req.session && req.session.loggedIn) {
             events.remove(id, res);
         } else {

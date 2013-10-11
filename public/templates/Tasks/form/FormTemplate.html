@@ -9,36 +9,47 @@
 </div>
 <div class="form-holder">
     <form class="form" data-id="<%=_id%>">
+        <div class="inner">
         <h2><%=summary%></h2>
-        <!--<div class="half-block left">
-            <div class="half-block left">-->
-        <p>
-            <label>Project</label>
-        </p>
-        <p>
-            <label>Assigned to</label>
-        </p>
-        <p>
-            <label>Workflow</label>
-        </p>
-        <p>
-            <label>Deadline</label>
-        </p>
-        <p>
-            <label>Tags</label>
-        </p>
-        <!--</div>
-        <div class="half-block left">-->
-        <p><a id="<%=project.id%>" href="#"><%=project.name%></a></p>
-        <p><%=assignedTo.name%></p>
-        <p><%=workflow.name%></p>
-        <p><%=deadline%></p>
-        <p><%=tags%></p>
-        <!--  </div>
-        </div>-->
+            <div class="half-block left">
+                <div class="half-block left">
+                    <p>
+                        <label>Project</label>
+                    </p>
+                    <p>
+                        <label>Assigned to</label>
+                    </p>
+                    <p>
+                        <label>Workflow</label>
+                    </p>
+                   
+                </div>
+                <div class="half-block left">
+                    <p><a id="<%=project.id%>" href="#"><%=project.name%></a></p>
+                    <p><%=assignedTo.name%></p>
+                    <p><%=workflow.name%></p>
+                  
+                </div>
+            </div>
+            <div class="half-block left">
+                <div class="half-block left">
+                     <p>
+                        <label>Deadline</label>
+                    </p>
+                    <p>
+                        <label>Tags</label>
+                    </p>
+                </div>
+                <div class="half-block left">
+                      <p><%=deadline%></p>
+                      <p><%=tags%></p>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
         <div id="tabs">
             <div>
-                <ul id="tabList">
+                <ul id="tabList" class="inner">
                     <li>
                         <a href="#" class="selected">Description</a>
                     </li>
@@ -50,7 +61,7 @@
             <br />
             <div class="tab">
                 <p>
-                    <label for="description">Description </label>
+                  
                     <span><%=description%></span>
                 </p>
             </div>

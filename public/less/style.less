@@ -24,7 +24,7 @@
 }
 /*------------------------Constants-----------------------------*/
 @imagesfolder: '../images';
-@body-font: "Segoe UI";
+@body-font: "Segoe UI", sans-serif;
 @lucida-font: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
 @icon-font: Icons;
 @icon2-font: Icons2;
@@ -35,11 +35,12 @@
 @bold-border: 3px solid;
 @thin-border: 1px solid;
 @taskBorderColor: #4d5a75;
-
+@tabColor: #BDC3C7;
 
 /*--------------------------Styles------------------------------*/
 body {
     font-family: @body-font;
+    font-size:12px;
     height: 100%;
 }
 
@@ -194,7 +195,7 @@ body {
                 color: @blue;
                 text-decoration: none;
                 font-size: 12px;
-                line-height: 23px;
+                line-height: 19px;
                 font-weight: bold;
             }
 
@@ -530,13 +531,41 @@ body {
     margin: 0 auto;
     background: white;
     min-height: 330px;
-    padding: 16px;
+    // padding: 16px;
     display: block;
     position: relative;
     border: 1px solid #c8c8d3;
     -moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+    .avatar {
+        float: left;
+
+        img {
+            height: 120px;
+            width: 120px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+            -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+            border: none;
+            margin-bottom: 10px;
+        }
+    }
+
+    .inner {
+        margin: 16px;
+    }
+
+    & > #tabList {
+        li {
+            float: left;
+            margin: 0px 2px 5px 0;
+        }
+    }
 
     h2 {
         font-family: @lucida-font;
@@ -560,6 +589,7 @@ body {
         font-size: 13px;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
         line-height: 30px;
+        min-height: 30px;
 
         lable {
             margin-bottom: 2px;
@@ -567,10 +597,12 @@ body {
 
         input {
             margin-bottom: 2px;
+            width: 90%;
         }
 
         select {
             margin-bottom: 2px;
+            width: 90%;
         }
     }
 
@@ -594,35 +626,7 @@ body {
     textarea {
         width: 99%;
         min-height: 160px;
-    }
-
-    &#taskForm, &#projectForm {
-        >p {
-            display: block;
-            font-size: 14px;
-            margin: 3px 0 0 3px;
-
-            a {
-                color: #7c7bad;
-                text-decoration: none;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-
-            label {
-                margin-left: 0;
-                display: inline;
-                float: none;
-            }
-
-            span {
-                &.tag {
-                    padding: 1px 2px;
-                }
-            }
-        }
+        resize: vertical;
     }
 }
 
@@ -667,7 +671,7 @@ input, textarea, select {
 
 .topbarBtnHolder {
     float: left;
-    margin-top: 5px;
+    margin-top: 0px;
     margin-left: 10px;
 }
 
@@ -777,11 +781,11 @@ input, textarea, select {
 }
 
 .btn {
-    display: inline-block;
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: #4c4c4c;
     margin: 0;
-    padding: 3px 12px;
+    padding: 3px 12px 5px 12px;
+    line-height:13px;
     font-size: 13px;
     text-align: center;
     text-decoration: none;
@@ -810,8 +814,20 @@ input, textarea, select {
 button {
     .btn;
 }
-//Less Styles Up to date 20.08.2013
-@tabColor: #BDC3C7;
+button.red, a.red {
+    .btn;
+    .gradient(#c02c2c);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    color: white;
+
+    &:hover {
+         .gradient(#c63939);
+    }
+}
+
+
 
 #tabList {
     li {
@@ -823,34 +839,34 @@ button {
         float: left;
         display: block;
         padding: 4px;
-        border: 1px solid @tabColor;
+        border:1px solid transparent;
         border-bottom: none;
         text-decoration: none;
-        color: #fff;
-        background-color: @tabColor;
-        margin-bottom: -0.5px;
         border-radius: 5px 5px 0 0;
+        
+        color: #4c4c4c;
+        &:hover {
+             color: #4c4c4c;
+             background-color:#e1e1e1;
+             border: 1px solid #e1e1e1;
+             border-bottom:none;
+        
+        }
 
         &.selected {
+            border: 1px solid @tabColor;
+            border-bottom: none;
             background: #fff;
             color: #4c4c4c;
         }
     }
 }
 
-#employeeForm #tabList, #createEmployeeForm #tabList, #editEmployeeForm #tabList, #leadForm #tabList {
-    li {
-        float: left;
-        margin: -24px 2px 5px 0;
-    }
-}
 
 .tab {
     margin-top: 13px;
-    padding: 5px;
-    border: 1px solid @tabColor;
-    border-radius: 5px;
-    border-top-left-radius: 0;
+    padding: 16px;
+    border-top: 1px solid @tabColor;
 
     & ~ & {
         display: none;
@@ -1073,6 +1089,7 @@ button {
     list-style: none;
     width: 205px;
     padding-left: 0;
+
     & > li {
         border: 1px solid #fff;
         float: left;
@@ -1208,32 +1225,10 @@ button {
 
     >button {
         margin: 7px 1px;
+
         &:first-of-type, &:last-of-type {
             margin-left: 9px;
         }
     }
 }
 
-button.red, a.red {
-    background-color: #c02c2c;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#df3f3f), to(#a21a1a));
-    background-image: -webkit-linear-gradient(top, #df3f3f, #a21a1a);
-    background-image: -moz-linear-gradient(top, #df3f3f, #a21a1a);
-    background-image: -ms-linear-gradient(top, #df3f3f, #a21a1a);
-    background-image: -o-linear-gradient(top, #df3f3f, #a21a1a);
-    background-image: linear-gradient(to bottom, #df3f3f, #a21a1a);
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    color: white;
-
-    &:hover {
-        background-color: #c63939;
-        background-image: -webkit-gradient(linear, left top, left bottom, from(#e25858), to(#ab1b1b));
-        background-image: -webkit-linear-gradient(top, #e25858, #ab1b1b);
-        background-image: -moz-linear-gradient(top, #e25858, #ab1b1b);
-        background-image: -ms-linear-gradient(top, #e25858, #ab1b1b);
-        background-image: -o-linear-gradient(top, #e25858, #ab1b1b);
-        background-image: linear-gradient(to bottom, #e25858, #ab1b1b);
-    }
-}

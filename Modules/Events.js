@@ -100,11 +100,11 @@ var Events = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            employee.update({ _id: _id }, data, function (err, result) {
+            event.update({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
-                        logWriter.log("Events.js update employee.update " + err);
+                        logWriter.log("Events.js update events.update " + err);
                         res.send(500, { error: "Can't update Events" });
                     } else {
                         res.send(200, { success: 'Events updated success' });
@@ -123,7 +123,7 @@ var Events = function (logWriter, mongoose) {
     };// end update
 
     function remove(_id, res) {
-        employee.remove({ _id: _id }, function (err, result) {
+        event.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Events.js remove event.remove " + err);
