@@ -1,8 +1,9 @@
 define([
     "collections/Events/EventsCollection",
+    "collections/Employees/EmployeesCollection",
     "models/EventModel"
 ],
-    function(EventsCollection, EventModel){
+    function(EventsCollection, EmployeesCollection, EventModel){
     var saveEventId;
     var miniCalendar;
 
@@ -44,7 +45,7 @@ define([
         scheduler.locale.labels.section_text = "Text";
         scheduler.config.xml_date = "%Y-%m-%d";
         scheduler.config.separate_short_events = true;
-        scheduler.config.event_duration = 30;
+        scheduler.config.event_duration = 60;
         scheduler.config.auto_end_date = true;
         scheduler.config.drag_move = true;
 
@@ -57,6 +58,7 @@ define([
             {name:"assignTo", height: 40, type:"select", map_to: "assignTo", options: personsOptions},
             {name:"status", height: 40, type:"select", map_to: "status", options: statusOptions}
         ];
+
         scheduler.attachEvent("onTemplatesReady", function(){
             scheduler.templates.event_bar_text = function(start, end, ev){
                 return ev.subject || "New Event";
@@ -80,6 +82,11 @@ define([
                     return false;
                 }
                 return true;
+            });
+        }
+        if(!scheduler.checkEvent("onBeforeLightbox")){
+            scheduler.attachEvent("onBeforeLightbox", function(){
+
             });
         }
     };
