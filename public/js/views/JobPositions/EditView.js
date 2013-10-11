@@ -3,9 +3,10 @@ define([
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
-    "custom"
+    "custom",
+    'common'
 ],
-    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom) {
+    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -72,7 +73,7 @@ define([
                     var requirements = $.trim($("#requirements").val());
 
                     var departmentId = this.$("#department option:selected").val();
-                    var _department = common.toObject(idManager, this.departmentsCollection);
+                    var _department = common.toObject(departmentId, this.departmentsCollection);
                     var department = {};
                     if (_department) {
                         department.id = _department._id;

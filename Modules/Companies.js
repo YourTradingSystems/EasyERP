@@ -37,6 +37,7 @@ var Company = function (logWriter, mongoose) {
             date: { type: Date, default: null },
             receiveMessages: { type: Number, default: 0 }
         },
+        color: { type: String, default: '#4d5a75' },
         social: {
             fb: { type: String, default: '' },
             li: { type: String, default: '' }
@@ -80,6 +81,9 @@ var Company = function (logWriter, mongoose) {
                         }
                         if (data.name) {
                             _company.name = data.name;
+                        }
+                        if (data.color) {
+                            _company.color = data.color;
                         }
                         if (data.internalNotes) {
                             _company.internalNotes = data.internalNotes;
@@ -245,7 +249,7 @@ var Company = function (logWriter, mongoose) {
             res['result']['description'] = 'An error was find';
             res['data'] = [];
             var query = (data.isOwnCompany) ? { isOwnCompany: true } : {};
-            Company.find(query, { _id: 1, cname: 1 }, function (err, companies) {
+            Company.find(query, { _id: 1, name: 1 }, function (err, companies) {
                 try {
                     if (err) {
                         //func();
@@ -273,7 +277,7 @@ var Company = function (logWriter, mongoose) {
             var res = {};
             res['data'] = [];
             var query = company.find({});
-            query.sort({ cname: 1 });
+            query.sort({ name: 1 });
             query.exec(function (err, companies) {
                 if (err) {
                     console.log(err);

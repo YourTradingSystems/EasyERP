@@ -41,10 +41,7 @@ var Leads = function (logWriter, mongoose) {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
-        priority: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        priority: { type: String, default: 'Trivial' },
         categories: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -124,7 +121,7 @@ var Leads = function (logWriter, mongoose) {
                             _lead.salesPerson.id = data.salesPerson._id;
                         }
                         if (data.salesPerson.name) {
-                            _lead.salesPerson.name = data.salesPerson.name;
+                            _lead.salesPerson.name = data.salesPerson.name.first + ' ' + data.salesPerson.name.last;
                         }
                     }
                     if (data.salesTeam) {
@@ -132,7 +129,7 @@ var Leads = function (logWriter, mongoose) {
                             _lead.salesTeam.id = data.salesTeam._id;
                         }
                         if (data.salesTeam.name) {
-                            _lead.salesTeam.name = data.salesTeam.name;
+                            _lead.salesTeam.name = data.salesTeam.departmentName;
                         }
                     }
                     if (data.contactName) {

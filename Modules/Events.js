@@ -2,23 +2,23 @@
 var Events = function (logWriter, mongoose) {
 
     var eventsSchema = mongoose.Schema({
+        _id: Number,
         subject: { type: String, default: '' },
         description: {type: String, default: ''},
-        type: { type: String, default: '' },     
-        startDate: Date,
-        endDate: Date,
-        assignTo: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
-        status: { type: String, default: '' },
+        eventType: { type: String, default: '' },
+        start_date: Date,
+        end_date: Date,
+        color: {type:String, default:''},
+        textColor: {type:String, default:''},
+        assignTo: { type:String, default:''},
+        status: { type: String, default: '' }
     }, { collection: 'Events' });
 
     var event = mongoose.model('Events', eventsSchema);
 
     function create(data, res) {
         try {
-            if (!data) {
+            if (!data || !data.id) {
                 logWriter.log('Events.create Incorrect Incoming Data');
                 res.send(400, { error: 'Events.create Incorrect Incoming Data' });
                 return;
@@ -27,30 +27,36 @@ var Events = function (logWriter, mongoose) {
             }
             function savetoDb(data) {
                 try {
+                    console.log(data);
                     _event = new event();
+                    _event._id = data.id;
                     if (data.subject) {
                         _event.subject = data.subject;
                     }
                     if (data.assignTo) {
-                        if (data.assignTo._id) {
-                            _event.assignTo.id = data.assignTo._id;
-                        }
-                        if (data.assignTo.name) {
-                            _event.assignTo.name = data.assignTo.name;
-                        }
+                        _event.assignTo = data.assignTo;
                     }
                     if (data.description) {
                         _event.description = data.description;
                     }
-                   if (data.startDate) {
-                       _event.startDate = data.startDate;
+                   if (data.start_date) {
+                       _event.start_date = data.start_date;
                     }
-                   if (data.endDate) {
-                       _event.endDate = data.endDate;
+                   if (data.end_date) {
+                       _event.end_date= data.end_date;
                    }
-                    if (data.status) {
-                        _event.status = data.status;
-                    }
+                   if (data.status) {
+                       _event.status = data.status;
+                   }
+                   if (data.eventType) {
+                       _event.eventType = data.eventType;
+                   }
+                   if (data.color) {
+                       _event.color = data.color;
+                   }
+                   if (data.textColor) {
+                       _event.textColor = data.textColor;
+                   }
                     ///////////////////////////////////////////////////
                     _event.save(function(err, result) {
                         try {
@@ -100,20 +106,31 @@ var Events = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            event.update({ _id: _id }, data, function (err, result) {
-                try {
-                    if (err) {
-                        console.log(err);
-                        logWriter.log("Events.js update events.update " + err);
-                        res.send(500, { error: "Can't update Events" });
-                    } else {
-                        res.send(200, { success: 'Events updated success' });
-                    }
+            event.findById(_id , function (err, result) {
+                if (err) {
+
                 }
-                catch (exception) {
-                    logWriter.log("Events.js getEvents event.find " + exception);
+                else if (result) {
+                    event.update({ _id: _id }, data, function (err, result) {
+                        try {
+                            if (err) {
+                                console.log(err);
+                                logWriter.log("Events.js update events.update " + err);
+                                res.send(500, { error: "Can't update Events" });
+                            } else {
+                                res.send(200, { success: 'Events updated success' });
+                            }
+                        }
+                        catch (exception) {
+                            logWriter.log("Events.js getEvents event.find " + exception);
+                        }
+                    });
+                } else if (!result) {
+                    data.id = _id;
+                    create(data, res);
                 }
             });
+          
         }
         catch (exception) {
             console.log(exception);
