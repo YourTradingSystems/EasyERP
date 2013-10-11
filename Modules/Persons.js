@@ -27,6 +27,7 @@ var Persons = function (logWriter, mongoose) {
             mobile: { type: String, default: '' },
             fax: { type: String, default: '' },
         },
+        color: { type: String, default: '#4d5a75' },
         title: { type: String, default: 'Mister' },
         salesPurchases: {
             isCustomer: { type: Boolean, default: false },
@@ -88,6 +89,9 @@ var Persons = function (logWriter, mongoose) {
                         }
                         if (data.photoUrl) {
                             _person.photoUrl = data.photoUrl;
+                        }
+                        if (data.color) {
+                            _person.color = data.color;
                         }
                         if (data.name) {
                             if (data.name.first) {

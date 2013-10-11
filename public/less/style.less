@@ -737,7 +737,6 @@ input, textarea, select {
     width: 200px;
     min-height: 110px;
     cursor: pointer;
-    z-index: 1;
 
     span {
         font-family: @lucida-font;
@@ -1011,6 +1010,8 @@ button {
 .task:hover .dropDown img,
 .application:hover .dropDown img,
 .opportunity:hover .dropDown img,
+.thumbnail:hover .dropDown img,
+.thumbnail .selected img,
 .task .selected img,
 .application .selected img,
 .opportunity .selected img {
@@ -1033,6 +1034,7 @@ button {
     top: 2.5px;
     right: 7px;
     position: absolute;
+    /*z-index:2;*/
 }
 
 .dropDownOpened,
@@ -1073,6 +1075,7 @@ button {
     list-style: none;
     width: 205px;
     padding-left: 0;
+
     & > li {
         border: 1px solid #fff;
         float: left;
@@ -1208,6 +1211,7 @@ button {
 
     >button {
         margin: 7px 1px;
+
         &:first-of-type, &:last-of-type {
             margin-left: 9px;
         }
