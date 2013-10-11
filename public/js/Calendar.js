@@ -84,11 +84,11 @@ define([
                 return true;
             });
         }
-        if(!scheduler.checkEvent("onBeforeLightbox")){
-            scheduler.attachEvent("onBeforeLightbox", function(){
+        //if(!scheduler.checkEvent("onBeforeLightbox")){
+        //    scheduler.attachEvent("onBeforeLightbox", function(){
 
-            });
-        }
+        //    });
+        //}
     };
 
     //used to populate array of select options "Assigned to" on the lightbox
