@@ -29,16 +29,10 @@ define(function () {
             parse: true,
 
             parse: function (response) {
-                //console.log('parse');
-                //$.each(response, function (index, val) {
-                //    response[index]["id"] = response[index]["_id"];
-                //    delete response[index]["_id"];
-                //});
                 return response;
             },
 
             fetchSuccess: function (collection, response) {
-                console.log("fetchSuccess");
                 collection.relationships();
             },
 
