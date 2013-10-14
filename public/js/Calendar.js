@@ -3,7 +3,7 @@ define([
     "collections/Employees/EmployeesCollection",
     "models/EventModel"
 ],
-function(EventsCollection, EventModel, EmployeesCollection){
+function(EventsCollection,EmployeesCollection, EventModel){
     var saveEventId;
     var miniCalendar;
 
@@ -12,6 +12,7 @@ function(EventsCollection, EventModel, EmployeesCollection){
             applyDefaults();
             scheduler.init(calendarContainer, new Date(), "month");
             //var events = new EventsCollection();
+            populatePersons();
             scheduler.backbone(eventsCollection);
         }
     }
@@ -26,8 +27,8 @@ function(EventsCollection, EventModel, EmployeesCollection){
         })
     }
 
-    var applyDefaults = function(){
-        var personsOptions = populatePersons();
+    var applyDefaults = function(personsCollection){
+        var personsOptions =  personsCollection;
         var eventTypeOptions = [
             {key:"call", label: "Call"},
             {key:"todo", label: "To Do"},
@@ -37,13 +38,29 @@ function(EventsCollection, EventModel, EmployeesCollection){
             {key:"notStarted", label:"Not started"},
             {key:"completed", label:"Completed"}
         ];
+        var priorityOptions = [
+            { key: "low", label: "Low"},
+            { key: "medium", label: "Medium"},
+            { key: "high", label: "High"}
+        ];
+
+        scheduler.config.lightbox.sections = [
+            {name:"eventType", height:30, type:"select", map_to:"eventType", options:eventTypeOptions},
+            {name:"subject", height:30, type:"textarea", map_to:"subject", defaultValue:"New Event"},
+            {name:"description", height:70, type:"textarea", map_to:"description"},
+            {name:"time", height:72, type:"calendar_time", map_to:"auto" },
+            {name:"assignTo", height: 30, type:"select", map_to: "assignTo", options: personsOptions},
+            {name:"status", height: 30, type:"select", map_to: "status", options: statusOptions},
+            {name:"priority", height: 30, type:"select", map_to: "priority", options: priorityOptions}
+        ];
         scheduler.locale.labels.section_assignTo = "Assign To";
         scheduler.locale.labels.section_eventType = "Event type";
         scheduler.locale.labels.section_subject = "Subject";
         scheduler.locale.labels.section_description = "Description";
         scheduler.locale.labels.section_status = "Status";
         scheduler.locale.labels.section_text = "Text";
-        scheduler.config.xml_date = "%Y-%m-%d";
+        scheduler.locale.labels.section_priority = "Priority";
+        scheduler.config.xml_date = "%Y/%m/%d";
         scheduler.config.separate_short_events = true;
         scheduler.config.event_duration = 60;
         scheduler.config.auto_end_date = true;
@@ -52,15 +69,9 @@ function(EventsCollection, EventModel, EmployeesCollection){
         scheduler.config.cascade_event_display = true;
         scheduler.config.cascade_event_count = 4;
         scheduler.config.cascade_event_margin = 30;
-
-        scheduler.config.lightbox.sections = [
-            {name:"eventType", height:40, type:"select", map_to:"eventType", options:eventTypeOptions},
-            {name:"subject", height:40, type:"textarea", map_to:"subject", defaultValue:"New Event"},
-            {name:"description", height:150, type:"textarea", map_to:"description"},
-            {name:"time", height:72, type:"calendar_time", map_to:"auto" },
-            {name:"assignTo", height: 40, type:"select", map_to: "assignTo", options: personsOptions},
-            {name:"status", height: 40, type:"select", map_to: "status", options: statusOptions}
-        ];
+        scheduler.config.first_hour = 8;
+        scheduler.config.last_hour = 21;
+        scheduler.config.start_on_monday = true;
 
         scheduler.attachEvent("onTemplatesReady", function(){
             scheduler.templates.event_bar_text = function(start, end, ev){
@@ -69,6 +80,10 @@ function(EventsCollection, EventModel, EmployeesCollection){
             scheduler.templates.event_text = function(start, end, ev){
                 return ev.subject || "New Event";
             };
+            /*scheduler.tempalte.event_class = function(start, end, event){
+                if(start < (new Date()))
+                    return "past_event";
+            }*/
             /*scheduler.templates.event_date = function(start, end, ev){
 
             }*/
@@ -88,14 +103,9 @@ function(EventsCollection, EventModel, EmployeesCollection){
                 return true;
             });
         }
-       /* if(!scheduler.checkEvent("onBeforeLightbox")){
-            *//*scheduler.attachEvent("onBeforeLightbox",function(){
-                alert('df');
-                *//**//*employeesCollection.fetch({success: function(){
-                    alert('df');
-                }});*//**//*
-            });*//*
-        }*/
+
+
+
     };
 
     var attachEventColor = function(id, data){
@@ -119,13 +129,24 @@ function(EventsCollection, EventModel, EmployeesCollection){
         }
     }
 
-    //used to populate array of select options "Assigned to" on the lightbox
     var populatePersons = function(){
-        return [
-            {key:"me", label:"Me"},
-            {key:"nobody", label:"Nobody"},
-            {key:"you", label:"You"}];
-    };
+        var collection = new EmployeesCollection();
+        if(collection.length == 0){
+            collection.fetch({success: function(fetchedCollection){
+                var personsOptions = $.map(fetchedCollection.toJSON(), function(model, index){
+                    return {
+                        key: model._id,
+                        label: model.name.first + " " + model.name.last
+                    }
+                });
+                personsOptions.unshift({key:'nobody', label:"Nobody"});
+                applyDefaults(personsOptions);
+
+            }});
+        }
+    }
+
+
     return {
         initCalendar:initCalendar,
         initMiniCalendar:initMiniCalendar

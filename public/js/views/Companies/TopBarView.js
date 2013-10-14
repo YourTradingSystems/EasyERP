@@ -1,4 +1,4 @@
-define([
+    define([
     'text!templates/Companies/TopBarTemplate.html',
     'collections/Companies/CompaniesCollection',
     'custom'
