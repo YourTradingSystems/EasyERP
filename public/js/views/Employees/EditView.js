@@ -92,7 +92,7 @@ define([
                     var department = {};
                     if (_department) {
                         department.id = _department._id;
-                        department.name = _department.login;
+                        department.name = _department.departmentName;
                     } else {
                         department = currentModel.defaults.department;
                     }

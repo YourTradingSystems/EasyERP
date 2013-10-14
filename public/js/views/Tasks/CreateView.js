@@ -30,6 +30,7 @@ define([
                 this.priorityCollection = new PriorityCollection();
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
                 this.tasksCollection = options.collection;
+                this.pId = options.pId;
                 this.render();
             },
 
@@ -138,7 +139,7 @@ define([
             render: function () {
                 this.$el.html(this.template({
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
-                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection
+                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
                 }));
 
                 return this;

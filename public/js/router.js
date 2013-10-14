@@ -16,7 +16,7 @@ define([
             "home": "main",
             "login": "login",
             "home/content-:type(/:viewtype)(/:hash)(/:curitem)": "getList",
-            "home/action-:type/:action(/:curitem)": "makeAction",
+            "home/action-:type/:action(/:hash)(/:curitem)": "makeAction",
             "*actions": "main"
         },
 
@@ -97,10 +97,16 @@ define([
             });
 
         },
-        makeAction: function (contentType, action, itemIndex) {
+        makeAction: function (contentType, action, projectId, itemIndex) {
             if (/\s/.test(contentType)) {
                 var contentTypeArray = contentType.split(' ');
                 contentType = contentTypeArray.join('');
+            }
+            if (projectId) {
+                if (projectId.length != 24) {
+                    itemIndex = projectId;
+                    projectId = null;
+                }
             }
             if (this.mainView == null) this.main();
             var actionVariants = ["Create", "Edit"];
@@ -134,11 +140,16 @@ define([
                     if (action === "Edit") {
                         url += "/" + itemIndex;
                     }
-
+                    if (!projectId && App.projectId) {
+                        projectId = App.projectId
+                    }
+                    if (projectId && action === "Create") {
+                        url += "/" + projectId
+                    }
                     Backbone.history.navigate(url, { replace: true });
 
-                    var topBarView = new TopBarView({ actionType: action }),
-                        actionView = new ActionView({ collection: contentCollection });
+                    var topBarView = new TopBarView({ actionType: action}),
+                        actionView = new ActionView({ collection: contentCollection, pId: projectId });
 
                     topBarView.bind('saveEvent', actionView.saveItem, actionView);
 

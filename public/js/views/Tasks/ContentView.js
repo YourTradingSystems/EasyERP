@@ -74,8 +74,10 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             var projectId = window.location.hash.split('/')[3];
             if (!projectId || projectId.length < 24) {
                 models = this.collection.models;
+                App.projectId = null;
             }
             else {
+                App.projectId = projectId;
                 _.each(this.collection.models, function (item) {
                     if (item.get("project").id == projectId) models.push(item)
                 }, this);
