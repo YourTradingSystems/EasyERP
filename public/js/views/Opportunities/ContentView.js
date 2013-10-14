@@ -75,11 +75,14 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
 
                         _.each(workflows, function (workflow, i) {
                             var counter = 0,
-                                revenue = 0;
+                                revenue = 0,
+                                kanbanItemView;
                             var column = this.$(".column").eq(i);
                             _.each(this.collection.models, function (model) {
                                 if (model.get("workflow").name === column.data("name")) {
-                                    column.append(new KanbanItemView({ model: model }).render().el);
+                                    kanbanItemView = new KanbanItemView({ model: model });
+                                    kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
+                                    column.append(kanbanItemView.render().el);
                                     counter++;
                                     revenue += model.get("expectedRevenue").value;
                                 }
@@ -300,21 +303,68 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
 
         deleteItems: function () {
             var that = this,
-                mid = 39;
-
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var task = that.collection.get(checkbox.value);
-
-                task.destroy({
-                    headers: {
-                        mid: mid
+        		mid = 39,
+                model,
+                viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "kanban":
+                    {
+                        model = this.collection.get($(".opportunity").attr("id"));
+                        var revenue = model.get("expectedRevenue").value;
+                        this.$("#delete").closest(".opportunity").fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        var column = this.$el.closest(".column");
+                        column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                        column.find(".revenue span").html(parseInt(column.find(".revenue span").html()) - revenue);
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-                { wait: true }
-                );
-            });
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = that.collection.get(checkbox.value);
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                                { wait: true }
+                            );
+                        });
 
-            this.collection.trigger('reset');
+                        this.collection.trigger('reset');
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
+
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Opportunities", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

@@ -35,7 +35,8 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
         render: function () {
             Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Employees View');
-            var viewType = Custom.getCurrentVT();
+            var viewType = Custom.getCurrentVT(),
+                models = this.collection.models;
             switch (viewType) {
                 case "list":
                     {
@@ -55,10 +56,13 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                 case "thumbnails":
                     {
                         this.$el.html('');
-                        var holder = this.$el;
-                        this.collection.each(function (model) {
-                            $(holder).append(new ThumbnailsItemView({ model: model }).render().el);
-                        });
+                        var holder = this.$el,
+                            thumbnailsItemView;
+                        _.each(models, function (model) {
+                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                            thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                            $(holder).append(thumbnailsItemView.render().el);
+                        }, this);
                         break;
                     }
                 case "form":
@@ -97,31 +101,63 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
 
         deleteItems: function () {
             var self = this,
-        		mid = 39;
+                mid = 39,
+                model,
+                viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = self.collection.get(checkbox.value);
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                                { wait: true }
+                            );
+                        });
 
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var project = self.collection.get(checkbox.value);
-
-                /*project.set("projectName", 'testEDIT');
-        		
-        		project.save({},{
-        			headers: {
-        				uid: uid,
-        				hash: hash,
-        				mid: mid
-        			}
-        		});*/
-
-                project.destroy({
-                    headers: {
-                        mid: mid
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-        		{ wait: true }
-        		);
-            });
+                case "thumbnails":
+                    {
+                        model = this.model.collection.get(this.$el.attr("id"));
+                        this.$el.fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
 
-            this.collection.trigger('reset');
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Employees/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Employees", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

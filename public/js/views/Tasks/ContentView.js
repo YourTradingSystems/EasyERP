@@ -25,7 +25,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             this.projectsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            //this.render();
+            this.render();
 
             $(window).resize(function () {
                 if (this.resizeTO) clearTimeout(this.resizeTO);
@@ -46,7 +46,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             "click .fold": "foldUnfoldColumn",
             "click .form p > a": "gotoProjectForm",
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
         },
 
         switchTab: function (e) {
@@ -71,6 +71,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
+            var workflows = this.workflowsCollection.models;
             var projectId = window.location.hash.split('/')[3];
             if (!projectId || projectId.length < 24) {
                 models = this.collection.models;
@@ -79,13 +80,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             else {
                 App.projectId = projectId;
                 _.each(this.collection.models, function (item) {
-                    if (item.get("project").id == projectId) models.push(item)
+                    if (item.get("project").id == projectId) models.push(item);
                 }, this);
             }
             switch (viewType) {
                 case "kanban":
                     {
-                        var workflows = this.workflowsCollection.models;
                         this.$el.html(_.template(TasksKanbanTemplate));
                         _.each(workflows, function (workflow, index) {
                             $("<div class='column' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
@@ -97,9 +97,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             var counter = 0,
                                 remaining = 0;
                             var column = this.$(".column").eq(i);
+                            var kanbanItemView;
                             _.each(models, function (model) {
                                 if (model.get("workflow").name === column.data("name")) {
-                                    column.append(new TasksKanbanItemView({ model: model }).render().el);
+                                    kanbanItemView = new TasksKanbanItemView({ model: model });
+                                    kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
+                                    column.append(kanbanItemView.render().el);
                                     counter++;
                                     remaining += model.get("estimated") - model.get("loged");
                                 }
@@ -130,8 +133,11 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         this.$el.html('');
                         if (models.length > 0) {
                             var holder = this.$el;
+                            var thumbnailsItemView;
                             _.each(models, function (model) {
-                                $(holder).append(new TasksThumbnailsItemView({ model: model }).render().el);
+                                thumbnailsItemView = new TasksThumbnailsItemView({ model: model });
+                                thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                                $(holder).append(thumbnailsItemView.render().el);
                             }, this);
                         } else {
                             this.$el.html('<h2>No tasks found</h2>');
@@ -165,12 +171,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
 
                             currentModel.on('change', this.render, this);
-                            console.log(currentModel);
                             //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
                             this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
 
-                            var workflows = this.workflowsCollection.models;
-                            var that = this;
                             _.each(workflows, function (workflow, index) {
                                 if (index < workflows.length - 2) {
                                     $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
@@ -253,7 +256,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                 status = breadcrumb.data("status");
             }
             else {
-                var workflow = {};
+                var workflow;
                 if ($(e.target).closest("button").attr("id") == "Cancel") {
                     workflow = this.workflowsCollection.models[this.workflowsCollection.models.length - 1];
                 }
@@ -311,34 +314,93 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
 
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
                 $("#top-bar-deleteBtn").hide();
         },
 
-        deleteSingleItem: function () {
-
-        },
-
         deleteItems: function () {
             var that = this,
-        		mid = 39;
-
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var task = that.collection.get(checkbox.value);
-
-                task.destroy({
-                    headers: {
-                        mid: mid
+        		mid = 39,
+                model,
+                viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "kanban":
+                    {
+                        model = that.collection.get($(".task").attr("id"));
+                        var remaining = model.get("estimated") - model.get("loged");
+                        this.$("#delete").closest(".task").fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        var column = this.$el.closest(".column");
+                        column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - remaining);
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-        		{ wait: true }
-        		);
-            });
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = that.collection.get(checkbox.value);
 
-            this.collection.trigger('reset');
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                            { wait: true }
+                            );
+                        });
+
+                        this.collection.trigger('reset');
+                        break;
+                    }
+                case "thumbnails":
+                    {
+                        model = this.model.collection.get(this.$el.attr("id"));
+                        this.$el.fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
+
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Tasks/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Tasks", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

@@ -8,7 +8,7 @@ define([
 ], function (ListTemplate, FormTemplate, ListItemView, ThumbnailsItemView, Custom) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
-        initialize: function(options){
+        initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
@@ -16,104 +16,131 @@ define([
         },
 
         events: {
-        	"click .checkbox": "checked"
+            "click .checkbox": "checked"
         },
-        
-        render: function(){
-        	Custom.setCurrentCL(this.collection.length);
-            console.log('Render Persons View');
-            var viewType = Custom.getCurrentVT();
-            switch(viewType)
-            {
-            	case "list":
-            	{
-	        		this.$el.html(_.template(ListTemplate));
-	                var table = this.$el.find('table > tbody');
-	
-	                this.collection.each(function(model){
-	                    table.append(new ListItemView({model:model}).render().el);
-	                });
 
-                    $('#check_all').click(function () {
-                        var c = this.checked;
-                        $(':checkbox').prop('checked', c);
-                    });
-					break;
-            	}
-            	case "thumbnails":
-            	{
-            		this.$el.html('');
-            		var holder = this.$el;
-	                this.collection.each(function(model){
-	                	$(holder).append(new ThumbnailsItemView({model:model}).render().el);
-	                });
-	                break;
-            	}
-            	case "form":
-            	{
-            	    var itemIndex = Custom.getCurrentII() - 1;
-            		if (itemIndex > this.collection.models.length - 1)
-            		{
-            			itemIndex = this.collection.models.length - 1;
-            			Custom.setCurrentII(this.collection.models.length);
-            		}
-            		
-            		if (itemIndex == -1) 
-            		{
-            			this.$el.html();
-            		}
-                    else
-            		{
-            			var currentModel = this.collection.models[itemIndex];
-            			this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-            		}
-            		break;
-            	}
+        render: function () {
+            Custom.setCurrentCL(this.collection.length);
+            console.log('Render Persons View');
+            var viewType = Custom.getCurrentVT(),
+                models = this.collection.models;
+            switch (viewType) {
+                case "list":
+                    {
+                        this.$el.html(_.template(ListTemplate));
+                        var table = this.$el.find('table > tbody');
+
+                        this.collection.each(function (model) {
+                            table.append(new ListItemView({ model: model }).render().el);
+                        });
+
+                        $('#check_all').click(function () {
+                            var c = this.checked;
+                            $(':checkbox').prop('checked', c);
+                        });
+                        break;
+                    }
+                case "thumbnails":
+                    {
+                        this.$el.html('');
+                        var holder = this.$el,
+                            thumbnailsItemView;
+                        _.each(models, function (model) {
+                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                            thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                            $(holder).append(thumbnailsItemView.render().el);
+                        }, this);
+                        break;
+                    }
+                case "form":
+                    {
+                        var itemIndex = Custom.getCurrentII() - 1;
+                        if (itemIndex > models.length - 1) {
+                            itemIndex = models.length - 1;
+                            Custom.setCurrentII(models.length);
+                        }
+
+                        if (itemIndex == -1) {
+                            this.$el.html();
+                        }
+                        else {
+                            var currentModel = models[itemIndex];
+                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                        }
+                        break;
+                    }
             }
-            
+
             return this;
         },
-        
-        checked: function(event)
-        {
-        	if ($("input:checked").length > 0)
-        		$("#top-bar-deleteBtn").show();
-        	else
-        		$("#top-bar-deleteBtn").hide();
+
+        checked: function (event) {
+            if ($("input:checked").length > 0)
+                $("#top-bar-deleteBtn").show();
+            else
+                $("#top-bar-deleteBtn").hide();
         },
-        
-        deleteItems: function()
-        {
-            var self = this,
-                mid = 39;
 
-            if(Custom.getCurrentVT()==="form"){
-                var index = Custom.getCurrentII() - 1;
-                var person = this.collection.models[index];
+        deleteItems: function () {
+            var that = this,
+               mid = 39,
+               model,
+               viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = that.collection.get(checkbox.value);
 
-                if(person){
-                    person.destroy({headers: {
-                        mid: mid
-                    }});
-                    Custom.setCurrentII(Custom.getCurrentII()-1);
-                    this.collection.trigger('reset');
-                    return;
-                }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                            { wait: true }
+                            );
+                        });
 
-
-            }
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var person = self.collection.get(checkbox.value);
-
-                person.destroy({
-                    headers: {
-                        mid: mid
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-        		{ wait: true }
-        		);
-            });
-        	this.collection.trigger('reset');
+                case "thumbnails":
+                    {
+                        model = this.model.collection.get(this.$el.attr("id"));
+                        this.$el.fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
+
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Persons/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Persons", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

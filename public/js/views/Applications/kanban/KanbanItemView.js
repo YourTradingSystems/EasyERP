@@ -1,9 +1,9 @@
 define([
         "text!templates/Applications/kanban/KanbanItemTemplate.html",
         "collections/Applications/ApplicationsCollection",
-        'custom'
+        "common"
 ],
-    function (KanbanItemTemplate, ApplicationsCollection, Custom) {
+    function (KanbanItemTemplate, ApplicationsCollection, common) {
         var ApplicationsItemView = Backbone.View.extend({
             className: "application",
             id: function () {
@@ -18,7 +18,7 @@ define([
             },
 
             events: {
-                "click #delete": "deleteItem",
+                "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
                 "click .application-content": "gotoForm",
@@ -39,24 +39,8 @@ define([
                 window.location.hash = "home/content-Applications/form/" + itemIndex;
             },
 
-            deleteItem: function (e) {
-                e.preventDefault();
-                mid = 39;
-                var that = this;
-                var model = that.collection.get($(e.target).closest(".application").attr("id"));
-                this.$("#delete").closest(".application").fadeToggle(300, function () {
-                    model.destroy(
-                        {
-                            headers: {
-                                mid: mid
-                            }
-                        },
-                        { wait: true });
-                    $(this).remove();
-                });
-                var column = this.$el.closest(".column");
-                column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                this.collection.trigger('reset');
+            deleteEvent: function (e) {
+                common.deleteEvent(e, this);
             },
 
             openDropDown: function (e) {
@@ -64,32 +48,31 @@ define([
                 this.$(".dropDown > a").toggleClass("selected").siblings(".dropDownOpened").fadeToggle("normal");
             },
 
-            pickColor: function (e) {
-                e.preventDefault();
-                var mid = 39;
-                var color = $(e.target).data("color");
-                this.changeColor(color);
-                this.model.set({ color: color });
-                this.model.save({ color: color }, {
-                    headers: {
-                        mid: mid
-                    }
-                });
-            },
+        pickColor: function (e) {
+            e.preventDefault();
+            var mid = 39;
+            var color = $(e.target).data("color");
+            this.changeColor(color);
+            this.model.set({ color: color });
+            this.model.save({ color: color }, {
+                headers: {
+                    mid: mid
+                }
+            });
+        },
 
-            changeColor: function (color) {
-                this.$(".colorPicker a").closest(".application-header").css('background-color', color).closest(".application").css('border-color', color);
-            },
+        changeColor: function (color) {
+            this.$(".colorPicker a").closest(".application-header").css('background-color', color).closest(".application").css('border-color', color);
+        },
 
-            render: function () {
-                var index = this.model.collection.indexOf(this.model);
-                var todayString = new Date().format("yyyy-mm-dd");
-                this.$el.html(this.template(this.model.toJSON()));
-                this.changeColor(this.model.get('color'));
-                this.$el.attr("data-index", index);
-                return this;
-            }
-        });
-
-        return ApplicationsItemView;
+        render: function () {
+            var index = this.model.collection.indexOf(this.model);
+            this.$el.html(this.template(this.model.toJSON()));
+            this.changeColor(this.model.get('color'));
+            this.$el.attr("data-index", index);
+            return this;
+        }
     });
+
+return ApplicationsItemView;
+});

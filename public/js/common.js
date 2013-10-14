@@ -21,9 +21,18 @@
         } : null;
     };
 
+    var deleteEvent = function(e, that) {
+        e.preventDefault();
+        var answer = confirm("Realy DELETE item ?!");
+        if (answer == true) {
+            that.trigger('deleteEvent');
+        }
+    };
+
     return {
         toObject: toObject,
         ISODateToDate: ISODateToDate,
-        hexToRgb: hexToRgb
+        hexToRgb: hexToRgb,
+        deleteEvent: deleteEvent
     }
 });
