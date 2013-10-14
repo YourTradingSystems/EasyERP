@@ -25,13 +25,13 @@ var Users = function (logWriter, mongoose) {
 
     return {
 
-        create: function (data, res) {
+        create: function (data, result) {
             try {
                 var shaSum = crypto.createHash('sha256');
                 var res = {};
                 if (!data) {
                     logWriter.log('Person.create Incorrect Incoming Data');
-                    res.send(400, { error: 'User.create Incorrect Incoming Data' });
+                    result.send(400, { error: 'User.create Incorrect Incoming Data' });
                     return;
                 } else {
                     User.find({ login: data.login }, function (error, doc) {
@@ -39,12 +39,12 @@ var Users = function (logWriter, mongoose) {
                             if (error) {
                                 console.log(error);
                                 logWriter.log('User.js create User.find' + error);
-                                res.send(500, { error: 'User.create find error' });
+                                result.send(500, { error: 'User.create find error' });
                             }
                             if (doc.length > 0) {
-                                if (doc[0].ulogin === data.ulogin) {
+                                if (doc[0].login === data.login) {
                                     console.log("An user with the same Login already exists");
-                                    res.send(400, { error: "An user with the same Login already exists" });
+                                    result.send(400, { error: "An user with the same Login already exists" });
                                 }
                             }
                             else
@@ -55,7 +55,7 @@ var Users = function (logWriter, mongoose) {
 
                         catch (error) {
                             logWriter.log("User.js. create Account.find " + error);
-                            res.send(500, { error: 'User.create find error' });
+                            result.send(500, { error: 'User.create find error' });
                         }
                     });
                 }
@@ -95,13 +95,14 @@ var Users = function (logWriter, mongoose) {
                             _user.email = data.email;
                         }
 
-                        _user.save(function (err, result) {
+                        _user.save(function (err, result1) {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("User.js create savetoBd _user.save " + err);
-                                res.send(500, { error: 'User.create save error' });
+                                result.send(500, { error: 'User.create save error' });
                             } else {
-                                res.send(201, { success: 'A new User crate success' });
+                                console.log(result1);
+                                result.send(201, { success: 'A new User crate success' });
                             }
                         });
 
@@ -109,14 +110,14 @@ var Users = function (logWriter, mongoose) {
                     catch (error) {
                         console.log(error);
                         logWriter.log("User.js create savetoBd" + error);
-                        res.send(500, { error: 'User.create save error' });
+                        result.send(500, { error: 'User.create save error' });
                     }
                 }
             }
             catch (exception) {
                 console.log(exception);
                 logWriter.log("User.js  " + exception);
-                res.send(500, { error: 'User.create save error' });
+                result.send(500, { error: 'User.create save error' });
             }
         },//End create
 
