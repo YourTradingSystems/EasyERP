@@ -10,6 +10,7 @@ define([
         var UsersCreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Users",
+            actionType: null,
             template: _.template(CreateUserTemplate),
             contentType: "Users",
             initialize: function () {
@@ -31,12 +32,12 @@ define([
                 "submit form": "submit"
             },
 
-            submit: function (event) {
+            saveItem: function (event) {
                 var self = this;
-                event.preventDefault();
+                //event.preventDefault();
                 var mid = 39;
-                this.model = new UserModel();
-                this.model.set({
+
+                this.model.save({
                     email:$('#email').val(),
                     login:$('#login').val(),
                     pass:$('#password').val(),
@@ -50,22 +51,23 @@ define([
                             name: $('#profilesDd option:selected').text()
                         }
                     }
-                }, {validate:true, confirmPass:$('#confirmpassword').val()});
-                this.model.save(null,
-                    {
-                        headers: {
-                            mid: mid
-                        }, 
-                        wait: true, 
-                        success: function (model) {
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
-                        },
-                        error: function () {
-                            Backbone.history.navigate("home", { trigger: true });
-                        },
-                        confirmPass:$('#confirmpassword').val()
-                    });
-                Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
+                },
+                {
+                    headers: {
+                        mid: mid
+                    },
+                    wait: true,
+                    success: function (model, responseText) {
+                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                    },
+                    error: function () {
+                        Backbone.history.navigate("home", { trigger: true });
+                    },
+                    confirmPass:$('#confirmpassword').val()
+                });
+
+
+                //Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
 
             },
             render: function () {

@@ -15,8 +15,11 @@ define([
             	"click ul.changeContentIndex a": 'changeItemIndex',
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
-                "click #top-bar-discardBtn": "discardEvent"
+                "click #top-bar-discardBtn": "discardEvent",
+                "click #top-bar-createBtn" : "createEvent"
             },
+
+
             
             changeContentViewType: Custom.changeContentViewType,
             
@@ -42,11 +45,34 @@ define([
                 var collectionLength = this.collection.length;
                 var itemIndex = Custom.getCurrentII();
                 this.$el.html(this.template({ viewType: viewType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                
-                (viewType == "form") ? $("ul.changeContentIndex").show() && $("#top-bar-editBtn").show() && $("#template-switcher>span").show() 
-                						  : $("ul.changeContentIndex").hide() && $("#top-bar-editBtn").hide();
+                if(this.actionType == "Content"){
+                    $('#createBtnHolder').show();
+                    $('#saveDiscardHolder').hide();
+                } else{
+                    $('#createBtnHolder').hide();
+                    $('#saveDiscardHolder').show();
+                }
+                $("ul.changeContentIndex").hide();
+                $("#top-bar-editBtn").hide();
+                $("#top-bar-deleteBtn").hide();
+
+                if ((viewType == "form") && (this.actionType === "Content")) {
+                    $("ul.changeContentIndex").show();
+                    $("#top-bar-editBtn").show();
+                    $("#top-bar-deleteBtn").show();
+                    $("#template-switcher>span").show();
+                } else
+                if ((viewType == "form") && (this.actionType === "Edit")) {
+                    $("ul.changeContentIndex").show();
+                    $("#template-switcher>span").show();
+                }
                
                 return this;
+            },
+
+            saveEvent:function(event){
+                event.preventDefault();
+                this.trigger('saveEvent');
             },
             discardEvent: function (event) {
                 event.preventDefault();

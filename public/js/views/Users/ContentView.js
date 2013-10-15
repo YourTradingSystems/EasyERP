@@ -15,7 +15,7 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
             this.render();
         },
         events:{
-            "click .chechbox":"checked"
+            "click .checkbox":"checked"
         },
         checked: function(){
             if ($("input:checked").length > 0)
@@ -25,23 +25,50 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
         },
         deleteItems: function () {
             var that = this,
-                mid = 39;
+                mid = 39,
+                viewType = Custom.getCurrentVT();
 
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var user = that.collection.get(checkbox.value);
-                user.destroy({
-                        headers: {
-                            mid: mid
+            switch(viewType){
+                case "list":
+                    $.each($("tbody input:checked"), function (index, checkbox) {
+                        var user = that.collection.get(checkbox.value);
+                        user.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                            { wait: true }
+                        );
+                    });
+
+                    this.collection.trigger('reset');
+                    break;
+                case "form":
+                    var id = $(".form-holder form").data("id")
+                    var model = this.collection.get(id);
+                    var itemIndex = this.collection.indexOf(model);
+                    model.on('change', this.render, this);
+                    model.destroy({
+                        headers:{
+                            mid:mid
                         }
-                    },
-                    { wait: true }
-                );
-            });
+                    },{
+                        wait:true
+                    });
+                    this.collection.trigger("reset");
+                    if(this.collection.length != 0){
+                        Backbone.history.navigate("#home/content-Projects/form/" + itemIndex, { trigger: true });
+                    } else {
+                        Backbone.history.navigate("#home/content-Projects", { trigger: true });
+                    }
+                    break;
+            }
 
-            this.collection.trigger('reset');
+
         },
         render: function(){
-        	Custom.setCurrentCL(this.collection.models.length);
+        	this.checked();
+            Custom.setCurrentCL(this.collection.models.length);
         	console.log('Render Users View');
             var viewType = Custom.getCurrentVT();
             switch(viewType)
@@ -50,10 +77,14 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
             	{
             	    this.$el.html(_.template(UserListTemplate));
 	                var table = this.$el.find('table > tbody');
-	
-	                this.collection.each(function(model){
-	                    table.append(new UsersItemView({ model: model }).render().el);
-	                });
+	                if(this.collection.length > 0){
+                        this.collection.each(function(model){
+                            table.append(new UsersItemView({ model: model }).render().el);
+                        });
+                    }else {
+                        this.$el.html('<h2>No users found</h2>');
+                    }
+
 
                     $('#check_all').on('click',function(){
                         $(':checkbox').prop('checked', this.checked);
@@ -63,15 +94,15 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
                 case "form":
             	{
             		var itemIndex = Custom.getCurrentII()-1;
-            		if (itemIndex > this.collection.models.length - 1)
+            		if (itemIndex > this.collection.length - 1)
             		{
-            			itemIndex = this.collection.models.length - 1;
-            			Custom.setCurrentII(this.collection.models.length);
+            			itemIndex = this.collection.length - 1;
+            			Custom.setCurrentII(this.collection.length);
             		}
             		
             		if (itemIndex == -1) 
             		{
-            			this.$el.html();
+            			this.$el.html("No users found");
             		}else
             		{
             			var currentModel = this.collection.models[itemIndex];

@@ -20,22 +20,42 @@
 
             saveItem: function(){
                 var itemIndex = Custom.getCurrentII() - 1;
-
+                var self = this;
                 if (itemIndex != -1)
                 {
                     var currentModel = this.collection.models[itemIndex];
                     var mid = 39;
 
                     var data = {
-
+                        email:$('#email').val(),
+                        login:$('#login').val(),
+                        pass:$('#password').val(),
+                        profile:{
+                            company:{
+                                id:$('#companiesDd option:selected').val(),
+                                name: $('#companiesDd option:selected').text()
+                            },
+                            profile:{
+                                id:$('#profilesDd option:selected').val(),
+                                name: $('#profilesDd option:selected').text()
+                            }
+                        }
                     };
-                    currentModel.set(data);
-                    currentModel.save({}, {
+
+                    currentModel.save(data, {
                         headers: {
                             mid: mid
-                        }
+                        },
+                        wait: true,
+                        success: function (model, responseText) {
+                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        },
+                        error: function () {
+                            Backbone.history.navigate("home", { trigger: true });
+                        },
+                        confirmPass:$('#confirmpassword').val()
                     });
-                    Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
+
                 }
             },
 
@@ -47,10 +67,6 @@
                 else
                 {
                     var currentModel = this.collection.models[itemIndex];
-                    /*console.log(currentModel.get('profile').company.id + " " + currentModel.get('profile').company.name);
-                    for(var i=0; i<this.companiesCollection.length; i++){
-                        console.log(this.companiesCollection.models[i].get('id') + " " + this.companiesCollection.models[i].get('cname'));
-                    }*/
                     this.$el.html(_.template(EditTemplate, {model: currentModel.toJSON(),
                         companiesCollection:this.companiesCollection,
                         profilesCollection:this.profilesCollection }));
