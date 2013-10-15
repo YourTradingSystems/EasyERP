@@ -4381,8 +4381,12 @@ scheduler._init_event = function(event) {
 scheduler._init_date = function(date){
 	if(!date)
 		return null;
-	if(typeof date == "string")
-		return scheduler.templates.xml_date(date);
+	if(typeof date == "string"){
+        if(date.indexOf("T") != -1 || date.indexOf("Z") != -1){
+            var newDate = date.replace('T', " ").replace("Z", "").concat(' UTC');
+            return new Date(newDate);
+        }
+    }
 	else return new Date(date);
 };
 
