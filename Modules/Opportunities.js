@@ -184,7 +184,9 @@ var Opportunities = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        opportunitie.find({}, function (err, result) {
+        var query = opportunitie.find({});
+        query.sort({ name: 1 });
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('Opportunities.js get job.find' + err);

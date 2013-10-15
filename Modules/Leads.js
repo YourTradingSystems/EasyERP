@@ -220,7 +220,9 @@ var Leads = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        lead.find({}, function (err, result) {
+        var query = lead.find({});
+        query.sort({ name: 1 });
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log('Leads.js get lead.find' + err);

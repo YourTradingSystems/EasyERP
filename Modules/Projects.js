@@ -447,7 +447,9 @@ var Project = function (logWriter, mongoose) {
     function getForDd(response) {
         var res = {};
         res['data'] = [];
-        project.find({}, { _id: 1, projectName: 1 }, function (err, projects) {
+        var query = project.find({});
+        query.sort({ projectName: 1 });
+        query.exec( function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js getProjectsForDd project.find " + err);
@@ -462,12 +464,15 @@ var Project = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        project.find({}, function (err, projects) {
+        var query = project.find({});
+        query.sort({ projectName: 1 });
+        query.exec(function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js getProjects project.find " + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
+                console.log(projects);
                 findTasksById(projects, 0);
             }
         });
@@ -721,8 +726,10 @@ var Project = function (logWriter, mongoose) {
     function getTasks(response) {
         var res = {};
         res['data'] = [];
-        tasks.find({}, function (err, _tasks) {
-            if (err) {
+        var query = tasks.find({});
+        query.sort({ summary: 1 });
+        query.exec(function (err, _tasks) {
+          if (err) {
                 console.log(err);
                 logWriter.log("Project.js getTasks project.find " + err);
                 response.send(500, { error: "Can't find Tasks" });
@@ -756,7 +763,9 @@ var Project = function (logWriter, mongoose) {
         res['result']['status'] = '2';
         res['result']['description'] = 'An error was find';
         res['data'] = [];
-        tasks.find({ project: data.id }, function (err, taskss) {
+        var query = tasks.find({ project: data.id });
+        query.sort({ summary: 1 });
+        query.exec(function (err, taskss) {
             try {
                 if (err) {
                     //func();

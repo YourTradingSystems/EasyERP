@@ -53,7 +53,9 @@ var Degrees = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        degree.find({}, function (err, degrees) {
+        var query = degree.find({});
+        query.sort({ name: 1 });
+        query.exec( function (err, degrees) {
             if (err) {
                 console.log(err);
                 logWriter.log("Degrees.js getDegrees degrees.find " + err);

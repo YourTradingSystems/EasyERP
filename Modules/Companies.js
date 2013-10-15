@@ -249,7 +249,9 @@ var Company = function (logWriter, mongoose) {
             res['result']['description'] = 'An error was find';
             res['data'] = [];
             var query = (data.isOwnCompany) ? { isOwnCompany: true } : {};
-            Company.find(query, { _id: 1, name: 1 }, function (err, companies) {
+            var _query = Company.find(query, { _id: 1, name: 1 });
+            _query.sort({name: 1});
+            _query.exec(function (err, companies) {
                 try {
                     if (err) {
                         //func();

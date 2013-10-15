@@ -65,7 +65,7 @@ define([
 
                     var mid = 39;
 
-                    var projectname = $("#projectName").val();
+                    var projectName = $("#projectName").val();
 
                     var idCustomer = $(this.el).find("#customerDd option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersDdCollection);

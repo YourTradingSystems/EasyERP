@@ -167,7 +167,9 @@ var Users = function (logWriter, mongoose) {
         get: function (response) {
             var res = {};
             res['data'] = [];
-            User.find({}, { __v: 0, upass: 0 }, function (err, result) {
+            var query = User.find({}, { __v: 0, upass: 0 });
+            query.sort({ login: 1 });
+            query.exec(function (err, result) {
                 if (err) {
                     //func();
                     console.log(err);

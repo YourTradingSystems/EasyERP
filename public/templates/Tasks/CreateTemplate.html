@@ -21,7 +21,7 @@
                                 <option selected="selected" value="0">Select...</option>
                                 <% projectsDdCollection.each(function(option){ %>
                            
-                                <option value="<%= option.get('_id') %>"><%= option.get('projectName') %> </option>
+                                <option value="<%= option.get('_id') %>"<%= (option.get('_id') == projectId) ? 'selected="selected"' : ''%>><%= option.get('projectName') %> </option>
                                 <% }); %>
                        
                             </select>

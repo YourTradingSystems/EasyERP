@@ -305,6 +305,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
+        query.sort({'name.first': 1});
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -323,6 +324,7 @@ var Employee = function (logWriter, mongoose) {
         var query = employee.find();
         query.where('isEmployee', true);
         query.select('_id name');
+        query.sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -340,6 +342,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', false);
+        query.sort({ 'name.first': 1 });
         query.exec(function (err, applications) {
             if (err) {
                 console.log(err);

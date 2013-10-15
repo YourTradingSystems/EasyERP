@@ -91,6 +91,7 @@ var Events = function (logWriter, mongoose) {
         var description = "";
         res['data'] = [];
         var query = event.find();
+        query.sort({ subject: 1 });
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
