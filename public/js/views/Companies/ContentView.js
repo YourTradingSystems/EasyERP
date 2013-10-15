@@ -33,9 +33,10 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
         },
 
         render: function () {
-            Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Companies View');
-            var viewType = Custom.getCurrentVT();
+            var viewType = Custom.getCurrentVT(),
+                models = this.collection.models;
+            Custom.setCurrentCL(models.length);
             switch (viewType) {
                 case "list":
                     {
@@ -58,25 +59,27 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                     {
                         this.$el.html('');
                         var holder = this.$el;
-                        this.collection.each(function (model) {
-                            $(holder).append(new ThumbnailsItemView({ model: model }).render().el);
-                        });
+                        var thumbnailsItemView;
+                        _.each(models, function (model) {
+                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                            thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                            $(holder).append(thumbnailsItemView.render().el);
+                        }, this);
                         break;
                     }
                 case "form":
                     {
-
                         var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.models.length - 1) {
-                            itemIndex = this.collection.models.length - 1;
-                            Custom.setCurrentII(this.collection.models.length);
+                        if (itemIndex > models.length - 1) {
+                            itemIndex = models.length - 1;
+                            Custom.setCurrentII(models.length);
                         }
 
                         if (itemIndex == -1) {
                             this.$el.html();
                         }
                         else {
-                            var currentModel = this.collection.models[itemIndex];
+                            var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                         }
 
@@ -88,7 +91,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
 
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -97,32 +100,64 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
 
         deleteItems: function () {
             var self = this,
-        		mid = 39;
+                mid = 39,
+                model,
+                viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = self.collection.get(checkbox.value);
 
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                console.log(self.collection.findWhere({ id: checkbox.value }));
-                var companies = self.collection.get(checkbox.value);
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                                { wait: true }
+                            );
+                        });
 
-                /*project.set("projectName", 'testEDIT');
-        		
-        		project.save({},{
-        			headers: {
-        				uid: uid,
-        				hash: hash,
-        				mid: mid
-        			}
-        		});*/
-
-                companies.destroy({
-                    headers: {
-                        mid: mid
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-        	        { wait: true }
-        	    );
-            });
+                case "thumbnails":
+                    {
+                        model = this.model.collection.get(this.$el.attr("id"));
+                        this.$el.fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
 
-            this.collection.trigger('reset');
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Companies/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Companies", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

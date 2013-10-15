@@ -71,21 +71,50 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
         },
 
         deleteItems: function () {
-            var self = this,
-        		mid = 39;
+            var that = this,
+        		mid = 39,
+                model,
+                viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = that.collection.get(checkbox.value);
 
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var item = self.collection.get(checkbox.value);
-                item.destroy({
-                    headers: {
-                        mid: mid
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                            { wait: true }
+                            );
+                        });
+
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-                     { wait: true }
-                 );
-            });
+                case "form":
+                    {
+                        model = this.collection.get($("#wrap").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
 
-            this.collection.trigger('reset');
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-SourceOfApplicants/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-SourceOfApplicants", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

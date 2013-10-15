@@ -87,7 +87,7 @@ define([
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
-
+                   
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
                     

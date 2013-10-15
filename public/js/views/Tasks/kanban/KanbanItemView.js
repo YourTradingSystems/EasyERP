@@ -1,9 +1,9 @@
 define([
         "text!templates/Tasks/kanban/KanbanItemTemplate.html",
         "collections/Tasks/TasksCollection",
-        'custom'
+        "common"
 ],
-    function (KanbanItemTemplate, TasksCollection, Custom) {
+    function (KanbanItemTemplate, TasksCollection, common) {
         var TasksItemView = Backbone.View.extend({
             className: "task",
             id: function () {
@@ -18,7 +18,7 @@ define([
             },
 
             events: {
-                "click #delete": "deleteTask",
+                "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
                 "click .task-content": "gotoForm",
@@ -39,26 +39,8 @@ define([
                 window.location.hash = "home/content-Tasks/form/" + itemIndex;
             },
 
-            deleteTask: function (e) {
-                e.preventDefault();
-                var mid = 39;
-                var that = this;
-                var model = that.collection.get($(e.target).closest(".task").attr("id"));
-                var remaining = model.get("estimated") - model.get("loged");
-                this.$("#delete").closest(".task").fadeToggle(300, function () {
-                    model.destroy(
-                        {
-                            headers: {
-                                mid: mid
-                            }
-                        },
-                        { wait: true });
-                    $(this).remove();
-                });
-                var column = this.$el.closest(".column");
-                column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - remaining);
-                this.collection.trigger('reset');
+            deleteEvent: function (e) {
+                common.deleteEvent(e, this);
             },
 
             openDropDown: function (e) {

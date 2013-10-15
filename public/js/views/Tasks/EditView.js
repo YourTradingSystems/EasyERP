@@ -107,7 +107,7 @@
                     }
 
                     var idProject = this.$("#projectDd option:selected").val();
-                    var _project = this.projectsDdCollection.get(idProject);
+                    var _project = common.toObject(idProject, this.projectsDdCollection);
                     var project = {};
                     if (_project) {
                         project.id = _project._id;

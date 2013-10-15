@@ -47,6 +47,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
         render: function () {
             var that = this;
+            var workflows = this.workflowsCollection.models;
             Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Applications View');
             var viewType = Custom.getCurrentVT();
@@ -55,7 +56,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                 case "kanban":
                     {
                         this.$el.html(_.template(ApplicationsKanbanTemplate));
-                        var workflows = this.workflowsCollection.models;
+
 
                         _.each(workflows, function (workflow, index) {
                             $("<div class='column applicationColumn' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
@@ -67,9 +68,12 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                             var counter = 0,
                                 remaining = 0;
                             var column = this.$(".column").eq(i);
+                            var kanbanItemView;
                             _.each(this.collection.models, function (model) {
                                 if (model.get("workflow").name === column.data("name")) {
-                                    column.append(new ApplicationsKanbanItemView({ model: model }).render().el);
+                                    kanbanItemView = new ApplicationsKanbanItemView({ model: model });
+                                    kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
+                                    column.append(kanbanItemView.render().el);
                                     counter++;
                                     remaining += model.get("estimated") - model.get("loged");
                                 }
@@ -115,8 +119,6 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                             var currentModel = this.collection.models[itemIndex];
                             this.$el.html(_.template(ApplicationsFormTemplate, currentModel.toJSON()));
 
-                            var workflows = this.workflowsCollection.models;
-
                             _.each(workflows, function (workflow, index) {
                                 if (index < workflows.length - 1) {
                                     $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
@@ -145,7 +147,6 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                 helper: 'clone',
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
-                    var model = that.collection.get(ui.item.attr("id"));
                     column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                 },
                 stop: function (event, ui) {
@@ -173,7 +174,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
         changeWorkflow: function (e) {
             var mid = 39;
-            var model = {};
+            var model;
             var name = '', status = '';
             if ($(e.target).hasClass("applicationWorkflowLabel")) {
                 var breadcrumb = $(e.target).closest('li');
@@ -251,7 +252,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -260,21 +261,66 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
         deleteItems: function () {
             var that = this,
-        		mid = 39;
-
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var task = that.collection.get(checkbox.value);
-
-                task.destroy({
-                    headers: {
-                        mid: mid
+               mid = 39,
+               model;
+            var viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "kanban":
+                    {
+                        model = that.collection.get($(".application").attr("id"));
+                        this.$("#delete").closest(".application").fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        var column = this.$el.closest(".column");
+                        column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-        		{ wait: true }
-        		);
-            });
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            var task = that.collection.get(checkbox.value);
 
-            this.collection.trigger('reset');
+                            task.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                                { wait: true }
+                            );
+                        });
+                        this.collection.trigger('reset');
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
+
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Applications/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Applications/form/0", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

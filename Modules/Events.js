@@ -11,7 +11,8 @@ var Events = function (logWriter, mongoose) {
         color: {type:String, default:''},
         textColor: {type:String, default:''},
         assignTo: { type:String, default:''},
-        status: { type: String, default: '' }
+        status: { type: String, default: '' },
+        priority: { type: String, default: '' }
     }, { collection: 'Events' });
 
     var event = mongoose.model('Events', eventsSchema);
@@ -32,6 +33,9 @@ var Events = function (logWriter, mongoose) {
                     _event._id = data.id;
                     if (data.subject) {
                         _event.subject = data.subject;
+                    }
+                    if (data.priority) {
+                        _event.priority = data.priority;
                     }
                     if (data.assignTo) {
                         _event.assignTo = data.assignTo;

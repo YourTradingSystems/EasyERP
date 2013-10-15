@@ -37,9 +37,9 @@ define([
                 var mid = 39;
                 this.model = new UserModel();
                 this.model.set({
-                    uemail:$('#email').val(),
-                    ulogin:$('#login').val(),
-                    upass:$('#password').val(),
+                    email:$('#email').val(),
+                    login:$('#login').val(),
+                    pass:$('#password').val(),
                     profile:{
                         company:{
                             id:$('#companiesDd option:selected').val(),

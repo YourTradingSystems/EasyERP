@@ -24,8 +24,9 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
         },
 
         render: function () {
-            Custom.setCurrentCL(this.collection.models.length);
-            var viewType = Custom.getCurrentVT();
+            var viewType = Custom.getCurrentVT(),
+                models = this.collection.models;
+            Custom.setCurrentCL(models.length);
             switch (viewType) {
                 case "list":
                     {
@@ -48,10 +49,13 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                     {
                         this.$el.html('');
                         if (this.collection.length > 0) {
-                            var holder = this.$el;
-                            this.collection.each(function (model) {
-                                $(holder).append(new ThumbnailsItemView({ model: model }).render().el);
-                            });
+                            var holder = this.$el,
+                                thumbnailsItemView;
+                            _.each(models, function (model) {
+                                thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                                thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                                $(holder).append(thumbnailsItemView.render().el);
+                            }, this);
                         } else {
                             this.$el.html('<h2>No projects found</h2>');
                         }
@@ -60,15 +64,15 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                 case "form":
                     {
                         var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.models.length - 1) {
-                            itemIndex = this.collection.models.length - 1;
-                            Custom.setCurrentII(this.collection.models.length);
+                        if (itemIndex > models.length - 1) {
+                            itemIndex = models.length - 1;
+                            Custom.setCurrentII(models.length);
                         }
 
                         if (itemIndex == -1) {
                             this.$el.html('<h2>No projects found</h2>');
                         } else {
-                            var currentModel = this.collection.models[itemIndex];
+                            var currentModel = models[itemIndex];
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             var workflows = this.workflowsCollection.models;
@@ -127,7 +131,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
 
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -135,21 +139,64 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
         },
 
         deleteItems: function () {
-            var self = this,
-        		mid = 39;
+            var that = this,
+        		mid = 39,
+                model,
+                viewType = Custom.getCurrentVT();
+            switch (viewType) {
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = that.collection.get(checkbox.value);
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                }
+                            },
+                                { wait: true }
+                            );
+                        });
 
-            $.each($("tbody input:checked"), function (index, checkbox) {
-                var project = self.collection.get(checkbox.value);
-                project.destroy({
-                    headers: {
-                        mid: mid
+                        this.collection.trigger('reset');
+                        break;
                     }
-                },
-                    { wait: true }
-                );
-            });
+                case "thumbnails":
+                    {
+                        model = this.model.collection.get(this.$el.attr("id"));
+                        this.$el.fadeToggle(300, function () {
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    }
+                                },
+                                { wait: true });
+                            $(this).remove();
+                        });
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($(".form-holder form").data("id"));
+                        var itemIndex = this.collection.indexOf(model);
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
+                            }
+                        },
+                        { wait: true }
 
-            this.collection.trigger('reset');
+                        );
+                        this.collection.trigger('reset');
+                        if (this.collection.length != 0) {
+                            Backbone.history.navigate("#home/content-Projects/form/" + itemIndex, { trigger: true });
+                        } else {
+                            Backbone.history.navigate("#home/content-Projects", { trigger: true });
+                        }
+                        break;
+                    }
+            }
         }
     });
 

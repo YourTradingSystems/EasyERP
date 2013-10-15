@@ -14,7 +14,7 @@ define([
 
             events: {
                 "click": "gotoForm",
-                "click #delete": "deleteThumbnail",
+                "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
                 "click #edit": "gotoEditForm"
@@ -49,23 +49,26 @@ define([
                 this.$el.css('background-color', 'rgba(' + rgbColor.r + ',' + rgbColor.g + ',' + rgbColor.b + ', 0.20)');
                 this.$('p').css({ 'color': color, 'font-weight': 'bold', 'text-shadow': '0 1px 1px rgba(' + 255 + ',' + 255 + ',' + 255 + ', 0.5)' });
             },
-
-            deleteThumbnail: function (e) {
-                e.preventDefault();
-                var mid = 39;
-                var that = this;
-                var model = this.model.collection.get(this.$el.attr("id"));
-                this.$el.closest(".thumbnail").fadeToggle(300, function () {
-                    model.destroy(
-                        {
-                            headers: {
-                                mid: mid
-                            }
-                        },
-                        { wait: true });
-                    $(this).remove();
-                });
+            
+            deleteEvent: function (e) {
+                common.deleteEvent(e, this);
             },
+
+            //deleteThumbnail: function (e) {
+            //    e.preventDefault();
+            //    var mid = 39;
+            //    var model = this.model.collection.get(this.$el.attr("id"));
+            //    this.$el.closest(".thumbnail").fadeToggle(300, function () {
+            //        model.destroy(
+            //            {
+            //                headers: {
+            //                    mid: mid
+            //                }
+            //            },
+            //            { wait: true });
+            //        $(this).remove();
+            //    });
+            //},
 
             gotoForm: function (e) {
                 App.ownContentType = true;
@@ -78,12 +81,10 @@ define([
             template: _.template(ThumbnailsItemTemplate),
 
             render: function () {
-                var color = this.model.get('color');
-                var index = this.model.collection.indexOf(this.model);
                 this.$el.html(this.template(this.model.toJSON()));
-                this.$el.attr("data-index", index);
+                this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 this.$el.attr("id", this.model.get('_id'));
-                this.changeColor(color);
+                this.changeColor(this.model.get('color'));
                 return this;
             }
         });
