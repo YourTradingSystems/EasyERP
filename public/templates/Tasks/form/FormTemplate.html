@@ -66,34 +66,35 @@
                 </p>
             </div>
             <div class="tab">
-                <p>
-                    <label for="priority">Priority </label>
-                    <span><%=extrainfo.priority%></span>
-                </p>
-                <p>
-                    <label for="sequence">Sequense </label>
-                    <span><%=extrainfo.sequence%></span>
-                </p>
-                <p>
-                    <label for="customerDd">Customer</label>
-                    <span><%=extrainfo.customer.name%></span>
-                </p>
-                <p>
-                    <label for="loged">Logged</label>
-                    <span><%=extrainfo.loged%></span>
-                </p>
-                <p>
-                    <label for="estimated">Estimated</label>
-                    <span><%=extrainfo.estimated%></span>
-                </p>
-                <p>
-                    <label for="StartDate">Starting Date </label>
-                    <span><%=extrainfo.StartDate%></span>
-                </p>
-                <p>
-                    <label for="EndDate">Ending Date </label>
-                    <span><%=extrainfo.EndDate%></span>
-                </p>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p><label for="priority">Priority</label></p>
+                        <p><label for="sequence">Sequense</label></p>
+                        <p><label for="customerDd">Customer</label></p>
+                        <p><label for="loged">Logged</label></p>
+                    </div>
+                    <div class="half-block left">
+                        <p><span><%=extrainfo.priority%></span></p>
+                        <p><span><%=extrainfo.sequence%></span></p>
+                        <p><span><%=extrainfo.customer.name%></span></p>
+                        <p><span><%=extrainfo.loged%></span></p>
+                    </div>
+                </div>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p><label for="estimated">Estimated</label></p>
+                        <p><label for="StartDate">Starting Date </label></p>
+                        <p><label for="EndDate">Ending Date </label></p>
+                    </div>
+                    <div class="half-block left">
+                        <p><span><%=extrainfo.estimated%></span></p>
+                        <p><span><%=extrainfo.StartDate%></span></p>
+                        <p><span><%=extrainfo.EndDate%></span></p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+           
+           
             </div>
         </div>
     </form>

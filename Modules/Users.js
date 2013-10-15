@@ -6,7 +6,7 @@ var Users = function (logWriter, mongoose) {
     var crypto = require('crypto');
 
     var userSchema = mongoose.Schema({
-        login: { type: String, default: 'demoUser' },
+        login: { type: String, default: '' },
         email: { type: String, default: '' },
         pass: { type: String, default: '' },
         profile: {
@@ -128,7 +128,7 @@ var Users = function (logWriter, mongoose) {
                         User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                             try {
                                 if (_users && _users.length !== 0) {
-                                    //Провірка по username
+                                    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ username
                                     var shaSum = crypto.createHash('sha256');
                                     shaSum.update(data.pass);
                                     if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {

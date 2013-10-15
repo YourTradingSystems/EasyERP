@@ -26,7 +26,11 @@ define([
                 this.render();
             },
 
-            close: function () {
+            events: {
+                "submit form" : "formSubmitHandler"
+            },
+            formSubmitHandler : function(event){
+                event.preventDefault();
             },
 
             saveItem: function () {
@@ -35,10 +39,10 @@ define([
 
                 var projectModel = new ProjectModel();
 
-                var projectName = $("#projectName").val();
+               /* var projectName = $("#projectName").val();
                 if ($.trim(projectName) == "") {
                     projectName = "New Project";
-                }
+                }*/
 
                 var idCustomer = $(this.el).find("#customerDd option:selected").val();
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
@@ -57,9 +61,8 @@ define([
                     });
                 });
 
-
                 projectModel.save({
-                    projectName: projectName,
+                    projectName: $("#projectName").val(),
                     customer: customer,
                     projectmanager: projectmanager,
                     workflow: workflow,
