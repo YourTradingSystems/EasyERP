@@ -15,7 +15,7 @@ define([
             el: "#content-holder",
             contentType: "Employees",
             template: _.template(CreateTemplate),
-
+            imageSrc: '',
             initialize: function (options) {
                 this.usersCollection = new UsersCollection();
                 this.usersCollection.bind('reset', _.bind(this.render, this));
@@ -27,7 +27,7 @@ define([
                 this.accountsDdCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = options.collection;
-                //this.render();
+                this.render();
             },
 
             events: {
@@ -117,6 +117,7 @@ define([
 
                 employeeModel.save({
                     name: name,
+                    imgSrc: this.imageSrc,
                     workAddress: workAddress,
                     workEmail: workEmail,
                     workPhones: workPhones,
@@ -148,7 +149,9 @@ define([
             },
 
             render: function () {
+                var employeeModel = new EmployeeModel();
                 this.$el.html(this.template({ departmentsCollection: this.departmentsCollection, jobPositionsCollection: this.jobPositionsCollection, accountsDdCollection: this.accountsDdCollection, usersCollection: this.usersCollection }));
+                common.canvasDraw({ model: employeeModel.toJSON() }, this);
                 return this;
             }
 

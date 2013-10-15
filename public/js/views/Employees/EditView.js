@@ -13,7 +13,8 @@ define([
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Employees",
-
+            imageSrc: '',
+                
             initialize: function (options) {
                 this.usersCollection = new UsersCollection();
                 this.usersCollection.bind('reset', _.bind(this.render, this));
@@ -48,7 +49,6 @@ define([
 
                 if (itemIndex != -1) {
                     var currentModel = this.collection.models[itemIndex];
-
                     var mid = 39;
 
                     var first = $.trim($("#first").val());
@@ -149,6 +149,7 @@ define([
 
                     currentModel.set({
                         name: name,
+                        imageSrc: this.imageSrc,
                         workAddress: workAddress,
                         workEmail: workEmail,
                         workPhones: workPhones,
@@ -194,7 +195,7 @@ define([
                     }
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), departmentsCollection: this.departmentsCollection, jobPositionsCollection: this.jobPositionsCollection, accountsDdCollection: this.accountsDdCollection, usersCollection: this.usersCollection }));
                 }
-
+                common.canvasDraw({ model: currentModel.toJSON() }, this);
                 return this;
             }
 

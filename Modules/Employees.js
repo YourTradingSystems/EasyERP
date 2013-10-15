@@ -3,6 +3,7 @@ var Employee = function (logWriter, mongoose) {
 
     var employeeSchema = mongoose.Schema({
         isEmployee: { type: Boolean, default: false },
+        imageSrc: { type: String, default: '' },
         subject: { type: String, default: '' },
         name: {
             first: { type: String, default: 'demo' },
@@ -22,6 +23,7 @@ var Employee = function (logWriter, mongoose) {
             mobile: { type: String, default: '' },
             phone: { type: String, default: '' }
         },
+        skype: { type: String, default: '' },
         officeLocation: { type: String, default: '' },
         relatedUser: {
             id: { type: String, default: '' },
@@ -270,6 +272,9 @@ var Employee = function (logWriter, mongoose) {
                     }
                     if (data.color) {
                         _employee.color = data.color;
+                    }
+                    if (data.imgSrc) {
+                        _employee.imageSrc = data.imgSrc;
                     }
                     ///////////////////////////////////////////////////
                     _employee.save(function (err, result) {
