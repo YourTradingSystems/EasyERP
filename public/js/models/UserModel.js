@@ -39,33 +39,37 @@ define(function () {
                     }
                 );
             }
-            if(attrs.pass.trim() == ""){
-                errors.push(
-                    {
-                        name:"Password",
-                        field:"pass",
-                        msg:"Password can not be empty"
-                    }
-                );
+            //if model is in edit mode than no to ask password and confirm password
+            if(!options.editMode){
+                if(attrs.pass.trim() == ""){
+                    errors.push(
+                        {
+                            name:"Password",
+                            field:"pass",
+                            msg:"Password can not be empty"
+                        }
+                    );
+                }
+                if(options.confirmPass.trim() == ""){
+                    errors.push(
+                        {
+                            name:"Confirmation password",
+                            field:"confirmPass",
+                            msg:"Confirmation password can not be empty"
+                        }
+                    );
+                }
+                if(attrs.pass != options.confirmPass){
+                    errors.push(
+                        {
+                            name:"",
+                            field:"",
+                            msg:"Password and confirm password do not match"
+                        }
+                    );
+                }
             }
-            if(options.confirmPass.trim() == ""){
-                errors.push(
-                    {
-                        name:"Confirmation password",
-                        field:"confirmPass",
-                        msg:"Confirmation password can not be empty"
-                    }
-                );
-            }
-            if(attrs.pass != options.confirmPass){
-                errors.push(
-                    {
-                        name:"",
-                        field:"",
-                        msg:"Password and confirm password do not match"
-                    }
-                );
-            }
+
             if(attrs.email.trim() == ""){
                 errors.push(
                     {

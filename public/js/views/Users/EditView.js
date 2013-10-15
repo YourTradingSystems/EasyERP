@@ -53,7 +53,8 @@
                         error: function () {
                             Backbone.history.navigate("home", { trigger: true });
                         },
-                        confirmPass:$('#confirmpassword').val()
+                        confirmPass:$('#confirmpassword').val(),
+                        editMode: true
                     });
 
                 }
@@ -67,6 +68,7 @@
                 else
                 {
                     var currentModel = this.collection.models[itemIndex];
+                    currentModel.set( { pass: "" } );
                     this.$el.html(_.template(EditTemplate, {model: currentModel.toJSON(),
                         companiesCollection:this.companiesCollection,
                         profilesCollection:this.profilesCollection }));

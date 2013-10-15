@@ -23,16 +23,16 @@
             <p>
                 <label for="companiesDd">Company</label>
                 <select id="companiesDd">
-                    <option selected="selected" value="0">Select...</option>
+                    <option value="" selected="selected" disabled>Select...</option>
                     <% companiesCollection.each(function(option){ %>
-                    <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.company.id) ? 'selected="selected"' : ''%> > <%= option.get('name') %></option>
+                        <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.company.id) ? 'selected="selected"' : ''%> > <%= option.get('name') %></option>
                     <% }); %>
                 </select>
             </p><br/>
             <p>
                 <label for="profilesDd">Profile</label>
                 <select id="profilesDd">
-                    <option selected="selected" value="0">Select...</option>
+                    <option value="" selected="selected" disabled>Select...</option>
                     <% profilesCollection.each(function(option){ %>
                     <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.profile.id) ? 'selected="selected"' : ''%> ><%= option.get('profileName')%></option>
                     <% }) %>
