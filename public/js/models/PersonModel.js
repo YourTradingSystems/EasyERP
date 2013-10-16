@@ -29,7 +29,8 @@ define( function () {
                 isCustomer:false,
                 isSupplier:false,
                 active:false
-            }
+            },
+            color: '#4d5a75',
         },
 
         urlRoot: function(){

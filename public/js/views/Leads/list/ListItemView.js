@@ -27,6 +27,7 @@ define([
                 model.set({ creationDate: model.get("creationDate").split('.')[0].replace(/T|Z/g, ' ').replace(/-/g, '/') });
                 this.$el.attr("data-index", index);
                 this.$el.html(this.template(model.toJSON()));
+                this.$("td:nth-child(2)").append(index + 1);
                 return this;
             }
         });

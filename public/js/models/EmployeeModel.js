@@ -22,6 +22,7 @@
                 mobile: '',
                 phone: ''
             },
+            skype:'',
             officeLocation: '',
             relatedUser: {
                 id: '',

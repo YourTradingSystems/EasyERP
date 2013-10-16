@@ -54,26 +54,10 @@ define([
                 common.deleteEvent(e, this);
             },
 
-            //deleteThumbnail: function (e) {
-            //    e.preventDefault();
-            //    var mid = 39;
-            //    var model = this.model.collection.get(this.$el.attr("id"));
-            //    this.$el.closest(".thumbnail").fadeToggle(300, function () {
-            //        model.destroy(
-            //            {
-            //                headers: {
-            //                    mid: mid
-            //                }
-            //            },
-            //            { wait: true });
-            //        $(this).remove();
-            //    });
-            //},
-
             gotoForm: function (e) {
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
-                    var itemIndex = $(e.target).data("index") + 1;
+                    var itemIndex = this.$el.data("index") + 1;
                     window.location.hash = "#home/content-Companies/form/" + itemIndex;
                 }
             },
