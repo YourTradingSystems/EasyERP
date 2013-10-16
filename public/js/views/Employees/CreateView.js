@@ -70,6 +70,7 @@ define([
                 var tags = $.trim($("#tags").val()).split(',');
 
                 var workEmail = $.trim($("#workEmail").val());
+                var skype = $.trim($("#skype").val());
 
                 var phone = $.trim($("#phone").val());
                 var mobile = $.trim($("#mobile").val());
@@ -118,8 +119,10 @@ define([
                 employeeModel.save({
                     name: name,
                     imgSrc: this.imageSrc,
+                    tags: tags,
                     workAddress: workAddress,
                     workEmail: workEmail,
+                    skype: skype,
                     workPhones: workPhones,
                     officeLocation: officeLocation,
                     relatedUser: relatedUser,

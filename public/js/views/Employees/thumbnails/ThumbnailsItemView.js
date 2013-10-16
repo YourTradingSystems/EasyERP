@@ -57,7 +57,7 @@ define([
             gotoForm: function (e) {
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
-                    var itemIndex = $(e.target).data("index") + 1;
+                    var itemIndex = this.$el.data("index") + 1;
                     window.location.hash = "#home/content-Employees/form/" + itemIndex;
                 }
             },
@@ -65,12 +65,10 @@ define([
             template: _.template(ThumbnailsItemTemplate),
 
             render: function () {
-                var color = this.model.get('color');
-                var index = this.model.collection.indexOf(this.model);
-                this.$el.attr("data-index", index);
+                this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.html(this.template(this.model.toJSON()));
-                this.changeColor(color);
+                this.changeColor(this.model.get('color'));
                 return this;
             }
         });
