@@ -191,10 +191,20 @@ define([
                 } else {
                     var currentModel = this.collection.models[itemIndex];
                     if (currentModel.get('dateBirth')) {
-                        currentModel.set({ dateBirth: currentModel.get('dateBirth').split('T')[0].replace(/-/g, '/') }, { silent: true });
+                        currentModel.set({
+                            dateBirth: currentModel.get('dateBirth').split('T')[0].replace(/-/g, '/')
+                        }, {
+                            silent: true
+                        });
                     }
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), departmentsCollection: this.departmentsCollection, jobPositionsCollection: this.jobPositionsCollection, accountsDdCollection: this.accountsDdCollection, usersCollection: this.usersCollection }));
-                }
+                    this.$el.html(_.template(EditTemplate, {
+                        model: currentModel.toJSON(),
+                        departmentsCollection: this.departmentsCollection,
+                        jobPositionsCollection: this.jobPositionsCollection,
+                        accountsDdCollection: this.accountsDdCollection,
+                        usersCollection: this.usersCollection
+                    }));
+                };
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
                 return this;
             }

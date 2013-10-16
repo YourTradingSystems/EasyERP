@@ -117,7 +117,7 @@ define([
 
                 employeeModel.save({
                     name: name,
-                    imgSrc: this.imageSrc,
+                    imageSrc: this.imageSrc,
                     workAddress: workAddress,
                     workEmail: workEmail,
                     workPhones: workPhones,
@@ -150,7 +150,12 @@ define([
 
             render: function () {
                 var employeeModel = new EmployeeModel();
-                this.$el.html(this.template({ departmentsCollection: this.departmentsCollection, jobPositionsCollection: this.jobPositionsCollection, accountsDdCollection: this.accountsDdCollection, usersCollection: this.usersCollection }));
+                this.$el.html(this.template({
+                    departmentsCollection: this.departmentsCollection,
+                    jobPositionsCollection: this.jobPositionsCollection,
+                    accountsDdCollection: this.accountsDdCollection,
+                    usersCollection: this.usersCollection
+                }));
                 common.canvasDraw({ model: employeeModel.toJSON() }, this);
                 return this;
             }

@@ -1,7 +1,7 @@
 var Company = function (logWriter, mongoose) {
 
     var CompanySchema = mongoose.Schema({
-        image: { type: String, default: '' },
+        imageSrc: { type: String, default: '' },
         isOwnCompany: { type: Boolean, default: false },
         email: { type: String, default: '' },
         name: { type: String, default: 'emptyCompany' },
@@ -151,6 +151,9 @@ var Company = function (logWriter, mongoose) {
                             }
                             if (data.salesPurchases.receiveMessages) {
                                 _company.salesPurchases.receiveMessages = data.salesPurchases.receiveMessages;
+                            }
+                            if (data.imageSrc) {
+                                _company.imageSrc = data.imageSrc;
                             }
                         }
                         if (data.history) {

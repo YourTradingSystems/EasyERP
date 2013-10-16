@@ -3,9 +3,10 @@ define([
     "collections/Users/UsersCollection",
     "collections/Companies/CompaniesCollection",
     "collections/Profiles/ProfilesCollection",
-    "models/UserModel"
+    "models/UserModel",
+    "common"
 ],
-    function (CreateUserTemplate, UsersCollection, CompaniesCollection, ProfilesCollection, UserModel) {
+    function (CreateUserTemplate, UsersCollection, CompaniesCollection, ProfilesCollection, UserModel, common) {
 
         var UsersCreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -13,6 +14,7 @@ define([
             actionType: null,
             template: _.template(CreateUserTemplate),
             contentType: "Users",
+            imageSrc: '',
             initialize: function () {
                 this.usersCollection = new UsersCollection();
                 this.usersCollection.bind('reset', _.bind(this.render, this));
@@ -38,16 +40,17 @@ define([
                 var mid = 39;
 
                 this.model.save({
-                    email:$('#email').val(),
-                    login:$('#login').val(),
-                    pass:$('#password').val(),
-                    profile:{
-                        company:{
-                            id:$('#companiesDd option:selected').val(),
+                    imageSrc: this.imageSrc,
+                    email: $('#email').val(),
+                    login: $('#login').val(),
+                    pass: $('#password').val(),
+                    profile: {
+                        company: {
+                            id: $('#companiesDd option:selected').val(),
                             name: $('#companiesDd option:selected').text()
                         },
-                        profile:{
-                            id:$('#profilesDd option:selected').val(),
+                        profile: {
+                            id: $('#profilesDd option:selected').val(),
                             name: $('#profilesDd option:selected').text()
                         }
                     }
@@ -63,15 +66,19 @@ define([
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
                     },
-                    confirmPass:$('#confirmpassword').val()
+                    confirmPass: $('#confirmpassword').val()
                 });
-
-
-                //Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
 
             },
             render: function () {
-                this.$el.html(this.template({ model:this.model.toJSON(), usersCollection: this.usersCollection, companiesCollection: this.companiesCollection, profilesCollection:this.profilesCollection }));
+                var userModel = new UserModel();
+                this.$el.html(this.template({
+                    model: this.model.toJSON(),
+                    usersCollection: this.usersCollection,
+                    companiesCollection: this.companiesCollection,
+                    profilesCollection: this.profilesCollection
+                }));
+                common.canvasDraw({ model: userModel.toJSON() }, this);
                 return this;
             }
         });

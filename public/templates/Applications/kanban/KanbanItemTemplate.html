@@ -2,7 +2,8 @@
     <p><%=name.first%> <%=name.last%></p>
     <div class="dropDown">
         <a href="#">
-            <img hidden="hidden" src="./images/downCircleWhite.png" alt="Down" /></a>
+            <img hidden="hidden" src="./images/downCircleWhite.png" alt="Down" />
+        </a>
         <ul class="dropDownOpened" hidden="hidden">
             <li>
                 <a href="#" id="edit">Edit...</a>
@@ -51,6 +52,6 @@
     <p><%=subject%></p>
     <p><%=workflow.name%></p>
     <span><%=jobPosition.name%></span>
-        <img class="person" src="./images/person.png" />
+    <img class="person" src="<%=imageSrc%>" width="64" height="64"/>
     <p>Mobile: <%=workPhones.mobile%></p>
 </div>

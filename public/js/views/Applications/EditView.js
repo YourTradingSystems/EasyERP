@@ -15,6 +15,7 @@
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Applications",
+            imageSrc: '',
 
             initialize: function (options) {
                 this.employeesCollection = new EmployeesCollection();
@@ -168,6 +169,7 @@
 
                     currentModel.set({
                         subject: subject,
+                        imageSrc: this.imageSrc,
                         name: name,
                         wemail: wemail,
                         wphones: wphones,
@@ -198,11 +200,6 @@
                 }
             },
 
-            ISODateToDate: function (ISODate) {
-                var date = ISODate.split('T')[0].replace(/-/g, '/');
-                return date;
-            },
-
             render: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
 
@@ -212,7 +209,14 @@
                 else {
                     var currentModel = this.applicationsCollection.models[itemIndex];
                     //currentModel.on('change', this.render, this);
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), employeesCollection: this.employeesCollection, jobPositionsCollection: this.jobPositionsCollection, departmentsCollection: this.departmentsCollection, degreesCollection: this.degreesCollection, sourceOfApplicantsCollection: this.sourceOfApplicantsCollection }));
+                    this.$el.html(_.template(EditTemplate, {
+                        model: currentModel.toJSON(),
+                        employeesCollection: this.employeesCollection,
+                        jobPositionsCollection: this.jobPositionsCollection,
+                        departmentsCollection: this.departmentsCollection,
+                        degreesCollection: this.degreesCollection,
+                        sourceOfApplicantsCollection: this.sourceOfApplicantsCollection
+                    }));
                     var workflows = this.workflowsCollection.models;
 
                     _.each(workflows, function (workflow, index) {
@@ -227,7 +231,8 @@
                             breadcrumb.find("a").addClass("active");
                         }
                     }, this);
-                }
+                };
+                common.canvasDraw({ model: currentModel.toJSON() }, this);
                 return this;
             }
 

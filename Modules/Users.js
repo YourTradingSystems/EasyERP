@@ -1,11 +1,9 @@
 // JavaScript source code
 var Users = function (logWriter, mongoose) {
-
-    //var fs = require("fs"),
-    //mongoose = require('mongoose'),
     var crypto = require('crypto');
 
     var userSchema = mongoose.Schema({
+        imageSrc: { type: String, default: '' },
         login: { type: String, default: '' },
         email: { type: String, default: '' },
         pass: { type: String, default: '' },
@@ -95,6 +93,10 @@ var Users = function (logWriter, mongoose) {
                             _user.email = data.email;
                         }
 
+                        if (data.imageSrc) {
+                            _user.imageSrc = data.imageSrc;
+                        }
+
                         _user.save(function (err, result1) {
                             if (err) {
                                 console.log(err);
@@ -128,7 +130,6 @@ var Users = function (logWriter, mongoose) {
                         User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                             try {
                                 if (_users && _users.length !== 0) {
-                                    //������� �� username
                                     var shaSum = crypto.createHash('sha256');
                                     shaSum.update(data.pass);
                                     if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {

@@ -16,7 +16,7 @@ define([
             el: "#content-holder",
             contentType: "Applications",
             template: _.template(CreateTemplate),
-
+            imageSrc: '',
             initialize: function (options) {
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
@@ -108,6 +108,7 @@ define([
 
                 applicationModel.save({
                     subject: subject,
+                    imgSrc: this.imageSrc,
                     name: name,
                     wemail: wemail,
                     wphones: wphones,
@@ -138,7 +139,9 @@ define([
             },
 
             render: function () {
+                var applicationModel = new ApplicationModel();
                 this.$el.html(this.template({ employeesCollection: this.employeesCollection, jobPositionsCollection: this.jobPositionsCollection, departmentsCollection: this.departmentsCollection, degreesCollection: this.degreesCollection, sourceOfApplicantsCollection: this.sourceOfApplicantsCollection }));
+                common.canvasDraw({ model: applicationModel.toJSON() }, this);
                 return this;
             }
 

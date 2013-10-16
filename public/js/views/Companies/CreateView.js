@@ -13,7 +13,7 @@ define([
             el: "#content-holder",
             contentType: "Companies",
             template: _.template(CreateTemplate),
-
+            imageSrc: '',
             initialize: function (options) {
                 this.companyCollection = options.collection;
                 this.employeesCollection = new EmployeesCollection();
@@ -88,6 +88,7 @@ define([
 
                 companyModel.save({
                     name: name,
+                    imageSrc: this.imageSrc,
                     email: email,
                     phones: {
                         phone: phone,
@@ -124,7 +125,12 @@ define([
             },
 
             render: function () {
-                this.$el.html(this.template({ employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection }));
+                var companyModel = new CompanyModel();
+                this.$el.html(this.template({
+                    employeesCollection: this.employeesCollection,
+                    departmentsCollection: this.departmentsCollection
+                }));
+                common.canvasDraw({ model: companyModel.toJSON() }, this);
                 return this;
             }
 

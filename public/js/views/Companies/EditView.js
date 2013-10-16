@@ -11,6 +11,7 @@ define([
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Companies",
+            imageSrc: '',
 
             initialize: function (options) {
                 this.companiesCollection = options.collection;
@@ -99,6 +100,7 @@ define([
 
                     currentModel.set({
                         name: name,
+                        imageSrc: this.imageSrc,
                         email: email,
                         phones: {
                             phone: phone,
@@ -138,14 +140,13 @@ define([
 
             render: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
-
+                var currentModel = this.companiesCollection.models[itemIndex];
                 if (itemIndex == -1) {
                     this.$el.html();
                 } else {
-                    var currentModel = this.companiesCollection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection }));
                 }
-
+                common.canvasDraw({ model: currentModel.toJSON() }, this);
                 return this;
             }
 

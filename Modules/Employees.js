@@ -273,8 +273,8 @@ var Employee = function (logWriter, mongoose) {
                     if (data.color) {
                         _employee.color = data.color;
                     }
-                    if (data.imgSrc) {
-                        _employee.imageSrc = data.imgSrc;
+                    if (data.imageSrc) {
+                        _employee.imageSrc = data.imageSrc;
                     }
                     ///////////////////////////////////////////////////
                     _employee.save(function (err, result) {
