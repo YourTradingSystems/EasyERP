@@ -36,7 +36,7 @@
                 active: true,
                 reference: '',
                 language: 'English',
-                date: null,
+                date: null
             },
             social: {
                 fb: '',
