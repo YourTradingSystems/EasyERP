@@ -31,9 +31,25 @@ define([
             },
 
             events: {
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
+            
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display:"block"
+                }, 250);
+               
+            },
+            hideEdit: function () {
+              $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
 
+            },
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
