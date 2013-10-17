@@ -187,7 +187,14 @@ var Users = function (logWriter, mongoose) {
         update: function (_id, data, res) {
             try {
                 delete data._id;
-                User.update({ _id: _id }, data, function (err, result) {
+                var updateFields = {};
+                for (var i in data) {
+                    if (data[i]) {
+                        updateFields[i] = data[i]
+                    }
+                };
+                var _object = { $set: updateFields }
+                User.update({ _id: _id }, _object, function (err, result) {
 
                     if (err) {
                         console.log(err);

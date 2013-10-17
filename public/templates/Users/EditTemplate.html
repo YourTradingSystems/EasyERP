@@ -11,14 +11,14 @@
                 <input type="text" name="login" id="login" value="<%= model.login %>" required />
             </p>
 
-            <p>
+            <!--<p>
                 <label for="password">Password </label>
                 <input type="password" name="password" id="password" value="<%= model.pass %>" required />
             </p>
             <p>
                 <label for="confirmpassword">Confirm Password</label>
                 <input type="password" name="confirmpassword" id="confirmpassword" required />
-            </p>
+            </p>-->
 
             <p>
                 <label for="email">Email </label>
@@ -26,7 +26,7 @@
             </p>
             <p>
                 <label for="companiesDd">Company</label>
-                <select id="companiesDd">
+                <select id="companiesDd">k
                     <option value="" selected="selected" disabled>Select...</option>
                     <% companiesCollection.each(function(option){ %>
                         <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.company.id) ? 'selected="selected"' : ''%> > <%= option.get('name') %></option>

@@ -3,6 +3,10 @@
     <form method="post" action="" id="createPersonsForm" class="form">
         <fieldset>
             <legend>Personal Info</legend>
+            <div class="avatar">
+                <input type="file" value="Edit" id="inputImg" accept="image/*">
+                <canvas id="avatar" width="120" height="120"></canvas>
+            </div>
             <p>
                 <label for="firstName">First Name</label>
                 <input type="text" name="firstName" id="firstName" value="<%= model.name.first %>" required/> <br/>

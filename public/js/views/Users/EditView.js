@@ -30,7 +30,6 @@
                         imageSrc: this.imageSrc,
                         email: $('#email').val(),
                         login: $('#login').val(),
-                        pass: $('#password').val(),
                         profile: {
                             company: {
                                 id: $('#companiesDd option:selected').val(),

@@ -5,6 +5,7 @@ var Persons = function (logWriter, mongoose) {
             first: { type: String, default: 'demo' },
             last: { type: String, default: 'User' }
         },
+        imageSrc: { type: String, default: '' },
         email: { type: String, default: '' },
         photoUrl: { type: String, default: '' },
         company: {
@@ -14,7 +15,6 @@ var Persons = function (logWriter, mongoose) {
         timezone: { type: String, default: 'UTC' },
         address: {
             street1: { type: String, default: '' },
-            //street2: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
@@ -175,6 +175,9 @@ var Persons = function (logWriter, mongoose) {
                             }
                             if (data.salesPurchases.receiveMessages) {
                                 _person.salesPurchases.receiveMessages = data.usalesPurchases.receiveMessages;
+                            }
+                            if (data.imageSrc) {
+                                _person.imageSrc = data.imageSrc;
                             }
                         }
                         if (data.relatedUser) {

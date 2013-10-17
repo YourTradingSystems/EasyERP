@@ -11,6 +11,7 @@ define([
             el: "#content-holder",
             contentType: "Persons",
             template: _.template(CreateTemplate),
+            imageSrc: '',
 
             initialize: function (options) {
                 this.companiesCollection = new CompaniesCollection();
@@ -34,6 +35,7 @@ define([
                         first: $('#firstName').val(),
                         last: $('#lastName').val()
                     },
+                    imageSrc: this.imageSrc,
                     company: company,
                     address: {
                         street1: $('#addressInput').val(),
@@ -80,7 +82,9 @@ define([
             },
 
             render: function () {
+                var personModel = new PersonModel();
                 this.$el.html(this.template({ companiesCollection: this.companiesCollection }));
+                common.canvasDraw({ model: personModel.toJSON() }, this);
                 return this;
             }
 

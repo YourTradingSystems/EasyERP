@@ -1,13 +1,15 @@
 define([
     "text!templates/Persons/EditTemplate.html",
     "collections/Companies/CompaniesCollection",
+    "common",
     "custom"
 ],
-    function (EditTemplate, CompaniesCollection, Custom) {
+    function (EditTemplate, CompaniesCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Persons",
+            imageSrc: '',
 
             initialize: function (options) {
                 this.companiesCollection = new CompaniesCollection();
@@ -87,7 +89,11 @@ define([
                 }
                 else {
                     var currentModel = this.personsCollection.models[itemIndex];
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), companiesCollection: this.companiesCollection }));
+                    this.$el.html(_.template(EditTemplate, {
+                        model: currentModel.toJSON(),
+                        companiesCollection: this.companiesCollection
+                    }));
+                    common.canvasDraw({ model: currentModel.toJSON() }, this);
                 }
 
                 return this;

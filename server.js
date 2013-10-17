@@ -88,6 +88,7 @@ app.post('/login', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<<<<<<<<<<');
     data = {};
     data = req.body;
+    console.log(data);
     requestHandler.login(req, res, data);
 });
 
