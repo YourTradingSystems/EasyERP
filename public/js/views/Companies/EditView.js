@@ -118,7 +118,7 @@ define([
                             salesTeam: salesTeam,
                             reference: reference,
                             language: language,
-                            date: date,
+                            date: date
                         }
                     });
 
