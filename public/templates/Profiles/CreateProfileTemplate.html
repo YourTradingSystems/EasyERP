@@ -1,10 +1,14 @@
-
-    <form method="post" action="" id="createProfileForm" class="form">
-        <p>
-            <label>Profile Name: <input type="text" id="profileNameInput" value="<%= profileName %>" required/> </label>
-            <label>Description: <input type="text" id="profileDescInput" value="<%= profileDescription %>"/></label>
-        </p>
-        <br/>
-
-        <input type="submit" value="Save" class="btn"/>
-    </form>
+    <div class="form-holder">
+        <form method="post" action="" id="createProfileForm" class="form">
+            <fielset>
+                <div class="inner">
+                    <p>
+                        <label for="profileNameInput">Profile Name: </label>
+                        <input type="text" id="profileNameInput" value="<%= profileName %>" required/>
+                        <label for="profileDescInput">Description: </label>
+                        <input type="text" id="profileDescInput" value="<%= profileDescription %>"/>
+                    </p>
+                </div>
+            </fielset>
+        </form>
+    </div>
