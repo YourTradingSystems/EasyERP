@@ -44,16 +44,16 @@
         img.src = model.imageSrc;
     };
 
-    var canvasDraw = function (options, _context) {
+    var canvasDraw = function(options, _context) {
         var model = (options && options.model) ? options.model : null;
         var context = (_context) ? _context : this;
         var canvas = context.$('#avatar')[0];
         var inputFile = context.$('#inputImg');
         var that = context;
-        inputFile.on('change', function () {
+        inputFile.on('change', function() {
             var file = inputFile[0].files[0];
             var fr = new FileReader();
-            fr.onload = function () {
+            fr.onload = function() {
                 var src = "data:image/jpg;base64," + btoa(fr.result);
                 that.imageSrc = src;
                 if (model) {
@@ -68,7 +68,7 @@
             fr.readAsBinaryString(file);
         });
         canvasDrawing({ model: model }, context);
-    }
+    };
 
     return {
         toObject: toObject,
@@ -76,5 +76,5 @@
         hexToRgb: hexToRgb,
         deleteEvent: deleteEvent,
         canvasDraw: canvasDraw
-    }
+    };
 });
