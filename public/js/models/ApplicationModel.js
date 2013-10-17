@@ -44,7 +44,7 @@
             workflow: {
                 name: 'Initial Qualification',
                 status: 'New'
-            },
+            }
         },
 
         urlRoot: function () {

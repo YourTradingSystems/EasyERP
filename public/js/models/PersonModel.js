@@ -31,7 +31,7 @@ define(function () {
                 isSupplier: false,
                 active: false
             },
-            color: '#4d5a75',
+            color: '#4d5a75'
         },
 
         urlRoot: function () {
