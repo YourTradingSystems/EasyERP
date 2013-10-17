@@ -32,12 +32,16 @@ define([
                     hash = null;
                 }
             }
+            
             console.log('GetList: ' + contentType + " " + viewType + " " + hash + " " + itemIndex);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection",
                 self = this;
+            if (contentType == "Birthdays") {
+                CollectionUrl = "collections/Employees/EmployeesCollection";
+            }
 
             self.Custom = Custom;
 

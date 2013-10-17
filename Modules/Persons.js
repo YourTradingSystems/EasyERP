@@ -29,7 +29,7 @@ var Persons = function (logWriter, mongoose) {
         },
         title: { type: String, default: 'Mister' },
         salesPurchases: {
-            isCustomer: { type: Boolean, default: false },
+            isCustomer: { type: Boolean, default: true },
             isSupplier: { type: Boolean, default: false },
             salesPerson: { type: String, default: '' },
             salesTeam: { type: String, default: '' },
