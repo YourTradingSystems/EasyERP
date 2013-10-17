@@ -24,8 +24,8 @@ define([
             render: function () {
                 var index = this.model.collection.indexOf(this.model);
                 this.$el.attr("data-index", index);
-                console.log(this.model);
                 this.$el.html(this.template(this.model.toJSON()));
+                this.$("td:nth-child(2)").append(index + 1);
                 return this;
             }
         });

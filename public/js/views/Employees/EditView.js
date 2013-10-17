@@ -14,7 +14,7 @@ define([
             el: "#content-holder",
             contentType: "Employees",
             imageSrc: '',
-                
+
             initialize: function (options) {
                 this.usersCollection = new UsersCollection();
                 this.usersCollection.bind('reset', _.bind(this.render, this));
@@ -85,6 +85,7 @@ define([
                     var tags = $.trim($("#tags").val()).split(',');
 
                     var workEmail = $.trim($("#workEmail").val());
+                    var skype = $.trim($("#skype").val());
 
                     var phone = $.trim($("#phone").val());
                     var mobile = $.trim($("#mobile").val());
@@ -168,8 +169,10 @@ define([
                     currentModel.set({
                         name: name,
                         imageSrc: this.imageSrc,
+                        tags: tags,
                         workAddress: workAddress,
                         workEmail: workEmail,
+                        skype: skype,
                         workPhones: workPhones,
                         officeLocation: officeLocation,
                         relatedUser: relatedUser,

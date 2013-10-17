@@ -92,10 +92,12 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
         },
 
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.companiesCollection.length> 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
         },
 
         deleteItems: function () {

@@ -62,7 +62,7 @@ define([
 
                 var idProject = this.$("#projectDd option:selected").val();
                 var project = common.toObject(idProject, this.projectsDdCollection);
-               
+
                 var idAssignedTo = this.$("#assignedTo option:selected").val();
                 var assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
 
@@ -92,7 +92,7 @@ define([
 
                 var idCustomer = this.$("#customerDd option:selected").val();
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
-                
+
 
                 var idWorkflow = this.$("#workflowDd option:selected").val();
                 var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
@@ -128,7 +128,12 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        if (idProject == '0' || !idProject) {
+                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                            
+                        } else {
+                            Backbone.history.navigate("home/content-Tasks/kanban/" + idProject, { trigger: true });
+                        }
                     },
                     error: function (model, xhr, options) {
                         Backbone.history.navigate("home", { trigger: true });

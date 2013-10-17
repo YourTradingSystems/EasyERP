@@ -37,6 +37,8 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                             this.collection.each(function (model) {
                                 table.append(new ListItemView({ model: model }).render().el);
                             });
+                        }else {
+                            this.$el.html('<h2>No projects found</h2>');
                         }
 
                         $('#check_all').click(function () {
@@ -93,10 +95,10 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                     }
                 case "gantt":
                     {
-                        this.$el.html('');
                         this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
                         GanttChart.create("GanttDiv");
                         GanttChart.parseProjects(this.collection);
+
                         break;
                     }
             }

@@ -3,7 +3,7 @@
         <fieldset>
             <div class="inner">
                 <div class="avatar">
-                    <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
+                    <input type="file" value="Edit" id="inputImg">
                     <canvas id="avatar" width="120" height="120"></canvas>
                 </div>
                 <div style="margin-left: 130px; width: 80%; display: block;">
@@ -38,276 +38,283 @@
             </div>
 
             <div id="tabs">
-            <div>
-                <ul id="tabList" class="inner">
-                    <li>
-                        <a href="#" class="selected">Public Information</a>
+                <div>
+                    <ul id="tabList" class="inner">
+                        <li>
+                            <a href="#" class="selected">Public Information</a>
 
-                    </li>
-                    <li>
-                        <a href="#">Personal Information</a>
+                        </li>
+                        <li>
+                            <a href="#">Personal Information</a>
 
-                    </li>
-                    <li>
-                        <a href="#">HR Settings</a>
-                    </li>
-                </ul>
-            </div></br>
-            <div class="tab">
+                        </li>
+                        <li>
+                            <a href="#">HR Settings</a>
+                        </li>
+                    </ul>
+                </div><br/>
+                <div class="tab">
                
-                <div class="half-block left">
-                       <h3>Working Address</h3>
                     <div class="half-block left">
-                        <p>
-                            <label for="street">Street</label>
-                        </p>
-                        <p>
-                            <label for="city">City</label>
-                        </p>
-                        <p>
-                        <label for="state">State</label>
-                        <p>
-                            <label for="zip">Zip</label>
-                        </p>
-                        <p>
-                            <label for="country">Country</label>
-                        </p>
-                        <p>
-                            <label for="workEmail">Work Email</label>
-                        </p>
+                        <h2>Working Address</h2>
+                        <div class="half-block left">
+                            <p>
+                                <label for="street">Street</label>
+                            </p>
+                            <p>
+                                <label for="city">City</label>
+                            </p>
+                            <p>
+                            <label for="state">State</label>
+                            <p>
+                                <label for="zip">Zip</label>
+                            </p>
+                            <p>
+                                <label for="country">Country</label>
+                            </p>
+                            <p>
+                                <label for="workEmail">Work Email</label>
+                            </p>
+                            <p>
+                                <label for="skype">Skype</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="text" class="workAddress" name="street" value="<%=model.workAddress.street%>" />
+                            </p>
+                            <p>
+                                <input type="text" class="workAddress" name="city" value="<%=model.workAddress.city%>" />
+                            </p>
+                            <p>
+                                <input type="text" class="workAddress" name="state" value="<%=model.workAddress.state%>"/>
+                            </p>
+                            <p>
+                                <input type="text" class="workAddress" name="zip" value="<%=model.workAddress.zip%>"/>
+                            </p>
+                            <p>
+                                <input type="text" class="workAddress" name="country" value="<%=model.workAddress.country%>" />
+                            </p>
+                            <p>
+                                <input type="text"  id="workEmail" value="<%=model.workEmail%>" required />
+                            </p>
+                            <p>
+                                <input type="text" id="skype" value="<%=model.skype%>" />
+                            </p>
+                        </div>
                     </div>
                     <div class="half-block left">
-                        <p>
-                            <input type="text" class="workAddress" name="street" value="<%=model.workAddress.street%>" />
-                        </p>
-                        <p>
-                            <input type="text" class="workAddress" name="city" value="<%=model.workAddress.city%>" />
-                        </p>
-                        <p>
-                            <input type="text" class="workAddress" name="state" value="<%=model.workAddress.state%>"/>
-                        </p>
-                        <p>
-                            <input type="text" class="workAddress" name="zip" value="<%=model.workAddress.zip%>"/>
-                        </p>
-                        <p>
-                            <input type="text" class="workAddress" name="country" value="<%=model.workAddress.country%>" />
-                        </p>
-                        <p>
-                            <input type="text" name="workEmail" id="workEmail" value="<%=model.workEmail%>" required />
-                        </p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label for="phone">Work Phone</label>
-                        </p>
-                        <p>
-                            <label for="mobile">Work Mobile</label>
-                        </p>
-                        <p>
-                            <label for="officeLocation">Office Location</label>
-                        </p>
-                        <p>
-                            <label for="relatedUser">Related User</label>
-                        </p>
-                        <p>
-                            <label for="visibility">Visibility</label>
-                        </p>
-                        <p>
-                            <label for="department">Department</label>
-                        </p>
-                        <p>
-                            <label for="jobPosition">Job</label>
-                        </p>
-                        <p>
-                            <label for="coach">Coach</label>
-                        </p>
+                        <div class="half-block left">
+                            <p>
+                                <label for="phone">Work Phone</label>
+                            </p>
+                            <p>
+                                <label for="mobile">Work Mobile</label>
+                            </p>
+                            <p>
+                                <label for="officeLocation">Office Location</label>
+                            </p>
+                            <p>
+                                <label for="relatedUser">Related User</label>
+                            </p>
+                            <p>
+                                <label for="visibility">Visibility</label>
+                            </p>
+                            <p>
+                                <label for="department">Department</label>
+                            </p>
+                            <p>
+                                <label for="jobPosition">Job</label>
+                            </p>
+                            <p>
+                                <label for="coach">Coach</label>
+                            </p>
 
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <input type="text" name="phone" id="phone" value="<%=model.workPhones.phone%>" required />
-                        </p>
-                        <p>
-                            <input type="text" name="mobile" id="mobile" value="<%=model.workPhones.mobile%>" required />
-                        </p>
-                        <p>
-                            <input type="text" name="officeLocation" id="officeLocation" value="<%=model.officeLocation%>" required />
-                        </p>
-                        <p>
-                            <select id="relatedUser">
-                                <option selected="selected" value="0">Select...</option>
-                                <% usersCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)? 'selected="selected"':''%>><%= option.get('login')%></option>
-                                <% }); %>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="visibility">
-                                <option selected="selected" value="0">Select...</option>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="department">
-                                <option value="0">Select...</option>
-                                <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
-                                <% }); %>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="jobPosition">
-                                <option selected="selected" value="0">Select...</option>
-                                <% jobPositionsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.jobPosition.id)? 'selected="selected"':''%>><%= option.get('name')%></option>
-                                <% }); %>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="coach">
-                                <option selected="selected" value="0">Select...</option>
-                                <% accountsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.coach.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
-                                <% }); %>
-                            </select>
-                        </p>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-             
-            <div class="tab">
-                <div class="half-block left">
-                     <h3>Citizenship & Other Info</h3>
-                    <div class="half-block left">
-                        <p>
-                            <label for="nationality">Nationality</label>
-                        </p>
-                        <p>
-                            <label for="identNo">Identification No</label>
-                        </p>
-                        <p>
-                            <label for="passportNo">Passport No</label>
-                        </p>
-                        <p>
-                            <label for="bankAccountNo">Bank Account No</label>
-                        </p>
-                        <p>
-                            <label for="otherId">Other Id</label>
-                        </p>
-
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <select id="nationality">
-                                <option selected="selected" value="0">Select...</option>
-                            </select>
-                        </p>
-                        <p>
-                            <input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required />
-                        </p>
-                        <p>
-                             <input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required />
-                        </p>
-                        <p>
-                            <select id="bankAccountNo">
-                                <option selected="selected" value="0">Select...</option>
-                            </select>
-                        </p>
-                        <p>
-                             <input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required />
-                        </p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <h3>Contact Information</h3>
-                    <p>Home Address</p>
-                    <div class="half-block left">
-                        <p>
-                            <label>Street</label>
-                        </p>
-                        <p>
-                            <label>State</label>
-                  
-                        </p>
-                        <p>
-                            <label>Zip</label>
-                 
-                        </p>
-                        <p>
-                            <label>Country</label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" />
-                        </p>
-                        <p>
-                            <input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>"/>
-                        </p>
-                        <p>
-                            <input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>"/>
-                        </p>
-                        <p>
-                            <input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>"/>
-                        </p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                      <h3>Status</h3>
-                    <div class="half-block left">
-                        <p>
-                            <label for="gender">Gender</label>
-                        </p>
-                        <p>
-                            <label for="maritalStatus">Marital Status</label>
-                        </p>
-                       
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <select id="gender">
-                                <option selected="selected" value="0">Select...</option>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="maritalStatus">
-                                <option selected="selected" value="0">Select...</option>
-                            </select>
-                        </p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <h3>Birth</h3>
-                    <div class="half-block left">
-                        <p>
-                            <label for="dateBirth">Date of Birth</label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <input type="text" name="dateBirth" id="dateBirth" value="<%=model.dateBirth%>" required />
-                        </p>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="tab">
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label for="active">Active</label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <input type="checkbox" <%= (model.active)? "checked='checked'":''%> name="active" id="active" />
-                        </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="text" name="phone" id="phone" value="<%=model.workPhones.phone%>" required />
+                            </p>
+                            <p>
+                                <input type="text" name="mobile" id="mobile" value="<%=model.workPhones.mobile%>" required />
+                            </p>
+                            <p>
+                                <input type="text" name="officeLocation" id="officeLocation" value="<%=model.officeLocation%>" required />
+                            </p>
+                            <p>
+                                <select id="relatedUser">
+                                    <option selected="selected" value="0">Select...</option>
+                                    <% usersCollection.each(function(option){ %>
+                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)? 'selected="selected"':''%>><%= option.get('login')%></option>
+                                    <% }); %>
+                                </select>
+                            </p>
+                            <p>
+                                <select id="visibility">
+                                    <option selected="selected" value="0">Select...</option>
+                                </select>
+                            </p>
+                            <p>
+                                <select id="department">
+                                    <option value="0">Select...</option>
+                                    <% departmentsCollection.each(function(option){ %>
+                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                                    <% }); %>
+                                </select>
+                            </p>
+                            <p>
+                                <select id="jobPosition">
+                                    <option selected="selected" value="0">Select...</option>
+                                    <% jobPositionsCollection.each(function(option){ %>
+                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.jobPosition.id)? 'selected="selected"':''%>><%= option.get('name')%></option>
+                                    <% }); %>
+                                </select>
+                            </p>
+                            <p>
+                                <select id="coach">
+                                    <option selected="selected" value="0">Select...</option>
+                                    <% accountsDdCollection.each(function(option){ %>
+                                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.coach.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                                    <% }); %>
+                                </select>
+                            </p>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
+             
+                <div class="tab">
+                    <div class="half-block left">
+                        <h2>Citizenship & Other Info</h2>
+                        <div class="half-block left">
+                            <p>
+                                <label for="nationality">Nationality</label>
+                            </p>
+                            <p>
+                                <label for="identNo">Identification No</label>
+                            </p>
+                            <p>
+                                <label for="passportNo">Passport No</label>
+                            </p>
+                            <p>
+                                <label for="bankAccountNo">Bank Account No</label>
+                            </p>
+                            <p>
+                                <label for="otherId">Other Id</label>
+                            </p>
+
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <select id="nationality">
+                                    <option selected="selected" value="0">Select...</option>
+                                </select>
+                            </p>
+                            <p>
+                                <input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required />
+                            </p>
+                            <p>
+                                <input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required />
+                            </p>
+                            <p>
+                                <select id="bankAccountNo">
+                                    <option selected="selected" value="0">Select...</option>
+                                </select>
+                            </p>
+                            <p>
+                                <input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <h2>Contact Information</h2>
+                        <p>Home Address</p>
+                        <div class="half-block left">
+                            <p>
+                                <label>Street</label>
+                            </p>
+                            <p>
+                                <label>State</label>
+                  
+                            </p>
+                            <p>
+                                <label>Zip</label>
+                 
+                            </p>
+                            <p>
+                                <label>Country</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" />
+                            </p>
+                            <p>
+                                <input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>"/>
+                            </p>
+                            <p>
+                                <input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>"/>
+                            </p>
+                            <p>
+                                <input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>"/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <h2>Status</h2>
+                        <div class="half-block left">
+                            <p>
+                                <label for="gender">Gender</label>
+                            </p>
+                            <p>
+                                <label for="maritalStatus">Marital Status</label>
+                            </p>
+                       
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <select id="gender">
+                                    <option selected="selected" value="0">Select...</option>
+                                </select>
+                            </p>
+                            <p>
+                                <select id="maritalStatus">
+                                    <option selected="selected" value="0">Select...</option>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <h2>Birth</h2>
+                        <div class="half-block left">
+                            <p>
+                                <label for="dateBirth">Date of Birth</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="text" name="dateBirth" id="dateBirth" value="<%=model.dateBirth%>" required />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab">
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p>
+                                <label for="active">Active</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="checkbox" <%= (model.active)? "checked='checked'":''%> name="active" id="active" />
+                            </p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
               
+                </div>
             </div>
         </fieldset>
     </form>

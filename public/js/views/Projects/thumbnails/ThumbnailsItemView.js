@@ -53,27 +53,10 @@ define([
                 common.deleteEvent(e, this);
             },
 
-            //deleteThumbnail: function (e) {
-            //    e.preventDefault();
-            //    var mid = 39;
-            //    var that = this;
-            //    var model = this.model.collection.get(this.$el.attr("id"));
-            //    this.$el.fadeToggle(300, function () {
-            //        model.destroy(
-            //            {
-            //                headers: {
-            //                    mid: mid
-            //                }
-            //            },
-            //            { wait: true });
-            //        $(this).remove();
-            //    });
-            //},
 
             gotoForm: function (e) {
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
-                    var itemIndex = $(e.target).data("index") + 1;
                     window.location.hash = "#home/content-Tasks/kanban/" + this.model.get("_id");
                 }
             },
@@ -82,8 +65,7 @@ define([
 
             render: function () {
                 var color = common.hexToRgb(this.model.get('color'));
-                var index = this.model.collection.indexOf(this.model);
-                this.$el.attr("data-index", index);
+                this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 this.$el.html(this.template(this.model.toJSON()));
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.css('background-color', 'rgba(' + color.r + ',' + color.g + ',' + color.b + ', 0.20)');

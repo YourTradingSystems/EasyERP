@@ -147,6 +147,9 @@ var Employee = function (logWriter, mongoose) {
                     if (data.workEmail) {
                         _employee.workEmail = data.workEmail;
                     }
+                    if (data.skype) {
+                        _employee.skype = data.skype;
+                    }
                     if (data.workPhones) {
                         if (data.workPhones.phone) {
                             _employee.workPhones.phone = data.workPhones.phone;
