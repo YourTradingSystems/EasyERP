@@ -315,7 +315,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
         },
 
         checked: function () {
-            if(this.companiesCollection.length> 0){
+            if (this.collection.length > 0) {
                 if ($("input:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else
