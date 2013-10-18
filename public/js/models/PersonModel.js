@@ -27,7 +27,7 @@ define(function () {
                 fax: ""
             },
             salesPurchases: {
-                isCustomer: false,
+                isCustomer: true,
                 isSupplier: false,
                 active: false
             },

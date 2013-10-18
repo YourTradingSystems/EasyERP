@@ -16,16 +16,16 @@ define([
                 "click .editProfile":"editProfile",
                 "click #newProfileBtn": "createProfile"
             },
-            createProfile: function(){
-                //this.createView = new ProfilesListView();
-            },
-            editProfile: function(){
+
+            editItem: function(){
 
             },
+
             viewProfile: function(event){
                 var profileName = $(event.target).text().trim();
                 if(profileName == "")
                     throw new Error("Profile not selected");
+                $('#top-bar-editBtn').show();
                 this.modulesView = new ModulesAccessView({action:"view",profileName:profileName, profilesCollection: this.profilesCollection});
                 this.modulesView.render();
             },
