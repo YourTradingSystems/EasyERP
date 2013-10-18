@@ -1,6 +1,5 @@
 define([
-    "text!templates/Profiles/ModulesAccessListTemplate.html",
-    "collections/Profiles/ProfilesCollection"
+    "text!templates/Profiles/ModulesAccessListTemplate.html"
 ],
     function (ModulesAccessTemplate) {
         var ViewName = Backbone.View.extend({

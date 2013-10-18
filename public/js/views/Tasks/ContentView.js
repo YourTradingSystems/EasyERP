@@ -267,6 +267,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                 status = workflow.get('status');
             }
             model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
+            model.unbind('change');
             var ob = {
                 workflow: {
                     name: name,
@@ -315,7 +316,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
         },
 
         checked: function () {
-            if(this.companiesCollection.length> 0){
+            if (this.collection.length > 0) {
                 if ($("input:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else

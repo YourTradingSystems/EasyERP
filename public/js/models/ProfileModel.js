@@ -1,10 +1,7 @@
 define( function () {
     var ProfileModel = Backbone.Model.extend({
         idAttribute:"_id",
-        defaults:{
-            profileName: '',
-            profileDescription: ''
-        },
+
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){

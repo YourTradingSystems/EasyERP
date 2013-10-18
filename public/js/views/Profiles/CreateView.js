@@ -10,6 +10,7 @@ define([
             template: _.template(CreateProfileTemplate),
             initialize: function (options) {
                 this.model = new ProfileModel();
+                this.profilesCollection = options.collection;
                 this.render();
             },
             events:{
@@ -37,8 +38,18 @@ define([
                 });
 
             },
+
+            getProfilesForDropDown: function(){
+                var arr = this.profilesCollection.toJSON().map(function(item){
+                    return {
+                        id: item.id || item._id,
+                        name: item.profileName
+                    }
+                });
+                return arr;
+            },
             render: function () {
-                this.$el.html(this.template(this.model.toJSON()));
+                this.$el.html(this.template({profilesCollection: this.getProfilesForDropDown()}));
                 return this;
             }
         });

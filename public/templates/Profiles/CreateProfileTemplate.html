@@ -3,10 +3,26 @@
             <fielset>
                 <div class="inner">
                     <p>
-                        <label for="profileNameInput">Profile Name: </label>
-                        <input type="text" id="profileNameInput" value="<%= profileName %>" required/>
-                        <label for="profileDescInput">Description: </label>
-                        <input type="text" id="profileDescInput" value="<%= profileDescription %>"/>
+                        <label for="profileName">Profile Name: </label>
+                        <input type="text" id="profileName" required/>
+                        <label for="profileDesc">Description: </label>
+                        <input type="text" id="profileDesc"/>
+                    </p>
+                    <p>
+                        <label for="baseProfile">
+                            <input type="radio" id="baseProfile"/>Use base profile and edit privileges</label>
+                            <label>Base Profile:
+                                <select id="profileSelect">
+                                    <% profilesCollection.forEach(function(option){ %>
+                                        <option value="<%= option._id %>"><%= option.name %> profile</option>
+                                    <% }) %>
+                                </select>
+                            </label>     <br/><br/>
+                            <br/>
+
+
+                        <label for="newProfile">
+                            <input type="radio" id="newProfile"/>Create new profile from scratch</label>
                     </p>
                 </div>
             </fielset>

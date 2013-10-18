@@ -116,7 +116,7 @@ var requestHandler = function (mongoose) {
     function updateProfile(req, res, id, data) {
         console.log("Requst updatePerson is success");
         if (req.session && req.session.loggedIn) {
-            profile.update(id, data, res);
+            profile.update(id, data.profile, res);
         } else {
             res.send(401);
         }

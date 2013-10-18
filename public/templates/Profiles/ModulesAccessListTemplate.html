@@ -1,5 +1,5 @@
 
-    <table class="list">
+    <table class="list" id="modulesAccessTable">
         <thead>
         <tr>
             <td>Module Name</td>
@@ -12,10 +12,10 @@
         <% if(profile){ %>
             <% profile.get("profileAccess").forEach(function(item){ %>
                 <tr>
-                    <td> <%=item.module.mname %> </td>
-                    <td><input type="checkbox" <% if(item.access[0]) { %> checked="checked" <% } %> <% if(action == "view") { %> disabled <% } %> /></td>
-                    <td><input type="checkbox" <% if(item.access[1]) { %> checked="checked" <% } %> <% if(action == "view") { %> disabled <% } %>/></td>
-                    <td><input type="checkbox" <% if(item.access[2]) { %> checked="checked" <% } %> <% if(action == "view") { %> disabled <% } %>/></td>
+                    <td class="mname"> <%=item.module.mname %> </td>
+                    <td><input type="checkbox" class="read" <% if(item.access[0]) { %> checked="checked" <% } %> <% if(action == "view") { %> disabled <% } else if(action == "edit" ){%> enabled <% } %> /></td>
+                    <td><input type="checkbox" class="write" <% if(item.access[1]) { %> checked="checked" <% } %> <% if(action == "view") { %> disabled <% } else if(action == "edit" ){%> enabled <% } %>/></td>
+                    <td><input type="checkbox" class="delete" <% if(item.access[2]) { %> checked="checked" <% } %> <% if(action == "view") { %> disabled <% } else if(action == "edit" ){%> enabled <% } %>/></td>
                 </tr>
             <% }) %>
         <% } %>

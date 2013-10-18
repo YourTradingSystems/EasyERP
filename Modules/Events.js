@@ -86,9 +86,7 @@ var Events = function (logWriter, mongoose) {
             logWriter.log("Events.js  " + exception);
             res.send(500, { error: 'Events.save  error' });
         }
-    }
-
-    ;//End create
+    };//End create
 
     function get(response) {
         var res = {}

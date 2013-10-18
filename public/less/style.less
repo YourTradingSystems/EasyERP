@@ -42,7 +42,11 @@
     body {
         font: size:10px;
     }
-
+     input[type="checkbox"] {
+        display: block;
+        height: 6px;
+        width: 6px;
+    }
     .form {
         p {
             label {
@@ -73,6 +77,18 @@ a:focus, *:focus {
     background-image: -o-linear-gradient(top, @startcolor, @endcolor);
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
+
+            .box-shadow (@x: 0, @y: 0, @blur: 1px, @color: #000) {
+              box-shadow: @arguments;
+              -moz-box-shadow: @arguments;
+              -webkit-box-shadow: @arguments;
+            }
+
+
+            article{
+            .box-shadow(2px, 5px);
+            }
+
 
 .error {
     color: #dc1b1b;
@@ -209,15 +225,20 @@ a:focus, *:focus {
             padding-left: 10px;
             width: auto;
             text-shadow: 1px 1px #fff;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
+            padding:3px 0px 3px 10px;
             color: @blue;
+            line-height:20px;
 
             a {
                 color: @blue;
                 text-decoration: none;
-                font-size: 12px;
+                font-size: 12.5px;
                 line-height: 16px;
+                display:block;
+                width:100%;
+                height:100%;
                 font-weight: bold;
             }
 
@@ -494,6 +515,8 @@ a:focus, *:focus {
     font-family: @lucida-font;
     width: 100%;
 
+   
+
     thead {
         tr {
             border-bottom: 2px solid #cacaca;
@@ -504,10 +527,15 @@ a:focus, *:focus {
         th {
             padding: 3px 6px;
             line-height: 18px;
-            color: #4c4c4c;
+            color: #6c6c6c;
+            font-weight: 400;
             font-size: 13px;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 1px 1px rgba(122, 122, 122, 0.5);
             border-left: 1px solid #dfdfdf;
+
+            input[type="checkbox"] {
+                margin-top:2.5px;
+            }
 
             &:first-of-type {
                 width: 12px;
@@ -522,7 +550,6 @@ a:focus, *:focus {
     tr {
         color: #4c4c4c;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-        height: 27px;
         border-top: 1px solid #dddddd;
 
         td {
@@ -531,6 +558,10 @@ a:focus, *:focus {
             white-space: pre-line;
             line-height: 18px;
             font-size: 11px;
+
+            progress {
+                width: 100%;
+            }
 
             &:first-of-type {
                 padding-left: 7px;
@@ -543,7 +574,7 @@ a:focus, *:focus {
     }
 
         tr:nth-child(odd) {
-            background-color: #f4f4fa;
+            background-color: rgba(77, 104, 160, 0.1);
         }
 }
 
@@ -553,8 +584,7 @@ a:focus, *:focus {
     max-width: 860px;
     margin: 0 auto;
     background: white;
-    min-height: 330px;
-    // padding: 16px;
+    min-height: 130px;
     display: block;
     position: relative;
     border: 1px solid #c8c8d3;
@@ -646,7 +676,7 @@ a:focus, *:focus {
             font-size: 26px;
             font-weight: bold;
             color: #4c4c4c;
-            margin: 0 0 18px;
+            margin: 0 0 8px;
         }
 
     p {
