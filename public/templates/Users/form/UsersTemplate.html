@@ -1,21 +1,28 @@
-   <div class="form-holder">
+<div class="form-holder">
     <div class="form">
-        <img class="person" src="<%=imageSrc%>" width="120" height="120" />
-        <p>
-            <label><%=login%></label>
-        </p>
-        <p>
+        <div class="inner">
 
-        <p>
-            <label>Email: <%=email%></label>
-        </p>
+            <div class="avatar">
+                <img class="person" src="<%=imageSrc%>" width="120" height="120" />
+            </div>
+            <div style="margin-left: 130px; width: 80%; display: block;">
+                <h2><%=login%></h2>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p><label>Email:</label></p>
+                        <p><label>Profile:</label></p>
+                        <p><label>Company:</label></p>
+                    </div>
+                    <div class="half-block left">
+                        <p><%=email%></p>
+                        <p><%=profile.profile.name%></p>
+                        <p><%=profile.company.name%></p>
+                    </div>
+                   
+                </div>
+            </div>
+             <div class="clearfix"></div>
+        </div>
 
-        <p>
-            <label>Profile: <%=profile.profile.name%></label>
-        </p>
-        <p>
-            <label>Company: <%=profile.company.name%></label>
-        </p>
     </div>
 </div>
- 

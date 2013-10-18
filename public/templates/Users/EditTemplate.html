@@ -2,46 +2,77 @@
 
     <form method="post" action="" id="createUserForm" class="form">
         <fieldset>
-            <div class="avatar">
-                <input type="file" value="Edit" id="inputImg" accept="image/*">
-                <canvas id="avatar" width="120" height="120"></canvas>
-            </div>
-            <p>
-                <label for="login">User Name</label>
-                <input type="text" name="login" id="login" value="<%= model.login %>" required />
-            </p>
+            <div class="inner">
+                <div class="avatar">
+                    <div class="upload"><input type="file" value="Edit" id="inputImg" accept="image/*"></div>
+                    <canvas id="avatar" width="120" height="120"></canvas>
+                </div>
+                <div style="margin-left: 130px;">
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p>
+                                <label for="login">User Name</label>
+                            </p>
+                            <p>
+                                <label for="email">Email </label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                          
+                            <p>
+                                <input type="text" name="login" id="login" value="<%= model.login %>" required />
+                            </p>
+                            <p>
+                                <input type="text" name="email" id="email" value="<%= model.email %>" required />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p>
+                                <label for="companiesDd">Company</label>
+                            </p>
+                              
+                            <p>
+                                <label for="profilesDd">Profile</label>
+                            </p>
+
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <select id="companiesDd">k
+                                    <option value="" selected="selected" disabled>Select...</option>
+                                    <% companiesCollection.each(function(option){ %>
+                                    <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.company.id) ? 'selected="selected"' : ''%> > <%= option.get('name') %></option>
+                                    <% }); %>
+                                </select>
+                            </p>
+                            <p>
+                                <select id="profilesDd">
+                                    <option value="" selected="selected" disabled>Select...</option>
+                                    <% profilesCollection.each(function(option){ %>
+                                    <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.profile.id) ? 'selected="selected"' : ''%> ><%= option.get('profileName')%></option>
+                                    <% }) %>
+                                </select>
+                            </p>
+                        </div>
+                        
+                    </div>
+                </div>
+          
 
             <!--<p>
-                <label for="password">Password </label>
-                <input type="password" name="password" id="password" value="<%= model.pass %>" required />
-            </p>
-            <p>
-                <label for="confirmpassword">Confirm Password</label>
-                <input type="password" name="confirmpassword" id="confirmpassword" required />
-            </p>-->
+                    <label for="password">Password </label>
+                    <input type="password" name="password" id="password" value="<%= model.pass %>" required />
+                </p>
+                <p>
+                    <label for="confirmpassword">Confirm Password</label>
+                    <input type="password" name="confirmpassword" id="confirmpassword" required />
+                </p>-->
 
-            <p>
-                <label for="email">Email </label>
-                <input type="text" name="email" id="email" value="<%= model.email %>" required />
-            </p>
-            <p>
-                <label for="companiesDd">Company</label>
-                <select id="companiesDd">k
-                    <option value="" selected="selected" disabled>Select...</option>
-                    <% companiesCollection.each(function(option){ %>
-                        <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.company.id) ? 'selected="selected"' : ''%> > <%= option.get('name') %></option>
-                    <% }); %>
-                </select>
-            </p><br/>
-            <p>
-                <label for="profilesDd">Profile</label>
-                <select id="profilesDd">
-                    <option value="" selected="selected" disabled>Select...</option>
-                    <% profilesCollection.each(function(option){ %>
-                    <option value="<%= option.id %>" <%= (option.get('_id') == model.profile.profile.id) ? 'selected="selected"' : ''%> ><%= option.get('profileName')%></option>
-                    <% }) %>
-                </select>
-            </p>
+          
+         
+                </div>
         </fieldset>
 
     </form>
