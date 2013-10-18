@@ -32,12 +32,16 @@ define([
                     hash = null;
                 }
             }
+            
             console.log('GetList: ' + contentType + " " + viewType + " " + hash + " " + itemIndex);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection",
                 self = this;
+            if (contentType == "Birthdays") {
+                CollectionUrl = "collections/Employees/EmployeesCollection";
+            }
 
             self.Custom = Custom;
 
@@ -85,6 +89,8 @@ define([
                     
                     var contentView = new ContentView({ collection: contentCollection });
                     var topBarView = new TopBarView({ actionType: "Content" });
+                    if(contentType == "Profiles")
+                        contentView.bind('editEvent', contentView.editItem, contentView);
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                    

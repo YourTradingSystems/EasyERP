@@ -65,7 +65,7 @@ var Project = function (logWriter, mongoose) {
         },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
-        loged: { type: Number, default: 0 },
+        logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
         progress: { type: Number, default: 0 }
     }, { collection: 'Tasks' });
@@ -477,7 +477,7 @@ var Project = function (logWriter, mongoose) {
             }
         });
 
-        var findTasksById = function (_projects, count) {//рекурсивна функція
+        var findTasksById = function (_projects, count) {//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             try {
                 if (_projects.length > count) {
                     tasks.find({ 'project.id': _projects[count]._id }, function (err, taskss) {
@@ -659,13 +659,13 @@ var Project = function (logWriter, mongoose) {
                     if (data.estimated) {
                         _task.estimated = data.estimated;
                     }
-                    if (data.loged) {
-                        _task.loged = data.loged;
+                    if (data.logged) {
+                        _task.logged = data.logged;
                     }
                     if (data.estimated) {
-                        _task.remaining = data.estimated - data.loged;
+                        _task.remaining = data.estimated - data.logged;
                         if (_task.remaining != 0) {
-                            _task.progress = Math.round((data.loged / data.estimated) * 100);
+                            _task.progress = Math.round((data.logged / data.estimated) * 100);
                         }
                     }
                     _task.save(function (err, _task) {
@@ -695,10 +695,10 @@ var Project = function (logWriter, mongoose) {
 
     function updateTask(_id, data, res) {
         delete data._id;
-        data.remaining = data.estimated - data.loged;
+        data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
-            data.progress = Math.round((data.loged / data.estimated) * 100);
+            data.progress = Math.round((data.logged / data.estimated) * 100);
         }
         tasks.update({ _id: _id }, data, function (err, taskk) {
             if (err) {

@@ -15,29 +15,27 @@ define([
             events:{
                 "submit #createProfileForm": "submitForm"
             },
-            submitForm: function (event) {
+            saveItem: function () {
                 var self = this;
-                event.preventDefault();
                 var mid = 39;
 
-                this.model.set({
+
+                this.model.save({
                     profileName: $('#profileNameInput').val(),
                     profileDescription: $('#profileDescInput').val()
+                },{
+                    headers: {
+                        mid: mid
+                    },
+                    wait: true,
+                    success: function () {
+                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                    },
+                    error: function () {
+                        Backbone.history.navigate("home", { trigger: true });
+                    }
                 });
-                if(this.model.isNew()){
-                    this.model.save(null,{
-                        headers: {
-                            mid: mid
-                        },
-                        wait: true,
-                        success: function (model) {
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
-                        },
-                        error: function () {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
-                    });
-                }
+
             },
             render: function () {
                 this.$el.html(this.template(this.model.toJSON()));

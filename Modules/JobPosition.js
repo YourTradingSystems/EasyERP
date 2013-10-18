@@ -126,6 +126,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
                         response.send(res);
                     } else {
                         jobPositions[count].numberOfEmployees = _employees.length;
+                        jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
                         count++;
                         getTotalEmployees(jobPositions, count);
                     }

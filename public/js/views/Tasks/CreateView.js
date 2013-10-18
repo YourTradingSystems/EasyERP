@@ -34,10 +34,6 @@ define([
                 this.render();
             },
 
-            close: function () {
-                this._modelBinder.unbind();
-            },
-
             events: {
                 "click #tabList a": "switchTab"
             },
@@ -99,7 +95,7 @@ define([
 
                 var estimated = $("#estimated").val();
 
-                var loged = $("#loged").val();
+                var logged = $("#loged").val();
 
                 var idPriority = this.$("#priority option:selected").val();
                 var priority = common.toObject(idCustomer, this.customersDdCollection);
@@ -120,7 +116,7 @@ define([
                         EndDate: EndDate
                     },
                     estimated: estimated,
-                    loged: loged
+                    logged: logged
                 },
                 {
                     headers: {

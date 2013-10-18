@@ -27,11 +27,11 @@ define(function () {
                 fax: ""
             },
             salesPurchases: {
-                isCustomer: false,
+                isCustomer: true,
                 isSupplier: false,
                 active: false
             },
-            color: '#4d5a75',
+            color: '#4d5a75'
         },
 
         urlRoot: function () {
