@@ -267,6 +267,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                 status = workflow.get('status');
             }
             model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
+            model.unbind('change');
             var ob = {
                 workflow: {
                     name: name,

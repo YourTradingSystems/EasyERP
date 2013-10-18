@@ -116,6 +116,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
             }
             breadcrumb.find("a").addClass("active");
             var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
+            model.unbind('change');
             var ob = {
                 workflow: {
                     name: breadcrumb.data("name"),

@@ -235,6 +235,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                 status = workflow.get('status');
             }
             var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
+            model.unbind('change');
             var ob = {
                 workflow: {
                     name: name,
