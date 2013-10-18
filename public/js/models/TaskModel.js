@@ -28,9 +28,11 @@ define(function () {
         },
         defaults: {
             summary: '',
+            taskShortDescr: '',
             project: {
                 id: '',
-                name: ''
+                name: '',
+                projectShortDesc: ''
             },
             assignedTo: {
                 id: '',

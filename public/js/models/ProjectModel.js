@@ -30,6 +30,7 @@ define(function () {
         },
         defaults: {
             projectName: '',
+            projectShortDesc: '',
             task: {
                 avaliable: false,
                 tasks: []

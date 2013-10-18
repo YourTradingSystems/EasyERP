@@ -1,6 +1,7 @@
 var Project = function (logWriter, mongoose) {
 
     var ProjectSchema = mongoose.Schema({
+        projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
         task: {
             avaliable: { type: Boolean, default: false },
@@ -37,9 +38,11 @@ var Project = function (logWriter, mongoose) {
 
     var TasksSchema = mongoose.Schema({
         summary: { type: String, default: '' },
+        taskShortDescr: { type: String, default: '' },
         project: {
             id: String,
-            name: String
+            name: String,
+            projectShortDesc: String
         },
         assignedTo: {
             id: { type: String, default: '' },
@@ -67,8 +70,7 @@ var Project = function (logWriter, mongoose) {
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
-        progress: { type: Number, default: 0 },
-        counter: { type: Number, default: 0 }
+        progress: { type: Number, default: 0 }
     }, { collection: 'Tasks' });
 
     var PrioritySchema = mongoose.Schema({
@@ -334,7 +336,7 @@ var Project = function (logWriter, mongoose) {
     function create(data, res) {
         try {
             console.log(data);
-            if (!data.projectName) {
+            if (!data.projectName || !data.projectShortDesc) {
                 logWriter.log('Project.create Incorrect Incoming Data');
                 res.send(400, { error: 'Project.create Incorrect Incoming Data' });
                 return;
@@ -357,6 +359,9 @@ var Project = function (logWriter, mongoose) {
                     _project = new project();
                     if (data.projectName) {
                         _project.projectName = data.projectName;
+                    }
+                    if (data.projectShortDesc) {
+                        _project.projectShortDesc = data.projectShortDesc;
                     }
                     if (data.task) {
                         _project.task = data.task;
@@ -450,7 +455,7 @@ var Project = function (logWriter, mongoose) {
         res['data'] = [];
         var query = project.find({});
         query.sort({ projectName: 1 });
-        query.exec( function (err, projects) {
+        query.exec(function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js getProjectsForDd project.find " + err);
@@ -573,12 +578,12 @@ var Project = function (logWriter, mongoose) {
     function createTask(data, res) {
         try {
             console.log(data);
-            if (!data.summary) {
+            if (!data.summary || !data.project._id) {
                 logWriter.log('Task.create Incorrect Incoming Data');
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
                 return;
             } else {
-                var projectId = (data.project) ? data.project._id : '';
+                var projectId = data.project._id;
                 tasks.find({ $and: [{ summary: data.summary }, { 'project.id': projectId }] }, function (error, doc) {
                     if (error) {
                         console.log(error);
@@ -590,11 +595,21 @@ var Project = function (logWriter, mongoose) {
                     }
                     else
                         if (doc.length === 0) {
+                            tasks.find({ 'project.id': projectId }, function (error, _tasks) {
+                                if (error) {
+                                    console.log(error);
+                                    logWriter.log("Project.js createTask tasks.find doc.length === 0" + error);
+                                    res.send(500, { error: 'Task find error' });
+                                } else {
+                                    tasks
+                                    saveTaskToBd(data, ++_tasks.length);
+                                }
+                            });
                             saveTaskToBd(data);
                         }
                 });
             }
-            function saveTaskToBd(data) {
+            function saveTaskToBd(data, n) {
                 try {
                     console.log(data);
                     _task = new tasks();
@@ -605,6 +620,10 @@ var Project = function (logWriter, mongoose) {
                         }
                         if (data.project.projectName) {
                             _task.project.name = data.project.projectName;
+                        }
+                        if (data.project.projectShortDesc) {
+                            _task.project.projectShortDesc = data.project.projectShortDesc;
+                            _task.taskShortDescr = data.project.projectShortDesc + ' ' + n;
                         }
                     }
                     if (data.assignedTo) {
@@ -730,7 +749,7 @@ var Project = function (logWriter, mongoose) {
         var query = tasks.find({});
         query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
-          if (err) {
+            if (err) {
                 console.log(err);
                 logWriter.log("Project.js getTasks project.find " + err);
                 response.send(500, { error: "Can't find Tasks" });

@@ -112,6 +112,7 @@
                     if (_project) {
                         project.id = _project._id;
                         project.name = _project.projectName;
+                        project.name = _project.projectShortDesc;
                     } else {
                         project = currentModel.defaults.project;
                     }

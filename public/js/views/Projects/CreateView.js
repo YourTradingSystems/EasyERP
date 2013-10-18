@@ -63,6 +63,7 @@ define([
 
                 projectModel.save({
                     projectName: $("#projectName").val(),
+                    projectShortDesc: $("#projectShortDesc").val(),
                     customer: customer,
                     projectmanager: projectmanager,
                     workflow: workflow,
