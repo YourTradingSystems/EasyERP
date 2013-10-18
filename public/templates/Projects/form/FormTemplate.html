@@ -1,23 +1,23 @@
 <div class="formHeader">
-    <ul class="breadcrumb">
-    </ul>
+    <ul class="breadcrumb"></ul>
 </div>
 <div class="form-holder">
     <form class="form" data-id="<%=_id%>">
         <div class="inner">
-        <h2><%=projectName%></h2>
-        <div class="half-block left">
+            <h2><%=projectName%></h2>
+            <h3><%=projectShortDesc%></h3>
             <div class="half-block left">
-                <p><label for="projectmanager">Project Manager</label></p>
-                <p><label for="customer">Customer</label></p>
-                <p><label for="privacy">Privacy / Visibility </label></p>
+                <div class="half-block left">
+                    <p><label for="projectmanager">Project Manager</label></p>
+                    <p><label for="customer">Customer</label></p>
+                    <p><label for="privacy">Privacy / Visibility </label></p>
+                </div>
+                <div class="half-block left">
+                    <p><%=projectmanager.name%></p>
+                    <p><%=customer.name%></p>
+                    <p><%=privacy%> </p>
+                </div>
             </div>
-            <div class="half-block left">
-                <p><%=projectmanager.name%></p>
-                <p><%=customer.name%></p>
-                <p><%=privacy%> </p>
-            </div>
-        </div>
         </div>
     </form>
 </div>

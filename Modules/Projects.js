@@ -601,11 +601,9 @@ var Project = function (logWriter, mongoose) {
                                     logWriter.log("Project.js createTask tasks.find doc.length === 0" + error);
                                     res.send(500, { error: 'Task find error' });
                                 } else {
-                                    tasks
                                     saveTaskToBd(data, ++_tasks.length);
                                 }
                             });
-                            saveTaskToBd(data);
                         }
                 });
             }
@@ -623,7 +621,7 @@ var Project = function (logWriter, mongoose) {
                         }
                         if (data.project.projectShortDesc) {
                             _task.project.projectShortDesc = data.project.projectShortDesc;
-                            _task.taskShortDescr = data.project.projectShortDesc + ' ' + n;
+                            _task.taskShortDescr = data.project.projectShortDesc + n;
                         }
                     }
                     if (data.assignedTo) {
