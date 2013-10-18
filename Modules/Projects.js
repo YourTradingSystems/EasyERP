@@ -67,7 +67,8 @@ var Project = function (logWriter, mongoose) {
         estimated: { type: Number, default: 0 },
         loged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
-        progress: { type: Number, default: 0 }
+        progress: { type: Number, default: 0 },
+        counter: { type: Number, default: 0 }
     }, { collection: 'Tasks' });
 
     var PrioritySchema = mongoose.Schema({
