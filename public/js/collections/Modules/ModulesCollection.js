@@ -6,20 +6,13 @@ define(function () {
         },
         initialize: function () {
             this.fetch({
-                reset: true,
-                success: this.fetchSuccess,
-                error: this.fetchError
+                reset: true
             });
         },
         parse: true,
 
         parse: function (response) {
             return response.data;
-        },
-
-        fetchSuccess: function (collection, response) {
-        },
-        fetchError: function (error) {
         }
     });
 

@@ -5,8 +5,8 @@ var Profile = function (logWriter, mongoose) {
         profileDescription: { type: String, default: 'No description' },
         profileAccess: [{
             module: {
-                id: { type: Number, default: '' },
-                name: { type: String, default: '' }
+                mid: { type: Number, default: '' },
+                mname: { type: String, default: '' }
             },
             access: { type: [Boolean], default: [false, false, false] }
         }]
@@ -15,7 +15,7 @@ var Profile = function (logWriter, mongoose) {
 
     var profile = mongoose.model('Profile', ProfileSchema);
 
-    function create(data, func) {
+    function create(data, res) {
         try {
             console.log('createProfile');
             if (!data.profileName) {
@@ -70,11 +70,11 @@ var Profile = function (logWriter, mongoose) {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Profile.js saveProfileToDb _profile.save" + err);
-                                func(500);
+                                res(500);
                             }
                             if (result) {
                                 console.log("Data Profile saved sucscess");
-                                func(201);
+                                res(201);
                             }
                         }
                         catch (error) {
@@ -121,12 +121,14 @@ var Profile = function (logWriter, mongoose) {
         try {
             delete data._id;
             profile.update({ _id: _id }, data, function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("Profile.js update profile.update" + err);
+                if (result) {
+                    console.log(" RESULT " + result);
+                    res.send(200, { success: 'Profile updated success' });
+                } else if(err){
+                        logWriter.log("Profile.js update profile.update" + err);
+                        res.send(500, { error: "Can't update Profile" });
+                    }  else  {
                     res.send(500, { error: "Can't update Profile" });
-                } else {
-                    res.send(200, { success: 'Person updated success' });
                 }
             });
         }
@@ -150,7 +152,7 @@ var Profile = function (logWriter, mongoose) {
     };
 
     return {
-        ctreate: create,
+        create: create,
         
         get: get,
         
