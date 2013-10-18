@@ -38,7 +38,12 @@ define([
             },
 
             events: {
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "click #hire": "isEmployee"
+            },
+
+            isEmployee: function (e) {
+                $(e.target).addClass("pressed");
             },
 
             switchTab: function (e) {
@@ -55,6 +60,11 @@ define([
                 var self = this;
                 var mid = 39;
 
+                var isEmployee = false;
+
+                if (this.$("#hire>span").hasClass("pressed")) {
+                    isEmployee = true;
+                }
                 var applicationModel = new ApplicationModel();
 
                 var subject = $.trim($("#subject").val());
@@ -107,6 +117,7 @@ define([
                 var otherInfo = $("#otherInfo").val();
 
                 applicationModel.save({
+                    isEmployee: isEmployee,
                     subject: subject,
                     imgSrc: this.imageSrc,
                     name: name,
