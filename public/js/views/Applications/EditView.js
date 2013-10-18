@@ -37,7 +37,8 @@
 
             events: {
                 "click #tabList a": "switchTab",
-                "click .breadcrumb a, #refuse": "changeWorkflow"
+                "click .breadcrumb a, #refuse": "changeWorkflow",
+                "click #hire": "isEmployee"
             },
 
             changeWorkflow: function (e) {
@@ -76,6 +77,17 @@
 
                 });
 
+            },
+            
+            isEmployee: function (e) {
+                var mid = 39;
+                var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
+                model.set({ isEmployee: true });
+                model.save({}, {
+                    headers: {
+                        mid: mid
+                    }
+                });
             },
 
             switchTab: function (e) {
