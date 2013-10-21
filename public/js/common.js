@@ -42,6 +42,7 @@
             ctx.drawImage(img, 0, 0, 120, 120);
         }
         img.src = model.imageSrc;
+        context.imageSrc = model.imageSrc;
     };
 
     var canvasDraw = function (options, _context) {
@@ -55,7 +56,6 @@
             var fr = new FileReader();
             fr.onload = function () {
                 var src = "data:image/jpg;base64," + btoa(fr.result);
-                that.imageSrc = src;
                 if (model) {
                     model.imageSrc = src;
                 } else {

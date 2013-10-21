@@ -55,8 +55,10 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                         if (itemIndex == -1) {
                             this.$el.html();
                         } else {
+                            this.$el.html();
                             var currentModel = this.collection.models[itemIndex];
-                            currentModel.on('change', this.render, this);
+                            currentModel.off('change');
+                            currentModel.on('change:workflow', _.bind(this.render, this));
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             var workflows = this.workflowsCollection.models;
 
@@ -88,7 +90,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
             }
             breadcrumb.find("a").addClass("active");
             var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
-            model.unbind('change');
+            //model.unbind('change');
             var ob = {
                 workflow: {
                     name: breadcrumb.data("name"),
@@ -100,8 +102,8 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
             model.save({}, {
                 headers: {
                     mid: mid
-                }
-
+                },
+                wait: true
             });
 
         },
