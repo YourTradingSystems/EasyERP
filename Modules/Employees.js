@@ -12,7 +12,6 @@ var Employee = function (logWriter, mongoose) {
         tags: { type: Array, default: [] },
         workAddress: {
             street: { type: String, default: '' },
-            //street2: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },

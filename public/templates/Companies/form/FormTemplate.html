@@ -40,13 +40,16 @@
                     <p></p>
                 </div>
             </div>
-                     <div class="clearfix"></div>
+            <div class="clearfix"></div>
         </div>
         <div id="tabs">
             <div>
                 <ul id="tabList" class="inner">
                     <li>
-                        <a href="#" class="selected">Internal Notes</a>
+                        <a href="#" class="selected">Contacts</a>
+                    </li>
+                    <li>
+                        <a href="#">Internal Notes</a>
                     </li>
                     <li>
                         <a href="#">Sales & Purchases</a>
@@ -56,44 +59,54 @@
                     </li>
                 </ul>
             </div>
-              <br/>
+            <br />
             <div class="tab">
-                    <span><%=internalNotes%></span>
-            </div>
-            <div class="tab">
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p><label>Sales Person</label></p>
-                        <p><label>Sales Team</label></p>
-                        <p><label>Reference</label></p>
-                        <p><label>Language</label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=salesPurchases.salesPerson.name%></span></p>
-                        <p><%=salesPurchases.salesTeam.name%></span></p>
-                        <p><span><%=salesPurchases.reference%></span></p>
-                        <p><span><%=salesPurchases.language%></span></p>
-                    </div>
+                <% _.each(contacts,function(contact){ %>
+                <div class="thumbnail">
+                    <%=contact.name%>
                 </div>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p><label>Date</label></p>
-                        <p><label>Customer</label></p>
-                        <p><label>Supplier</label></p>
-                        <p><label>Active </label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=salesPurchases.date%></span></p>
-                        <p><input type="checkbox" <%=(salesPurchases.isCustomer)? "checked='checked'":''%>  disabled  /></p>
-                        <p><input type="checkbox" <%=(salesPurchases.isSupplier)? "checked='checked'":''%> disabled  /></p>
-                        <p><input type="checkbox" <%=(salesPurchases.active)? "checked='checked'":''%> disabled  /></p>
-                    </div>
-                </div>
+                <% });%>
                 <div class="clearfix"></div>
             </div>
-            <div class="tab">
-                
+           
+        </div>
+        <div class="tab">
+            <span><%=internalNotes%></span>
+        </div>
+        <div class="tab">
+            <div class="half-block left">
+                <div class="half-block left">
+                    <p><label>Sales Person</label></p>
+                    <p><label>Sales Team</label></p>
+                    <p><label>Reference</label></p>
+                    <p><label>Language</label></p>
+                </div>
+                <div class="half-block left">
+                    <p><span><%=salesPurchases.salesPerson.name%></span></p>
+                    <p><%=salesPurchases.salesTeam.name%></span></p>
+                    <p><span><%=salesPurchases.reference%></span></p>
+                    <p><span><%=salesPurchases.language%></span></p>
+                </div>
             </div>
+            <div class="half-block left">
+                <div class="half-block left">
+                    <p><label>Date</label></p>
+                    <p><label>Customer</label></p>
+                    <p><label>Supplier</label></p>
+                    <p><label>Active </label></p>
+                </div>
+                <div class="half-block left">
+                    <p><span><%=salesPurchases.date%></span></p>
+                    <p><input type="checkbox"><%=(salesPurchases.isCustomer)? "checked='checked'":''%>  disabled  /></p>
+                    <p><input type="checkbox"><%=(salesPurchases.isSupplier)? "checked='checked'":''%> disabled  /></p>
+                    <p><input type="checkbox"><%=(salesPurchases.active)? "checked='checked'":''%> disabled  /></p>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="tab">
+
         </div>
     </div>
+</div>
 </div>

@@ -141,6 +141,15 @@ var JobPosition = function (logWriter, mongoose, employee) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            console.log(data);
+            if (data.workflow.status === 'New') {
+                data.expectedRecruitment = 0;
+            } else {
+                if (data.expectedRecruitment === 0) {
+                    ++data.expectedRecruitment;
+                }
+            }
+            console.log(data);
             job.update({ _id: _id }, data, function (err, result) {
                 if (err) {
                     console.log(err);

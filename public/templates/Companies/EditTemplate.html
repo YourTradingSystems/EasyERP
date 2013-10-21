@@ -1,125 +1,141 @@
 <div class="form-holder">
-
     <form method="post" action="" id="editEmployeeForm" class="form">
         <fieldset>
-             <div class="inner">
-                 <div class="avatar">
-                     <input type="file" value="Edit" id="inputImg" accept="image/*">
-                     <canvas id="avatar" width="120" height="120"></canvas>
-                 </div>
-             <div style="margin-left: 130px; width: 80%; display: block;">
-                 <p>
-                     <label for="name">Company Name</label><br/>
-                     <input type="text" name="name" id="name" required value="<%=model.name%>"/>
-                 </p>
-                 <div class="clearfix"></div>
-             </div>
-             <div class="half-block left">
-                 <div class="half-block left">
-                     <p><label>Address</label></p>
-                     <p><label></label></p>
-                     <p><label></label></p>
-                     <p><label></label></p>
-                     <p><label></label></p>
-                 </div>
-                 <div class="half-block left">
-                     <p><input type="text" class="address" name="street" placeholder="Street..."  value="<%=model.address.street%>"/></p>
-                     <p><input type="text" class="address" name="city" placeholder="City" value="<%=model.address.city%>"/></p>
-                     <p><input type="text" class="address" name="state" placeholder="State" value="<%=model.address.state%>"/></p>
-                     <p><input type="text" class="address" name="zip" placeholder="ZIP" value="<%=model.address.zip%>"/></p>
-                     <p><input type="text" class="address" name="country" placeholder="Country" value="<%=model.address.country%>"/></p>
-                 </div>
-             </div>
-             <div class="half-block left">
-                 <div class="half-block left">
-                     <p><label for="website">Website</label></p>
-                     <p><label for="email">Email</label></p>
-                     <p><label for="phone">Phone</label></p>
-                     <p><label for="mobile">Mobile</label></p>
-                     <p><label for="fax">Fax</label></p>
-                 </div>
-                 <div class="half-block left">
-                     <p><input type="text" id="website" value="<%=model.website%>"/></p>
-                     <p><input type="text" name="email" id="email" value="<%=model.email%>"/></p>
-                     <p><input type="text" name="phone" id="phone" value="<%=model.phones.phone%>"/></p>
-                     <p><input type="text" name="mobile" id="mobile" value="<%=model.phones.mobile%>"/></p>
-                     <p><input type="text" name="fax" id="fax" value="<%=model.phones.fax%>"/></p>
-                 </div>
-                
-             </div>            
-             <div class="clearfix"></div>
-                 </div>
-             <div id="tabs">
+            <div class="inner">
+                <div class="avatar">
+                    <input type="file" value="Edit" id="inputImg" accept="image/*">
+                    <canvas id="avatar" width="120" height="120"></canvas>
+                </div>
+                <div style="margin-left: 130px; width: 80%; display: block;">
+                    <p>
+                        <label for="name">Company Name</label><br />
+                        <input type="text" name="name" id="name" required value="<%=model.name%>" />
+                    </p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p><label>Address</label></p>
+                        <p><label></label></p>
+                        <p><label></label></p>
+                        <p><label></label></p>
+                        <p><label></label></p>
+                    </div>
+                    <div class="half-block left">
+                        <p><input type="text" class="address" name="street" placeholder="Street..." value="<%=model.address.street%>" /></p>
+                        <p><input type="text" class="address" name="city" placeholder="City" value="<%=model.address.city%>" /></p>
+                        <p><input type="text" class="address" name="state" placeholder="State" value="<%=model.address.state%>" /></p>
+                        <p><input type="text" class="address" name="zip" placeholder="ZIP" value="<%=model.address.zip%>" /></p>
+                        <p><input type="text" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" /></p>
+                    </div>
+                </div>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p><label for="website">Website</label></p>
+                        <p><label for="email">Email</label></p>
+                        <p><label for="phone">Phone</label></p>
+                        <p><label for="mobile">Mobile</label></p>
+                        <p><label for="fax">Fax</label></p>
+                    </div>
+                    <div class="half-block left">
+                        <p><input type="text" id="website" value="<%=model.website%>" /></p>
+                        <p><input type="text" name="email" id="email" value="<%=model.email%>" /></p>
+                        <p><input type="text" name="phone" id="phone" value="<%=model.phones.phone%>" /></p>
+                        <p><input type="text" name="mobile" id="mobile" value="<%=model.phones.mobile%>" /></p>
+                        <p><input type="text" name="fax" id="fax" value="<%=model.phones.fax%>" /></p>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="tabs">
                 <div>
                     <ul id="tabList" class="inner">
                         <li>
-                            <a href="#" class="selected">Internal Notes</a></li>
+                            <a href="#" class="selected">Contacts</a>
+                        </li>
                         <li>
-                            <a href="#">Sales & Purchases</a></li>
+                            <a href="#">Internal Notes</a>
+                        </li>
                         <li>
-                            <a href="#">History</a></li>
+                            <a href="#">Sales & Purchases</a>
+                        </li>
+                        <li>
+                            <a href="#">History</a>
+                        </li>
                     </ul>
                     <br />
                 </div>
+                <div class="tab">
+                    <input type="button" value="Add" id="addContacts" />
+                    <div id="contacts">
 
+                    </div>
+                </div>
                 <div class="tab">
                     <textarea id="internalNotes" placeholder="Put an internal note..."><%=model.internalNotes%></textarea>
                 </div>
-                 <div class="tab">
-                     <div class="half-block left">
-                         <div class="half-block left">
-                             <p><label for="salesPerson">Salesperson</label></p>
-                             <p> <label for="salesTeam">Sales Team</label></p>
-                             <p><label for="reference">Reference</label></p>
-                             <p><label for="language">Language</label></p>
-                            
-                         </div>
-                         <div class="half-block left">
-                             <p><select id="salesPerson">
+                <div class="tab">
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p><label for="salesPerson">Salesperson</label></p>
+                            <p> <label for="salesTeam">Sales Team</label></p>
+                            <p><label for="reference">Reference</label></p>
+                            <p><label for="language">Language</label></p>
+
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <select id="salesPerson">
                                     <option selected="selected" value="0">Select...</option>
                                     <% employeesCollection.each(function(option){ %>
-                   
-                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.salesPurchases.salesPerson.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+
+                                    <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesPerson.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
                                     <% }); %>
-               
-                                </select></p>
-                             <p>  <select id="salesTeam">
-                                      <option selected="selected" value="0">Select...</option>
-                                      <% departmentsCollection.each(function(option){ %>
-                   
-                                      <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.salesPurchases.salesTeam.id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
-                                      <% }); %>
-               
-                                  </select></p>
-                             <p> <input type="text" id="reference" value="<%=model.salesPurchases.reference%>"/></p>
-                             <p> <select id="language">
-                                     <option>English</option>
-                                 </select></p>
-                            
-                         </div>
-                     </div>
-                     <div class="half-block left">
-                         <div class="half-block left">
-                             <p>  <label for="date">Date</label></p>
-                             <p>
-                                 <label for="isCustomer">Customer</label>
-                             </p>
-                             <p>
-                                 <label for="isSupplier">Supplier </label>
-                             </p>
-                             <p>
-                                 <label for="active">Active</label>
-                             </p>
-                         </div>
-                         <div class="half-block left">
-                             <p><input type="date" id="date" value="<%=model.salesPurchases.date%>"/></p>
-                             <p><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></p>
-                             <p><input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></p>
-                             <p><input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> /></p>
-                          </div>
-                     </div>
-                     <div class="clearfix"></div>
-                 </div>
+
+                                </select>
+                            </p>
+                            <p>
+                                <select id="salesTeam">
+                                    <option selected="selected" value="0">Select...</option>
+                                    <% departmentsCollection.each(function(option){ %>
+
+                                    <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesTeam.id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
+                                    <% }); %>
+
+                                </select>
+                            </p>
+                            <p> <input type="text" id="reference" value="<%=model.salesPurchases.reference%>" /></p>
+                            <p>
+                                <select id="language">
+                                    <option>English</option>
+                                </select>
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p>  <label for="date">Date</label></p>
+                            <p>
+                                <label for="isCustomer">Customer</label>
+                            </p>
+                            <p>
+                                <label for="isSupplier">Supplier </label>
+                            </p>
+                            <p>
+                                <label for="active">Active</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p><input type="date" id="date" value="<%=model.salesPurchases.date%>" /></p>
+                            <p><input type="checkbox" id="isCustomer"><%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></p>
+                            <p><input type="checkbox" id="isSupplier"><%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></p>
+                            <p><input type="checkbox" id="active"><%=(model.salesPurchases.active)? "checked='checked'":''%> /></p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
                 <div class="tab"></div>
             </div>
         </fieldset>
