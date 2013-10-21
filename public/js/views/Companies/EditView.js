@@ -2,11 +2,12 @@ define([
     "text!templates/Companies/EditTemplate.html",
     "collections/Companies/CompaniesCollection",
     "collections/Employees/EmployeesCollection",
+    "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
     "common",
     "custom"
 ],
-    function (EditTemplate, CompaniesCollection, EmployeesCollection, DepartmentsCollection, common, Custom) {
+    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -23,10 +24,21 @@ define([
             },
 
             events: {
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "click #contacts": "editContacts"
             },
 
             switchTab: function (e) {
+                e.preventDefault();
+                var link = this.$("#tabList a");
+                if (link.hasClass("selected")) {
+                    link.removeClass("selected");
+                }
+                var index = link.index($(e.target).addClass("selected"));
+                this.$(".tab").hide().eq(index).show();
+            },
+
+            editContacts: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
                 if (link.hasClass("selected")) {

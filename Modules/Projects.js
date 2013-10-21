@@ -333,7 +333,7 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
-    var updateTask = function (tasksArray, fieldsObject) {
+    var _updateTask = function (tasksArray, fieldsObject) {
         var n = tasksArray.length;
         var i = 0;
         var _update = function (i) {
@@ -561,7 +561,7 @@ var Project = function (logWriter, mongoose) {
                             res.send(500, { error: "Can't update Project & tasks.find" });
                         } else {
                             if (result.length > 0) {
-                                updateTask(result, {
+                                _updateTask(result, {
                                     'project.name': data.projectName,
                                     'project.projectShortDesc': data.projectShortDesc
                                 });
@@ -614,12 +614,13 @@ var Project = function (logWriter, mongoose) {
     function createTask(data, res) {
         try {
             console.log(data);
-            if (!data.summary || !data.project._id) {
+            if (!data.summary || (!data.project || !data.project._id)) {
                 logWriter.log('Task.create Incorrect Incoming Data');
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
                 return;
             } else {
                 var projectId = data.project._id;
+                console.log(projectId);
                 tasks.find({ $and: [{ summary: data.summary }, { 'project.id': projectId }] }, function (error, doc) {
                     if (error) {
                         console.log(error);
@@ -748,12 +749,14 @@ var Project = function (logWriter, mongoose) {
     };
 
     function updateTask(_id, data, res) {
+        console.log(data);
         delete data._id;
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
             data.progress = Math.round((data.logged / data.estimated) * 100);
         }
+        console.log(data);
         tasks.update({ _id: _id }, data, function (err, taskk) {
             if (err) {
                 console.log(err);
