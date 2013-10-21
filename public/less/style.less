@@ -42,20 +42,23 @@
     body {
         font: size:10px;
     }
-     input[type="checkbox"] {
+
+    input[type="checkbox"] {
         display: block;
         height: 6px;
         width: 6px;
     }
+
     .form {
         p {
             label {
-            line-height:30px;
-            font-size:10px;
+                line-height: 30px;
+                font-size: 10px;
             }
         }
     }
 }
+
 body {
     font-family: @body-font;
     font-size: 12px;
@@ -78,16 +81,21 @@ a:focus, *:focus {
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
-            .box-shadow (@x: 0, @y: 0, @blur: 1px, @color: #000) {
-              box-shadow: @arguments;
-              -moz-box-shadow: @arguments;
-              -webkit-box-shadow: @arguments;
-            }
+.box-shadow (@x: 0, @y: 0, @blur: 1px, @color: #000) {
+    box-shadow: @arguments;
+    -moz-box-shadow: @arguments;
+    -webkit-box-shadow: @arguments;
+}
+.border-radius(@radius:4px) {
+ -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+    border-radius: @radius;
+}
 
 
-            article{
-            .box-shadow(2px, 5px);
-            }
+article {
+    .box-shadow(2px, 5px);
+}
 
 
 .error {
@@ -227,18 +235,18 @@ a:focus, *:focus {
             text-shadow: 1px 1px #fff;
             font-size: 14px;
             font-weight: bold;
-            padding:3px 0px 3px 10px;
+            padding: 3px 0px 3px 10px;
             color: @blue;
-            line-height:20px;
+            line-height: 20px;
 
             a {
                 color: @blue;
                 text-decoration: none;
                 font-size: 12.5px;
                 line-height: 16px;
-                display:block;
-                width:100%;
-                height:100%;
+                display: block;
+                width: 100%;
+                height: 100%;
                 font-weight: bold;
             }
 
@@ -250,7 +258,8 @@ a:focus, *:focus {
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
-                padding-left:10px;
+                padding-left: 10px;
+
                 a {
                     background: #4d5a75;
                     color: #fff;
@@ -307,18 +316,20 @@ a:focus, *:focus {
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
 
-    h3 {    
+    h3 {
         padding: 10px;
         max-width: 7em;
     }
 }
- h3 {
-        color: @blue;
-        font-size: 18px;
-        font-weight: bold;        
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
+
+h3 {
+    color: @blue;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 #loginForm {
     display: block;
     width: 310px;
@@ -336,7 +347,7 @@ a:focus, *:focus {
     }
 
     input {
-        border-radius: 0;
+        .border-radius(0px);
         width: 300px;
         height: 30px;
     }
@@ -408,7 +419,7 @@ a:focus, *:focus {
     img {
         float: left;
         margin: 2px 5px 2px 2px;
-        border-radius: 4px;
+        .border-radius;
     }
 
     span {
@@ -469,7 +480,7 @@ a:focus, *:focus {
     float: left;
     margin: 0 12px;
     border: 1px solid #ababab;
-    border-radius: 5px;
+    .border-radius(5px);
 
     li {
         border-right: 1px solid #ababab;
@@ -515,8 +526,6 @@ a:focus, *:focus {
     font-family: @lucida-font;
     width: 100%;
 
-   
-
     thead {
         tr {
             border-bottom: 2px solid #cacaca;
@@ -534,7 +543,7 @@ a:focus, *:focus {
             border-left: 1px solid #dfdfdf;
 
             input[type="checkbox"] {
-                margin-top:2.5px;
+                margin-top: 2.5px;
             }
 
             &:first-of-type {
@@ -593,7 +602,7 @@ a:focus, *:focus {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 
     h3 {
-        margin-bottom:10px;
+        margin-bottom: 10px;
     }
 
     .avatar {
@@ -601,9 +610,7 @@ a:focus, *:focus {
         position: relative;
         width: 120px;
         height: 120px;
-        -moz-border-radius: 3px;
-        -webkit-border-radius: 3px;
-        border-radius: 3px;
+        .border-radius(3px);
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -740,9 +747,7 @@ a:focus, *:focus {
 input, textarea, select {
     padding: 2px 4px;
     border: 1px solid #cccccc;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    .border-radius(3px);
     background: white;
 }
 
@@ -831,9 +836,7 @@ input, textarea, select {
     border-bottom-color: rgba(0, 0, 0, 0.3);
     padding: 5px;
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
+    .border-radius;
     width: 200px;
     min-height: 110px;
     cursor: pointer;
@@ -875,6 +878,49 @@ input, textarea, select {
     }
 }
 
+.thumbnailwithavatar {
+
+    display: block;
+    position: relative;
+    float: left;
+    width: 420px;
+    margin-left: 7px;
+    margin-top: 7px;
+    //border:@thin-border @taskBorderColor;
+    .border-radius;
+    background:transparent !important;
+    .inner {
+        padding: 10px;
+
+        P {
+              font-family: @lucida-font;
+             .thumbnail-text;
+                 font-size:14px;
+                 line-height:20px;
+            margin-left:130px;
+
+            a {
+                word-break: break-all;
+                word-wrap: break-word;
+            }
+        }
+    }
+
+    .avatar {
+        float: left;
+        display: block;
+        width: 120px;
+        height: 120px;
+        overflow: hidden;
+        margin-bottom: 10px;
+              .border-radius(3px);
+        -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        margin-right: 10px;
+    }
+}
+
 .btn {
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: #4c4c4c;
@@ -885,9 +931,7 @@ input, textarea, select {
     text-align: center;
     text-decoration: none;
     .gradient(#d7d7d7);
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    .border-radius(3px);
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
@@ -1054,9 +1098,11 @@ button {
 }
 
 .dropDownMenu {
+    height: 10px;
+    width: 10px;
     float: right;
     margin: 5px;
-    padding: 3px 5px!important;
+    padding: 3px 5px !important;
     position: absolute;
     top: 16px;
     right: 0;
@@ -1104,7 +1150,7 @@ button {
         width: 120px;
         margin-left: 1px;
         font-size: 14px;
-        font-weight: bold!important;
+        font-weight: bold !important;
     }
 }
 
@@ -1114,7 +1160,7 @@ button {
     border: 1px solid #afafb6;
     font-size: 10px;
     padding: 0 2px;
-    border-radius: 3px;
+    .border-radius(3px);
     background: #f0f0fa;
     color: #4c4c4c;
 }

@@ -5,7 +5,7 @@ define([
     function (ThumbnailsItemTemplate, common) {
         var ThumbnailsItemView = Backbone.View.extend({
             tagName: "div",
-            className: "thumbnail",
+            className: "thumbnailwithavatar",
 
             initialize: function () {
                 this.model.on('change', this.render, this);
@@ -65,6 +65,7 @@ define([
             template: _.template(ThumbnailsItemTemplate),
 
             render: function () {
+                
                 this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.html(this.template(this.model.toJSON()));

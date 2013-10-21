@@ -58,12 +58,35 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                         this.$el.html('');
                         var holder = this.$el,
                             thumbnailsItemView;
+                       
+                       
                         _.each(models, function (model) {
+                            var dateBirth = new Date(model.get("dateBirth"));
+                            var today = new Date;
+                            var age = today.getFullYear() - dateBirth.getFullYear();
+                            if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
+                            model.set({ age: age }, {silent: true});
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                            var relatedUser = model.get("relatedUser");
+                            var login = relatedUser.login;                          
+                            if (login) {                               
+                                var _login = "(" + login + ")";
+                                relatedUser.login = _login;
+                                model.set({ relatedUser: relatedUser }, { silent: true });
+                            }
+                            //var dateBirth =new Date(model.get("dateBirth"));                            
+                            //var today = new Date;
+                            //var age = today.getFullYear() - dateBirth.getFullYear();
+                            if(today.getMonth()<dateBirth.getMonth() || (today.getMonth()==dateBirth.getMonth() && today.getDate()<dateBirth.getDate())){age--;}
+                   
+                            if (dateBirth) {
+                                model.set({ dateBirth: dateBirth.format("dd/mm/yyyy") }, { silent: true });
+                            }
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);
                         break;
+                      
                     }
                 case "form":
                     {
