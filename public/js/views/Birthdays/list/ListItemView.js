@@ -33,8 +33,13 @@
             },
             
             getDaysToBirthday: function (birthday) {
-                var today = new Date();
-                var days = birthday.getDate()- today.getDate();
+                var today = new Date(),
+                    days;
+                if (birthday.getMonth() > today.getMonth()) {
+                    days = Math.round(Math.round(parseFloat((birthday - today) / (1000 * 60 * 60 * 24)) * 10) / 10);
+                } else {
+                    days = birthday.getDate() - today.getDate();
+                }
                 return days;
             },
 
