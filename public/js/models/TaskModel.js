@@ -28,7 +28,7 @@ define(function () {
         },
         defaults: {
             summary: '',
-            taskShortDescr: '',
+            taskCount: 0,
             project: {
                 id: '',
                 name: '',

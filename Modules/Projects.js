@@ -38,7 +38,7 @@ var Project = function (logWriter, mongoose) {
 
     var TasksSchema = mongoose.Schema({
         summary: { type: String, default: '' },
-        taskShortDescr: { type: String, default: '' },
+        taskCount: { type: Number, default: 0 },
         project: {
             id: String,
             name: String,
@@ -333,6 +333,28 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
+    var updateTask = function (tasksArray, fieldsObject) {
+        var n = tasksArray.length;
+        var i = 0;
+        var _update = function (i) {
+            if (i < n) {
+                tasks.update({ _id: tasksArray[i]._id }, { $set: fieldsObject }, function (err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(i);
+                        console.log(result);
+                        i++;
+                        _update(i);
+                    }
+                });
+            } else {
+                return true;
+            }
+        };
+        _update(i);
+    };
+
     function create(data, res) {
         try {
             console.log(data);
@@ -532,6 +554,20 @@ var Project = function (logWriter, mongoose) {
                     logWriter.log("Project.js update project.update " + err);
                     res.send(500, { error: "Can't update Project" });
                 } else {
+                    tasks.find({ 'project.id': _id }, function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log("Project.js update tasks.find " + err);
+                            res.send(500, { error: "Can't update Project & tasks.find" });
+                        } else {
+                            if (result.length > 0) {
+                                updateTask(result, {
+                                    'project.name': data.projectName,
+                                    'project.projectShortDesc': data.projectShortDesc
+                                });
+                            }
+                        }
+                    });
                     res.send(200, { success: 'Project updated success' });
                 }
             });
@@ -621,7 +657,7 @@ var Project = function (logWriter, mongoose) {
                         }
                         if (data.project.projectShortDesc) {
                             _task.project.projectShortDesc = data.project.projectShortDesc;
-                            _task.taskShortDescr = data.project.projectShortDesc + n;
+                            _task.taskCount = n;
                         }
                     }
                     if (data.assignedTo) {

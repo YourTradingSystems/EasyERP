@@ -66,7 +66,7 @@ define([
                     var mid = 39;
 
                     var projectName = $("#projectName").val();
-
+                    var projectShortDesc = $("#projectShortDesc").val();
                     var idCustomer = $(this.el).find("#customerDd option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersDdCollection);
                     var customer = {};
@@ -103,6 +103,7 @@ define([
 
                     currentModel.set({
                         projectName: projectName,
+                        projectShortDesc: projectShortDesc,
                         customer: customer,
                         projectmanager: projectmanager,
                         workflow: workflow,
