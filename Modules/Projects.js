@@ -547,7 +547,6 @@ var Project = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
-            console.log(data);
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
