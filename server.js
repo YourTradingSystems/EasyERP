@@ -362,6 +362,8 @@ app.post('/JobPosition', function (req, res) {
 app.get('/JobPosition', function (req, res) {
     data = {};
     data.mid = req.param('mid');
+    //data._id = req.param('_id');
+    console.log(data);
     requestHandler.getJobPosition(req, res, data);
 });
 

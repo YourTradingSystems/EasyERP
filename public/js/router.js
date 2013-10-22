@@ -104,15 +104,15 @@ define([
             });
 
         },
-        makeAction: function (contentType, action, projectId, itemIndex) {
+        makeAction: function (contentType, action, hash, itemIndex) {
             if (/\s/.test(contentType)) {
                 var contentTypeArray = contentType.split(' ');
                 contentType = contentTypeArray.join('');
             }
-            if (projectId) {
-                if (projectId.length != 24) {
-                    itemIndex = projectId;
-                    projectId = null;
+            if (hash) {
+                if (hash.length != 24) {
+                    itemIndex = hash;
+                    hash = null;
                 }
             }
             if (this.mainView == null) this.main();
@@ -147,16 +147,16 @@ define([
                     if (action === "Edit") {
                         url += "/" + itemIndex;
                     }
-                    if (!projectId && App.projectId) {
-                        projectId = App.projectId
+                    if (!hash && App.projectId) {
+                        hash = App.projectId
                     }
-                    if (projectId && action === "Create") {
-                        url += "/" + projectId
+                    if (hash && (action === "Create") || (action === "Edit")) {
+                        url += "/" + hash
                     }
                     Backbone.history.navigate(url, { replace: true });
 
                     var topBarView = new TopBarView({ actionType: action}),
-                        actionView = new ActionView({ collection: contentCollection, pId: projectId });
+                        actionView = new ActionView({ collection: contentCollection, pId: hash });
 
                     topBarView.bind('saveEvent', actionView.saveItem, actionView);
 

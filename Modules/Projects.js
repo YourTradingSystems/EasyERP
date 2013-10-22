@@ -619,28 +619,17 @@ var Project = function (logWriter, mongoose) {
                 return;
             } else {
                 var projectId = data.project._id;
-                console.log(projectId);
-                tasks.find({ $and: [{ summary: data.summary }, { 'project.id': projectId }] }, function (error, doc) {
+                var query = tasks.find({ 'project.id': projectId });
+                query.sort({ taskCount: -1 });
+                query.exec(function (error, _tasks) {
                     if (error) {
                         console.log(error);
-                        logWriter.log("Project.js createTask tasks.find " + error);
+                        logWriter.log("Project.js createTask tasks.find doc.length === 0" + error);
                         res.send(500, { error: 'Task find error' });
+                    } else {
+                        var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+                        saveTaskToBd(data, n);
                     }
-                    if (doc.length > 0) {
-                        res.send(400, { error: 'An Task with the same Name already exists' });
-                    }
-                    else
-                        if (doc.length === 0) {
-                            tasks.find({ 'project.id': projectId }, function (error, _tasks) {
-                                if (error) {
-                                    console.log(error);
-                                    logWriter.log("Project.js createTask tasks.find doc.length === 0" + error);
-                                    res.send(500, { error: 'Task find error' });
-                                } else {
-                                    saveTaskToBd(data, ++_tasks.length);
-                                }
-                            });
-                        }
                 });
             }
             function saveTaskToBd(data, n) {
@@ -748,23 +737,38 @@ var Project = function (logWriter, mongoose) {
     };
 
     function updateTask(_id, data, res) {
-        console.log(data);
         delete data._id;
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
             data.progress = Math.round((data.logged / data.estimated) * 100);
         }
-        console.log(data);
-        tasks.update({ _id: _id }, data, function (err, taskk) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js updateTask tasks.update " + err);
-                res.send(500, { error: "Can't update Task" });
-            } else {
-                res.send(200, { success: 'JobPosition updated success' });
-            }
-        });
+        if (data.project && data.project.id) {
+            var query = tasks.find({ 'project.id': data.project.id });
+            query.sort({ taskCount: -1 });
+            query.exec(function (error, _tasks) {
+                if (error) {
+                    console.log(error);
+                    logWriter.log("Project.js createTask tasks.find doc.length === 0" + error);
+                    res.send(500, { error: 'Task find error' });
+                } else {
+                    var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+                    data.taskCount = n;
+                    console.log(data);
+                    tasks.update({ _id: _id }, data, function (err, taskk) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log("Project.js updateTask tasks.update " + err);
+                            res.send(500, { error: "Can't update Task" });
+                        } else {
+                            res.send(200, { success: 'JobPosition updated success' });
+                        }
+                    });
+                }
+            });
+        } else {
+            res.send(500, { error: "Can't update Task" });
+        }
     };
 
     function removeTask(_id, res) {

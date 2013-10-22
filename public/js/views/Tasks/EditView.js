@@ -119,7 +119,7 @@
 
                     var assignedTo = {};
                     var idAssignedTo = this.$("#assignedTo option:selected").val();
-                    var _assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
+                    var _assignedTo = common.toObject(idAssignedTo, this.accountsDdCollection);
                     if (_assignedTo) {
                         assignedTo.name = _assignedTo.name.first + " " + _assignedTo.name.last;
                         assignedTo.id = _assignedTo._id;
@@ -226,7 +226,12 @@
                         },
                         wait: true,
                         success: function (model) {
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                            if (project.id == '0' || !project.id) {
+                                Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+
+                            } else {
+                                Backbone.history.navigate("home/content-Tasks/kanban/" + project.id, { trigger: true });
+                            }
                         },
                         error: function () {
                             Backbone.history.navigate("home", { trigger: true });
