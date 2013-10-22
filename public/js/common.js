@@ -82,10 +82,40 @@
             fr.readAsBinaryString(file);
         });
         canvasDrawing({ model: model }, context);
+    };
+
+    var displayControlBtnsByActionType = function(actionType){
+        $("#saveDiscardHolder").hide();
+        $("#top-bar-createBtn").hide();
+        $("#top-bar-deleteBtn").hide();
+        $("#top-bar-editBtn").hide();
+        $("#top-bar-renameBtn").hide();
+        $("#top-bar-nextBtn").hide();
+        $("#top-bar-discardBtn").hide();
+        $('#top-bar-saveBtn').hide();
+        if(!actionType || actionType === "Content")
+            $("#top-bar-createBtn").show();
+        else if(actionType === "View"){
+            $('#top-bar-createBtn').show();
+            $('#top-bar-editBtn').show();
+            $('#top-bar-deleteBtn').show();
+        }
+        else if(actionType === "Edit"){
+            $('#top-bar-saveBtn').show();
+            $('#top-bar-discardBtn').show();
+            $("#saveDiscardHolder").show();
+        }
+        else if(actionType === "Create"){
+            $('#top-bar-saveBtn').hide();
+            $('#top-bar-nextBtn').show();
+            $('#top-bar-discardBtn').show();
+            $("#saveDiscardHolder").show();
+        }
     }
 
     return {
         toObject: toObject,
+        displayControlBtnsByActionType : displayControlBtnsByActionType,
         ISODateToDate: ISODateToDate,
         hexToRgb: hexToRgb,
         deleteEvent: deleteEvent,

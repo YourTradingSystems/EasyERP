@@ -23,11 +23,12 @@ var Profile = function (logWriter, mongoose) {
                 res.send(400, { error: 'Profile.create Incorrect Incoming Data' });
                 return;
             } else {
+                console.log(data);
                 profile.find({ profileName: data.profileName }, function (error, doc) {
                     try {
                         if (error) {
                             console.log(error);
-                            logWriter.log("Profile.js create profile.find " + description);
+                            logWriter.log("Profile.js create profile.find");
                             res.send(500, { error: 'Profile.create find error' });
                         }
                         if (doc.length > 0) {
@@ -53,28 +54,18 @@ var Profile = function (logWriter, mongoose) {
                         _profile.profileDescription = data.profileDescription;
                     }
                     if (data.profileAccess) {
-                        if (data.profileAccess.module) {
-                            if (data.profileAccess.module.mid) {
-                                _profile.profileAccess.module.id = data.profileAccess.module.mid;
-                            }
-                            if (data.profileAccess.mname) {
-                                _profile.profileAccess.module.name = data.profileAccess.module.mname;
-                            }
-                        }
-                        if (data.profileAccess.access) {
-                            _profile.profileAccess.access = data.profileAccess.access;
-                        }
+                        _profile.profileAccess = data.profileAccess;
                     }
                     _profile.save(function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Profile.js saveProfileToDb _profile.save" + err);
-                                res(500);
+                                res.send(500, {error: "Profile save failed"});
                             }
                             if (result) {
-                                console.log("Data Profile saved sucscess");
-                                res(201);
+                                console.log("Data Profile saved success");
+                                res.send(201, {success:"Profile Saved"});
                             }
                         }
                         catch (error) {

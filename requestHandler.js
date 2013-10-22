@@ -125,7 +125,7 @@ var requestHandler = function (mongoose) {
     function removeProfile(req, res, id) {
         console.log("Requst removePerson is success");
         if (req.session && req.session.loggedIn) {
-            profile.removeProfile(id, res);
+            profile.remove(id, res);
         } else {
             res.send(401);
         }
