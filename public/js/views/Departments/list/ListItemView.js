@@ -1,5 +1,5 @@
 define([
-    "text!templates/Departments/list/ListItemTemplate.html"
+    "text!templates/Departments/list/ListItemTemplate.html",
 ],
     function (ListItemTemplate) {
         var ListItemView = Backbone.View.extend({
@@ -26,6 +26,7 @@ define([
                 this.$el.attr("data-index", index);
                 this.$el.html(this.template(this.model.toJSON()));
                 this.$("td:nth-child(2)").append(index + 1);
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

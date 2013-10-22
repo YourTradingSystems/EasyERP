@@ -3,10 +3,11 @@ define([
     'text!templates/Degrees/form/FormTemplate.html',
     'collections/Degrees/DegreesCollection',
     'views/Degrees/list/ListItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom) {
+function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -58,7 +59,7 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom) {
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
         },

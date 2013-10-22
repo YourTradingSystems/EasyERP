@@ -17,7 +17,6 @@ define([
                 this.companiesCollection = new CompaniesCollection();
                 this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = options.collection;
-
                 this.bind('reset', _.bind(this.render, this));
                 this.render();
             },
@@ -86,6 +85,7 @@ define([
                 this.$el.html(this.template({ companiesCollection: this.companiesCollection }));
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 return this;
+                common.contentHolderHeightFixer();
             }
 
         });

@@ -4,10 +4,11 @@ define([
     'collections/Employees/EmployeesCollection',
     'views/Employees/list/ListItemView',
     'views/Employees/thumbnails/ThumbnailsItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, ThumbnailsItemView, Custom) {
+function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, ThumbnailsItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -84,6 +85,7 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                                 model.set({ dateBirth: dateBirth.format("dd/mm/yyyy") }, { silent: true });
                             }
                             $(holder).append(thumbnailsItemView.render().el);
+                            
                         }, this);
                         break;
                       
@@ -110,7 +112,8 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                         break;
                     }
             }
-
+            $(holder).append('<div class="clearfix"></div>');
+            common.contentHolderHeightFixer();
             return this;
 
         },

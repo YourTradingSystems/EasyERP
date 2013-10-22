@@ -7,10 +7,11 @@ define([
     'text!templates/Customers/list/ListTemplate.html',
     'views/Persons/list/ListItemView',
     'views/Companies/list/ListItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, PersonsItemView, CompaniesItemView, Custom) {
+function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, PersonsItemView, CompaniesItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
 
@@ -95,7 +96,7 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
         },

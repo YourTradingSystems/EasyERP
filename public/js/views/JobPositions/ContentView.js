@@ -4,10 +4,11 @@ define([
     'collections/JobPositions/JobPositionsCollection',
     'collections/Workflows/WorkflowsCollection',
     'views/JobPositions/list/ListItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, ListItemView, Custom) {
+function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, ListItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -59,7 +60,6 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             var currentModel = this.collection.models[itemIndex];
                             currentModel.off('change');
                             currentModel.on('change:workflow', _.bind(this.render, this));
-                            //currentModel.bind('change:workflow', this.fetchModel(currentModel), this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             var workflows = this.workflowsCollection.models;
 
@@ -77,13 +77,9 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
-        },
-
-        fetchModel: function (model){
-            model.fetch();
         },
 
         changeWorkflow: function (e) {
@@ -103,12 +99,12 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                 }
             };
 
-            //model.set(ob);
-            model.save(ob, {
+            model.set(ob);
+            model.save({}, {
                 headers: {
                     mid: mid
                 },
-                waite: true
+                wait: true
             });
 
         },

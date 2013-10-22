@@ -175,6 +175,7 @@ define([
                     usersCollection: this.usersCollection
                 }));
                 common.canvasDraw({ model: employeeModel.toJSON() }, this);
+                common.contentHolderHeightFixer();
                 return this;
             }
 

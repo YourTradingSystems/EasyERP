@@ -8,10 +8,11 @@ define([
     'collections/Workflows/WorkflowsCollection',
     'views/Opportunities/list/ListItemView',
     'views/Opportunities/kanban/KanbanItemView',
-    'custom'
+    'custom',
+    'common'
 ],
 
-function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, ListItemView, KanbanItemView, Custom) {
+function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, ListItemView, KanbanItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -193,6 +194,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                     column.find(".revenue span").html(parseInt(column.find(".revenue span").html()) + (model.get("expectedRevenue").value));
                 }
             }).disableSelection();
+            common.contentHolderHeightFixer();
             return this;
         },
 

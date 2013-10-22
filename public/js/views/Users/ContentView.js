@@ -3,9 +3,10 @@ define([
     'text!templates/Users/form/UsersTemplate.html',
     'collections/Users/UsersCollection',
     'views/Users/list/UsersItemView',
-    'custom'
+    'custom',
+    'common'
 ],
-function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Custom) {
+function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Custom, common) {
     var UsersView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function(options){
@@ -115,7 +116,7 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
                     this.$el.html("Thumbnails View");
                     break;
             }
-            
+            common.contentHolderHeightFixer();
             return this;
 
         }

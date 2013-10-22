@@ -1,7 +1,8 @@
 define([
-    "text!templates/Profiles/ModulesAccessListTemplate.html"
+    "text!templates/Profiles/ModulesAccessListTemplate.html",
+    'common'
 ],
-    function (ModulesAccessTemplate) {
+    function (ModulesAccessTemplate, common) {
         var ViewName = Backbone.View.extend({
             el: "#modulesContent",
             template: _.template(ModulesAccessTemplate),
@@ -18,7 +19,8 @@ define([
             },
             render: function () {
                 this.filterCollection();
-                this.$el.html(this.template({profile:this.profile, action:this.action}));
+                this.$el.html(this.template({ profile: this.profile, action: this.action }));
+                common.contentHolderHeightFixer();
                 return this;
             }
 

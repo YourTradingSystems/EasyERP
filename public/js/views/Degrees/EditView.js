@@ -1,9 +1,10 @@
 define([
     "text!templates/Degrees/EditTemplate.html",
     "collections/Degrees/DegreesCollection",
-    "custom"
+    "custom",
+    "common"
 ],
-    function (EditTemplate, DegreesCollection, Custom) {
+    function (EditTemplate, DegreesCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -50,7 +51,7 @@ define([
                     var currentModel = this.degreesCollection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON() }));
                 }
-
+                common.contentHolderHeightFixer();
                 return this;
             }
 

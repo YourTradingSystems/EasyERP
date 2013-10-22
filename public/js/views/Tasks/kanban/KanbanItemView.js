@@ -88,6 +88,7 @@ define([
                 }
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", index);
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

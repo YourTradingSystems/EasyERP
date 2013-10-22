@@ -10,7 +10,7 @@
             <li>
                 <a href="#" id="delete">Delete</a>
             </li>
-            <li>
+            <!--<li>
                 <ul class="colorPicker">
                     <li>
                         <a href="#" data-color="#1ABC9C" class="color_0"></a>
@@ -43,12 +43,13 @@
                         <a href="#" data-color="#2980B9" class="color_9"></a>
                     </li>
                 </ul>
-            </li>
+            </li>-->
         </ul>
     </div>
-    <p><%=name%></p>
-    <img src="<%=imageSrc%>" width="64" height="64" />
-    <p><%=email%></p>
-    <p><%=phones.phone%></p>
-    <p><%=phones.mobile%></p>
+    <div class="avatar"><img src="<%=imageSrc%>" width="60" /></div>
+    <div class="info">
+        <h4 class="title"><%=name%></h4>
+        <p><%=address.city%>, <%=address.country%></p>       
+        <p><a href="mailto:<%=email%>"><%=email%></a></p>
+    </div>
 </div>

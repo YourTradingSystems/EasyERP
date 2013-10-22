@@ -131,6 +131,7 @@ define([
                     departmentsCollection: this.departmentsCollection
                 }));
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
+                common.contentHolderHeightFixer();
                 return this;
             }
 

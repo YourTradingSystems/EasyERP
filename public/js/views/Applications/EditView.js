@@ -245,6 +245,7 @@
                     }, this);
                 };
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
+                common.contentHolderHeightFixer();
                 return this;
             }
 

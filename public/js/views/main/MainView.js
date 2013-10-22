@@ -2,7 +2,7 @@ define([
         'text!templates/main/MainTemplate.html',
         'views/menu/LeftMenuView',
         'collections/menu/MenuItems',
-        'views/menu/TopMenuView'
+        'views/menu/TopMenuView',
     ], function(MainTemplate, LeftMenuView, MenuItemsCollection, TopMenuView) {
 
         var MainView = Backbone.View.extend({
@@ -24,6 +24,7 @@ define([
             render: function() {
                 console.log('Render Main View');
                 this.$el.html(MainTemplate);
+               
                 return this;
             }
         });
