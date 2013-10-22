@@ -1,5 +1,5 @@
 <div class="task-header">
-    <p><%=project.projectShortDesc%><%=taskCount%> - <%=summary%></p>
+    <p><%=project.projectShortDesc%> - <%=taskCount%></p>
     <div class="dropDown">
         <a href="#">
             <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden"/></a>
@@ -50,6 +50,7 @@
 <div class="task-content">
     <div class="avatar-small right"><img class="person" src="./images/person.png" /></div>
     <p><%=project.name%></p>
+    <p><%=summary%></p>
     <% _.each(tags,function(tag){ %>
             <span class="tag"><%=tag%></span>
     <% });%>
