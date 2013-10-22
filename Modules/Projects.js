@@ -58,7 +58,7 @@ var Project = function (logWriter, mongoose) {
                 id: { type: String, default: '' },
                 name: { type: String, default: '' }
             },
-            StartDate: Date,
+            StartDate: {type: Date, default: Date.now},
             EndDate: Date,
             duration: Number
         },
@@ -353,6 +353,40 @@ var Project = function (logWriter, mongoose) {
             }
         };
         _update(i);
+    };
+
+    var calculateTaskEndDate = function (startDate, estimated) {
+        var iWeeks, iDateDiff, iAdjust = 0;
+
+        estimated // estimated in miliseconds
+
+        var endDate = new Date();
+
+        if (endDate < startDate) return -1;                 // error code if dates transposed
+
+        var iWeekday1 = startDate.getDay();                // day of week
+        var iWeekday2 = endDate.getDay();
+
+        iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1;   // change Sunday from 0 to 7
+        iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
+
+        if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1;  // adjustment if both days on weekend
+
+        iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1;    // only count weekdays
+        iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
+
+        // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
+        iWeeks = Math.floor((endDate.getTime() - startDate.getTime()) / 604800000)
+
+        if (iWeekday1 <= iWeekday2) {
+            iDateDiff = (iWeeks * 2) + (iWeekday2 - iWeekday1)
+        } else {
+            iDateDiff = ((iWeeks + 1) * 2) - (iWeekday1 - iWeekday2)
+        }
+
+        iDateDiff -= iAdjust                            // take into account both days on weekend
+
+        return endDate;
     };
 
     function create(data, res) {
