@@ -4,10 +4,11 @@ define([
     'collections/Leads/LeadsCollection',
     'collections/Workflows/WorkflowsCollection',
     'views/Leads/list/ListItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, ListItemView, Custom) {
+function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, ListItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -149,7 +150,7 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
         },

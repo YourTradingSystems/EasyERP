@@ -234,6 +234,7 @@
                     }, this);
 
                 }
+                common.contentHolderHeightFixer();
                 return this;
             }
 

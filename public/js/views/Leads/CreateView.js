@@ -138,6 +138,7 @@ define([
 
             render: function () {
                 this.$el.html(this.template({ companiesCollection: this.companiesCollection, customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
+                common.contentHolderHeightFixer();
                 return this;
             }
 

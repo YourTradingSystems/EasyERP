@@ -2,9 +2,10 @@ define([
     "text!templates/Degrees/CreateTemplate.html",
     "collections/Degrees/DegreesCollection",
     "models/DegreeModel",
-    "custom"
+    "custom",
+    "common"
 ],
-    function (CreateTemplate, DegreesCollection, DegreeModel, Custom) {
+    function (CreateTemplate, DegreesCollection, DegreeModel, Custom, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -44,6 +45,7 @@ define([
 
             render: function () {
                 this.$el.html(this.template());
+                common.contentHolderHeightFixer();
                 return this;
             }
 

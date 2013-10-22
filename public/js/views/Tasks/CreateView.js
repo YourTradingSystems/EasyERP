@@ -142,7 +142,7 @@ define([
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
                     workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
                 }));
-
+                common.contentHolderHeightFixer();
                 return this;
             }
 

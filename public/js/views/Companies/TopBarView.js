@@ -59,8 +59,7 @@
                     if ((viewType == "form") && (this.actionType === "Edit")) {
                         $("ul.changeContentIndex").show();
                         $("#template-switcher>span").show();
-                    }
-
+                    }               
                 return this;
             },
 

@@ -5,7 +5,7 @@ define([
     function (ThumbnailsItemTemplate, common) {
         var ThumbnailsItemView = Backbone.View.extend({
             tagName:"div",
-            className: "thumbnail",
+            className: "thumbnailcusomers",
 
             initialize: function () {
                 this.model.on('change', this.render, this);
@@ -69,6 +69,7 @@ define([
                 this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 this.$el.attr("id", this.model.get('_id'));
                 this.changeColor(this.model.get('color'));
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

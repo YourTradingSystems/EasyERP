@@ -4,10 +4,11 @@ define([
     'collections/JobPositions/JobPositionsCollection',
     'collections/Workflows/WorkflowsCollection',
     'views/JobPositions/list/ListItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, ListItemView, Custom) {
+function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, ListItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -76,7 +77,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
         },

@@ -151,6 +151,7 @@ define([
 
             render: function () {
                 var applicationModel = new ApplicationModel();
+                common.contentHolderHeightFixer();
                 this.$el.html(this.template({ employeesCollection: this.employeesCollection, jobPositionsCollection: this.jobPositionsCollection, departmentsCollection: this.departmentsCollection, degreesCollection: this.degreesCollection, sourceOfApplicantsCollection: this.sourceOfApplicantsCollection }));
                 common.canvasDraw({ model: applicationModel.toJSON() }, this);
                 return this;

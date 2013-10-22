@@ -49,7 +49,8 @@ define([
                 return arr;
             },
             render: function () {
-                this.$el.html(this.template({profilesCollection: this.getProfilesForDropDown()}));
+                this.$el.html(this.template({ profilesCollection: this.getProfilesForDropDown() }));
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

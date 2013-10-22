@@ -69,6 +69,7 @@ define([
                 this.$el.html(this.template(this.model.toJSON()));
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", this.model.collection.indexOf(this.model));
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

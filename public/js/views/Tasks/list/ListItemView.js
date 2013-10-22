@@ -33,7 +33,8 @@ define([
                 var index = this.model.collection.indexOf(this.model);
                 this.$el.attr("data-index", index);
                 this.$el.html(this.template(this.model.toJSON()));
-                this.$("td:nth-child(2)").append(index+1);
+                this.$("td:nth-child(2)").append(index + 1);
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

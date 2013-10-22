@@ -1,7 +1,8 @@
 define([
-    "text!templates/Users/list/UsersItemTemplate.html"
+    "text!templates/Users/list/UsersItemTemplate.html",
+    'common'
 ],
-    function (UsersItemTemplate) {
+    function (UsersItemTemplate, common) {
         var UsersItemView = Backbone.View.extend({
             tagName:"tr",
 
@@ -26,6 +27,7 @@ define([
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.html(this.template(this.model.toJSON()));
                 this.$("td:nth-child(2)").append(this.model.collection.indexOf(this.model) + 1);
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

@@ -5,9 +5,10 @@ define([
     'views/Projects/list/ListItemView',
     'views/Projects/thumbnails/ThumbnailsItemView',
     'custom',
-    "GanttChart"
+    "GanttChart",
+    'common'
 ],
-function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, ThumbnailsItemView, Custom, GanttChart) {
+function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, ThumbnailsItemView, Custom, GanttChart, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -102,7 +103,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
         },

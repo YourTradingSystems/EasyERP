@@ -70,6 +70,7 @@ define([
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.html(this.template(this.model.toJSON()));
                 this.changeColor(this.model.get('color'));
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

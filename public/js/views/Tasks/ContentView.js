@@ -238,6 +238,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                     column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("loged")));
                 }
             }).disableSelection();
+            common.contentHolderHeightFixer();
             return this;
         },
 

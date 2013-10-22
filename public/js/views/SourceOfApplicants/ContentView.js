@@ -3,10 +3,10 @@ define([
     'text!templates/SourceOfApplicants/form/FormTemplate.html',
     'collections/SourceOfApplicants/SourceOfApplicantsCollection',
     'views/SourceOfApplicants/list/ListItemView',
-    'custom'
-
+    'custom',
+    'common'
 ],
-function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemView, Custom) {
+function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -58,7 +58,7 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
 
         },

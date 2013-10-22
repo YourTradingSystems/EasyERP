@@ -1,9 +1,10 @@
 define([
     "text!templates/Profiles/ProfileListTemplate.html",
     "views/Profiles/ModulesAccessView",
-    'custom'
+    'custom',
+    'common'
 ],
-    function (ProfileListTemplate, ModulesAccessView, Custom) {
+    function (ProfileListTemplate, ModulesAccessView, Custom, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
@@ -82,6 +83,7 @@ define([
                 this.$el.html(_.template(ProfileListTemplate,
                     { profilesCollection:this.profilesCollection
                     }));
+                common.contentHolderHeightFixer();
                 return this;
             }
         });

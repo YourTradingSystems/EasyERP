@@ -1,9 +1,10 @@
 define([
     "text!templates/SourceOfApplicants/EditTemplate.html",
     "collections/SourceOfApplicants/SourceOfApplicantsCollection",
-    "custom"
+    "custom",
+    "common"
 ],
-    function (EditTemplate, SourceOfApplicantsCollection, Custom) {
+    function (EditTemplate, SourceOfApplicantsCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -50,7 +51,7 @@ define([
                     var currentModel = this.departmentsCollection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON() }));
                 }
-
+                common.contentHolderHeightFixer();
                 return this;
             }
 

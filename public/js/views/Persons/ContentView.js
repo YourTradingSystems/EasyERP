@@ -3,9 +3,10 @@ define([
     'text!templates/Persons/form/FormTemplate.html',
     'views/Persons/list/ListItemView',
     'views/Persons/thumbnails/ThumbnailsItemView',
-    'custom'
+    'custom',
+    'common'
 
-], function (ListTemplate, FormTemplate, ListItemView, ThumbnailsItemView, Custom) {
+], function (ListTemplate, FormTemplate, ListItemView, ThumbnailsItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -70,7 +71,7 @@ define([
                         break;
                     }
             }
-
+            common.contentHolderHeightFixer();
             return this;
         },
 

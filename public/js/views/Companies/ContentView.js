@@ -4,10 +4,11 @@ define([
     'collections/Companies/CompaniesCollection',
     'views/Companies/list/ListItemView',
     'views/Companies/thumbnails/ThumbnailsItemView',
-    'custom'
+    'custom',
+    'common'
 
 ],
-function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, ThumbnailsItemView, Custom) {
+function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, ThumbnailsItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -86,7 +87,8 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                         break;
                     }
             }
-
+            $(holder).append('<div class="clearfix"></div>');
+            common.contentHolderHeightFixer();
             return this;
 
         },

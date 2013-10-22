@@ -2,9 +2,10 @@ define([
     "text!templates/SourceOfApplicants/CreateTemplate.html",
     "collections/SourceOfApplicants/SourceOfApplicantsCollection",
     "models/SourceOfApplicantsModel",
-    "custom"
+    "custom",
+    'common'
 ],
-    function (CreateTemplate, SourceOfApplicantsCollection, SourceOfApplicantsModel, Custom) {
+    function (CreateTemplate, SourceOfApplicantsCollection, SourceOfApplicantsModel, Custom, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -44,6 +45,7 @@ define([
 
             render: function () {
                 this.$el.html(this.template());
+                common.contentHolderHeightFixer();
                 return this;
             }
 
