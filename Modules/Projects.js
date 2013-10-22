@@ -749,19 +749,28 @@ var Project = function (logWriter, mongoose) {
             query.exec(function (error, _tasks) {
                 if (error) {
                     console.log(error);
-                    logWriter.log("Project.js createTask tasks.find doc.length === 0" + error);
+                    logWriter.log("Project.js updateTask tasks.find doc.length === 0" + error);
                     res.send(500, { error: 'Task find error' });
                 } else {
-                    var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
-                    data.taskCount = n;
-                    console.log(data);
-                    tasks.update({ _id: _id }, data, function (err, taskk) {
+                    tasks.findById(_id, function (err, task) {
                         if (err) {
                             console.log(err);
-                            logWriter.log("Project.js updateTask tasks.update " + err);
-                            res.send(500, { error: "Can't update Task" });
+                            logWriter.log("Project.js updateTask tasks.findById " + err);
+                            res.send(500, { error: 'Task find error' });
                         } else {
-                            res.send(200, { success: 'JobPosition updated success' });
+                            if (!_tasks[0] || (task.project.id != data.project.id)) {
+                                var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+                                data.taskCount = n;
+                            }
+                            tasks.update({ _id: _id }, data, function (err, taskk) {
+                                if (err) {
+                                    console.log(err);
+                                    logWriter.log("Project.js updateTask tasks.update " + err);
+                                    res.send(500, { error: "Can't update Task" });
+                                } else {
+                                    res.send(200, { success: 'JobPosition updated success' });
+                                }
+                            });
                         }
                     });
                 }
