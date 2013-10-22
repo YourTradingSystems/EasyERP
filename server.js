@@ -367,6 +367,15 @@ app.get('/JobPosition', function (req, res) {
     requestHandler.getJobPosition(req, res, data);
 });
 
+app.get('/JobPosition/:_id', function (req, res) {
+    data = {};
+    data._id = req.params._id;
+    //data._id = req.param('_id');
+    console.log(data);
+    res.send(200, { success: 'ok' });
+    //requestHandler.getJobPosition(req, res, data);
+});
+
 app.put('/JobPosition/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

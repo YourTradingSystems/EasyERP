@@ -654,7 +654,7 @@ var Project = function (logWriter, mongoose) {
                             _task.assignedTo.id = data.assignedTo._id;
                         }
                         if (data.assignedTo.name) {
-                            _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.first;
+                            _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.last;
                         }
                     }
                     if (data.deadline) {
@@ -758,7 +758,7 @@ var Project = function (logWriter, mongoose) {
                             logWriter.log("Project.js updateTask tasks.findById " + err);
                             res.send(500, { error: 'Task find error' });
                         } else {
-                            if (!_tasks[0] || (task.project.id != data.project.id)) {
+                            if (!_tasks[0] || (!task || (task.project.id != data.project.id))) {
                                 var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
                                 data.taskCount = n;
                             }

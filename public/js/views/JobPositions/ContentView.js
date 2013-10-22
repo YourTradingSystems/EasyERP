@@ -59,6 +59,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             var currentModel = this.collection.models[itemIndex];
                             currentModel.off('change');
                             currentModel.on('change:workflow', _.bind(this.render, this));
+                            //currentModel.bind('change:workflow', this.fetchModel(currentModel), this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             var workflows = this.workflowsCollection.models;
 
@@ -81,6 +82,10 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
 
         },
 
+        fetchModel: function (model){
+            model.fetch();
+        },
+
         changeWorkflow: function (e) {
             var mid = 39;
             var breadcrumb = $(e.target).closest('li');
@@ -98,12 +103,12 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                 }
             };
 
-            model.set(ob);
-            model.save({}, {
+            //model.set(ob);
+            model.save(ob, {
                 headers: {
                     mid: mid
                 },
-                wait: true
+                waite: true
             });
 
         },
