@@ -1,9 +1,10 @@
 define([
     "text!templates/Profiles/CreateProfileTemplate.html",
     "models/ProfileModel",
-    "text!templates/Profiles/ModulesAccessListTemplate.html"
+    "text!templates/Profiles/ModulesAccessListTemplate.html",
+    "common"
 ],
-    function (CreateProfileTemplate, ProfileModel,  ModulesAccessTemplate) {
+    function (CreateProfileTemplate, ProfileModel,  ModulesAccessTemplate, common) {
         var CreateView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",

@@ -152,7 +152,7 @@ define([
                     if (!hash && App.projectId) {
                         hash = App.projectId
                     }
-                    if (projectId && (action === "Create" || action === "View" || action === "Edit")) {
+                    if (hash && (action === "Create" || action === "View" || action === "Edit")) {
                         url += "/" + hash
                     }
                    
