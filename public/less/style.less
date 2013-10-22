@@ -86,8 +86,9 @@ a:focus, *:focus {
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
 }
-.border-radius(@radius:4px) {
- -moz-border-radius: @radius;
+
+.border-radius(@radius: 4px) {
+    -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
     border-radius: @radius;
 }
@@ -879,30 +880,43 @@ input, textarea, select {
 }
 
 .thumbnailwithavatar {
-
     display: block;
     position: relative;
     float: left;
     width: 420px;
     margin-left: 7px;
     margin-top: 7px;
-    //border:@thin-border @taskBorderColor;
+    border:@thin-border transparent;
     .border-radius;
-    background:transparent !important;
+    background: transparent !important;
+    .title {
+                    color: #7c7bad !important;
+                }
     .inner {
         padding: 10px;
 
-        P {
-              font-family: @lucida-font;
-             .thumbnail-text;
-                 font-size:14px;
-                 line-height:20px;
-            margin-left:130px;
+        .info {
+            P {
+                font-family: @lucida-font;
+                //.thumbnail-text;
+                color: #000;
+                font-size: 12.5px;
+                font-weight: 200 !important;
+                line-height: 20px;
+                margin-left: 130px;
 
-            a {
-                word-break: break-all;
-                word-wrap: break-word;
+                a {
+                    word-break: break-all;
+                    text-decoration: none;
+                    word-wrap: break-word;
+                    color: #7c7bad;
+                }
+
+                
             }
+        }
+        &:hover{
+            
         }
     }
 
@@ -913,7 +927,7 @@ input, textarea, select {
         height: 120px;
         overflow: hidden;
         margin-bottom: 10px;
-              .border-radius(3px);
+        .border-radius(3px);
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -1134,15 +1148,17 @@ button {
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
 }
+
 .avatar-small {
-    display:block;
-    overflow:hidden;
-    width:32px;
-    height:32px;
-    margin:5px;
+    display: block;
+    overflow: hidden;
+    width: 32px;
+    height: 32px;
+    margin: 5px;
+
     img {
-        height:auto;
-        width:100%;
+        height: auto;
+        width: 100%;
     }
 }
 
