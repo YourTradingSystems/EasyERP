@@ -358,9 +358,10 @@ var Project = function (logWriter, mongoose) {
     var calculateTaskEndDate = function (startDate, estimated) {
         var iWeeks, iDateDiff, iAdjust = 0;
 
-        estimated // estimated in miliseconds
+        estimated = estimated * 1000 * 60 * 60;              // estimated in ticks
 
-        var endDate = new Date();
+        var endDate = startDate.getTime() + estimated;
+        endDate = new Date(endDate);
 
         if (endDate < startDate) return -1;                 // error code if dates transposed
 
