@@ -51,6 +51,9 @@ require.config({
 
 require(['app'], function (app) {
     app.initialize();
+    $.datepicker.setDefaults({
+        dateFormat:"dd-mm-yy"
+    });
 });
 
 
