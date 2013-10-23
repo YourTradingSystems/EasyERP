@@ -61,8 +61,8 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                         this.$el.html('');
                         var holder = this.$el;
                         var thumbnailsItemView;
-                        _.each(models, function (model) {                            
-                            var address = model.get('address');                      
+                        _.each(models, function (model) {
+                            var address = model.get('address');
                             if (address.city && address.country) {
                                 console.log(address.country);
                                 address.city = address.city + ", ";
@@ -101,7 +101,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
         },
 
         checked: function () {
-            if(this.companiesCollection.length> 0){
+            if (this.companiesCollection.length > 0) {
                 if ($("input:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else
@@ -150,7 +150,6 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -161,14 +160,10 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Companies/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Companies", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Companies", { trigger: true });
         }
     });
 

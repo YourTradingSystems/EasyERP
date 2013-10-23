@@ -15,7 +15,6 @@ define([
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
-                this.companyCollection = options.collection;
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
@@ -35,10 +34,6 @@ define([
                 }
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
-            },
-
-            close: function () {
-                this._modelBinder.unbind();
             },
 
             saveItem: function () {
@@ -132,6 +127,7 @@ define([
                 }));
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
                 common.contentHolderHeightFixer();
+                $('#date').datepicker();
                 return this;
             }
 

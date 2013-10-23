@@ -142,6 +142,9 @@ define([
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
                     workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
                 }));
+                $('#deadline').datepicker();
+                $('#StartDate').datepicker();
+                $('#EndDate').datepicker();
                 common.contentHolderHeightFixer();
                 return this;
             }

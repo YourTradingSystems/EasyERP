@@ -43,13 +43,17 @@ require.config({
         common: 'common'
     },
     shim: {
+        'jqueryui': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less']
+        'app': ['Backbone', 'less', 'jqueryui']
     }
 });
 
 require(['app'], function (app) {
     app.initialize();
+    $.datepicker.setDefaults({
+        //dateFormat:"dd/mm/yy"
+    });
 });
 
 

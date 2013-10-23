@@ -21,7 +21,7 @@ define([
                 "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
-                "click .application-content": "gotoForm",
+                "click .opportunity-content": "gotoForm",
                 "click #edit": "gotoEditForm"
             },
 
@@ -29,7 +29,7 @@ define([
 
             gotoEditForm: function (e) {
                 e.preventDefault();
-                var itemIndex = $(e.target).closest(".opporunity").data("index") + 1;
+                var itemIndex = $(e.target).closest(".opportunity").data("index") + 1;
                 window.location.hash = "#home/action-Opportunities/Edit/" + itemIndex;
             },
 
@@ -67,6 +67,7 @@ define([
 
             render: function () {
                 this.$el.html(this.template(this.model.toJSON()));
+                console.log(this.model);
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 common.contentHolderHeightFixer();

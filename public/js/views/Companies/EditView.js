@@ -160,6 +160,7 @@ define([
                 }
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
                 common.contentHolderHeightFixer();
+                $('#date').datepicker();
                 return this;
             }
 

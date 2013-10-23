@@ -228,6 +228,12 @@ define([
                 };
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
                 common.contentHolderHeightFixer();
+                $('#dateBirth').datepicker({
+                    changeMonth : true,
+                    changeYear : true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-1d'
+                });
                 return this;
             }
 

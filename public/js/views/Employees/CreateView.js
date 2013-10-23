@@ -60,10 +60,6 @@ define([
                 this.$(".tab").hide().eq(index).show();
             },
 
-            close: function () {
-                this._modelBinder.unbind();
-            },
-
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -176,6 +172,12 @@ define([
                 }));
                 common.canvasDraw({ model: employeeModel.toJSON() }, this);
                 common.contentHolderHeightFixer();
+                $('#dateBirth').datepicker({
+                    changeMonth : true,
+                    changeYear : true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-1d'
+                });
                 return this;
             }
 

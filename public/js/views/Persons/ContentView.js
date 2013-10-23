@@ -75,7 +75,7 @@ define([
             return this;
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -123,7 +123,6 @@ define([
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -134,14 +133,10 @@ define([
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Persons/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Persons", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Persons", { trigger: true });
         }
     });
 

@@ -302,7 +302,6 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -313,14 +312,10 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Applications/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Applications/form/0", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Applications", { trigger: true });
         }
     });
 

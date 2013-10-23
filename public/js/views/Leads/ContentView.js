@@ -152,10 +152,9 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
             }
             common.contentHolderHeightFixer();
             return this;
-
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -187,7 +186,6 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -198,14 +196,10 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Leads/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Leads", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Leads", { trigger: true });
 
         }
     });

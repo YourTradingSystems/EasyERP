@@ -22,6 +22,7 @@ var Persons = function (logWriter, mongoose) {
         },
         website: { type: String, default: '' },
         jobPosition: { type: String, default: '' },
+        skype: { type: String, default: '' },
         phones: {
             phone: { type: String, default: '' },
             mobile: { type: String, default: '' },
@@ -133,6 +134,9 @@ var Persons = function (logWriter, mongoose) {
                         }
                         if (data.jobPosition) {
                             _person.jobPosition = data.jobPosition;
+                        }
+                        if (data.skype) {
+                            _person.skype = data.skype;
                         }
                         if (data.phones) {
                             if (data.phones.phone) {

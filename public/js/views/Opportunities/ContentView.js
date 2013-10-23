@@ -62,11 +62,11 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             console.log('Render Opportunities View');
             var viewType = Custom.getCurrentVT();
             var mid = 39;
+            var workflows = this.workflowsCollection.models;
             switch (viewType) {
                 case "kanban":
                     {
                         this.$el.html(_.template(KanbanTemplate));
-                        var workflows = this.workflowsCollection.models;
 
                         _.each(workflows, function (workflow, index) {
                             $("<div class='column' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
@@ -130,7 +130,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
-                            var workflows = this.workflowsCollection.models;
+                            
                             _.each(workflows, function (workflow, index) {
                                 $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
                                 if (index == workflows.length - 1)
@@ -349,7 +349,6 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -360,14 +359,10 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Opportunities", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Opportunities", { trigger: true });
         }
     });
 

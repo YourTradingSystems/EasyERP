@@ -29,16 +29,33 @@
                 if (today < birthday) {
                     years--;
                 }
-                return years;
+
+                return (years < 0) ? '' : '(Age: ' + years + ')';
             },
-            
+
             getDaysToBirthday: function (birthday) {
                 var today = new Date(),
-                    days;
+                    days,
+                    firstDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1),
+                    lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0),
+                    todayDate = today.getDate(),
+                    birthdayDate = birthday.getDate();
+
                 if (birthday.getMonth() > today.getMonth()) {
-                    days = Math.round(Math.round(parseFloat((birthday - today) / (1000 * 60 * 60 * 24)) * 10) / 10);
-                } else {
-                    days = birthday.getDate() - today.getDate();
+                    days = (lastDayOfMonth.getDate() - todayDate);
+                    if (birthday.getMonth() == today.getMonth() + 1) {
+                        days += (birthdayDate - firstDayOfNextMonth.getDate()) + 1;
+                    }
+                    else {
+                        var lastDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+                        days += (lastDayOfNextMonth.getDate() - firstDayOfNextMonth.getDate()) + 1;
+                        var firstDayOfNextNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1);
+                        days += (birthdayDate - firstDayOfNextNextMonth.getDate()) + 1;
+                    }
+                }
+
+                else {
+                    days = birthdayDate - todayDate;
                 }
                 return days;
             },
@@ -52,7 +69,7 @@
                 var age = this.getAge(new Date(dateBirth));
                 var daysToBirthday = this.getDaysToBirthday(new Date(dateBirth));
                 this.$el.html(this.template({ model: this.model.toJSON(), age: age, dateBirth: dateBirth, daysToBirthday: daysToBirthday }));
-                    return this;
+                return this;
             }
         });
 
