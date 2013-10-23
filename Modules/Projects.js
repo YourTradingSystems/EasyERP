@@ -58,9 +58,9 @@ var Project = function (logWriter, mongoose) {
                 id: { type: String, default: '' },
                 name: { type: String, default: '' }
             },
-            StartDate: {type: Date, default: Date.now},
-            EndDate: Date,
-            duration: Number
+            StartDate: { type: Date, default: Date.now },
+            EndDate: { type: Date, default: Date.now },
+            duration: {type: Number, default: 0}
         },
         workflow: {
             name: { type: String, default: 'Analysis' },
@@ -363,29 +363,43 @@ var Project = function (logWriter, mongoose) {
         var endDate = startDate.getTime() + estimated;
         endDate = new Date(endDate);
 
+        console.log(startDate);
+        console.log(endDate);
+
         if (endDate < startDate) return -1;                 // error code if dates transposed
 
         var iWeekday1 = startDate.getDay();                // day of week
         var iWeekday2 = endDate.getDay();
+
+        console.log('iWeekday1 ' + iWeekday1);
+        console.log('iWeekday2 ' + iWeekday2);
 
         iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1;   // change Sunday from 0 to 7
         iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
 
         if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1;  // adjustment if both days on weekend
 
-        iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1;    // only count weekdays
-        iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
-
+        iWeekday1 = (iWeekday1 <= 5) ? 0 : 1;    // only count weekdays
+        iWeekday2 = (iWeekday2 <= 5) ? 0 : 1;
+        console.log('iWeekday1 ' + iWeekday1);
+        console.log('iWeekday2 ' + iWeekday2);
         // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
         iWeeks = Math.floor((endDate.getTime() - startDate.getTime()) / 604800000)
+        console.log(iWeeks);
 
         if (iWeekday1 <= iWeekday2) {
-            iDateDiff = (iWeeks * 2) + (iWeekday2 - iWeekday1)
+            iDateDiff = (iWeeks * 2) + 2 * (iWeekday2 - iWeekday1);
         } else {
-            iDateDiff = ((iWeeks + 1) * 2) - (iWeekday1 - iWeekday2)
+            iDateDiff = (iWeeks * 2) + 2 * (iWeekday1 - iWeekday2);
         }
 
-        iDateDiff -= iAdjust                            // take into account both days on weekend
+
+        //iDateDiff++;
+        console.log(iAdjust);
+        console.log(iDateDiff);
+        iDateDiff = iDateDiff * 1000 * 60 * 60 * 24;
+        endDate = endDate.getTime() + iDateDiff;
+        endDate = new Date(endDate);
 
         return endDate;
     };
@@ -647,7 +661,6 @@ var Project = function (logWriter, mongoose) {
 
     function createTask(data, res) {
         try {
-            console.log(data);
             if (!data.summary || (!data.project || !data.project._id)) {
                 logWriter.log('Task.create Incorrect Incoming Data');
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
@@ -703,7 +716,7 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.extrainfo) {
                         if (data.extrainfo.priority) {
-                            _task.extrainfo.priority = data.extrainfo.priority;
+                            _task.extrainfo.priority = data.extrainfo.priority.priority;
                         }
                         if (data.extrainfo.sequence) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
@@ -718,13 +731,11 @@ var Project = function (logWriter, mongoose) {
                         }
                         if (data.extrainfo.StartDate) {
                             _task.extrainfo.StartDate = data.extrainfo.StartDate;
+                            if (!data.estimated) _task.extrainfo.EndDate = data.extrainfo.StartDate;
                         }
-                        if (data.extrainfo.EndDate) {
-                            _task.extrainfo.EndDate = data.extrainfo.EndDate;
-                        }
-                        if (data.extrainfo.StartDate) {
-                            _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-                        }
+                        //if (data.extrainfo.StartDate) {
+                        //    _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+                        //}
                     }
                     if (data.workflow) {
                         if (data.workflow.name) {
@@ -736,6 +747,9 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.estimated) {
                         _task.estimated = data.estimated;
+                        var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
+                        _task.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
+                        _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
                     }
                     if (data.logged) {
                         _task.logged = data.logged;
@@ -777,6 +791,9 @@ var Project = function (logWriter, mongoose) {
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
             data.progress = Math.round((data.logged / data.estimated) * 100);
+            var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
+            data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
+            data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         }
         if (data.project && data.project.id) {
             var query = tasks.find({ 'project.id': data.project.id });
