@@ -43,8 +43,9 @@ require.config({
         common: 'common'
     },
     shim: {
+        'jqueryui': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less']
+        'app': ['Backbone', 'less', 'jqueryui']
     }
 });
 
