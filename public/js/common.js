@@ -15,7 +15,7 @@
 
         });
         jQuery(window).resize(function () {
-            var h = $(window).height;
+            var h = $(window).height();
             var hFixed = h - 100;
             $('#content-holder').css('min-height', hFixed + 'px');
         });
