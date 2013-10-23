@@ -24,7 +24,7 @@ define([
             render: function() {
                 console.log('Render Main View');
                 this.$el.html(MainTemplate);
-               
+
                 return this;
             }
         });
