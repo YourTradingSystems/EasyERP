@@ -46,6 +46,7 @@ define([
                     },
                     website: $('#websiteInput').val(),
                     jobPosition: $('#jobPositionInput').val(),
+                    skype: $('#skype').val(),
                     phones: {
                         phone: $('#phoneInput').val(),
                         mobile: $('#mobileInput').val(),

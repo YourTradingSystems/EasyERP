@@ -59,19 +59,19 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                         this.$el.html('');
                         var holder = this.$el,
                             thumbnailsItemView;
-                       
-                       
+
+
                         _.each(models, function (model) {
                             var dateBirth = new Date(model.get("dateBirth"));
                             var today = new Date;
                             var age = today.getFullYear() - dateBirth.getFullYear();
                             if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
-                            model.set({ age: age }, {silent: true});
+                            model.set({ age: age }, { silent: true });
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             var relatedUser = model.get("relatedUser");
-                            var login = relatedUser.login;                          
-                            if (login) {                               
+                            var login = relatedUser.login;
+                            if (login) {
                                 var _login = "(" + login + ")";
                                 relatedUser.login = _login;
                                 model.set({ relatedUser: relatedUser }, { silent: true });
@@ -79,16 +79,16 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                             //var dateBirth =new Date(model.get("dateBirth"));                            
                             //var today = new Date;
                             //var age = today.getFullYear() - dateBirth.getFullYear();
-                            if(today.getMonth()<dateBirth.getMonth() || (today.getMonth()==dateBirth.getMonth() && today.getDate()<dateBirth.getDate())){age--;}
-                   
+                            if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
+
                             if (dateBirth) {
                                 model.set({ dateBirth: dateBirth.format("dd/mm/yyyy") }, { silent: true });
                             }
                             $(holder).append(thumbnailsItemView.render().el);
-                            
+
                         }, this);
                         break;
-                      
+
                     }
                 case "form":
                     {
@@ -118,7 +118,7 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
 
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -165,7 +165,6 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -176,14 +175,10 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Employees/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Employees", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Employees", { trigger: true });
         }
     });
 

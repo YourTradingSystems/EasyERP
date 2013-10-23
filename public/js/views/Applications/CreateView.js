@@ -7,10 +7,9 @@ define([
     "collections/Degrees/DegreesCollection",
     "collections/SourceOfApplicants/SourceOfApplicantsCollection",
     "models/ApplicationModel",
-    "common",
-    "custom"
+    "common"
 ],
-    function (CreateTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, ApplicationModel, common, Custom) {
+    function (CreateTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, ApplicationModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -44,6 +43,7 @@ define([
 
             isEmployee: function (e) {
                 $(e.target).addClass("pressed");
+                this.saveItem();
             },
 
             switchTab: function (e) {
@@ -64,6 +64,7 @@ define([
 
                 if (this.$("#hire>span").hasClass("pressed")) {
                     isEmployee = true;
+                    self.contentType = "Employees";
                 }
                 var applicationModel = new ApplicationModel();
 

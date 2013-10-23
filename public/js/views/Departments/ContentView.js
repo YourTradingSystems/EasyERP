@@ -95,7 +95,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -106,14 +105,10 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Departments/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Departments", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Departments", { trigger: true });
         }
     });
 

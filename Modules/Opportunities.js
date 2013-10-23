@@ -95,7 +95,7 @@ var Opportunities = function (logWriter, mongoose) {
                             _opportunitie.customer.id = data.customer._id;
                         }
                         if (data.customer.name) {
-                            _opportunitie.customer.name = data.customer.name;
+                            _opportunitie.customer.name = data.customer.name.first + " " + data.customer.name.last;
                         }
                     }
                     if (data.email) {

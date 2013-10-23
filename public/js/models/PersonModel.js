@@ -21,6 +21,7 @@ define(function () {
             },
             website: "",
             jobPosition: "",
+            skype: "",
             phones: {
                 phone: "",
                 mobile: "",

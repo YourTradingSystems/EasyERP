@@ -38,7 +38,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                             this.collection.each(function (model) {
                                 table.append(new ListItemView({ model: model }).render().el);
                             });
-                        }else {
+                        } else {
                             this.$el.html('<h2>No projects found</h2>');
                         }
 
@@ -86,6 +86,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
 
                             _.each(workflows, function (workflow, i) {
                                 var breadcrumb = this.$(".breadcrumb li").eq(i);
+
                                 if (currentModel.get("workflow").name === breadcrumb.data("name")) {
                                     breadcrumb.find("a").addClass("active");
                                 }
@@ -130,7 +131,6 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                 headers: {
                     mid: mid
                 }
-
             });
 
         },
@@ -156,6 +156,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                                 headers: {
                                     mid: mid
                                 }
+
                             },
                                 { wait: true }
                             );
@@ -179,10 +180,10 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                         });
                         break;
                     }
+
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        var itemIndex = this.collection.indexOf(model);
                         model.on('change', this.render, this);
                         model.destroy({
                             headers: {
@@ -193,14 +194,10 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
 
                         );
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Projects/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Projects", { trigger: true });
-                        }
                         break;
                     }
             }
+            Backbone.history.navigate("#home/content-Projects", { trigger: true });
         }
     });
 
