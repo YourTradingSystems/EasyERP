@@ -61,7 +61,14 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                         this.$el.html('');
                         var holder = this.$el;
                         var thumbnailsItemView;
-                        _.each(models, function (model) {
+                        _.each(models, function (model) {                            
+                            var address = model.get('address');                      
+                            if (address.city && address.country) {
+                                console.log(address.country);
+                                address.city = address.city + ", ";
+                                console.log(address.city);
+                                model.set({ address: address }, { silent: true });
+                            }
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);

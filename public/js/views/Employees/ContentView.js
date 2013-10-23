@@ -75,10 +75,7 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                                 var _login = "(" + login + ")";
                                 relatedUser.login = _login;
                                 model.set({ relatedUser: relatedUser }, { silent: true });
-                            }
-                            //var dateBirth =new Date(model.get("dateBirth"));                            
-                            //var today = new Date;
-                            //var age = today.getFullYear() - dateBirth.getFullYear();
+                            }                            
                             if(today.getMonth()<dateBirth.getMonth() || (today.getMonth()==dateBirth.getMonth() && today.getDate()<dateBirth.getDate())){age--;}
                    
                             if (dateBirth) {
