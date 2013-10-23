@@ -1,6 +1,7 @@
 var Leads = function (logWriter, mongoose) {
 
     var leadsSchema = mongoose.Schema({
+        isOpportunitie: {type: Boolean, default: false},
         name: { type: String, default: 'New Lead' },
         creationDate: { type: Date, default: Date.now },
         company: {

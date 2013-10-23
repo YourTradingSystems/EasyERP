@@ -547,7 +547,8 @@ app.post('/Leads', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
     data.lead = req.body;
-    requestHandler.createLead(req, res, data);
+    //requestHandler.createLead(req, res, data);
+    requestHandler.createOpportunitie(req, res, data);
 });
 
 app.put('/Leads/:_id', function (req, res) {
