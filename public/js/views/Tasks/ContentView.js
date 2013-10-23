@@ -46,7 +46,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             "click .fold": "foldUnfoldColumn",
             "click .form p > a": "gotoProjectForm",
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
-            "click #tabList a": "switchTab",
+            "click #tabList a": "switchTab"
         },
 
         switchTab: function (e) {
@@ -359,10 +359,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                            { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');

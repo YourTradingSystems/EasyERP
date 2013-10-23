@@ -8,6 +8,7 @@ define([
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
+            actionType:"Content",
             initialize: function (options) {
                 this.profilesCollection = options.collection;
                 this.profilesCollection.bind('reset', _.bind(this.render, this));
@@ -79,9 +80,9 @@ define([
                 this.modulesView.render();
             },
             render: function () {
-                var viewType = Custom.getCurrentVT();
                 this.$el.html(_.template(ProfileListTemplate,
-                    { profilesCollection:this.profilesCollection
+                    { profilesCollection:this.profilesCollection,
+                        contentType: this.contentType
                     }));
                 common.contentHolderHeightFixer();
                 return this;

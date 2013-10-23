@@ -1,10 +1,13 @@
 <h3><%=contentType%></h3>
 <div id="createBtnHolder">
     <a href="#home/action-<%=contentType%>/Create" class="btn  red"  id="top-bar-createBtn">Create</a>
-    <button class="btn" id="top-bar-editBtn">Edit</button>
-    <!--<a href="#home/action-<%=contentType%>/Edit" class="btn"  id="top-bar-editBtn">Edit</a>-->
-    <a href="#" class="btn"  id="top-bar-deleteBtn">Delete</a>
+    <input type="button" class="btn" id="top-bar-editBtn" value="Edit"/>
+    <input type="button" value="Rename" id="top-bar-renameBtn" class="btn"/>
+    <input type="button" value="Delete" id="top-bar-deleteBtn" class="btn"/>
+
 </div>
 <div id="saveDiscardHolder">
-    <button id="top-bar-saveBtn" >Save</button> or <button id="top-bar-discardBtn">Discard</button>
+    <input type="button" value="Next" id="top-bar-nextBtn" class="btn"/>
+    <button id="top-bar-saveBtn">Save</button> or <button id="top-bar-discardBtn">Discard</button>
 </div>
+

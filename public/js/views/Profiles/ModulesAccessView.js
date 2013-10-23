@@ -1,30 +1,32 @@
 define([
-    "text!templates/Profiles/ModulesAccessListTemplate.html",
-    'common'
+    "text!templates/Profiles/ModulesAccessListTemplate.html"
 ],
-    function (ModulesAccessTemplate, common) {
+    function (ModulesAccessTemplate) {
         var ViewName = Backbone.View.extend({
-            el: "#modulesContent",
+            el: "#content-holder",
             template: _.template(ModulesAccessTemplate),
             initialize: function (options) {
                 this.action = options.action;
                 this.profilesCollection = options.profilesCollection;
-                this.selectedProfile = options.profileName;
                 this.render();
             },
             filterCollection:function(){
-                this.profile = this.profilesCollection.findWhere({profileName:this.selectedProfile});
+                this.profile = this.profilesCollection.get('5264f88d22be433c0b000003');
                 if(!this.profile)
                     throw new Error("No profile found after filter: ModulesTableView -> filterCollection");
             },
             render: function () {
                 this.filterCollection();
+                this.$el.html(
+                    this.template({
+                            profile:this.profile.toJSON()
+                        }));
                 this.$el.html(this.template({ profile: this.profile, action: this.action }));
                 common.contentHolderHeightFixer();
                 return this;
             }
 
-        });
+    });
 
         return ViewName;
     });

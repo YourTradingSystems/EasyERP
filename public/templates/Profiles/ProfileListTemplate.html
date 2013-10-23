@@ -1,9 +1,29 @@
+    <div>
+        <table >
+            <thead>
+                <tr>
+                    <td>Tools</td>
+                    <td>Profile Name</td>
+                    <td>Description</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% profilesCollection.each(function(profile){ %>
+                    <tr>
+                        <td></td>
+                        <td><a href="#home/action-<%=contentType%>/View/<%= profile.get('_id')%> "><%= profile.get('profileName') %> Profile</a> </td>
+                        <td><%= profile.get('profileDescription') %> </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
 
-   <select id="companiesList" size="3">
+<!--<select id="companiesList" size="3">
        <% profilesCollection.each(function(profile){ %>
             <option class='profile'> <%= profile.get('profileName') %>  </option>
        <% }) %>
    </select>
 
-   <div id="modulesContent"></div>
+   <div id="modulesContent"></div>-->
 

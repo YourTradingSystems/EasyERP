@@ -90,8 +90,11 @@ define([
                     var contentView = new ContentView({ collection: contentCollection });
                     var topBarView = new TopBarView({ actionType: "Content" });
                     if(contentType == "Profiles")
+                    {
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                         topBarView.bind('saveEvent', contentView.saveItem, contentView);
+                        topBarView.bind('deleteEvent', contentView.deleteItem, contentView);
+                    }
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                    
@@ -100,7 +103,6 @@ define([
                     
                     Backbone.history.navigate(url, { replace: true });
                 }
-
             });
 
         },
@@ -116,7 +118,7 @@ define([
                 }
             }
             if (this.mainView == null) this.main();
-            var actionVariants = ["Create", "Edit"];
+            var actionVariants = ["Create", "Edit", "View"];
 
             if ($.inArray(action, actionVariants) == -1) {
                 action = "Create";
@@ -144,21 +146,27 @@ define([
 
                     var url = "#home/action-" + contentType + "/" + action;
 
-                    if (action === "Edit") {
+                    if (action === "Edit" && contentType != "Profiles") {
                         url += "/" + itemIndex;
                     }
                     if (!hash && App.projectId) {
                         hash = App.projectId
                     }
-                    if (hash && (action === "Create") || (action === "Edit")) {
+                    if (hash && (action === "Create" || action === "View" || action === "Edit")) {
                         url += "/" + hash
                     }
+                   
                     Backbone.history.navigate(url, { replace: true });
 
                     var topBarView = new TopBarView({ actionType: action}),
                         actionView = new ActionView({ collection: contentCollection, pId: hash });
 
                     topBarView.bind('saveEvent', actionView.saveItem, actionView);
+                    if(contentType == "Profiles")
+                    {
+                        topBarView.bind('nextEvent', actionView.nextForm, actionView);
+                        topBarView.bind('deleteEvent', actionView.deleteItem, actionView);
+                    }
 
                     this.changeView(actionView);
                     this.changeTopBarView(topBarView);
