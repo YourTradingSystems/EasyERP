@@ -89,13 +89,7 @@ define([
                     
                     var contentView = new ContentView({ collection: contentCollection });
                     var topBarView = new TopBarView({ actionType: "Content" });
-                    if(contentType == "Profiles")
-                    {
-                        topBarView.bind('editEvent', contentView.editItem, contentView);
-                        topBarView.bind('saveEvent', contentView.saveItem, contentView);
-                        topBarView.bind('deleteEvent', contentView.deleteItem, contentView);
-                    }
-
+                    
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                    
                     this.changeView(contentView);

@@ -189,9 +189,9 @@
                     if ($.trim(estimated) == "") {
                         estimated = 0;
                     }
-                    var loged = $("#loged").val();
+                    var logged = $("#loged").val();
                     if ($.trim(loged) == "") {
-                        loged = 0;
+                        logged = 0;
                     }
                     
                     var idPriority = this.$("#priority option:selected").val();
@@ -218,7 +218,7 @@
                             EndDate: EndDate
                         },
                         estimated: estimated,
-                        loged: loged
+                        logged: logged
                     });
                     currentModel.save({}, {
                         headers: {

@@ -85,9 +85,9 @@
                         <div class="half-block left">
                             <p>
                                 <select id="priority">
-                                    <option value="<%=model.extrainfo.priority%>">Select...</option>
+                                    <option value="<%=model.extrainfo.priority._id%>">Select...</option>
                                     <% priorityCollection.each(function(option){ %>
-                                    <option value="<%= option.get('priority') %>" <%= (option.get('priority') == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.get('priority') %></option>
+                                    <option value="<%= option.get('_id') %>" <%= (option.get('priority') == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.get('priority') %></option>
                                     <% }); %>
                                 </select> 
                             </p>
@@ -135,7 +135,7 @@
                                 </select>
                             </p>
                             <p>
-                                <input type="text" name="loged" id="loged" value="<%=model.loged%>"/>
+                                <input type="text" name="loged" id="loged" value="<%=model.logged%>"/>
                             </p>
                             <p>
                                  <input type="text" name="loged" id="estimated" value="<%=model.estimated%>" />
