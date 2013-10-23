@@ -246,6 +246,7 @@
                 };
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
                 common.contentHolderHeightFixer();
+                $('#nextAction').datepicker();
                 return this;
             }
 

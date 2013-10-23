@@ -172,7 +172,12 @@ define([
                 }));
                 common.canvasDraw({ model: employeeModel.toJSON() }, this);
                 common.contentHolderHeightFixer();
-                $('#dateBirth').datepicker();
+                $('#dateBirth').datepicker({
+                    changeMonth : true,
+                    changeYear : true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-1d'
+                });
                 return this;
             }
 
