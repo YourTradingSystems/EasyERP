@@ -6,103 +6,170 @@
 </div>
 <div class="form-holder">
     <form class="form" id="leadForm" data-id="<%=_id%>">
-        <h2><%=name%></h2>
-        <h2><%=expectedRevenue.value%> <%=expectedRevenue.currency%> at <%=expectedRevenue.progress%>%</h2>
+        <div class="inner">
+            <h2><%=name%></h2>
+            <h2><%=expectedRevenue.value%> <%=expectedRevenue.currency%> at <%=expectedRevenue.progress%>%</h2>
+            <div class="half-block left">
+                <div class="half-block left">
+                    <p>
+                        <label>Email</label>                        
+                    </p>
+                    <p>
+                        <label>Phone</label>                        
+                    </p>
+                    <p>
+                        <label>Salesperson</label>                       
+                    </p>
+                    <p>
+                        <label>Sales Team</label>                       
+                    </p>
+                </div>
+                <div class="half-block left">
+                    <p><span><%=email%></span></p>
+                    <p><span><%=phones.phone%></span></p>
+                    <p><span><%=salesPerson.name%></span></p>
+                    <p><span><%=salesTeam.name%></span></p>
+                </div>
+            </div>
+           <div class="half-block left">
+               <div class="half-block left">
+                   <p>
+                       <label>Next Action</label>
+                       
+                   </p>
+                   <p>
+                       <label>Expected Closing</label>
+                       
+                   </p>
+                   <p>
+                       <label>Priority</label>
+                      
+                   </p>
+                   <p>
+                       <label>Categories</label>
+                   </p>
+               </div>
+               <div class="half-block left">
+                   <p>
+                       <span><%=nextAction.date%> - <%=nextAction.desc%></span>
+                   </p>
+                   <p>
+                       <span><%=expectedClosing%></span>
+                   </p>
+                   <p>
+                       <span><%=priority%></span>
+                   </p>
+                   <p>
 
-        <p>
-            <label>Email</label>
-            <span><%=email%></span>
-        </p>
-        <p>
-            <label>Phone</label>
-            <span><%=phones.phone%></span>
-        </p>
-        <p>
-            <label>Salesperson</label>
-            <span><%=salesPerson.name%></span>
-        </p>
-        <p>
-            <label>Sales Team</label>
-            <span><%=salesTeam.name%></span>
-        </p>
-        <p>
-            <label>Next Action</label>
-            <span><%=nextAction.date%> - <%=nextAction.desc%></span>
-        </p>
-        <p>
-            <label>Expected Closing</label>
-            <span><%=expectedClosing%></span>
-        </p>
-        <p>
-            <label>Priority</label>
-            <span><%=priority%></span>
-        </p>
-        <p>
-            <label>Categories</label>
-        </p>
+                   </p>
+               </div> 
+           </div>          
+           <div class="clearfix"></div>
+        </div>
         <div id="tabs">
             <div>
-                <ul id="tabList">
+                <ul id="tabList" class="inner">
                     <li>
                         <a href="#" class="selected">Internal Notes</a></li>
                     <li>
                         <a href="#">Lead</a></li>
                 </ul>
+                <br/>
             </div>
             <div class="tab">
                 <textarea id="internalNotes"><%=internalNotes%></textarea>
             </div>
             <div class="tab">
-                <p>
-                    <label>Customer Name</label>
-                    <span><%=contactName.first%> <%=contactName.last%></span>>
-                </p>
-                <p>
-                    <label>Address</label>
-                    <span><%=address.street%></span>
-                    <span><%=address.city%></span>
-                    <span><%=address.state%></span>
-                    <span><%=address.zip%></span>
-                    <span><%=address.country%></span>
-                </p>
-                <p>
-                    <label>Contact Name</label>
-                    <span><%=contactName.first%> <%=contactName.last%></span>
-                </p>
-                <p>
-                    <label>Function</label>
-                    <span><%=func%></span>
-                </p>
-                <p>
-                    <label>Mobile</label>
-                    <span><%=phones.mobile%></span>
-                </p>
-                <p>
-                    <label>Fax</label>
-                    <span><%=phones.fax%></span>
-                </p>
-                <h3>Misc</h3>
-                <p>
-                    <label>Active</label>
-                    <input type="checkbox" <%= (active)? checked='checked':''%> id="active" />
-                </p>
-                <p>
-                    <label>Days To Open</label>
-                    <span>0.00</span>
-                </p>
-                <p>
-                    <label>Days To Close</label>
-                    <span>0.00</span>
-                </p>
-                <p>
-                    <label>Referred By</label>
-                    <span><%=reffered%></span>
-                </p>
-                <h3>Mailings</h3>
-                <p>
-                    <label>Opt-Out</label>
-                    <input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" />
-                </p>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p>
+                            <label>Customer Name</label>
+                        </p>
+                        <p>
+                            <label>Address</label>
+                        </p>
+                        <p><label></label></p>
+                        <p><label></label></p>
+                        <p><label></label></p>
+                        <p><label></label></p>
+                     
+                    </div>
+                    <div class="half-block left">
+                        <p><span><%=contactName.first%> <%=contactName.last%></span></p>
+                        <p><span><%=address.street%></span></p>
+                        <p><span><%=address.city%></span></p>
+                        <p><span><%=address.state%></span></p>
+                        <p>
+                            <span><%=address.zip%></span>
+                        </p>
+                        <p>
+                            <span><%=address.country%></span>
+                        </p>                     
+                       
+                    </div>
+                </div>
+             
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p><label>Contact Name</label></p>
+                        <p>
+                            <label>Function</label>
+                        </p>
+                        <p>
+                            <label>Mobile</label>
+                        </p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                    </div>
+                    <div class="half-block left">
+                        <p>
+                            <span><%=contactName.first%> <%=contactName.last%></span>
+                        </p>
+                        <p><span><%=func%></span></p>
+                        <p><span><%=phones.mobile%></span></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="half-block left">
+                    <h3>Mailings</h3>
+                    <div class="half-block left">
+                        <p>
+                            <label>Opt-Out</label>
+
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p><input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" /></p>
+                    </div>
+                </div>               
+                <div class="half-block left">
+                    <h3>Misc</h3>
+                    <div class="half-block left">
+                        <p>
+                            <label>Active</label>
+                        </p>
+                        <p>
+                            <label>Days To Open</label>
+                        </p>
+                        <p>
+                            <label>Days To Close</label>
+                        </p>
+                        <p>
+                            <label>Referred By</label>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p><input type="checkbox" <%= (active)? checked='checked':''%> id="active" /></p>
+                        <p><span>0.00</span></p>
+                        <p><span>0.00</span></p>
+                        <p><span><%=reffered%></span></p>
+                    </div>
+                </div>
+                
+               <div class="clearfix"></div> 
             </div>
         </div>
     </form>

@@ -135,39 +135,44 @@
                 <textarea><%=internalNotes%></textarea>
             </div>
             <div class="tab">
-
                 <div class="half-block left">
                     <h3>Categorization</h3>
                     <div class="half-block left">
                         <p>
                             <label>Status</label>                          
-                        </p>
-
-                        <p>
-                            <label>Active</label>                            
-                        </p>
-                        <p>   
-                            <label>Referred By</label>                           
-                        </p>
+                        </p>                      
                     </div>
                     <div class="half-block left">
                         <p><span><%=workflow.status%></span></p>
-                        <p><span><input type="checkbox" <%= (active)? checked='checked':''%> id="active" disabled /></span></p>
-                        <p><span><%=reffered%></span></p>
+                      
                      </div>
                 </div>
                 <div class="half-block left">
                     <h3>Mailings</h3>
                     <div class="half-block left">
                         <p>
-                            <label>Opt-Out</label>
-                          
+                            <label>Opt-Out</label>                          
                         </p>
                     </div>
                     <div class="half-block left">
                         <p>
                             <input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" disabled />
                         </p>
+                    </div>
+                </div>
+                <div class="half-block left">
+                    <h3>Misc</h3>
+                    <div class="half-block left">
+                        <p>
+                            <label>Active</label>
+                        </p>
+                        <p>
+                            <label>Referred By</label>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p><span><input type="checkbox" <%= (active)? checked='checked':''%> id="active" disabled /></span></p>
+                        <p><span><%=reffered%></span></p>
                     </div>
                 </div>
               <div class="clearfix"></div>
