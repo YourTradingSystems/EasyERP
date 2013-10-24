@@ -171,13 +171,13 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = self.collection.get(checkbox.value);
-                            model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                            model.destroy(
+                               {
+                                   headers: {
+                                       mid: mid
+                                   },
+                                   wait: true
+                               });
                         });
 
                         this.collection.trigger('reset');
@@ -190,17 +190,15 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Leads", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Leads", { trigger: true });
-
         }
     });
 

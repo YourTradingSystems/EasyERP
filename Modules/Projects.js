@@ -743,7 +743,7 @@ var Project = function (logWriter, mongoose) {
 
                         var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
                         _task.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
-                        _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+                        _task.extrainfo.duration = returnDuration(StartDate, _task.extrainfo.EndDate);
                     }
                     _task.save(function (err, _task) {
                         if (err) {

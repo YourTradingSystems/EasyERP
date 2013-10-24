@@ -123,10 +123,9 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -140,9 +139,9 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                                 {
                                     headers: {
                                         mid: mid
-                                    }
-                                },
-                                { wait: true });
+                                    },
+                                    wait: true
+                                });
                             $(this).remove();
                         });
                         break;
@@ -154,16 +153,15 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Companies", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Companies", { trigger: true });
         }
     });
 

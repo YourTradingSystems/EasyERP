@@ -76,9 +76,6 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                                 relatedUser.login = _login;
                                 model.set({ relatedUser: relatedUser }, { silent: true });
                             }
-                            //var dateBirth =new Date(model.get("dateBirth"));                            
-                            //var today = new Date;
-                            //var age = today.getFullYear() - dateBirth.getFullYear();
                             if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
 
                             if (dateBirth) {
@@ -135,13 +132,13 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = self.collection.get(checkbox.value);
-                            model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                            model.destroy(
+                                {
+                                    headers: {
+                                        mid: mid
+                                    },
+                                    wait: true
+                                });
                         });
 
                         this.collection.trigger('reset');
@@ -152,12 +149,12 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
                             model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
-                                },
-                                { wait: true });
+                               {
+                                   headers: {
+                                       mid: mid
+                                   },
+                                   wait: true
+                               });
                             $(this).remove();
                         });
                         break;
@@ -169,16 +166,15 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Employees", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Employees", { trigger: true });
         }
     });
 

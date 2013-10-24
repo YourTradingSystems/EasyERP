@@ -155,11 +155,9 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -169,13 +167,12 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         break;
@@ -188,16 +185,15 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Projects", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Projects", { trigger: true });
         }
     });
 

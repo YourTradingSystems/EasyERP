@@ -130,7 +130,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
-                            
+
                             _.each(workflows, function (workflow, index) {
                                 $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
                                 if (index == workflows.length - 1)
@@ -312,16 +312,16 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             switch (viewType) {
                 case "kanban":
                     {
-                        model = this.collection.get($(".opportunity").attr("id"));
+                        model = this.collection.get(this.$el.attr("id"));
                         var revenue = model.get("expectedRevenue").value;
                         this.$("#delete").closest(".opportunity").fadeToggle(300, function () {
                             model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
-                                },
-                                { wait: true });
+                               {
+                                   headers: {
+                                       mid: mid
+                                   },
+                                   wait: true
+                               });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");
@@ -337,10 +337,9 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -353,16 +352,15 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Opportunities", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Opportunities", { trigger: true });
         }
     });
 

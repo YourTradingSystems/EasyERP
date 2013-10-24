@@ -267,15 +267,15 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
             switch (viewType) {
                 case "kanban":
                     {
-                        model = that.collection.get($(".application").attr("id"));
+                        model = that.collection.get(this.$el.attr("id"));
                         this.$("#delete").closest(".application").fadeToggle(300, function () {
                             model.destroy(
                                 {
                                     headers: {
                                         mid: mid
-                                    }
-                                },
-                                { wait: true });
+                                   },
+                                    wait: true
+                                });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");
@@ -291,10 +291,9 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                             task.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
                         this.collection.trigger('reset');
                         break;
@@ -306,16 +305,15 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Applications", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Applications", { trigger: true });
         }
     });
 

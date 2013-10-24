@@ -83,10 +83,9 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -99,16 +98,15 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Departments", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
             }
-            Backbone.history.navigate("#home/content-Departments", { trigger: true });
         }
     });
 

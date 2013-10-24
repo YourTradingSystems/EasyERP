@@ -333,7 +333,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             switch (viewType) {
                 case "kanban":
                     {
-                        model = that.collection.get($(".task").attr("id"));
+                        model = that.collection.get(this.$el.attr("id"));
                         var remaining = model.get("estimated") - model.get("loged");
                         this.$("#delete").closest(".task").fadeToggle(300, function () {
                             model.destroy(
@@ -355,14 +355,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = that.collection.get(checkbox.value);
-
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                            { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -372,13 +370,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         break;
@@ -391,21 +388,22 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
+                            },
+                            wait: true,
+                            success: function (model) {
+                                model = model.toJSON();
+                                if (!model.project.id) {
+                                    Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
 
-                        );
+                                } else {
+                                    Backbone.history.navigate("home/content-Tasks/kanban/" + model.project.id, { trigger: true });
+                                }
+                            }
+                        });
                         this.collection.trigger('reset');
-                        if (this.collection.length != 0) {
-                            Backbone.history.navigate("#home/content-Tasks/form/" + itemIndex, { trigger: true });
-                        } else {
-                            Backbone.history.navigate("#home/content-Tasks", { trigger: true });
-                        }
                         break;
                     }
             }
-            //Backbone.history.navigate("#home/content-Tasks", { trigger: true });
         }
     });
 

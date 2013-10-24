@@ -5,7 +5,6 @@ define([
     'views/Degrees/list/ListItemView',
     'custom',
     'common'
-
 ],
 function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
@@ -71,45 +70,43 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
                 $("#top-bar-deleteBtn").hide();
         },
 
-        deleteItems: function() {
+        deleteItems: function () {
             var self = this,
                 mid = 39,
                 model,
                 viewType = Custom.getCurrentVT();
             switch (viewType) {
-            case "list":
-                {
-                    $.each($("tbody input:checked"), function(index, checkbox) {
-                        model = self.collection.get(checkbox.value);
-                        model.destroy({
+                case "list":
+                    {
+                        $.each($("tbody input:checked"), function (index, checkbox) {
+                            model = self.collection.get(checkbox.value);
+                            model.destroy({
                                 headers: {
                                     mid: mid
-                                }
+                                },
+                                wait: true
+                            });
+                        });
+
+                        this.collection.trigger('reset');
+                        break;
+                    }
+                case "form":
+                    {
+                        model = this.collection.get($("#wrap").data("id"));
+                        model.on('change', this.render, this);
+                        model.destroy({
+                            headers: {
+                                mid: mid
                             },
-                            { wait: true }
-                        );
-                    });
-
-                    this.collection.trigger('reset');
-                    break;
-                }
-            case "form":
-                {
-                    model = this.collection.get($("#wrap").data("id"));
-                    model.on('change', this.render, this);
-                    model.destroy({
-                        headers: {
-                            mid: mid
-                        }
-                    },
-                    { wait: true }
-
-                    );
-                    this.collection.trigger('reset');
-                    break;
-                }
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-Degrees", { trigger: true });
+                            }
+                        });
+                        break;
+                    }
             }
-            Backbone.history.navigate("#home/content-Degrees", { trigger: true });
         }
     });
 

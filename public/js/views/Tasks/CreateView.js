@@ -124,11 +124,12 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        if (idProject == '0' || !idProject) {
+                        model = model.toJSON();
+                        if (!model.project._id) {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                             
                         } else {
-                            Backbone.history.navigate("home/content-Tasks/kanban/" + idProject, { trigger: true });
+                            Backbone.history.navigate("home/content-Tasks/kanban/" + model.project._id, { trigger: true });
                         }
                     },
                     error: function (model, xhr, options) {

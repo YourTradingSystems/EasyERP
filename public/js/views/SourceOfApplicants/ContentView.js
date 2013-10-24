@@ -80,14 +80,12 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = that.collection.get(checkbox.value);
-
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                            { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -100,17 +98,15 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
                         model.destroy({
                             headers: {
                                 mid: mid
+                            },
+                            wait: true,
+                            success: function () {
+                                Backbone.history.navigate("#home/content-SourceOfApplicants", { trigger: true });
                             }
-                        },
-                        { wait: true }
-
-                        );
-                        this.collection.trigger('reset');
+                        });
                         break;
                     }
-                    
             }
-            Backbone.history.navigate("#home/content-SourceOfApplicants", { trigger: true });
         }
     });
 
