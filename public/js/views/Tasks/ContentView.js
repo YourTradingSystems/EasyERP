@@ -194,8 +194,8 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                 case "gantt":
                     {
                         this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
-                            GanttChart.create("GanttDiv");
-                        if(this.projectsCollection.length > 0)
+                        GanttChart.create("GanttDiv");
+                        if (this.projectsCollection.length > 0)
                             GanttChart.parseTasks(this.projectsCollection);
                         break;
                     }
@@ -335,11 +335,11 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         var remaining = model.get("estimated") - model.get("loged");
                         this.$("#delete").closest(".task").fadeToggle(300, function () {
                             model.destroy({
-                                    headers: {
-                                        mid: mid
-                                    },
-                                    wait: true
-                                });
+                                headers: {
+                                    mid: mid
+                                },
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");
@@ -355,9 +355,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             model.destroy({
                                 headers: {
                                     mid: mid
-                            },
+                                },
                                 wait: true
-                        });
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -368,8 +368,8 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
                             model.destroy({
-                                    headers: {
-                                        mid: mid
+                                headers: {
+                                    mid: mid
                                 },
                                 wait: true
                             });
@@ -385,19 +385,18 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model.destroy({
                             headers: {
                                 mid: mid
-                        },
+                            },
                             wait: true,
                             success: function (model) {
                                 model = model.toJSON();
                                 if (!model.project.id) {
                                     Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
 
-                        } else {
+                                } else {
                                     Backbone.history.navigate("home/content-Tasks/kanban/" + model.project.id, { trigger: true });
                                 }
-                        }
+                            }
                         });
-                        this.collection.trigger('reset');
                         break;
                     }
             }
