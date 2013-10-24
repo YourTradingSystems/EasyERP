@@ -83,8 +83,7 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
 
@@ -99,7 +98,6 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-SourceOfApplicants", { trigger: true });
                             }

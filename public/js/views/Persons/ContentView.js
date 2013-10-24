@@ -95,8 +95,7 @@ define([
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
 
@@ -110,8 +109,7 @@ define([
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                             $(this).remove();
                         });
@@ -125,7 +123,6 @@ define([
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Persons", { trigger: true });
                             }

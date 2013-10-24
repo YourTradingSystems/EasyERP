@@ -83,8 +83,7 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
 
@@ -99,7 +98,6 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Degrees", { trigger: true });
                             }

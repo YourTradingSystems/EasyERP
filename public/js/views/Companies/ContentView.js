@@ -123,8 +123,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
 
@@ -139,8 +138,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                                 {
                                     headers: {
                                         mid: mid
-                                    },
-                                    wait: true
+                                    }
                                 });
                             $(this).remove();
                         });
@@ -154,7 +152,6 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Companies", { trigger: true });
                             }

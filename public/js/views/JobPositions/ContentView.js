@@ -129,8 +129,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
 
@@ -145,7 +144,6 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-JobPositions", { trigger: true });
                             }

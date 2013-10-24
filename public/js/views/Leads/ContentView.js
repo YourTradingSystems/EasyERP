@@ -175,8 +175,7 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                                {
                                    headers: {
                                        mid: mid
-                                   },
-                                   wait: true
+                                   }
                                });
                         });
 
@@ -191,7 +190,6 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Leads", { trigger: true });
                             }

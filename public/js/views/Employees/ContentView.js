@@ -136,8 +136,7 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                                 {
                                     headers: {
                                         mid: mid
-                                    },
-                                    wait: true
+                                    }
                                 });
                         });
 
@@ -152,8 +151,7 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                                {
                                    headers: {
                                        mid: mid
-                                   },
-                                   wait: true
+                                   }
                                });
                             $(this).remove();
                         });
@@ -167,7 +165,6 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Employees", { trigger: true });
                             }

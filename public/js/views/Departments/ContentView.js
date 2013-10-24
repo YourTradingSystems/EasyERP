@@ -83,8 +83,7 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
 
@@ -99,7 +98,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Departments", { trigger: true });
                             }

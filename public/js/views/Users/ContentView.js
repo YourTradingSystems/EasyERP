@@ -36,8 +36,7 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
                         user.destroy({
                             headers: {
                                 mid: mid
-                            },
-                            wait: true
+                            }
                         });
                     });
 
@@ -51,7 +50,6 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
                         headers: {
                             mid: mid
                         },
-                        wait: true,
                         success: function () {
                             Backbone.history.navigate("#home/content-Users", { trigger: true });
                         }

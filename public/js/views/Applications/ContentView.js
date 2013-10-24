@@ -273,8 +273,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                                 {
                                     headers: {
                                         mid: mid
-                                   },
-                                    wait: true
+                                   }
                                 });
                             $(this).remove();
                         });
@@ -291,8 +290,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                             task.destroy({
                                 headers: {
                                     mid: mid
-                                },
-                                wait: true
+                                }
                             });
                         });
                         this.collection.trigger('reset');
@@ -306,7 +304,6 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                             headers: {
                                 mid: mid
                             },
-                            wait: true,
                             success: function () {
                                 Backbone.history.navigate("#home/content-Applications", { trigger: true });
                             }
