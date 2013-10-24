@@ -3,6 +3,7 @@
         idAttribute: "_id",
 
         defaults: {
+            isOpportunitie: false,
             name: 'New Lead',
             company: {
                 id: '',

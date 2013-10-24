@@ -92,6 +92,7 @@ var Opportunities = function (logWriter, mongoose) {
             function savetoDb(data) {
                 try {
                     _opportunitie = new opportunitie();
+                    _opportunitie.isOpportunitie = (data.isOpportunitie) ? data.isOpportunitie : false;
                     if (data.name) {
                         _opportunitie.name = data.name;
                     }
@@ -257,7 +258,7 @@ var Opportunities = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        var query = opportunitie.find({});
+        var query = opportunitie.find({isOpportunitie: true});
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -266,6 +267,24 @@ var Opportunities = function (logWriter, mongoose) {
                 response.send(500, { error: "Can't find Opportunities" });
             } else {
                 res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+
+    function getLeads(response) {
+        var res = {};
+        res['data'] = [];
+        var query = opportunitie.find({ isOpportunitie: false });
+        query.sort({ name: 1 });
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Leads.js get lead.find' + err);
+                response.send(500, { error: "Can't find Leads" });
+            } else {
+                res['data'] = result;
+                console.log(res);
                 response.send(res);
             }
         });
@@ -307,6 +326,8 @@ var Opportunities = function (logWriter, mongoose) {
         create: create,
 
         get: get,
+
+        getLeads: getLeads,
 
         update: update,
 
