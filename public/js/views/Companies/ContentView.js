@@ -119,14 +119,12 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = self.collection.get(checkbox.value);
-
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');

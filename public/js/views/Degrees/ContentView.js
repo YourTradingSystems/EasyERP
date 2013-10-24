@@ -82,12 +82,11 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
                     $.each($("tbody input:checked"), function(index, checkbox) {
                         model = self.collection.get(checkbox.value);
                         model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
+                            headers: {
+                                mid: mid
                             },
-                            { wait: true }
-                        );
+                            wait: true
+                        });
                     });
 
                     this.collection.trigger('reset');
@@ -100,11 +99,9 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
                     model.destroy({
                         headers: {
                             mid: mid
-                        }
-                    },
-                    { wait: true }
-
-                    );
+                        },
+                        wait: true
+                    });
                     this.collection.trigger('reset');
                     break;
                 }

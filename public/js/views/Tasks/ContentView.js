@@ -168,9 +168,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
                             extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
                             deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
-                            currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
+                            //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
 
-                            currentModel.on('change', this.render, this);
+                            //currentModel.on('change', this.render, this);
                             //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
                             this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
 
@@ -193,12 +193,10 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
 
                 case "gantt":
                     {
-                        if (this.projectsCollection.length > 0) {
-                            this.$el.html('');
-                            this.$el.html('<div style=" height:570px;"  id="GanttDiv"></div>');
-                            GanttChart.create("GanttDiv");
+                        this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
+                        GanttChart.create("GanttDiv");
+                        if(this.projectsCollection.length > 0)
                             GanttChart.parseTasks(this.projectsCollection);
-                        }
                         break;
                     }
             }
@@ -336,13 +334,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model = that.collection.get($(".task").attr("id"));
                         var remaining = model.get("estimated") - model.get("loged");
                         this.$("#delete").closest(".task").fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    },
-                                    wait: true
-                                });
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                },
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");
@@ -359,10 +356,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                            { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -372,13 +368,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         break;
@@ -391,11 +386,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         if (this.collection.length != 0) {
                             Backbone.history.navigate("#home/content-Tasks/form/" + itemIndex, { trigger: true });

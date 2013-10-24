@@ -315,13 +315,12 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         model = this.collection.get($(".opportunity").attr("id"));
                         var revenue = model.get("expectedRevenue").value;
                         this.$("#delete").closest(".opportunity").fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");
@@ -337,10 +336,9 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -353,11 +351,9 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         break;
                     }

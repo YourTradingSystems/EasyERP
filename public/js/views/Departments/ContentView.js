@@ -83,10 +83,9 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -99,11 +98,9 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         break;
                     }

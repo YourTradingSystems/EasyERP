@@ -174,10 +174,9 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -190,11 +189,9 @@ function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, List
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         break;
                     }

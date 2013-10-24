@@ -151,13 +151,12 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         break;
@@ -169,11 +168,9 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         break;
                     }

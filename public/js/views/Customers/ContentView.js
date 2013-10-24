@@ -83,18 +83,6 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
 
                         break;
                     }
-                case "gantt":
-                    {
-                        this.$el.html("CustomersGantView");
-                        /*console.log('render gantt');
-                        if(this.collection){
-                            var collection = this.collection.toJSON();
-                            var ganttChart =  Custom.createGanttChart(collection, false);
-                            this.$el.html('<div style="width:1180px; height:550px; position:relative;" id="GanttDiv"></div>');
-                            ganttChart.create("GanttDiv");
-                        }*/
-                        break;
-                    }
             }
             common.contentHolderHeightFixer();
             return this;
@@ -115,23 +103,12 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
             $.each($("input:checked"), function (index, checkbox) {
                 var project = self.collection.where({ id: checkbox.value })[0];
 
-                /*project.set("projectName", 'testEDIT');
-        		
-        		project.save({},{
-        			headers: {
-        				uid: uid,
-        				hash: hash,
-        				mid: mid
-        			}
-        		});*/
-
                 project.destroy({
                     headers: {
                         mid: mid
-                    }
-                },
-        		{ wait: true }
-        		);
+                    },
+                    wait: true
+                });
             });
 
             this.collection.trigger('reset');

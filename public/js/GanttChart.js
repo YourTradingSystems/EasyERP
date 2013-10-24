@@ -13,7 +13,7 @@ define([
         loadDefaultOptions();
         gantt.init(chartContainerId);
         gantt.clearAll();
-        tasksCollection = new TasksCollection();
+        /*tasksCollection = new TasksCollection();
         projectsCollection = new ProjectsCollection();
 
         if (!gantt.checkEvent("onAfterTaskUpdate")) {
@@ -24,7 +24,7 @@ define([
         }
         if (!gantt.checkEvent("onBeforeTaskChanged")) {
             changeEventId = gantt.attachEvent("onBeforeTaskChanged", onTaskChangeHandler);
-        }
+        }*/
     };
 
     var onTaskChangeHandler = function (id, mode, task) {
@@ -110,53 +110,63 @@ define([
         }
     };
 
-
     var parseProjects = function (jsonCollection) {
         var array = Custom.convertProjectsCollectionForGantt(jsonCollection);
         if (array.data.length > 0) gantt.parse(array);
     };
 
     var parseTasks = function (jsonCollection) {
-        var array = Custom.convertTasksCollectionForGantt(jsonCollection);
+            var array = Custom.convertTasksCollectionForGantt(jsonCollection);
         if (array.data.length > 0) gantt.parse(array);
     }
 
     var loadDefaultOptions = function () {
-        gantt.config.scale_unit = "day";
+        gantt.config.scale_unit = "month";
         gantt.config.step = 1;
-        gantt.config.date_scale = "%M, %d";
-        gantt.config.scale_height = 25;
-
-
+        gantt.config.readonly = true;
+        gantt.config.date_scale = "%F";
+        gantt.config.scale_height = 50;
+        gantt.config.row_height = 20;
+        gantt.config.drag_resize = false;
+        gantt.config.min_column_width = 30;
+        gantt.config.grid_width = 200;
         gantt.config.columns = [
-            { name: "text", label: "Task Name", tree: true, width: '*' },
-            {
-                name: "progress", label: "Progress", width: 80, align: 'center', template: function (item) {
-                    if (item.progress >= 1)
-                        return "Completed";
-                    if (item.progress == 0)
-                        return "Not started";
-                    return Math.round(item.progress * 100) + "%";
-                }
-            },
-            {
-                name: "assigned", label: "Assigned to", align: "center", width: 100, template: function (item) {
-                    if (!item.assignedTo)
-                        return "Nobody";
-                    return item.assignedTo;
-                }
-            }
+            { name: "assignedTo", label: "Name / AssignedTo", tree: true }
         ];
+        gantt.config.task_scroll_offset = 140;
+        gantt.config.subscales = [
+            {unit:"day", step:1, date: "%d", css: scaleStyle}
+        ];
+        var scaleStyle = function(date){
+            return "";
+        };
+
+        //gantt.templates.
+
         gantt.templates.scale_cell_class = function (date) {
             if (date.getDay() == 0 || date.getDay() == 6) {
                 return "weekend";
             }
+            //return "ordinaryDay";
         };
         gantt.templates.task_cell_class = function (item, date) {
             if (date.getDay() == 0 || date.getDay() == 6) {
                 return "weekend";
             }
+            //return "ordinaryDay";
         }
+
+
+        /*gantt.templates.tooltip_text = function(start, end, task){
+            return "<b>Start date: </b>" + task.start_date + "<br/>" +
+                "<b>End date: </b>" + task.end_date;
+        };*/
+        /*gantt.templates.leftside_text = function(start, end, task){
+            return "<b>Progress: </b>" + task.progress * 100 + "%";
+        };*/
+
+
+
     };
     return {
         create: create,

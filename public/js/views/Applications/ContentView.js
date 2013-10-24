@@ -269,13 +269,12 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                     {
                         model = that.collection.get($(".application").attr("id"));
                         this.$("#delete").closest(".application").fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");
@@ -287,14 +286,12 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             var task = that.collection.get(checkbox.value);
-
-                            task.destroy({
+                            model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                                { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
                         this.collection.trigger('reset');
                         break;
@@ -306,11 +303,9 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         break;
                     }

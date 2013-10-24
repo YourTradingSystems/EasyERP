@@ -92,14 +92,12 @@ define([
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = that.collection.get(checkbox.value);
-
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                }
-                            },
-                            { wait: true }
-                            );
+                                },
+                                wait: true
+                            });
                         });
 
                         this.collection.trigger('reset');
@@ -109,13 +107,12 @@ define([
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
-                            model.destroy(
-                                {
-                                    headers: {
-                                        mid: mid
-                                    }
+                            model.destroy({
+                                headers: {
+                                    mid: mid
                                 },
-                                { wait: true });
+                                wait: true
+                            });
                             $(this).remove();
                         });
                         break;
@@ -127,11 +124,9 @@ define([
                         model.destroy({
                             headers: {
                                 mid: mid
-                            }
-                        },
-                        { wait: true }
-
-                        );
+                            },
+                            wait: true
+                        });
                         this.collection.trigger('reset');
                         break;
                     }
