@@ -1,6 +1,7 @@
 var Opportunities = function (logWriter, mongoose) {
 
     var opportunitiesSchema = mongoose.Schema({
+        isOpportunitie: { type: Boolean, default: false },
         name: { type: String, default: '' },
         expectedRevenue: {
             value: { type: Number, default: '' },
@@ -8,14 +9,32 @@ var Opportunities = function (logWriter, mongoose) {
             currency: { type: String, default: '' }
         },
         creationDate: { type: Date, default: Date.now },
+        company: {
+            id: { type: String, default: '' },
+            name: { type: String, default: '' }
+        },
         customer: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
+        address: {
+            street: { type: String, default: '' },
+            city: { type: String, default: '' },
+            state: { type: String, default: '' },
+            zip: { type: String, default: '' },
+            country: { type: String, default: '' }
+        },
+        contactName: {
+            first: { type: String, default: '' },
+            last: { type: String, default: '' }
+        },
         email: { type: String, default: '' },
         phones: {
-            phone: { type: String, default: '' }
+            mobile: { type: String, default: '' },
+            phone: { type: String, default: '' },
+            fax: { type: String, default: '' }
         },
+        func: { type: String, default: '' },
         salesPerson: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -36,6 +55,9 @@ var Opportunities = function (logWriter, mongoose) {
             name: { type: String, default: '' }
         },
         color: { type: String, default: '#4d5a75' },
+        active: { type: Boolean, default: true },
+        optout: { type: Boolean, default: false },
+        reffered: { type: String, default: '' },
         workflow: {
             status: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -70,6 +92,7 @@ var Opportunities = function (logWriter, mongoose) {
             function savetoDb(data) {
                 try {
                     _opportunitie = new opportunitie();
+                    _opportunitie.isOpportunitie = (data.isOpportunitie) ? data.isOpportunitie : false;
                     if (data.name) {
                         _opportunitie.name = data.name;
                     }
@@ -90,12 +113,45 @@ var Opportunities = function (logWriter, mongoose) {
                     if (data.creationDate) {
                         _opportunitie.creationDate = data.creationDate;
                     }
+                    if (data.company) {
+                        if (data.company._id) {
+                            _opportunitie.company.id = data.company._id;
+                        }
+                        if (data.company.name) {
+                            _opportunitie.company.name = data.company.name;
+                        }
+                    }
                     if (data.customer) {
                         if (data.customer._id) {
                             _opportunitie.customer.id = data.customer._id;
                         }
                         if (data.customer.name) {
                             _opportunitie.customer.name = data.customer.name.first + " " + data.customer.name.last;
+                        }
+                    }
+                    if (data.address) {
+                        if (data.address.street) {
+                            _opportunitie.address.street = data.address.street;
+                        }
+                        if (data.address.city) {
+                            _opportunitie.address.city = data.address.city;
+                        }
+                        if (data.address.state) {
+                            _opportunitie.address.state = data.address.state;
+                        }
+                        if (data.address.zip) {
+                            _opportunitie.address.zip = data.address.zip;
+                        }
+                        if (data.address.country) {
+                            _opportunitie.address.country = data.address.country;
+                        }
+                    }
+                    if (data.contactName) {
+                        if (data.contactName.first) {
+                            _opportunitie.contactName.first = data.contactName.first;
+                        }
+                        if (data.contactName.last) {
+                            _opportunitie.contactName.last = data.contactName.last;
                         }
                     }
                     if (data.email) {
@@ -105,6 +161,15 @@ var Opportunities = function (logWriter, mongoose) {
                         if (data.phones.phone) {
                             _opportunitie.phones.phone = data.phones.phone;
                         }
+                        if (data.phones.mobile) {
+                            _opportunitie.phones.mobile = data.phones.mobile;
+                        }
+                        if (data.fax) {
+                            _opportunitie.phones.fax = data.phones.fax;
+                        }
+                    }
+                    if (data.func) {
+                        _opportunitie.func = data.func;
                     }
                     if (data.salesPerson) {
                         if (data.salesPerson._id) {
@@ -157,6 +222,15 @@ var Opportunities = function (logWriter, mongoose) {
                             _opportunitie.workflow.status = data.workflow.status;
                         }
                     }
+                    if (data.active) {
+                        _opportunitie.active = data.active;
+                    }
+                    if (data.optout) {
+                        _opportunitie.optout = data.optout;
+                    }
+                    if (data.reffered) {
+                        _opportunitie.reffered = data.reffered;
+                    }
                     _opportunitie.save(function (err, result) {
                         if (err) {
                             console.log(err);
@@ -184,7 +258,7 @@ var Opportunities = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        var query = opportunitie.find({});
+        var query = opportunitie.find({isOpportunitie: true});
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -193,6 +267,24 @@ var Opportunities = function (logWriter, mongoose) {
                 response.send(500, { error: "Can't find Opportunities" });
             } else {
                 res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+
+    function getLeads(response) {
+        var res = {};
+        res['data'] = [];
+        var query = opportunitie.find({ isOpportunitie: false });
+        query.sort({ name: 1 });
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Leads.js get lead.find' + err);
+                response.send(500, { error: "Can't find Leads" });
+            } else {
+                res['data'] = result;
+                console.log(res);
                 response.send(res);
             }
         });
@@ -234,6 +326,8 @@ var Opportunities = function (logWriter, mongoose) {
         create: create,
 
         get: get,
+
+        getLeads: getLeads,
 
         update: update,
 

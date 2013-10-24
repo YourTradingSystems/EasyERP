@@ -13,8 +13,7 @@ var requestHandler = function (mongoose) {
         department = require("./Modules/Department.js")(logWriter, mongoose),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
-        leads = require("./Modules/Leads.js")(logWriter, mongoose),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, persons, company),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
 
     function getModules(req, res) {
@@ -701,7 +700,7 @@ var requestHandler = function (mongoose) {
 
     function getLeads(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            leads.get(res);
+            opportunities.getLeads(res);
         } else {
             res.send(401);
         }
@@ -709,7 +708,7 @@ var requestHandler = function (mongoose) {
 
     function createLead(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            leads.create(data.lead, res);
+            opportunities.create(data.lead, res);
         } else {
             res.send(401);
         }
@@ -717,7 +716,7 @@ var requestHandler = function (mongoose) {
 
     function updateLead(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            leads.update(id, data.lead, res);
+            opportunities.update(id, data.lead, res);
         } else {
             res.send(401);
         }
@@ -725,7 +724,7 @@ var requestHandler = function (mongoose) {
 
     function removeLead(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            leads.remove(id, res);
+            opportunities.remove(id, res);
         } else {
             res.send(401);
         }

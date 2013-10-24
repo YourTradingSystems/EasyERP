@@ -60,7 +60,7 @@ define([
 
                 var companyId = this.$("#company option:selected").val();
                 var company = common.toObject(companyId, this.companiesCollection);
-                
+
                 var idCustomer = $(this.el).find("#customer option:selected").val();
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
 
@@ -72,10 +72,10 @@ define([
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
                 var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
-                
+
                 var salesTeamId = this.$("#salesTeam option:selected").val();
                 var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-                
+
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
                 var contactName = {
@@ -85,26 +85,23 @@ define([
 
                 var email = $.trim($("#email").val());
                 var func = $.trim($("#func").val());
+
                 var phone = $.trim($("#phone").val());
                 var mobile = $.trim($("#mobile").val());
+                var fax = $.trim($("#fax").val());
                 var phones = {
                     phone: phone,
-                    mobile: mobile
+                    mobile: mobile,
+                    fax: fax,
                 };
-
-                var fax = $.trim($("#fax").val());
 
                 var priority = $("#priority").val();
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
-                var active;
-                if ($("#active").is(":checked")) { active = true; }
-                else { active = false; }
+                var active = ($("#active").is(":checked")) ? true : false;
 
-                var optout;
-                if ($("#optout").is(":checked")) { optout = true; }
-                else { optout = false; }
+                var optout = ($("#optout").is(":checked")) ? true : false;
 
                 var reffered = $.trim($("#reffered").val());
 

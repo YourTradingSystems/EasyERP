@@ -169,14 +169,15 @@ define([
 
                     var email = $.trim($("#email").val());
                     var func = $.trim($("#func").val());
+                    
                     var phone = $.trim($("#phone").val());
                     var mobile = $.trim($("#mobile").val());
+                    var fax = $.trim($("#fax").val());
                     var phones = {
                         phone: phone,
-                        mobile: mobile
+                        mobile: mobile,
+                        fax: fax,
                     };
-
-                    var fax = $.trim($("#fax").val());
 
                     var priority = $("#priority").val();
 

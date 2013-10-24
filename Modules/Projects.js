@@ -60,7 +60,7 @@ var Project = function (logWriter, mongoose) {
             },
             StartDate: { type: Date, default: Date.now },
             EndDate: { type: Date, default: Date.now },
-            duration: {type: Number, default: 0}
+            duration: { type: Number, default: 0 }
         },
         workflow: {
             name: { type: String, default: 'Analysis' },
@@ -377,7 +377,7 @@ var Project = function (logWriter, mongoose) {
         iWeekday2 = (iWeekday2 <= 5) ? 0 : 1;
         // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
         iWeeks = Math.floor((endDate.getTime() - startDate.getTime()) / 604800000)
-        
+
         if (iWeekday1 < iWeekday2) {
             iDateDiff = (iWeeks * 2) + 2 * (iWeekday2 - iWeekday1);
         } else if ((iWeekday1 == iWeekday2) && (iWeekday1 == 0)) {
@@ -724,9 +724,6 @@ var Project = function (logWriter, mongoose) {
                             _task.extrainfo.StartDate = data.extrainfo.StartDate;
                             if (!data.estimated) _task.extrainfo.EndDate = data.extrainfo.StartDate;
                         }
-                        //if (data.extrainfo.StartDate) {
-                        //    _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-                        //}
                     }
                     if (data.workflow) {
                         if (data.workflow.name) {
@@ -736,20 +733,17 @@ var Project = function (logWriter, mongoose) {
                             _task.workflow.status = data.workflow.status;
                         }
                     }
-                    if (data.estimated) {
-                        _task.estimated = data.estimated;
-                        var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
-                        _task.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
-                        _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-                    }
                     if (data.logged) {
                         _task.logged = data.logged;
                     }
                     if (data.estimated) {
                         _task.remaining = data.estimated - data.logged;
-                        if (_task.remaining != 0) {
-                            _task.progress = Math.round((data.logged / data.estimated) * 100);
-                        }
+                        _task.progress = Math.round((data.logged / data.estimated) * 100);
+                        _task.estimated = data.estimated;
+
+                        var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
+                        _task.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
+                        _task.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
                     }
                     _task.save(function (err, _task) {
                         if (err) {
@@ -824,6 +818,29 @@ var Project = function (logWriter, mongoose) {
     };
 
     function removeTask(_id, res) {
+        tasks.findById(_id, function (er, task) {
+            if (task) {
+                tasks.find({ 'project.id': task.project.id }, function (_er, docs) {
+                    if (docs && docs.length == 0) {
+                        project.update({ _id: task.project.id }, {
+                            $set:
+                                {
+                                    'info.StartDate': '',
+                                    'info.EndDate': ''
+                                }
+                        }, function (_err, result) {
+                            if (_err) {
+                                logWriter.log("Project.js => removeTask => tasks.findById =>  tasks.find => project.update " + _err);
+                            }
+                        })
+                    } else if (_er) {
+                        logWriter.log("Project.js => removeTask => tasks.findById =>  tasks.find " + _er);
+                    }
+                });
+            } else if (er) {
+                logWriter.log("Project.js => removeTask => tasks.findById " + er);
+            }
+        });
         tasks.remove({ _id: _id }, function (err, taskk) {
             if (err) {
                 console.log(err);

@@ -3,18 +3,40 @@
         idAttribute: "_id",
 
         defaults: {
+            isOpportunitie: true,
             name: '',
             expectedRevenue: {
                 value: '',
                 currency: '',
                 progress: ''
             },
+            company: {
+                id: '',
+                name: ''
+            },
+            contactName: {
+                first: '',
+                last: ''
+            },
             customer: {
                 id: '',
                 name: ''
             },
+            address: {
+                street: '',
+                city: '',
+                state: '',
+                zip: '',
+                country: ''
+            },
             email: '',
-            phone: '',
+            phones: {
+                mobile: '',
+                phone: '',
+                fax: ''
+            },
+           
+            func: '',
             salesPerson: {
                 id: '',
                 name: ''
@@ -31,6 +53,9 @@
             expectedClosing: null,
             priority: 'Trivial',
             categories: '',
+            active: true,
+            optout: false,
+            reffered: '',
             workflow: {
                 name: 'New',
                 status: 'New'
