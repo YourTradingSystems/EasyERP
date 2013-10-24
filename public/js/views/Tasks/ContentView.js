@@ -333,7 +333,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             switch (viewType) {
                 case "kanban":
                     {
-                        model = that.collection.get($(".task").attr("id"));
+                        model = that.collection.get(this.$el.attr("id"));
                         var remaining = model.get("estimated") - model.get("loged");
                         this.$("#delete").closest(".task").fadeToggle(300, function () {
                             model.destroy(

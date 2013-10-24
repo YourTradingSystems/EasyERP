@@ -56,7 +56,7 @@ var Opportunities = function (logWriter, mongoose) {
         },
         color: { type: String, default: '#4d5a75' },
         active: { type: Boolean, default: true },
-        optOut: { type: Boolean, default: false },
+        optout: { type: Boolean, default: false },
         reffered: { type: String, default: '' },
         workflow: {
             status: { type: String, default: '' },
@@ -225,8 +225,8 @@ var Opportunities = function (logWriter, mongoose) {
                     if (data.active) {
                         _opportunitie.active = data.active;
                     }
-                    if (data.optOut) {
-                        _opportunitie.optOut = data.optOut;
+                    if (data.optout) {
+                        _opportunitie.optout = data.optout;
                     }
                     if (data.reffered) {
                         _opportunitie.reffered = data.reffered;

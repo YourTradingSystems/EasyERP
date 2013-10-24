@@ -2,6 +2,7 @@ define([
     "jqueryui",
     "text!templates/Opportunities/CreateTemplate.html",
     "collections/Customers/CustomersCollection",
+    "collections/Companies/CompaniesCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Priority/TaskPriority",
@@ -9,7 +10,7 @@ define([
     "common",
     "custom"
 ],
-    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, common, Custom) {
+    function (jqueryui, CreateTemplate, CustomersCollection, CompaniesCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, common, Custom) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
@@ -18,6 +19,8 @@ define([
             initialize: function () {
                 this.customersCollection = new CustomersCollection();
                 this.customersCollection.bind('reset', _.bind(this.render, this));
+                this.companiesCollection = new CompaniesCollection();
+                this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
@@ -50,8 +53,9 @@ define([
 
                 var expectedRevenueValue = $.trim($("#expectedRevenueValue").val());
                 var expectedRevenueProgress = $.trim($("#expectedRevenueProgress").val());
+                var expectedRevenue;
                 if (expectedRevenueValue || expectedRevenueProgress) {
-                    var expectedRevenue = {
+                    expectedRevenue = {
                         value: expectedRevenueValue,
                         currency: '$',
                         progress: expectedRevenueProgress
@@ -62,7 +66,7 @@ define([
                 var customer = common.toObject(customerId, this.customersCollection);
 
                 var email = $.trim($("#email").val());
-                var phone = $.trim($("#phone").val());
+                
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
                 var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
@@ -89,20 +93,63 @@ define([
 
                 var priority = $("#priority").val();
 
+                var companyName = $.trim($("#company").val());
+                var company = {
+                    id: "",
+                    name: companyName
+                };
+
                 var internalNotes = $.trim($("#internalNotes").val());
+
+                var address = {};
+                $("p").find(".address").each(function () {
+                    var el = $(this);
+                    address[el.attr("name")] = el.val();
+                });
+
+                var first = $.trim($("#first").val());
+                var last = $.trim($("#last").val());
+                var contactName = {
+                    first: first,
+                    last: last
+                };
+
+                var func = $.trim($("#func").val());
+                
+                var phone = $.trim($("#phone").val());
+                var mobile = $.trim($("#mobile").val());
+                var fax = $.trim($("#fax").val());
+                var phones = {
+                    phone: phone,
+                    mobile: mobile,
+                    fax: fax,
+                };
+
+                var active = ($("#active").is(":checked")) ? true : false;
+
+                var optout = ($("#optout").is(":checked")) ? true : false;
+
+                var reffered = $.trim($("#reffered").val());
 
                 opportunityModel.save({
                     name: name,
                     expectedRevenue: expectedRevenue,
                     customer: customer,
                     email: email,
-                    phone: phone,
                     salesPerson: salesPerson,
                     salesTeam: salesTeam,
                     nextAction: nextAction,
                     expectedClosing: expectedClosing,
                     priority: priority,
-                    internalNotes: internalNotes
+                    internalNotes: internalNotes,
+                    company: company,
+                    address: address,
+                    contactName: contactName,
+                    func: func,
+                    phones: phones,
+                    active: active,
+                    optout: optout,
+                    reffered: reffered
                 },
                 {
                     headers: {
@@ -116,7 +163,7 @@ define([
             },
 
             render: function () {
-                this.$el.html(this.template({ customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
+                this.$el.html(this.template({ customersCollection: this.customersCollection, companiesCollection: this.companiesCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
                 common.contentHolderHeightFixer();
                 $('#nextActionDate').datepicker();
                 $('#expectedClosing').datepicker();

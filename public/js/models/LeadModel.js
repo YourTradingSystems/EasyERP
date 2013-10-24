@@ -36,9 +36,10 @@
             func: '',
             phones: {
                 mobile: '',
-                phone: ''
+                phone: '',
+                fax: ''
             },
-            fax: '',
+            
             priority: 'Trivial',
             categories: {
                 id: '',
