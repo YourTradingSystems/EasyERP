@@ -39,7 +39,7 @@
 
             <p>
                 <label for="phone">Phone </label>
-                <input type="text" id="phone" value="<%=model.phone%>"/>
+                <input type="text" id="phone" value="<%=model.phones.phone%>"/>
             </p>
 
             <p>
@@ -91,10 +91,128 @@
             <p>
                 <label for="categories">Categories</label>
             </p>
-            <p>
-                <label for="internalNotes">Internal Notes</label>
-                <textarea id="internalNotes"><%=model.internalNotes%></textarea>
-            </p>
+            
+             <div id="tabs">
+                <div>
+                    <ul id="tabList" class="inner">
+                        <li>
+                            <a href="#" class="selected">Internal Notes</a>
+                        </li>
+                        <li>
+                            <a href="#">Lead</a>
+                        </li>
+                    </ul>
+                </div>
+                <br />
+                <div class="tab">
+                    <p>
+                        <label for="internalNotes">Internal Notes</label>
+                        <textarea id="internalNotes"><%=model.internalNotes%></textarea>
+                    </p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab">
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p>
+                                <label for="company">Company Name</label>
+                            </p>
+                            <p>
+                                <label for="address">Address</label>
+                            </p>
+                            <p>
+                                <label></label>
+                            </p>
+                            <p>
+                                <label></label>
+                            </p>
+                            <p>
+                                <label></label>
+                            </p>
+                            <p>
+                                <label></label>
+                            </p>
+                            <h3>Mailings</h3>
+                            <p>
+                                <label>Opt-Out</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+
+                            <p>
+                                <input type="text" id="company" value="<%=model.company.name%>" />
+                            </p>
+                            <p>
+                                <input type="text" class="address" name="street" value="<%=model.address.street%>"/>
+                                <input type="text" class="address" name="city" value="<%=model.address.city%>" />
+                                <input type="text" class="address" name="state" value="<%=model.address.state%>" />
+                                <input type="text" class="address" name="zip" value="<%=model.address.zip%>" />
+                                <input type="text" class="address" name="country" value="<%=model.address.country%>" />
+                            </p>
+                            <p></p>
+                            <p>
+                                <input type="checkbox" <%= (model.optout)? 'checked="checked"':''%> id="optout" />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <div class="half-block left">
+                            <p>
+                                <label for="contactName">Contact Name</label>
+                            </p>
+                            <p>
+                                <label></label>
+                            </p>
+                            <p>
+                                <label for="func">Function</label>
+                            </p>
+                            <p>
+                                <label for="mobile">Mobile </label>
+                            </p>
+                            <p>
+                                <label for="name">Fax</label>
+                            </p>
+                            <p></p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                               <input type="text" class="name" id="first" value="<%=model.contactName.first%>"/>
+                               <input type="text" class="name" id="last" value="<%=model.contactName.last%>"/>
+                            </p>
+                            <p>
+                               <input type="text" id="func" value="<%=model.func%>"/>
+                            </p>
+                            <p>
+                               <input type="text" id="mobile" value="<%=model.phones.mobile%>"/>
+                            </p>
+                            <p>
+                                <input type="text" id="fax" value="<%=model.phones.fax%>"/>
+                            </p>
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <h3>Misc</h3>
+                        <div class="half-block left">
+                            <p>
+                                <label>Active</label>
+                            </p>
+                            <p>
+                                <label>Referred By</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="checkbox" <%= (model.active)? 'checked="checked"':''%> id="active" />
+                            </p>
+                            <p>
+                                <input type="text" id="reffered" value="<%=model.reffered%>"/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
         </fieldset>
     </form>
 </div>

@@ -32,7 +32,18 @@
             },
 
             events: {
-                "click .breadcrumb a, #lost, #won": "changeWorkflow"
+                "click .breadcrumb a, #lost, #won": "changeWorkflow",
+                "click #tabList a": "switchTab"
+            },
+
+            switchTab: function (e) {
+                e.preventDefault();
+                var link = this.$("#tabList a");
+                if (link.hasClass("selected")) {
+                    link.removeClass("selected");
+                }
+                var index = link.index($(e.target).addClass("selected"));
+                this.$(".tab").hide().eq(index).show();
             },
 
             saveItem: function () {
@@ -66,7 +77,6 @@
                     }
 
                     var email = $.trim($("#email").val());
-                    var phone = $.trim($("#phone").val());
 
                     var salesPersonId = this.$("#salesPerson option:selected").val();
                     var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
@@ -107,7 +117,43 @@
 
                     var priority = $("#priority").val();
 
+                    var companyName = $.trim($("#company").val());
+                    var company = {
+                        id: "",
+                        name: companyName
+                    };
+
                     var internalNotes = $.trim($("#internalNotes").val());
+
+                    var address = {};
+                    $("p").find(".address").each(function () {
+                        var el = $(this);
+                        address[el.attr("name")] = el.val();
+                    });
+
+                    var first = $.trim($("#first").val());
+                    var last = $.trim($("#last").val());
+                    var contactName = {
+                        first: first,
+                        last: last
+                    };
+
+                    var func = $.trim($("#func").val());
+
+                    var phone = $.trim($("#phone").val());
+                    var mobile = $.trim($("#mobile").val());
+                    var fax = $.trim($("#fax").val());
+                    var phones = {
+                        phone: phone,
+                        mobile: mobile,
+                        fax: fax,
+                    };
+
+                    var active = ($("#active").is(":checked")) ? true : false;
+
+                    var optout = ($("#optout").is(":checked")) ? true : false;
+
+                    var reffered = $.trim($("#reffered").val());
 
 
                     currentModel.set({
@@ -115,13 +161,20 @@
                         expectedRevenue: expectedRevenue,
                         customer: customer,
                         email: email,
-                        phone: phone,
                         salesPerson: salesPerson,
                         salesTeam: salesTeam,
                         nextAction: nextAction,
                         expectedClosing: expectedClosing,
                         priority: priority,
-                        internalNotes: internalNotes
+                        internalNotes: internalNotes,
+                        company: company,
+                        address: address,
+                        contactName: contactName,
+                        func: func,
+                        phones: phones,
+                        active: active,
+                        optout: optout,
+                        reffered: reffered
                     });
                     currentModel.save({}, {
                         headers: {

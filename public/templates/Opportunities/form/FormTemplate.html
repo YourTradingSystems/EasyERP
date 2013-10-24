@@ -15,7 +15,7 @@
         </p>
         <p>
             <label>Phone</label>
-            <span><%=phone%></span>
+            <span><%=phones.phone%></span>
         </p>
         <p>
             <label>Salesperson</label>
@@ -54,33 +54,37 @@
             </div>
             <div class="tab">
                 <p>
-                    <label for="customer">Customer Name</label>
-                    <span><%=customer.name%></span>
+                    <label>Customer Name</label>
+                    <span><%=contactName.first%> <%=contactName.last%></span>>
                 </p>
                 <p>
-                    <label for="name">Address</label>
+                    <label>Address</label>
+                    <span><%=address.street%></span>
+                    <span><%=address.city%></span>
+                    <span><%=address.state%></span>
+                    <span><%=address.zip%></span>
+                    <span><%=address.country%></span>
                 </p>
                 <p>
-                    <label for="name">Contact Name</label>
-                    <input type="text" id="leadContactNameFirst" placeholder="First" />
-                    <input type="text" id="leadContactNameLast" placeholder="Last" />
+                    <label>Contact Name</label>
+                    <span><%=contactName.first%> <%=contactName.last%></span>
                 </p>
                 <p>
-                    <label for="func">Function</label>
-                    <input type="text" id="func" />
+                    <label>Function</label>
+                    <span><%=func%></span>
                 </p>
                 <p>
-                    <label for="mobile">Mobile </label>
-                    <input type="text" id="mobile" />
+                    <label>Mobile</label>
+                    <span><%=phones.mobile%></span>
                 </p>
                 <p>
-                    <label for="name">Fax</label>
-                    <input type="text" id="fax" />
+                    <label>Fax</label>
+                    <span><%=phones.fax%></span>
                 </p>
-                <h2>Misc</h2>
+                <h3>Misc</h3>
                 <p>
                     <label>Active</label>
-                    <input type="checkbox" checked="checked" id="active" />
+                    <input type="checkbox" <%= (active)? checked='checked':''%> id="active" />
                 </p>
                 <p>
                     <label>Days To Open</label>
@@ -92,21 +96,12 @@
                 </p>
                 <p>
                     <label>Referred By</label>
-                    <input type="text" id="reffered" />
+                    <span><%=reffered%></span>
                 </p>
-                <h2>Mailings</h2>
+                <h3>Mailings</h3>
                 <p>
                     <label>Opt-Out</label>
-                    <input type="checkbox" id="optout" />
-                </p>
-                <h2>References</h2>
-                <p>
-                    <label>Reference</label>
-                    <input type="text" id="reference" />
-                </p>
-                <p>
-                    <label>Reference 2</label>
-                    <input type="text" id="reference2" />
+                    <input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" />
                 </p>
             </div>
         </div>

@@ -14,6 +14,10 @@
                 id: '',
                 name: ''
             },
+            contactName: {
+                first: '',
+                last: ''
+            },
             customer: {
                 id: '',
                 name: ''
@@ -28,9 +32,10 @@
             email: '',
             phones: {
                 mobile: '',
-                phone: ''
+                phone: '',
+                fax: ''
             },
-            fax: '',
+           
             func: '',
             salesPerson: {
                 id: '',
