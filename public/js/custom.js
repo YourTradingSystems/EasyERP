@@ -1,4 +1,4 @@
-define(['libs/date.format'], function (dateformat) {
+define(['libs/date.format','common'], function (dateformat, common) {
     var runApplication = function (success, description) {
         if (!Backbone.history.fragment)
             Backbone.history.start({ silent: true });
@@ -265,20 +265,11 @@ define(['libs/date.format'], function (dateformat) {
         return hours;
     };
 
-    var getProjectsCollectionMinDate = function (jsonProjectsArray) {
-        var minDate;
-        var dateArray = $.map(jsonProjectsArray, function (val) {
-            return val.StartDate;
-        });
-        minDate = findMinDate(dateArray);
-    }
-
     var convertProjectsCollectionForGantt = function (collection) {
         var anyProjectHasTasks = false;
         var duration = 0;
-        var jsonCollection;
-        collection.length > 0 ? jsonCollection = collection.toJSON() : jsonCollection = [];
-        for (i = 0; i < jsonCollection.length; i++) {
+        var jsonCollection = collection.toJSON();
+        for (var i = 0; i < jsonCollection.length; i++) {
             if (jsonCollection[i].task.tasks.length > 0) {
                 anyProjectHasTasks = true;
                 duration += parseInt(jsonCollection[i].estimated);
@@ -295,32 +286,33 @@ define(['libs/date.format'], function (dateformat) {
         var minDate;
         (jsonCollection && jsonCollection.length > 0 && jsonCollection[0].info.StartDate) ?
             minDate = dateFormat(new Date(jsonCollection[0].info.StartDate), "dd-mm-yyyy") :
-            minDate = dateFormat(new Date(), "dd/mm-yyyy");
+            minDate = dateFormat(new Date(), "dd-mm-yyyy");
 
         projects.push({
             'id': 1,
             'text': "Gantt View",
+            'assignedTo' : "Gantt View",
             'start_date': minDate,
-            'duration': duration,
-            'progress': 0,
+            'duration': 0,
+            'progress': duration/100,
             'open': true
         });
 
-        if (jsonCollection.length > 0) {
-            jsonCollection.forEach(function (project) {
-                if (project.task.tasks.length > 0) {
-                    projects.push({
-                        'id': project._id || project.id,
-                        'text': project.projectName,
-                        'start_date': dateFormat(new Date(jsonCollection[0].info.StartDate), "dd-mm-yyyy"),
-                        'duration': project.estimated,
-                        'progress': project.progress / 100,
-                        'open': true,
-                        'parent': 1
-                    });
-                }
-            });
-        }
+        jsonCollection.forEach(function (project) {
+            if (project.task.tasks.length > 0) {
+                projects.push({
+                    'id': project._id || project.id,
+                    'assignedTo': project.projectmanager.name,
+                    'text': project.projectName,
+                    'start_date': new Date(jsonCollection[0].info.StartDate),
+                    'duration': project.estimated,
+                    'progress': project.progress / 100,
+                    'open': true,
+                    'parent': 1
+                });
+            }
+        });
+
 
         return {
             data: projects
@@ -328,30 +320,33 @@ define(['libs/date.format'], function (dateformat) {
     };
 
     var convertTasksCollectionForGantt = function (collection) {
-        var jsonCollection;
-        collection.length > 0 ? jsonCollection = collection.toJSON() : jsonCollection = [];
+        var jsonCollection = collection.toJSON();
+        //collection.length > 0 ? jsonCollection = collection.toJSON() : jsonCollection = [];
         var projects = [];
 
         for (var i = 0; i < jsonCollection.length; i++) {
             if (jsonCollection[i].task.tasks.length > 0) {
+                var project = jsonCollection[i];
                 projects.push({
-                    'id': jsonCollection[i]._id || jsonCollection[i].id,
-                    'text': jsonCollection[i].projectName,
-                    'start_date': new Date(jsonCollection[i].info.StartDate),
-                    'duration': jsonCollection[i].info.duration,
-                    'progress': jsonCollection[i].progress / 100,
+                    'id': project._id || project.id,
+                    'text': project.projectName + " / " + project.projectmanager.name || "Nobody",
+                    'start_date': new Date(project.info.StartDate),
+                    'duration': project.info.duration,
+                    'assignedTo': project.projectName + ' / ' + project.projectmanager.name || "Nobody",
+                    //'duration': project.info.duration,
+                    'progress': project.progress / 100,
                     'open': true
                 });
 
-                for (j = 0, len = jsonCollection[i].task.tasks.length; j < len; j++) {
+                for (var j = 0, len = jsonCollection[i].task.tasks.length; j < len; j++) {
                     var task = jsonCollection[i].task.tasks[j];
                     projects.push({
                         'id': task.id || task._id,
                         'text': task.summary,
                         'start_date': new Date(task.extrainfo.StartDate),
-                        'duration': task.estimated,
+                        'duration': task.extrainfo.duration,
                         'progress': task.progress / 100,
-                        'assignedTo': task.assignedTo.name,
+                        'assignedTo': task.assignedTo.name || "Nobody",
                         'parent': jsonCollection[i].id || jsonCollection[i]._id
                     });
                 }
@@ -366,16 +361,10 @@ define(['libs/date.format'], function (dateformat) {
     function applyDefaultSettings(chartControl) {
         chartControl.setImagePath("/crm_backbone_repo/images/");
         chartControl.setEditable(false);
-        chartControl.showTreePanel(true);
+        chartControl.showTreePanel(false);
         chartControl.showContextMenu(false);
         chartControl.showDescTask(true, 'd,s-f');
         chartControl.showDescProject(true, 'n,d');
-    }
-
-
-
-    function findMinDate(dateArray) {
-        return _.min(dateArray);
     }
 
     return {

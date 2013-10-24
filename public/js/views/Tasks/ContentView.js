@@ -168,9 +168,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
                             extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
                             deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
-                            currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
+                            //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
 
-                            currentModel.on('change', this.render, this);
+                            //currentModel.on('change', this.render, this);
                             //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
                             this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
 
@@ -193,12 +193,10 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
 
                 case "gantt":
                     {
-                        if (this.projectsCollection.length > 0) {
-                            this.$el.html('');
-                            this.$el.html('<div style=" height:570px;"  id="GanttDiv"></div>');
+                        this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
                             GanttChart.create("GanttDiv");
+                        if(this.projectsCollection.length > 0)
                             GanttChart.parseTasks(this.projectsCollection);
-                        }
                         break;
                     }
             }
@@ -336,8 +334,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model = that.collection.get(this.$el.attr("id"));
                         var remaining = model.get("estimated") - model.get("loged");
                         this.$("#delete").closest(".task").fadeToggle(300, function () {
-                            model.destroy(
-                                {
+                            model.destroy({
                                     headers: {
                                         mid: mid
                                     },
@@ -358,9 +355,9 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
+                            },
                                 wait: true
-                            });
+                        });
                         });
 
                         this.collection.trigger('reset');
@@ -371,8 +368,8 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
                             model.destroy({
-                                headers: {
-                                    mid: mid
+                                    headers: {
+                                        mid: mid
                                 },
                                 wait: true
                             });
@@ -388,17 +385,17 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                         model.destroy({
                             headers: {
                                 mid: mid
-                            },
+                        },
                             wait: true,
                             success: function (model) {
                                 model = model.toJSON();
                                 if (!model.project.id) {
                                     Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
 
-                                } else {
+                        } else {
                                     Backbone.history.navigate("home/content-Tasks/kanban/" + model.project.id, { trigger: true });
                                 }
-                            }
+                        }
                         });
                         this.collection.trigger('reset');
                         break;

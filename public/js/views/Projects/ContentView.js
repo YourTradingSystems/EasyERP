@@ -99,6 +99,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                     {
                         this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
                         GanttChart.create("GanttDiv");
+                        if(this.collection.length > 0)
                         GanttChart.parseProjects(this.collection);
 
                         break;
@@ -155,9 +156,9 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                             model.destroy({
                                 headers: {
                                     mid: mid
-                                },
+                            },
                                 wait: true
-                            });
+                        });
                         });
 
                         this.collection.trigger('reset');
@@ -168,8 +169,8 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
                             model.destroy({
-                                headers: {
-                                    mid: mid
+                                    headers: {
+                                        mid: mid
                                 },
                                 wait: true
                             });

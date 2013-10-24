@@ -1,131 +1,206 @@
 <div class="form-holder">
     <form method="post" action="" class="form" id="leadForm">
         <fieldset>
-            <p>
-                <label for="name">Subject</label>
-                <input type="text" class="title-input blueback" id="name" placeholder="Describe the lead..." required />
-            </p>
-            <p>
-                <label for="company">Company Name</label>
-                <select id="company">
-                    <option selected="selected" value="0">Select...</option>
-                    <% companiesCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>"><%= option.get('name') %></option>
-                    <% }); %>
-               
-                </select>
-            </p>
-            <p>
-                <label for="customer">Customer</label>
-                <select id="customer">
-                    <option selected="selected" value="0">Select...</option>
-                    <% customersCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
-                    <% }); %>
-               
-                </select>
-            </p>
-            <p>
-                <label for="address">Address</label>
-                <input type="text" class="address" name="street" placeholder="Street..." />
-                <input type="text" class="address" name="city" placeholder="City" />
-                <input type="text" class="address" name="state" placeholder="State" />
-                <input type="text" class="address" name="zip" placeholder="ZIP" />
-                <input type="text" class="address" name="country" placeholder="Country" />
-            </p>
-            <p>
-                <label for="salesPerson">Salesperson</label>
-                <select id="salesPerson">
-                    <option selected="selected" value="0">Select...</option>
-                    <% employeesCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
-                    <% }); %>
-               
-                </select>
-            </p>
-            <p>
-                <label for="salesTeam">Sales Team</label>
-                <select id="salesTeam">
-                    <option selected="selected" value="0">Select...</option>
-                    <% departmentsCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                    <% }); %>
-               
-                </select>
-            </p>
-            <p>
-                <label for="name">Contact name</label>
-                <input type="text" class="name" id="first" placeholder="First" />
-                <input type="text" class="name" id="last" placeholder="Last" />
-            </p>
-            <p>
-                <label for="email">Email</label>
-                <input type="text" id="email" />
-            </p>
-            <p>
-                <label for="func">Function</label>
-                <input type="text" id="func" />
-            </p>
-            <p>
-                <label for="phone">Phone </label>
-                <input type="text" id="phone" />
-            </p>
+            <div class="inner">
+                <p>
+                    <label for="name">Subject</label>
+                    <input type="text" class="title-input blueback" id="name" placeholder="Describe the lead..." required />
+                </p>
+                <div class="half-block left">
+                    <div class="half-block left">
 
-            <p>
-                <label for="mobile">Mobile </label>
-                <input type="text" id="mobile" />
-            </p>
-            <p>
-                <label for="name">Fax</label>
-                <input type="text" id="fax" />
-            </p>
-            <p>
-                <label for="priority">Priority </label>
-                <select id="priority">
-                    <option selected="selected" value="0">Select...</option>
-                    <% priorityCollection.each(function(option){ %>
-                    <option value="<%= option.get('priority') %>"><%= option.get('priority') %></option>
-                    <% }); %>
-                </select>
-            </p>
-            <p>
-                <label for="name">Categories</label>
-            </p>
+                        <p>
+                            <label for="company">Company Name</label>
+                        </p>
+                        <p>
+                            <label for="customer">Customer</label>
+                        </p>
+                        <p>
+                            <label>Address</label>
+                        </p>
+                        <p>
+                            <label></label>
+                        </p>
+                        <p>
+                            <label></label>
+                        </p>
+                        <p>
+                            <label></label>
+                        </p>
+                        <p>
+                            <label></label>
+                        </p>
+                        <p></p>
+                        <p>
+                            <label for="salesPerson">Salesperson</label>
+                        </p>
+                        <p>
+                            <label for="salesTeam">Sales Team</label>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p>
+                            <select id="company">
+                                <option selected="selected" value="0">Select...</option>
+                                <% companiesCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>"><%= option.get('name') %></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p>
+                            <select id="customer">
+                                <option selected="selected" value="0">Select...</option>
+                                <% customersCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p><input type="text" class="address" name="street" placeholder="Street" /></p>
+                        <p><input type="text" class="address" name="city" placeholder="City" /></p>
+                        <p><input type="text" class="address" name="state" placeholder="State" /></p>
+                        <p><input type="text" class="address" name="zip" placeholder="ZIP" /></p>
+                        <p><input type="text" class="address" name="country" placeholder="Country" /></p>
+                        <p></p>
+                        <p>
+                            <select id="salesPerson">
+                                <option selected="selected" value="0">Select...</option>
+                                <% employeesCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p>
+                            <select id="salesTeam">
+                                <option selected="selected" value="0">Select...</option>
+                                <% departmentsCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p>
+                            <label for="name">Contact name</label>
+                        </p>
+                        <p><label></label></p>
+                        <p>
+                            <label for="email">Email</label>
+
+                        </p>
+                        <p>
+                            <label for="func">Function</label>
+
+                        </p>
+                        <p>
+                            <label for="phone">Phone </label>
+
+                        </p>
+                        <p>
+                            <label for="mobile">Mobile </label>
+
+                        </p>
+                        <p></p>
+                        <p></p>
+                        <p>
+                            <label for="priority">Priority</label>
+                        </p>
+                        <p>
+                            <label for="name">Categories</label>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p><input type="text" class="name" id="first" placeholder="First" /></p>
+                        <p>
+                            <input type="text" class="name" id="last" placeholder="Last" />
+                        </p>
+                        <p><input type="text" id="email" /></p>
+                        <p><input type="text" id="func" /></p>
+                        <p><input type="text" id="phone" /></p>
+                        <p><input type="text" id="mobile" /></p>
+                        <p></p>
+                        <p></p>
+                        <p>
+                            <select id="priority">
+                                <option selected="selected" value="0">Select...</option>
+                                <% priorityCollection.each(function(option){ %>
+                                <option value="<%= option.get('priority') %>"><%= option.get('priority') %></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
             <div id="tabs">
                 <div>
-                    <ul id="tabList">
+                    <ul id="tabList" class="inner">
                         <li>
-                            <a href="#" class="selected">Internal Notes</a></li>
+                            <a href="#" class="selected">Internal Notes</a>
+                        </li>
                         <li>
-                            <a href="#">Extra Info</a></li>
+                            <a href="#">Extra Info</a>
+                        </li>
                     </ul>
+                    <br />
                 </div>
                 <div class="tab">
                     <textarea id="internalNotes"></textarea>
                 </div>
                 <div class="tab">
-                    <h2>Categorization</h2>
-                    <p>
-                        <label>Status</label>
-                    </p>
-                    <h2>Misc</h2>
-                    <p>
-                        <label>Active</label>
-                        <input type="checkbox" checked="checked" id="active" />
-                    </p>
-                    <p>
-                        <label>Referred By</label>
-                        <input type="text" id="reffered" />
-                    </p>
-                    <h2>Mailings</h2>
-                    <p>
-                        <label>Opt-Out</label>
-                        <input type="checkbox" id="optout" />
-                    </p>
+                    <div class="half-block left">
+                        <h3>Categorization</h3>
+                        <div class="half-block left">
+                            <p>
+                                <label>Status</label>
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p>
+
+                            </p>
+                        </div>                      
+                    </div>
+                    <div class="half-block left">
+                        <h3>Mailings</h3>
+                        <div class="half-block left">
+                            <p>
+                                <label>Opt-Out</label>
+
+                            </p>
+                        </div>
+                        <div class="half-block left">
+                            <p><input type="checkbox" id="optout" /></p>
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <h3>Misc</h3>
+                        <div class="half-block left">
+                            <p>
+                                <label>Active</label>
+                            </p>
+                            <p>
+                                <label>Referred By</label>
+                            </p>
+
+                        </div>
+                        <div class="half-block left">
+                            <p>
+                                <input type="checkbox" checked="checked" id="active" />
+                            </p>
+                            <p>
+                                <input type="text" id="reffered" />
+                            </p>
+                        </div>
+                    </div>
+
+
+
+
+                   
+                <div class="clearfix"></div>
                 </div>
             </div>
         </fieldset>

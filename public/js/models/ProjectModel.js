@@ -25,6 +25,15 @@ define(function () {
                     }
                 );
             }
+            if(attrs.projectShortDesc.trim() == ""){
+                errors.push(
+                    {
+                        name: "Project",
+                        field: "projectName",
+                        msg: "Project description can not be empty"
+                    }
+                );
+            }
             if(errors.length > 0)
                 return errors;
         },

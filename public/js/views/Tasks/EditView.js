@@ -103,7 +103,7 @@
 
                     var summary = $("#summary").val();
                     if ($.trim(summary) == "") {
-                        summary = "New Summary";
+                        summary = "";
                     }
 
                     var idProject = this.$("#projectDd option:selected").val();
@@ -143,7 +143,7 @@
 
                     var description = $("#description").val();
                     if ($.trim(description) == "") {
-                        description = "New Description";
+                        description = "";
                     }
 
                     var sequence = parseInt($.trim($("#sequence").val()));

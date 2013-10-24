@@ -79,7 +79,7 @@ define([
                     success: function (model) {
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
-                    error: function () {
+                    error: function (model, statusText, xhr) {
                         Backbone.history.navigate("home", { trigger: true });
                     }
                 });

@@ -7,6 +7,14 @@
         return _tempObject;
     };
 
+    var utcDateToLocaleDate = function(utcDateString){
+        //check if it is a correct utc date
+        if(utcDateString.indexOf("T") == -1 || utcDateString.indexOf("Z"))
+            throw new Error("UTC date parse error: input date was not in the correct format. -> Common.js");
+        var fixedDate = utcDateString.replace('T',' ').replace('Z','').concat(' UTC');
+        return new Date(fixedDate);
+    }
+
     var contentHolderHeightFixer = function () {
         $(window).ready(function () {
             var h = $(window).height();
@@ -114,6 +122,7 @@
     }
 
     return {
+        utcDateToLocaleDate:utcDateToLocaleDate,
         toObject: toObject,
         displayControlBtnsByActionType : displayControlBtnsByActionType,
         ISODateToDate: ISODateToDate,
