@@ -125,7 +125,7 @@ define([
         gantt.config.step = 1;
         gantt.config.readonly = true;
         gantt.config.date_scale = "%F";
-        gantt.config.scale_height = 50;
+        gantt.config.scale_height = 40;
         gantt.config.row_height = 20;
         gantt.config.drag_resize = false;
         gantt.config.min_column_width = 30;
@@ -135,25 +135,18 @@ define([
         ];
         gantt.config.task_scroll_offset = 140;
         gantt.config.subscales = [
-            {unit:"day", step:1, date: "%d", css: scaleStyle}
+            {unit:"day", step:1, date: "%d"}
         ];
-        var scaleStyle = function(date){
-            return "";
-        };
-
-        //gantt.templates.
 
         gantt.templates.scale_cell_class = function (date) {
             if (date.getDay() == 0 || date.getDay() == 6) {
                 return "weekend";
             }
-            //return "ordinaryDay";
         };
         gantt.templates.task_cell_class = function (item, date) {
             if (date.getDay() == 0 || date.getDay() == 6) {
                 return "weekend";
             }
-            //return "ordinaryDay";
         }
 
 
@@ -161,9 +154,9 @@ define([
             return "<b>Start date: </b>" + task.start_date + "<br/>" +
                 "<b>End date: </b>" + task.end_date;
         };*/
-        /*gantt.templates.leftside_text = function(start, end, task){
-            return "<b>Progress: </b>" + task.progress * 100 + "%";
-        };*/
+        gantt.templates.leftside_text = function(start, end, task){
+            return task.progress !== 0 ? "<b>Progress: </b>" + task.progress * 100 + "%" : "";
+        };
 
 
 
