@@ -1,0 +1,17 @@
+﻿<div class="formTitle">
+    <h3 class="left">Opportunities</h3>
+    <div class="btnHolder">
+        <button class="btn red">Create</button>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="inner scroll">
+    <% _.each(collection, function(model){ %>
+    <% if (model.company.name == company.name) { %>
+    <p>
+        <%=model.name%>
+    </p>
+    <% }%>
+    <% });%>
+    <div class="clearfix"></div>
+</div>
