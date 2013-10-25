@@ -11,7 +11,8 @@ define(function () {
                     data: $.param({
                         mid: mid
                     }),
-                    reset: true
+                    reset: true,
+                    success:this.fetchSuccess
                 });
             },
 
@@ -19,6 +20,9 @@ define(function () {
 
             parse: function (response) {
                 return response.data;
+            },
+            fetchSuccess: function (collection, response) {
+                console.log("Calendar fetchSuccess");
             }
         });
 

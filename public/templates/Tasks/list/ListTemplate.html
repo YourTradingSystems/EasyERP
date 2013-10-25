@@ -16,5 +16,20 @@
         </tr>
     </thead>
     <tbody>
+        <% tasksCollection.forEach(function(task, index){ %>
+            <tr data-index="<%= index %>">
+                <td><input type="checkbox"  value="<%=task._id%>" class="checkbox"/></td>
+                <td><%= index + 1 %></td>
+                <td><%=task.summary%></td>
+                <td><%=task.project.projectShortDesc%><%=task.taskCount%></td>
+                <td><%=task.project.name%></td>
+                <td><%=task.project.projectShortDesc%></td>
+                <td><%=task.assignedTo.name%></td>
+                <td><%=task.extrainfo.StartDate%></td>
+                <td><%=task.extrainfo.EndDate%></td>
+                <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
+                <td><%=task.workflow.name%></td>
+            </tr>
+        <% }) %>
     </tbody>
 </table>

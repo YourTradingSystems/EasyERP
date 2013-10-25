@@ -1,12 +1,10 @@
 define([
-    'jqueryui',
     'text!templates/Tasks/list/ListTemplate.html',
     'text!templates/Tasks/form/FormTemplate.html',
     'text!templates/Tasks/kanban/KanbanTemplate.html',
-    'collections/Tasks/TasksCollection',
+    'text!templates/Tasks/kanban/WorkflowsTemplate.html',
     'collections/Workflows/WorkflowsCollection',
     'collections/Projects/ProjectsCollection',
-    'views/Tasks/list/ListItemView',
     'views/Tasks/thumbnails/ThumbnailsItemView',
     'views/Tasks/kanban/KanbanItemView',
     'custom',
@@ -14,7 +12,7 @@ define([
     "GanttChart"
 ],
 
-function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, TasksCollection, WorkflowsCollection, ProjectsCollection, TasksListItemView, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
+function (TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate,WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -46,7 +44,8 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             "click .fold": "foldUnfoldColumn",
             "click .form p > a": "gotoProjectForm",
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         switchTab: function (e) {
@@ -57,6 +56,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             }
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
+        },
+
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Tasks/form/" + itemIndex;
         },
 
         gotoProjectForm: function (e) {
@@ -86,10 +91,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(TasksKanbanTemplate));
-                        _.each(workflows, function (workflow, index) {
-                            $("<div class='column' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
-                        });
+                        this.$el.html(_.template(WorkflowsTemplate, {workflowsCollection:this.workflowsCollection.toJSON()}));
 
                         $(".column").last().addClass("lastColumn");
 
@@ -104,7 +106,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                                     kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
                                     column.append(kanbanItemView.render().el);
                                     counter++;
-                                    remaining += model.get("estimated") - model.get("loged");
+                                    remaining += model.get("estimated") - model.get("logged");
                                 }
                             }, this);
                             column.find(".columnNameDiv").append("<p class='counter'>" + counter + "</p><a class='foldUnfold' href='#'><img hidden='hidden' src='./images/downCircleBlack.png'/></a><ul hidden='hidden' class='dropDownMenu'></ul><p class='remaining'>Remaining time: <span>" + remaining + "</span></p>");
@@ -113,14 +115,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                     }
                 case "list":
                     {
-                        this.$el.html('');
-                        this.$el.html(_.template(TasksListTemplate));
-                        if (models.length > 0) {
-                            var table = this.$el.find('table > tbody');
-                            _.each(models, function (model) {
-                                table.append(new TasksListItemView({ model: model }).render().el);
-                            }, this);
-                        }
+                        var jsonCollection = this.collection.toJSON();
+                        $.each(jsonCollection, function(index,value){
+                            value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
+                            value.extrainfo.EndDate = common.utcDateToLocaleDate(value.extrainfo.EndDate);
+                        });
+                        this.$el.html(_.template(TasksListTemplate, {tasksCollection:jsonCollection}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

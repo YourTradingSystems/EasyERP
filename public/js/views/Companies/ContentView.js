@@ -1,26 +1,33 @@
 define([
     'text!templates/Companies/list/ListTemplate.html',
     'text!templates/Companies/form/FormTemplate.html',
-    'collections/Companies/CompaniesCollection',
-    'views/Companies/list/ListItemView',
+    'collections/Opportunities/OpportunitiesCollection',
+    'collections/Persons/PersonsCollection',
     'views/Companies/thumbnails/ThumbnailsItemView',
+    'views/Opportunities/compactContent',
+    'views/Persons/compactContent',
     'custom',
     'common'
 
 ],
-function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, ThumbnailsItemView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Companies View');
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
-            this.render();
+            this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            this.personsCollection = new PersonsCollection();
+            this.personsCollection.bind('reset', _.bind(this.render, this));
+            //this.collection.bind('reset', _.bind(this.render, this));
+            //this.render();
         },
 
         events: {
             "click .checkbox": "checked",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         switchTab: function (e) {
@@ -32,7 +39,11 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
         },
-
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Companies/form/" + itemIndex;
+        },
         render: function () {
             console.log('Render Companies View');
             var viewType = Custom.getCurrentVT(),
@@ -41,15 +52,14 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
+                        this.$el.html(_.template(ListTemplate, {companiesCollection:this.collection.toJSON()}));
+                        //var table = this.$el.find('table > tbody');
 
-                        this.collection.each(function (model) {
+                        /*this.collection.each(function (model) {
                             table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        });*/
 
                         $('#check_all').click(function () {
-
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
                         });
@@ -89,6 +99,16 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                         else {
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                            this.$el.find('.formRightColumn').append(
+                                new opportunitiesCompactContentView({
+                                    collection: this.opportunitiesCollection,
+                                    model: currentModel
+                                }).render().el,
+                                new personsCompactContentView({
+                                    collection: this.personsCollection,
+                                    model: currentModel
+                                }).render().el
+                            );
                         }
 
                         break;
@@ -101,7 +121,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
         },
 
         checked: function () {
-            if (this.companiesCollection.length > 0) {
+            if (this.collection.length > 0) {
                 if ($("input:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else

@@ -40,12 +40,16 @@ require.config({
         less: './libs/less-1.4.1.min',
         templates: '../templates',
         text: './libs/text',
-        common: 'common'
+        common: 'common',
+        dateFormat: './libs/date.format'
     },
     shim: {
         'jqueryui': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less', 'jqueryui']
+        'app': ['Backbone', 'less', 'jqueryui'],
+        'dateFormat': {
+            exports: 'dateFormat'
+        }
     }
 });
 

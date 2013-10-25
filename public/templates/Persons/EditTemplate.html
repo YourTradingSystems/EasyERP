@@ -19,7 +19,7 @@
                 <select id="companiesDd">
                     <option selected="selected" value="0">Select...</option>
                     <% companiesCollection.each(function(option){ %>
-                        <option value="<%= option.id %>"><%= option.get('cname')%></option>
+                        <option value="<%= option.id %>"><%= option.get('name')%></option>
                     <% }); %>
                 </select>
             </p>
