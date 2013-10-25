@@ -1,7 +1,6 @@
 define([
     'text!templates/Tasks/list/ListTemplate.html',
     'text!templates/Tasks/form/FormTemplate.html',
-    'text!templates/Tasks/kanban/KanbanTemplate.html',
     'text!templates/Tasks/kanban/WorkflowsTemplate.html',
     'collections/Workflows/WorkflowsCollection',
     'collections/Projects/ProjectsCollection',
@@ -12,7 +11,7 @@ define([
     "GanttChart"
 ],
 
-function (TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate,WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
+function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {

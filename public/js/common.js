@@ -29,7 +29,7 @@
             });
             jQuery(window).resize(function () {
                 var h = $(window).height();
-                var hFixed = h - 100;
+                var hFixed = h - 101;
                 $('#content-holder').css('min-height', hFixed + 'px');
             });
         }

@@ -53,11 +53,6 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                 case "list":
                     {
                         this.$el.html(_.template(ListTemplate, {companiesCollection:this.collection.toJSON()}));
-                        //var table = this.$el.find('table > tbody');
-
-                        /*this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });*/
 
                         $('#check_all').click(function () {
                             var c = this.checked;
