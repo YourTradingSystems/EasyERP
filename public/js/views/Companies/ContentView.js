@@ -41,7 +41,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         },
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            var itemIndex = $(e.target).closest("tr").data("data-index") + 1;
             window.location.hash = "#home/content-Companies/form/" + itemIndex;
         },
         render: function () {
@@ -53,11 +53,6 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                 case "list":
                     {
                         this.$el.html(_.template(ListTemplate, {companiesCollection:this.collection.toJSON()}));
-                        //var table = this.$el.find('table > tbody');
-
-                        /*this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });*/
 
                         $('#check_all').click(function () {
                             var c = this.checked;
