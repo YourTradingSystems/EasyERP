@@ -617,10 +617,10 @@ h3 {
         }
 }
 
-.form(@width: 650px) {
+.form(@width: 650px){
     background-color: #fff;
-    width: @width;
-    // max-width: 860px;
+     min-width: @width;
+     max-width: 860px;
     margin: 0 auto;
     background: white;
     min-height: 130px;
@@ -782,6 +782,13 @@ h3 {
         min-height: 160px;
         resize: vertical;
     }
+}
+.form {
+.form;
+}
+.scroll {
+height:200px;
+overflow-y:scroll;
 }
 .formLeftColumn {
     width: 60%;
