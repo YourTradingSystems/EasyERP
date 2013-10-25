@@ -3,10 +3,8 @@ define([
     'text!templates/Tasks/list/ListTemplate.html',
     'text!templates/Tasks/form/FormTemplate.html',
     'text!templates/Tasks/kanban/KanbanTemplate.html',
-    'collections/Tasks/TasksCollection',
     'collections/Workflows/WorkflowsCollection',
     'collections/Projects/ProjectsCollection',
-    'views/Tasks/list/ListItemView',
     'views/Tasks/thumbnails/ThumbnailsItemView',
     'views/Tasks/kanban/KanbanItemView',
     'custom',
@@ -14,7 +12,7 @@ define([
     "GanttChart"
 ],
 
-function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, TasksCollection, WorkflowsCollection, ProjectsCollection, TasksListItemView, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
+function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -46,7 +44,8 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             "click .fold": "foldUnfoldColumn",
             "click .form p > a": "gotoProjectForm",
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         switchTab: function (e) {
@@ -57,6 +56,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
             }
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
+        },
+
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Tasks/form/" + itemIndex;
         },
 
         gotoProjectForm: function (e) {
@@ -113,14 +118,12 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, T
                     }
                 case "list":
                     {
-                        this.$el.html('');
-                        this.$el.html(_.template(TasksListTemplate));
-                        if (models.length > 0) {
-                            var table = this.$el.find('table > tbody');
-                            _.each(models, function (model) {
-                                table.append(new TasksListItemView({ model: model }).render().el);
-                            }, this);
-                        }
+                        var jsonCollection = this.collection.toJSON();
+                        $.each(jsonCollection, function(index,value){
+                            value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
+                            value.extrainfo.EndDate = common.utcDateToLocaleDate(value.extrainfo.EndDate);
+                        });
+                        this.$el.html(_.template(TasksListTemplate, {tasksCollection:jsonCollection}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
