@@ -11,8 +11,8 @@
         </thead>
         <tbody>
             <% companiesCollection.forEach(function(company, index){ %>
-             <tr>
-                <td><input type="checkbox" value="<%=company._id%>" class="checkbox"/></td>
+            <tr data-index="<%=index + 1%>">
+                <td><input type="checkbox" value="<%=company._id%>" class="checkbox" /></td>
                 <td><%=index + 1%></td>
                 <td><%=company.name%></td>
                 <td><%=company.email%></td>
@@ -20,7 +20,7 @@
                     <span><%=company.phones.phone%></span>
                     <span><%=company.phones.mobile%></span>
                 </td>
-             </tr>
+            </tr>
             <% }) %>
         </tbody>
     </table>

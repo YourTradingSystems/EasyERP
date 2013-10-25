@@ -41,7 +41,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         },
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            var itemIndex = $(e.target).closest("tr").data("index");
             window.location.hash = "#home/content-Companies/form/" + itemIndex;
         },
         render: function () {
