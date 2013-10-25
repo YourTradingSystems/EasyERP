@@ -5,7 +5,7 @@ define([
     function (ThumbnailsItemTemplate, common) {
         var ThumbnailsItemView = Backbone.View.extend({
             tagName: "div",
-            className: "thumbnail",
+            className: "thumbnailcusomers",
 
             initialize: function () {
                 this.model.on('change', this.render, this);

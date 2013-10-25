@@ -32,6 +32,7 @@
 @metroicon-font: "Metrize-Icons";
 @blue: #4d5a75;
 @lightmagenta: #7c7bad;
+@lightgrey:#c8c8d3;
 @dark-blue: #444f67;
 @bold-border: 3px solid;
 @thin-border: 1px solid;
@@ -616,10 +617,10 @@ h3 {
         }
 }
 
-.form {
+.form(@width: 650px) {
     background-color: #fff;
-    min-width: 650px;
-    max-width: 860px;
+    width: @width;
+    // max-width: 860px;
     margin: 0 auto;
     background: white;
     min-height: 130px;
@@ -629,6 +630,27 @@ h3 {
     -moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+    .formTitle {
+        width: 100%;
+        .gradient(#eee);
+        border-bottom: @thin-border @lightgrey;
+
+        .btnHolder {
+            .right;
+            padding:5px 16px;
+        }
+
+        h3 {
+            color: @blue !important;
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding: 8px 16px;
+        }
+    }
 
     h3 {
         margin-bottom: 10px;
@@ -761,7 +783,24 @@ h3 {
         resize: vertical;
     }
 }
-
+.formLeftColumn {
+    width: 60%;
+    float: left;
+    display:block;
+    .form{
+        .form(98%);
+        margin-bottom:10px;
+    }
+}
+.formRightColumn {
+    width:40%;
+    float:left;
+    display:block;
+    .form{
+        .form(98%);
+        margin-bottom:10px;
+    }
+}
 .title-input {
     font-size: 20px;
     padding: 4px;
@@ -906,8 +945,8 @@ input, textarea, select {
         -box-shadow: 0 0 4px #7c7bad;
     }
 }
-.thumbnailcusomers{
-     display: block;
+.thumbnailcusomers {
+    display: block;
     position: relative;
     float: left;
     width: 230px;
@@ -917,12 +956,18 @@ input, textarea, select {
     .border-radius;
     background: transparent !important;
 
+    .avatar {
+        img {
+            width:100%;
+        }
+    }
+
     .title {
         color: #7c7bad !important;
         font-size: 13px;
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-        line-height:20px;
+        line-height: 20px;
     }
 
     .inner {
@@ -934,7 +979,7 @@ input, textarea, select {
                 color: #000;
                 font-size: 13px;
                 font-weight: 200 !important;
-                line-height: 20px;               
+                line-height: 20px;
 
                 a {
                     word-break: break-all;
@@ -949,7 +994,7 @@ input, textarea, select {
         }
     }
 
-      .avatar {
+    .avatar {
         float: left;
         display: block;
         width: 60px;
@@ -963,9 +1008,9 @@ input, textarea, select {
         margin-right: 10px;
 
         img {
-            vertical-align:auto;
-            margin:auto 0;
-            display:block;
+            vertical-align: auto;
+            margin: auto 0;
+            display: block;
         }
     }
 }
@@ -1485,10 +1530,8 @@ button {
 
 .formHeader {
     height: 41px;
-    background-color: #ddd;
-    background-image: linear-gradient(to bottom, #fefefe, #eee);
+    .gradient( #ddd);  
     border-bottom: 1px solid #ddd;
-
     >button {
         margin: 7px 1px;
 
