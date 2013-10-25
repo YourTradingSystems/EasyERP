@@ -3,7 +3,6 @@ define([
     'text!templates/Companies/form/FormTemplate.html',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Persons/PersonsCollection',
-    'views/Companies/list/ListItemView',
     'views/Companies/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
@@ -11,7 +10,7 @@ define([
     'common'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, ListItemView, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
