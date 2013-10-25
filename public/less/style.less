@@ -32,7 +32,7 @@
 @metroicon-font: "Metrize-Icons";
 @blue: #4d5a75;
 @lightmagenta: #7c7bad;
-@lightgrey:#c8c8d3;
+@lightgrey: #c8c8d3;
 @dark-blue: #444f67;
 @bold-border: 3px solid;
 @thin-border: 1px solid;
@@ -60,6 +60,7 @@
         }
     }
 }
+
 a {
     color: @lightmagenta;
 
@@ -68,18 +69,19 @@ a {
     }
 
     &:focus {
-         outline: 0;
+        outline: 0;
     }
 }
+
 body {
     font-family: @body-font;
     font-size: 12px;
     height: 100%;
 }
 
- * {
-     &:focus{
-    outline: 0;
+* {
+    &:focus {
+        outline: 0;
     }
 }
 
@@ -118,13 +120,12 @@ article {
 }
 
 .ordinaryDay {
-  width: 70px !important;
-
+    width: 70px !important;
 }
+
 .weekend {
     background: #f4f7f4 !important;
     //width: 50px !important;
-
 }
 
 .left {
@@ -186,9 +187,10 @@ article {
     margin: 0;
     padding: 0;
 }
+
 #wrapper {
     background: #f0eeee;
-    height:100%;  
+    height: 100%;
 }
 
 #topmenu-holder {
@@ -248,7 +250,7 @@ article {
     left: 0;
     width: 170px;
     height: auto;
-   
+
 
     ul {
         li {
@@ -322,7 +324,7 @@ article {
 #content-holder {
     position: relative;
     display: block;
-    background:#fff;
+    background: #fff;
     border-left: @thin-border #afafb6;
     width: auto;
     margin-left: 171px;
@@ -595,7 +597,7 @@ h3 {
             font-size: 11px;
 
             &:nth-child(2) {
-                text-align:right;
+                text-align: right;
             }
 
             progress {
@@ -617,10 +619,10 @@ h3 {
         }
 }
 
-.form(@width: 860px){
+.form(@width: 860px) {
     background-color: #fff;
-     width: @width;
-     max-width: 860px;
+    width: @width;
+    max-width: 860px;
     margin: 0 auto;
     background: white;
     min-height: 130px;
@@ -638,7 +640,7 @@ h3 {
 
         .btnHolder {
             .right;
-            padding:5px 16px;
+            padding: 5px 16px;
         }
 
         h3 {
@@ -783,31 +785,38 @@ h3 {
         resize: vertical;
     }
 }
+
 .form {
-.form;
+    .form;
 }
+
 .scroll {
-height:200px;
-overflow-y:scroll;
+    height: 200px;
+    overflow-y: scroll;
 }
+
 .formLeftColumn {
     width: 60%;
     float: left;
-    display:block;
-    .form{
+    display: block;
+
+    .form {
         .form(98%);
-        margin-bottom:10px;
+        margin-bottom: 10px;
     }
 }
+
 .formRightColumn {
-    width:40%;
-    float:left;
-    display:block;
-    .form{
+    width: 40%;
+    float: left;
+    display: block;
+
+    .form {
         .form(98%);
-        margin-bottom:10px;
+        margin-bottom: 10px;
     }
 }
+
 .title-input {
     font-size: 20px;
     padding: 4px;
@@ -952,6 +961,7 @@ input, textarea, select {
         -box-shadow: 0 0 4px #7c7bad;
     }
 }
+
 .thumbnailcusomers {
     display: block;
     position: relative;
@@ -965,7 +975,7 @@ input, textarea, select {
 
     .avatar {
         img {
-            width:100%;
+            width: 100%;
         }
     }
 
@@ -1021,6 +1031,7 @@ input, textarea, select {
         }
     }
 }
+
 .thumbnailwithavatar {
     display: block;
     position: relative;
@@ -1037,8 +1048,8 @@ input, textarea, select {
         font-size: 13px;
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-        line-height:18px;
-        font-family:@lucida-font;
+        line-height: 18px;
+        font-family: @lucida-font;
     }
 
     .inner {
@@ -1050,7 +1061,7 @@ input, textarea, select {
                 color: #000;
                 font-size: 13px;
                 font-weight: 200 !important;
-                line-height: 16px;               
+                line-height: 16px;
 
                 a {
                     word-break: break-all;
@@ -1079,10 +1090,10 @@ input, textarea, select {
         margin-right: 10px;
 
         img {
-            width:100%;
-            vertical-align:auto;
-            margin:auto 0;
-            display:block;
+            width: 100%;
+            vertical-align: auto;
+            margin: auto 0;
+            display: block;
         }
     }
 }
@@ -1181,100 +1192,102 @@ button {
 // kanban styles
 .kanban {
     background-color: #f0eeee;
-}
+    height:100%;
+    width:100%;
+    overflow-y:auto;
+    .column {
+        float: left;
+        display:block;
+        width: 300px;
+        height: 100%;
+        border-right: 1px solid #afafb6;
 
-.column {
-    float: left;
-    position: relative;
-    width: 12.4%;
-    height: 101.5%;
-    border-right: 1px solid #afafb6;
-
-    h2 {
-        width: 70px;
-        padding: 4px;
-        text-align: left;
-        color: #333333;
-        font-size: 16px;
-        font-weight: bold;
-        text-shadow: 0 1px 0 white;
-        white-space: nowrap;
-    }
-
-    .columnNameDiv {
-        &:hover .counter, &.selected .counter {
-            display: none;
+        h2 {
+            width: 70px;
+            padding: 4px;
+            text-align: left;
+            color: #333333;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 1px 0 white;
+            white-space: nowrap;
         }
 
-        &:hover .foldUnfold img, &.selected .foldUnfold img {
-            margin: -20px 6px 3px 0;
-            width: 13px;
-            display: block;
+        .columnNameDiv {
+            &:hover .counter, &.selected .counter {
+                display: none;
+            }
+
+            &:hover .foldUnfold img, &.selected .foldUnfold img {
+                margin: -20px 6px 3px 0;
+                width: 13px;
+                display: block;
+                float: right;
+                cursor: pointer;
+            }
+        }
+
+        .counter {
             float: right;
-            cursor: pointer;
+            border: 1px solid #afafb6;
+            font-size: 11px;
+            padding: 3px 4px;
+            margin: -20px 6px 3px 0;
+            border-radius: 3px;
+            background: #f0f0fa;
+            color: #4c4c4c;
+        }
+
+        .remaining, .revenue {
+            margin-left: 3px;
+            font-size: 13px;
+            color: #4c4c4c;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        &.rotate h2 {
+            position: relative;
+            display: inline-block;
+            top: 60px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: normal;
+            color: grey;
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+
+        &.rotate .dropDownMenu {
+            top: 21px;
+        }
+
+        &.lastColumn .dropDownOpened {
+            right: 0;
         }
     }
 
-    .counter {
+    .applicationColumn {
+        width: 16%;
+    }
+
+    .dropDownMenu {
+        height: 10px;
+        width: 10px;
         float: right;
-        border: 1px solid #afafb6;
-        font-size: 11px;
-        padding: 3px 4px;
-        margin: -20px 6px 3px 0;
-        border-radius: 3px;
-        background: #f0f0fa;
-        color: #4c4c4c;
-    }
-
-    .remaining, .revenue {
-        margin-left: 3px;
-        font-size: 13px;
-        color: #4c4c4c;
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    }
-
-    &.rotate h2 {
-        position: relative;
-        display: inline-block;
-        top: 60px;
-        right: 15px;
-        font-size: 28px;
-        font-weight: normal;
-        color: grey;
-        -webkit-transform: rotate(90deg);
-        -moz-transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        -o-transform: rotate(90deg);
-    }
-
-    &.rotate .dropDownMenu {
-        top: 21px;
-    }
-
-    &.lastColumn .dropDownOpened {
+        margin: 5px;
+        padding: 3px 5px !important;
+        position: absolute;
+        top: 16px;
         right: 0;
-    }
-}
+        z-index: 1;
 
-.applicationColumn {
-    width: 16%;
-}
-
-.dropDownMenu {
-    height: 10px;
-    width: 10px;
-    float: right;
-    margin: 5px;
-    padding: 3px 5px !important;
-    position: absolute;
-    top: 16px;
-    right: 0;
-    z-index: 1;
-
-    & > li > a {
-        text-decoration: none;
-        text-align: left;
-        color: #34495E;
+        & > li > a {
+            text-decoration: none;
+            text-align: left;
+            color: #34495E;
+        }
     }
 }
 
@@ -1537,8 +1550,9 @@ button {
 
 .formHeader {
     height: 41px;
-    .gradient( #ddd);  
+    .gradient( #ddd);
     border-bottom: 1px solid #ddd;
+
     >button {
         margin: 7px 1px;
 
