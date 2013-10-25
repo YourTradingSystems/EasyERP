@@ -217,8 +217,10 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
             model.save({}, {
                 headers: {
                     mid: mid
+                },
+                success: function (model) {
+                    Backbone.history.navigate("#home/content-Employees", { trigger: true });
                 }
-
             });
         },
 
