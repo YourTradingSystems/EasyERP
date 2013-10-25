@@ -1,21 +1,24 @@
 define([
     'text!templates/Companies/list/ListTemplate.html',
     'text!templates/Companies/form/FormTemplate.html',
-    'collections/Companies/CompaniesCollection',
+    'collections/Opportunities/OpportunitiesCollection',
     'views/Companies/list/ListItemView',
     'views/Companies/thumbnails/ThumbnailsItemView',
+    'views/Opportunities/compactContent',
     'custom',
     'common'
 
 ],
-function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, ThumbnailsItemView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, ListItemView, ThumbnailsItemView, compactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Companies View');
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
-            this.render();
+            this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            //this.collection.bind('reset', _.bind(this.render, this));
+            //this.render();
         },
 
         events: {
@@ -89,6 +92,10 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
                         else {
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                            this.$el.find('.formRightColumn').append(new compactContentView({
+                                collection: this.opportunitiesCollection,
+                                model: currentModel
+                            }).render().el);
                         }
 
                         break;
@@ -101,7 +108,7 @@ function (ListTemplate, FormTemplate, CompaniesCollection, ListItemView, Thumbna
         },
 
         checked: function () {
-            if (this.companiesCollection.length > 0) {
+            if (this.collection.length > 0) {
                 if ($("input:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else

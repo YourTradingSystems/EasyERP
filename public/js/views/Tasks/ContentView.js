@@ -1,5 +1,4 @@
 define([
-    'jqueryui',
     'text!templates/Tasks/list/ListTemplate.html',
     'text!templates/Tasks/form/FormTemplate.html',
     'text!templates/Tasks/kanban/KanbanTemplate.html',
@@ -14,7 +13,7 @@ define([
     "GanttChart"
 ],
 
-function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, TasksCollection, WorkflowsCollection, ProjectsCollection, TasksListItemView, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
+function (TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, TasksCollection, WorkflowsCollection, ProjectsCollection, TasksListItemView, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
