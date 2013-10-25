@@ -27,7 +27,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
         events: {
             "click .checkbox": "checked",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         switchTab: function (e) {
@@ -39,7 +40,11 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
         },
-
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Companies/form/" + itemIndex;
+        },
         render: function () {
             console.log('Render Companies View');
             var viewType = Custom.getCurrentVT(),
