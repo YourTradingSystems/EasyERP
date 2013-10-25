@@ -17,8 +17,7 @@ define([
                     }),
                     type: 'GET',
                     reset: true,
-                    success: this.fetchSuccess,
-                    error: this.fetchError
+                    success: this.fetchSuccess
                 });
             },
 
@@ -26,6 +25,9 @@ define([
 
             parse: function (response) {
                 return response.data;
+            },
+            fetchSuccess: function(){
+                console.log("Employees fetchSuccess");
             }
         });
 

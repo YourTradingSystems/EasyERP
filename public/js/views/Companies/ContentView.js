@@ -48,15 +48,14 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
+                        this.$el.html(_.template(ListTemplate, {companiesCollection:this.collection.toJSON()}));
+                        //var table = this.$el.find('table > tbody');
 
-                        this.collection.each(function (model) {
+                        /*this.collection.each(function (model) {
                             table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        });*/
 
                         $('#check_all').click(function () {
-
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
                         });

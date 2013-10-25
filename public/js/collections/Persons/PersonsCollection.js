@@ -25,7 +25,8 @@ define([
                 return response.data;
             },
 
-            fetchSuccess: function(collection, response){
+            fetchSuccess:function(){
+                console.log("Persons fetchSuccess");
             },
             fetchError: function(error){
             }
