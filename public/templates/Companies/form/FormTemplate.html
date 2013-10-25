@@ -65,10 +65,7 @@
                 <div>
                     <ul id="tabList" class="inner">
                         <li>
-                            <a href="#" class="selected">Contacts</a>
-                        </li>
-                        <li>
-                            <a href="#">Internal Notes</a>
+                            <a href="#" class="selected">Internal Notes</a>
                         </li>
                         <li>
                             <a href="#">Sales & Purchases</a>
@@ -79,16 +76,7 @@
                     </ul>
                 </div>
                 <br />
-                <div class="tab">
-                    <% _.each(contacts,function(contact){ %>
-                    <div class="thumbnail">
-                        <%=contact.name%>
-                    </div>
-                    <% });%>
-                    <div class="clearfix"></div>
-                </div>
-
-
+                
                 <div class="tab">
                     <span><%=internalNotes%></span>
                 </div>
@@ -151,30 +139,7 @@
         </form>
     </div>
     <div class="formRightColumn">
-        <div class="form">
-            <div class="formTitle">
-                <h3 class="left">First Title</h3>
-                <div class="btnHolder">
-                <button class="btn red">Create</button>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-        </div>
-        <div class="form">
-            <div class="formTitle"><h3>Second Title</h3></div>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-        </div>
+        
     </div>
     <div class="clearfix"></div>
 

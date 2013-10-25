@@ -2,14 +2,16 @@ define([
     'text!templates/Companies/list/ListTemplate.html',
     'text!templates/Companies/form/FormTemplate.html',
     'collections/Opportunities/OpportunitiesCollection',
+    'collections/Persons/PersonsCollection',
     'views/Companies/list/ListItemView',
     'views/Companies/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
+    'views/Persons/compactContent',
     'custom',
     'common'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, ListItemView, ThumbnailsItemView, compactContentView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, ListItemView, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -17,6 +19,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, ListItemView, Thu
             this.collection = options.collection;
             this.opportunitiesCollection = new OpportunitiesCollection();
             this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            this.personsCollection = new PersonsCollection();
+            this.personsCollection.bind('reset', _.bind(this.render, this));
             //this.collection.bind('reset', _.bind(this.render, this));
             //this.render();
         },
@@ -92,10 +96,16 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, ListItemView, Thu
                         else {
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            this.$el.find('.formRightColumn').append(new compactContentView({
-                                collection: this.opportunitiesCollection,
-                                model: currentModel
-                            }).render().el);
+                            this.$el.find('.formRightColumn').append(
+                                new opportunitiesCompactContentView({
+                                    collection: this.opportunitiesCollection,
+                                    model: currentModel
+                                }).render().el,
+                                new personsCompactContentView({
+                                    collection: this.personsCollection,
+                                    model: currentModel
+                                }).render().el
+                            );
                         }
 
                         break;
