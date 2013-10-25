@@ -1,8 +1,8 @@
 define([
-    'jqueryui',
     'text!templates/Tasks/list/ListTemplate.html',
     'text!templates/Tasks/form/FormTemplate.html',
     'text!templates/Tasks/kanban/KanbanTemplate.html',
+    'text!templates/Tasks/kanban/WorkflowsTemplate.html',
     'collections/Workflows/WorkflowsCollection',
     'collections/Projects/ProjectsCollection',
     'views/Tasks/thumbnails/ThumbnailsItemView',
@@ -12,7 +12,7 @@ define([
     "GanttChart"
 ],
 
-function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
+function (TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate,WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -91,10 +91,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, W
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(TasksKanbanTemplate));
-                        _.each(workflows, function (workflow, index) {
-                            $("<div class='column' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
-                        });
+                        this.$el.html(_.template(WorkflowsTemplate, {workflowsCollection:this.workflowsCollection.toJSON()}));
 
                         $(".column").last().addClass("lastColumn");
 
@@ -109,7 +106,7 @@ function (jqueryui, TasksListTemplate, TasksFormTemplate, TasksKanbanTemplate, W
                                     kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
                                     column.append(kanbanItemView.render().el);
                                     counter++;
-                                    remaining += model.get("estimated") - model.get("loged");
+                                    remaining += model.get("estimated") - model.get("logged");
                                 }
                             }, this);
                             column.find(".columnNameDiv").append("<p class='counter'>" + counter + "</p><a class='foldUnfold' href='#'><img hidden='hidden' src='./images/downCircleBlack.png'/></a><ul hidden='hidden' class='dropDownMenu'></ul><p class='remaining'>Remaining time: <span>" + remaining + "</span></p>");
