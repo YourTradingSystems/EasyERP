@@ -14,7 +14,8 @@ define([
                     data: $.param({
                         mid: mid
                     }),
-                    reset: true
+                    reset: true,
+                    success: this.fetchSuccess
                 });
 
 
@@ -31,6 +32,9 @@ define([
 
                 });
                 return response.data;
+            },
+            fetchSuccess:function(){
+                console.log("Events fetchSuccess");
             }
 
         });

@@ -32,9 +32,6 @@ define(function () {
 
         fetchSuccess: function (collection, response) {
             console.log("Workflows fetchSuccess");
-            /*if (options.success) {
-                options.success(result);
-            }*/
         },
         fetchError: function (error) {
 
