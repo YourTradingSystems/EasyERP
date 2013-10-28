@@ -4,6 +4,7 @@
 
         defaults: {
             isOpportunitie: false,
+            createCustomer: false,
             name: 'New Lead',
             company: {
                 id: '',
