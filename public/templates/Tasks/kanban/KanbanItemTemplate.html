@@ -2,7 +2,8 @@
     <p><%=project.projectShortDesc%>-<%=taskCount%></p>
     <div class="dropDown">
         <a href="#">
-            <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden"/></a>
+            <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
+        </a>
         <ul class="dropDownOpened" hidden="hidden">
             <li>
                 <a href="#" id="edit">Edit...</a>
@@ -49,12 +50,12 @@
 </div>
 <div class="task-content">
     <div class="avatar-small right"><img class="person" src="./images/person.png" /></div>
-    <p><%=project.name%></p>
-    <p><%=summary%></p>
-    <% _.each(tags,function(tag){ %>
-            <span class="tag"><%=tag%></span>
-    <% });%>
-    <p class="deadline"><%=deadline%></p>
-    
-    <div class="clearfix"></div>
+    <div class="info">
+        <p><%=project.name%></p>
+        <p><%=summary%></p>
+        <% _.each(tags,function(tag){ %>
+        <span class="tag"><%=tag%></span>
+        <% });%>
+        <p class="deadline"><%=deadline%></p>
+    </div>
 </div>
