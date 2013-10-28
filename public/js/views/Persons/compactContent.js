@@ -7,6 +7,10 @@
 
             className: "form",
 
+            events: {
+                "click .inner scroll p > a": "gotoForm",
+            },
+
             initialize: function () {
                 
             },

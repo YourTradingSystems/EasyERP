@@ -5,11 +5,22 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<div class="inner scroll">
-    <% _.each(collection, function(model){ %>
+<div id="persons" class="inner scroll">
+    <% _.each(collection, function(model, index){ %>
     <% if (model.company.name == company.name) { %>
     <p>
-        <%=model.name.first%> <%=model.name.last%>
+        <a id="<%=++index%>" href="#">
+            <%=model.name.first%> <%=model.name.last%>
+        </a>
+    </p>
+    <p>
+        <%=model.phones.mobile%>
+    </p>
+    <p>
+        <%=model.phones.phone%>
+    </p>
+    <p>
+        <%=model.email%>
     </p>
     <% }%>
     <% });%>
