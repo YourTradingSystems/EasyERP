@@ -181,7 +181,7 @@ define([
                                             success: function (model) {
                                                 $(self).dialog("close");
                                                 that.opportunitiesCollection.add(model);
-                                                itemIndex = that.opportunitiesCollection.indexOf(model)+1;
+                                                itemIndex = that.opportunitiesCollection.indexOf(model) + 1;
                                                 Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
                                             }
 

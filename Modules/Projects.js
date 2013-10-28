@@ -15,6 +15,7 @@ var Project = function (logWriter, mongoose) {
         },
         projectmanager: {
             id: { type: String, default: '' },
+            imageSrc: { type: String, default: '' },
             name: { type: String, default: '' }
         },
         teams: { users: { type: Array, default: [] }, Teams: { type: Array, default: [] } },
@@ -46,7 +47,8 @@ var Project = function (logWriter, mongoose) {
         },
         assignedTo: {
             id: { type: String, default: '' },
-            name: { type: String, default: '' }
+            name: { type: String, default: '' },
+            imageSrc: { type: String, default: '' }
         },
         deadline: Date,
         tags: [String],
@@ -479,6 +481,9 @@ var Project = function (logWriter, mongoose) {
                         if (data.projectmanager._id) {
                             _project.projectmanager.id = data.projectmanager._id;
                         }
+                        if (data.projectmanager.imageSrc) {
+                            _project.projectmanager.imageSrc = data.projectmanager.imageSrc;
+                        }
                         if (data.projectmanager.name) {
                             _project.projectmanager.name = (data.projectmanager.name.first)
                                 ? ((data.projectmanager.name.last)
@@ -689,6 +694,9 @@ var Project = function (logWriter, mongoose) {
                         }
                     }
                     if (data.assignedTo) {
+                        if (data.assignedTo.imageSrc) {
+                            _project.assignedTo.imageSrc = data.assignedTo.imageSrc;
+                        }
                         if (data.assignedTo._id) {
                             _task.assignedTo.id = data.assignedTo._id;
                         }

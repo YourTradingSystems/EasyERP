@@ -123,6 +123,7 @@
                     if (_assignedTo) {
                         assignedTo.name = _assignedTo.name.first + " " + _assignedTo.name.last;
                         assignedTo.id = _assignedTo._id;
+                        assignedTo.imageSrc = _assignedTo.imageSrc;
                     } else {
                         assignedTo = currentModel.defaults.assignedTo;
                     }
