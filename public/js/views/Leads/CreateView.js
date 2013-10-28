@@ -126,6 +126,12 @@ define([
                 {
                     headers: {
                         mid: mid
+                    },
+                    success: function (model) {
+                        Backbone.history.navigate("home/content-Leads", { trigger: true });
+                    },
+                    error: function (model, xhr, options) {
+                        Backbone.history.navigate("home", { trigger: true });
                     }
                 });
 

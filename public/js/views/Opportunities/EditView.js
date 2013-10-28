@@ -288,6 +288,7 @@
 
                 }
                 common.contentHolderHeightFixer();
+                $('#nextActionDate').datepicker();
                 return this;
             }
 
