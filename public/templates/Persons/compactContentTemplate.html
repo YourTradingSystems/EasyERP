@@ -1,17 +1,32 @@
 ﻿<div class="formTitle">
-    <h3 class="left">Contacts</h3>
+    <h3 class="left">Persons</h3>
     <div class="btnHolder">
         <button class="btn red">Create</button>
     </div>
     <div class="clearfix"></div>
 </div>
-<div class="inner scroll">
-    <% _.each(collection, function(model){ %>
-    <% if (model.company.name == company.name) { %>
-    <p>
-        <%=model.name.first%> <%=model.name.last%>
-    </p>
-    <% }%>
-    <% });%>
+<div id="persons" class="inner scroll">
+    <ul>
+        <% _.each(collection, function(model, index){ %>
+        <% if (model.company.name == company.name) { %>
+        <li>
+            <p>
+                <a id="<%=++index%>" href="#">
+                    <%=model.name.first%> <%=model.name.last%>
+                </a>
+            </p>
+            <p>
+                <%=model.phones.mobile%>
+            </p>
+            <p>
+                <%=model.phones.phone%>
+            </p>
+            <p>
+                <%=model.email%>
+            </p>
+        </li>
+        <% }%>
+        <% });%>
+    </ul>
     <div class="clearfix"></div>
 </div>

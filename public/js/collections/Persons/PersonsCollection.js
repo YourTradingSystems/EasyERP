@@ -3,7 +3,8 @@ define([
 ],
     function (PersonModel) {
         var PersonsCollection = Backbone.Collection.extend({
-            model:PersonModel,
+            model: PersonModel,
+            idAttribute: "_id",
             url: function () {
                 return "/Persons";
             },
