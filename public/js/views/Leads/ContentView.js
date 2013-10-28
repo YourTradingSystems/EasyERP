@@ -19,7 +19,6 @@ define([
                 this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
-                this.render();
             },
 
             events: {
@@ -166,26 +165,49 @@ define([
                                     "Create opportunity": function () {
                                         var self = this;
                                         var id = $("form").data("id");
-                                        var model = that.collection.get(id);
+                                        var model;
                                         var createCustomer = ($("select#createCustomerOrNot option:selected").val()) ? true : false;
                                         var itemIndex = 0;
+                                        that.collection.unbind('reset');
+                                        that.collection.fetch({
+                                            success: function (collection) {
+                                                model = collection.get(id);
+                                                model.set({
+                                                    isOpportunitie: true,
+                                                    createCustomer: createCustomer
+                                                });
+                                                model.save({}, {
+                                                    headers: {
+                                                        mid: mid
+                                                    },
+                                                    success: function (model) {
+                                                        $(self).dialog("close");
+                                                        that.opportunitiesCollection.add(model);
+                                                        itemIndex = that.opportunitiesCollection.indexOf(model) + 1;
+                                                        Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
+                                                    }
 
-                                        model.set({
-                                            isOpportunitie: true,
-                                            createCustomer: createCustomer
-                                        });
-                                        model.save({}, {
-                                            headers: {
-                                                mid: mid
-                                            },
-                                            success: function (model) {
-                                                $(self).dialog("close");
-                                                that.opportunitiesCollection.add(model);
-                                                itemIndex = that.opportunitiesCollection.indexOf(model)+1;
-                                                Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
+                                                });
                                             }
-
                                         });
+                                       
+
+                                        //model.set({
+                                        //    isOpportunitie: true,
+                                        //    createCustomer: createCustomer
+                                        //});
+                                        //model.save({}, {
+                                        //    headers: {
+                                        //        mid: mid
+                                        //    },
+                                        //    success: function (model) {
+                                        //        $(self).dialog("close");
+                                        //        that.opportunitiesCollection.add(model);
+                                        //        itemIndex = that.opportunitiesCollection.indexOf(model)+1;
+                                        //        Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
+                                        //    }
+
+                                        //});
                                     },
                                     Cancel: function () {
                                         $(this).dialog("close");
@@ -200,7 +222,6 @@ define([
 
                         break;
                 }
-
                 common.contentHolderHeightFixer();
                 return this;
             },
