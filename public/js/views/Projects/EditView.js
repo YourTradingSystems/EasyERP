@@ -81,6 +81,7 @@ define([
                     var projectmanager = {};
                     if (_projectmanager) {
                         projectmanager.id = _projectmanager._id;
+                        projectmanager.imageSrc = _projectmanager.imageSrc;
                         projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
                     } else {
                         projectmanager = currentModel.defaults.projectmanager;

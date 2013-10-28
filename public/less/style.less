@@ -55,7 +55,6 @@
         p {
             label {
                 line-height: 30px;
-                font-size: 10px;
             }
         }
     }
@@ -622,7 +621,7 @@ h3 {
 .form(@width: 860px) {
     background-color: #fff;
     width: @width;
-    max-width: 860px;
+    max-width: @width;
     margin: 0 auto;
     background: white;
     min-height: 130px;
@@ -632,6 +631,30 @@ h3 {
     -moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+    .compactList {
+
+
+        li {
+            border-bottom: @thin-border @lightgrey;
+
+            &.inner {
+                margin: 0px !important;
+                padding: 10px;
+             
+
+                &:hover {
+                  background:#f1f1f1;
+               
+                }
+            }
+
+            p {
+                line-height: 20px !important;
+                min-height: 20px !important;
+            }
+        }
+    }
 
     .formTitle {
         width: 100%;
@@ -1191,11 +1214,13 @@ button {
 
 // kanban styles
 .scroll-x {
- overflow-x: scroll;
-     overflow-y: hidden;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
+
 .kanban {
-    background-color: #f0eeee;   
+    background-color: #f0eeee;
+
     .column {
         float: left;
         display: block;
@@ -1203,28 +1228,28 @@ button {
         height: 100%;
         border-right: 1px solid #afafb6;
 
-            .task {
-                word-wrap: break-word;
-                margin: 5px auto;
-                width: 95%;
-                text-align: left;
-                border: 1px solid @taskBorderColor;
-                .border-radius(3px);
-                background-color: #fff;
-                color: #2C3E50;
-                cursor: move;
-                transition: box-shadow 1s ease;
-                transition: border-color 1s ease;
+        .task {
+            word-wrap: break-word;
+            margin: 5px auto;
+            width: 95%;
+            text-align: left;
+            border: 1px solid @taskBorderColor;
+            .border-radius(3px);
+            background-color: #fff;
+            color: #2C3E50;
+            cursor: move;
+            transition: box-shadow 1s ease;
+            transition: border-color 1s ease;
 
-                .task-content {
-                    .info {
-                    padding:5px;
-                    }
+            .task-content {
+                .info {
+                    padding: 5px;
                 }
             }
+        }
+
         h2 {
             width: 70px;
-
             padding: 4px;
             text-align: left;
             color: #333333;
@@ -1246,8 +1271,6 @@ button {
                 float: right;
                 cursor: pointer;
             }
-
-        
         }
 
         .counter {

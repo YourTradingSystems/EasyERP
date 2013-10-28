@@ -5,11 +5,11 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<div id="opportunities" class="inner scroll">
-    <ul>
+<div id="opportunities" class="scroll">
+    <ul class="compactList">
         <% _.each(collection, function(model, index){ %>
         <% if (model.company.name == company.name) { %>
-        <li>
+        <li class="inner">
             <p>
                 <a id="<%=++index%>" href="#">
                     <%=model.name%>
