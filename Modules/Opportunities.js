@@ -46,7 +46,7 @@ var Opportunities = function (logWriter, mongoose) {
         internalNotes: { type: String, default: '' },
         nextAction: {
             desc: { type: String, default: '' },
-            date: { type: Date, default: null }
+            date: { type: Date, default: Date.now }
         },
         expectedClosing: { type: Date, default: null },
         priority: { type: String, default: 'Trivial' },

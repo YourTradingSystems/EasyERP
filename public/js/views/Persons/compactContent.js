@@ -8,7 +8,7 @@
             className: "form",
 
             events: {
-                "click .inner scroll p > a": "gotoForm",
+                "click #persons p > a": "gotoPersonsForm"
             },
 
             initialize: function () {
@@ -16,6 +16,12 @@
             },
 
             template: _.template(compactContentTemplate),
+
+            gotoPersonsForm: function (e) {
+                e.preventDefault();
+                var itemIndex = $(e.target).closest("a").attr("id");
+                window.location.hash = "#home/content-Persons/form/" + itemIndex;
+            },
 
             render: function () {
                 var collection = this.collection.toJSON();

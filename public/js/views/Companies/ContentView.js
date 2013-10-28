@@ -27,7 +27,6 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         events: {
             "click .checkbox": "checked",
             "click #tabList a": "switchTab",
-            "click #persons p > a": "gotoPersonsForm",
             "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
@@ -40,11 +39,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
         },
-        gotoPersonsForm: function (e) {
-            e.preventDefault();
-            var itemIndex = $(e.target).closest("a").attr("id");
-            window.location.hash = "#home/content-Persons/form/" + itemIndex;
-        },
+        
         gotoForm: function (e) {
             App.ownContentType = true;
             var itemIndex = $(e.target).closest("tr").data("index");
