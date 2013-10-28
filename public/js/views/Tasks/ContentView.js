@@ -116,10 +116,10 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 case "list":
                     {
                         var jsonCollection = this.collection.toJSON();
-                        $.each(jsonCollection, function(index,value){
+                        /*$.each(jsonCollection, function(index,value){
                             value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
                             value.extrainfo.EndDate = common.utcDateToLocaleDate(value.extrainfo.EndDate);
-                        });
+                        });*/
                         this.$el.html(_.template(TasksListTemplate, {tasksCollection:jsonCollection}));
 
                         $('#check_all').click(function () {
