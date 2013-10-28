@@ -35,8 +35,8 @@ require.config({
     paths: {
         jQuery: './libs/jquery',
         jqueryui: './libs/jquery-ui-1.10.3.custom.min',
-        Underscore: './libs/underscore',
-        Backbone: './libs/backbone',
+        Underscore: './libs/underscore_1.5.2',
+        Backbone: './libs/backbone v_1_1',
         less: './libs/less-1.4.1.min',
         templates: '../templates',
         text: './libs/text',
