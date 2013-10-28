@@ -2,18 +2,21 @@ define([
     'text!templates/Leads/list/ListTemplate.html',
     'text!templates/Leads/form/FormTemplate.html',
     'collections/Leads/LeadsCollection',
+    'collections/Opportunities/OpportunitiesCollection',
     'collections/Workflows/WorkflowsCollection',
     'views/Leads/list/ListItemView',
     'custom',
     'common'
 ],
-    function (ListTemplate, FormTemplate, LeadsCollection, WorkflowsCollection, ListItemView, Custom, common) {
+    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, ListItemView, Custom, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 console.log('Init Leads View');
                 this.workflowsCollection = new WorkflowsCollection({ id: 'lead' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
+                this.opportunitiesCollection = new OpportunitiesCollection();
+                this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
@@ -130,6 +133,7 @@ define([
                             } else {
                                 var currentModel = this.collection.models[itemIndex];
                                 this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                                currentModel.off('change');
                                 currentModel.on('change', this.render, this);
                                 var workflows = this.workflowsCollection.models;
                                 _.each(workflows, function (workflow, index) {
@@ -160,8 +164,11 @@ define([
                                 title: "Convert to opportunity",
                                 buttons: {
                                     "Create opportunity": function () {
-                                        var model = that.collection.get($("form").data("id"));
+                                        var self = this;
+                                        var id = $("form").data("id");
+                                        var model = that.collection.get(id);
                                         var createCustomer = ($("select#createCustomerOrNot option:selected").val()) ? true : false;
+                                        var itemIndex = 0;
 
                                         model.set({
                                             isOpportunitie: true,
@@ -170,6 +177,12 @@ define([
                                         model.save({}, {
                                             headers: {
                                                 mid: mid
+                                            },
+                                            success: function (model) {
+                                                $(self).dialog("close");
+                                                that.opportunitiesCollection.add(model);
+                                                itemIndex = that.opportunitiesCollection.indexOf(model)+1;
+                                                Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
                                             }
 
                                         });

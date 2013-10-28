@@ -1,11 +1,13 @@
-<div class="kanban">
-    <% workflowsCollection.forEach(function(workflow, index){ %>
-        <div class="column" data-index="<%=index%>" data-status="<%=workflow.status%>" data-name="<%=workflow.name%>" data-id="<%=workflow.id%>" >
+<div class="scroll-x">
+    <div class="kanban">
+        <% workflowsCollection.forEach(function(workflow, index){ %>
+        <div class="column" data-index="<%=index%>" data-status="<%=workflow.status%>" data-name="<%=workflow.name%>" data-id="<%=workflow.id%>">
             <div class="columnNameDiv">
                 <h2 class="columnName"><%=workflow.name%></h2>
             </div>
-            <div class="clearfix"></div>
-        </div>
-    <% }) %>
 
+        </div>
+        <% }) %>
+        <div class="clearfix"></div>
+    </div>
 </div>

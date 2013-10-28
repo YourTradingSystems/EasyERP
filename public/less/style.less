@@ -1190,17 +1190,38 @@ button {
 }
 
 // kanban styles
+.scroll-x {
+ overflow-x: scroll;
+     overflow-y: hidden;
+}
 .kanban {
-    background-color: #f0eeee;
-    height:100%;
-    width:100%;
-    overflow-y:auto;
+    background-color: #f0eeee;   
     .column {
         float: left;
-        display:block;
+        display: block;
         width: 300px;
         height: 100%;
         border-right: 1px solid #afafb6;
+
+            .task {
+                word-wrap: break-word;
+                margin: 5px auto;
+                width: 95%;
+                text-align: left;
+                border: 1px solid @taskBorderColor;
+                .border-radius(3px);
+                background-color: #fff;
+                color: #2C3E50;
+                cursor: move;
+                transition: box-shadow 1s ease;
+                transition: border-color 1s ease;
+
+                .task-content {
+                    .info {
+                    padding:5px;
+                    }
+                }
+            }
 
         h2 {
             width: 70px;
@@ -1225,6 +1246,8 @@ button {
                 float: right;
                 cursor: pointer;
             }
+
+        
         }
 
         .counter {
@@ -1482,7 +1505,7 @@ button {
     margin-bottom: 20px;
     display: block;
     float: right;
-    overflow: hidden;   
+    overflow: hidden;
     color: #6f6f6f;
 
     li {
@@ -1501,7 +1524,7 @@ button {
             background-repeat: no-repeat;
             background-position: 0px 0px;
             height: 25px;
-            text-decoration: none;        
+            text-decoration: none;
             cursor: pointer;
             color: #999999;
             text-shadow: 0 1px 0 #ffffff;
