@@ -22,16 +22,10 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             this.projectsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.render();
+            //this.render();
 
-            //$(window).resize(function () {
-            //    if (this.resizeTO) clearTimeout(this.resizeTO);
-            //    this.resizeTO = setTimeout(function () {
-            //        $(this).trigger('resizeEnd');
-            //    }, 1000);
-            //});         
             $(window).resize(function () {
-                that.$(".kanban").height($(window).height() - 119);            
+                that.$(".kanban").height($(window).height() - 119);
             });
 
         },
@@ -213,19 +207,15 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     var column = ui.item.closest(".column");
                     var model = that.collection.get(ui.item.attr("id"));
                     column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                    column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("loged")));
+                    column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
                 },
                 stop: function (event, ui) {
                     var model = that.collection.get(ui.item.attr("id"));
                     var column = ui.item.closest(".column");
-                    var ob = {
-                        workflow: {
-                            name: column.data("name"),
-                            status: column.data("status")
-                        }
-                    };
 
-                    model.set(ob);
+                    model.get('workflow').name = column.data('name');
+                    model.get('workflow').status= column.data('status');
+
                     model.save({}, {
                         headers: {
                             mid: mid
@@ -233,7 +223,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
                     });
                     column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
-                    column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("loged")));
+                    column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
                 }
             }).disableSelection();
             common.contentHolderHeightFixer();
@@ -331,9 +321,9 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                     {
-                        model = that.collection.get(this.$el.attr("id"));
-                        var remaining = model.get("estimated") - model.get("loged");
-                        this.$("#delete").closest(".task").fadeToggle(300, function () {
+                        model = this.model;
+                        var remaining = model.get("estimated") - model.get("logged");
+                        this.$("#delete").closest(".task").fadeToggle(200, function () {
                             model.destroy({
                                 headers: {
                                     mid: mid
@@ -344,7 +334,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                         var column = this.$el.closest(".column");
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                         column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - remaining);
-                        this.collection.trigger('reset');
+                        //this.collection.trigger('reset');
                         break;
                     }
                 case "list":
@@ -364,7 +354,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 case "thumbnails":
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
-                        this.$el.fadeToggle(300, function () {
+                        this.$el.fadeToggle(200, function () {
                             model.destroy({
                                 headers: {
                                     mid: mid
