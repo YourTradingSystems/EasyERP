@@ -10,11 +10,10 @@
 
         var utcDateToLocaleDate = function(utcDateString){
             if(utcDateString){
-                //check if it is a correct utc date
-                if(utcDateString.indexOf("T") == -1 || utcDateString.indexOf("Z") == -1)
-                    throw new Error("UTC date parse error: input date was not in the correct format. -> Common.js");
-                var fixedDate = utcDateString.replace('T',' ').replace('Z','').concat(' UTC');
-                return dateFormat(new Date(fixedDate), "dd-mm-yyyy hh:mm");
+                if(utcDateString.indexOf("T") !== -1 && utcDateString.indexOf("Z") !== -1)
+                    utcDateString = utcDateString.replace('T',' ').replace('Z','').concat(' UTC');
+                //else utcDateString.concat(' UTC');
+                return dateFormat(new Date(utcDateString), "dd-mm-yyyy hh:mm");
             }
             return "";
 

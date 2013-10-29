@@ -1,20 +1,16 @@
 define([
-    "collections/Events/EventsCollection",
-    "collections/Employees/EmployeesCollection",
-    "models/EventModel"
+    "collections/Employees/EmployeesCollection"
 ],
-function(EventsCollection,EmployeesCollection, EventModel){
+function(EmployeesCollection){
     var saveEventId;
     var miniCalendar;
 
     var initCalendar = function(calendarContainer, eventsCollection){
-        if(calendarContainer){
-            applyDefaults();
-            scheduler.init(calendarContainer, new Date(), "month");
-            //var events = new EventsCollection();
-            populatePersons();
-            scheduler.backbone(eventsCollection);
-        }
+        applyTemplates();
+        scheduler.init(calendarContainer, new Date(), "month");
+        //var events = new EventsCollection();
+        populatePersons();
+        scheduler.backbone(eventsCollection);
     }
 
     var initMiniCalendar = function(miniCalendarDiv){
@@ -27,8 +23,66 @@ function(EventsCollection,EmployeesCollection, EventModel){
         })
     }
 
-    var applyDefaults = function(personsCollection){
-        var personsOptions =  personsCollection;
+    var applyTemplates = function(){
+        scheduler.locale.labels.section_assignTo = "Assign To";
+        scheduler.locale.labels.section_eventType = "Event type";
+        scheduler.locale.labels.section_subject = "Subject";
+        scheduler.locale.labels.section_description = "Description";
+        scheduler.locale.labels.section_status = "Status";
+        scheduler.locale.labels.section_text = "Text";
+        scheduler.locale.labels.section_priority = "Priority";
+        scheduler.config.xml_date = "%Y/%m/%d";
+        scheduler.config.separate_short_events = true;
+        scheduler.config.event_duration = 60;
+        scheduler.config.auto_end_date = true;
+        scheduler.config.drag_move = true;
+        scheduler.config.details_on_create=true;
+        //scheduler.config.server_utc = true;
+        scheduler.config.cascade_event_display = true;
+        scheduler.config.cascade_event_count = 4;
+        scheduler.config.cascade_event_margin = 30;
+        scheduler.config.first_hour = 8;
+        scheduler.config.last_hour = 21;
+        scheduler.config.start_on_monday = true;
+
+        scheduler.attachEvent("onTemplatesReady", function(){
+            scheduler.templates.event_bar_text = function(start, end, ev){
+                return ev.subject || "New Event";
+            };
+            scheduler.templates.event_text = function(start, end, ev){
+                return ev.subject || "New Event";
+            };
+            scheduler.templates.tooltip_text = function(start,end, event){
+                return "<b>Event: </b>" + event.subject + "<br/><b>Start: </b>" + dateFormat(start, "dd-mm-yyyy hh:mm") + "<br/><b>End: </b>" + dateFormat(end, "dd-mm-yyyy hh:mm");
+            }
+            /*scheduler.tempalte.event_class = function(start, end, event){
+             if(start < (new Date()))
+             return "past_event";
+             }*/
+            /*scheduler.templates.event_date = function(start, end, ev){
+
+             }*/
+        });
+        if(!scheduler.checkEvent("onEventSave")){
+            scheduler.attachEvent('onEventSave', function(id, data, flag){
+                if(!data.subject){
+                    alert('Subject field can not be empty');
+                    return false;
+                }
+                if(data.subject.trim().length == 0){
+                    alert("Subject field can not contain whitespaces");
+                    scheduler.formSection('subject').setValue('');
+                    return false;
+                }
+                attachEventColor(id,data);
+                data.text = data.subject;
+                return true;
+            });
+        }
+    }
+
+    var applyDefaults = function(personsOptions){
+        var personsOptions =  personsOptions;
         var eventTypeOptions = [
             {key:"call", label: "Call"},
             {key:"todo", label: "To Do"},
@@ -53,59 +107,6 @@ function(EventsCollection,EmployeesCollection, EventModel){
             {name:"status", height: 30, type:"select", map_to: "status", options: statusOptions},
             {name:"priority", height: 30, type:"select", map_to: "priority", options: priorityOptions}
         ];
-        scheduler.locale.labels.section_assignTo = "Assign To";
-        scheduler.locale.labels.section_eventType = "Event type";
-        scheduler.locale.labels.section_subject = "Subject";
-        scheduler.locale.labels.section_description = "Description";
-        scheduler.locale.labels.section_status = "Status";
-        scheduler.locale.labels.section_text = "Text";
-        scheduler.locale.labels.section_priority = "Priority";
-        scheduler.config.xml_date = "%Y/%m/%d";
-        scheduler.config.separate_short_events = true;
-        scheduler.config.event_duration = 60;
-        scheduler.config.auto_end_date = true;
-        scheduler.config.drag_move = true;
-        //scheduler.config.server_utc = true;
-        scheduler.config.cascade_event_display = true;
-        scheduler.config.cascade_event_count = 4;
-        scheduler.config.cascade_event_margin = 30;
-        scheduler.config.first_hour = 8;
-        scheduler.config.last_hour = 21;
-        scheduler.config.start_on_monday = true;
-
-        scheduler.attachEvent("onTemplatesReady", function(){
-            scheduler.templates.event_bar_text = function(start, end, ev){
-                return ev.subject || "New Event";
-            };
-            scheduler.templates.event_text = function(start, end, ev){
-                return ev.subject || "New Event";
-            };
-            /*scheduler.tempalte.event_class = function(start, end, event){
-                if(start < (new Date()))
-                    return "past_event";
-            }*/
-            /*scheduler.templates.event_date = function(start, end, ev){
-
-            }*/
-        });
-        if(!scheduler.checkEvent("onEventSave")){
-            scheduler.attachEvent('onEventSave', function(id, data, flag){
-                if(!data.subject){
-                    alert('Subject field can not be empty');
-                    return false;
-                }
-                if(data.subject.trim().length == 0){
-                    alert("Subject field can not contain whitespaces");
-                    scheduler.formSection('subject').setValue('');
-                    return false;
-                }
-                attachEventColor(id,data);
-                return true;
-            });
-        }
-
-
-
     };
 
     var attachEventColor = function(id, data){
