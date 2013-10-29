@@ -80,10 +80,10 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             var projectId = window.location.hash.split('/')[3];
             if (!projectId || projectId.length < 24) {
                 models = this.collection.models;
-                App.projectId = null;
+                App.hash = null;
             }
             else {
-                App.projectId = projectId;
+                App.hash = projectId;
                 _.each(this.collection.models, function (item) {
                     if (item.get("project").id == projectId) models.push(item);
                 }, this);

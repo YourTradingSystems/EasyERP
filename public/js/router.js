@@ -15,9 +15,19 @@ define([
         routes: {
             "home": "main",
             "login": "login",
+            "home/content-:type/form(/:hash)": "getForm",
             "home/content-:type(/:viewtype)(/:hash)(/:curitem)": "getList",
             "home/action-:type/:action(/:hash)(/:curitem)": "makeAction",
             "*actions": "main"
+        },
+
+        getForm: function (contentType, hash) {
+            if (this.mainView == null) this.main();
+            console.log('GetForm: ' + contentType + " " + hash);
+            var ContentViewUrl = "views/" + contentType + "/ContentView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                ModelUrl = "models/" + contentType + "Model",
+                self = this;
         },
 
         getList: function (contentType, viewType, hash, itemIndex) {
@@ -84,6 +94,7 @@ define([
                     }
 
                     if (viewType === "form" && (!hash || hash.length == 24)) {
+                        App.hash = hash;
                         url += "/" + itemIndex;
                     }
                     
@@ -143,8 +154,8 @@ define([
                     if (action === "Edit" && contentType != "Profiles") {
                         url += "/" + itemIndex;
                     }
-                    if (!hash && App.projectId) {
-                        hash = App.projectId
+                    if (!hash && App.hash) {
+                        hash = App.hash
                     }
                     if (hash && (action === "Create" || action === "View" || action === "Edit")) {
                         url += "/" + hash
