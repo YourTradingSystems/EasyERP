@@ -26,7 +26,6 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
             $(window).resizr(function () {
                 that.$(".kanban").height($(window).height() - 119);
-                that.$(".kanban").width(301 * workflows.length);
             });
 
         },
@@ -133,7 +132,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                     }
             }
             this.$(".kanban").height($(window).height() - 119);
-            this.$(".kanban").width(301 * workflows.length);
+            this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",
