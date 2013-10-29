@@ -29,11 +29,9 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             //    this.resizeTO = setTimeout(function () {
             //        $(this).trigger('resizeEnd');
             //    }, 1000);
-            //});
-
+            //});         
             $(window).resize(function () {
-                that.$(".kanban").height($(window).height() - 119);
-                that.$(".kanban").width(301 * workflows.length);
+                that.$(".kanban").height($(window).height() - 119);            
             });
 
         },
@@ -202,7 +200,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     }
             }
             this.$(".kanban").height($(window).height() - 119);
-            this.$(".kanban").width(301 * workflows.length);
+            this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",

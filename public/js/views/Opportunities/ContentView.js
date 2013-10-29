@@ -25,8 +25,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             this.render();         
 
             $(window).resize(function () {
-                that.$(".kanban").height($(window).height() - 119);
-                that.$(".kanban").width(301 * workflows.length);
+                that.$(".kanban").height($(window).height() - 119);    
             });
 
         },
@@ -153,7 +152,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                     }
             }
             this.$(".kanban").height($(window).height() - 119);
-            this.$(".kanban").width(301 * workflows.length);
+            this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",
