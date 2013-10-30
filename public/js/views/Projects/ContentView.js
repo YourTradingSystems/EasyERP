@@ -81,6 +81,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                             } else {
                                 currentModel = models[itemIndex];
                             }
+                            this.collection.setElement(currentModel);
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             var workflows = this.workflowsCollection.models;

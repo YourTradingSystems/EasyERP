@@ -6,7 +6,7 @@ define([
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
     "collections/Priority/TaskPriority",
-    "models/TaskModel",
+    "models/TasksModel",
     "common",
     "custom"
 ],

@@ -236,6 +236,13 @@ app.get('/Projects', function (req, res) {
     requestHandler.getProjects(req, res, data);
 });
 
+app.get('/Projects/:_id', function (req, res) {
+    data = {};
+    data.id = req.params._id;
+    data.mid = req.param('mid');
+    requestHandler.getProjectsById(req, res, data);
+});
+
 app.get('/getProjectsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');

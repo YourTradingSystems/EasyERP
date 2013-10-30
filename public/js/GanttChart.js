@@ -1,7 +1,7 @@
 define([
     "custom",
     "models/ProjectsModel",
-    "models/TaskModel",
+    "models/TasksModel",
     "collections/Projects/ProjectsCollection",
     "collections/Tasks/TasksCollection"
 

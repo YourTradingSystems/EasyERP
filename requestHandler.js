@@ -224,6 +224,15 @@ var requestHandler = function (mongoose) {
         }
     };
 
+    function getProjectsById(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn) {
+            project.getById(data.id, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getProjectsForDd(req, res, data) {
         console.log("Requst getProjectsForDd is success");
         if (req.session && req.session.loggedIn) {
@@ -820,6 +829,7 @@ var requestHandler = function (mongoose) {
         getCustomer: getCustomer,
 
         getProjects: getProjects,
+        getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
         updateProject: updateProject,

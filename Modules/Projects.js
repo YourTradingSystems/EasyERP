@@ -589,6 +589,22 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
+    function getById(_id, response) {
+        var res = {};
+        res['data'] = [];
+        var query = project.findById(_id);
+        query.exec(function (err, project) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js getProjects project.find " + err);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                console.log(project);
+                response.send(project);
+            }
+        });
+    };
+
     function update(_id, data, res) {
         try {
             delete data._id;
@@ -962,6 +978,8 @@ var Project = function (logWriter, mongoose) {
         getForDd: getForDd,
 
         get: get,
+
+        getById: getById,
 
         update: update,
 
