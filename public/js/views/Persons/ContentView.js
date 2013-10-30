@@ -14,10 +14,9 @@ define([
         initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
+            //this.collection.bind('reset', _.bind(this.render, this));
             this.opportunitiesCollection = new OpportunitiesCollection();
             this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
-            this.render();
         },
 
         events: {
