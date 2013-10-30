@@ -358,7 +358,7 @@ var requestHandler = function (mongoose) {
     //------------------Workflow---------------------------------
 
     function getRelatedStatus(req, res, data) {
-        console.log("Requst getWorkflow is success");
+        console.log("Requst getRelatedStatus is success");
         if (req.session && req.session.loggedIn) {
             workflow.getRelatedStatus(res);
         } else {

@@ -164,6 +164,9 @@ define(['libs/date.format','common'], function (dateformat, common) {
                     case 'Birthdays':
                         App.currentViewType = "list";
                         break;
+                    case 'LeadsWorkflow':
+                        App.currentViewType = "list";
+                        break;
                     default:
                         App.currentViewType = "thumbnails";
                         break;
@@ -207,6 +210,9 @@ define(['libs/date.format','common'], function (dateformat, common) {
                         App.currentViewType = "kanban";
                         break;
                     case 'Birthdays':
+                        App.currentViewType = "list";
+                        break;
+                    case 'LeadsWorkflow':
                         App.currentViewType = "list";
                         break;
                     default:
