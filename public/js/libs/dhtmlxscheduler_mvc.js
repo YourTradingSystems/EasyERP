@@ -71,13 +71,13 @@ scheduler.backbone = function(events){
 		ev.save(upd);
 		return true;
 	});
-	if(!scheduler.checkEvent("onEventDeleted")){
-        scheduler.attachEvent("onEventDeleted", function(id){
-            var ev = scheduler.getEvents();
-            if (events.get(id))
-                events.get(id).destroy();
-            return true;
-        });
-}   }
+
+    scheduler.attachEvent("onEventDeleted", function(id){
+        var ev = scheduler.getEvents();
+        if (events.get(id))
+            events.get(id).destroy();
+        return true;
+    });
+   }
 
 })();

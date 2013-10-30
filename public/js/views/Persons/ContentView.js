@@ -1,18 +1,22 @@
 define([
     'text!templates/Persons/list/ListTemplate.html',
     'text!templates/Persons/form/FormTemplate.html',
+    'collections/Opportunities/OpportunitiesCollection',
     'views/Persons/list/ListItemView',
     'views/Persons/thumbnails/ThumbnailsItemView',
+    'views/Opportunities/compactContent',
     'custom',
     'common'
 
-], function (ListTemplate, FormTemplate, ListItemView, ThumbnailsItemView, Custom, common) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ListItemView, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
+            this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.render();
         },
 
@@ -63,10 +67,15 @@ define([
 
                         if (itemIndex == -1) {
                             this.$el.html();
-                        }
-                        else {
+                        } else {
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                            this.$el.find('.formRightColumn').append(
+                                new opportunitiesCompactContentView({
+                                    collection: this.opportunitiesCollection,
+                                    model: currentModel
+                                }).render(true).el
+                            );
                         }
                         break;
                     }

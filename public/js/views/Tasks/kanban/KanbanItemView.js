@@ -1,19 +1,28 @@
 define([
         "text!templates/Tasks/kanban/KanbanItemTemplate.html",
-        "collections/Tasks/TasksCollection",
         "common"
 ],
-    function (KanbanItemTemplate, TasksCollection, common) {
+    function (KanbanItemTemplate, common) {
         var TasksItemView = Backbone.View.extend({
             className: "task",
             id: function () {
                 return this.model.get("_id");
             },
+            colors:[
+                {dataColor: "#1ABC9C", className: "color_0"},
+                {dataColor: "#2ECC71", className: "color_1"},
+                {dataColor: "#3498DB", className: "color_2"},
+                {dataColor: "#9B59B6", className: "color_3"},
+                {dataColor: "#34495E", className: "color_4"},
+                {dataColor: "#F1C40F", className: "color_5"},
+                {dataColor: "#F39C12", className: "color_6"},
+                {dataColor: "#E74C3C", className: "color_7"},
+                {dataColor: "#27AE60", className: "color_8"},
+                {dataColor: "#2980B9", className: "color_9"},
+
+            ],
 
             initialize: function () {
-                this.model.on('change', this.render, this);
-                this.collection = new TasksCollection();
-                this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
 
@@ -82,7 +91,7 @@ define([
                     var deadlineString = this.model.get('deadline').split('T')[0];
                     this.model.set({ deadline: deadlineString.replace(/-/g, '/') }, { silent: true });
                 }
-                this.$el.html(this.template(this.model.toJSON()));
+                this.$el.html(this.template({model: this.model.toJSON(), colors: this.colors}));
                 if (this.isLater(todayString, deadlineString)) {
                     this.changeDeadlineColor();
                 }

@@ -3,14 +3,16 @@ define([
     'text!templates/Companies/form/FormTemplate.html',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Persons/PersonsCollection',
+    "collections/Events/EventsCollection",
     'views/Companies/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
     'custom',
-    'common'
+    'common',
+    'views/Calendar/compactCalendar'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, compactCalendar) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -18,6 +20,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.collection = options.collection;
             this.opportunitiesCollection = new OpportunitiesCollection();
             this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            //this.eventsCollection = new EventsCollection();
+            //this.eventsCollection.bind('reset', _.bind(this.render, this));
             this.personsCollection = new PersonsCollection();
             this.personsCollection.bind('reset', _.bind(this.render, this));
             //this.collection.bind('reset', _.bind(this.render, this));
@@ -70,9 +74,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         _.each(models, function (model) {
                             var address = model.get('address');
                             if (address.city && address.country) {
-                                console.log(address.country);
+                                //console.log(address.country);
                                 address.city = address.city + ", ";
-                                console.log(address.city);
+                                //console.log(address.city);
                                 model.set({ address: address }, { silent: true });
                             }
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
@@ -104,6 +108,11 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     collection: this.personsCollection,
                                     model: currentModel
                                 }).render().el
+                                /*new compactCalendar({
+                                    collection: this.eventsCollection,
+                                    model:currentModel
+                                }).render().el*/
+
                             );
                         }
 

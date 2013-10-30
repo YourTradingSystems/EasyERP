@@ -8,14 +8,10 @@ define([
             contentType: "Calendar",
             template: _.template(ContentTopBarTemplate),
             events:{
-                "click removeEventsBtn": "removeEvents"
-            },
-            removeEvents: function(e){
-                e.preventDefault();
-                this.trigger("removeEvents");
-            },
-            initialize: function(options){
 
+            },
+
+            initialize: function(options){
                 this.render();
             },
 
