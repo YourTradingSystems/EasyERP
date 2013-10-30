@@ -39,12 +39,7 @@
                     </div>
                     <div class="half-block left">                       
                         <p>
-                            <select id="company">
-                                <option selected="selected" value="0">Select...</option>
-                                <% companiesCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"<%=(option.get('_id')==model.company.id)?'selected="selected"':''%>><%= option.get('name') %></option>
-                                <% }); %>
-                            </select>
+                            <input type="text" id="company" value="<%= model.company %>" />
                         </p>
                         <p>
                             <select id="customer">

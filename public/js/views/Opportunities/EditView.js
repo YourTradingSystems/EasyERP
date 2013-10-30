@@ -117,11 +117,7 @@
 
                     var priority = $("#priority").val();
 
-                    var companyName = $.trim($("#company").val());
-                    var company = {
-                        id: "",
-                        name: companyName
-                    };
+                    var company = $.trim($("#company").val());
 
                     var internalNotes = $.trim($("#internalNotes").val());
 

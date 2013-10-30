@@ -8,11 +8,11 @@ define([
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
     'custom',
-    'common',
-    'views/Calendar/compactCalendar'
+    'common'
+    //'views/Calendar/compactCalendar'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, compactCalendar) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
