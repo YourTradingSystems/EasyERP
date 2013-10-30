@@ -327,7 +327,10 @@ app.get('/Workflows', function (req, res) {
 
 app.post('/Workflows', function (req, res) {
     data = {};
-    data = req.body;
+    data.mid = req.headers.mid;
+    data.value = req.body;
+    data.name = req.headers.id;
+    console.log(data);
     requestHandler.createWorkflow(req, res, data);
 });
 

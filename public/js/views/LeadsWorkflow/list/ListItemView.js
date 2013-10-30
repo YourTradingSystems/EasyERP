@@ -1,5 +1,5 @@
 define([
-    "text!templates/Departments/list/ListItemTemplate.html",
+    "text!templates/LeadsWorkflow/list/ListItemTemplate.html",
     "common"
 ],
     function (ListItemTemplate, common) {
@@ -17,7 +17,7 @@ define([
             gotoForm: function (e) {
                 App.ownContentType = true;
                 var itemIndex = $(e.target).closest("tr").data("index") + 1;
-                window.location.hash = "#home/content-Departments/form/" + itemIndex;
+                window.location.hash = "#home/content-LeadsWorkflow/form/" + itemIndex;
             },
 
             template: _.template(ListItemTemplate),

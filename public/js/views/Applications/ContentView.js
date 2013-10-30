@@ -24,7 +24,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
            
 
-            $(window).resizr(function () {
+            $(window).resize(function () {
                 that.$(".kanban").height($(window).height() - 119);
             });
 

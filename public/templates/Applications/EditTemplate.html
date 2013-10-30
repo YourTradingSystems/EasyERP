@@ -86,7 +86,7 @@
                     <option selected="selected" value="0">Select...</option>
                     <% jobPositionsCollection.each(function(option){ %>
                    
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.job.jobPositionId)?'selected="selected"':''%>><%= option.get('name')%></option>
+                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.jobPosition.id)?'selected="selected"':''%>><%= option.get('name')%></option>
                     <% }); %>
                
                 </select>
@@ -98,7 +98,7 @@
                     <option selected="selected" value="0">Select...</option>
                     <% departmentsCollection.each(function(option){ %>
                    
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.departmentId)?'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)?'selected="selected"':''%>><%= option.get('departmentName')%></option>
                     <% }); %>
                
                 </select>

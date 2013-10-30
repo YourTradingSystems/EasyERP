@@ -711,7 +711,7 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.assignedTo) {
                         if (data.assignedTo.imageSrc) {
-                            _project.assignedTo.imageSrc = data.assignedTo.imageSrc;
+                            _task.assignedTo.imageSrc = data.assignedTo.imageSrc;
                         }
                         if (data.assignedTo._id) {
                             _task.assignedTo.id = data.assignedTo._id;
