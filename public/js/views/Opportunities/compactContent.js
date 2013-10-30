@@ -1,16 +1,13 @@
 ﻿define([
     "text!templates/Opportunities/compactContentTemplate.html",
-    'collections/Companies/CompaniesCollection',
     "common"
 ],
-    function (compactContentTemplate, CompaniesCollection, common) {
+    function (compactContentTemplate, common) {
         var compactContentView = Backbone.View.extend({
 
             className: "form",
 
             initialize: function () {
-                this.companiesCollection = new CompaniesCollection();
-                this.companiesCollection.bind('reset', _.bind(this.render, this));
             },
 
             events: {
@@ -28,7 +25,7 @@
             render: function (options) {
                 var collection = this.collection.toJSON();
                 if (options) {
-                    var company = this.companiesCollection.get(this.model.get("company").id);
+                    var company = this.model.get("company");
                 } else {
                     company = this.model.toJSON();
                 }
