@@ -334,15 +334,15 @@ app.post('/Workflows', function (req, res) {
     requestHandler.createWorkflow(req, res, data);
 });
 
-app.put('/Workflows', function (req, res) {
+app.put('/Workflows/:id', function (req, res) {
     data = {};
+    data.id = req.param('id');
     data.mid = req.headers.mid;
     data.value = req.body;
     data.name = req.headers.id;
     console.log(data);
-    requestHandler.createWorkflow(req, res, data);
+    //requestHandler.createWorkflow(req, res, data);
 });
-
 //-------------------Companies--------------------------------------------------
 
 app.post('/Companies', function (req, res) {

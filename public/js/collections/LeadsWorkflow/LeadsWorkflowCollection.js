@@ -7,7 +7,7 @@ define(function () {
         model: WorkflowModel,
         url: function () {
             var mid = 39,
-                url = "/Workflows?mid=" + mid + "&id=lead";
+                url = "/Workflows";
             return url;
         },
 
@@ -15,7 +15,13 @@ define(function () {
 
         initialize: function () {
             console.log("Workflow Collection Init");
+            var mid = 39;
+
             this.fetch({
+                data: $.param({
+                    mid: mid,
+                    id: 'lead'
+                }),
                 type: 'GET',
                 reset: true,
                 success: this.fetchSuccess,
