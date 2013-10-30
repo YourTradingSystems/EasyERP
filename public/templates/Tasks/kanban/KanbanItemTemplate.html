@@ -1,5 +1,5 @@
 <div class="task-header">
-    <p><%=project.projectShortDesc%>-<%=taskCount%></p>
+    <p><%=model.project.projectShortDesc%>-<%=model.taskCount%></p>
     <div class="dropDown">
         <a href="#">
             <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
@@ -13,49 +13,24 @@
             </li>
             <li>
                 <ul class="colorPicker">
-                    <li>
-                        <a href="#" data-color="#1ABC9C" class="color_0"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#2ECC71" class="color_1"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#3498DB" class="color_2"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#9B59B6" class="color_3"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#34495E" class="color_4"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#F1C40F" class="color_5"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#F39C12" class="color_6"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#E74C3C" class="color_7"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#27AE60" class="color_8"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#2980B9" class="color_9"></a>
-                    </li>
+                    <% colors.forEach(function(color, index){ %>
+                        <li>
+                            <a href="#" data-color="<%=color.dataColor%>" class="<%= color.className %>"></a>
+                        </li>
+                    <% }) %>
                 </ul>
             </li>
         </ul>
     </div>
 </div>
 <div class="task-content">
-    <div class="avatar-small right"><img class="person" src="<%=assignedTo.imageSrc%>"  alt="<%=assignedTo.name%>"/></div>
+    <div class="avatar-small right"><img class="person" src="<%=model.assignedTo.imageSrc%>"  alt="<%=model.assignedTo.name%>"/></div>
     <div class="info">
-        <p><%=project.name%></p>
-        <p><%=summary%></p>
-        <% _.each(tags,function(tag){ %>
-        <span class="tag"><%=tag%></span>
+        <p><%=model.project.name%></p>
+        <p><%=model.summary%></p>
+        <% _.each(model.tags,function(tag){ %>
+             <span class="tag"><%=tag%></span>
         <% });%>
-        <p class="deadline"><%=deadline%></p>
+        <p class="deadline"><%=model.deadline%></p>
     </div>
 </div>

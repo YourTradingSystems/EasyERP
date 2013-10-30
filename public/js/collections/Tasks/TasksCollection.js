@@ -1,5 +1,5 @@
 define([
-    'models/TaskModel'
+    'models/TasksModel'
 ],
     function (TaskModel) {
         var TasksCollection = Backbone.Collection.extend({

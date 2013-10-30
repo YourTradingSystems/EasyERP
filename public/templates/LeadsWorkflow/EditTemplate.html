@@ -1,0 +1,21 @@
+<div class="form-holder">
+    <form method="post" action="" class="form">
+        <fieldset>
+                <div class="half-block left">
+                    <p><label for="name">Name</label></p>
+                    <p><label for="status">Status</label></p>
+                </div>
+                <div class="half-block left">
+                    <p><input type="text" class="title-input blueback" id="name" value="<%=model.name%>"/></p>
+                    <p>
+                        <select id="status">
+                            <option selected="selected" value="0">Select...</option>
+                             <% relatedStatusesCollection.each(function(option){ %>
+                                <option value="<%= option.get('_id') %>" <%=(option.get('status')==model.status)? 'selected="selected"':''%>><%= option.get('status')%></option>
+                             <% }); %>
+                        </select>
+                    </p>
+                </div>
+        </fieldset>
+    </form>
+</div>

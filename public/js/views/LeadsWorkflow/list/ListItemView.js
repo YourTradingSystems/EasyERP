@@ -1,6 +1,6 @@
 define([
-    "text!templates/Projects/list/ListItemTemplate.html",
-    'common'
+    "text!templates/LeadsWorkflow/list/ListItemTemplate.html",
+    "common"
 ],
     function (ListItemTemplate, common) {
         var ListItemView = Backbone.View.extend({
@@ -17,7 +17,7 @@ define([
             gotoForm: function (e) {
                 App.ownContentType = true;
                 var itemIndex = $(e.target).closest("tr").data("index") + 1;
-                window.location.hash = "#home/content-Projects/form/" + itemIndex;
+                window.location.hash = "#home/content-LeadsWorkflow/form/" + itemIndex;
             },
 
             template: _.template(ListItemTemplate),

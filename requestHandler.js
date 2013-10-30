@@ -224,6 +224,15 @@ var requestHandler = function (mongoose) {
         }
     };
 
+    function getProjectsById(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn) {
+            project.getById(data.id, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getProjectsForDd(req, res, data) {
         console.log("Requst getProjectsForDd is success");
         if (req.session && req.session.loggedIn) {
@@ -347,6 +356,16 @@ var requestHandler = function (mongoose) {
 
     //------------------END---Tasks------------------------------
     //------------------Workflow---------------------------------
+
+    function getRelatedStatus(req, res, data) {
+        console.log("Requst getRelatedStatus is success");
+        if (req.session && req.session.loggedIn) {
+            workflow.getRelatedStatus(res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getWorkflow(req, res, data) {
         console.log("Requst getWorkflow is success");
         if (req.session && req.session.loggedIn) {
@@ -356,27 +375,13 @@ var requestHandler = function (mongoose) {
         }
     };
 
-    function createWorkflow(res, data) {
+    function createWorkflow(req, res, data) {
         console.log("Requst createWorkflow is success");
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Allow Cross Site Origin", "*");
-        //dbSession.checkHash(data, function (result) {
-        //    console.log('Sending response for checkHash')
-        //    console.log(result);
-        //if (result.result.status == '0') {
-        workflow.create(data, function (result2) {
-            //        console.log('Sending response for getWorkflow');
-            //        console.log(result2);
-            //        res.send(result2);
-            //    });
-            //} else {
-            result['result'] = {};
-            result['result']['status'] = '4';
-            result['result']['description'] = 'Bad hash';
-            result['data'] = [];
-            res.send(result);
-            //}
-        });
+        if (req.session && req.session.loggedIn) {
+            workflow.create(data, res);
+        } else {
+            res.send(401);
+        }
     };
     //---------------------Companies-------------------------------
     function getCompanies(req, res, data) {
@@ -761,7 +766,7 @@ var requestHandler = function (mongoose) {
             res.send(401);
         }
     }
-    
+
     //--------------------Events--------------------------------
     function createEvent(req, res, data) {
         console.log("Requst createEvent is success");
@@ -820,6 +825,7 @@ var requestHandler = function (mongoose) {
         getCustomer: getCustomer,
 
         getProjects: getProjects,
+        getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
         updateProject: updateProject,
@@ -838,6 +844,7 @@ var requestHandler = function (mongoose) {
         createCompany: createCompany,
         updateCompany: updateCompany,
 
+        getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,
         createWorkflow: createWorkflow,
 
@@ -886,7 +893,7 @@ var requestHandler = function (mongoose) {
         getOpportunities: getOpportunities,
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
-        
+
         createEvent: createEvent,
         getEvents: getEvents,
         updateEvent: updateEvent,

@@ -2,13 +2,12 @@ define([
     'text!templates/Projects/list/ListTemplate.html',
     'text!templates/Projects/form/FormTemplate.html',
     'collections/Workflows/WorkflowsCollection',
-    'views/Projects/list/ListItemView',
     'views/Projects/thumbnails/ThumbnailsItemView',
     'custom',
     "GanttChart",
     'common'
 ],
-function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, ThumbnailsItemView, Custom, GanttChart, common) {
+function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, Custom, GanttChart, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -21,7 +20,13 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
 
         events: {
             "click .checkbox": "checked",
-            "click .breadcrumb a": "changeWorkflow"
+            "click .breadcrumb a": "changeWorkflow",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Projects/form/" + itemIndex;
         },
 
         render: function () {
@@ -31,16 +36,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html('');
-                        this.$el.html(_.template(ListTemplate));
-                        if (this.collection.length > 0) {
-                            var table = this.$el.find('table > tbody');
-                            this.collection.each(function (model) {
-                                table.append(new ListItemView({ model: model }).render().el);
-                            });
-                        } else {
-                            this.$el.html('<h2>No projects found</h2>');
-                        }
+                        this.$el.html(_.template(ListTemplate, {projectsCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -75,7 +71,13 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ListItemView, Thumbna
                         if (itemIndex == -1) {
                             this.$el.html('<h2>No projects found</h2>');
                         } else {
-                            var currentModel = models[itemIndex];
+                            var currentModel;
+                            if (App.hash) {
+                                currentModel = this.collection.get(App.hash)
+                            } else {
+                                currentModel = models[itemIndex];
+                            }
+                            this.collection.setElement(currentModel);
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             var workflows = this.workflowsCollection.models;

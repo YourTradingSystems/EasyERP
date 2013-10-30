@@ -14,13 +14,17 @@ define([
                     data: $.param({
                         mid: mid
                     }),
-                    reset: true
+                    reset: true,
+                    success: this.fetchSuccess
                 });
             },
             parse: true,
 
             parse: function (response) {
                 return response.data;
+            },
+            fetchSuccess : function(){
+                console.log('Profiles fetch Success');
             }
         });
 

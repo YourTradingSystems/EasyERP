@@ -7,12 +7,11 @@
 
             className: "form",
 
-            events: {
-                "click #opportunities p > a": "gotoOpportunitieForm"
+            initialize: function () {
             },
 
-            initialize: function () {
-                //this.company = options.company;
+            events: {
+                "click #opportunities p > a": "gotoOpportunitieForm"
             },
 
             template: _.template(compactContentTemplate),
@@ -23,9 +22,13 @@
                 window.location.hash = "#home/content-Opportunities/form/" + itemIndex;
             },
 
-            render: function () {
+            render: function (options) {
                 var collection = this.collection.toJSON();
-                var company = this.model.toJSON();
+                if (options) {
+                    var company = this.model.get("company");
+                } else {
+                    company = this.model.toJSON();
+                }
                 this.$el.html(this.template({
                     collection: collection,
                     company: company

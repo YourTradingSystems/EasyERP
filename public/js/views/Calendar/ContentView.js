@@ -2,24 +2,19 @@ define([
     "text!templates/Calendar/CalendarTemplate.html",
     "Calendar",
     "collections/Events/EventsCollection",
-    "collections/Employees/EmployeesCollection",
     "common"
 ],
-function (CalendarTemplate, Calendar, EventsCollection, EmployeesCollection, common) {
+function (CalendarTemplate, Calendar, EventsCollection, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         template: _.template(CalendarTemplate),
-        initialize: function (options) {
+        initialize: function () {
             this.eventsCollection = new EventsCollection();
-            //this.employeesCollection  = new EmployeesCollection();
             this.eventsCollection.bind('reset', _.bind(this.render, this));
-            //this.employeesCollection.bind('reset', _.bind(this.render, this));
             this.render();
         },
 
-        events: {
-
-        },
+        events: { },
 
         render: function () {
             this.$el.html(this.template());

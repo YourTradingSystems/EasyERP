@@ -32,7 +32,7 @@ define([
                     hash = null;
                 }
             }
-            
+
             console.log('GetList: ' + contentType + " " + viewType + " " + hash + " " + itemIndex);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",
@@ -48,8 +48,11 @@ define([
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 var contentCollection = new ContentCollection();
                 contentCollection.bind('reset', _.bind(createViews, self));
+                contentCollection.next = _.bind(self.Custom.next, contentCollection);
+                contentCollection.prev = _.bind(self.Custom.prev, contentCollection);
+                contentCollection.setElement = _.bind(self.Custom.setElement, contentCollection);
+                contentCollection.getElement = _.bind(self.Custom.getElement, contentCollection);
                 function createViews() {
-
                     contentCollection.unbind('reset');
                     this.Custom.setCurrentCL(contentCollection.models.length);
 
@@ -74,7 +77,7 @@ define([
                     viewType = this.Custom.getCurrentVT({
                         contentType: contentType
                     });
-                    
+
                     itemIndex = this.Custom.getCurrentII();
 
                     var url = "#home/content-" + contentType + "/" + viewType;
@@ -84,17 +87,18 @@ define([
                     }
 
                     if (viewType === "form" && (!hash || hash.length == 24)) {
+                        App.hash = hash;
                         url += "/" + itemIndex;
                     }
-                    
+
                     var contentView = new ContentView({ collection: contentCollection });
                     var topBarView = new TopBarView({ actionType: "Content" });
-                    
+
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
-                   
+
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    
+
                     Backbone.history.navigate(url, { replace: true });
                 }
             });
@@ -143,21 +147,20 @@ define([
                     if (action === "Edit" && contentType != "Profiles") {
                         url += "/" + itemIndex;
                     }
-                    if (!hash && App.projectId) {
-                        hash = App.projectId
+                    if (!hash && App.hash) {
+                        hash = App.hash
                     }
                     if (hash && (action === "Create" || action === "View" || action === "Edit")) {
                         url += "/" + hash
                     }
-                   
+
                     Backbone.history.navigate(url, { replace: true });
 
-                    var topBarView = new TopBarView({ actionType: action}),
+                    var topBarView = new TopBarView({ actionType: action }),
                         actionView = new ActionView({ collection: contentCollection, pId: hash });
 
                     topBarView.bind('saveEvent', actionView.saveItem, actionView);
-                    if(contentType == "Profiles")
-                    {
+                    if (contentType == "Profiles") {
                         topBarView.bind('nextEvent', actionView.nextForm, actionView);
                         topBarView.bind('deleteEvent', actionView.deleteItem, actionView);
                     }

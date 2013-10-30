@@ -77,6 +77,21 @@ define(['libs/date.format','common'], function (dateformat, common) {
         Backbone.history.navigate(url, { trigger: true });
     };
 
+    var getElement = function() {
+        return this.currentElement;
+    };
+    var setElement = function(model) {
+        this.currentElement = model;
+    };
+    var next = function (){
+        this.setElement(this.at(this.indexOf(this.getElement()) + 1));
+        return this;
+    };
+    var prev = function() {
+        this.setElement(this.at(this.indexOf(this.getElement()) - 1));
+        return this;
+    }
+
     var getCurrentII = function () {
         if (App.currentItemIndex == null) {
             App.currentItemIndex = 1;
@@ -88,6 +103,9 @@ define(['libs/date.format','common'], function (dateformat, common) {
             App.currentItemIndex = 0;
             itemIndex = 0;
         } else {
+        //if (!App.currentItemIndex){
+        //    itemIndex = null;
+        //} else {
             itemIndex = App.currentItemIndex;
         }
         return itemIndex;
@@ -146,6 +164,9 @@ define(['libs/date.format','common'], function (dateformat, common) {
                     case 'Birthdays':
                         App.currentViewType = "list";
                         break;
+                    case 'LeadsWorkflow':
+                        App.currentViewType = "list";
+                        break;
                     default:
                         App.currentViewType = "thumbnails";
                         break;
@@ -189,6 +210,9 @@ define(['libs/date.format','common'], function (dateformat, common) {
                         App.currentViewType = "kanban";
                         break;
                     case 'Birthdays':
+                        App.currentViewType = "list";
+                        break;
+                    case 'LeadsWorkflow':
                         App.currentViewType = "list";
                         break;
                     default:
@@ -373,6 +397,10 @@ define(['libs/date.format','common'], function (dateformat, common) {
 
         calculateHours: calculateHours,
 
+        getElement: getElement,
+        setElement: setElement,
+        next: next,
+        prev: prev,
 
         runApplication: runApplication,
         changeItemIndex: changeItemIndex,

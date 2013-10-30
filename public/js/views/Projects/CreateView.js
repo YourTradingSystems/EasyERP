@@ -3,7 +3,7 @@ define([
     "collections/Customers/AccountsDdCollection",
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
-    "models/ProjectModel",
+    "models/ProjectsModel",
     "common"
 ],
     function (CreateTemplate, AccountsDdCollection, CustomersCollection, WorkflowsCollection, ProjectModel, common) {

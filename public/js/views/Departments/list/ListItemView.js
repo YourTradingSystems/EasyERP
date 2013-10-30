@@ -1,7 +1,8 @@
 define([
     "text!templates/Departments/list/ListItemTemplate.html",
+    "common"
 ],
-    function (ListItemTemplate) {
+    function (ListItemTemplate, common) {
         var ListItemView = Backbone.View.extend({
             tagName:"tr",
 

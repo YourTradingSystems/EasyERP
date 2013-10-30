@@ -236,6 +236,13 @@ app.get('/Projects', function (req, res) {
     requestHandler.getProjects(req, res, data);
 });
 
+app.get('/Projects/:_id', function (req, res) {
+    data = {};
+    data.id = req.params._id;
+    data.mid = req.param('mid');
+    requestHandler.getProjectsById(req, res, data);
+});
+
 app.get('/getProjectsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -305,6 +312,12 @@ app.delete('/Tasks/:_id', function (req, res) {
 
 //------------------Workflows---------------------------------------------------
 
+app.get('/relatedStatus', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getRelatedStatus(req, res, data);
+});
+
 app.get('/Workflows', function (req, res) {
     data = {};
     data.id = req.param('id');
@@ -312,16 +325,24 @@ app.get('/Workflows', function (req, res) {
     requestHandler.getWorkflow(req, res, data);
 });
 
-app.post('/createWorkflow', function (req, res) {
-    console.log(req.body);
+app.post('/Workflows', function (req, res) {
     data = {};
-    data = req.body;
-    //data.uid = req.param('uid');
-    //data.id = req.param('id');
+    data.mid = req.headers.mid;
+    data.value = req.body;
+    data.name = req.headers.id;
     console.log(data);
-    requestHandler.createWorkflow(res, data);
+    requestHandler.createWorkflow(req, res, data);
 });
 
+app.put('/Workflows/:id', function (req, res) {
+    data = {};
+    data.id = req.param('id');
+    data.mid = req.headers.mid;
+    data.value = req.body;
+    data.name = req.headers.id;
+    console.log(data);
+    //requestHandler.createWorkflow(req, res, data);
+});
 //-------------------Companies--------------------------------------------------
 
 app.post('/Companies', function (req, res) {
@@ -555,6 +576,7 @@ app.put('/Leads/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.lead = req.body;
+    console.log(data);
     requestHandler.updateLead(req, res, id, data);
 });
 
