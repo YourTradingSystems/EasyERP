@@ -76,6 +76,10 @@ body {
     font-family: @body-font;
     font-size: 12px;
     height: 100%;
+    overflow:hidden;
+}
+html {
+overflow:hidden;
 }
 
 * {
@@ -96,10 +100,10 @@ body {
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
-.box-shadow (@x: 0, @y: 0, @blur: 1px, @color: #000) {
+.box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
-    -webkit-box-shadow: @arguments;
+    -webkit-box-shadow: @arguments;    
 }
 
 .border-radius(@radius: 4px) {
@@ -327,6 +331,7 @@ article {
     border-left: @thin-border #afafb6;
     width: auto;
     margin-left: 171px;
+    overflow:auto;
 }
 
 #top-bar {
@@ -465,7 +470,6 @@ h3 {
     font-family: @icon-font;
     text-decoration: none;
     font-weight: 300 !important;
-    text-shadow: 0px 1px 2px black;
     line-height: 17px;
 }
 
@@ -486,11 +490,18 @@ h3 {
 }
 
 .metroicon {
-    font-size: 26px;
+    font-size: 34px;
     font-family: @metroicon-font;
     text-decoration: none;
     font-weight: 300 !important;
-    line-height: 24px;
+    line-height: 38px;
+}
+.circle {
+    height:16px;
+    width:16px;
+    border: 3px solid @lightgrey;
+    line-height:22px !important;
+    .border-radius(16px);
 }
 
 .icon-btn {
@@ -500,6 +511,9 @@ h3 {
     text-align: center;
     width: 100%;
     height: 100%;
+    font-weight:100 !important;
+    cursor: pointer;   
+
 }
 
 .btn-list {
@@ -547,6 +561,11 @@ h3 {
 .dark {
     color: #4c4c4c;
     text-shadow: 0px 1px 2px white;
+}
+
+.lightgrey {
+color:#cecece;
+
 }
 
 .list {
@@ -618,7 +637,7 @@ h3 {
         }
 }
 
-.form(@width: 860px) {
+.form(@width: 860px, @border:1px) {
     background-color: #fff;
     width: @width;
     max-width: @width;
@@ -627,10 +646,8 @@ h3 {
     min-height: 130px;
     display: block;
     position: relative;
-    border: 1px solid #c8c8d3;
-    -moz-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: @border solid #c8c8d3;
+  
 
     .compactList {
 
@@ -658,7 +675,6 @@ h3 {
 
     .formTitle {
         width: 100%;
-        .gradient(#eee);
         border-bottom: @thin-border @lightgrey;
 
         .btnHolder {
@@ -667,13 +683,14 @@ h3 {
         }
 
         h3 {
-            color: @blue !important;
+            color: #333 !important;
             margin: 0;
-            font-size: 16px;
-            font-weight: bold;
+            font-family:'Open Sans',sans-serif;
+            font-size: 18px;
+            font-weight: normal;
             white-space: nowrap;
             text-overflow: ellipsis;
-            padding: 8px 16px;
+            padding: 8px 8px;
         }
     }
 
@@ -835,7 +852,7 @@ h3 {
     display: block;
 
     .form {
-        .form(98%);
+        .form(98%, 0px);
         margin-bottom: 10px;
     }
 }
@@ -846,9 +863,9 @@ h3 {
 }
 
 .form-holder {
-    background: url("@{imagesfolder}/form_sheetbg.png");
+    /*background: url("@{imagesfolder}/form_sheetbg.png");*/
     padding: 20px 0px;
-    border-bottom: 1px solid #dddddd;
+    /*border-bottom: 1px solid #dddddd;*/
 }
 
 input, textarea, select {
@@ -1182,7 +1199,7 @@ button {
         border: 1px solid transparent;
         border-bottom: none;
         text-decoration: none;
-        border-radius: 5px 5px 0 0;
+        border-radius: 0 0;
         color: #4c4c4c;
 
         &:hover {
@@ -1194,9 +1211,11 @@ button {
 
         &.selected {
             border: 1px solid @tabColor;
+            border-top:3px solid @blue;
             border-bottom: none;
             background: #fff;
             color: #4c4c4c;
+            margin-top:-2px;
         }
     }
 }
@@ -1214,18 +1233,34 @@ button {
 
 // kanban styles
 .scroll-x {
-    overflow-x: scroll;
-    overflow-y: hidden;
+       overflow-x: auto;
+    overflow-y: auto; 
 }
 
 .kanban {
     background-color: #f0eeee;
-
+    overflow-x: hidden;
+    overflow-y: hidden; 
+    height:auto;width:auto;
+    min-height:100%;
+    min-width:100%; 
+      display: flex;
+    display: -webkit-flex;
+    display: -moz-box;
+    .inner {
+        padding: 5px;
+    }
+    .opportunity-header {
+        h3 {
+            text-align: right;
+        }
+    }
     .column {
+        min-height:100%;
         float: left;
-        display: block;
-        width: 300px;
-        height: 100%;
+        display:block;
+        width: 250px;
+        height: auto;
         border-right: 1px solid #afafb6;
 
         .task {
@@ -1371,9 +1406,8 @@ button {
 }
 
 .task-header,
-.application-header,
-.opportunity-header {
-    padding: 1px 0 4px 4px;
+.application-header {
+        padding: 1px 0 4px 4px;
     background-color: @taskBorderColor;
     color: #fff;
     border-bottom-left-radius: 0;

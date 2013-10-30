@@ -62,7 +62,7 @@ define([
             },
 
             changeColor: function (color) {
-                this.$(".colorPicker a").closest(".opportunity-header").css('background-color', color).closest(".opportunity").css('border-color', color);
+                this.$(".colorPicker a").closest(".opportunity").css('border-color', color);
             },
 
             render: function () {
