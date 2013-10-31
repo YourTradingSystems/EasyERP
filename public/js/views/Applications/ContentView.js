@@ -5,12 +5,12 @@ define([
     'text!templates/Applications/kanban/KanbanTemplate.html',
     'collections/Applications/ApplicationsCollection',
     'collections/Workflows/WorkflowsCollection',
-    'views/Applications/list/ListItemView',
     'views/Applications/kanban/KanbanItemView',
-    'custom'
+    'custom',
+    'common'
 ],
 
-function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, ApplicationsKanbanTemplate, ApplicationsCollection, WorkflowsCollection, ApplicationsListItemView, ApplicationsKanbanItemView, Custom) {
+function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, ApplicationsKanbanTemplate, ApplicationsCollection, WorkflowsCollection, ApplicationsKanbanItemView, Custom, common) {
     var ApplicationsView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -35,10 +35,14 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
             "click .fold": "foldUnfoldColumn",
             "click .breadcrumb a, #refuse": "changeWorkflow",
             "click #hire": "isEmployee",
-            "click #top-bar-deleteBtn": "deleteForm"
+            "click #top-bar-deleteBtn": "deleteForm",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
-
-
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Applications/form/" + itemIndex;
+        },
         render: function () {
             var that = this;
             var workflows = this.workflowsCollection.models;
@@ -78,18 +82,13 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                     }
                 case "list":
                     {
-                        this.$el.html(_.template(ApplicationsListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        _.each(this.collection.models, function (model) {
-                            table.append(new ApplicationsListItemView({ model: model }).render().el);
-                            console.log(model);
-                        }, this);
+                        this.$el.html(_.template(ApplicationsListTemplate, { applicationsCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
                         });
+                        common.contentHolderHeightFixer();
 
                         break;
                     }
@@ -251,10 +250,12 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
         },
 
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.collection.length > 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
         },
 
         deleteItems: function () {

@@ -1,16 +1,15 @@
 define([
     'text!templates/Birthdays/list/ListTemplate.html',
-    'collections/Employees/EmployeesCollection',
     'views/Birthdays/list/ListItemView',
     'common',
     'custom'
 ],
-function (ListTemplate, EmployeesCollection, ListItemView, common, Custom) {
+function (ListTemplate, ListItemView, common, Custom) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
-        initialize: function () {
+        initialize: function (options) {
             console.log('Init Employees View');
-            this.employeesCollection = new EmployeesCollection();
+            this.employeesCollection = options.collection;;
             this.employeesCollection.bind('reset', _.bind(this.render, this));
             this.render();
         },

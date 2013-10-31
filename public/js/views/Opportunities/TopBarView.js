@@ -1,9 +1,8 @@
 define([
     'text!templates/Opportunities/TopBarTemplate.html',
-    'collections/Opportunities/OpportunitiesCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, OpportunitiesCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Opportunities",
@@ -42,7 +41,7 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = new OpportunitiesCollection();
+                this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
             },

@@ -103,7 +103,12 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                                     remaining += model.get("estimated") - model.get("logged");
                                 }
                             }, this);
-                            column.find(".columnNameDiv").append("<p class='counter'>" + counter + "</p><a class='foldUnfold' href='#'><img hidden='hidden' src='./images/downCircleBlack.png'/></a><ul hidden='hidden' class='dropDownMenu'></ul><p class='remaining'>Remaining time: <span>" + remaining + "</span></p>");
+                            var content = "<p class='counter'>" + counter + "</p>" +
+                                "<a class='foldUnfold' href='#'>" +
+                                "<img hidden='hidden' src='./images/downCircleBlack.png'/></a>" +
+                                "<ul hidden='hidden' class='dropDownMenu'></ul>" +
+                                "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                            column.find(".columnNameDiv").append(content);
                         }, this);
                         break;
                     }
@@ -196,7 +201,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     }
             }
             this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
-            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px'; console.log(height); return height; });
+            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
             this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
             this.$(".column").sortable({
                 connectWith: ".column",

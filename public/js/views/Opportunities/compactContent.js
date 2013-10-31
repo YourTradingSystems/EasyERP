@@ -23,14 +23,13 @@
             },
 
             render: function (options) {
-                var collection = this.collection.toJSON();
                 if (options) {
                     var company = this.model.get("company");
                 } else {
                     company = this.model.toJSON();
                 }
                 this.$el.html(this.template({
-                    collection: collection,
+                    collection: this.collection.toJSON(),
                     company: company
                 }));
                 common.contentHolderHeightFixer();

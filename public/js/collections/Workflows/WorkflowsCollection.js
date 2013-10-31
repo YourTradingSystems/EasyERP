@@ -11,10 +11,7 @@ define(function () {
             return url;
         },
 
-        //type: "project",
-
         initialize: function (options) {
-            console.log("Workflow Collection Init");
             this.type = options.id;
             this.fetch({
                 type: 'GET',

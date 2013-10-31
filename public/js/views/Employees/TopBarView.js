@@ -1,9 +1,8 @@
 define([
     'text!templates/Employees/TopBarTemplate.html',
-    'collections/Employees/EmployeesCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, EmployeesCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Employees",
@@ -26,9 +25,9 @@ define([
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
             		Custom.setCurrentVT("form");
-            	this.collection = new EmployeesCollection();
+            	this.collection = options.collection;
             	this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function(){

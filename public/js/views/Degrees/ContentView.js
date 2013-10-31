@@ -2,11 +2,10 @@ define([
     'text!templates/Degrees/list/ListTemplate.html',
     'text!templates/Degrees/form/FormTemplate.html',
     'collections/Degrees/DegreesCollection',
-    'views/Degrees/list/ListItemView',
     'custom',
     'common'
 ],
-function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, common) {
+function (ListTemplate, FormTemplate, DegreesCollection, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -17,7 +16,13 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
         },
 
         events: {
-            "click .checkbox": "checked"
+            "click .checkbox": "checked",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Degrees/form/" + itemIndex;
         },
 
         render: function () {
@@ -27,17 +32,13 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        this.$el.html(_.template(ListTemplate, {degreesCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
                         });
+                        common.contentHolderHeightFixer();
                         break;
                     }
                 case "form":
@@ -64,10 +65,12 @@ function (ListTemplate, FormTemplate, DegreesCollection, ListItemView, Custom, c
         },
 
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.collection.length > 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
         },
 
         deleteItems: function () {

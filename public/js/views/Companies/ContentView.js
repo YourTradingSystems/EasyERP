@@ -9,7 +9,6 @@ define([
     'views/Persons/compactContent',
     'custom',
     'common'
-    //'views/Calendar/compactCalendar'
 
 ],
 function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
@@ -20,8 +19,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.collection = options.collection;
             this.opportunitiesCollection = new OpportunitiesCollection();
             this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
-            //this.eventsCollection = new EventsCollection();
-            //this.eventsCollection.bind('reset', _.bind(this.render, this));
+            this.eventsCollection = new EventsCollection();
+            this.eventsCollection.bind('reset', _.bind(this.render, this));
             this.personsCollection = new PersonsCollection();
             this.personsCollection.bind('reset', _.bind(this.render, this));
             //this.collection.bind('reset', _.bind(this.render, this));
@@ -102,17 +101,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
+                                    companiesCollection: this.collection,
                                     model: currentModel
                                 }).render().el,
                                 new personsCompactContentView({
                                     collection: this.personsCollection,
                                     model: currentModel
                                 }).render().el
-                                /*new compactCalendar({
-                                    collection: this.eventsCollection,
-                                    model:currentModel
-                                }).render().el*/
-
                             );
                         }
 

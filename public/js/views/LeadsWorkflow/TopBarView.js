@@ -1,6 +1,5 @@
 define([
     'text!templates/LeadsWorkflow/TopBarTemplate.html',
-    'collections/LeadsWorkflow/LeadsWorkflowCollection',
     'custom'
 ],
     function (ContentTopBarTemplate, LeadsWorkflowCollection, Custom) {
@@ -26,9 +25,9 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = new LeadsWorkflowCollection();
+                this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function () {

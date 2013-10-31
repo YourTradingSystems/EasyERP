@@ -1,9 +1,8 @@
 define([
     'text!templates/Applications/TopBarTemplate.html',
-    'collections/Applications/ApplicationsCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, ApplicationsCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Applications",
@@ -42,9 +41,9 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = new ApplicationsCollection();
+                this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function () {

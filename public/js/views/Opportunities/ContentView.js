@@ -154,7 +154,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             }
 
             this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
-            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px'; console.log(height); return height; });
+            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
             this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
 
             this.$(".column").sortable({

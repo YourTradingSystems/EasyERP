@@ -1,9 +1,8 @@
 define([
     'text!templates/Persons/TopBarTemplate.html',
-    'collections/Persons/PersonsCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, PersonsCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Persons",
@@ -26,9 +25,9 @@ define([
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
             		Custom.setCurrentVT("form");
-            	this.collection = new PersonsCollection();
+            	this.collection = options.collection;
             	this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function(){
