@@ -1,18 +1,15 @@
 define([
     'text!templates/Employees/list/ListTemplate.html',
     'text!templates/Employees/form/FormTemplate.html',
-    'collections/Employees/EmployeesCollection',
-    'views/Employees/list/ListItemView',
     'views/Employees/thumbnails/ThumbnailsItemView',
     'custom',
     'common'
 
 ],
-function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, ThumbnailsItemView, Custom, common) {
+function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
-            console.log('Init Employees View');
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
@@ -20,7 +17,13 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
 
         events: {
             "click .checkbox": "checked",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Employees/form/" + itemIndex;
         },
 
         switchTab: function (e) {
@@ -41,12 +44,7 @@ function (ListTemplate, FormTemplate, ProjectsCollection, ListItemView, Thumbnai
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        this.$el.html(_.template(ListTemplate, {employeesCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

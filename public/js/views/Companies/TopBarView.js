@@ -1,9 +1,8 @@
     define([
     'text!templates/Companies/TopBarTemplate.html',
-    'collections/Companies/CompaniesCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, CompaniesCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Companies",
@@ -26,9 +25,9 @@
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = new CompaniesCollection();
+                this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function () {

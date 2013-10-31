@@ -15,5 +15,19 @@
         </tr>
     </thead>
     <tbody>
+    <% applicationsCollection.forEach(function(application, index){ %>
+        <tr data-index="<%= index + 1 %>">
+            <td><input type="checkbox"  value="<%=application._id%>" class="checkbox"/></td>
+            <td><%= index + 1 %></td>
+            <td><%=application.creationDate%></td>
+            <td><%=application.subject%></td>
+            <td><%=application.name.first%> <%=application.name.last%></td>
+            <td><%=application.workEmail%></td>
+            <td><%=application.workPhones.mobile%></td>
+            <td><%=application.jobPosition.name%></td>
+            <td><%=application.workflow.name%></td>
+            <td><%=application.relatedUser.login%></td>
+        </tr>
+    <% }) %>
     </tbody>
 </table>

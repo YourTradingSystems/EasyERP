@@ -76,10 +76,11 @@ body {
     font-family: @body-font;
     font-size: 12px;
     height: 100%;
-    overflow:hidden;
+    overflow: hidden;
 }
+
 html {
-overflow:hidden;
+    overflow: hidden;
 }
 
 * {
@@ -103,7 +104,7 @@ overflow:hidden;
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
-    -webkit-box-shadow: @arguments;    
+    -webkit-box-shadow: @arguments;
 }
 
 .border-radius(@radius: 4px) {
@@ -331,7 +332,7 @@ article {
     border-left: @thin-border #afafb6;
     width: auto;
     margin-left: 171px;
-    overflow:auto;
+    overflow: auto;
 }
 
 #top-bar {
@@ -496,11 +497,12 @@ h3 {
     font-weight: 300 !important;
     line-height: 38px;
 }
+
 .circle {
-    height:16px;
-    width:16px;
+    height: 16px;
+    width: 16px;
     border: 3px solid @lightgrey;
-    line-height:22px !important;
+    line-height: 22px !important;
     .border-radius(16px);
 }
 
@@ -511,9 +513,8 @@ h3 {
     text-align: center;
     width: 100%;
     height: 100%;
-    font-weight:100 !important;
-    cursor: pointer;   
-
+    font-weight: 100 !important;
+    cursor: pointer;
 }
 
 .btn-list {
@@ -564,8 +565,7 @@ h3 {
 }
 
 .lightgrey {
-color:#cecece;
-
+    color: #cecece;
 }
 
 .list {
@@ -637,7 +637,7 @@ color:#cecece;
         }
 }
 
-.form(@width: 860px, @border:1px) {
+.form(@width: 860px, @border: 1px) {
     background-color: #fff;
     width: @width;
     max-width: @width;
@@ -647,7 +647,7 @@ color:#cecece;
     display: block;
     position: relative;
     border: @border solid #c8c8d3;
-  
+
 
     .compactList {
 
@@ -658,11 +658,10 @@ color:#cecece;
             &.inner {
                 margin: 0px !important;
                 padding: 10px;
-             
+
 
                 &:hover {
-                  background:#f1f1f1;
-               
+                    background: #f1f1f1;
                 }
             }
 
@@ -685,7 +684,7 @@ color:#cecece;
         h3 {
             color: #333 !important;
             margin: 0;
-            font-family:'Open Sans',sans-serif;
+            font-family: 'Open Sans',sans-serif;
             font-size: 18px;
             font-weight: normal;
             white-space: nowrap;
@@ -832,7 +831,7 @@ color:#cecece;
 
 .scroll {
     height: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .formLeftColumn {
@@ -1211,11 +1210,11 @@ button {
 
         &.selected {
             border: 1px solid @tabColor;
-            border-top:3px solid @blue;
+            border-top: 3px solid @blue;
             border-bottom: none;
             background: #fff;
             color: #4c4c4c;
-            margin-top:-2px;
+            margin-top: -2px;
         }
     }
 }
@@ -1233,32 +1232,36 @@ button {
 
 // kanban styles
 .scroll-x {
-       overflow-x: auto;
-    overflow-y: auto; 
+    overflow-x: auto;
+    overflow-y: auto;
 }
 
 .kanban {
     background-color: #f0eeee;
     overflow-x: hidden;
-    overflow-y: hidden; 
-    height:auto;width:auto;
-    min-height:100%;
-    min-width:100%; 
-      display: flex;
+    overflow-y: hidden;
+    height: auto;
+    width: auto;
+    min-height: 100%;
+    min-width: 100%;
+    display: flex;
     display: -webkit-flex;
     display: -moz-box;
+
     .inner {
         padding: 5px;
     }
+
     .opportunity-header {
         h3 {
             text-align: right;
         }
     }
+
     .column {
-        min-height:100%;
+        min-height: 100%;
         float: left;
-        display:block;
+        display: block;
         width: 250px;
         height: auto;
         border-right: 1px solid #afafb6;
@@ -1407,7 +1410,7 @@ button {
 
 .task-header,
 .application-header {
-        padding: 1px 0 4px 4px;
+    padding: 1px 0 4px 4px;
     background-color: @taskBorderColor;
     color: #fff;
     border-bottom-left-radius: 0;
@@ -1557,76 +1560,79 @@ button {
     background-color: #2980B9;
 }
 
-.breadcrumb {
-   margin:0;
-    display: block;
-    float: right;
-    overflow: hidden;
-    color: #6f6f6f;
 
-    li {
-        float: left;
+
+.formHeader {
+    .gradient( #ddd);
+    border-bottom: 1px solid #ddd;
+    height: 33px;
+
+    .breadcrumb {
         margin: 0;
-        list-style: none;
-        max-width: 280px;
+        display: block;
+        float: right;
+        overflow: hidden;
+        color: #6f6f6f;
 
-        a {
-            padding: 9px 27px 4px 20px;
-            font-size: 14px;
-            display: block;
-            font-weight: 700;
-            margin-left: -20px;
-            border-right: 1px solid;
-            background-repeat: no-repeat;
-            background-position: 0px 0px;
-            height: 20px;
-            text-decoration: none;
-            cursor: pointer;
-            color: #999999;
-            text-shadow: 0 1px 0 #ffffff;
-            border-color: #eeeeee #dddddd #dddddd #dddddd;
-            background-image: url("@{imagesfolder}/breadcrumb.png");
-
-            &:hover {
-                color: #777777;
-                background-position: 0px -34px;
-            }
-
-            &:active, &.active {
-                color: #555555;
-                text-shadow: 0 0 1px #ffffff;
-                background-position: 0px -69px;
-            }
-        }
-
-        &:first-child {
-            margin-left: 0px;
+        li {
+            float: left;
+            margin: 0;
+            list-style: none;
+            max-width: 280px;
 
             a {
-                border-left: 1px solid;
-                border-left-color: #dddddd;
-                background-position: -20px 0px;
-                margin-left: 0px;
-                padding-left: 20px;
+                padding: 9px 27px 4px 20px;
+                font-size: 14px;
+                display: block;
+                font-weight: 700;
+                margin-left: -20px;
+                border-right: 1px solid;
+                background-repeat: no-repeat;
+                background-position: 0px 0px;
+                height: 20px;
+                text-decoration: none;
+                cursor: pointer;
+                color: #999999;
+                text-shadow: 0 1px 0 #ffffff;
+                border-color: #eeeeee #dddddd #dddddd #dddddd;
+                background-image: url("@{imagesfolder}/breadcrumb.png");
 
                 &:hover {
-                    background-position: -20px -34px;
+                    color: #777777;
+                    background-position: 0px -34px;
                 }
 
                 &:active, &.active {
-                    background-position: -20px -69px;
+                    color: #555555;
+                    text-shadow: 0 0 1px #ffffff;
+                    background-position: 0px -69px;
+                }
+            }
+
+            &:first-child {
+                margin-left: 0px;
+
+                a {
+                    border-left: 1px solid;
+                    border-left-color: #dddddd;
+                    background-position: -20px 0px;
+                    margin-left: 0px;
+                    padding-left: 20px;
+
+                    &:hover {
+                        background-position: -20px -34px;
+                    }
+
+                    &:active, &.active {
+                        background-position: -20px -69px;
+                    }
                 }
             }
         }
     }
-}
-
-.formHeader {  
-    .gradient( #ddd);
-    border-bottom: 1px solid #ddd;
 
     >button {
-        margin: 5px 1px;
+        margin: 5px 1px 4px 1px;
 
         &:first-of-type, &:last-of-type {
             margin-left: 9px;

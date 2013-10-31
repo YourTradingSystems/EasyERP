@@ -1,9 +1,8 @@
 define([
     'text!templates/Projects/TopBarTemplate.html',
-    'collections/Projects/ProjectsCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, ProjectsCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Projects",
@@ -26,9 +25,9 @@ define([
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
             		Custom.setCurrentVT("form");
-            	this.collection = new ProjectsCollection();
+            	this.collection = options.collection;
             	this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function(){

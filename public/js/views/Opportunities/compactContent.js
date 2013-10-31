@@ -6,8 +6,8 @@
         var compactContentView = Backbone.View.extend({
 
             className: "form",
-            initialize: function (options) {
-                this.customer = options.customers
+
+            initialize: function () {
             },
 
             events: {
@@ -23,15 +23,13 @@
             },
 
             render: function (options) {
-                var collection = this.collection.toJSON();
                 if (options) {
                     var company = this.model.get("company");
                 } else {
                     company = this.model.toJSON();
                 }
-                var customers = this.customer.toJSON();
                 this.$el.html(this.template({
-                    collection: collection,
+                    collection: this.collection.toJSON(),
                     company: company
                 }));
                 common.contentHolderHeightFixer();

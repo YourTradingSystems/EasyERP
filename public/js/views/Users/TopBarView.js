@@ -1,9 +1,8 @@
 define([
     'text!templates/Users/TopBarTemplate.html',
-    'collections/Users/UsersCollection',
     'custom'
 ],
-    function (TopBarTemplate, UsersCollection, Custom) {
+    function (TopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Users",
@@ -29,9 +28,9 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = new UsersCollection();
+                this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             deleteEvent: function (event) {

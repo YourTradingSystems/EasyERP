@@ -1,9 +1,8 @@
 define([
         "text!templates/Applications/kanban/KanbanItemTemplate.html",
-        "collections/Applications/ApplicationsCollection",
         "common"
 ],
-    function (KanbanItemTemplate, ApplicationsCollection, common) {
+    function (KanbanItemTemplate, common) {
         var ApplicationsItemView = Backbone.View.extend({
             className: "application",
             id: function () {
@@ -11,9 +10,9 @@ define([
             },
 
             initialize: function () {
-                this.model.on('change', this.render, this);
+                /*this.model.on('change', this.render, this);
                 this.collection = new ApplicationsCollection();
-                this.collection.bind('reset', _.bind(this.render, this));
+                this.collection.bind('reset', _.bind(this.render, this));*/
                 this.render();
             },
 

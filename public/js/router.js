@@ -92,7 +92,7 @@ define([
                     }
 
                     var contentView = new ContentView({ collection: contentCollection });
-                    var topBarView = new TopBarView({ actionType: "Content" });
+                    var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
@@ -156,7 +156,7 @@ define([
 
                     Backbone.history.navigate(url, { replace: true });
 
-                    var topBarView = new TopBarView({ actionType: action }),
+                    var topBarView = new TopBarView({ actionType: action, collection: contentCollection }),
                         actionView = new ActionView({ collection: contentCollection, pId: hash });
 
                     topBarView.bind('saveEvent', actionView.saveItem, actionView);

@@ -1,9 +1,8 @@
 define([
     'text!templates/SourceOfApplicants/TopBarTemplate.html',
-    'collections/SourceOfApplicants/SourceOfApplicantsCollection',
     'custom'
 ],
-    function (ContentTopBarTemplate, SourceOfApplicantsCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Source Of Applicants",
@@ -26,9 +25,9 @@ define([
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
             		Custom.setCurrentVT("form");
-            	this.collection = new SourceOfApplicantsCollection();
+            	this.collection = options.collection;
             	this.collection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render();
             },
 
             render: function(){
