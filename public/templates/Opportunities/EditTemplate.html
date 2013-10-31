@@ -140,7 +140,7 @@
                         <div class="half-block left">
 
                             <p>
-                                <input type="text" id="company" value="<%=model.company%>" />
+                                <input type="text" id="company" value="<%=model.company%>" disabled/>
                             </p>
                             <p>
                                 <input type="text" class="address" name="street" value="<%=model.address.street%>"/>
@@ -176,8 +176,8 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                               <input type="text" class="name" id="first" value="<%=model.contactName.first%>"/>
-                               <input type="text" class="name" id="last" value="<%=model.contactName.last%>"/>
+                               <input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled/>
+                               <input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled/>
                             </p>
                             <p>
                                <input type="text" id="func" value="<%=model.func%>"/>

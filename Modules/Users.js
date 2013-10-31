@@ -1,5 +1,5 @@
 // JavaScript source code
-var Users = function (logWriter, mongoose) {
+var Users = function (logWriter, mongoose, findCompany) {
     var crypto = require('crypto');
 
     var userSchema = mongoose.Schema({
@@ -178,8 +178,7 @@ var Users = function (logWriter, mongoose) {
                     logWriter.log("Users.js get User.find " + err);
                     response.send(500, { error: 'User get BD error' });
                 } else {
-                    res['data'] = result;
-                    response.send(res);
+                    findCompany.findCompany(result, 0, response);
                 }
             });
         },

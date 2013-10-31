@@ -2,7 +2,7 @@ define([
     'text!templates/LeadsWorkflow/TopBarTemplate.html',
     'custom'
 ],
-    function (ContentTopBarTemplate, LeadsWorkflowCollection, Custom) {
+    function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "LeadsWorkflow",

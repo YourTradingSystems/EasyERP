@@ -1,4 +1,4 @@
-var Persons = function (logWriter, mongoose) {
+var Persons = function (logWriter, mongoose, findCompany) {
 
     var personsSchema = mongoose.Schema({
         name: {
@@ -212,6 +212,7 @@ var Persons = function (logWriter, mongoose) {
                                 logWriter.log("Person.js create savetoBd _person.save " + err);
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
+                                console.log(result);
                                 res.send(201, { success: 'A new Person crate success' });
                             }
                         });
@@ -249,8 +250,6 @@ var Persons = function (logWriter, mongoose) {
         },
 
         get: function (response) {
-            var res = {};
-            res['data'] = [];
             var query = Person.find({});
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
@@ -259,8 +258,7 @@ var Persons = function (logWriter, mongoose) {
                     logWriter.log("Person.js get Person.find " + err);
                     response.send(500, { error: "Can't find Person" });
                 } else {
-                    res['data'] = result;
-                    response.send(res);
+                    findCompany.findCompany(result, 0, response);
                 }
             });
         },
