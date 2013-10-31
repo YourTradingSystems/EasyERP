@@ -1,142 +1,151 @@
 <div class="form-holder">
     <div class="formLeftColumn">
         <form class="form" id="createEmployeeForm" data-id="<%=_id%>">
-            <div class="inner">
-                <div class="avatar">
-                    <img alt="" src="<%=imageSrc%>" width="120" height="120" />
-                </div>
-                <div style="margin-left: 130px; width: 80%; display: block;">
-                    <h2><%=name%></h2>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label>Address</label>
-                        </p>
-                        <p>
-                            <label></label>
-                        </p>
-                        <p>
-                            <label></label>
-                        </p>
-                        <p>
-                            <label></label>
-                        </p>
-                        <p>
-                            <label></label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=address.street%></span></p>
-                        <p><span><%=address.city%></span></p>
-                        <p><span><%=address.state%></span></p>
-                        <p><span><%=address.zip%></span></p>
-                        <p><span><%=address.country%></span></p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label>Website</label>
-                        </p>
-                        <p>
-                            <label>Phone </label>
-                        </p>
-                        <p>
-                            <label>Mobile </label>
-                        </p>
-                        <p>
-                            <label>Fax</label>
-                        </p>
-                        <p></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=website%></span></p>
-                        <p><span><%=phones.phone%></span></p>
-                        <p><span><%=phones.mobile%></span></p>
-                        <p><span><%=phones.fax%></span></p>
-                        <p></p>
-                    </div>
+            <div class="formTitle">
+                <h3 class="left">Details</h3>  
+                <div class="btnHolder">
+                    <div class="icon-img add left" title="Add"></div>
+                    <div class="icon-img edit left" title="Edit"></div>
+                    <div class="icon-img remove left" title="Remove"></div>
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <div id="tabs">
-                <div>
-                    <ul id="tabList" class="inner">
-                        <li>
-                            <a href="#" class="selected">Internal Notes</a>
-                        </li>
-                        <li>
-                            <a href="#">Sales & Purchases</a>
-                        </li>
-                        <li>
-                            <a href="#">History</a>
-                        </li>
-                    </ul>
-                </div>
-                <br />
-                
-                <div class="tab">
-                    <span><%=internalNotes%></span>
-                </div>
-                <div class="tab">
+                <div class="inner">
+                    <div class="avatar">
+                        <img alt="" src="<%=imageSrc%>" width="120" height="120" />
+                    </div>
+                    <div style="margin-left: 130px; width: 80%; display: block;">
+                        <h2><%=name%></h2>
+                        <div class="clearfix"></div>
+                    </div>
                     <div class="half-block left">
                         <div class="half-block left">
                             <p>
-                                <label>Sales Person</label>
+                                <label>Address</label>
                             </p>
                             <p>
-                                <label>Sales Team</label>
+                                <label></label>
                             </p>
                             <p>
-                                <label>Reference</label>
+                                <label></label>
                             </p>
                             <p>
-                                <label>Language</label>
+                                <label></label>
+                            </p>
+                            <p>
+                                <label></label>
                             </p>
                         </div>
                         <div class="half-block left">
-                            <p><span><%=salesPurchases.salesPerson.name%></span></p>
-                            <p><span><%=salesPurchases.salesTeam.name%></span></p>
-                            <p><span><%=salesPurchases.reference%></span></p>
-                            <p><span><%=salesPurchases.language%></span></p>
+                            <p><span><%=address.street%></span></p>
+                            <p><span><%=address.city%></span></p>
+                            <p><span><%=address.state%></span></p>
+                            <p><span><%=address.zip%></span></p>
+                            <p><span><%=address.country%></span></p>
                         </div>
                     </div>
                     <div class="half-block left">
                         <div class="half-block left">
                             <p>
-                                <label>Date</label>
+                                <label>Website</label>
                             </p>
                             <p>
-                                <label>Customer</label>
+                                <label>Phone </label>
                             </p>
                             <p>
-                                <label>Supplier</label>
+                                <label>Mobile </label>
                             </p>
                             <p>
-                                <label>Active </label>
+                                <label>Fax</label>
                             </p>
+                            <p></p>
                         </div>
                         <div class="half-block left">
-                            <p><span><%=salesPurchases.date%></span></p>
-                            <p>
-                                <input type="checkbox" <%=(salesPurchases.isCustomer)? "checked='checked'":''%>  disabled  />
-                            </p>
-                            <p>
-                                <input type="checkbox" <%=(salesPurchases.isSupplier)? "checked='checked'":''%> disabled  />
-                            </p>
-                            <p>
-                                <input type="checkbox" <%=(salesPurchases.active)? "checked='checked'":''%> disabled  />
-                            </p>
+                            <p><span><%=website%></span></p>
+                            <p><span><%=phones.phone%></span></p>
+                            <p><span><%=phones.mobile%></span></p>
+                            <p><span><%=phones.fax%></span></p>
+                            <p></p>
                         </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="tab">
+                <div id="tabs">
+                    <div>
+                        <ul id="tabList" class="inner">
+                            <li>
+                                <a href="#" class="selected">Internal Notes</a>
+                            </li>
+                            <li>
+                                <a href="#">Sales & Purchases</a>
+                            </li>
+                            <li>
+                                <a href="#">History</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <br />
+
+                    <div class="tab">
+                        <span><%=internalNotes%></span>
+                    </div>
+                    <div class="tab">
+                        <div class="half-block left">
+                            <div class="half-block left">
+                                <p>
+                                    <label>Sales Person</label>
+                                </p>
+                                <p>
+                                    <label>Sales Team</label>
+                                </p>
+                                <p>
+                                    <label>Reference</label>
+                                </p>
+                                <p>
+                                    <label>Language</label>
+                                </p>
+                            </div>
+                            <div class="half-block left">
+                                <p><span><%=salesPurchases.salesPerson.name%></span></p>
+                                <p><span><%=salesPurchases.salesTeam.name%></span></p>
+                                <p><span><%=salesPurchases.reference%></span></p>
+                                <p><span><%=salesPurchases.language%></span></p>
+                            </div>
+                        </div>
+                        <div class="half-block left">
+                            <div class="half-block left">
+                                <p>
+                                    <label>Date</label>
+                                </p>
+                                <p>
+                                    <label>Customer</label>
+                                </p>
+                                <p>
+                                    <label>Supplier</label>
+                                </p>
+                                <p>
+                                    <label>Active </label>
+                                </p>
+                            </div>
+                            <div class="half-block left">
+                                <p><span><%=salesPurchases.date%></span></p>
+                                <p>
+                                    <input type="checkbox" <%=(salesPurchases.isCustomer)? "checked='checked'":''%>  disabled  />
+                                </p>
+                                <p>
+                                    <input type="checkbox" <%=(salesPurchases.isSupplier)? "checked='checked'":''%> disabled  />
+                                </p>
+                                <p>
+                                    <input type="checkbox" <%=(salesPurchases.active)? "checked='checked'":''%> disabled  />
+                                </p>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="tab">
+                    </div>
                 </div>
-            </div>
-        </form>
+</form>
     </div>
     <div class="formRightColumn">
         

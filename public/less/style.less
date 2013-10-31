@@ -2,7 +2,10 @@
     font-family: 'Segoe UI';
     src: url("../font/segoeui.woff") format('woff');
 }
-
+@font-face {
+    font-family: 'Title';
+    src: url("../font/title.woff") format('woff');
+}
 @font-face {
     font-family: 'Metrize-Icons';
     src: url("../font/Metrize-Icons.ttf") format('truetype');
@@ -29,6 +32,7 @@
 @icon-font: Icons;
 @icon2-font: Icons2;
 @icon3-font: Icons3;
+@title-font: Title;
 @metroicon-font: "Metrize-Icons";
 @blue: #4d5a75;
 @lightmagenta: #7c7bad;
@@ -62,6 +66,7 @@
 
 a {
     color: @lightmagenta;
+    text-decoration:none;
 
     &:hover {
         color: @lightmagenta - #333333;
@@ -684,12 +689,12 @@ h3 {
         h3 {
             color: #333 !important;
             margin: 0;
-            font-family: 'Open Sans',sans-serif;
+            font-family: @title-font;
             font-size: 18px;
             font-weight: normal;
             white-space: nowrap;
             text-overflow: ellipsis;
-            padding: 8px 8px;
+            padding: 4px;
         }
     }
 
@@ -840,7 +845,7 @@ h3 {
     display: block;
 
     .form {
-        .form(98%);
+        .form(98%, 0px);
         margin-bottom: 10px;
     }
 }
@@ -1229,7 +1234,27 @@ button {
         display: none;
     }
 }
-
+.icon-img {
+    display: block;
+    height: 18px;
+    width: 18px;
+    background: url("@{imagesfolder}/gray.png");
+    &.add {
+        background-position: 0px -60px;
+    }
+    &.edit {
+        background-position: 0px -82px;
+    }
+     &.remove {
+        background-position: 0px -22px;
+    }
+    &:hover {
+        opacity:0.7;
+    }
+}
+////////////////////////////////////////////////////////
+////////////////////////Review Code/////////////////////
+////////////////////////////////////////////////////////
 // kanban styles
 .scroll-x {
     overflow-x: auto;
