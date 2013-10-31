@@ -28,6 +28,7 @@ define([
                     var mid = 39;
 
                     var data = {
+                        imageSrc: this.imageSrc,
                         name: {
                             first: $('#firstName').val(),
                             last: $('#lastName').val()

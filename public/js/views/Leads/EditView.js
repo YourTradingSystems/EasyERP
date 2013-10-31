@@ -2,7 +2,6 @@ define([
     "text!templates/Leads/EditTemplate.html",
     "collections/Leads/LeadsCollection",
     'collections/Workflows/WorkflowsCollection',
-    "collections/Companies/CompaniesCollection",
     "collections/Customers/CustomersCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
@@ -10,7 +9,7 @@ define([
     "custom",
     'common'
 ],
-    function (EditTemplate, LeadsCollection, WorkflowsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, Custom, common) {
+    function (EditTemplate, LeadsCollection, WorkflowsCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -19,8 +18,6 @@ define([
             initialize: function (options) {
                 this.workflowsCollection = new WorkflowsCollection({ id: 'lead' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
-                this.companiesCollection = new CompaniesCollection();
-                this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.customersCollection = new CustomersCollection();
                 this.customersCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
@@ -114,16 +111,8 @@ define([
 
                     var name = $.trim($("#name").val());
 
-                    var companyId = $(this.el).find("#company option:selected").val();
-                    var _company = common.toObject(companyId, this.companiesCollection);
-                    var company = {};
-                    if (_company) {
-                        company.id = _company._id;
-                        company.name = _company.name;
-                    } else {
-                        company = currentModel.defaults.company;
-                    }
-
+                    var company = $(this.el).find("#company").val();
+                    
                     var idCustomer = $(this.el).find("#customer option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersCollection);
                     var customer = {};

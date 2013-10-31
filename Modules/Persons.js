@@ -32,7 +32,10 @@ var Persons = function (logWriter, mongoose) {
         salesPurchases: {
             isCustomer: { type: Boolean, default: true },
             isSupplier: { type: Boolean, default: false },
-            salesPerson: { type: String, default: '' },
+            salesPerson: {
+                id: { type: String, default: '' },
+                name: { type: String, default: '' }
+            },
             salesTeam: { type: String, default: '' },
             active: { type: Boolean, default: true },
             reference: { type: String, default: '' },
@@ -84,6 +87,9 @@ var Persons = function (logWriter, mongoose) {
                     try {
                         console.log(data);
                         _person = new Person();
+                        if (data.imageSrc) {
+                            _person.imageSrc = data.imageSrc;
+                        }
                         if (data.email) {
                             _person.email = data.email;
                         }
@@ -166,7 +172,12 @@ var Persons = function (logWriter, mongoose) {
                                 _person.salesPurchases.isSupplier = data.salesPurchases.isSupplier;
                             }
                             if (data.salesPurchases.salesPerson) {
-                                _person.salesPurchases.salesPerson = data.salesPurchases.salesPerson;
+                                if (data.salesPerson._id) {
+                                    _person.salesPurchases.salesPerson.id = data.salesPurchases.salesPerson._id;
+                                }
+                                if (data.salesPerson.name) {
+                                    _person.salesPurchases.salesPerson.name = data.salesPurchases.salesPerson.name.first + ' ' + data.salesPurchases.salesPerson.name.last;
+                                }
                             }
                             if (data.salesPurchases.salesTeam) {
                                 _person.salesPurchases.salesTeam = data.salesPurchases.salesTeam;
@@ -310,7 +321,9 @@ var Persons = function (logWriter, mongoose) {
                     res.send(200, { success: 'Person removed' });
                 }
             });
-        }
+        },
+
+        Person: Person
     }
 };
 

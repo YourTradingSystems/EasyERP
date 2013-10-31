@@ -1,4 +1,4 @@
-var Opportunities = function (logWriter, mongoose) {
+var Opportunities = function (logWriter, mongoose, persons, company) {
 
     var opportunitiesSchema = mongoose.Schema({
         isOpportunitie: { type: Boolean, default: false },
@@ -9,10 +9,7 @@ var Opportunities = function (logWriter, mongoose) {
             currency: { type: String, default: '' }
         },
         creationDate: { type: Date, default: Date.now },
-        company: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        company: { type: String, default: '' },
         customer: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
@@ -114,12 +111,7 @@ var Opportunities = function (logWriter, mongoose) {
                         _opportunitie.creationDate = data.creationDate;
                     }
                     if (data.company) {
-                        if (data.company._id) {
-                            _opportunitie.company.id = data.company._id;
-                        }
-                        if (data.company.name) {
-                            _opportunitie.company.name = data.company.name;
-                        }
+                        _opportunitie.company = data.company;
                     }
                     if (data.customer) {
                         if (data.customer._id) {
@@ -258,7 +250,7 @@ var Opportunities = function (logWriter, mongoose) {
     function get(response) {
         var res = {};
         res['data'] = [];
-        var query = opportunitie.find({isOpportunitie: true});
+        var query = opportunitie.find({ isOpportunitie: true });
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -300,6 +292,48 @@ var Opportunities = function (logWriter, mongoose) {
                     res.send(500, { error: "Can't update Opportunities" });
                 } else {
                     res.send(200, { success: 'Opportunities updated success' });
+                    if (data.createCustomer) {                       //створити кастомера
+                        if (data.company) {                          //кастомер Компанія
+                            var _company = {
+                                name: data.company,
+                                email: data.email,
+                                salesPurchases: {
+                                    isCustomer: true,
+                                    salesPerson: data.salesPerson
+                                }
+                            }
+                            var _Company = new company.Company(_company);
+                            _Company.save(function (err, _res) {
+                                if (err) {
+                                    console.log(err);
+                                    logWriter.log("Opportunities.js update opportunitie.update " + err);
+                                }
+                            });
+                        }                                              //кінець кастомер Компанія
+                        if (data.contactName) {                           //кастомер Person
+                            var personCompany = {
+                                id: '',
+                                name:''
+                            }
+                            if (data.company) personCompany.name = data.company;
+                            var _person = {
+                                name: data.contactName,
+                                email: data.email,
+                                company: personCompany,
+                                salesPurchases: {
+                                    isCustomer: true,
+                                    salesPerson: data.salesPerson
+                                }
+                            }
+                            var _Person = new persons.Person(_person);
+                            _Person.save(function (err, _res) {
+                                if (err) {
+                                    console.log(err);
+                                    logWriter.log("Opportunities.js update opportunitie.update " + err);
+                                }
+                            });
+                        }                                              //кінець кастомер Person
+                    }
                 }
             });
         }

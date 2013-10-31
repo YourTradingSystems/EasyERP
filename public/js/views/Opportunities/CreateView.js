@@ -2,7 +2,6 @@ define([
     "jqueryui",
     "text!templates/Opportunities/CreateTemplate.html",
     "collections/Customers/CustomersCollection",
-    "collections/Companies/CompaniesCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Priority/TaskPriority",
@@ -10,7 +9,7 @@ define([
     "common",
     "custom"
 ],
-    function (jqueryui, CreateTemplate, CustomersCollection, CompaniesCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, common, Custom) {
+    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, common, Custom) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
@@ -19,8 +18,6 @@ define([
             initialize: function () {
                 this.customersCollection = new CustomersCollection();
                 this.customersCollection.bind('reset', _.bind(this.render, this));
-                this.companiesCollection = new CompaniesCollection();
-                this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
@@ -93,12 +90,8 @@ define([
 
                 var priority = $("#priority").val();
 
-                var companyName = $.trim($("#company").val());
-                var company = {
-                    id: "",
-                    name: companyName
-                };
-
+                var company = $.trim($("#company").val());
+               
                 var internalNotes = $.trim($("#internalNotes").val());
 
                 var address = {};
@@ -163,7 +156,7 @@ define([
             },
 
             render: function () {
-                this.$el.html(this.template({ customersCollection: this.customersCollection, companiesCollection: this.companiesCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
+                this.$el.html(this.template({ customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
                 common.contentHolderHeightFixer();
                 $('#nextActionDate').datepicker();
                 $('#expectedClosing').datepicker();

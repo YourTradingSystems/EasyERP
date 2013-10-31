@@ -58,8 +58,7 @@ define([
 
                 var name = $.trim($("#name").val());
 
-                var companyId = this.$("#company option:selected").val();
-                var company = common.toObject(companyId, this.companiesCollection);
+                var company = this.$("#company").val();
 
                 var idCustomer = $(this.el).find("#customer option:selected").val();
                 var customer = common.toObject(idCustomer, this.customersDdCollection);

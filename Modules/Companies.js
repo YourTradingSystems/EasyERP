@@ -443,7 +443,8 @@ var Company = function (logWriter, mongoose) {
                 }
             });
         },
-        Company: Company
+
+        Company: company
     };
 };
 
