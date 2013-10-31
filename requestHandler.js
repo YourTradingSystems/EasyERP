@@ -376,12 +376,12 @@ var requestHandler = function (mongoose) {
     };
 
     function createWorkflow(req, res, data) {
-        console.log("Requst createWorkflow is success");
-        if (req.session && req.session.loggedIn) {
+        //console.log("Requst createWorkflow is success");
+        //if (req.session && req.session.loggedIn) {
             workflow.create(data, res);
-        } else {
-            res.send(401);
-        }
+        //} else {
+        //    res.send(401);
+        //}
     };
     //---------------------Companies-------------------------------
     function getCompanies(req, res, data) {
