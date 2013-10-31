@@ -6,64 +6,68 @@
 </div>
 <div class="form-holder">
     <form class="form" id="applicationForm" data-id="<%=_id%>">
-        <h2><%=subject%></h2>
-        <img class="person" src="<%=imageSrc%>" width="120" height="120"/>
-        <h2><%=name.first%> <%=name.last%></h2>
-        <p>
-            <label>Email</label>
-            <span><%=workEmail%></span>
-        </p>
-        <p>
-            <label>Phone</label>
-            <span><%=workPhones.phone%></span>
-        </p>
-        <p>
-            <label>Mobile</label>
-            <span><%=workPhones.mobile%></span>
-        </p>
-        <p>
-            <label>Degree</label>
-            <span><%=degree.name%></span>
-        </p>
-        <h3>Job</h3>
-        <p>
-            <label>Applied Job</label>
-            <span><%=jobPosition.name%></span>
-        </p>
-        <p>
-            <label>Department</label>
-            <span><%=department.name%></span>
-        </p>
-        <p>
-            <label>Tags</label>
-            <span><%=tags%></span>
-        </p>
-        <h3>Application Summary</h3>
-        <p>
-            <label>Responsible</label>
-            <span><%=relatedUser.login%></span>
-        </p>
-        <p>
-            <label>Next Action</label>
-            <span><%=nextAction%></span>
-        </p>
-        <p>
-            <label>Source</label>
-            <span><%=source.name%></span>
-        </p>
-        <p>
-            <label>Referred By</label>
-            <span><%=referredBy%></span>
-        </p>
-        <h3>Contract</h3>
-        <p>
-            <label>Expected Salary</label>
-            <span><%=expectedSalary%></span>
-        </p>
-        <p>
-            <label>Proposed Salary</label>
-            <span><%=proposedSalary%></span>
-        </p>
+        <div class="inner">
+            <h2><%=subject%></h2>
+            <h3><%=name.first%> <%=name.last%></h3>
+            <div class="avatar">
+                <img class="person" src="<%=imageSrc%>" />
+            </div>
+            <p>
+                <label>Email</label>
+                <span><%=workEmail%></span>
+            </p>
+            <p>
+                <label>Phone</label>
+                <span><%=workPhones.phone%></span>
+            </p>
+            <p>
+                <label>Mobile</label>
+                <span><%=workPhones.mobile%></span>
+            </p>
+            <p>
+                <label>Degree</label>
+                <span><%=degree.name%></span>
+            </p>
+            <h3>Job</h3>
+            <p>
+                <label>Applied Job</label>
+                <span><%=jobPosition.name%></span>
+            </p>
+            <p>
+                <label>Department</label>
+                <span><%=department.name%></span>
+            </p>
+            <p>
+                <label>Tags</label>
+                <span><%=tags%></span>
+            </p>
+            <h3>Application Summary</h3>
+            <p>
+                <label>Responsible</label>
+                <span><%=relatedUser.login%></span>
+            </p>
+            <p>
+                <label>Next Action</label>
+                <span><%=nextAction%></span>
+            </p>
+            <p>
+                <label>Source</label>
+                <span><%=source.name%></span>
+            </p>
+            <p>
+                <label>Referred By</label>
+                <span><%=referredBy%></span>
+            </p>
+            <h3>Contract</h3>
+            <p>
+                <label>Expected Salary</label>
+                <span><%=expectedSalary%></span>
+            </p>
+            <p>
+                <label>Proposed Salary</label>
+                <span><%=proposedSalary%></span>
+            </p>
+        </div>
     </form>
 </div>
 

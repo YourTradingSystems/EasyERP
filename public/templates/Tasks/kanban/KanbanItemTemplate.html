@@ -1,5 +1,6 @@
 <div class="task-header">
-    <p><%=model.project.projectShortDesc%>-<%=model.taskCount%></p>
+    <div class="half-block left"><p><%=model.project.projectShortDesc%>-<%=model.taskCount%></p></div>
+    <div class="half-block left"><p><%=model.assignedTo.name%></p></div>   
     <div class="dropDown">
         <a href="#">
             <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
@@ -22,6 +23,7 @@
             </li>
         </ul>
     </div>
+    <div class="clearfix"></div>
 </div>
 <div class="task-content">
     <div class="avatar-small right"><img class="person" src="<%=model.assignedTo.imageSrc%>"  alt="<%=model.assignedTo.name%>"/></div>

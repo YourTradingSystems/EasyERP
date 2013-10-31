@@ -1,7 +1,7 @@
 ﻿<div class="formTitle">
     <h3 class="left">Opportunities</h3>
     <div class="btnHolder">
-        <button class="btn red">Create</button>
+        <div class="icon-img add" title="Add"></div>
     </div>
     <div class="clearfix"></div>
 </div>
@@ -10,20 +10,26 @@
         <% _.each(collection, function(model, index){ %>
         <% if (model.company == company.name) { %>
         <li class="inner">
-            <p>
-                <a id="<%=++index%>" href="#">
-                    <%=model.name%>
-                </a>
-            </p>
-            <p>
-                <%=model.expectedRevenue.currency%><%=model.expectedRevenue.value%>
-            </p>
-            <p>
-                <%=model.workflow.name%>
-            </p>
-            <p>
-                <%=model.nextAction.date%>
-            </p>
+            <div class="half-block left">
+                <p>
+                    <a id="<%=++index%>" href="#">
+                        <%=model.name%>
+                    </a>
+                </p>
+                <p>
+                    <%=model.expectedRevenue.currency%><%=model.expectedRevenue.value%>
+                </p>
+                <p>
+                    <%=model.nextAction.date%>
+                </p>
+            </div>
+            <div class="half-block left">
+                <p></p>
+                <p>
+                    <%=model.workflow.name%>
+                </p>
+            </div>
+            <div class="clearfix"></div>          
         </li>
         <% }%>
         <% });%>

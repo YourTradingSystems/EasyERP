@@ -44,15 +44,19 @@
         </li>
     </ul>
 </div>
+
 <p><%=projectName%></p>
+<div class="avatar right">
+    <img alt="" src="<%=projectmanager.imageSrc%>" />
+</div>
 <p><%=projectShortDesc%></p>
 <p><a id="<%=_id%>" class="tasksByProject" href="#home/content-Tasks/kanban/<%= _id %>"><%=task.tasks.length%> Tasks</a></p>
 <p><%=projectmanager.name%></p>
-<div class="avatar">
-    <img alt="" src="<%=projectmanager.imageSrc%>" width="30" height="30"/>
-</div>
-<% _.each(teams.users, function (item){ %>
-<p><%=item.name%></p>
-<% }); %>
+<p><span><%=workflow.status%></span></p>
+<!--<% _.each(teams.users, function (item){ %>
+<p><%=item%></p>
+<% }); %>-->
+
+
 
 

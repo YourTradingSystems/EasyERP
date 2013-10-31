@@ -1,7 +1,7 @@
 ﻿<div class="formTitle">
     <h3 class="left">Persons</h3>
     <div class="btnHolder">
-        <div class="icon3 icon-btn lightgrey">Y</div>
+        <div class="icon-img add"></div>
        
     </div>
     <div class="clearfix"></div>
@@ -11,20 +11,30 @@
         <% _.each(collection, function(model, index){ %>
         <% if (model.company.name == company.name) { %>
         <li class="inner">
-            <p>
-                <a id="<%=++index%>" href="#">
-                    <%=model.name.first%> <%=model.name.last%>
-                </a>
-            </p>
-            <p>
-                <%=model.phones.mobile%>
-            </p>
-            <p>
-                <%=model.phones.phone%>
-            </p>
-            <p>
-                <%=model.email%>
-            </p>
+           
+             
+                    <div class="half-block left">
+                        <p>
+                            <a id="<%=++index%>" href="#">
+                                <%=model.name.first%> <%=model.name.last%>
+                            </a>
+                        </p>
+                        <p>
+                            <%=model.email%>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p>
+                            <%=model.phones.mobile%>
+                        </p>
+                    </div>
+                
+                <div class="clearfix"></div>
+        
+          
+           
+           
+           
         </li>
         <% }%>
         <% });%>
