@@ -6,8 +6,8 @@
         var compactContentView = Backbone.View.extend({
 
             className: "form",
-
-            initialize: function () {
+            initialize: function (options) {
+                this.customer = options.customers
             },
 
             events: {
@@ -29,6 +29,7 @@
                 } else {
                     company = this.model.toJSON();
                 }
+                var customers = this.customer.toJSON();
                 this.$el.html(this.template({
                     collection: collection,
                     company: company

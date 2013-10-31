@@ -63,7 +63,7 @@ define([
                 var customer = common.toObject(customerId, this.customersCollection);
 
                 var email = $.trim($("#email").val());
-                
+
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
                 var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
@@ -91,7 +91,7 @@ define([
                 var priority = $("#priority").val();
 
                 var company = $.trim($("#company").val());
-               
+
                 var internalNotes = $.trim($("#internalNotes").val());
 
                 var address = {};
@@ -108,7 +108,7 @@ define([
                 };
 
                 var func = $.trim($("#func").val());
-                
+
                 var phone = $.trim($("#phone").val());
                 var mobile = $.trim($("#mobile").val());
                 var fax = $.trim($("#fax").val());
@@ -147,12 +147,14 @@ define([
                 {
                     headers: {
                         mid: mid
+                    },
+                    success: function (model) {
+                        Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+                    },
+                    error: function (model, xhr, options) {
+                        Backbone.history.navigate("home", { trigger: true });
                     }
                 });
-
-
-
-                Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
             },
 
             render: function () {

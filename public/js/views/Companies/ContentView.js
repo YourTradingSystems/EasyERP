@@ -3,6 +3,7 @@ define([
     'text!templates/Companies/form/FormTemplate.html',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Persons/PersonsCollection',
+    "collections/Customers/CustomersCollection",
     "collections/Events/EventsCollection",
     'views/Companies/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
@@ -12,7 +13,7 @@ define([
     //'views/Calendar/compactCalendar'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, CustomersCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -24,6 +25,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             //this.eventsCollection.bind('reset', _.bind(this.render, this));
             this.personsCollection = new PersonsCollection();
             this.personsCollection.bind('reset', _.bind(this.render, this));
+            this.customersCollection = new CustomersCollection();
+            this.customersCollection.bind('reset', _.bind(this.render, this));
             //this.collection.bind('reset', _.bind(this.render, this));
             //this.render();
         },
@@ -102,7 +105,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
-                                    model: currentModel
+                                    model: currentModel,
+                                    customer: this.customersCollection
                                 }).render().el,
                                 new personsCompactContentView({
                                     collection: this.personsCollection,
