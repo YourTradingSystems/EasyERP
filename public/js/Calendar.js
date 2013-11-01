@@ -8,8 +8,8 @@ function(EmployeesCollection){
     var initCalendar = function(calendarContainer, eventsCollection){
         applyTemplates();
         scheduler.init(calendarContainer, new Date(), "month");
-        populatePersons();
-        scheduler.backbone(eventsCollection);
+        //populatePersons();
+        //scheduler.backbone(eventsCollection);
     }
 
     var initMiniCalendar = function(miniCalendarDiv){

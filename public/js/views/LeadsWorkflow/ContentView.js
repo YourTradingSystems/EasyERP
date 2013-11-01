@@ -2,11 +2,10 @@ define([
     'text!templates/LeadsWorkflow/list/ListTemplate.html',
     'text!templates/LeadsWorkflow/form/FormTemplate.html',
     'collections/LeadsWorkflow/LeadsWorkflowCollection',
-    'views/LeadsWorkflow/list/ListItemView',
     'custom',
     'common'
 ],
-function (ListTemplate, FormTemplate, LeadsWorkflowCollection, ListItemView, Custom, common) {
+function (ListTemplate, FormTemplate, LeadsWorkflowCollection, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -17,7 +16,13 @@ function (ListTemplate, FormTemplate, LeadsWorkflowCollection, ListItemView, Cus
         },
 
         events: {
-            "click .checkbox": "checked"
+            "click .checkbox": "checked" ,
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-LeadsWorkflow/form/" + itemIndex;
         },
 
         render: function () {
@@ -27,12 +32,7 @@ function (ListTemplate, FormTemplate, LeadsWorkflowCollection, ListItemView, Cus
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        this.$el.html(_.template(ListTemplate, {leadsWorkflowCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

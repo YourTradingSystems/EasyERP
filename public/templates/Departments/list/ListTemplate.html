@@ -8,6 +8,13 @@
             </tr>
         </thead>
         <tbody>
-
+        <% departmentsCollection.forEach(function(department, index){ %>
+            <tr>
+                <td><input type="checkbox" value="<%=department._id%>" class="checkbox"/></td>
+                <td><%=index + 1%></td>
+                <td><%=department.departmentName%></td>
+                <td><%=department.departmentManager.name%></td>
+            </tr>
+        <% }) %>
         </tbody>
     </table>

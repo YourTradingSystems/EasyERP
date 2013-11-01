@@ -8,6 +8,13 @@
             </tr>
         </thead>
         <tbody>
-
+        <% leadsWorkflowCollection.forEach(function(leadsWorkflow, index){ %>
+            <tr>
+                <td><input type="checkbox" value="<%=leadsWorkflow._id%>" class="checkbox"/></td>
+                <td><%=index+1%></td>
+                <td><%=leadsWorkflow.name%></td>
+                <td><%=leadsWorkflow.status%></td>
+            </tr>
+        <% }) %>
         </tbody>
     </table>
