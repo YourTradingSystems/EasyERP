@@ -285,7 +285,44 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            var createPersonCustomer = function (company) {
+                if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //кастомер Person
+                    var _person = {
+                        name: data.contactName,
+                        email: data.email,
+                        company: company,
+                        salesPurchases: {
+                            isCustomer: true,
+                            salesPerson: data.salesPerson
+                        }
+                    }
+                    persons.Person.find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log("Opportunities.js update opportunitie.update " + err);
+                        } else if (_persons.length > 0) {
+                            if (_persons[0].salesPurchases && !_persons[0].salesPurchases.isCustomer) {
+                                persons.Person.update({ _id: _persons[0]._id }, { $set: { 'salesPurchases.isCustomer': true } }, function (err, success) {
+                                    if (err) {
+                                        console.log(err);
+                                        logWriter.log("Opportunities.js update opportunitie.update " + err);
+                                    }
+                                });
+                            }
+                        } else {
+                            var _Person = new persons.Person(_person);
+                            _Person.save(function (err, _res) {
+                                if (err) {
+                                    console.log(err);
+                                    logWriter.log("Opportunities.js update opportunitie.update " + err);
+                                }
+                            });
+                        }
+                    });
+                }                                              //кінець кастомер Person
+            };
             opportunitie.update({ _id: _id }, data, function (err, result) {
+                console.log(data);
                 if (err) {
                     console.log(err);
                     logWriter.log("Opportunities.js update opportunitie.update " + err);
@@ -302,37 +339,40 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                                     salesPerson: data.salesPerson
                                 }
                             }
-                            var _Company = new company.Company(_company);
-                            _Company.save(function (err, _res) {
+                            company.Company.find({ name: data.company }, function (err, companies) {
                                 if (err) {
                                     console.log(err);
                                     logWriter.log("Opportunities.js update opportunitie.update " + err);
+                                } else if (companies.length > 0) {
+                                    if (companies[0].salesPurchases && !companies[0].salesPurchases.isCustomer) {
+                                        company.Company.update({ _id: companies[0]._id }, { $set: { 'salesPurchases.isCustomer': true } }, function (err, success) {
+                                            if (success) {
+                                                createPersonCustomer({
+                                                    id: companies[0]._id,
+                                                    name: companies[0].name
+                                                });
+                                            }
+                                        })
+                                    }
+                                } else {
+                                    var _Company = new company.Company(_company);
+                                    _Company.save(function (err, _res) {
+                                        if (err) {
+                                            console.log(err);
+                                            logWriter.log("Opportunities.js update opportunitie.update " + err);
+                                        } else {
+                                            createPersonCustomer({
+                                                id: _res._id,
+                                                name: _res.name
+                                            });
+                                        }
+                                    });
                                 }
                             });
-                        }                                              //кінець кастомер Компанія
-                        if (data.contactName) {                           //кастомер Person
-                            var personCompany = {
-                                id: '',
-                                name:''
-                            }
-                            if (data.company) personCompany.name = data.company;
-                            var _person = {
-                                name: data.contactName,
-                                email: data.email,
-                                company: personCompany,
-                                salesPurchases: {
-                                    isCustomer: true,
-                                    salesPerson: data.salesPerson
-                                }
-                            }
-                            var _Person = new persons.Person(_person);
-                            _Person.save(function (err, _res) {
-                                if (err) {
-                                    console.log(err);
-                                    logWriter.log("Opportunities.js update opportunitie.update " + err);
-                                }
-                            });
-                        }                                              //кінець кастомер Person
+
+                        } else {                                              //кінець кастомер Компанія
+                            createPersonCustomer({});
+                        }
                     }
                 }
             });

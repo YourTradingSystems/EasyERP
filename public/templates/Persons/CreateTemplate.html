@@ -19,7 +19,7 @@
                 <select id="companiesDd">
                     <option selected="selected" value="0"></option>
                     <% companiesCollection.each(function(option){ %>
-                        <option value="<%= option._id %>"><%= option.get('name')%></option>
+                        <option value="<%= option.id %>"><%= option.get('name')%></option>
                     <% }) %>
                 </select>
             </p>
@@ -39,7 +39,6 @@
             <p>
                 <label for="addressInput">Address</label>
                 <input type="text" id="addressInput" placeholder="Street..."/>
-                <input type="text" id="additional"/>
                 <input type="text" id="cityInput" placeholder="City"/>
                 <input type="text" id="stateInput" placeholder="State"/>
                 <input type="text" id="zipInput" placeholder="Zip"/>

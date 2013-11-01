@@ -45,22 +45,22 @@
                             <select id="customer">
                                 <option selected="selected" value="0">Select...</option>
                                 <% customersCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"<%=(option.get('_id')==model.customer.id)?'selected="selected"':''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+                                <option value="<%= option.get('_id') %>"<%=(option.get('_id')==model.customer.id)?'selected="selected"':''%>><%= option.get('name') %></option>
                                 <% }); %>
                             </select>
                         </p>
-                        <p><input type="text" class="address" placeholder="Street" name="street" value="<%=model.address.street%>" /></p>
+                        <p><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=model.address.street%>" /></p>
                         <p>
-                            <input type="text" class="address" placeholder="City" name="city" value="<%=model.address.city%>" />
+                            <input type="text" id="city" class="address" placeholder="City" name="city" value="<%=model.address.city%>" />
                         </p>
                         <p>
-                            <input type="text" class="address" placeholder="State" name="state" value="<%=model.address.state%>" />
+                            <input type="text" id="state" class="address" placeholder="State" name="state" value="<%=model.address.state%>" />
                         </p>
                         <p>
-                            <input type="text" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" />
+                            <input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" />
                         </p>
                         <p>
-                            <input type="text" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" />
+                            <input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" />
                         </p>
                         <p></p>
                         <p>

@@ -23,7 +23,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.eventsCollection.bind('reset', _.bind(this.render, this));
             this.personsCollection = new PersonsCollection();
             this.personsCollection.bind('reset', _.bind(this.render, this));
-            //this.collection.bind('reset', _.bind(this.render, this));
+            this.collection.bind('reset', _.bind(this.render, this));
             //this.render();
         },
         flag:true,

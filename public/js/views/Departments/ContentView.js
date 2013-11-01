@@ -2,22 +2,26 @@ define([
     'text!templates/Departments/list/ListTemplate.html',
     'text!templates/Departments/form/FormTemplate.html',
     'collections/Departments/DepartmentsCollection',
-    'views/Departments/list/ListItemView',
     'custom',
     'common'
 ],
-function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custom, common) {
+function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
-            console.log('Init Departments View');
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Departments/form/" + itemIndex;
+        },
 
         events: {
-            "click .checkbox": "checked"
+            "click .checkbox": "checked",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         render: function () {
@@ -27,12 +31,7 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, ListItemView, Custo
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        this.$el.html(_.template(ListTemplate, {departmentsCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

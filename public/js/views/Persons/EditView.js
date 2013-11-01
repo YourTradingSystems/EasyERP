@@ -38,8 +38,7 @@ define([
                             name: $('#companiesDd option:selected').text()
                         },
                         address: {
-                            street1: $('#addressInput').val(),
-                            street2: $('#additional').val(),
+                            street: $('#addressInput').val(),
                             city: $('#cityInput').val(),
                             state: $('#stateInput').val(),
                             zip: $('#zipInput').val(),

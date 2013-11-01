@@ -2,11 +2,10 @@ define([
     'text!templates/SourceOfApplicants/list/ListTemplate.html',
     'text!templates/SourceOfApplicants/form/FormTemplate.html',
     'collections/SourceOfApplicants/SourceOfApplicantsCollection',
-    'views/SourceOfApplicants/list/ListItemView',
     'custom',
     'common'
 ],
-function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemView, Custom, common) {
+function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -17,7 +16,13 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
         },
 
         events: {
-            "click .checkbox": "checked"
+            "click .checkbox": "checked",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-SourceOfApplicants/form/" + itemIndex;
         },
 
         render: function () {
@@ -27,12 +32,7 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, ListItemVie
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        this.$el.html(_.template(ListTemplate, {sourceOfApplicantsCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

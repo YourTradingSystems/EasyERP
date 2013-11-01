@@ -11,7 +11,7 @@
                     <div class="half-block left"></div>
                     <div class="half-block left"></div>
                 </div>
-              
+
                 <p>
                     <label for="expectedRevenueValue">Expected Revenue</label>
                     <input type="text" id="expectedRevenueValue" value="0.00" />
@@ -24,7 +24,7 @@
                         <option selected="selected" value="0">Select...</option>
                         <% customersCollection.each(function(option){ %>
 
-                        <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
+                        <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
                         <% }); %>
 
                     </select>
@@ -131,14 +131,14 @@
                         <div class="half-block left">
 
                             <p>
-                                <input type="text" id="company" />
+                                <input type="text" id="company" disabled />
                             </p>
                             <p>
-                                <input type="text" class="address" name="street" placeholder="Street..." />
-                                <input type="text" class="address" name="city" placeholder="City" />
-                                <input type="text" class="address" name="state" placeholder="State" />
-                                <input type="text" class="address" name="zip" placeholder="ZIP" />
-                                <input type="text" class="address" name="country" placeholder="Country" />
+                            <p><input type="text" class="address" id="street" name="street" placeholder="Street" /></p>
+                            <p><input type="text" class="address" id="city" name="city" placeholder="City" /></p>
+                            <p><input type="text" class="address" id="state" name="state" placeholder="State" /></p>
+                            <p><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" /></p>
+                            <p><input type="text" class="address" id="country" name="country" placeholder="Country" /></p>
                             </p>
                             <p></p>
                             <p>
@@ -167,8 +167,8 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="text" class="name" id="first" placeholder="First" />
-                                <input type="text" class="name" id="last" placeholder="Last" />
+                                <input type="text" class="name" id="first" placeholder="First" disabled />
+                                <input type="text" class="name" id="last" placeholder="Last" disabled />
                             </p>
                             <p>
                                 <input type="text" id="func" />

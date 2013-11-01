@@ -26,7 +26,7 @@
                     <option selected="selected" value="0">Select...</option>
                     <% customersCollection.each(function(option){ %>
                    
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.customer.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.customer.id)?"selected='selected'":''%>><%= option.get('name') %></option>
                     <% }); %>
                
                 </select>
@@ -140,14 +140,14 @@
                         <div class="half-block left">
 
                             <p>
-                                <input type="text" id="company" value="<%=model.company%>" />
+                                <input type="text" id="company" value="<%=model.company%>" disabled/>
                             </p>
                             <p>
-                                <input type="text" class="address" name="street" value="<%=model.address.street%>"/>
-                                <input type="text" class="address" name="city" value="<%=model.address.city%>" />
-                                <input type="text" class="address" name="state" value="<%=model.address.state%>" />
-                                <input type="text" class="address" name="zip" value="<%=model.address.zip%>" />
-                                <input type="text" class="address" name="country" value="<%=model.address.country%>" />
+                                <input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" />
+                                <input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" />
+                                <input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" />
+                                <input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" />
+                                <input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" />
                             </p>
                             <p></p>
                             <p>
@@ -176,8 +176,8 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                               <input type="text" class="name" id="first" value="<%=model.contactName.first%>"/>
-                               <input type="text" class="name" id="last" value="<%=model.contactName.last%>"/>
+                               <input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled/>
+                               <input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled/>
                             </p>
                             <p>
                                <input type="text" id="func" value="<%=model.func%>"/>

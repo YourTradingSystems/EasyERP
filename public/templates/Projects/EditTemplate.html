@@ -36,7 +36,7 @@
                             <select id="customerDd">
                                 <option selected="selected" value="0">Select...</option>
                                 <% customersDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.customer.id) ? 'selected' : ''%> ><%= option.get('name').first %> <%= option.get('name').last %> (<%= option.get('type') %>)</option>
+                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.customer.id) ? 'selected' : ''%> ><%= option.get('name') %> (<%= option.get('type') %>)</option>
                                 <% }); %>
                             </select>
                         </p>

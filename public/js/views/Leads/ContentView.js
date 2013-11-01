@@ -4,11 +4,10 @@ define([
     'collections/Leads/LeadsCollection',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Workflows/WorkflowsCollection',
-    'views/Leads/list/ListItemView',
     'custom',
     'common'
 ],
-    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, ListItemView, Custom, common) {
+    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -25,11 +24,17 @@ define([
                 "click .checkbox": "checked",
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #cancelCase, #reset": "changeWorkflow",
-                "click #convertToOpportunity": "openDialog"
+                "click #convertToOpportunity": "openDialog",
+                "click td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
 
             openDialog: function () {
                 $("#dialog-form").dialog("open");
+            },
+            gotoForm: function (e) {
+                App.ownContentType = true;
+                var itemIndex = $(e.target).closest("tr").data("index") + 1;
+                window.location.hash = "#home/content-Leads/form/" + itemIndex;
             },
 
             switchTab: function (e) {
@@ -106,12 +111,7 @@ define([
                 switch (viewType) {
                     case "list":
                         {
-                            this.$el.html(_.template(ListTemplate));
-                            var table = this.$el.find('table > tbody');
-
-                            this.collection.each(function (model) {
-                                table.append(new ListItemView({ model: model }).render().el);
-                            });
+                            this.$el.html(_.template(ListTemplate, {leadsCollection: this.collection.toJSON()}));
 
                             $('#check_all').click(function () {
                                 var c = this.checked;

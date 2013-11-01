@@ -3,12 +3,11 @@ define([
     'text!templates/JobPositions/form/FormTemplate.html',
     'collections/JobPositions/JobPositionsCollection',
     'collections/Workflows/WorkflowsCollection',
-    'views/JobPositions/list/ListItemView',
     'custom',
     'common'
 
 ],
-function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, ListItemView, Custom, common) {
+function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -20,9 +19,16 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
             //this.render();
         },
 
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-JobPositions/form/" + itemIndex;
+        },
+
         events: {
             "click .checkbox": "checked",
-            "click .breadcrumb a": "changeWorkflow"
+            "click .breadcrumb a": "changeWorkflow",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         render: function () {
@@ -32,12 +38,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        this.collection.each(function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        });
+                        this.$el.html(_.template(ListTemplate, {jobPositionsCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

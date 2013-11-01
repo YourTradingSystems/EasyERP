@@ -1,6 +1,7 @@
-var Persons = function (logWriter, mongoose) {
+var Persons = function (logWriter, mongoose, findCompany) {
 
     var personsSchema = mongoose.Schema({
+        type:{type: String, default: 'Person'},
         name: {
             first: { type: String, default: 'demo' },
             last: { type: String, default: 'User' }
@@ -14,7 +15,7 @@ var Persons = function (logWriter, mongoose) {
         },
         timezone: { type: String, default: 'UTC' },
         address: {
-            street1: { type: String, default: '' },
+            street: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
@@ -30,7 +31,7 @@ var Persons = function (logWriter, mongoose) {
         },
         title: { type: String, default: 'Mister' },
         salesPurchases: {
-            isCustomer: { type: Boolean, default: true },
+            isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
             salesPerson: {
                 id: { type: String, default: '' },
@@ -116,11 +117,8 @@ var Persons = function (logWriter, mongoose) {
                             _person.timezone = data.timezone;
                         }
                         if (data.address) {
-                            if (data.address.street1) {
-                                _person.address.street1 = data.address.street1;
-                            }
-                            if (data.address.street2) {
-                                _person.address.street2 = data.address.street2;
+                            if (data.address.street) {
+                                _person.address.street = data.address.street;
                             }
                             if (data.address.city) {
                                 _person.address.city = data.address.city;
@@ -212,6 +210,7 @@ var Persons = function (logWriter, mongoose) {
                                 logWriter.log("Person.js create savetoBd _person.save " + err);
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
+                                console.log(result);
                                 res.send(201, { success: 'A new Person crate success' });
                             }
                         });
@@ -249,8 +248,6 @@ var Persons = function (logWriter, mongoose) {
         },
 
         get: function (response) {
-            var res = {};
-            res['data'] = [];
             var query = Person.find({});
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
@@ -259,16 +256,14 @@ var Persons = function (logWriter, mongoose) {
                     logWriter.log("Person.js get Person.find " + err);
                     response.send(500, { error: "Can't find Person" });
                 } else {
-                    res['data'] = result;
-                    response.send(res);
+                    findCompany.findCompany(result, 0, response);
                 }
             });
         },
 
-        getCustomers: function (response) {
+        getCustomers: function (company, response) {
             var res = {};
             res['data'] = [];
-            //Person.find({ 'salesPurchases.isCustomer': true }, { _id: 1, name: 1 }, function (err, persons) {
             var query = Person.find({ 'salesPurchases.isCustomer': true });
             query.sort({ "name.first": 1 });
             query.exec(function (err, persons) {
@@ -277,15 +272,15 @@ var Persons = function (logWriter, mongoose) {
                     logWriter.log("Person.js getCustomersForDd Person.find " + err);
                     response.send(500, { error: "Can't find Customer" });
                 } else {
-                    //console.log(accounts);
                     for (var i in persons) {
                         var obj = {};
-                        obj._id = persons[i]._id;
-                        obj.name = persons[i].name;
+                        obj = persons[i];
+                        obj.name = obj.name.first + ' ' + obj.name.last;
                         obj.type = 'Person';
                         res['data'].push(obj);
                     }
-                    response.send(res);
+                    //response.send(res);
+                    company.getCustomers(res, response);
                 }
             });
         },

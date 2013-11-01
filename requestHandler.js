@@ -1,12 +1,13 @@
 var requestHandler = function (mongoose) {
     var fs = require("fs"),
         logWriter = require("./Modules/additions/logWriter.js")(fs),
+        company = require("./Modules/Companies.js")(logWriter, mongoose),
+        findCompany = require("./Modules/additions/findCompany.js")(company.Company),
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         events = require("./Modules/Events.js")(logWriter, mongoose),
-        users = require("./Modules/Users.js")(logWriter, mongoose),
-        persons = require("./Modules/Persons.js")(logWriter, mongoose),
+        users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
+        persons = require("./Modules/Persons.js")(logWriter, mongoose, findCompany),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
-        company = require("./Modules/Companies.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
@@ -156,7 +157,7 @@ var requestHandler = function (mongoose) {
         try {
             console.log("Requst getCustomer is success");
             if (req.session && req.session.loggedIn) {
-                persons.getCustomers(res);
+                persons.getCustomers(company, res);
             } else {
                 res.send(401);
             }
