@@ -6,13 +6,12 @@ define([
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Leads/LeadsCollection',
     'collections/Workflows/WorkflowsCollection',
-    'views/Opportunities/list/ListItemView',
     'views/Opportunities/kanban/KanbanItemView',
     'custom',
     'common'
 ],
 
-function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, ListItemView, KanbanItemView, Custom, common) {
+function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, KanbanItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -37,7 +36,14 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             "click .fold": "foldUnfoldColumn",
             "click .breadcrumb a, #lost, #won": "changeWorkflow",
             "click #hire": "isEmployee",
-            "click #tabList a": "switchTab"
+            "click #tabList a": "switchTab",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Opportunities/form/" + itemIndex;
         },
 
         switchTab: function (e) {
@@ -88,12 +94,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                     }
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate));
-                        var table = this.$el.find('table > tbody');
-
-                        _.each(this.collection.models, function (model) {
-                            table.append(new ListItemView({ model: model }).render().el);
-                        }, this);
+                        this.$el.html(_.template(ListTemplate, {opportunitiesCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;

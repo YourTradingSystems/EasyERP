@@ -7,6 +7,12 @@
             </tr>
         </thead>
         <tbody>
-
+        <% sourceOfApplicantsCollection.forEach(function(source, index){ %>
+            <tr>
+                <td><input type="checkbox" value="<%=source._id%>" class="checkbox"/></td>
+                <td><%=index+1%></td>
+                <td><%=source.name%></td>
+            </tr>
+        <% }) %>
         </tbody>
     </table>

@@ -16,5 +16,20 @@
         </tr>
     </thead>
     <tbody>
+    <% opportunitiesCollection.forEach(function(opportunity, index){ %>
+        <tr>
+            <td><input type="checkbox"  value="<%=opportunity._id%>" class="checkbox"/></td>
+            <td><%=index+1%></td>
+            <td><%=opportunity.creationDate%></td>
+            <td><%=opportunity.name%></td>
+            <td><%=opportunity.customer.name%></td>
+            <td><%=opportunity.nextAction.date%></td>
+            <td><%=opportunity.nextAction.desc%></td>
+            <td><%=opportunity.workflow.name%></td>
+            <td><%=opportunity.expectedRevenue.value%></td>
+            <td><%=opportunity.expectedRevenue.progress%>%</td>
+            <td><%=opportunity.salesPerson.name%></td>
+        </tr>
+    <% }) %>
     </tbody>
 </table>
