@@ -20,9 +20,32 @@ define([
         },
 
         events: {
-            "click .checkbox": "checked"
+            "click .checkbox": "checked",
+            "click .details": "toggle",
+            "mouseover .social a": "socialActive",
+            "mouseout .social a": "socialNotActive"
         },
+        toggle: function () {
+            this.$('#details').animate({
+                height: "toggle"
+            }, 250, function () {
+           
+            });
+        },
+        socialActive: function (e) {
+            e.preventDefault();           
+            $(e.target).animate({
+                'background-position-y':'-38px'
 
+            }, 300, function () { });
+        },
+        socialNotActive: function (e) {
+            e.preventDefault();
+            $(e.target).animate({
+                'background-position-y': '0px'
+
+            }, 300, function () { });
+        },
         render: function () {
             Custom.setCurrentCL(this.collection.length);
             console.log('Render Persons View');

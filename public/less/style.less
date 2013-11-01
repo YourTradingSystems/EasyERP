@@ -2,10 +2,12 @@
     font-family: 'Segoe UI';
     src: url("../font/segoeui.woff") format('woff');
 }
+
 @font-face {
     font-family: 'Title';
     src: url("../font/title.woff") format('woff');
 }
+
 @font-face {
     font-family: 'Metrize-Icons';
     src: url("../font/Metrize-Icons.ttf") format('truetype');
@@ -66,7 +68,7 @@
 
 a {
     color: @lightmagenta;
-    text-decoration:none;
+    text-decoration: none;
 
     &:hover {
         color: @lightmagenta - #333333;
@@ -85,7 +87,6 @@ body {
 }
 
 html {
- 
 }
 
 * {
@@ -702,11 +703,65 @@ h3 {
         margin-bottom: 10px;
     }
 
+    .mainInfo {
+        margin-left: 156px;
+        width: auto;
+        display: block;
+
+        h3 {
+            color: #333;
+        }
+
+        p {
+            height: 20px !important;
+            line-height: 20px !important;
+            min-height: 20px !important;
+        }
+    }
+
+    .details {
+        border: @thin-border #c1c1c1;
+        background: #cecece;
+        padding: 2px 3px;
+        line-height: 5px;
+        text-align: center;
+        color: #999;
+        cursor: pointer;
+        width: 12px;
+        height: 6px;
+    }
+
+    #details {
+        display: none;
+    }
+
+    .social {
+        a {
+            display: block;
+            height: 28px;
+            width: 28px;
+            float: left;
+            margin-right: 5px;
+        }
+
+        .facebook {
+            background: url("@{imagesfolder}/facebook.png");
+        }
+
+        .linkedin {
+             background: url("@{imagesfolder}/linkedin.png");
+        }
+
+        .skype {
+             background: url("@{imagesfolder}/skype.png");
+        }
+    }
+
     .avatar {
         float: left;
         position: relative;
-        width: 120px;
-        height: 120px;
+        width: 140px;
+        height: 140px;
         .border-radius(3px);
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -757,7 +812,7 @@ h3 {
 
 
     .inner {
-        margin: 16px;
+        margin: 16px 0px;
     }
 
     & > #tabList {
@@ -991,7 +1046,7 @@ input, textarea, select {
         .thumbnail-text;
 
         span {
-        font-weight:normal !important;
+            font-weight: normal !important;
         }
     }
 
@@ -1240,22 +1295,27 @@ button {
         display: none;
     }
 }
+
 .icon-img {
     display: block;
     height: 18px;
     width: 18px;
     background: url("@{imagesfolder}/gray.png");
+
     &.add {
         background-position: 0px -60px;
     }
+
     &.edit {
         background-position: 0px -82px;
     }
-     &.remove {
+
+    &.remove {
         background-position: 0px -22px;
     }
+
     &:hover {
-        opacity:0.7;
+        opacity: 0.7;
     }
 }
 ////////////////////////////////////////////////////////
