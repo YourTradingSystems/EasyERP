@@ -321,7 +321,7 @@ app.get('/relatedStatus', function (req, res) {
 app.get('/Workflows', function (req, res) {
     data = {};
     data.id = req.param('id');
-    data.mid = req.param('mid');
+    data.mid = req.param('mid');   
     requestHandler.getWorkflow(req, res, data);
 });
 
