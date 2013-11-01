@@ -1,6 +1,7 @@
 var Company = function (logWriter, mongoose) {
 
     var CompanySchema = mongoose.Schema({
+        type: { type: String, default: 'Company' },
         imageSrc: { type: String, default: '' },
         isOwnCompany: { type: Boolean, default: false },
         email: { type: String, default: '' },
@@ -24,7 +25,7 @@ var Company = function (logWriter, mongoose) {
             isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
             salesPerson: {
-                id: {type: String, default: ''},
+                id: { type: String, default: '' },
                 name: { type: String, default: '' }
             },
             salesTeam: {
@@ -48,7 +49,7 @@ var Company = function (logWriter, mongoose) {
     var company = mongoose.model('Companies', CompanySchema);
 
     return {
-        create: function(data, res) {
+        create: function (data, res) {
             try {
                 if (!data) {
                     logWriter.log('Company.create Incorrect Incoming Data');
@@ -159,7 +160,7 @@ var Company = function (logWriter, mongoose) {
                         if (data.history) {
                             _company.history = data.history;
                         }
-                        _company.save(function(err, result) {
+                        _company.save(function (err, result) {
                             if (err) {
                                 console.log(err);
                                 logWriter.log("Company.js create savetoBd _company.save" + err);
@@ -168,13 +169,13 @@ var Company = function (logWriter, mongoose) {
                                 res.send(201, { success: 'A new Company create success' });
                             }
                         });
-                    } catch(error) {
+                    } catch (error) {
                         console.log(error);
                         logWriter.log("Company.js create savetoBd" + error);
                         res.send(500, { error: 'Company .save Script error' });
                     }
                 }
-            } catch(Exception) {
+            } catch (Exception) {
                 console.log(Exception);
                 logWriter.log("Company.js  " + Exception);
                 res.send(500, { error: 'Company .save Script error' });
@@ -253,7 +254,7 @@ var Company = function (logWriter, mongoose) {
             res['data'] = [];
             var query = (data.isOwnCompany) ? { isOwnCompany: true } : {};
             var _query = Company.find(query, { _id: 1, name: 1 });
-            _query.sort({name: 1});
+            _query.sort({ name: 1 });
             _query.exec(function (err, companies) {
                 try {
                     if (err) {
@@ -359,87 +360,23 @@ var Company = function (logWriter, mongoose) {
             });
         },
 
-        getCustomersForDd: function (func) {
-            var res = {};
-            res['result'] = {};
-            res['result']['status'] = '2';
-            res['result']['description'] = 'An error was find';
-            res['data'] = [];
-            company.find({ 'csalesPurchases.isCustomer': true }, { _id: 1, cname: 1 }, function (err, companies) {
-                try {
-                    if (err) {
-                        //func();
-                        console.log(err);
-                        logWriter.log("Company.js getCustomersForDd Company.find " + err);
-                        res['result']['description'] = err;
-                        func(res);
-                    } else {
-                        if (companies) {
-                            //console.log(companies);
-                            for (var i in companies) {
-                                var obj = {};
-                                obj.type = 'Company';
-                                obj._id = companies[i]._id;
-                                obj.name = companies[i].cname;
-                                res['data'].push(obj);
-                            }
-                            res['result']['status'] = '0';
-                            res['result']['description'] = 'returned CompanyCustomers is success';
-                            //res['data'] = companies;
-                            func(res);
-                        }
+        getCustomers: function (res, response) {
+            var query = company.find({ 'salesPurchases.isCustomer': true });
+            query.sort({ "name": 1 });
+            query.exec(function (err, companies) {
+                if (err) {
+                    //func();
+                    console.log(err);
+                    logWriter.log("Company.js getCustomers Company.find " + err);
+                    response.send(500, { error: "Can't find Customer " });
+                } else {
+                    for (var i in companies) {
+                        var obj = {};
+                        obj = companies[i];
+                        obj.type = 'Company';
+                        res['data'].push(obj);
                     }
-                }
-                catch (Exception) {
-                    logWriter.log("Company.js getCustomersForDd Company.find " + Exception);
-                }
-            });
-        },
-
-        getAllForCustomers: function (func) {
-            var res = {};
-            res['result'] = {};
-            res['result']['status'] = '2';
-            res['result']['description'] = 'An error was find';
-            res['data'] = [];
-            company.find({}, {
-                _id: 1,
-                cname: 1,
-                cemail: 1,
-                caddress: 1,
-                cphones: 1
-            }, function (err, companies) {
-                try {
-                    if (err) {
-                        //func();
-                        console.log(err);
-                        logWriter.log("Company.js getAllCustomers Company.find " + err);
-                        res['result']['description'] = err;
-                        func(res);
-                    } else {
-                        if (companies) {
-                            for (var i in companies) {
-                                var obj = {};
-                                obj._id = companies[i]._id;
-                                obj.name = companies[i].cname;
-                                obj.type = 'Company';
-                                obj.email = companies[i].cemail;
-                                obj.address = companies[i].caddress;
-                                obj.phones = companies[i].cphones;
-                                obj.tags = [];
-                                res['data'].push(obj);
-                                console.log(obj);
-                                console.log(res['data']);
-                            }
-                            res['result']['status'] = '0';
-                            res['result']['description'] = 'returned CompanyCustomers is success';
-                            //res['data'] = accounts;
-                            func(res);
-                        }
-                    }
-                }
-                catch (Exception) {
-                    logWriter.log("Company.js getAllCustomers Company.find " + Exception);
+                    response.send(res);
                 }
             });
         },

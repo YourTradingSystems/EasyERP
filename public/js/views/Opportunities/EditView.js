@@ -33,7 +33,27 @@
 
             events: {
                 "click .breadcrumb a, #lost, #won": "changeWorkflow",
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "change #customer": "selectCustomer"
+            },
+
+            selectCustomer: function (e) {
+                e.preventDefault();
+                var id = $(e.target).val();
+                var customer = this.customersCollection.get(id).toJSON();
+                if (customer.type == 'Person') {
+                    this.$el.find('#company').val(customer.company.name);
+                } else {
+                    this.$el.find('#company').val(customer.name);
+                }
+                this.$el.find('#email').val(customer.email);
+                this.$el.find('#phone').val(customer.phones.phone);
+                this.$el.find('#mobile').val(customer.phones.mobile);
+                this.$el.find('#street').val(customer.address.street);
+                this.$el.find('#city').val(customer.address.city);
+                this.$el.find('#state').val(customer.address.state);
+                this.$el.find('#zip').val(customer.address.zip);
+                this.$el.find('#country').val(customer.address.country);
             },
 
             switchTab: function (e) {
@@ -71,7 +91,7 @@
                     var customer = {};
                     if (_customer) {
                         customer.id = _customer._id;
-                        customer.name = _customer.name.first + ' ' + _customer.name.last;
+                        customer.name = _customer.name;
                     } else {
                         customer = currentModel.defaults.customer;
                     }

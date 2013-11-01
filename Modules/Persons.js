@@ -1,6 +1,7 @@
 var Persons = function (logWriter, mongoose, findCompany) {
 
     var personsSchema = mongoose.Schema({
+        type:{type: String, default: 'Person'},
         name: {
             first: { type: String, default: 'demo' },
             last: { type: String, default: 'User' }
@@ -14,7 +15,7 @@ var Persons = function (logWriter, mongoose, findCompany) {
         },
         timezone: { type: String, default: 'UTC' },
         address: {
-            street1: { type: String, default: '' },
+            street: { type: String, default: '' },
             city: { type: String, default: '' },
             state: { type: String, default: '' },
             zip: { type: String, default: '' },
@@ -30,7 +31,7 @@ var Persons = function (logWriter, mongoose, findCompany) {
         },
         title: { type: String, default: 'Mister' },
         salesPurchases: {
-            isCustomer: { type: Boolean, default: true },
+            isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
             salesPerson: {
                 id: { type: String, default: '' },
@@ -116,11 +117,8 @@ var Persons = function (logWriter, mongoose, findCompany) {
                             _person.timezone = data.timezone;
                         }
                         if (data.address) {
-                            if (data.address.street1) {
-                                _person.address.street1 = data.address.street1;
-                            }
-                            if (data.address.street2) {
-                                _person.address.street2 = data.address.street2;
+                            if (data.address.street) {
+                                _person.address.street = data.address.street;
                             }
                             if (data.address.city) {
                                 _person.address.city = data.address.city;
@@ -263,10 +261,9 @@ var Persons = function (logWriter, mongoose, findCompany) {
             });
         },
 
-        getCustomers: function (response) {
+        getCustomers: function (company, response) {
             var res = {};
             res['data'] = [];
-            //Person.find({ 'salesPurchases.isCustomer': true }, { _id: 1, name: 1 }, function (err, persons) {
             var query = Person.find({ 'salesPurchases.isCustomer': true });
             query.sort({ "name.first": 1 });
             query.exec(function (err, persons) {
@@ -275,15 +272,15 @@ var Persons = function (logWriter, mongoose, findCompany) {
                     logWriter.log("Person.js getCustomersForDd Person.find " + err);
                     response.send(500, { error: "Can't find Customer" });
                 } else {
-                    //console.log(accounts);
                     for (var i in persons) {
                         var obj = {};
-                        obj._id = persons[i]._id;
-                        obj.name = persons[i].name;
+                        obj = persons[i];
+                        obj.name = obj.name.first + ' ' + obj.name.last;
                         obj.type = 'Person';
                         res['data'].push(obj);
                     }
-                    response.send(res);
+                    //response.send(res);
+                    company.getCustomers(res, response);
                 }
             });
         },

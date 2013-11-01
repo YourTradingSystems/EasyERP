@@ -175,7 +175,7 @@
                     var customer = {};
                     if (_customer) {
                         customer.id = _customer._id;
-                        customer.name = _customer.name.first + ' ' + _customer.name.last;
+                        customer.name = _customer.name;
                     } else {
                         customer = currentModel.defaults.extrainfo.customer;
                     }

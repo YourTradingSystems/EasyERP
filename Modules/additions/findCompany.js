@@ -2,12 +2,12 @@
     var res = {};
     res['data'] = [];
     var findCompany = function (objectArray, index, response) {
+        console.log(index);
         if (index < objectArray.length) {
-            console.log(index);
             var query;
             if (objectArray[index].company && objectArray[index].company.id) {
                 query = objectArray[index].company.id;
-            } else if (objectArray[index].profile.company && objectArray[index].profile.company.id) {
+            } else if (objectArray[index].profile && objectArray[index].profile.company && objectArray[index].profile.company.id) {
                 query = objectArray[index].profile.company.id;
             }
             if (query) {
@@ -21,6 +21,9 @@
                         findCompany(objectArray, ++index, response);
                     } else if (err) {
                         console.log(err);
+                        findCompany(objectArray, ++index, response);
+                    } else {
+                        findCompany(objectArray, ++index, response);
                     }
                 });
             } else {

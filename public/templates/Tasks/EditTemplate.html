@@ -122,7 +122,7 @@
                                 <select id="customerDd">
                                     <option value="<%=model.extrainfo.customer.id%>">Select...</option>
                                     <% customersDdCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.extrainfo.customer.id) ? 'selected="selected"' : ''%>><%= option.get('name').first %> <%= option.get('name').last %> (<%= option.get('type') %>)</option>
+                                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.extrainfo.customer.id) ? 'selected="selected"' : ''%>><%= option.get('name') %> (<%= option.get('type') %>)</option>
                                     <% }); %>
                                 </select>
                             </p>

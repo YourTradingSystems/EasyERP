@@ -157,7 +157,7 @@ var requestHandler = function (mongoose) {
         try {
             console.log("Requst getCustomer is success");
             if (req.session && req.session.loggedIn) {
-                persons.getCustomers(res);
+                persons.getCustomers(company, res);
             } else {
                 res.send(401);
             }
