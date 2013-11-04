@@ -56,6 +56,5 @@ function (ListTemplate, ListItemView, common, Custom) {
             }, this);
         }
     });
-    common.contentHolderHeightFixer();
     return ContentView;
 });

@@ -17,21 +17,7 @@
             }
             return "";
 
-        }
-
-        var contentHolderHeightFixer = function () {
-            $(window).ready(function () {
-                var h = $(window).height();
-                var hFixed = h - 101;
-                $('#content-holder').css('min-height', hFixed + 'px');
-
-            });
-            jQuery(window).resize(function () {
-                var h = $(window).height();
-                var hFixed = h - 101;
-                $('#content-holder').css('min-height', hFixed + 'px');
-            });
-        }
+        }   
 
         var ISODateToDate = function (ISODate) {
             var date = ISODate.split('T')[0];
@@ -132,7 +118,6 @@
         ISODateToDate: ISODateToDate,
         hexToRgb: hexToRgb,
         deleteEvent: deleteEvent,
-        canvasDraw: canvasDraw,
-        contentHolderHeightFixer: contentHolderHeightFixer
+        canvasDraw: canvasDraw
     }
 });

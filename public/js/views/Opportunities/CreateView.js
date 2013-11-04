@@ -179,7 +179,6 @@ define([
 
             render: function () {
                 this.$el.html(this.template({ customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
-                common.contentHolderHeightFixer();
                 $('#nextActionDate').datepicker();
                 $('#expectedClosing').datepicker();
                 return this;

@@ -62,7 +62,6 @@ define([
 
             render: function () {
                 this.$el.html(this.template({ relatedStatusesCollection: this.relatedStatusesCollection }));
-                common.contentHolderHeightFixer();
                 return this;
             }
 

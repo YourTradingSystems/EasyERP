@@ -74,7 +74,6 @@ define([
 
             render: function () {
                 this.$el.html(this.template({ departmentsCollection: this.departmentsCollection }));
-                common.contentHolderHeightFixer();
                 return this;
             }
 

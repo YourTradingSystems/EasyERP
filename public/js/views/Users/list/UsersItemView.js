@@ -27,7 +27,6 @@ define([
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.html(this.template(this.model.toJSON()));
                 this.$("td:nth-child(2)").append(this.model.collection.indexOf(this.model) + 1);
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

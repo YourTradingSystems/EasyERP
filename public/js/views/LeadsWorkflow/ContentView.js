@@ -58,7 +58,6 @@ function (ListTemplate, FormTemplate, LeadsWorkflowCollection, Custom, common) {
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },

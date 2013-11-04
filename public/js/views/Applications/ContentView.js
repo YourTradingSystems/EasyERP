@@ -87,8 +87,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
-                        });
-                        common.contentHolderHeightFixer();
+                        });                       
 
                         break;
                     }

@@ -84,7 +84,6 @@ define([
                     { profilesCollection:this.profilesCollection,
                         contentType: this.contentType
                     }));
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

@@ -159,7 +159,6 @@ define([
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection }));
                 }
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
-                common.contentHolderHeightFixer();
                 $('#date').datepicker();
                 return this;
             }

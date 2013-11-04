@@ -85,7 +85,6 @@ define([
                 this.$el.html(this.template({ companiesCollection: this.companiesCollection }));
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 return this;
-                common.contentHolderHeightFixer();
             }
 
         });

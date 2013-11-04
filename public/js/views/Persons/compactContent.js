@@ -30,7 +30,6 @@
                     collection: collection,
                     company: company
                 }));
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

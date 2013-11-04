@@ -104,7 +104,6 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
                     this.$el.html("Thumbnails View");
                     break;
             }
-            common.contentHolderHeightFixer();
             return this;
 
         }

@@ -78,7 +78,6 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },

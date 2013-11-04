@@ -278,7 +278,6 @@
                 $('#deadline').datepicker();
                 $('#StartDate').datepicker();
                 $('#EndDate').datepicker();
-                common.contentHolderHeightFixer();
                 return this;
             }
 

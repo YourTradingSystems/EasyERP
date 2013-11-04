@@ -70,7 +70,6 @@ define([
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.css('background-color', 'rgba(' + color.r + ',' + color.g + ',' + color.b + ', 0.20)');
                 this.$('p').css({ 'color': this.model.get('color'), 'font-weight': 'bold', 'text-shadow': '0 1px 1px rgba(' + 255 + ',' + 255 + ',' + 255 + ', 0.5)' });
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

@@ -222,7 +222,6 @@ define([
 
                         break;
                 }
-                common.contentHolderHeightFixer();
                 return this;
             },
 

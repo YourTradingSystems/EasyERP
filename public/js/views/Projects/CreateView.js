@@ -87,7 +87,6 @@ define([
 
             render: function () {
                 this.$el.html(this.template({ accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection, workflowsDdCollection: this.workflowsDdCollection }));
-                common.contentHolderHeightFixer();
                 return this;
             }
 

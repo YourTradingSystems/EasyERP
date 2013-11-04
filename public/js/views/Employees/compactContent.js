@@ -16,7 +16,6 @@
             render: function () {
                 var collection = this.collection.toJSON();
                 this.$el.html(this.template({ collection: collection }));
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

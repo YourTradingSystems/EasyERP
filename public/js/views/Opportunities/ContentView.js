@@ -193,7 +193,6 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                     column.find(".revenue span").html(parseInt(column.find(".revenue span").html()) + (model.get("expectedRevenue").value));
                 }
             }).disableSelection();
-            common.contentHolderHeightFixer();
             return this;
         },
 

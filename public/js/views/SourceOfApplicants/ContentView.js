@@ -58,7 +58,6 @@ function (ListTemplate, FormTemplate, SourcesOfApplicantsCollection, Custom, com
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },
