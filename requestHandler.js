@@ -397,6 +397,15 @@ var requestHandler = function (mongoose) {
         }
     };
 
+    function getOwnCompanies(req, res, data) {
+        console.log("Requst getCompanies is success");
+        if (req.session && req.session.loggedIn) {
+            company.getOwn(res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function removeCompany(req, res, id, data) {
         console.log("Requst removeCompany is success");
         if (req.session && req.session.loggedIn) {
@@ -844,6 +853,7 @@ var requestHandler = function (mongoose) {
         getTasksPriority: getTasksPriority,
 
         getCompanies: getCompanies,
+        getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
