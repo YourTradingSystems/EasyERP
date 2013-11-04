@@ -361,6 +361,12 @@ app.get('/Companies', function (req, res) {
     requestHandler.getCompanies(req, res, data);
 });
 
+app.get('/ownCompanies', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getOwnCompanies(req, res, data);
+});
+
 app.put('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

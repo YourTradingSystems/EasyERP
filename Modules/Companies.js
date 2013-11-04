@@ -296,6 +296,23 @@ var Company = function (logWriter, mongoose) {
             });
         },
 
+        getOwn: function (response) {
+            var res = {};
+            res['data'] = [];
+            var query = company.find({isOwnCompany: true});
+            query.sort({ name: 1 });
+            query.exec(function (err, companies) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Company.js get Company.find " + err);
+                    response.send(500, { error: "Can't find Person" });
+                } else {
+                    res['data'] = companies;
+                    response.send(res);
+                }
+            });
+        },
+
         remove: function (_id, res) {
             company.remove({ _id: _id }, function (err, companies) {
                 if (err) {

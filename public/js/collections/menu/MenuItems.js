@@ -60,10 +60,20 @@ define(function () {
                 });
             },
 
-            children: function (model) {
+            children: function (model, self) {
 
                 if (!this.relations) this.relationships();
-                return (typeof this.relations[model["id"]] === 'undefined') ? [] : this.relations[model["id"]];
+                var modules = (self) ? self : [];
+                if (typeof this.relations[model["id"]] != 'undefined') {
+                    _.each(this.relations[model["id"]], function (module) {
+                        if (module.get("link")) {
+                            modules.push(module);
+                        } else {
+                            this.children(module, modules);
+                        }
+                    }, this);
+                }
+                return modules;
             },
 
             parent: function (model) {

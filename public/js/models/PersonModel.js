@@ -32,7 +32,12 @@ define(function () {
                 isSupplier: false,
                 active: false
             },
-            color: '#4d5a75'
+            department: {
+                id: '',
+                name: ''
+            },
+            color: '#4d5a75',
+            dateBirth: null
         },
 
         urlRoot: function () {
