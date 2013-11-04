@@ -60,6 +60,15 @@
             <input type="text" id="jobPositionInput" value="<%= model.jobPosition%>" placeholder="e.g. Sales Manager"/>
         </p>
         <p>
+            <label for="department">Department</label>
+            <select id="department">
+                <option value="0">Select...</option>
+                <% departmentsCollection.each(function(option){ %>
+                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                <% }); %>
+            </select>
+        </p>
+        <p>
             <label for="phoneInput">Phone</label>
             <input type="text" id="phoneInput" value="<%= model.phones.phone%>"/>
         </p>
@@ -74,6 +83,10 @@
         <p>
             <label for="emailInput">Email</label>
             <input type="text" id="emailInput" value="<%= model.email%>"/>
+        </p>
+        <p>
+            <label for="dateBirth">Date Of Birth</label>
+            <input type="text" id="dateBirth" value="<%= model.dateBirth%>"/>
         </p>
         <p>
             <label for="titleDd">Title</label>

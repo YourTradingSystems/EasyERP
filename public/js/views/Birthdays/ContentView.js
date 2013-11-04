@@ -9,10 +9,13 @@ function (ListTemplate, ListItemView, common, Custom) {
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Employees View');
-            this.employeesCollection = options.collection;;
+            this.employeesCollection = options.collection;
             this.employeesCollection.bind('reset', _.bind(this.render, this));
             this.render();
         },
+        
+        
+    
 
         render: function () {
             Custom.setCurrentCL(this.employeesCollection.models.length);
@@ -51,6 +54,11 @@ function (ListTemplate, ListItemView, common, Custom) {
             _.each(weekModels, function (model) {
                 list.find("#weekList").append(new ListItemView({ model: model }).render().el);
             }, this);
+            monthModels.sort(function(a, b) {
+                var firstDate = new Date(common.ISODateToDate(a.get('dateBirth')));
+                var secondDate = new Date(common.ISODateToDate(b.get('dateBirth')));
+                return secondDate.getTime()-firstDate.getTime();
+            });
             _.each(monthModels, function (model) {
                 list.find("#monthList").append(new ListItemView({ model: model }).render().el);
             }, this);
