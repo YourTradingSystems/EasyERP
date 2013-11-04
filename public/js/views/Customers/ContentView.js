@@ -84,7 +84,6 @@ function ($, _, Backbone, PersonsCollection, CompaniesCollection, ListTemplate, 
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },

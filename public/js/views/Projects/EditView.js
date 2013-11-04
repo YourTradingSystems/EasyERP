@@ -151,7 +151,6 @@ define([
                         }
                     }, this);
                 }
-                common.contentHolderHeightFixer();
                 return this;
             }
 

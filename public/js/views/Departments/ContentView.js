@@ -57,7 +57,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },

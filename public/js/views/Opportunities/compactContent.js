@@ -32,7 +32,6 @@
                     collection: this.collection.toJSON(),
                     company: company
                 }));
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

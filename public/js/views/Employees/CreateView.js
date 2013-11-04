@@ -171,7 +171,6 @@ define([
                     usersCollection: this.usersCollection
                 }));
                 common.canvasDraw({ model: employeeModel.toJSON() }, this);
-                common.contentHolderHeightFixer();
                 $('#dateBirth').datepicker({
                     changeMonth : true,
                     changeYear : true,

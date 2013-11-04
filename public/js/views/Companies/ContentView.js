@@ -117,7 +117,6 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     }
             }
             $(holder).append('<div class="clearfix"></div>');
-            common.contentHolderHeightFixer();
             return this;
 
         },

@@ -2,10 +2,11 @@ define([
     "text!templates/Persons/CreateTemplate.html",
     "collections/Companies/CompaniesCollection",
     "collections/Persons/PersonsCollection",
+    "collections/Departments/DepartmentsCollection",
     "models/PersonModel",
     "common"
 ],
-    function (CreateTemplate, CompaniesCollection, PersonsCollection, PersonModel, common) {
+    function (CreateTemplate, CompaniesCollection, PersonsCollection, DepartmentsCollection, PersonModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -16,6 +17,8 @@ define([
             initialize: function (options) {
                 this.companiesCollection = new CompaniesCollection();
                 this.companiesCollection.bind('reset', _.bind(this.render, this));
+                this.departmentsCollection = new DepartmentsCollection();
+                this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = options.collection;
                 this.bind('reset', _.bind(this.render, this));
                 this.render();
@@ -29,13 +32,24 @@ define([
                 var idCompany = $(this.el).find('#companiesDd option:selected').val();
                 var company = common.toObject(idCompany, this.companiesCollection);
 
+                var dateBirthSt = $.trim($("#dateBirth").val());
+                var dateBirth = "";
+                if (dateBirthSt) {
+                    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
+                }
+
+                var departmentId = this.$("#department option:selected").val();
+                var department = common.toObject(departmentId, this.departmentsCollection);
+
                 var data = {
                     name: {
                         first: $('#firstName').val(),
                         last: $('#lastName').val()
                     },
                     imageSrc: this.imageSrc,
+                    dateBirth: dateBirth,
                     company: company,
+                    department: department,
                     address: {
                         street: $('#addressInput').val(),
                         city: $('#cityInput').val(),
@@ -82,10 +96,19 @@ define([
 
             render: function () {
                 var personModel = new PersonModel();
-                this.$el.html(this.template({ companiesCollection: this.companiesCollection }));
+                this.$el.html(this.template({
+                    companiesCollection: this.companiesCollection,
+                    departmentsCollection: this.departmentsCollection
+                }));
                 common.canvasDraw({ model: personModel.toJSON() }, this);
-                return this;
                 common.contentHolderHeightFixer();
+                $('#dateBirth').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-1d'
+                });
+                return this;
             }
 
         });

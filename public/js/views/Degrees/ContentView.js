@@ -38,7 +38,6 @@ function (ListTemplate, FormTemplate, DegreesCollection, Custom, common) {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
                         });
-                        common.contentHolderHeightFixer();
                         break;
                     }
                 case "form":
@@ -59,7 +58,6 @@ function (ListTemplate, FormTemplate, DegreesCollection, Custom, common) {
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },

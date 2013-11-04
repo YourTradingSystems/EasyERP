@@ -69,7 +69,6 @@ define([
                     var currentModel = this.collection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), relatedStatusesCollection: this.relatedStatusesCollection }));
                 }
-                common.contentHolderHeightFixer();
                 return this;
             }
 

@@ -84,7 +84,6 @@ define([
                     var currentModel = this.departmentsCollection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), accountDdCollection: this.accountDdCollection, departmentsCollection: this.departmentsCollection }));
                 }
-                common.contentHolderHeightFixer();
                 return this;
             }
 

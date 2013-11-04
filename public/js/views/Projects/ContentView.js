@@ -107,7 +107,6 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
                         break;
                     }
             }
-            common.contentHolderHeightFixer();
             return this;
 
         },

@@ -22,7 +22,6 @@ define([
                             profile:this.profile.toJSON()
                         }));
                 this.$el.html(this.template({ profile: this.profile, action: this.action }));
-                common.contentHolderHeightFixer();
                 return this;
             }
 

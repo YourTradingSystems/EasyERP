@@ -20,7 +20,6 @@ function (CalendarTemplate, Calendar, EventsCollection, common) {
             this.$el.html(this.template());
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);
             Calendar.initMiniCalendar("miniCalendar");
-            common.contentHolderHeightFixer();
             return this;
         }
     });

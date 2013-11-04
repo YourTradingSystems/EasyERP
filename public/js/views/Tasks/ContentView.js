@@ -234,7 +234,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
                 }
             }).disableSelection();
-            common.contentHolderHeightFixer();
             return this;
         },
 

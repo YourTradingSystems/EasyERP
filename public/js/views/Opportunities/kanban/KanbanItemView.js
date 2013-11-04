@@ -70,7 +70,6 @@ define([
                 console.log(this.model);
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", this.model.collection.indexOf(this.model));
-                common.contentHolderHeightFixer();
                 return this;
             }
         });

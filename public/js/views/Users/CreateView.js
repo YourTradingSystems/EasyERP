@@ -79,7 +79,6 @@ define([
                     profilesCollection: this.profilesCollection
                 }));
                 common.canvasDraw({ model: userModel.toJSON() }, this);
-                common.contentHolderHeightFixer();
                 return this;
             }
         });
