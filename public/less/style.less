@@ -199,8 +199,8 @@ article {
 }
 
 #wrapper {
-    width:100%;
-    position:absolute;
+    width: 100%;
+    position: absolute;
     height: 100%;
 }
 
@@ -212,7 +212,7 @@ article {
     left: 0;
     width: 100%;
     height: 27px;
-        background: #f0eeee;
+    background: #f0eeee;
     /*background: @blue;*/
     .no-marpad;
 
@@ -226,6 +226,8 @@ article {
 
             li {
                 height: 27px;
+                width: 80px;
+                text-align: center;
                 color: #fff;
                 padding-left: 14px;
                 line-height: 24px;
@@ -241,7 +243,7 @@ article {
                     text-decoration: none;
                     display: block;
                     .fullsize;
-                    font-size: 12px;
+                    font-size: 14px;
                     line-height: 24px;
                 }
 
@@ -250,6 +252,7 @@ article {
                     background-color: @blue;
 
                     a {
+                        font-weight:bold;
                         color: #fff;
                     }
                 }
@@ -263,20 +266,22 @@ article {
     position: relative;
     width: 100%;
     height: auto;
-    height: 43px;
+    height: 26px;
     background: @blue;
 
     ul {
         li {
             list-style: none;
-            padding: 2px 10px;
+            padding: 5px 10px;
             width: auto;
             /*text-shadow: 1px 1px #fff;*/
             font-size: 14px;
-            font-weight: bold;
             color: #fff;
-            line-height: 20px;
+            line-height: 26px;
             float: left;
+            display: block;
+            width: 80px;
+            text-align: center;
 
             a {
                 /*color: @blue;*/
@@ -287,10 +292,9 @@ article {
                 display: block;
                 width: 100%;
                 height: 100%;
-                font-weight: bold;
             }
 
-            &.selected {
+            &.hover {
                 background: @dark-blue;
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -331,7 +335,7 @@ article {
 
 #content-holder {
     position: absolute;
-    height:auto;
+    height: auto;
     display: block;
     background: #fff;
     width: 100%;
@@ -351,7 +355,11 @@ article {
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);*/
     h3 {
-        padding:  0px 10px;
+        margin-top:6px;
+        padding: 0px 10px;
+        color:#333 !important;
+        font-family:@title-font;
+        font-weight:normal;
         float: left;
     }
 }
@@ -523,7 +531,10 @@ h3 {
     float: left;
     margin: 0 12px;
     border: 1px solid #ababab;
-    .border-radius(5px);
+    border-bottom:0;
+    position:absolute;
+    bottom:0;
+    right:5px;
 
     li {
         border-right: 1px solid #ababab;
@@ -536,10 +547,11 @@ h3 {
     }
 
     .selected {
-        background: #999999;
+        /*background: #999999;
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;*/
+        border-bottom:1px solid white;
 
         a {
             color: white;
@@ -1009,16 +1021,18 @@ input, textarea, select {
     margin-left: 4px;
     position: relative;
     display: block;
-    background: white;
+    background: white !important;
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
     width: 230px;
     min-height: 110px;
     cursor: pointer;
-     .inner {
-            padding:5px;
-            }
+
+    .inner {
+        padding: 5px;
+    }
+
     .bottom {
         width: 100%;
         background: rgba(0,0,0, 0.1);
@@ -1028,7 +1042,9 @@ input, textarea, select {
         left: 0px;
 
         .half-block {
-           
+            &:last-child {
+            text-align:right;
+            }
         }
     }
 
@@ -1215,7 +1231,7 @@ input, textarea, select {
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: #4c4c4c;
     margin: 0;
-    padding: 3px 12px 5px 12px;
+    padding: 2px 6px;
     line-height: 13px;
     font-size: 13px;
     text-align: center;
