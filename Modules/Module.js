@@ -6,7 +6,8 @@ var Module = function (logWriter, mongoose, users, profile) {
         ancestors: [Number],
         users: {},
         parrent: Number,
-        link: Boolean
+        link: Boolean,
+        visible: Boolean
     }, { collection: 'modules' });
 
     var _module = mongoose.model('modules', moduleSchema);
@@ -33,7 +34,7 @@ var Module = function (logWriter, mongoose, users, profile) {
 
         get: function (uId, response) {
             var res = [];
-            var query = _module.find({ 'users.user': uId });
+            var query = _module.find({ $and: [{ 'users.user': uId }, {visible: true}]});
             //query.sort({ sequence: 1 });
             query.select({
                 _id: 1,

@@ -118,7 +118,7 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                             _opportunitie.customer.id = data.customer._id;
                         }
                         if (data.customer.name) {
-                            _opportunitie.customer.name = data.customer.name.first + " " + data.customer.name.last;
+                            _opportunitie.customer.name = data.customer.name;
                         }
                     }
                     if (data.address) {
