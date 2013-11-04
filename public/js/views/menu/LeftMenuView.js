@@ -9,7 +9,6 @@ define([
             className: 'menu',
             el: '#leftmenu-holder nav',
             currentSection: null,
-
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
@@ -22,11 +21,9 @@ define([
                 _.bindAll(this, 'render');
                 this.render();
                 this.collection.bind('reset', _.bind(this.render, this));
-
             },
 
             render: function () {
-
                 console.log("Render LeftMenuView");
                 var $el = $(this.el);
                 $el.html('');
@@ -69,7 +66,13 @@ define([
                     var kids = this.collection.children(model);
                     $dom.find(':last').append(this.renderMenu(kids));
                 }, this);
+                var clickEl = $($dom).find('a')[0];
+                $($dom.find('a')[0]).click(function () {
+                    $(clickEl).closest('li').addClass('hover');
+
+                });
                 $($dom).find('a')[0].click();
+                //$($dom.find('a')[0]).trigger('click');
                 return $dom;
             },
 
