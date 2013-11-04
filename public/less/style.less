@@ -199,7 +199,8 @@ article {
 }
 
 #wrapper {
-    background: #f0eeee;
+    width:100%;
+    position:absolute;
     height: 100%;
 }
 
@@ -210,8 +211,9 @@ article {
     top: 0;
     left: 0;
     width: 100%;
-    height: 30px;
-    background: @blue;
+    height: 27px;
+        background: #f0eeee;
+    /*background: @blue;*/
     .no-marpad;
 
     nav {
@@ -220,7 +222,7 @@ article {
         ul {
             .no-marpad;
             display: block;
-            height: 30px;
+            height: 27px;
 
             li {
                 height: 27px;
@@ -230,12 +232,12 @@ article {
                 overflow: hidden;
                 .left;
                 position: relative;
-                border-bottom: @bold-border @blue;
+                /*border-bottom: @bold-border @blue;*/
                 padding-right: 14px;
                 cursor: pointer;
 
                 a {
-                    color: #fff;
+                    color: @blue;
                     text-decoration: none;
                     display: block;
                     .fullsize;
@@ -244,8 +246,12 @@ article {
                 }
 
                 &.selected {
-                    border-bottom: @bold-border #a0b6e5;
-                    background-color: @dark-blue;
+                    /*border-bottom: @bold-border #a0b6e5;*/
+                    background-color: @blue;
+
+                    a {
+                        color: #fff;
+                    }
                 }
             }
         }
@@ -253,28 +259,28 @@ article {
 }
 
 #leftmenu-holder {
-    padding-top: 10px;
     display: block;
-    position: relative;    
+    position: relative;
     width: 100%;
     height: auto;
-    height:43px;
-
+    height: 43px;
+    background: @blue;
 
     ul {
         li {
             list-style: none;
             padding: 2px 10px;
             width: auto;
-            text-shadow: 1px 1px #fff;
+            /*text-shadow: 1px 1px #fff;*/
             font-size: 14px;
-            font-weight: bold;           
-            color: @blue;
+            font-weight: bold;
+            color: #fff;
             line-height: 20px;
-            float:left;
+            float: left;
 
             a {
-                color: @blue;
+                /*color: @blue;*/
+                color: #fff;
                 text-decoration: none;
                 font-size: 12.5px;
                 line-height: 16px;
@@ -285,16 +291,14 @@ article {
             }
 
             &.selected {
-                background: #4d5a75;
-                border-top: 1px solid lightgrey;
-                border-bottom: 1px solid #dedede;
+                background: @dark-blue;
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
-                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);               
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
 
                 a {
-                    background: #4d5a75;
+                    background: @dark-blue;
                     color: #fff;
                 }
             }
@@ -302,13 +306,11 @@ article {
             >ul {
                 li {
                     &.hover {
-                        border-top: 1px solid lightgrey;
-                        border-bottom: 1px solid #dedede;
                         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                         -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
-                        background: #4d5a75;                    
+                        background: @dark-blue;
                         cursor: pointer;
 
                         a {
@@ -328,30 +330,29 @@ article {
 }
 
 #content-holder {
-    position: relative;
+    position: absolute;
+    height:auto;
     display: block;
     background: #fff;
-    border-left: @thin-border #afafb6;
-    width: auto;  
-    overflow: auto;
+    width: 100%;
 }
 
 #top-bar {
     position: relative;
     display: block;
     width: auto;
-    margin-top: 0px;   
-    height: 70px;
+    margin-top: 0px;
+    height: 30px;
     border-bottom: 1px solid #cacaca;
-    border-left: @thin-border #afafb6;
-    .gradient(#ededed);
+    background: #fff;
+    clear: both;
+    /*.gradient(#ededed);
     -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);*/
     h3 {
-        padding: 10px;
-        max-width: 7em;
+        padding:  0px 10px;
+        float: left;
     }
 }
 
@@ -743,11 +744,11 @@ h3 {
         }
 
         .linkedin {
-             background: url("@{imagesfolder}/linkedin.png");
+            background: url("@{imagesfolder}/linkedin.png");
         }
 
         .skype {
-             background: url("@{imagesfolder}/skype.png");
+            background: url("@{imagesfolder}/skype.png");
         }
     }
 
@@ -1011,12 +1012,25 @@ input, textarea, select {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-bottom-color: rgba(0, 0, 0, 0.3);
-    padding: 5px;
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
-    .border-radius;
-    width: 200px;
+    width: 230px;
     min-height: 110px;
     cursor: pointer;
+     .inner {
+            padding:5px;
+            }
+    .bottom {
+        width: 100%;
+        background: rgba(0,0,0, 0.1);
+        height: 20px;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+
+        .half-block {
+           
+        }
+    }
 
     span {
         font-family: @lucida-font;
@@ -1606,7 +1620,7 @@ button {
 }
 
 .color_0 {
-    background-color: #1ABC9C;
+    background-color: #fff;
 }
 
 .color_1 {
