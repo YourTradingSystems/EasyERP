@@ -19,6 +19,7 @@ define([
                 var root = this.collection.getRootElements();
                 this.topMenu = new TopMenuView({ collection: this.collection.getRootElements() });
                 this.topMenu.bind('changeSelection', this.leftMenu.setCurrentSection, { leftMenu: this.leftMenu });
+                this.topMenu.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
             },
 
             render: function() {

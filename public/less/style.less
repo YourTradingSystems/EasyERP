@@ -254,16 +254,16 @@ article {
                     a {
                         font-weight: bold;
                         color: #fff;
-                    }
                 }
             }
         }
     }
 }
+}
 
 #leftmenu-holder {
     display: block;
-    position: relative;
+    position: relative;    
     width: 100%;
     height: auto;
     height: 26px;
@@ -299,7 +299,7 @@ article {
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
-                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);               
 
                 a {
                     background: @dark-blue;
@@ -345,7 +345,7 @@ article {
     position: relative;
     display: block;
     width: auto;
-    margin-top: 0px;
+    margin-top: 0px;   
     height: 30px;
     border-bottom: 1px solid #cacaca;
     background: #fff;
@@ -380,17 +380,17 @@ h3 {
     background: #fff;
     border: @thin-border #ccc;
     padding: 20px 0 13px;
-    font-family: 'Open Sans', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 
     h2 {
-        font-weight: 300 !important;
-        font-size: 24px;
+		font-weight: 300 !important;
+		font-size: 24px;
         margin: 25px 0 35px 30px;
     }
 
-    .icon-pass,
+	.icon-pass,
     .icon-login {
-        border: @thin-border #e5e5e5;
+		border: @thin-border #e5e5e5;
         border-left: 2px solid #35aa74;
         margin: 0 30px;
 
@@ -402,21 +402,21 @@ h3 {
             height: 19px;
             background-image: url("@{imagesfolder}/login-sprite.png");
             background-repeat: no-repeat;
-        }
+    }
 
         &.active {
-            border-color: #999;
+			border-color: #999;
             border-left: 2px solid #35aa74;
-        }
-    }
+		}
+	}
 
     .icon-login {
         .icon {
             margin-top: 10px;
             background-position: 50% -48px;
             height: 14px;
-        }
-    }
+		}
+	}
 
     .icon-pass {
         margin-bottom: 30px;
@@ -425,58 +425,58 @@ h3 {
             margin-top: 10px;
             background-position: 2px -62px;
             height: 13px;
-        }
-    }
+		}
+	}
 
     #urem {
         display: none;
-    }
+	}
 
     p {
         margin: 10px 0px;
     }
 
     h3 {
-        font-weight: 300 !important;
-        font-size: 18px;
+		font-weight: 300 !important;
+		font-size: 18px;
         color: #555;
         margin-left: 30px;
         padding: 20px 0 0;
-    }
+	}
 
     span.text {
         line-height: 40px;
         margin: 0 30px;
-        font-size: 13px;
+			font-size: 13px;
 
         a {
             color: #0D638F;
             font-size: 13px;
 
             &:hover {
-                color: #2A6496;
-                text-decoration: underline;
-            }
-        }
-    }
+				color: #2A6496;
+				text-decoration: underline;
+			}
+		}
+	}
 
     .dotted-line {
         margin: 0 30px 5px 30px;
         border-top: 1px dotted #eee;
-    }
+	}
 
     .login-button {
-        background-color: #35aa47;
+		background-color: #35aa47;
         padding: 11px 14px 11px 14px;
-        font-size: 14px;
+		font-size: 14px;
         color: white;
         float: right;
         margin: -9px 30px 0 0;
-
+		
         &:hover {
             background-color: #1d943b;
             color: white;
-        }
+		}
 
         i {
             display: inline-block;
@@ -487,7 +487,7 @@ h3 {
             background-image: url("@{imagesfolder}/login-sprite.png");
             background-repeat: no-repeat;
             background-position: 0px -81px;
-        }
+	}
     }
 
     .remember-me {
@@ -498,14 +498,14 @@ h3 {
         background-image: url("@{imagesfolder}/login-sprite.png");
         background-repeat: no-repeat;
         background-position: 0 1px;
-        font-size: 14px;
+		font-size: 14px;
         line-height: 19px;
         color: black;
 
         &:hover {
             color: black;
             background-position: 0 -20px;
-        }
+		}
 
         .check {
             position: absolute;
@@ -519,30 +519,30 @@ h3 {
             background-repeat: no-repeat;
             background-position: 50% -40px;
             z-index: 1000;
-        }
+		}
 
         &.active {
             .check {
                 display: block;
-            }
-        }
-    }
+			}
+		}
+	}
 
     .line {
         height: 17px;
         border-bottom: @thin-border #eee;
         clear: both;
-    }
+	}
 
     input {
-        font-family: 'Open Sans', sans-serif;
+		font-family: 'Open Sans', sans-serif;
         font-weight: 400;
-        color: #333;
+		color: #333;
         padding-left: 0;
         border: 0;
         width: 260px;
         height: 30px;
-        font-size: 14px;
+		font-size: 14px;
     }
 
         input[type="submit"] {
@@ -570,6 +570,127 @@ h3 {
     }
 }
 
+.createFormDatepicker{
+	border-radius:0 !important;
+	font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+	margin-top:2px;
+	border:1px solid #DDD !important;
+	.ui-widget-header{
+		border:0;
+		background:none;
+		font-weight:normal;
+	}
+	.arrow{
+		position:absolute;
+		width:14px;
+		height:7px;
+		top:-7px;
+		left:5px;
+		background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
+		background-position:0px 0px;
+
+	}
+	.ui-datepicker-prev,
+	.ui-datepicker-next{
+		border-radius:0px;
+		border:0;
+		&:hover{
+			border:0px;
+		}
+		.ui-icon-circle-triangle-w{
+			background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
+			background-position:0px -7px;
+			width:6px ;
+			height:7px;
+			margin-top: -4px;
+			margin-left: -3px;
+		}
+		.ui-icon-circle-triangle-e{
+			background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
+			background-position:-6px -7px;
+			width:6px ;
+			height:7px;
+			margin-top: -4px;
+			margin-left: -3px;
+
+
+		}
+
+		&.ui-datepicker-prev-hover{
+			top:2px;
+			left:2px;
+			background:none !important;
+			background-color:#EEE !important;
+		}
+		&.ui-datepicker-next-hover{
+			top:2px;
+			right:2px;
+			background:none !important;
+			background-color:#EEE !important;
+		}
+	}
+	.ui-datepicker-calendar td {
+		width:15px;
+		height:20px;
+
+		&:hover{
+			background-color:#EEE !important;
+		}
+		&.ui-datepicker-today{
+			&:hover{
+				background-color:#2678FC !important;
+			}
+		
+		}
+		a.ui-state-default {
+			margin:0 auto;
+			width:20px !important;
+	}
+}
+
+	.ui-state-default{
+		border:0 !important;
+		background:none !important;
+		text-align:center;
+		&:hover{
+			background: #EEE !important;
+		}
+	}
+	.ui-datepicker-calendar th {
+		font-weight:normal;
+	}
+	.ui-datepicker-title:hover{
+		background-color: #EEE;
+		cursor:pointer;
+	}
+	.ui-datepicker-today{
+		background-color: #4B8DF8 !important;
+		a{
+			color: #FFF !important;
+			&:hover{
+				background-color:#2678FC !important;
+			}
+		}
+	}
+
+
+}
+dl.person-info{
+	color: #888;
+	dt{
+		width:60px;
+		float:left;
+		clear:both;
+	line-height:30px;
+
+	}
+	dd{
+	line-height:30px;
+
+		float:left;
+	}
+	
+}
 .loginPanelBtnHoover {
     background: rgba(0, 0, 0, 0.2);
     text-shadow: black 0px 0px 3px;
@@ -908,11 +1029,11 @@ h3 {
         }
 
         .linkedin {
-            background: url("@{imagesfolder}/linkedin.png");
+             background: url("@{imagesfolder}/linkedin.png");
         }
 
         .skype {
-            background: url("@{imagesfolder}/skype.png");
+             background: url("@{imagesfolder}/skype.png");
         }
     }
 
