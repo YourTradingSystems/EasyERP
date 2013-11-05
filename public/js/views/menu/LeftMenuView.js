@@ -49,9 +49,12 @@ define([
             },
 
             events: {
-                "click a": "selectMenuItem"
+                "click a": "selectMenuItem",
+                "mouseover a":"hoverItem"
             },
-
+            hoverItem: function (e) {
+                console.log('hover');
+            },
             selectMenuItem: function (e) {
                 this.$('li.hover').removeClass('hover');
                 $(e.target).closest('li').addClass('hover');
@@ -65,11 +68,11 @@ define([
                 var $dom = $('<ul></ul>');
 
                 _.each(list, function (model) {
-                    var html = this.renderMenuItem(model);
+                    var html = this.renderMenuItem(model, mouseOver);
 
                     $dom.append(html);
                     var kids = this.collection.children(model);
-                    $dom.find(':last').append(this.renderMenu(kids));
+                    $dom.find(':last').append(this.renderMenu(kids, mouseOver));
                 }, this);
                 if (mouseOver) {
                     var clickEl = $($dom).find('a')[0];
@@ -77,7 +80,7 @@ define([
                         $(clickEl).closest('li').addClass('hover');
 
                     });
-                    $($dom).find('a')[0].click();
+                    $(clickEl).click();
                     //$($dom.find('a')[0]).trigger('click');
                 }
                 return $dom;

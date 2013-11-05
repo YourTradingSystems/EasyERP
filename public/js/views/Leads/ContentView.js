@@ -4,15 +4,14 @@ define([
     'collections/Leads/LeadsCollection',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Workflows/WorkflowsCollection',
-    'custom',
-    'common'
+    'custom'
 ],
-    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, common) {
+    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 console.log('Init Leads View');
-                this.workflowsCollection = new WorkflowsCollection({ id: 'lead' });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.opportunitiesCollection = new OpportunitiesCollection();
                 this.opportunitiesCollection.bind('reset', _.bind(this.render, this));

@@ -19,13 +19,13 @@
                         <h3>
                             <%=name.first%> <%=name.last%>
                         </h3>
-                        <p>
-                            <%=jobPosition%>
-                        </p>
-                        <p class="bold"><%=company.name%></p>
-                        <p>Sep 29, 1980</p>
-                        <p><a href="mailto:<%=email%>"><%=email%></a></p>
-                        <p></p>
+						<dl class="person-info">
+						  <dt>Position</dt><dd>: <%=jobPosition%></dd>
+						  <dt>Company</dt><dd class="bold">: <%=company.name%></dd>
+						  <dt>Birthday</dt><dd>: Sep 29, 1980</dd>
+						  <dt>Email</dt><dd class="bold">: <a href="mailto:<%=email%>"><%=email%></a></dd>
+						</dl>
+                                <p></p>
                     </div>
                     <div class="half-block left">
                         <h3></h3>

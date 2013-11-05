@@ -3,16 +3,14 @@ define([
     'text!templates/JobPositions/form/FormTemplate.html',
     'collections/JobPositions/JobPositionsCollection',
     'collections/Workflows/WorkflowsCollection',
-    'custom',
-    'common'
-
+    'custom'
 ],
-function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom, common) {
+function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init JobPositions View');
-            this.workflowsCollection = new WorkflowsCollection({ id: 'jobposition' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Job Position' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));

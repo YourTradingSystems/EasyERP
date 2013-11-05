@@ -35,9 +35,15 @@ define([
             },
 
             events: {
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "click #deadline": "showDatePicker"
             },
-
+			showDatePicker: function (e) {
+				if ($(".createFormDatepicker").find(".arrow").length==0){
+					$(".createFormDatepicker").append("<div class='arrow'></div>")
+				}
+				
+			},
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -143,7 +149,8 @@ define([
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
                     workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
                 }));
-                $('#deadline').datepicker();
+                $('#deadline').datepicker({showOtherMonths: true,selectOtherMonths: true});
+				$("#ui-datepicker-div").addClass("createFormDatepicker");
                 $('#StartDate').datepicker();
                 $('#EndDate').datepicker();
                 return this;
