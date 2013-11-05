@@ -256,7 +256,6 @@ define([
                     case "form":
                         {
                             model = this.collection.get($(".form-holder form").data("id"));
-                            model.on('change', this.render, this);
                             model.destroy({
                                 headers: {
                                     mid: mid
