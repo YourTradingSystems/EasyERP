@@ -11,7 +11,11 @@ define([
             currentSection: null,
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
-                this.leftMenu.render();
+                this.leftMenu.render(true);
+            },
+            mouseOver: function (section) {
+                this.leftMenu.currentSection = section;
+                this.leftMenu.render(false);
             },
 
             initialize: function (options) {
@@ -23,7 +27,7 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
             },
 
-            render: function () {
+            render: function (options) {
                 console.log("Render LeftMenuView");
                 var $el = $(this.el);
                 $el.html('');
@@ -38,8 +42,9 @@ define([
                         break;
                     }
                 }
+                var mousOver = (options) ? options : false;
                 if (currentModule == null) currentModule = root[0];
-                var elem = $el.append(this.renderMenu(this.collection.children(currentModule)));
+                var elem = $el.append(this.renderMenu(this.collection.children(currentModule), mousOver));
                 return this;
             },
 
@@ -53,7 +58,7 @@ define([
 
             },
 
-            renderMenu: function (list) {
+            renderMenu: function (list, mouseOver) {
                 if (_.size(list) === 0) {
                     return null;
                 }
@@ -66,13 +71,15 @@ define([
                     var kids = this.collection.children(model);
                     $dom.find(':last').append(this.renderMenu(kids));
                 }, this);
-                var clickEl = $($dom).find('a')[0];
-                $($dom.find('a')[0]).click(function () {
-                    $(clickEl).closest('li').addClass('hover');
+                if (mouseOver) {
+                    var clickEl = $($dom).find('a')[0];
+                    $($dom.find('a')[0]).click(function () {
+                        $(clickEl).closest('li').addClass('hover');
 
-                });
-                $($dom).find('a')[0].click();
-                //$($dom.find('a')[0]).trigger('click');
+                    });
+                    $($dom).find('a')[0].click();
+                    //$($dom.find('a')[0]).trigger('click');
+                }
                 return $dom;
             },
 

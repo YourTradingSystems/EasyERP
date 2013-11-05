@@ -19,7 +19,8 @@ define([
             },
 
             events:{
-                "click": "clickItem"
+                "click": "clickItem",
+                "mouseover": "mouseOver"
             },
 
             clickItem: function(event){
@@ -27,6 +28,13 @@ define([
                 this.selectedModule = $(event.target).text();
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
+            },
+
+            mouseOver: function (event) {
+                event.preventDefault();
+                this.selectedModule = $(event.target).text();
+                this.trigger('mouseOver', this.selectedModule);
+                //this.render();
             },
 
             render: function(){
