@@ -64,7 +64,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
-            var workflows = this.workflowsCollection.models;
+            var workflows = this.workflowsCollection.toJSON()[0].value;
             var projectId = window.location.hash.split('/')[3];
             if (!projectId || projectId.length < 24) {
                 models = this.collection.models;
@@ -79,7 +79,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: this.workflowsCollection.toJSON() }));
+                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
                         $(".column").last().addClass("lastColumn");
                         _.each(workflows, function (workflow, i) {                         
