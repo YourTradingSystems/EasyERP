@@ -1,10 +1,11 @@
 define([
     "text!templates/Persons/EditTemplate.html",
     "collections/Companies/CompaniesCollection",
+    "collections/Departments/DepartmentsCollection",
     "common",
     "custom"
 ],
-    function (EditTemplate, CompaniesCollection, common, Custom) {
+    function (EditTemplate, CompaniesCollection, DepartmentsCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -14,6 +15,8 @@ define([
             initialize: function (options) {
                 this.companiesCollection = new CompaniesCollection();
                 this.companiesCollection.bind('reset', _.bind(this.render, this));
+                this.departmentsCollection = new DepartmentsCollection();
+                this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = options.collection;
                 this.render();
             },
@@ -27,11 +30,22 @@ define([
 
                     var mid = 39;
 
+                    var dateBirthSt = $.trim($("#dateBirth").val());
+                    var dateBirth = "";
+                    if (dateBirthSt) {
+                        dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
+                    }
+
                     var data = {
                         imageSrc: this.imageSrc,
                         name: {
                             first: $('#firstName').val(),
                             last: $('#lastName').val()
+                        },
+                        dateBirth: dateBirth,
+                        department: {
+                            id: $("#department option:selected").val(),
+                            name: $("#department option:selected").text()
                         },
                         company: {
                             id: $('#companiesDd option:selected').val(),
@@ -92,10 +106,18 @@ define([
                     var currentModel = this.personsCollection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, {
                         model: currentModel.toJSON(),
-                        companiesCollection: this.companiesCollection
+                        companiesCollection: this.companiesCollection,
+                        departmentsCollection: this.departmentsCollection
                     }));
                     common.canvasDraw({ model: currentModel.toJSON() }, this);
                 }
+                //common.contentHolderHeightFixer();
+                $('#dateBirth').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-1d'
+                });
                 return this;
             }
 

@@ -1,6 +1,7 @@
 <div class="dropDown">
     <a href="#">
-        <img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" /></a>
+        <img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" />
+    </a>
     <ul class="dropDownOpened" hidden="hidden">
         <li>
             <a href="#" id="edit">Edit...</a>
@@ -44,19 +45,26 @@
         </li>
     </ul>
 </div>
+<div class="inner">
 
-<p><%=projectName%></p>
-<div class="avatar right">
-    <img alt="" src="<%=projectmanager.imageSrc%>" />
+    <div class="avatar right">
+        <img alt="" src="<%=projectmanager.imageSrc%>" />
+    </div>
+    <p><%=projectName%></p>
+    <p><%=projectShortDesc%></p>
+    <p></p>
+    <p><%=projectmanager.name%></p>
 </div>
-<p><%=projectShortDesc%></p>
-<p><a id="<%=_id%>" class="tasksByProject" href="#home/content-Tasks/kanban/<%= _id %>"><%=task.tasks.length%> Tasks</a></p>
-<p><%=projectmanager.name%></p>
-<p><span><%=workflow.status%></span></p>
+<div class="bottom">
+    <div class="half-block left">
+        <p class="inner"><span><%=workflow.status%></span></p>
+    </div>
+    <div class="half-block right">
+        <p class="inner">
+            <a id="<%=_id%>" class="tasksByProject" href="#home/content-Tasks/kanban/<%= _id %>"><%=task.tasks.length%> Tasks</a>
+        </p>
+    </div>
+</div>
 <!--<% _.each(teams.users, function (item){ %>
 <p><%=item%></p>
 <% }); %>-->
-
-
-
-

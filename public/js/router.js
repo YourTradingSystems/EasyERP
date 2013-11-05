@@ -21,10 +21,10 @@ define([
         },
 
         getList: function (contentType, viewType, hash, itemIndex) {
-            if (/\s/.test(contentType)) {
-                var contentTypeArray = contentType.split(' ');
-                contentType = contentTypeArray.join('');
-            }
+            //if (/\s/.test(contentType)) {
+            //    var contentTypeArray = contentType.split(' ');
+            //    contentType = contentTypeArray.join('');
+            //}
             if (this.mainView == null) this.main();
             if (hash) {
                 if (hash.length != 24) {
@@ -41,6 +41,10 @@ define([
                 self = this;
             if (contentType == "Birthdays") {
                 CollectionUrl = "collections/Employees/EmployeesCollection";
+            } else if (contentType == "ownCompanies") {
+                TopBarViewUrl = "views/Companies/TopBarView";
+                ContentViewUrl = "views/Companies/ContentView";
+                CollectionUrl = "collections/Companies" + "/" + contentType + "Collection"
             }
 
             self.Custom = Custom;
