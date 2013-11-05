@@ -1,3 +1,11 @@
+
+
+    <ul>
+        <% leadsList.forEach(function(lead, index){ %>
+            <li id="<%=lead.wId%>"><a href="#" class="leadsWorkflow"><%=lead.name %> </a> </li>
+        <% }) %>
+    </ul>
+
     <table class="list">
         <thead>
             <tr>
@@ -8,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-        <% leadsWorkflowCollection.forEach(function(leadsWorkflow, index){ %>
+        <% selectedLead.value.forEach(function(leadsWorkflow, index){ %>
             <tr>
                 <td><input type="checkbox" value="<%=leadsWorkflow._id%>" class="checkbox"/></td>
                 <td><%=index+1%></td>

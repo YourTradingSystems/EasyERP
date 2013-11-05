@@ -99,6 +99,8 @@ define([
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
+                    if(contentType === "LeadsWorkflow")
+                        topBarView.bind('createEvent', contentView.createItem, contentView);
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
