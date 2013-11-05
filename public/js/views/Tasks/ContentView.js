@@ -24,12 +24,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             this.collection.bind('reset', _.bind(this.render, this));
             //this.render();
 
-            $(window).resize(function () {
-                that.$(".scroll-x").css("min-height", function () { var h = $(window).height() - 101; var height = h + 'px'; return height; });
-                that.$(".column").css("height", function () { var h = $(".kanban").height(); var height = h + 'px'; return height; });
-            });
-
-
         },
 
         events: {
@@ -200,9 +194,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                         break;
                     }
             }
-            this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
-            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
-            this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
+            //this.$(".kanban").width((this.$(".column").width() + 10) * workflows.length);
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",

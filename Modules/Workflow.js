@@ -6,7 +6,8 @@ var Workflow = function (logWriter, mongoose) {
         value: [{
             name: { type: String, default: '' },
             status: { type: String, default: 'New' },
-            sequence: { type: Number, default: 0 }
+            sequence: { type: Number, default: 0 },
+            color: { type: String, default: '#2C3E50' }
         }]
     }, { collection: 'workflows' });
 
@@ -40,6 +41,7 @@ var Workflow = function (logWriter, mongoose) {
                                     _workflow.wId = data._id;
                                     _workflow.name = data.name;
                                     _workflow.value = data.value;
+                                    _workflow.color = data.color;
                                     _workflow.save(function (err, workfloww) {
                                         if (err) {
                                             console.log(err);
