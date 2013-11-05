@@ -27,19 +27,6 @@
     font-family: 'Icons3';
     src: url("../font/zurmogamificationsymblyregular-regular-webfont.woff") format('woff');
 }
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url("../font/Open-Sans.woff") format('woff');
-}
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Open Sans Light'), local('OpenSans-Light'), url("../font/Open-Sans-Light.woff") format('woff');
-}
-
 /*------------------------Constants-----------------------------*/
 @imagesfolder: '../images';
 @body-font: "Segoe UI", sans-serif;
@@ -212,8 +199,7 @@ article {
 }
 
 #wrapper {
-    width: 100%;
-    position: absolute;
+    background: #f0eeee;
     height: 100%;
 }
 
@@ -224,9 +210,8 @@ article {
     top: 0;
     left: 0;
     width: 100%;
-    height: 27px;
-    background: #f0eeee;
-    /*background: @blue;*/
+    height: 30px;
+    background: @blue;
     .no-marpad;
 
     nav {
@@ -235,87 +220,81 @@ article {
         ul {
             .no-marpad;
             display: block;
-            height: 27px;
+            height: 30px;
 
             li {
                 height: 27px;
-                width: 80px;
-                text-align: center;
                 color: #fff;
                 padding-left: 14px;
                 line-height: 24px;
                 overflow: hidden;
                 .left;
                 position: relative;
-                /*border-bottom: @bold-border @blue;*/
+                border-bottom: @bold-border @blue;
                 padding-right: 14px;
                 cursor: pointer;
 
                 a {
-                    color: @blue;
+                    color: #fff;
                     text-decoration: none;
                     display: block;
                     .fullsize;
-                    font-size: 14px;
+                    font-size: 12px;
                     line-height: 24px;
                 }
 
                 &.selected {
-                    /*border-bottom: @bold-border #a0b6e5;*/
-                    background-color: @blue;
-
-                    a {
-                        font-weight:bold;
-                        color: #fff;
+                    border-bottom: @bold-border #a0b6e5;
+                    background-color: @dark-blue;
                 }
             }
         }
     }
 }
-}
 
 #leftmenu-holder {
+    padding-top: 10px;
     display: block;
     position: relative;    
     width: 100%;
     height: auto;
-    height: 26px;
-    background: @blue;
+    height:43px;
+
 
     ul {
         li {
             list-style: none;
-            padding: 5px 10px;
+            padding: 2px 10px;
             width: auto;
-            /*text-shadow: 1px 1px #fff;*/
+            text-shadow: 1px 1px #fff;
             font-size: 14px;
-            color: #fff;
-            line-height: 26px;
-            float: left;
-            display: block;
-            width: 80px;
-            text-align: center;
+            font-weight: bold;           
+            color: @blue;
+            line-height: 20px;
+            float:left;
 
             a {
-                /*color: @blue;*/
-                color: #fff;
+                color: @blue;
                 text-decoration: none;
                 font-size: 12.5px;
                 line-height: 16px;
                 display: block;
                 width: 100%;
                 height: 100%;
+                font-weight: bold;
             }
 
-            &.hover {
-                background: @dark-blue;
+            &.selected {
+                background: #4d5a75;
+                border-top: 1px solid lightgrey;
+                border-bottom: 1px solid #dedede;
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);               
 
                 a {
-                    background: @dark-blue;
+                    background: #4d5a75;
                     color: #fff;
                 }
             }
@@ -323,11 +302,13 @@ article {
             >ul {
                 li {
                     &.hover {
+                        border-top: 1px solid lightgrey;
+                        border-bottom: 1px solid #dedede;
                         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                         -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
-                        background: @dark-blue;
+                        background: #4d5a75;                    
                         cursor: pointer;
 
                         a {
@@ -347,11 +328,12 @@ article {
 }
 
 #content-holder {
-    position: absolute;
-    height: auto;
+    position: relative;
     display: block;
     background: #fff;
-    width: 100%;
+    border-left: @thin-border #afafb6;
+    width: auto;  
+    overflow: auto;
 }
 
 #top-bar {
@@ -359,21 +341,17 @@ article {
     display: block;
     width: auto;
     margin-top: 0px;   
-    height: 30px;
+    height: 70px;
     border-bottom: 1px solid #cacaca;
-    background: #fff;
-    clear: both;
-    /*.gradient(#ededed);
+    border-left: @thin-border #afafb6;
+    .gradient(#ededed);
     -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);*/
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
+
     h3 {
-        margin-top:6px;
-        padding: 0px 10px;
-        color:#333 !important;
-        font-family:@title-font;
-        font-weight:normal;
-        float: left;
+        padding: 10px;
+        max-width: 7em;
     }
 }
 
@@ -387,157 +365,24 @@ h3 {
 
 #loginForm {
     display: block;
-    width: 360px;
-    margin: 130px auto;
-    min-height: 150px;
+    width: 310px;
+    margin: 230px auto;
+    min-height: 250px;
     background: #fff;
-    border: @thin-border #ccc;
-	padding:20px 0 13px;
-	font-family: 'Open Sans', sans-serif;
+    border: 1px solid #ccc;
+    padding: 20px 30px;
 
     h2 {
-		font-weight: 300 !important;
-		font-size: 24px;
-		margin:25px 0 35px 30px;
     }
-	.icon-pass,
-	.icon-login{
-		border: @thin-border #e5e5e5;
-		border-left:2px solid #35aa74;
-		margin:0 30px;
-		.icon{
-			margin:8px 0 0 5px;
-			display:block;
-			float:left;
-			width:25px;
-			height:19px;
-			background-image:url("@{imagesfolder}/login-sprite.png");
-			background-repeat:no-repeat;
-    }
-		&.active{
-			border-color: #999;
-			border-left:2px solid #35aa74;
-		}
-	}
-	.icon-login{
-		.icon{
-			margin-top:10px;
-			background-position:50% -48px;
-			height:14px;
-		}
-	}
-	.icon-pass{
-		margin-bottom:30px;
-		.icon{
-			margin-top:10px;
-			background-position:2px -62px;
-			height:13px;
-		}
-	}
-	#urem{
-		display:none;
-	}
+
     p {
         margin: 10px 0px;
     }
-	h3{
-		font-weight: 300 !important;
-		font-size: 18px;
-		color:#555;
-		margin-left:30px;
-		padding:20px 0 0;
-	}
-	span.text{
-		line-height:40px;
-		margin:0 30px;
-		font-size:13px;
-		a{
-			color:#0D638F;
-			font-size: 13px;
-			&:hover{
-				color: #2A6496;
-				text-decoration: underline;
-			}
-		}
-	}
-	.dotted-line{
-		margin:0 30px 5px 30px;
-		border-top:1px dotted #eee;
-	}
-	.login-button{
-		background-color: #35aa47;
-		padding:11px 14px 11px 14px;
-		font-size: 14px;
-		color:white;
-		float:right;
-		margin:-9px 30px 0 0;
-		&:hover{
-			background-color:#1d943b;
-			color:white;
-		}
-		i{
-			display:inline-block;
-			float:right;
-			margin-left:5px;
-			width:14px;
-			height:14px;
-			background-image:url("@{imagesfolder}/login-sprite.png");
-			background-repeat:no-repeat;
-			background-position:0px -81px;
-		
-		}
 
-	}
-	.remember-me{
-		position:relative;
-		float:left;
-		padding-left:25px;
-		margin-left:30px;
-		background-image:url("@{imagesfolder}/login-sprite.png");
-		background-repeat:no-repeat;
-		background-position:0 1px;
-		font-size: 14px;
-		line-height:19px;
-		color:black;
-		&:hover{
-			color:black;
-			background-position:0 -20px;
-
-		}
-		.check{
-			position:absolute;
-			top:5px;
-			left:5px;
-			display:none;
-			float:left;
-			width:9px;
-			height:8px;
-			background-image:url("@{imagesfolder}/login-sprite.png");
-			background-repeat:no-repeat;
-			background-position:50% -40px;
-			z-index:1000;
-		}
-		&.active{
-			.check{
-				display:block;
-			}
-		}
-	}
-	.line{
-		height:17px;
-		border-bottom:@thin-border #eee;
-		clear:both;
-	}
     input {
-		font-family: 'Open Sans', sans-serif;
-		font-weight:400;
-		color: #333;
-		padding-left:0;
-		border:0;
-        width: 260px;
+        .border-radius(0px);
+        width: 300px;
         height: 30px;
-		font-size: 14px;
-
     }
 
         input[type="submit"] {
@@ -564,12 +409,7 @@ h3 {
         }
     }
 }
-#createTaskForm{
-	.ui-widget-header{
-		border:0;
-		background:none;
-	}
-}
+
 .loginPanelBtnHoover {
     background: rgba(0, 0, 0, 0.2);
     text-shadow: black 0px 0px 3px;
@@ -682,10 +522,7 @@ h3 {
     float: left;
     margin: 0 12px;
     border: 1px solid #ababab;
-    border-bottom:0;
-    position:absolute;
-    bottom:0;
-    right:5px;
+    .border-radius(5px);
 
     li {
         border-right: 1px solid #ababab;
@@ -698,11 +535,10 @@ h3 {
     }
 
     .selected {
-        /*background: #999999;
+        background: #999999;
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;*/
-        border-bottom:1px solid white;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
 
         a {
             color: white;
@@ -1172,32 +1008,15 @@ input, textarea, select {
     margin-left: 4px;
     position: relative;
     display: block;
-    background: white !important;
+    background: white;
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-bottom-color: rgba(0, 0, 0, 0.3);
+    padding: 5px;
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
-    width: 230px;
+    .border-radius;
+    width: 200px;
     min-height: 110px;
     cursor: pointer;
-
-    .inner {
-        padding: 5px;
-    }
-
-    .bottom {
-        width: 100%;
-        background: rgba(0,0,0, 0.1);
-        height: 20px;
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
-
-        .half-block {
-            &:last-child {
-            text-align:right;
-            }
-        }
-    }
 
     span {
         font-family: @lucida-font;
@@ -1382,7 +1201,7 @@ input, textarea, select {
     border: 1px solid rgba(0, 0, 0, 0.4);
     color: #4c4c4c;
     margin: 0;
-    padding: 2px 6px;
+    padding: 3px 12px 5px 12px;
     line-height: 13px;
     font-size: 13px;
     text-align: center;
@@ -1782,7 +1601,7 @@ button {
 }
 
 .color_0 {
-    background-color: #fff;
+    background-color: #1ABC9C;
 }
 
 .color_1 {

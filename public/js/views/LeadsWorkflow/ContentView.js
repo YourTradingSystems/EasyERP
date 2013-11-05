@@ -1,23 +1,55 @@
 define([
     'text!templates/LeadsWorkflow/list/ListTemplate.html',
     'text!templates/LeadsWorkflow/form/FormTemplate.html',
+    'text!templates/LeadsWorkflow/CreateTemplate.html',
     'collections/LeadsWorkflow/LeadsWorkflowCollection',
+    "collections/RelatedStatuses/RelatedStatusesCollection",
     'custom',
     'common'
 ],
-function (ListTemplate, FormTemplate, LeadsWorkflowCollection, Custom, common) {
+function (ListTemplate, FormTemplate, CreateTemplate, LeadsWorkflowCollection, RelatedStatusesCollection, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
+        selectedLead:"",
+        template: _.template(FormTemplate),
+        leadNamesForList:[],
         initialize: function (options) {
-            console.log('Init LeadsWorkflow View');
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
+            this.relatedStatusesCollection = new RelatedStatusesCollection();
+            if(this.collection.length > 0)
+                this.selectedLead = this.collection.models[0].toJSON();
             this.render();
+        },
+
+        getLeadNamesForList: function(){
+            return _.map(this.collection.toJSON(), function(lead){
+                return {
+                    wId: lead.wId,
+                    name: lead.name
+                }
+            });
         },
 
         events: {
             "click .checkbox": "checked" ,
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm",
+            "click .leadsWorkflow": "leadSelect"
+        },
+
+        createItem:function(){
+            var formString = _.template(CreateTemplate, {relatedStatusesCollection:this.relatedStatusesCollection.toJSON()});
+            $(formString).dialog({
+                title:"Create Lead"
+            });
+            //this.el = $('#.')
+        },
+
+        leadSelect: function(event){
+            event.preventDefault();
+            var leadName = event.currentTarget.innerHTML.trim();
+            this.selectedLead = this.collection.findWhere({name: leadName}).toJSON();
+            this.render();
         },
         gotoForm: function (e) {
             App.ownContentType = true;
@@ -32,7 +64,8 @@ function (ListTemplate, FormTemplate, LeadsWorkflowCollection, Custom, common) {
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {leadsWorkflowCollection:this.collection.toJSON()}));
+                        var list = this.getLeadNamesForList();
+                        this.$el.html(_.template(ListTemplate, {leadsList:this.getLeadNamesForList(), selectedLead:this.selectedLead}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -63,10 +96,12 @@ function (ListTemplate, FormTemplate, LeadsWorkflowCollection, Custom, common) {
         },
 
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.collection.length > 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
         },
 
         deleteItems: function () {
@@ -92,7 +127,6 @@ function (ListTemplate, FormTemplate, LeadsWorkflowCollection, Custom, common) {
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        model.on('change', this.render, this);
                         model.destroy({
                             headers: {
                                 mid: mid
