@@ -72,13 +72,14 @@ var Workflow = function (logWriter, mongoose) {
                 var res = {};
                 res['data'] = [];
                 if (data) {
-                    workflow.find({wId: data.id}, function (err, result) {
+                    var query = (data.id) ? { wId: data.id } : {};
+                    workflow.find(query, function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
                             response.send(500, { error: "Can't find Workflow" });
                         } else {
-                            res['data'] = result[0];
+                            res['data'] = result;
                             response.send(res);
                         }
                     });

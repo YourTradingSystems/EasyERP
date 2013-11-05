@@ -16,7 +16,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
         el: '#content-holder',
         initialize: function (options) {
             var that = this;
-            this.workflowsCollection = new WorkflowsCollection({ id: 'task' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.projectsCollection = new ProjectsCollection();
             this.projectsCollection.bind('reset', _.bind(this.render, this));
@@ -79,10 +79,9 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(WorkflowsTemplate, {workflowsCollection:this.workflowsCollection.toJSON()}));
+                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: this.workflowsCollection.toJSON() }));
 
                         $(".column").last().addClass("lastColumn");
-
                         _.each(workflows, function (workflow, i) {                         
                             var counter = 0,
                                 remaining = 0;
@@ -113,7 +112,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                             value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
                             value.extrainfo.EndDate = common.utcDateToLocaleDate(value.extrainfo.EndDate);
                         });*/
-                        this.$el.html(_.template(TasksListTemplate, {tasksCollection:jsonCollection}));
+                        this.$el.html(_.template(TasksListTemplate, { tasksCollection: jsonCollection }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -214,7 +213,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     var column = ui.item.closest(".column");
 
                     model.get('workflow').name = column.data('name');
-                    model.get('workflow').status= column.data('status');
+                    model.get('workflow').status = column.data('status');
 
                     model.save({}, {
                         headers: {

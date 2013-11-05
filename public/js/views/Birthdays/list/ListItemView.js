@@ -1,9 +1,8 @@
 ﻿define([
     "text!templates/Birthdays/list/ListItemTemplate.html",
-    "common",
-    "Custom"
+    "common"
 ],
-    function (ListItemTemplate, common, Custom) {
+    function (ListItemTemplate, common) {
         var ListItemView = Backbone.View.extend({
 
             initialize: function () {
