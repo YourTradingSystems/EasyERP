@@ -101,7 +101,7 @@ define([
                     departmentsCollection: this.departmentsCollection
                 }));
                 common.canvasDraw({ model: personModel.toJSON() }, this);
-                common.contentHolderHeightFixer();
+                //common.contentHolderHeightFixer();
                 $('#dateBirth').datepicker({
                     changeMonth: true,
                     changeYear: true,

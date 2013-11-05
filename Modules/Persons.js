@@ -6,12 +6,17 @@ var Persons = function (logWriter, mongoose, findCompany) {
             first: { type: String, default: 'demo' },
             last: { type: String, default: 'User' }
         },
+        dateBirth: Date,
         imageSrc: { type: String, default: '' },
         email: { type: String, default: '' },
         photoUrl: { type: String, default: '' },
         company: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
+        },
+        department: {
+            id: '',
+            name: ''
         },
         timezone: { type: String, default: 'UTC' },
         address: {
@@ -94,6 +99,9 @@ var Persons = function (logWriter, mongoose, findCompany) {
                         if (data.email) {
                             _person.email = data.email;
                         }
+                        if (data.dateBirth) {
+                            _person.dateBirth = data.dateBirth;
+                        }
                         if (data.photoUrl) {
                             _person.photoUrl = data.photoUrl;
                         }
@@ -111,6 +119,14 @@ var Persons = function (logWriter, mongoose, findCompany) {
                             }
                             if (data.company.name) {
                                 _person.company.name = data.company.name;
+                            }
+                        }
+                        if (data.department) {
+                            if (data.department._id) {
+                                _person.department.id = data.department._id;
+                            }
+                            if (data.department.name) {
+                                _person.department.name = data.department.name;
                             }
                         }
                         if (data.timezone) {

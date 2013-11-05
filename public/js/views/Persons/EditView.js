@@ -111,7 +111,7 @@ define([
                     }));
                     common.canvasDraw({ model: currentModel.toJSON() }, this);
                 }
-                common.contentHolderHeightFixer();
+                //common.contentHolderHeightFixer();
                 $('#dateBirth').datepicker({
                     changeMonth: true,
                     changeYear: true,
