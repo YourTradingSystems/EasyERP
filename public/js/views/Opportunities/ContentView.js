@@ -17,7 +17,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
         initialize: function (options) {
             console.log('Init Opportunities View');
             var that = this;
-            this.workflowsCollection = new WorkflowsCollection({ id: 'opportunity' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));

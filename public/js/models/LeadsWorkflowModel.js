@@ -3,9 +3,16 @@
         idAttribute: "_id",
 
         defaults: {
-            name: 'Lead workflow',
-            status: 'New' ,
-            sequence: 0 
+            wId:'',
+            name: '',
+            value:[
+                {
+                    _id:'',
+                    name:'',
+                    status:'',
+                    sequence: 0
+                }
+            ]
         },
 
         urlRoot: function () {

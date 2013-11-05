@@ -10,12 +10,13 @@
                     <p>
                         <select id="status">
                             <option selected="selected" value="0">Select...</option>
-                             <% relatedStatusesCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('status')%></option>
+                             <% relatedStatusesCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>"><%= option.status %></option>
                              <% }); %>
                         </select>
                     </p>
                 </div>
         </fieldset>
+        <input type="submit" class="btn" value="Create"/>
     </form>
 </div>

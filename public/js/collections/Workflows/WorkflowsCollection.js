@@ -12,7 +12,11 @@ define(function () {
         },
 
         initialize: function (options) {
-            this.type = options.id;
+            if (!options) {
+                this.type = "";
+            } else {
+                this.type = options.id;
+            }
             this.fetch({
                 type: 'GET',
                 reset: true,
@@ -24,7 +28,7 @@ define(function () {
         parse: true,
 
         parse: function (response) {
-            return response.data.value;
+            return response.data;
         },
 
         fetchSuccess: function (collection, response) {

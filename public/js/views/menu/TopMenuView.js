@@ -19,9 +19,9 @@ define([
             },
 
             events:{
-                "click": "clickItem"
+                "click": "clickItem"               
             },
-
+           
             clickItem: function(event){
                 event.preventDefault();
                 this.selectedModule = $(event.target).text();

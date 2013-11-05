@@ -13,9 +13,6 @@ function (ListTemplate, ListItemView, common, Custom) {
             this.employeesCollection.bind('reset', _.bind(this.render, this));
             this.render();
         },
-        
-        
-    
 
         render: function () {
             Custom.setCurrentCL(this.employeesCollection.models.length);

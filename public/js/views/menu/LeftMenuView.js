@@ -44,9 +44,12 @@ define([
             },
 
             events: {
-                "click a": "selectMenuItem"
+                "click a": "selectMenuItem",
+                "mouseover a":"hoverItem"
             },
-
+            hoverItem: function (e) {
+                console.log('hover');
+            },
             selectMenuItem: function (e) {
                 this.$('li.hover').removeClass('hover');
                 $(e.target).closest('li').addClass('hover');
