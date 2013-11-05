@@ -564,11 +564,127 @@ h3 {
         }
     }
 }
-#createTaskForm{
+
+.createFormDatepicker{
+	border-radius:0 !important;
+	font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+	margin-top:2px;
+	border:1px solid #DDD !important;
 	.ui-widget-header{
 		border:0;
 		background:none;
+		font-weight:normal;
 	}
+	.arrow{
+		position:absolute;
+		width:14px;
+		height:7px;
+		top:-7px;
+		left:5px;
+		background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
+		background-position:0px 0px;
+
+	}
+	.ui-datepicker-prev,
+	.ui-datepicker-next{
+		border-radius:0px;
+		border:0;
+		&:hover{
+			border:0px;
+		}
+		.ui-icon-circle-triangle-w{
+			background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
+			background-position:0px -7px;
+			width:6px ;
+			height:7px;
+			margin-top: -4px;
+			margin-left: -3px;
+		}
+		.ui-icon-circle-triangle-e{
+			background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
+			background-position:-6px -7px;
+			width:6px ;
+			height:7px;
+			margin-top: -4px;
+			margin-left: -3px;
+
+
+		}
+
+		&.ui-datepicker-prev-hover{
+			top:2px;
+			left:2px;
+			background:none !important;
+			background-color:#EEE !important;
+		}
+		&.ui-datepicker-next-hover{
+			top:2px;
+			right:2px;
+			background:none !important;
+			background-color:#EEE !important;
+		}
+	}
+	.ui-datepicker-calendar td {
+		width:15px;
+		height:20px;
+
+		&:hover{
+			background-color:#EEE !important;
+		}
+		&.ui-datepicker-today{
+			&:hover{
+				background-color:#2678FC !important;
+			}
+		
+		}
+		a.ui-state-default {
+			margin:0 auto;
+			width:20px !important;
+		}
+	}
+
+	.ui-state-default{
+		border:0 !important;
+		background:none !important;
+		text-align:center;
+		&:hover{
+			background: #EEE !important;
+		}
+	}
+	.ui-datepicker-calendar th {
+		font-weight:normal;
+	}
+	.ui-datepicker-title:hover{
+		background-color: #EEE;
+		cursor:pointer;
+	}
+	.ui-datepicker-today{
+		background-color: #4B8DF8 !important;
+		a{
+			color: #FFF !important;
+			&:hover{
+				background-color:#2678FC !important;
+			}
+		}
+	}
+
+
+}
+dl.person-info{
+	color: #888;
+	dt{
+		width:60px;
+		float:left;
+		clear:both;
+	line-height:30px;
+
+	}
+	dd{
+	line-height:30px;
+
+		float:left;
+	}
+	
 }
 .loginPanelBtnHoover {
     background: rgba(0, 0, 0, 0.2);
