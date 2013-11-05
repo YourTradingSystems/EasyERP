@@ -16,7 +16,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
         initialize: function (options) {
             console.log('Init Applications View');
             var that = this;
-            this.workflowsCollection = new WorkflowsCollection({ id: 'application' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));

@@ -4,15 +4,14 @@ define([
     'collections/Workflows/WorkflowsCollection',
     'views/Projects/thumbnails/ThumbnailsItemView',
     'custom',
-    "GanttChart",
-    'common'
+    "GanttChart"
 ],
-function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, Custom, GanttChart, common) {
+function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, Custom, GanttChart) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Projects View');
-            this.workflowsCollection = new WorkflowsCollection({ id: 'project' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Project' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));

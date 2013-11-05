@@ -1,12 +1,12 @@
 define([
-    "text!templates/LeadsWorkflow/CreateTemplate.html",
-    "collections/LeadsWorkflow/LeadsWorkflowCollection",
+    "text!templates/Workflows/CreateTemplate.html",
+    "collections/Workflows/WorkflowsCollection",
     "collections/RelatedStatuses/RelatedStatusesCollection",
-    "models/LeadsWorkflowModel",
+    "models/WorkflowsModel",
     "common",
     "custom"
 ],
-    function (CreateTemplate, LeadsWorkflowCollection, RelatedStatusesCollection, LeadsWorkflowModel, common, Custom) {
+    function (CreateTemplate, WorkflowsCollection, RelatedStatusesCollection, WorkflowsModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",

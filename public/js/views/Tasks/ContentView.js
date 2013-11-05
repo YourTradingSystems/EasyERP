@@ -16,7 +16,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
         el: '#content-holder',
         initialize: function (options) {
             var that = this;
-            this.workflowsCollection = new WorkflowsCollection({ id: 'task' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.projectsCollection = new ProjectsCollection();
             this.projectsCollection.bind('reset', _.bind(this.render, this));
@@ -85,11 +85,10 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(WorkflowsTemplate, {workflowsCollection:this.workflowsCollection.toJSON()}));
+                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: this.workflowsCollection.toJSON() }));
 
                         $(".column").last().addClass("lastColumn");
-
-                        _.each(workflows, function (workflow, i) {                         
+                        _.each(workflows, function (workflow, i) {
                             var counter = 0,
                                 remaining = 0;
                             var column = this.$(".column").eq(i);
@@ -119,7 +118,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                             value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
                             value.extrainfo.EndDate = common.utcDateToLocaleDate(value.extrainfo.EndDate);
                         });*/
-                        this.$el.html(_.template(TasksListTemplate, {tasksCollection:jsonCollection}));
+                        this.$el.html(_.template(TasksListTemplate, { tasksCollection: jsonCollection }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -180,7 +179,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                             });
 
                             _.each(workflows, function (workflow, i) {
-                              
+
                                 var breadcrumb = this.$(".breadcrumb li").eq(i);
                                 if (currentModel.get("workflow").name === breadcrumb.data("name")) {
                                     breadcrumb.find("a").addClass("active");
@@ -201,7 +200,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     }
             }
             this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
-            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
+            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px'; return height; });
             this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
             this.$(".column").sortable({
                 connectWith: ".column",
@@ -222,7 +221,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     var column = ui.item.closest(".column");
 
                     model.get('workflow').name = column.data('name');
-                    model.get('workflow').status= column.data('status');
+                    model.get('workflow').status = column.data('status');
 
                     model.save({}, {
                         headers: {
