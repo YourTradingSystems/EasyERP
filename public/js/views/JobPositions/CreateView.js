@@ -8,7 +8,7 @@ define([
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "Job Positions",
+            contentType: "JobPositions",
             template: _.template(CreateTemplate),
 
             initialize: function (options) {

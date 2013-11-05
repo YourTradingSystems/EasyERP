@@ -60,10 +60,10 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             //currentModel.off('change');
                             //currentModel.on('change:workflow', _.bind(this.render, this));
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            var workflows = this.workflowsCollection.models;
+                            var workflows = this.workflowsCollection.toJSON()[0].value;
 
                             _.each(workflows, function (workflow, index) {
-                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
+                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
                             });
 
                             _.each(workflows, function (workflow, i) {
