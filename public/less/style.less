@@ -1497,22 +1497,15 @@ button {
 ////////////////////////Review Code/////////////////////
 ////////////////////////////////////////////////////////
 // kanban styles
-.scroll-x {
-    overflow-x: auto;
-    overflow-y: auto;
-}
 
 .kanban {
-    background-color: #f0eeee;
     overflow-x: hidden;
     overflow-y: hidden;
     height: auto;
     width: auto;
     min-height: 100%;
     min-width: 100%;
-    display: flex;
-    display: -webkit-flex;
-    display: -moz-box;
+    display: block; 
 
     .inner {
         padding: 5px;
@@ -1528,9 +1521,10 @@ button {
         min-height: 100%;
         float: left;
         display: block;
-        width: 250px;
+        width: 350px;
+        margin:0 5px;
         height: auto;
-        border-right: 1px solid #afafb6;
+        background: url("@{imagesfolder}/form_sheetbg.png");
 
         .task {
             word-wrap: break-word;
@@ -1564,6 +1558,7 @@ button {
         }
 
         .columnNameDiv {
+           background:#fff;
             &:hover .counter, &.selected .counter {
                 display: none;
             }
