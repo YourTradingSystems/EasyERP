@@ -30,9 +30,13 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         events: {
             "click #authBtn" : "authorize",
             "click #addCalendarBtn" : "showCreateCalendarDlg",
+            "click #syncCalendarBtn" : "syncCalendar",
             "change #calendarList" : "curCalendarChange",
             'keydown': 'keydownHandler'
         },
+		syncCalendar:function(e){
+			GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
+		},
         keydownHandler: function (e) {
             switch (e.which) {
                 case 27:
