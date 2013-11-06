@@ -169,7 +169,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
                             _.each(workflows, function (workflow, index) {
                                 if (index < workflows.length - 2) {
-                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
+                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
                                 }
                             });
 

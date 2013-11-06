@@ -18,7 +18,7 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             "click .checkbox": "checked",
             "click td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click a.workflow": "chooseWorkflowNames",
-            "click #workflowNames p":"chooseWorkflowDetailes"
+            "click #workflowNames p": "chooseWorkflowDetailes"
         },
         gotoForm: function (e) {
             App.ownContentType = true;
@@ -29,18 +29,18 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
         chooseWorkflowNames: function (e) {
             this.$("#workflowNames").html("");
             var wId = $(e.target).text();
-            var names;
+            var names = [];
             _.each(this.collection.models, function (model) {
                 if (model.get('wId') == wId) {
-                    names = model.get('name');
+                    names.push(model.get('name'));
                 }
             }, this);
-           // _.each(names, function (name) {
-            this.$("#workflowNames").append("<p data-id='" + names + "'>" + names + "</p>");
-            this.$("#details").html("");
-           // }, this);
+            _.each(names, function (name) {
+                this.$("#workflowNames").append("<p data-id='" + name + "'>" + name + "</p>");
+                this.$("#details").html("");
+            }, this);
         },
-        
+
         chooseWorkflowDetailes: function (e) {
             this.$("#details").html("");
             var name = $(e.target).data("id");
@@ -59,39 +59,9 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
         render: function () {
             Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Workflows View');
-            var viewType = Custom.getCurrentVT();
-            /*switch (viewType) {
-                case "list":
-                    {*/
-            this.$el.html(_.template(ListTemplate, { workflowsCollection: this.collection.toJSON() }));
-
-            $('#check_all').click(function () {
-                var c = this.checked;
-                $(':checkbox').prop('checked', c);
-            });
-            /* break;
-         }
-     case "form":
-         {
-             var itemIndex = Custom.getCurrentII() - 1;
-             if (itemIndex > this.collection.models.length - 1) {
-                 itemIndex = this.collection.models.length - 1;
-                 Custom.setCurrentII(this.collection.models.length);
-             }
-
-             if (itemIndex == -1) {
-                 this.$el.html();
-             } else {
-                 var currentModel = this.collection.models[itemIndex];
-                 this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-             }
-
-             break;
-         }
- }*/
-
+            var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
+            this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds }));
             return this;
-
         },
 
         checked: function () {
@@ -103,40 +73,22 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
 
         deleteItems: function () {
             var self = this,
-               mid = 39,
-               model,
-               viewType = Custom.getCurrentVT();
-            switch (viewType) {
-                case "list":
-                    {
-                        $.each($("tbody input:checked"), function (index, checkbox) {
-                            model = self.collection.get(checkbox.value);
-                            model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
-                            });
-                        });
+                mid = 39,
+                model;
 
-                        this.collection.trigger('reset');
-                        break;
+            $.each($("tbody input:checked"), function (index, checkbox) {
+                model = self.collection.get(checkbox.value);
+                model.destroy({
+                    headers: {
+                        mid: mid
                     }
-                case "form":
-                    {
-                        model = this.collection.get($(".form-holder form").data("id"));
-                        model.on('change', this.render, this);
-                        model.destroy({
-                            headers: {
-                                mid: mid
-                            },
-                            success: function () {
-                                Backbone.history.navigate("#home/content-Workflows", { trigger: true });
-                            }
-                        });
-                        break;
-                    }
-            }
+                });
+            });
+
+            this.collection.trigger('reset');
+
         }
+
     });
 
     return ContentView;
