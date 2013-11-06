@@ -11,11 +11,11 @@ define([
             currentSection: null,
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
-                this.leftMenu.render(true);
+                this.leftMenu.render();
             },
             mouseOver: function (section) {
                 this.leftMenu.currentSection = section;
-                this.leftMenu.render(false);
+                this.leftMenu.render();
             },
 
             initialize: function (options) {
@@ -27,7 +27,7 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
             },
 
-            render: function (options) {
+            render: function () {
                 console.log("Render LeftMenuView");
                 var $el = $(this.el);
                 $el.html('');
@@ -42,15 +42,14 @@ define([
                         break;
                     }
                 }
-                var mousOver = (options) ? options : false;
                 if (currentModule == null) currentModule = root[0];
-                var elem = $el.append(this.renderMenu(this.collection.children(currentModule), mousOver));
+                var elem = $el.append(this.renderMenu(this.collection.children(currentModule)));
                 return this;
             },
 
             events: {
                 "click a": "selectMenuItem",
-                "mouseover a":"hoverItem"
+                "mouseover a": "hoverItem"
             },
             hoverItem: function (e) {
                 console.log('hover');
@@ -61,28 +60,26 @@ define([
 
             },
 
-            renderMenu: function (list, mouseOver) {
+            renderMenu: function (list) {
                 if (_.size(list) === 0) {
                     return null;
                 }
                 var $dom = $('<ul></ul>');
 
                 _.each(list, function (model) {
-                    var html = this.renderMenuItem(model, mouseOver);
+                    var html = this.renderMenuItem(model);
 
                     $dom.append(html);
                     var kids = this.collection.children(model);
-                    $dom.find(':last').append(this.renderMenu(kids, mouseOver));
+                    $dom.find(':last').append(this.renderMenu(kids));
                 }, this);
-                if (mouseOver) {
-                    var clickEl = $($dom).find('a')[0];
-                    $($dom.find('a')[0]).click(function () {
-                        $(clickEl).closest('li').addClass('hover');
+                var clickEl = $($dom).find('a')[0];
+                $($dom.find('a')[0]).click(function () {
+                    $(clickEl).closest('li').addClass('hover');
 
-                    });
-                    $(clickEl).click();
-                    //$($dom.find('a')[0]).trigger('click');
-                }
+                });
+                $(clickEl).click();
+                //$($dom.find('a')[0]).trigger('click');
                 return $dom;
             },
 

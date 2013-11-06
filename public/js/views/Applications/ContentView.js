@@ -40,7 +40,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
         },
         render: function () {
             var that = this;
-            var workflows = this.workflowsCollection.models;
+            var workflows = this.workflowsCollection.toJSON()[0].value;
             Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Applications View');
             var viewType = Custom.getCurrentVT();
@@ -52,7 +52,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
 
                         _.each(workflows, function (workflow, index) {
-                            $("<div class='column applicationColumn' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
+                            $("<div class='column applicationColumn' data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.name + "</h2></div></div>").appendTo(".kanban");
                         });
 
                         $(".column").last().addClass("lastColumn");
@@ -108,7 +108,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
 
                             _.each(workflows, function (workflow, index) {
                                 if (index < workflows.length - 1) {
-                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
+                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
                                 }
                             });
 

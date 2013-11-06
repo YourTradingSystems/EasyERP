@@ -29,7 +29,7 @@
                     years--;
                 }
 
-                return (years < 0) ? '' : '(Age: ' + years + ')';
+                return (years < 0) ? '' : 'Age: ' + years;
             },
 
             getDaysToBirthday: function (birthday) {

@@ -22,7 +22,7 @@ define([
                 "click": "clickItem",
                 "mouseover": "mouseOver"
             },
-
+           
             clickItem: function(event){
                 event.preventDefault();
                 this.selectedModule = $(event.target).text();
