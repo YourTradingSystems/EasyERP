@@ -27,6 +27,18 @@
     font-family: 'Icons3';
     src: url("../font/zurmogamificationsymblyregular-regular-webfont.woff") format('woff');
 }
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(../font/Open-Sans-Light.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(../font/Open-Sans.woff) format('woff');
+}
 /*------------------------Constants-----------------------------*/
 @imagesfolder: '../images';
 @body-font: "Segoe UI", sans-serif;
@@ -44,6 +56,7 @@
 @thin-border: 1px solid;
 @taskBorderColor: #4d5a75;
 @tabColor: #BDC3C7;
+@birthdayColor:#555;
 
 /*--------------------------Styles------------------------------*/
 @-moz-document url-prefix() {
@@ -245,6 +258,15 @@ article {
                     .fullsize;
                     font-size: 14px;
                     line-height: 24px;
+                }
+
+                &:hover {
+                    background-color: @blue;
+
+                    a {
+                        font-weight: bold;
+                        color: #fff;
+                    }
                 }
 
                 &.selected {
@@ -570,126 +592,310 @@ h3 {
     }
 }
 
-.createFormDatepicker{
-	border-radius:0 !important;
+.createFormDatepicker {
+    border-radius: 0 !important;
 	font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-	margin-top:2px;
-	border:1px solid #DDD !important;
-	.ui-widget-header{
-		border:0;
-		background:none;
-		font-weight:normal;
-	}
-	.arrow{
-		position:absolute;
-		width:14px;
-		height:7px;
-		top:-7px;
-		left:5px;
-		background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
-		background-position:0px 0px;
+    margin-top: 2px;
+    border: 1px solid #DDD !important;
 
+    .ui-widget-header {
+        border: 0;
+        background: none;
+        font-weight: normal;
 	}
+
+    .arrow {
+        position: absolute;
+        width: 14px;
+        height: 7px;
+        top: -7px;
+        left: 5px;
+        background-image: url("@{imagesfolder}/datepicker-sprite.png") !important;
+        background-position: 0px 0px;
+	}
+
 	.ui-datepicker-prev,
-	.ui-datepicker-next{
-		border-radius:0px;
-		border:0;
-		&:hover{
-			border:0px;
+    .ui-datepicker-next {
+        border-radius: 0px;
+        border: 0;
+
+        &:hover {
+            border: 0px;
 		}
-		.ui-icon-circle-triangle-w{
-			background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
-			background-position:0px -7px;
-			width:6px ;
-			height:7px;
+
+        .ui-icon-circle-triangle-w {
+            background-image: url("@{imagesfolder}/datepicker-sprite.png") !important;
+            background-position: 0px -7px;
+            width: 6px;
+            height: 7px;
 			margin-top: -4px;
 			margin-left: -3px;
 		}
-		.ui-icon-circle-triangle-e{
-			background-image:url("@{imagesfolder}/datepicker-sprite.png") !important;
-			background-position:-6px -7px;
-			width:6px ;
-			height:7px;
+
+        .ui-icon-circle-triangle-e {
+            background-image: url("@{imagesfolder}/datepicker-sprite.png") !important;
+            background-position: -6px -7px;
+            width: 6px;
+            height: 7px;
 			margin-top: -4px;
 			margin-left: -3px;
+        }
 
-
+        &.ui-datepicker-prev-hover {
+            top: 2px;
+            left: 2px;
+            background: none !important;
+            background-color: #EEE !important;
 		}
 
-		&.ui-datepicker-prev-hover{
-			top:2px;
-			left:2px;
-			background:none !important;
-			background-color:#EEE !important;
-		}
-		&.ui-datepicker-next-hover{
-			top:2px;
-			right:2px;
-			background:none !important;
-			background-color:#EEE !important;
+        &.ui-datepicker-next-hover {
+            top: 2px;
+            right: 2px;
+            background: none !important;
+            background-color: #EEE !important;
 		}
 	}
-	.ui-datepicker-calendar td {
-		width:15px;
-		height:20px;
 
-		&:hover{
-			background-color:#EEE !important;
+	.ui-datepicker-calendar td {
+        width: 15px;
+        height: 20px;
+
+        &:hover {
+            background-color: #EEE !important;
 		}
-		&.ui-datepicker-today{
-			&:hover{
-				background-color:#2678FC !important;
-			}
 		
+        &.ui-datepicker-today {
+            &:hover {
+                background-color: #2678FC !important;
 		}
+        }
+
 		a.ui-state-default {
-			margin:0 auto;
-			width:20px !important;
+            margin: 0 auto;
+            width: 20px !important;
 	}
 }
 
-	.ui-state-default{
-		border:0 !important;
-		background:none !important;
-		text-align:center;
-		&:hover{
+    .ui-state-default {
+        border: 0 !important;
+        background: none !important;
+        text-align: center;
+
+        &:hover {
 			background: #EEE !important;
 		}
 	}
+
 	.ui-datepicker-calendar th {
-		font-weight:normal;
+        font-weight: normal;
 	}
-	.ui-datepicker-title:hover{
+
+    .ui-datepicker-title:hover {
 		background-color: #EEE;
-		cursor:pointer;
+        cursor: pointer;
 	}
-	.ui-datepicker-today{
+
+    .ui-datepicker-today {
 		background-color: #4B8DF8 !important;
-		a{
+
+        a {
 			color: #FFF !important;
-			&:hover{
-				background-color:#2678FC !important;
+
+            &:hover {
+                background-color: #2678FC !important;
+            }
 			}
 		}
 	}
 
+dl.person-info {
+           clear: both;
+	
+    dt {
+        width: 60px;
+        float: left;
+        clear: both;
+        line-height: 20px;
+}
+
+    dd {
+        line-height: 20px;
+        float: left;
+	}
+}
+.company-info{
+	margin-left: 150px; 
+	width: 80%; 
+	display: block;
+}
+#details{
+	>dl{
+		padding-left:156px;
+	}
+}
+.sale-purchase{
+	clear:both;
+	padding-top:10px;
+	>span{
+		font-size:15px;
+		padding-left:156px !important;
+	}
+	>dl{
+		margin-top:5px;
+		padding-left:156px;
+	}
+    .person-checkbox {
+		margin-left:3px;
+        position: relative;
+        float: right;
+        padding-left: 25px;
+        background-image: url("@{imagesfolder}/login-sprite.png");
+        background-repeat: no-repeat;
+        background-position: 0 1px;
+		font-size: 14px;
+        line-height: 19px;
+        color: black;
+
+        &:hover {
+            color: black;
+            background-position: 0 -20px;
+		}
+
+        .check {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: none;
+            float: left;
+            width: 9px;
+            height: 8px;
+			padding:0;
+            background-image: url("@{imagesfolder}/login-sprite.png");
+            background-repeat: no-repeat;
+            background-position: 50% -40px;
+            z-index: 1000;
+		}
+
+        &.active {
+            .check {
+                display: block;
+			}
+		}
+	}
 
 }
-dl.person-info{
-	color: #888;
-	dt{
-		width:60px;
+.birthday-item{
+	clear:both;
+	width:95%;
+	margin:20px auto 0;
+	.date,
+	.info{
 		float:left;
-		clear:both;
-	line-height:30px;
-
 	}
-	dd{
-	line-height:30px;
+	.date{
+		width:130px;
+		height:100px;
+		text-align:right;
+		h3{
+			padding-right:30px;
+			font-size: 12px;
+			color: #AAA;
+			font-weight:300;
+		}
+		h2{
+			font-family: 'Open Sans', sans-serif;
+			padding-right:30px;
+			font-weight: 300;
+			font-size: 30px;
+			line-height: 38px;
+			color:@birthdayColor;
+		}
+		
+	}
+	.info{
+		margin-top:-100px;
+		float:right;
+		color: #FFF;
+		background:@birthdayColor;
+		margin-left:130px;
+		padding-right:10px;
+		padding-bottom:10px;
+		padding-left:10px;
+		position: relative;
+		&:after{
+			right: 100%;
+			border: solid rgba(0, 0, 0, 0);
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			border-right-color: @birthdayColor;
+			border-width: 10px;
+			top: 19px;
+		}
+		.top{
+			height:40px;
+			margin:0 0 10px 0;
+			border-bottom:@thin-border rgba(255, 255, 255, 0.3);
+			a{
+				font-family: 'Open Sans', sans-serif;
+				font-weight: 300 !important;
+				line-height:40px;
+				font-size:24px;
+				color: #FFF;
+				cursor:pointer;
+				&:hover{
+					opacity:0.5;
+				}
+			}
+		}
 
-		float:left;
+		.ava{
+			float:left;
+			margin:5px 10px 0 0;
+		}
+		.text{
+			font-family: 'Open Sans', sans-serif;
+			font-size: 14px;
+			font-weight: 300;
+	}
+		.readMore{
+			display: inline-block;
+			margin-top: 10px;
+			color: rgb(255, 255, 255);
+			font-size: 14px;
+			padding: 0px;
+			text-align: left;
+			text-decoration: none;
+			float:right;
+			i{
+				background-image: url("@{imagesfolder}/login-sprite.png");
+				background-position: 0px -81px;
+				display: inline-block;
+				width: 14px;
+				height: 14px;
+				margin-top: 0px;
+				line-height: 14px;
+				vertical-align: top;
+				background-repeat: no-repeat;
+			}
+			&:hover{
+				opacity:0.5;
+			}
+		}
 	}
 	
+}
+#weekList,
+#monthList{
+	>h2{
+		text-align:center;
+		font-size: 30px;
+		line-height:30px;
+		padding-top:15px;
+	
+	}
 }
 .loginPanelBtnHoover {
     background: rgba(0, 0, 0, 0.2);
@@ -990,6 +1196,10 @@ dl.person-info{
 
         h3 {
             color: #333;
+            font-size:24px;
+            line-height:24px;
+            min-height:24px;
+            font:@lucida-font;
         }
 
         p {
@@ -1732,21 +1942,7 @@ button {
     }
 }
 
-dl.person-info {
-    color: #888;
 
-    dt {
-        width: 60px;
-        float: left;
-        clear: both;
-        line-height: 30px;
-    }
-
-    dd {
-        line-height: 30px;
-        float: left;
-    }
-}
 ////////////////////////////////////////////////////////
 ////////////////////////Review Code/////////////////////
 ////////////////////////////////////////////////////////

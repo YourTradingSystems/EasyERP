@@ -20,9 +20,26 @@ define([
 
         events: {
             "click .checkbox": "checked",
+            "click .person-checkbox": "personsSalesChecked",
             "click .details": "toggle",
             "mouseover .social a": "socialActive",
-            "mouseout .social a": "socialNotActive"
+            "mouseout .social a": "socialNotActive",
+            "click .company": "gotoCompanyForm"
+        },
+      
+        
+        personsSalesChecked: function (e) {
+			if ($(e.target).get(0).tagName.toLowerCase()=="span"){
+				$(e.target).parent().toggleClass("active");
+			}else{
+				$(e.target).toggleClass("active");
+			}
+        },
+
+        gotoCompanyForm: function (e) {
+            e.preventDefault();
+            var itemIndex = $(e.target).closest("a").attr("data-id");
+            window.location.hash = "#home/content-Company/form/" + itemIndex;
         },
         toggle: function () {
             this.$('#details').animate({
