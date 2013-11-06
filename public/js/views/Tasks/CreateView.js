@@ -68,11 +68,11 @@ define([
                 var idAssignedTo = this.$("#assignedTo option:selected").val();
                 var assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
 
-                var deadlineSt = $.trim($("#deadline").val());
-                var deadline = "";
-                if (deadlineSt) {
-                    deadline = new Date(Date.parse(deadlineSt)).toISOString();
-                }
+                var deadline = $.trim($("#deadline").val());
+                //var deadline = "";
+                //if (deadlineSt) {
+                //    deadline = new Date(Date.parse(deadlineSt)).toISOString();
+                //}
 
                 var tags = $.trim($("#tags").val()).split(',');
 
@@ -80,17 +80,17 @@ define([
 
                 var sequence = parseInt($.trim($("#sequence").val()));
 
-                var startDateSt = $.trim($("#StartDate").val());
-                var StartDate = "";
-                if (startDateSt) {
-                    StartDate = new Date(Date.parse(startDateSt)).toISOString();
-                }
+                var StartDate = $.trim($("#StartDate").val());
+                //var StartDate = "";
+                //if (startDateSt) {
+                //    StartDate = new Date(Date.parse(startDateSt)).toISOString();
+                //}
 
-                var endDateSt = $.trim($("#EndDate").val());
-                var EndDate = "";
-                if (endDateSt) {
-                    EndDate = new Date(Date.parse(endDateSt)).toISOString();
-                }
+                var EndDate = $.trim($("#EndDate").val());
+                //var EndDate = "";
+                //if (endDateSt) {
+                //    EndDate = new Date(Date.parse(endDateSt)).toISOString();
+                //}
 
                 var idCustomer = this.$("#customerDd option:selected").val();
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
@@ -149,10 +149,10 @@ define([
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
                     workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
                 }));
-                $('#deadline').datepicker({showOtherMonths: true,selectOtherMonths: true});
+                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
 				$("#ui-datepicker-div").addClass("createFormDatepicker");
-                $('#StartDate').datepicker();
-                $('#EndDate').datepicker();
+				$('#StartDate').datepicker({ dateFormat: "d M, yy" });
+				$('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 return this;
             }
 
