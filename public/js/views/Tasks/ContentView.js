@@ -107,6 +107,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     }
                 case "list":
                     {
+
                         var jsonCollection = this.collection.toJSON();
                         /*$.each(jsonCollection, function(index,value){
                             value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);

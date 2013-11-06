@@ -3,37 +3,44 @@ define([
     'text!templates/Projects/form/FormTemplate.html',
     'collections/Workflows/WorkflowsCollection',
     'views/Projects/thumbnails/ThumbnailsItemView',
+    'views/Projects/EditView',
     'custom',
-    "GanttChart"
+    "GanttChart",
+    'common'
 ],
-function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, Custom, GanttChart) {
-    var ContentView = Backbone.View.extend({
-        el: '#content-holder',
-        initialize: function (options) {
-            console.log('Init Projects View');
-            this.workflowsCollection = new WorkflowsCollection({ id: 'Project' });
-            this.workflowsCollection.bind('reset', _.bind(this.render, this));
-            this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
-        },
+    function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, EditView,Custom, GanttChart, common) {
+        var ContentView = Backbone.View.extend({
+            el: '#content-holder',
+            initialize: function (options) {
+                this.workflowsCollection = new WorkflowsCollection({ id: 'project', fetch:true });
+                this.workflowsCollection.bind('reset', _.bind(this.render, this));
+                this.collection = options.collection;
+                this.collection.bind('reset', _.bind(this.render, this));
+            },
 
-        events: {
-            "click .checkbox": "checked",
-            "click .breadcrumb a": "changeWorkflow",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
-        },
-        gotoForm: function (e) {
-            App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
-            window.location.hash = "#home/content-Projects/form/" + itemIndex;
-        },
+            events: {
+                "click .checkbox": "checked",
+                "click .breadcrumb a": "changeWorkflow",
+                "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            },
 
-        render: function () {
-            var viewType = Custom.getCurrentVT(),
-                models = this.collection.models;
-            Custom.setCurrentCL(models.length);
-            switch (viewType) {
-                case "list":
+            editItem: function(){
+                //create editView in dialog here
+                new EditView({collection:this.collection});
+            },
+
+            gotoForm: function(e) {
+                App.ownContentType = true;
+                var itemIndex = $(e.target).closest("tr").data("index") + 1;
+                window.location.hash = "#home/content-Projects/form/" + itemIndex;
+            },
+
+            render: function () {
+                var viewType = Custom.getCurrentVT(),
+                    models = this.collection.models;
+                Custom.setCurrentCL(models.length);
+                switch (viewType) {
+                    case "list":
                     {
                         this.$el.html(_.template(ListTemplate, {projectsCollection:this.collection.toJSON()}));
 
@@ -43,7 +50,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
                         });
                         break;
                     }
-                case "thumbnails":
+                    case "thumbnails":
                     {
                         this.$el.html('');
                         if (this.collection.length > 0) {
@@ -59,7 +66,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
                         }
                         break;
                     }
-                case "form":
+                    case "form":
                     {
                         var itemIndex = Custom.getCurrentII() - 1;
                         if (itemIndex > models.length - 1) {
@@ -96,7 +103,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
 
                         break;
                     }
-                case "gantt":
+                    case "gantt":
                     {
                         this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
                         GanttChart.create("GanttDiv");
@@ -105,51 +112,51 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
 
                         break;
                     }
-            }
-            return this;
-
-        },
-
-        changeWorkflow: function (e) {
-            var mid = 39;
-            var breadcrumb = $(e.target).closest('li');
-            var a = breadcrumb.siblings().find("a");
-            if (a.hasClass("active")) {
-                a.removeClass("active");
-            }
-            breadcrumb.find("a").addClass("active");
-            var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
-            model.unbind('change');
-            var ob = {
-                workflow: {
-                    name: breadcrumb.data("name"),
-                    status: breadcrumb.data("status")
                 }
-            };
+                return this;
 
-            model.set(ob);
-            model.save({}, {
-                headers: {
-                    mid: mid
+            },
+
+            changeWorkflow: function (e) {
+                var mid = 39;
+                var breadcrumb = $(e.target).closest('li');
+                var a = breadcrumb.siblings().find("a");
+                if (a.hasClass("active")) {
+                    a.removeClass("active");
                 }
-            });
+                breadcrumb.find("a").addClass("active");
+                var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
+                model.unbind('change');
+                var ob = {
+                    workflow: {
+                        name: breadcrumb.data("name"),
+                        status: breadcrumb.data("status")
+                    }
+                };
 
-        },
+                model.set(ob);
+                model.save({}, {
+                    headers: {
+                        mid: mid
+                    }
+                });
 
-        checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
-        },
+            },
 
-        deleteItems: function () {
-            var that = this,
-        		mid = 39,
-                model,
-                viewType = Custom.getCurrentVT();
-            switch (viewType) {
-                case "list":
+            checked: function () {
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            },
+
+            deleteItems: function () {
+                var that = this,
+                    mid = 39,
+                    model,
+                    viewType = Custom.getCurrentVT();
+                switch (viewType) {
+                    case "list":
                     {
                         $.each($("tbody input:checked"), function (index, checkbox) {
                             model = that.collection.get(checkbox.value);
@@ -163,7 +170,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
                         this.collection.trigger('reset');
                         break;
                     }
-                case "thumbnails":
+                    case "thumbnails":
                     {
                         model = this.model.collection.get(this.$el.attr("id"));
                         this.$el.fadeToggle(300, function () {
@@ -177,7 +184,7 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
                         break;
                     }
 
-                case "form":
+                    case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
                         model.on('change', this.render, this);
@@ -191,9 +198,9 @@ function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, C
                         });
                         break;
                     }
+                }
             }
-        }
-    });
+        });
 
-    return ContentView;
-});
+        return ContentView;
+    });
