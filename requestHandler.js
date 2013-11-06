@@ -478,6 +478,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
     function createJobPosition(req, res, data) {
@@ -629,6 +630,27 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
+    // Custom function for list (getApplications)
+    function getApplicationsCustom(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn) {
+            employee.getCustom(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getApplicationById(req, res, data) {
+        console.log("Requst getApplicationById is success");
+        if (req.session && req.session.loggedIn) {
+            employee.getById(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+
 
     function getFilterApplications(req, res, data) {
         console.log("Requst getApplications is success");
@@ -805,6 +827,22 @@ var requestHandler = function (fs, mongoose) {
     function getLeads(req, res, data) {
         if (req.session && req.session.loggedIn) {
             opportunities.getLeads(res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getOpportunityById(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            opportunities.getById(data.id, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getLeadsCustom(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            opportunities.getLeadsCustom(data, res);
         } else {
             res.send(401);
         }
@@ -1029,6 +1067,7 @@ var requestHandler = function (fs, mongoose) {
 
         //createApplication: createApplication,
         getApplications: getApplications,
+        getApplicationsCustom: getApplicationsCustom,
         //removeApplication: removeApplication,
         //updateApplication: updateApplication,
 
@@ -1047,15 +1086,18 @@ var requestHandler = function (fs, mongoose) {
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
+        getApplicationById: getApplicationById,
 
         createLead: createLead,
         getLeads: getLeads,
+        getLeadsCustom:getLeadsCustom,
         updateLead: updateLead,
         removeLead: removeLead,
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
         getOpportunities: getOpportunities,
+        getOpportunityById: getOpportunityById,
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
 

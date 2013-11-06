@@ -1,6 +1,6 @@
 define([
     "text!templates/Applications/CreateTemplate.html",
-    "models/ApplicationModel",
+    "models/ApplicationsModel",
     "common"
 ],
     function (CreateTemplate, ApplicationModel, common) {

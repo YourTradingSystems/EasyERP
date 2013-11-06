@@ -602,15 +602,15 @@ app.post('/Employees', function (req, res) {
     requestHandler.createEmployee(req, res, data);
 });
 
-app.put('/Employees/:_id', function (req, res) {
-    data = {};
+app.put('/Employees/:viewType/:_id', function (req, res) {
+    var data = {};
     var id = req.body._id;
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
 });
 
-app.delete('/Employees/:_id', function (req, res) {
+app.delete('/Employees/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -630,7 +630,6 @@ app.get('/getSalesTeam', function (req, res) {
     requestHandler.getDepartmentForDd(req, res, data);
 });
 
-
 //------------------Applications---------------------------------------------------
 
 app.get('/Applications', function (req, res) {
@@ -647,11 +646,12 @@ app.get('/Applications/:viewType', function (req, res) {
     console.log(req.params);
     viewType = req.params.viewType;
     switch (viewType) {
-        case "kanban": requestHandler.getFilterApplications(req, res, data);
+        case "form": requestHandler.getApplicationById(req, res, data);
             break;
-        //case "form": requestHandler.getApplicationById(req, res, data);
-        //    break;
+        default: requestHandler.getFilterApplications(req, res, data);
+            break;
     }
+
 
 });
 
@@ -663,16 +663,16 @@ app.post('/Applications', function (req, res) {
     requestHandler.createEmployee(req, res, data);
 });
 
-app.put('/Applications/:_id', function (req, res) {
-    console.log('-----SERVER put Employees---------------');
-    data = {};
+app.put('/Applications/:viewType/:_id', function (req, res) {
+    console.log('-----SERVER put Applications---------------');
+    var data = {};
     var id = req.body._id;
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
 });
 
-app.delete('/Applications/:_id', function (req, res) {
+app.delete('/Applications/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -712,6 +712,7 @@ app.get('/SourcesOfApplicants', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getSourcesOfApplicants(req, res, data);
 });
+
 app.post('/SourcesOfApplicants', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -739,6 +740,19 @@ app.get('/Leads', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getLeads(req, res, data);
+});
+app.get('/Leads/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getOpportunityById(req, res, data);
+            break;
+        default: requestHandler.getLeadsCustom(req, res, data);
+            break;
+    }
 });
 app.post('/Leads', function (req, res) {
     data = {};

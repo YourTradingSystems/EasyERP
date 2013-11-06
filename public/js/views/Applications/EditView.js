@@ -12,8 +12,13 @@
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, 'saveItem');
-                this.collection = options.collection;
-                this.currentModel = this.collection.getElement();
+
+            if (options.collection) {
+                this.employeesCollection = options.collection;
+                this.currentModel = this.employeesCollection.getElement();
+            } else {
+                this.currentModel = options.model;
+            }
                 this.render();
             },
 
@@ -46,6 +51,7 @@
                         break;
                 }
             },
+
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
@@ -74,8 +80,9 @@
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
             },
+
             hideDialog: function () {
-                $(".edit-dialog").remove();
+                $(".applications-edit-dialog").remove();
             },
 
             saveItem: function () {
@@ -97,7 +104,8 @@
 
                 var degreeId = $("#degreesDd option:selected").val();
 
-                var relatedUserId = $("#relatedUsersDd option:selected").val();
+                var relatedUserId = $("#relatedUsersDd option:selected").val() ? $("#relatedUsersDd option:selected").val() : null;
+
                 var nextActionSt = $.trim($("#nextAction").val());
                 var nextAction = "";
                 if (nextActionSt) {
@@ -106,7 +114,7 @@
                 var sourceId = $("#sourceDd option:selected").val();
                 var referredBy = $.trim($("#referredBy").val());
                 var departmentId = $("#departmentDd option:selected").val();
-                var jobPositionId = $("#jobPositionDd option:selected").val();
+                var jobPositionId = $("#jobPositionDd option:selected").val() ? $("#jobPositionDd option:selected").val() : null;
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());
                 var tags = $.trim($("#tags").val()).split(',');
@@ -119,7 +127,7 @@
                     name: name,
                     workEmail: wemail,
                     wphones: wphones,
-                    degree: degree,
+                    degree: degreeId,
                     relatedUser: relatedUserId,
                     nextAction: nextAction,
                     source: sourceId,
@@ -137,10 +145,12 @@
                     },
                     wait: true,
                     success: function (model) {
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        self.hideDialog();
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
+                        self.hideDialog();
                     }
                 });
 
@@ -150,7 +160,7 @@
                 var formString = this.template(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "edit-dialog",
+                    dialogClass: "applications-edit-dialog",
                     width: 900,
                     title: "Edit Application",
                     buttons:{

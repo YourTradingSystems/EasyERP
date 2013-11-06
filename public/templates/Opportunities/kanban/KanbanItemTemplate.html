@@ -1,6 +1,6 @@
 <div class="inner">
     <div class="opportunity-header">
-        <h4 class="bold left"><%=model.name%></h4>
+        <h4 class="bold left" style="max-width:56%"><%=model.name%></h4>
         <h3>$<%=model.expectedRevenue.value%></h3>        
         <!--<div class="dropDown">
             <a href="#">
@@ -26,12 +26,13 @@
         </div>-->
     </div>
     <div class="opportunity-content">
-        <p class="bold"><%=(model.company) ? model.company.name.first : ''%></p>
         <div class="half-block left">
             <p class="left"><%=(model.customer) ? model.customer.name.first + ' ' + model.customer.name.last : ''%></p>
         </div>
+        <div class="clearfix"></div>
         <div class="half-block right">
-            <p style="text-align:right;"><%=model.nextAction.desc%> <%=model.nextAction.date%></p>
+         	<p class="left" style="text-align:left;><%=model.nextAction.desc%> </p>
+            <p class="right" style="text-align:right;"> <%=model.nextAction.date%></p>
         </div>
         <div class="clearfix"></div>
     </div>

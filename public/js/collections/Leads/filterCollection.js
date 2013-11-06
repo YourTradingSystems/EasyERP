@@ -1,16 +1,18 @@
 ﻿define([
-    'models/ApplicationsModel',
+    'models/LeadsModel',
     'common'
 ],
-    function (ApplicationModel, common) {
-        var TasksCollection = Backbone.Collection.extend({
-            model: ApplicationModel,
-            url: function () {
-                return "/Applications/kanban/";
-            },
+    function (CompanyModel, common) {
+        var LeadsCollection = Backbone.Collection.extend({
+            model: CompanyModel,
+            url: "/Leads/",
             page: 1,
             initialize: function (options) {
                 var that = this;
+                if (options && options.viewType) {
+                    this.url += options.viewType;
+                    delete options.viewType;
+                }
                 var filterObject = {};
                 for (var i in options) {
                     filterObject[i] = options[i];
@@ -19,15 +21,16 @@
                     data: filterObject,
                     reset: true,
                     success: function() {
-                        console.log("Application fetchSuccess");
+                        console.log("Leads fetchSuccess");
                         that.page += 1;
                     },
                     error: this.fetchError
                 });
             },
-
+            
             showMore: function (options) {
                 var that = this;
+                
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -38,30 +41,30 @@
                 filterObject['count'] = (filterObject.hasOwnProperty('count')) ? filterObject['count'] : 10;
                 this.fetch({
                     data: filterObject,
-                    success: function(models) {
+                    waite: true,
+                    success: function (models) {
                         that.page += 1;
-                        that.trigger('add', models);
+                        that.trigger('showmore', models);
                     },
-                    error: this.fetchError
+                    error: function() {
+                        alert('Some Error');
+                    }
                 });
             },
 
             parse: true,
             parse: function (response) {
-                /*if (response.data) {
-                    _.map(response.data, function (task) {
-                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        task.deadline = common.utcDateToLocaleDate(task.deadline);
-                        return task;
+                if (response.data) {
+                    _.map(response.data, function (lead) {
+                        lead.creationDate = common.utcDateToLocaleDate(lead.creationDate);
+                        return lead;
                     });
-                }*/
+                }
                 return response.data;
-            },
-
-            fetchError: function (error) {
             }
+
+            
         });
 
-        return TasksCollection;
+        return LeadsCollection;
     });
