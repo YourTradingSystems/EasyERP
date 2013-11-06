@@ -19,7 +19,7 @@ define([
             },
 
             events:{
-                "click": "clickItem"               
+                "click": "clickItem"
             },
            
             clickItem: function(event){
@@ -28,7 +28,6 @@ define([
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
             },
-
             render: function(){
                 if (this.selectedModule == null)
                     this.selectedModule = (this.collection[0]).get('mname');
