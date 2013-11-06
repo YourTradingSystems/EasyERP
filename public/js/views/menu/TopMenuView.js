@@ -19,7 +19,8 @@ define([
             },
 
             events:{
-                "click": "clickItem"
+                "click": "clickItem",
+                "mouseover": "mouseOver"
             },
            
             clickItem: function(event){
@@ -28,6 +29,14 @@ define([
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
             },
+
+            mouseOver: function (event) {
+                event.preventDefault();
+                this.selectedModule = $(event.target).text();
+                this.trigger('mouseOver', this.selectedModule);
+                //this.render();
+            },
+
             render: function(){
                 if (this.selectedModule == null)
                     this.selectedModule = (this.collection[0]).get('mname');

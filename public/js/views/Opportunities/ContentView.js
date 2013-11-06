@@ -62,14 +62,14 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             console.log('Render Opportunities View');
             var viewType = Custom.getCurrentVT();
             var mid = 39;
-            var workflows = this.workflowsCollection.models;
+            var workflows = this.workflowsCollection.toJSON()[0].value;
             switch (viewType) {
                 case "kanban":
                     {
                         this.$el.html(_.template(KanbanTemplate));
 
                         _.each(workflows, function (workflow, index) {
-                            $("<div class='column' data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.get('name') + "</h2></div></div>").appendTo(".kanban");
+                            $("<div class='column' data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.name + "</h2></div></div>").appendTo(".kanban");
                         });
 
                         $(".column").last().addClass("lastColumn");
@@ -127,7 +127,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
 
 
                             _.each(workflows, function (workflow, index) {
-                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
+                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
                                 if (index == workflows.length - 1)
                                     this.$(".breadcrumb li").last().hide();
                             });
@@ -156,7 +156,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
 
             this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
             this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
-            this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
+            //this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
 
             this.$(".column").sortable({
                 connectWith: ".column",

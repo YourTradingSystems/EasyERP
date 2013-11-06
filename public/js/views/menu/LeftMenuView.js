@@ -13,6 +13,10 @@ define([
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
             },
+            mouseOver: function (section) {
+                this.leftMenu.currentSection = section;
+                this.leftMenu.render();
+            },
 
             initialize: function (options) {
                 console.log("init MenuView");
@@ -45,7 +49,7 @@ define([
 
             events: {
                 "click a": "selectMenuItem",
-                "mouseover a":"hoverItem"
+                "mouseover a": "hoverItem"
             },
             hoverItem: function (e) {
                 console.log('hover');
@@ -74,7 +78,7 @@ define([
                     $(clickEl).closest('li').addClass('hover');
 
                 });
-                $($dom).find('a')[0].click();
+                $(clickEl).click();
                 //$($dom.find('a')[0]).trigger('click');
                 return $dom;
             },
