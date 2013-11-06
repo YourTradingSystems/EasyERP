@@ -12,40 +12,43 @@
             </div>
             <div class="inner">
                 <div class="avatar left">
-                    <img alt="" src="<%=imageSrc%>" />                   
+                    <img alt="" src="<%=imageSrc%>" />
                 </div>
                 <div class="mainInfo">
                     <div class="half-block left">
                         <h3>
                             <%=name.first%> <%=name.last%>
                         </h3>
-						<dl class="person-info">
-						  <dt>Position</dt><dd>: <%=jobPosition%></dd>
-						  <dt>Company</dt><dd class="bold">: <%=company.name%></dd>
-						  <dt>Birthday</dt><dd>: Sep 29, 1980</dd>
-						  <dt>Email</dt><dd class="bold">: <a href="mailto:<%=email%>"><%=email%></a></dd>
-						</dl>
-                                <p></p>
+                        <dl class="person-info">
+                            <dt>Position</dt>
+                            <dd>: <%=jobPosition%></dd>
+                            <dt>Company</dt>
+                            <dd>: <a  class="bold company" data-id="<%=company.id%>" href="#"><%=company.name%></a></dd>
+                            <dt>Birthday</dt>
+                            <dd>: Sep 29, 1980</dd>
+                            <dt>Email</dt>
+                            <dd class="bold ">: <a href="mailto:<%=email%>"><%=email%></a></dd>
+                            <dt>Mobile</dt>
+                            <dd>: <%=phones.mobile%> </dd>
+                            <dt>Phone</dt>
+                            <dd>: <%=phones.phone%> </dd>
+                        </dl>
                     </div>
                     <div class="half-block left">
-                        <h3></h3>
-                        <P></P>
-                        <p>
-                            <%=address.street1%>
-                        </p>
-                        <p>
-                            <%=address.city%>  <%=address.state%>,  <%=address.zip%>
-                        </p>
-                        <p>
-                            <%=address.country%>
-                        </p>
-                        <p>
-                        
-                          <span class="icon3">W</span> <%=phones.phone%> 
-                       
-                            <span class="icon">"</span>  <%=phones.mobile%>
-                        </p>
-                    </div>
+                        <h3></h3>     
+                        <dl>
+                            <dt>Address:</dt>
+                            <dd> <%=address.street1%></dd>
+                            <dd>
+                                <%=address.city%>  <%=address.state%>  <%=address.zip%>
+                            </dd>
+                        </dl>
+                            </p>
+                            <p>
+                                <%=address.country%>
+                            </p>
+
+</div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="social">
@@ -54,7 +57,7 @@
                     <a class="skype" href="#"></a>
                     <div class="clearfix"></div>
                 </div>
-               <div class="details right">...</div>
+                <div class="details right">...</div>
                 <div id="details">
                     <p>
                         <label>Website: <%=website%></label>
@@ -73,9 +76,9 @@
                     <div>
                         <span>Sales & Purchases</span>
                         <p>
-                            <label>Customer: <input type="checkbox" <% if(salesPurchases.isCustomer) { %> checked="checked" <% } %>  /> </label>
-                            <label>Supplier: <input type="checkbox" <% if(salesPurchases.isSupplier) { %> checked="checked" <% } %>  /> </label>
-                            <label>Active: <input type="checkbox" <% if(salesPurchases.active) { %> checked="checked" <% } %>  /> </label>
+                            <label>Customer: <input type="checkbox"<% if(salesPurchases.isCustomer) { %> checked="checked" <% } %>  /> </label>
+                            <label>Supplier: <input type="checkbox"<% if(salesPurchases.isSupplier) { %> checked="checked" <% } %>  /> </label>
+                            <label>Active: <input type="checkbox"<% if(salesPurchases.active) { %> checked="checked" <% } %>  /> </label>
                         </p>
                     </div>
                 </div>

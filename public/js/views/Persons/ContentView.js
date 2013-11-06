@@ -22,7 +22,16 @@ define([
             "click .checkbox": "checked",
             "click .details": "toggle",
             "mouseover .social a": "socialActive",
-            "mouseout .social a": "socialNotActive"
+            "mouseout .social a": "socialNotActive",
+            "click .company": "gotoCompanyForm"
+        },
+      
+        
+
+        gotoCompanyForm: function (e) {
+            e.preventDefault();
+            var itemIndex = $(e.target).closest("a").attr("data-id");
+            window.location.hash = "#home/content-Company/form/" + itemIndex;
         },
         toggle: function () {
             this.$('#details').animate({
