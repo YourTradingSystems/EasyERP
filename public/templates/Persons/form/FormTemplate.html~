@@ -38,27 +38,26 @@
                         <h3></h3>     
                         <dl class="person-info">
                             <dt>Address:</dt>
-							<% if(address.street) { %>
                             <dd> <%=address.street%></dd>
 							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.city) { %>
-                            <dd> <%=address.city%></dd>
+                            <dd>
+                                <%=address.city%>
+                            </dd>
 							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.state) { %>
-                            <dd> <%=address.state%></dd>
+                            <dd>
+                                <%=address.state%> 
+                            </dd>
+
 							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.zip) { %>
-                            <dd> <%=address.zip%></dd>
-							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.country) { %>
-                            <dd> <%=address.country%></dd>
-							<% } %>
+                            <dd>
+                                <%=address.zip%>
+                            </dd>
 
                         </dl>
+                            </p>
+                            <p>
+                                <%=address.country%>
+                            </p>
 
 </div>
                     <div class="clearfix"></div>
@@ -80,9 +79,9 @@
                     <div class="sale-purchase">
                         <span>Sales & Purchases</span>
 				  <dl class="person-info">
-					<dt>Customer</dt><dd><a class="person-checkbox <% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-					<dt>Supplier</dt><dd><a class="person-checkbox <% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-					<dt>Active</dt><dd><a class="person-checkbox <% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
+					<dt>Customer</dt><dd><a class="person-checkbox <% if(salesPurchases.isCustomer) { %>  <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>: <input type="checkbox"<% if(salesPurchases.isCustomer) { %> checked="checked" <% } %>  /></dd>
+					<dt>Supplier</dt><dd>: <input type="checkbox"<% if(salesPurchases.isSupplier) { %> checked="checked" <% } %>  /></dd>
+					<dt>Active</dt><dd>: <input type="checkbox"<% if(salesPurchases.active) { %> checked="checked" <% } %>  /></dd>
 				  </dl>
 
                     </div>

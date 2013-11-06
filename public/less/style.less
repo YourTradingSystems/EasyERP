@@ -709,8 +709,8 @@ h3 {
 	}
 
 dl.person-info {
-   
-
+           clear: both;
+	
     dt {
         width: 60px;
         float: left;
@@ -722,12 +722,67 @@ dl.person-info {
         line-height: 20px;
         float: left;
 	}
-	dd{
-	line-height:30px;
-
-		float:left;
+}
+.company-info{
+	margin-left: 150px; 
+	width: 80%; 
+	display: block;
+}
+#details{
+	>dl{
+		padding-left:156px;
 	}
-	
+}
+.sale-purchase{
+	clear:both;
+	padding-top:10px;
+	>span{
+		font-size:15px;
+		padding-left:156px !important;
+	}
+	>dl{
+		margin-top:5px;
+		padding-left:156px;
+	}
+    .person-checkbox {
+		margin-left:3px;
+        position: relative;
+        float: right;
+        padding-left: 25px;
+        background-image: url("@{imagesfolder}/login-sprite.png");
+        background-repeat: no-repeat;
+        background-position: 0 1px;
+		font-size: 14px;
+        line-height: 19px;
+        color: black;
+
+        &:hover {
+            color: black;
+            background-position: 0 -20px;
+		}
+
+        .check {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: none;
+            float: left;
+            width: 9px;
+            height: 8px;
+			padding:0;
+            background-image: url("@{imagesfolder}/login-sprite.png");
+            background-repeat: no-repeat;
+            background-position: 50% -40px;
+            z-index: 1000;
+		}
+
+        &.active {
+            .check {
+                display: block;
+			}
+		}
+	}
+
 }
 .birthday-item{
 	clear:both;
