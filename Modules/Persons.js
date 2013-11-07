@@ -100,7 +100,7 @@ var Persons = function (logWriter, mongoose, findCompany) {
                             _person.email = data.email;
                         }
                         if (data.dateBirth) {
-                            _person.dateBirth = data.dateBirth;
+                            _person.dateBirth = new Date(data.dateBirth);
                         }
                         if (data.photoUrl) {
                             _person.photoUrl = data.photoUrl;

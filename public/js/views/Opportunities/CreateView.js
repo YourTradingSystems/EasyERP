@@ -92,21 +92,21 @@ define([
                 var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var nextActionSt = $.trim($("#nextActionDate").val());
-                var nextActionDescription = $.trim($("#nextActionDescription").val());
-                var nextActionDate = "";
-                if (nextActionSt) {
-                    nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
-                }
+                var nextActionDate = $.trim($("#nextActionDescription").val());
+                //var nextActionDate = "";
+                //if (nextActionSt) {
+                //    nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
+                //}
                 var nextAction = {
                     date: nextActionDate,
                     desc: nextActionDescription
                 };
 
-                var expectedClosingSt = $.trim($("#expectedClosing").val());
-                var expectedClosing = "";
-                if (expectedClosingSt) {
-                    expectedClosing = new Date(Date.parse(expectedClosingSt)).toISOString();
-                }
+                var expectedClosing = $.trim($("#expectedClosing").val());
+                //var expectedClosing = "";
+                //if (expectedClosingSt) {
+                //    expectedClosing = new Date(Date.parse(expectedClosingSt)).toISOString();
+                //}
 
                 var priority = $("#priority").val();
 
@@ -179,8 +179,8 @@ define([
 
             render: function () {
                 this.$el.html(this.template({ customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
-                $('#nextActionDate').datepicker();
-                $('#expectedClosing').datepicker();
+                $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
+                $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
                 return this;
             }
 

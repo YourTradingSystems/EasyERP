@@ -148,7 +148,7 @@ var Company = function (logWriter, mongoose) {
                                 _company.salesPurchases.reference = data.salesPurchases.reference;
                             }
                             if (data.salesPurchases.date) {
-                                _company.salesPurchases.date = data.salesPurchases.date;
+                                _company.salesPurchases.date = new Date(data.salesPurchases.date);
                             }
                             if (data.salesPurchases.receiveMessages) {
                                 _company.salesPurchases.receiveMessages = data.salesPurchases.receiveMessages;

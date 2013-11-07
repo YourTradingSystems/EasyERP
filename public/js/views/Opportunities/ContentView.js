@@ -21,7 +21,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.render();         
+            this.render();
 
             $(window).resize(function () {
                 that.$(".scroll-x").css("min-height", function () { var h = $(window).height() - 101; var height = h + 'px'; return height; });
@@ -94,7 +94,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                     }
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {opportunitiesCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(ListTemplate, { opportunitiesCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -155,7 +155,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             }
 
             this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
-            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
+            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px'; return height; });
             //this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
 
             this.$(".column").sortable({
@@ -324,7 +324,6 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         var column = this.$el.closest(".column");
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                         column.find(".revenue span").html(parseInt(column.find(".revenue span").html()) - revenue);
-                        this.collection.trigger('reset');
                         break;
                     }
                 case "list":
@@ -337,8 +336,6 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                                 }
                             });
                         });
-
-                        this.collection.trigger('reset');
                         break;
                     }
                 case "form":

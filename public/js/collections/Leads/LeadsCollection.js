@@ -1,7 +1,8 @@
 define([
-    'models/LeadModel'
+    'models/LeadModel',
+    'common'
 ],
-    function (LeadModel) {
+    function (LeadModel, common) {
         var LeadsCollection = Backbone.Collection.extend({
             model: LeadModel,
             url: function () {
@@ -27,6 +28,12 @@ define([
             parse: true,
 
             parse: function (response) {
+                if (response.data) {
+                    _.map(response.data, function (lead) {
+                        lead.creationDate = common.utcDateToLocaleDate(lead.creationDate);
+                        return lead;
+                    });
+                }
                 return response.data;
             },
 

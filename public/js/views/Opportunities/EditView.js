@@ -201,11 +201,6 @@
                 }
             },
 
-            ISODateToDate: function (ISODate) {
-                var date = ISODate.split('T')[0].replace(/-/g, '/');
-                return date;
-            },
-
             changeWorkflow: function (e) {
                 var mid = 39;
                 var name = '', status = '';

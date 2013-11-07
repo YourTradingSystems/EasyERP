@@ -126,7 +126,7 @@ define([
                     departmentsCollection: this.departmentsCollection
                 }));
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
-                $('#date').datepicker();
+                $('#date').datepicker({ dateFormat: "d M, yy" });
                 return this;
             }
 
