@@ -1,4 +1,4 @@
-define([   
+define([
     'text!templates/Opportunities/list/ListTemplate.html',
     'text!templates/Opportunities/form/FormTemplate.html',
     'text!templates/Opportunities/kanban/WorkflowsTemplate.html',
@@ -22,11 +22,11 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
             this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-          
+
         },
 
         events: {
-            "click .checkbox": "checked",       
+            "click .checkbox": "checked",
             "click .breadcrumb a, #lost, #won": "changeWorkflow",
             "click #hire": "isEmployee",
             "click #tabList a": "switchTab",
@@ -95,7 +95,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                     }
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {opportunitiesCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(ListTemplate, { opportunitiesCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -310,10 +310,10 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                         var remaining = model.get("estimated");
                         this.$("#delete").closest(".task").fadeToggle(200, function () {
                             model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
-                            });
+                                   headers: {
+                                       mid: mid
+                                   }
+                               });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");

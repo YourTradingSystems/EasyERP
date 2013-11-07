@@ -20,6 +20,7 @@ define([
 
         events: {
             "click .checkbox": "checked",
+            "click .person-checkbox": "personsSalesChecked",
             "click .details": "toggle",
             "mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
@@ -27,6 +28,13 @@ define([
         },
       
         
+        personsSalesChecked: function (e) {
+			if ($(e.target).get(0).tagName.toLowerCase()=="span"){
+				$(e.target).parent().toggleClass("active");
+			}else{
+				$(e.target).toggleClass("active");
+			}
+        },
 
         gotoCompanyForm: function (e) {
             e.preventDefault();

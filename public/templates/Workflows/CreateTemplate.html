@@ -1,22 +1,46 @@
 <div class="form-holder">
-    <form method="post" action="" id="createDepartmentForm" class="form">
+    <form method="post" action="" class="form">
         <fieldset>
-                <div class="half-block left">
-                    <p><label for="name">Name</label></p>
-                    <p><label for="status">Status</label></p>
-                </div>
-                <div class="half-block left">
-                    <p><input type="text" class="title-input blueback" id="name" /></p>
+            <div class="half-block left">
+                <p>
+                    <label for="wId">Workflow Id</label>
+                </p>
+                <p>
+                    <label for="workflowsName">Workflow Name</label>
+                </p>
+            </div>
+            <div class="half-block left">
+                <p>
+                    <select id="wId">
+                        <option selected="selected" value="0">Select...</option>
+                        <% workflowsWIds.forEach(function(option){ %>
+                        <option value="<%= option %>"><%= option %></option>
+                        <% }); %>
+                    </select>
+                </p>
+                <p>
+                    <input type="text" class="title-input blueback" id="workflowsName" />
+                </p>
+            </div>
+            <div id="allNamesStatuses">
+                <div class="nameStatus">
                     <p>
-                        <select id="status">
+                        <label>Name</label>
+                        <input type="text" class="name" />
+                    </p>
+                    <p>
+                        <label>Status</label>
+                        <select class="status">
                             <option selected="selected" value="0">Select...</option>
-                             <% relatedStatusesCollection.forEach(function(option){ %>
-                                <option value="<%= option._id %>"><%= option.status %></option>
-                             <% }); %>
+                            <% relatedStatusesCollection.forEach(function(option){ %>
+                            <option value="<%= option.get('_id') %>"><%= option.get('status') %></option>
+                            <% }); %>
                         </select>
                     </p>
                 </div>
+            </div>
+            <button id="add" class="btn">Add</button>
         </fieldset>
-        <input type="submit" class="btn" value="Create"/>
+        <input type="submit" class="btn" value="Create" />
     </form>
 </div>

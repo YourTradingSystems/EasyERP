@@ -14,59 +14,42 @@
                     <div class="avatar">
                         <img alt="" src="<%=imageSrc%>" width="120" height="120" />
                     </div>
-                    <div style="margin-left: 130px; width: 80%; display: block;">
+                    <div class="company-info">
                         <h2><%=name%></h2>
+                    <div class="half-block left">
+                          <dl class="person-info company">
+							<dt>Address :</dt>
+							<% if(address.street) { %>
+                            <dd> <%=address.street%></dd>
+							<dt>&nbsp;</dt>
+							<% } %>
+							<% if(address.city) { %>
+                            <dd> <%=address.city%></dd>
+							<dt>&nbsp;</dt>
+							<% } %>
+							<% if(address.state) { %>
+                            <dd> <%=address.state%></dd>
+							<dt>&nbsp;</dt>
+							<% } %>
+							<% if(address.zip) { %>
+                            <dd> <%=address.zip%></dd>
+							<dt>&nbsp;</dt>
+							<% } %>
+							<% if(address.country) { %>
+                            <dd> <%=address.country%></dd>
+							<% } %>
+                          </dl>
+                    </div>
+                    <div class="half-block left">
+                          <dl class="person-info company">
+							<dt>Website</dt><dd>: <%=website%></dd>
+							<dt>Phone</dt><dd>: <%=phones.phone%></dd>
+							<dt>Mobile</dt><dd>: <%=phones.mobile%></dd>
+							<dt>Fax</dt><dd>: <%=phones.fax%></dd>
+                          </dl>
+                    </div>
+
                         <div class="clearfix"></div>
-                    </div>
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label>Address</label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                        </div>
-                        <div class="half-block left">
-                            <p><span><%=address.street%></span></p>
-                            <p><span><%=address.city%></span></p>
-                            <p><span><%=address.state%></span></p>
-                            <p><span><%=address.zip%></span></p>
-                            <p><span><%=address.country%></span></p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label>Website</label>
-                            </p>
-                            <p>
-                                <label>Phone </label>
-                            </p>
-                            <p>
-                                <label>Mobile </label>
-                            </p>
-                            <p>
-                                <label>Fax</label>
-                            </p>
-                            <p></p>
-                        </div>
-                        <div class="half-block left">
-                            <p><span><%=website%></span></p>
-                            <p><span><%=phones.phone%></span></p>
-                            <p><span><%=phones.mobile%></span></p>
-                            <p><span><%=phones.fax%></span></p>
-                            <p></p>
-                        </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>

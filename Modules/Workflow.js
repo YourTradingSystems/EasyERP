@@ -23,15 +23,16 @@ var Workflow = function (logWriter, mongoose) {
         create: function (data, result) {
             try {
                 if (data) {
-                    workflow.find({ wId: data._id }, function (err, workflows) {
+                    workflow.find({ $and: [{ wId: data._id }, { name: data.name }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
                             result.send(400, { error: 'WorkFlow.js create workflow Incorrect Incoming Data' });
                             return;
                         } else {
+                            console.log(workflows);
                             if (workflows[0] && workflows[0].name == data.name) {
-                                workflow.update({ wId: workflows[0].wId }, { $push: { value: data.value } }, function (err, res) {
+                                workflow.update({ _id: workflows[0]._id }, { $push: { value: data.value } }, function (err, res) {
                                     console.log(res);
                                     result.send(200, { success: 'WorkFlow updated success' });
                                 });

@@ -32,11 +32,11 @@ define([
                 var idCompany = $(this.el).find('#companiesDd option:selected').val();
                 var company = common.toObject(idCompany, this.companiesCollection);
 
-                var dateBirthSt = $.trim($("#dateBirth").val());
-                var dateBirth = "";
-                if (dateBirthSt) {
-                    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
-                }
+                var dateBirth = $.trim($("#dateBirth").val());
+                //var dateBirth = "";
+                //if (dateBirthSt) {
+                //    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
+                //}
 
                 var departmentId = this.$("#department option:selected").val();
                 var department = common.toObject(departmentId, this.departmentsCollection);
@@ -103,6 +103,7 @@ define([
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 //common.contentHolderHeightFixer();
                 $('#dateBirth').datepicker({
+                    dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',

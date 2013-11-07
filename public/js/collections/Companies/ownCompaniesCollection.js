@@ -1,7 +1,8 @@
 ﻿define([
-    'models/CompanyModel'
+    'models/CompanyModel',
+    'common'
 ],
-    function (CompanyModel) {
+    function (CompanyModel, common) {
         var CompaniesCollection = Backbone.Collection.extend({
             model: CompanyModel,
             url: function () {
@@ -26,6 +27,12 @@
             parse: true,
 
             parse: function (response) {
+                if (response.data) {
+                    _.map(response.data, function (company) {
+                        company.salesPurchases.date = common.utcDateToLocaleDate(company.salesPurchases.date);
+                        return company;
+                    });
+                }
                 return response.data;
             },
 

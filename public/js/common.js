@@ -8,14 +8,9 @@
             return _tempObject;
         };
 
-        var utcDateToLocaleDate = function(utcDateString){
-            if(utcDateString){
-                if(utcDateString.indexOf("T") !== -1 && utcDateString.indexOf("Z") !== -1)
-                    utcDateString = utcDateString.replace('T',' ').replace('Z','').concat(' UTC');
-                //else utcDateString.concat(' UTC');
-                return dateFormat(new Date(utcDateString), "dd-mm-yyyy hh:mm");
-            }
-            return "";
+        var utcDateToLocaleDate = function (utcDateString) {
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d mmm, yyyy", false) : null;
+            return utcDateString;
 
         }   
 

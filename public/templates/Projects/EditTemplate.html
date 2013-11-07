@@ -1,15 +1,11 @@
-<div class="formHeader">
-    <ul class="breadcrumb">
-    </ul>
-</div>
-<div class="form-holder">
-    <form method="post" action="" id="createProjectForm" class="form" data-id="<%=model._id%>">
+<div class="form-holder" id="createFormDiv">
+    <form id="createProjectForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <div class="inner">
                 <p>
                     <label for="projectName">Project Name</label>
                     <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>"/>
-                </p> 
+                </p>
                 <p>
                     <label for="projectShortDesc">Project Short Description</label>
                     <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" />
@@ -27,16 +23,16 @@
                         <p>
                             <select id="managerDd">
                                 <option selected="selected" value="0">Select...</option>
-                                <% accountsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.projectmanager.id) ? 'selected' : ''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+                                <% accountsDdCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>" <%= (option._id == model.projectmanager.id) ? 'selected' : ''%>><%= option.name.first %> <%= option.name.last %></option>
                                 <% }); %>
                             </select>
                         </p>
                         <p>
                             <select id="customerDd">
                                 <option selected="selected" value="0">Select...</option>
-                                <% customersDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.customer.id) ? 'selected' : ''%> ><%= option.get('name') %> (<%= option.get('type') %>)</option>
+                                <% customersDdCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>" <%= (option._id == model.customer.id) ? 'selected' : ''%> ><%= option.name %> (<%= option.type %>)</option>
                                 <% }); %>
                             </select>
                         </p>
@@ -56,26 +52,24 @@
                         <p>
                             <select id="workflowDd">
                                 <option selected="selected" value="0">Select...</option>
-                                <% workflowsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"  <%= (option.get('name') == model.workflow.name) ? 'selected' : ''%> ><%= option.get('name') %> (<%= option.get('status') %>)</option>
+                                <% workflowsDdCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>"  <%= (option.name == model.workflow.name) ? 'selected' : ''%> ><%= option.name %> (<%= option.status %>)</option>
                                 <% }); %>
                             </select>
                         </p>
                         <p>
                             <select id="usereditDd" size="3" multiple>
                                 <option selected="selected" value="0">No one...</option>
-                                <% accountsDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('name').first%> <%= option.get('name').last %></option>
+                                <% accountsDdCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>"><%= option.name.first%> <%= option.name.last %></option>
                                 <% }); %>
                             </select>
                         </p>
                     </div>
                 </div>
                 <div class="clearfix"></div>
-           
-            
-           
             </div>
         </fieldset>
+
     </form>
 </div>

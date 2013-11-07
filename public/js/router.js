@@ -99,6 +99,8 @@ define([
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
+                    if(contentType === "Projects")
+                        topBarView.bind('editEvent', contentView.editItem, contentView);
                     if(contentType === "LeadsWorkflow")
                         topBarView.bind('createEvent', contentView.createItem, contentView);
 
