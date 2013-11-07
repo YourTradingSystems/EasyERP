@@ -709,23 +709,28 @@ h3 {
 	}
 
 dl.person-info {
-           clear: both;
+    clear: both;
 	
     dt {
-        width: 60px;
+        width: 35%;
         float: left;
         clear: both;
         line-height: 20px;
-}
+	}
 
     dd {
         line-height: 20px;
         float: left;
+		width:65%;
+		&.with-checkbox{
+			width:35px;
+		}
 	}
+
 }
+
 .company-info{
 	margin-left: 150px; 
-	width: 80%; 
 	display: block;
 }
 #details{
@@ -733,17 +738,23 @@ dl.person-info {
 		padding-left:156px;
 	}
 }
+.sales-purchases.inner{
+	margin-left:150px !important;
+}
+#details.person-details{
+	margin-left:156px;
+}
 .sale-purchase{
 	clear:both;
-	padding-top:10px;
 	>span{
 		font-size:15px;
-		padding-left:156px !important;
+		padding-left:0px !important;
 	}
 	>dl{
 		margin-top:5px;
-		padding-left:156px;
 	}
+
+}
     .person-checkbox {
 		margin-left:3px;
         position: relative;
@@ -754,13 +765,19 @@ dl.person-info {
         background-position: 0 1px;
 		font-size: 14px;
         line-height: 19px;
-        color: black;
+        color: black; 
 
-        &:hover {
+		&:hover {
             color: black;
             background-position: 0 -20px;
 		}
-
+		&.disabled{
+			opacity:0.3;
+			&:hover {
+				color: black;
+				background-position: 0 1px;
+			}
+		}
         .check {
             position: absolute;
             top: 5px;
@@ -769,7 +786,7 @@ dl.person-info {
             float: left;
             width: 9px;
             height: 8px;
-			padding:0;
+			padding:0 !important;
             background-image: url("@{imagesfolder}/login-sprite.png");
             background-repeat: no-repeat;
             background-position: 50% -40px;
@@ -783,7 +800,6 @@ dl.person-info {
 		}
 	}
 
-}
 .birthday-item{
 	clear:both;
 	width:95%;
@@ -793,7 +809,7 @@ dl.person-info {
 		float:left;
 	}
 	.date{
-		width:130px;
+		width:10%;
 		height:100px;
 		text-align:right;
 		h3{
@@ -813,15 +829,16 @@ dl.person-info {
 		
 	}
 	.info{
-		margin-top:-100px;
-		float:right;
+		width:90%;
 		color: #FFF;
 		background:@birthdayColor;
-		margin-left:130px;
-		padding-right:10px;
-		padding-bottom:10px;
-		padding-left:10px;
 		position: relative;
+		.top-wrapper{
+			margin-right:10px;
+			margin-bottom:10px;
+			margin-left:10px;
+			
+		}
 		&:after{
 			right: 100%;
 			border: solid rgba(0, 0, 0, 0);
@@ -1456,27 +1473,35 @@ input, textarea, select {
 #saveDiscardHolder {
     .topbarBtnHolder;
 }
+#template-switcher{
+	.changeContentIndex{
+		margin-right:145px;
+		border:0;
+		li{
+			border:0px;
+		}
+	}
+	> span {
+		display: none;
+		position: absolute;
+		top: 40px;
 
-#template-switcher > span {
-    display: none;
-    position: absolute;
-    top: 40px;
+		&#twoButtons {
+			right: 146px;
+		}
 
-    &#twoButtons {
-        right: 146px;
-    }
+		&#threeButtons {
+			right: 170px;
+		}
 
-    &#threeButtons {
-        right: 170px;
-    }
+		&#fourButtons {
+			right: 194px;
+		}
 
-    &#fourButtons {
-        right: 194px;
-    }
-
-    &#fiveButtons {
-        right: 218px;
-    }
+		&#fiveButtons {
+			right: 218px;
+		}
+	}
 }
 
 .input-title {
