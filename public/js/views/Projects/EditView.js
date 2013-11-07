@@ -1,28 +1,31 @@
 define([
     "text!templates/Projects/EditTemplate.html",
     "collections/Customers/AccountsDdCollection",
-    "collections/Projects/ProjectsCollection",
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
     "custom",
     "common"
 ],
-    function (EditTemplate, AccountsDdCollection, ProjectsCollection, CustomersCollection, WorkflowsCollection, Custom, common) {
+    function (EditTemplate, AccountsDdCollection, CustomersCollection, WorkflowsCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
-            el: "#content-holder",
             contentType: "Projects",
-
+            template: _.template(EditTemplate),
             initialize: function (options) {
+                _.bindAll(this, "render", "saveItem");
                 this.accountsDdCollection = new AccountsDdCollection();
                 this.customersDdCollection = new CustomersCollection();
-                this.workflowsDdCollection = new WorkflowsCollection({ id: 'project' });
+                this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});
                 this.projectsCollection = options.collection;
+                this.currentModel = this.projectsCollection.models[Custom.getCurrentII()-1];
+                this.renderView = _.after(3, this.render);
+                this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
+                this.customersDdCollection.bind('reset', _.bind(this.renderView, this));
+                this.workflowsDdCollection.bind('reset', _.bind(this.renderView, this));
+            },
 
-                this.projectsCollection.bind('reset', _.bind(this.render, this));
-                this.accountsDdCollection.bind('reset', _.bind(this.render, this));
-                this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsDdCollection.bind('reset', _.bind(this.render, this));
+            renderView:function(){
+                console.log('RENDERVIEW');
             },
 
             events: {
@@ -55,42 +58,38 @@ define([
 
             },
 
-            saveItem: function () {
+            saveItem: function (event) {
                 var self = this;
                 var itemIndex = Custom.getCurrentII() - 1;
 
                 if (itemIndex != -1) {
-
-                    var currentModel = this.collection.models[itemIndex];
-
                     var mid = 39;
-
                     var projectName = $("#projectName").val();
                     var projectShortDesc = $("#projectShortDesc").val();
                     var idCustomer = $(this.el).find("#customerDd option:selected").val();
-                    var _customer = common.toObject(idCustomer, this.customersDdCollection);
+                    var _customer = common.toObject(idCustomer, self.customersDdCollection);
                     var customer = {};
                     if (_customer) {
                         customer.id = _customer._id;
                         customer.name = _customer.name;
                     } else {
-                        customer = currentModel.defaults.customer;
+                        customer = self.currentModel.defaults.customer;
                     }
                     var idManager = $("#managerDd option:selected").val();
-                    var _projectmanager = common.toObject(idManager, this.accountsDdCollection);
+                    var _projectmanager = common.toObject(idManager, self.accountsDdCollection);
                     var projectmanager = {};
                     if (_projectmanager) {
                         projectmanager.id = _projectmanager._id;
                         projectmanager.imageSrc = _projectmanager.imageSrc;
                         projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
                     } else {
-                        projectmanager = currentModel.defaults.projectmanager;
+                        projectmanager = this.currentModel.defaults.projectmanager;
                     }
 
                     var idWorkflow = $("#workflowDd option:selected").val();
                     var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
                     if (!workflow) {
-                        workflow = currentModel.defaults.workflow;
+                        workflow = this.currentModel.defaults.workflow;
                     }
 
                     var $userNodes = $("#usereditDd option:selected"), users = [];
@@ -101,8 +100,7 @@ define([
                         });
                     });
 
-
-                    currentModel.set({
+                    this.currentModel.save({
                         projectName: projectName,
                         projectShortDesc: projectShortDesc,
                         customer: customer,
@@ -111,14 +109,12 @@ define([
                         teams: {
                             users: users
                         }
-                    });
-
-                    currentModel.save({}, {
+                    }, {
                         headers: {
                             mid: mid
                         },
                         wait: true,
-                        success: function (model) {
+                        success: function () {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                         },
                         error: function () {
@@ -130,27 +126,43 @@ define([
             },
 
             render: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                } else {
-                    var currentModel = this.projectsCollection.models[itemIndex];
-                    currentModel.on('change', this.render, this);
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), accountsDdCollection: this.accountsDdCollection, customersDdCollection: this.customersDdCollection, workflowsDdCollection: this.workflowsDdCollection }));
-                    var workflows = this.workflowsDdCollection.models;
-
-                    _.each(workflows, function (workflow, index) {
-                        $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                    });
-
-                    _.each(workflows, function (workflow, i) {
-                        var breadcrumb = this.$(".breadcrumb li").eq(i);
-                        if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                            breadcrumb.find("a").addClass("active");
+                console.log("REnder Projects Edit View");
+                var formString = this.template({
+                    model: this.currentModel.toJSON(),
+                    accountsDdCollection: this.accountsDdCollection.toJSON(),
+                    customersDdCollection: this.customersDdCollection.toJSON(),
+                    workflowsDdCollection: this.workflowsDdCollection.toJSON() });
+                var self = this;
+                this.dialog = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:true,
+                    title: "Edit Project",
+                    buttons:{
+                        "Save": {
+                            text:"Save",
+                            class: "btn",
+                            click: self.saveItem
                         }
-                    }, this);
-                }
+
+                    }
+                });
+                //this.el = $('.form-holder');
+                //this.delegateEvents(this.events);
+
+
+                /*var workflows = this.workflowsDdCollection.models;
+
+                _.each(workflows, function (workflow, index) {
+                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
+                });
+
+                _.each(workflows, function (workflow, i) {
+                    var breadcrumb = this.$(".breadcrumb li").eq(i);
+                    if (this.currentModel.get("workflow").name === breadcrumb.data("name")) {
+                        breadcrumb.find("a").addClass("active");
+                    }
+                }, this);*/
+
                 return this;
             }
 

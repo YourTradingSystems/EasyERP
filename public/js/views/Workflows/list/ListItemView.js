@@ -3,7 +3,7 @@
 ],
     function (ListItemTemplate) {
         var ListItemView = Backbone.View.extend({
-
+            
             initialize: function () {
                 //this.render();
             },

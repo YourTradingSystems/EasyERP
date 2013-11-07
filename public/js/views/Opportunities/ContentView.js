@@ -324,6 +324,7 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         var column = this.$el.closest(".column");
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                         column.find(".revenue span").html(parseInt(column.find(".revenue span").html()) - revenue);
+                        this.collection.trigger('reset');
                         break;
                     }
                 case "list":
@@ -336,6 +337,8 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                                 }
                             });
                         });
+
+                        this.collection.trigger('reset');
                         break;
                     }
                 case "form":

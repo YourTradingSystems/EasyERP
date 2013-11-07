@@ -14,6 +14,15 @@ function (ListTemplate, ListItemView, common, Custom) {
             this.render();
         },
 
+        sortByDate: function (a, b) {
+            var now = new Date();
+            var firstDate = new Date(common.ISODateToDate(a.get('dateBirth')));
+            var secondDate = new Date(common.ISODateToDate(b.get('dateBirth')));
+            firstDate.setFullYear(now.getFullYear());
+            secondDate.setFullYear(now.getFullYear());
+            return firstDate.getTime() - secondDate.getTime();
+        },
+
         render: function () {
             Custom.setCurrentCL(this.employeesCollection.models.length);
             console.log('Render Birthday View');
@@ -29,7 +38,7 @@ function (ListTemplate, ListItemView, common, Custom) {
             var list = this.$el.find('#birthdaysList');
             lastDayOfMonth.setDate(today.getDate() + 60);
             lastDayOfWeek.setDate(today.getDate() + daysToAdd);
-           
+
             _.each(this.employeesCollection.models, function (model) {
                 if (model.get('dateBirth')) {
                     birthday = new Date(common.ISODateToDate(model.get('dateBirth')));
@@ -48,14 +57,11 @@ function (ListTemplate, ListItemView, common, Custom) {
                     }
                 }
             }, this);
+            weekModels.sort(this.sortByDate);
             _.each(weekModels, function (model) {
                 list.find("#weekList").append(new ListItemView({ model: model }).render().el);
             }, this);
-            monthModels.sort(function(a, b) {
-                var firstDate = new Date(common.ISODateToDate(a.get('dateBirth')));
-                var secondDate = new Date(common.ISODateToDate(b.get('dateBirth')));
-                return secondDate.getTime()-firstDate.getTime();
-            });
+            monthModels.sort(this.sortByDate);
             _.each(monthModels, function (model) {
                 list.find("#monthList").append(new ListItemView({ model: model }).render().el);
             }, this);
