@@ -60,6 +60,8 @@ var Persons = function (logWriter, mongoose, findCompany) {
             FB: { type: String, default: '' },
             LI: { type: String, default: '' }
         },
+        notes: { type: String, default: "" },
+        attachments: { type: Array, default: [] },
         history: { type: Array, default: [] }
     }, { collection: 'Persons' });
 
@@ -219,6 +221,12 @@ var Persons = function (logWriter, mongoose, findCompany) {
                         }
                         if (data.history) {
                             _person.history = data.history;
+                        }
+                        if (data.notes) {
+                            _person.notes = data.notes;
+                        }
+                        if (data.attachments) {
+                            _person.attachments = data.attachments;
                         }
                         _person.save(function (err, result) {
                             if (err) {
