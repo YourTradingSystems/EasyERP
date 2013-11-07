@@ -100,7 +100,7 @@ define([
                         });
                     });
 
-                    this.currentModel.save({
+                    self.currentModel.save({
                         projectName: projectName,
                         projectShortDesc: projectShortDesc,
                         customer: customer,
@@ -115,6 +115,7 @@ define([
                         },
                         wait: true,
                         success: function () {
+                            self.dialog.dialog('close');
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                         },
                         error: function () {
@@ -150,7 +151,7 @@ define([
                 //this.delegateEvents(this.events);
 
 
-                /*var workflows = this.workflowsDdCollection.models;
+                var workflows = this.workflowsDdCollection.models;
 
                 _.each(workflows, function (workflow, index) {
                     $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
@@ -161,7 +162,7 @@ define([
                     if (this.currentModel.get("workflow").name === breadcrumb.data("name")) {
                         breadcrumb.find("a").addClass("active");
                     }
-                }, this);*/
+                }, this);
 
                 return this;
             }

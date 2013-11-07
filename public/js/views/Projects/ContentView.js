@@ -8,11 +8,11 @@ define([
     "GanttChart",
     'common'
 ],
-    function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, EditView,Custom, GanttChart, common) {
+    function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, EditView, Custom, GanttChart, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Project', fetch:true });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Project'});
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
