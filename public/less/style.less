@@ -27,17 +27,19 @@
     font-family: 'Icons3';
     src: url("../font/zurmogamificationsymblyregular-regular-webfont.woff") format('woff');
 }
+
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Open Sans Light'), local('OpenSans-Light'), url(../font/Open-Sans-Light.woff) format('woff');
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Open Sans Light'), local('OpenSans-Light'), url(../font/Open-Sans-Light.woff) format('woff');
 }
+
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url(../font/Open-Sans.woff) format('woff');
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'), local('OpenSans'), url(../font/Open-Sans.woff) format('woff');
 }
 /*------------------------Constants-----------------------------*/
 @imagesfolder: '../images';
@@ -56,7 +58,7 @@
 @thin-border: 1px solid;
 @taskBorderColor: #4d5a75;
 @tabColor: #BDC3C7;
-@birthdayColor:#555;
+@birthdayColor: #555;
 
 /*--------------------------Styles------------------------------*/
 @-moz-document url-prefix() {
@@ -252,40 +254,43 @@ article {
                 cursor: pointer;
 
                 a {
-                    color: @blue;
+                    color: #666;
                     text-decoration: none;
                     display: block;
                     .fullsize;
                     font-size: 14px;
                     line-height: 24px;
+                    border-left: 1px solud @lightgrey;
+                    border-right: 1px solud @lightgrey;
                 }
 
                 &:hover {
-                    background-color: @blue;
+                    background-color: white;
 
                     a {
                         font-weight: bold;
-                        color: #fff;
+                        color: @blue;
                     }
                 }
 
                 &.selected {
                     /*border-bottom: @bold-border #a0b6e5;*/
-                    background-color: @blue;
+                    background-color: white;
+
 
                     a {
                         font-weight: bold;
-                        color: #fff;
+                        color: @blue;
+                    }
                 }
             }
         }
     }
 }
-}
 
 #leftmenu-holder {
     display: block;
-    position: relative;    
+    position: relative;
     width: 100%;
     height: auto;
     height: 26px;
@@ -321,7 +326,7 @@ article {
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
                 -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
-                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);               
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
 
                 a {
                     background: @dark-blue;
@@ -367,7 +372,7 @@ article {
     position: relative;
     display: block;
     width: auto;
-    margin-top: 0px;   
+    margin-top: 0px;
     height: 30px;
     border-bottom: 1px solid #cacaca;
     background: #fff;
@@ -402,17 +407,17 @@ h3 {
     background: #fff;
     border: @thin-border #ccc;
     padding: 20px 0 13px;
-	font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 
     h2 {
-		font-weight: 300 !important;
-		font-size: 24px;
+        font-weight: 300 !important;
+        font-size: 24px;
         margin: 25px 0 35px 30px;
     }
 
-	.icon-pass,
+    .icon-pass,
     .icon-login {
-		border: @thin-border #e5e5e5;
+        border: @thin-border #e5e5e5;
         border-left: 2px solid #35aa74;
         margin: 0 30px;
 
@@ -424,21 +429,21 @@ h3 {
             height: 19px;
             background-image: url("@{imagesfolder}/login-sprite.png");
             background-repeat: no-repeat;
-    }
+        }
 
         &.active {
-			border-color: #999;
+            border-color: #999;
             border-left: 2px solid #35aa74;
-		}
-	}
+        }
+    }
 
     .icon-login {
         .icon {
             margin-top: 10px;
             background-position: 50% -48px;
             height: 14px;
-		}
-	}
+        }
+    }
 
     .icon-pass {
         margin-bottom: 30px;
@@ -447,58 +452,58 @@ h3 {
             margin-top: 10px;
             background-position: 2px -62px;
             height: 13px;
-		}
-	}
+        }
+    }
 
     #urem {
         display: none;
-	}
+    }
 
     p {
         margin: 10px 0px;
     }
 
     h3 {
-		font-weight: 300 !important;
-		font-size: 18px;
+        font-weight: 300 !important;
+        font-size: 18px;
         color: #555;
         margin-left: 30px;
         padding: 20px 0 0;
-	}
+    }
 
     span.text {
         line-height: 40px;
         margin: 0 30px;
-			font-size: 13px;
+        font-size: 13px;
 
         a {
             color: #0D638F;
             font-size: 13px;
 
             &:hover {
-				color: #2A6496;
-				text-decoration: underline;
-			}
-		}
-	}
+                color: #2A6496;
+                text-decoration: underline;
+            }
+        }
+    }
 
     .dotted-line {
         margin: 0 30px 5px 30px;
         border-top: 1px dotted #eee;
-	}
+    }
 
     .login-button {
-		background-color: #35aa47;
+        background-color: #35aa47;
         padding: 11px 14px 11px 14px;
-		font-size: 14px;
+        font-size: 14px;
         color: white;
         float: right;
         margin: -9px 30px 0 0;
-		
+
         &:hover {
             background-color: #1d943b;
             color: white;
-		}
+        }
 
         i {
             display: inline-block;
@@ -509,7 +514,7 @@ h3 {
             background-image: url("@{imagesfolder}/login-sprite.png");
             background-repeat: no-repeat;
             background-position: 0px -81px;
-	}
+        }
     }
 
     .remember-me {
@@ -520,14 +525,14 @@ h3 {
         background-image: url("@{imagesfolder}/login-sprite.png");
         background-repeat: no-repeat;
         background-position: 0 1px;
-		font-size: 14px;
+        font-size: 14px;
         line-height: 19px;
         color: black;
 
         &:hover {
             color: black;
             background-position: 0 -20px;
-		}
+        }
 
         .check {
             position: absolute;
@@ -541,30 +546,30 @@ h3 {
             background-repeat: no-repeat;
             background-position: 50% -40px;
             z-index: 1000;
-		}
+        }
 
         &.active {
             .check {
                 display: block;
-			}
-		}
-	}
+            }
+        }
+    }
 
     .line {
         height: 17px;
         border-bottom: @thin-border #eee;
         clear: both;
-	}
+    }
 
     input {
-		font-family: 'Open Sans', sans-serif;
+        font-family: 'Open Sans', sans-serif;
         font-weight: 400;
-		color: #333;
+        color: #333;
         padding-left: 0;
         border: 0;
         width: 260px;
         height: 30px;
-		font-size: 14px;
+        font-size: 14px;
     }
 
         input[type="submit"] {
@@ -594,7 +599,7 @@ h3 {
 
 .createFormDatepicker {
     border-radius: 0 !important;
-	font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
     border: 1px solid #DDD !important;
 
@@ -602,7 +607,7 @@ h3 {
         border: 0;
         background: none;
         font-weight: normal;
-	}
+    }
 
     .arrow {
         position: absolute;
@@ -612,33 +617,33 @@ h3 {
         left: 5px;
         background-image: url("@{imagesfolder}/datepicker-sprite.png") !important;
         background-position: 0px 0px;
-	}
+    }
 
-	.ui-datepicker-prev,
+    .ui-datepicker-prev,
     .ui-datepicker-next {
         border-radius: 0px;
         border: 0;
 
         &:hover {
             border: 0px;
-		}
+        }
 
         .ui-icon-circle-triangle-w {
             background-image: url("@{imagesfolder}/datepicker-sprite.png") !important;
             background-position: 0px -7px;
             width: 6px;
             height: 7px;
-			margin-top: -4px;
-			margin-left: -3px;
-		}
+            margin-top: -4px;
+            margin-left: -3px;
+        }
 
         .ui-icon-circle-triangle-e {
             background-image: url("@{imagesfolder}/datepicker-sprite.png") !important;
             background-position: -6px -7px;
             width: 6px;
             height: 7px;
-			margin-top: -4px;
-			margin-left: -3px;
+            margin-top: -4px;
+            margin-left: -3px;
         }
 
         &.ui-datepicker-prev-hover {
@@ -646,35 +651,35 @@ h3 {
             left: 2px;
             background: none !important;
             background-color: #EEE !important;
-		}
+        }
 
         &.ui-datepicker-next-hover {
             top: 2px;
             right: 2px;
             background: none !important;
             background-color: #EEE !important;
-		}
-	}
+        }
+    }
 
-	.ui-datepicker-calendar td {
+    .ui-datepicker-calendar td {
         width: 15px;
         height: 20px;
 
         &:hover {
             background-color: #EEE !important;
-		}
-		
+        }
+
         &.ui-datepicker-today {
             &:hover {
                 background-color: #2678FC !important;
-		}
+            }
         }
 
-		a.ui-state-default {
+        a.ui-state-default {
             margin: 0 auto;
             width: 20px !important;
-	}
-}
+        }
+    }
 
     .ui-state-default {
         border: 0 !important;
@@ -682,166 +687,178 @@ h3 {
         text-align: center;
 
         &:hover {
-			background: #EEE !important;
-		}
-	}
+            background: #EEE !important;
+        }
+    }
 
-	.ui-datepicker-calendar th {
+    .ui-datepicker-calendar th {
         font-weight: normal;
-	}
+    }
 
     .ui-datepicker-title:hover {
-		background-color: #EEE;
+        background-color: #EEE;
         cursor: pointer;
-	}
+    }
 
     .ui-datepicker-today {
-		background-color: #4B8DF8 !important;
+        background-color: #4B8DF8 !important;
 
         a {
-			color: #FFF !important;
+            color: #FFF !important;
 
             &:hover {
                 background-color: #2678FC !important;
             }
-			}
-		}
-	}
+        }
+    }
+}
 
 dl.person-info {
-   
+
 
     dt {
         width: 60px;
         float: left;
         clear: both;
         line-height: 20px;
-}
+    }
 
     dd {
         line-height: 20px;
         float: left;
-	}
-	dd{
-	line-height:30px;
+    }
 
-		float:left;
-	}
-	
+    dd {
+        line-height: 30px;
+        float: left;
+    }
 }
-.birthday-item{
-	clear:both;
-	width:95%;
-	margin:20px auto 0;
-	.date,
-	.info{
-		float:left;
-	}
-	.date{
-		width:130px;
-		height:100px;
-		text-align:right;
-		h3{
-			padding-right:30px;
-			font-size: 12px;
-			color: #AAA;
-			font-weight:300;
-		}
-		h2{
-			font-family: 'Open Sans', sans-serif;
-			padding-right:30px;
-			font-weight: 300;
-			font-size: 30px;
-			line-height: 38px;
-			color:@birthdayColor;
-		}
-		
-	}
-	.info{
-		margin-top:-100px;
-		float:right;
-		color: #FFF;
-		background:@birthdayColor;
-		margin-left:130px;
-		padding-right:10px;
-		padding-bottom:10px;
-		padding-left:10px;
-		position: relative;
-		&:after{
-			right: 100%;
-			border: solid rgba(0, 0, 0, 0);
-			content: " ";
-			height: 0;
-			width: 0;
-			position: absolute;
-			pointer-events: none;
-			border-right-color: @birthdayColor;
-			border-width: 10px;
-			top: 19px;
-		}
-		.top{
-			height:40px;
-			margin:0 0 10px 0;
-			border-bottom:@thin-border rgba(255, 255, 255, 0.3);
-			a{
-				font-family: 'Open Sans', sans-serif;
-				font-weight: 300 !important;
-				line-height:40px;
-				font-size:24px;
-				color: #FFF;
-				cursor:pointer;
-				&:hover{
-					opacity:0.5;
-				}
-			}
-		}
 
-		.ava{
-			float:left;
-			margin:5px 10px 0 0;
-		}
-		.text{
-			font-family: 'Open Sans', sans-serif;
-			font-size: 14px;
-			font-weight: 300;
-	}
-		.readMore{
-			display: inline-block;
-			margin-top: 10px;
-			color: rgb(255, 255, 255);
-			font-size: 14px;
-			padding: 0px;
-			text-align: left;
-			text-decoration: none;
-			float:right;
-			i{
-				background-image: url("@{imagesfolder}/login-sprite.png");
-				background-position: 0px -81px;
-				display: inline-block;
-				width: 14px;
-				height: 14px;
-				margin-top: 0px;
-				line-height: 14px;
-				vertical-align: top;
-				background-repeat: no-repeat;
-			}
-			&:hover{
-				opacity:0.5;
-			}
-		}
-	}
-	
+.birthday-item {
+    clear: both;
+    width: 95%;
+    margin: 20px auto 0;
+
+    .date,
+    .info {
+        float: left;
+    }
+
+    .date {
+        width: 130px;
+        height: 100px;
+        text-align: right;
+
+        h3 {
+            padding-right: 30px;
+            font-size: 12px;
+            color: #AAA;
+            font-weight: 300;
+        }
+
+        h2 {
+            font-family: 'Open Sans', sans-serif;
+            padding-right: 30px;
+            font-weight: 300;
+            font-size: 30px;
+            line-height: 38px;
+            color: @birthdayColor;
+        }
+    }
+
+    .info {
+        margin-top: -100px;
+        float: right;
+        color: #FFF;
+        background: @birthdayColor;
+        margin-left: 130px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        position: relative;
+
+        &:after {
+            right: 100%;
+            border: solid rgba(0, 0, 0, 0);
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-right-color: @birthdayColor;
+            border-width: 10px;
+            top: 19px;
+        }
+
+        .top {
+            height: 40px;
+            margin: 0 0 10px 0;
+            border-bottom: @thin-border rgba(255, 255, 255, 0.3);
+
+            a {
+                font-family: 'Open Sans', sans-serif;
+                font-weight: 300 !important;
+                line-height: 40px;
+                font-size: 24px;
+                color: #FFF;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        .ava {
+            float: left;
+            margin: 5px 10px 0 0;
+        }
+
+        .text {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .readMore {
+            display: inline-block;
+            margin-top: 10px;
+            color: rgb(255, 255, 255);
+            font-size: 14px;
+            padding: 0px;
+            text-align: left;
+            text-decoration: none;
+            float: right;
+
+            i {
+                background-image: url("@{imagesfolder}/login-sprite.png");
+                background-position: 0px -81px;
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                margin-top: 0px;
+                line-height: 14px;
+                vertical-align: top;
+                background-repeat: no-repeat;
+            }
+
+            &:hover {
+                opacity: 0.5;
+            }
+        }
+    }
 }
+
 #weekList,
-#monthList{
-	>h2{
-		text-align:center;
-		font-size: 30px;
-		line-height:30px;
-		padding-top:15px;
-	
-	}
+#monthList {
+    >h2 {
+        text-align: center;
+        font-size: 30px;
+        line-height: 30px;
+        padding-top: 15px;
+    }
 }
+
 .loginPanelBtnHoover {
     background: rgba(0, 0, 0, 0.2);
     text-shadow: black 0px 0px 3px;
@@ -1141,10 +1158,10 @@ dl.person-info {
 
         h3 {
             color: #333;
-            font-size:24px;
-            line-height:24px;
-            min-height:24px;
-            font:@lucida-font;
+            font-size: 24px;
+            line-height: 24px;
+            min-height: 24px;
+            font: @lucida-font;
         }
 
         p {
@@ -1184,11 +1201,11 @@ dl.person-info {
         }
 
         .linkedin {
-             background: url("@{imagesfolder}/linkedin.png");
+            background: url("@{imagesfolder}/linkedin.png");
         }
 
         .skype {
-             background: url("@{imagesfolder}/skype.png");
+            background: url("@{imagesfolder}/skype.png");
         }
     }
 
@@ -1901,9 +1918,6 @@ button {
 
 
 .kanban {
-    border-spacing: 10px 10px;
-
-
     .opportunity-header {
         h3 {
             text-align: right;
@@ -1914,13 +1928,14 @@ button {
         border-left: 10px solid #fff;
         vertical-align: text-top;
         min-height: 100%;
+        padding: 0px 0px 10px 0px;
         /*float: left;
         display: block;*/
         width: 350px;
         height: auto;
         background: url("@{imagesfolder}/form_sheetbg.png");
 
-        .task {
+        .task, .opportunity {
             word-wrap: break-word;
             margin: 5px auto;
             width: 95%;
@@ -1933,6 +1948,10 @@ button {
             transition: border-color 1s ease;
             .border-radius(0px);
 
+            .inner {
+                padding:5px;
+            }
+
             .task-content {
                 .info {
                     padding: 5px;
@@ -1941,7 +1960,7 @@ button {
         }
 
         h2 {
-            width: 70px;
+            width: auto;
             padding: 4px;
             text-align: left;
             color: #333333;
@@ -1949,21 +1968,25 @@ button {
             font-weight: bold;
             text-shadow: 0 1px 0 white;
             white-space: nowrap;
+
+            span {
+                font-weight: normal;
+                vertical-align: top;
+                font-size: 13px;
+            }
         }
 
         .columnNameDiv {
             background: #fff;
             height: 55px;
 
-            .remaining {
-                border-bottom: 3px solid #e88f04;
+            .remaining, .revenue {
+                border-bottom: 2px solid #e88f04;
                 padding-bottom: 5px;
                 margin-bottom: 5px;
             }
 
-            &:hover .counter, &.selected .counter {
-                display: none;
-            }
+
 
             &:hover .foldUnfold img, &.selected .foldUnfold img {
                 margin: -20px 6px 3px 0;
@@ -1975,14 +1998,8 @@ button {
         }
 
         .counter {
-            float: right;
-            border: 1px solid #afafb6;
-            font-size: 11px;
-            padding: 3px 4px;
-            margin: -20px 6px 3px 0;
-            border-radius: 3px;
-            background: #f0f0fa;
-            color: #4c4c4c;
+            font-size: 13px;
+            vertical-align: top;
         }
 
         .remaining, .revenue {

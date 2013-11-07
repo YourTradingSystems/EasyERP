@@ -10,7 +10,6 @@ define([
 
             initialize: function () {
                 console.log("Opportunities Collection Init");
-
                 var mid = 39;
 
                 this.fetch({
@@ -35,7 +34,6 @@ define([
             },
 
             fetchError: function (error) {
-
             }
 
         });

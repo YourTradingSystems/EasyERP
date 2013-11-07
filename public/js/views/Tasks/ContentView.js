@@ -93,7 +93,8 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                                     kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
                                     column.append(kanbanItemView.render().el);
                                     counter++;
-                                    remaining += model.get("estimated") - model.get("logged");
+                                    var exptRev = model.get("expectedRevenue");
+                                    remaining += exptRev.value;
                                 }
                             }, this);
                             var content = "<p class='counter'>" + counter + "</p>" +
