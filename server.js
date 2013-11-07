@@ -330,8 +330,8 @@ app.post('/Workflows', function (req, res) {
     data = {};
     //data.mid = req.headers.mid;
     data.value = req.body;
-    data._id = req.headers.id;
-    //data._id = req.body._id;
+    //data._id = req.headers.id;
+    data._id = req.body.wId;
     data.name = req.body.name;
     //data.value = req.body.value;
     console.log(data);
