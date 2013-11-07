@@ -9,13 +9,14 @@ define([
             className: 'menu',
             el: '#leftmenu-holder nav',
             currentSection: null,
+
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
             },
             mouseOver: function (section) {
                 this.leftMenu.currentSection = section;
-                this.leftMenu.render();
+                this.leftMenu.render(true);
             },
 
             initialize: function (options) {
@@ -27,7 +28,7 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
             },
 
-            render: function () {
+            render: function (onMouseOver) {
                 console.log("Render LeftMenuView");
                 var $el = $(this.el);
                 $el.html('');
@@ -43,7 +44,7 @@ define([
                     }
                 }
                 if (currentModule == null) currentModule = root[0];
-                var elem = $el.append(this.renderMenu(this.collection.children(currentModule)));
+                var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
                 return this;
             },
 
@@ -60,7 +61,7 @@ define([
 
             },
 
-            renderMenu: function (list) {
+            renderMenu: function (list, onMouseOver) {
                 if (_.size(list) === 0) {
                     return null;
                 }
@@ -73,13 +74,16 @@ define([
                     var kids = this.collection.children(model);
                     $dom.find(':last').append(this.renderMenu(kids));
                 }, this);
-                var clickEl = $($dom).find('a')[0];
-                $($dom.find('a')[0]).click(function () {
-                    $(clickEl).closest('li').addClass('hover');
+                var clickEl = $dom.find('a')[0];
 
+                $(clickEl).click({ mouseOver: onMouseOver }, function (option) {
+                    if (!option.data.mouseOver) {
+                        $(clickEl).closest('li').addClass('hover');
+                        clickEl.click();
+                    }
                 });
                 $(clickEl).click();
-                //$($dom.find('a')[0]).trigger('click');
+                //clickEl.click();
                 return $dom;
             },
 

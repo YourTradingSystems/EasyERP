@@ -23,11 +23,13 @@ define([
                 "mouseover": "mouseOver"
             },
            
-            clickItem: function(event){
+            clickItem: function (event) {
+                //this.unbind('mouseOver');
                 event.preventDefault();
                 this.selectedModule = $(event.target).text();
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
+                //this.bind('mouseOver', );
             },
 
             mouseOver: function (event) {
