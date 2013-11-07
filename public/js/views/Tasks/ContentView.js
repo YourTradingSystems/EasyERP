@@ -8,22 +8,20 @@ define([
     'views/Tasks/kanban/KanbanItemView',
     'custom',
     'common',
-    "GanttChart"
+    "GanttChart",
+    'views/Tasks/EditView'
 ],
 
-function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart) {
+function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart, EditView) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
-            var that = this;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.projectsCollection = new ProjectsCollection();
             this.projectsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            //this.render();
-
         },
 
         events: {
@@ -34,6 +32,11 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
             "click #tabList a": "switchTab",
             "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+
+        editItem: function(){
+            //create editView in dialog here
+            new EditView({collection:this.collection});
         },
 
         switchTab: function (e) {
@@ -165,7 +168,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                             //currentModel.on('change', this.render, this);
                             //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
                             this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
-
+                            /*
                             _.each(workflows, function (workflow, index) {
                                 if (index < workflows.length - 2) {
                                     $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
@@ -178,7 +181,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                                 if (currentModel.get("workflow").name === breadcrumb.data("name")) {
                                     breadcrumb.find("a").addClass("active");
                                 }
-                            }, this);
+                            }, this);*/
                         }
 
                         break;

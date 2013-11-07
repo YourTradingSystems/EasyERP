@@ -86,8 +86,10 @@
         $("#top-bar-nextBtn").hide();
         $("#top-bar-discardBtn").hide();
         $('#top-bar-saveBtn').hide();
-        if(!actionType || actionType === "Content")
+        if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
+            $('#top-bar-editBtn').show();
+        }
         else if(actionType === "View"){
             $('#top-bar-createBtn').show();
             $('#top-bar-editBtn').show();

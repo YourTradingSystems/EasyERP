@@ -1,20 +1,9 @@
-﻿<div class="formHeader">
-    <button class="red" id="Done">
-        <span>Done</span>
-    </button>
-    <button class="red" id="Cancel">
-        <span>Cancel Task</span>
-    </button>
-    <ul class="breadcrumb">
-    </ul>
-</div>
-<div class="form-holder">
+﻿<div class="form-holder">
     <form method="post" action="" id="createTaskForm" class="form" data-id="<%=model._id%>">
         <div class="inner">
-        <p>
-            	<input type="text" name="summary" class="input-title blueback" id="summary" value="<%=model.summary%>" required />
-           	</p>
-        <div>
+            <p>
+                <input type="text" name="summary" class="input-title blueback" id="summary" value="<%=model.summary%>" required />
+            </p>
             <div class="half-block left">
                 <div class="half-block left">
                     <p><label for="projectDd">Project </label></p>
@@ -24,16 +13,16 @@
                     <p>
                         <select id="projectDd">
                             <option value="0">Select...</option>
-                            <% projectsDdCollection.each(function(option){ %>
-                            <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.project.id) ? 'selected="selected"' : ''%>><%= option.get('projectName') %></option> 
+                            <% projectsDdCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>" <%= (option._id == model.project.id) ? 'selected="selected"' : ''%>><%= option.projectName %></option>
                             <% }); %>
                         </select>
                     </p>
                     <p>
                         <select id="assignedTo">
                             <option value="<%=model.assignedTo.id%>">Select...</option>
-                            <% accountsDdCollection.each(function(option){ %>
-                            <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.assignedTo.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
+                            <% accountsDdCollection.forEach(function(option){ %>
+                                <option value="<%= option._id %>" <%= (option._id == model.assignedTo.id) ? 'selected="selected"' : ''%>> <%= option.name.first %> <%= option.name.last %></option>
                             <% }); %>
                         </select>
                     </p>
@@ -51,99 +40,101 @@
             </div>
             <div class="clearfix"></div>
         </div>
-            </div>
-            <div id="tabs">
-                <div>
-                    <ul id="tabList" class="inner">
-                        <li>
-                            <a href="#" class="selected">Description</a></li>
-                        <li>
-                            <a href="#">Extra Info</a></li>
-                    </ul>
 
-                </div>
-                <br />
-                <div class="tab">
-                        <textarea type="text" name="description" placeholder="Add a Description" id="description" value="<%=model.description%>" required />
-                </div>
-                <div class="tab">
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label for="priority">Priority </label>
-                            </p>
-                            <p>
-                                 <label for="sequence">Sequense </label>
-                            </p>
-                            <p>
-                                <label for="StartDate">Start Date </label>
-                            </p>
-                            <p>
-                              <label for="EndDate">End Date </label>
-                            </p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <select id="priority">
-                                    <option value="<%=model.extrainfo.priority._id%>">Select...</option>
-                                    <% priorityCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%= (option.get('priority') == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.get('priority') %></option>
-                                    <% }); %>
-                                </select> 
-                            </p>
-                            <p>
-                                <input class="extrainfo" type="text" name="sequence" id="sequence" value="<%=model.extrainfo.sequence%>" required />
-                            </p>
-                            <p>
-                                <input class="extrainfo" type="text" name="StartDate" id="StartDate" value="<%= model.extrainfo.StartDate %>" required />
-                            </p>
-                            <p>
-                                <input class="extrainfo" type="text" name="EndDate" id="EndDate" value="<%= model.extrainfo.EndDate %>" required />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label for="customerDd">Customer</label>
-                            </p>
-                            <p>
-                                <label for="workflowDd">Task Workflow</label>
-                            </p>
-                            <p>
-                                <label for="loged">Loged</label>
-                            </p>
-                            <p>
-                                <label for="estimated">Estimeted</label>
-                            </p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <select id="customerDd">
-                                    <option value="<%=model.extrainfo.customer.id%>">Select...</option>
-                                    <% customersDdCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.extrainfo.customer.id) ? 'selected="selected"' : ''%>><%= option.get('name') %> (<%= option.get('type') %>)</option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="workflowDd">
-                                    <option value="<%=model.workflow.name%>">Select...</option>
-                                    <% workflowsDdCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%= (option.get('name') == model.workflow.name) ? 'selected="selected"' : ''%>><%= option.get('name') %> (<%= option.get('status') %>)</option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                            <p>
-                                <input type="text" name="loged" id="loged" value="<%=model.logged%>"/>
-                            </p>
-                            <p>
-                                 <input type="text" name="loged" id="estimated" value="<%=model.estimated%>" />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
+        <div id="tabs">
+            <div>
+                <ul id="tabList" class="inner">
+                    <li>
+                        <a href="#" class="selected">Description</a></li>
+                    <li>
+                        <a href="#">Extra Info</a></li>
+                </ul>
+
             </div>
+            <br />
+            <div class="tab">
+                <textarea type="text" name="description" placeholder="Add a Description" id="description" value="<%=model.description%>" required />
+            </div>
+            <div class="tab">
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p>
+                            <label for="priority">Priority </label>
+                        </p>
+                        <p>
+                            <label for="sequence">Sequense </label>
+                        </p>
+                        <p>
+                            <label for="StartDate">Start Date </label>
+                        </p>
+                        <p>
+                            <label for="EndDate">End Date </label>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p>
+                            <select id="priority">
+                                <option value="<%=model.extrainfo.priority._id%>">Select...</option>
+                                <% priorityCollection.forEach(function(option){ %>
+                                    <option value="<%= option._id %>" <%= (option.priority == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.priority %></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p>
+                            <input class="extrainfo" type="text" name="sequence" id="sequence" value="<%=model.extrainfo.sequence%>" required />
+                        </p>
+                        <p>
+                            <input class="extrainfo" type="text" name="StartDate" id="StartDate" value="<%= model.extrainfo.StartDate %>" required />
+                        </p>
+                        <p>
+                            <input class="extrainfo" type="text" name="EndDate" id="EndDate" value="<%= model.extrainfo.EndDate %>" required />
+                        </p>
+                    </div>
+                </div>
+                <div class="half-block left">
+                    <div class="half-block left">
+                        <p>
+                            <label for="customerDd">Customer</label>
+                        </p>
+                        <p>
+                            <label for="workflowDd">Task Workflow</label>
+                        </p>
+                        <p>
+                            <label for="logged">Logged</label>
+                        </p>
+                        <p>
+                            <label for="estimated">Estimeted</label>
+                        </p>
+                    </div>
+                    <div class="half-block left">
+                        <p>
+                            <select id="customerDd">
+                                <option value="<%=model.extrainfo.customer.id%>">Select...</option>
+                                <% customersDdCollection.forEach(function(option){ %>
+                                    <option value="<%= option._id %>" <%= (option._id == model.extrainfo.customer.id) ? 'selected="selected"' : ''%>><%= option.name %> (<%= option.type %>)</option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p>
+                            <select id="workflowDd">
+                                <option value="<%=model.workflow.name%>">Select...</option>
+                                <% workflowsDdCollection.forEach(function(option){ %>
+                                    <option value="<%= option._id %>" <%= (option.name == model.workflow.name) ? 'selected="selected"' : ''%>><%= option.name %> (<%= option.status %>)</option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p>
+                            <input type="text" name="loged" id="logged" value="<%=model.logged%>"/>
+                        </p>
+                        <p>
+                            <input type="text" name="estimated" id="estimated" value="<%=model.estimated%>" />
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <input type="submit" id="saveBtn" class="btn" value="Save"/>
+        <input type="button" id="cancelBtn" class="btn" value="Cancel"/>
     </form>
 </div>
