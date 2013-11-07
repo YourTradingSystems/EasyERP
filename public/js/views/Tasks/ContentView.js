@@ -33,7 +33,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             "click .form p > a": "gotoProjectForm",
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
             "click #tabList a": "switchTab",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         switchTab: function (e) {
@@ -97,11 +97,9 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                                     remaining += _remaining;
                                 }
                             }, this);
-                            var content = "<p class='counter'>" + counter + "</p>" +
-                                "<a class='foldUnfold' href='#'>" +
-                                "<img hidden='hidden' src='./images/downCircleBlack.png'/></a>" +
-                                "<ul hidden='hidden' class='dropDownMenu'></ul>" +
-                                "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                            var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
+                            var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                            column.find(".columnNameDiv h2").append(count);
                             column.find(".columnNameDiv").append(content);
                         }, this);
                         break;

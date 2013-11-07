@@ -1,8 +1,7 @@
 define([
-    'jqueryui',
     'text!templates/Applications/list/ListTemplate.html',
     'text!templates/Applications/form/FormTemplate.html',
-    'text!templates/Applications/kanban/KanbanTemplate.html',
+    'text!templates/Applications/kanban/WorkflowsTemplate.html',
     'collections/Applications/ApplicationsCollection',
     'collections/Workflows/WorkflowsCollection',
     'views/Applications/kanban/KanbanItemView',
@@ -10,17 +9,17 @@ define([
     'common'
 ],
 
-function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, ApplicationsKanbanTemplate, ApplicationsCollection, WorkflowsCollection, ApplicationsKanbanItemView, Custom, common) {
+function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate, ApplicationsCollection, WorkflowsCollection, KanbanItemView, Custom, common) {
     var ApplicationsView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Applications View');
             var that = this;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
-            this.workflowsCollection.bind('reset', _.bind(this.render, this));
+            this.workflowsCollection.bind('reset', _.bind(this.render, this));          
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.render();         
+            
 
         },
 
@@ -31,7 +30,7 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
             "click .breadcrumb a, #refuse": "changeWorkflow",
             "click #hire": "isEmployee",
             "click #top-bar-deleteBtn": "deleteForm",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click .list td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
         gotoForm: function (e) {
             App.ownContentType = true;
@@ -40,38 +39,45 @@ function (jqueryui, ApplicationsListTemplate, ApplicationsFormTemplate, Applicat
         },
         render: function () {
             var that = this;
-            var workflows = this.workflowsCollection.toJSON()[0].value;
             Custom.setCurrentCL(this.collection.models.length);
-            console.log('Render Applications View');
             var viewType = Custom.getCurrentVT();
             var mid = 39;
+            var models = [];
+            var workflows = this.workflowsCollection.toJSON()[0].value;
+            console.log('Render Applications View');                  
+            var applicationId = window.location.hash.split('/')[3];
+            if (!applicationId || applicationId.length < 24) {
+                models = this.collection.models;
+                App.hash = null;
+            }
+            else {
+                App.hash = applicationId;
+                _.each(this.collection.models, function (item) {
+                    if (item.get("application").id == applicationId) models.push(item);
+                }, this);
+            }
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(ApplicationsKanbanTemplate));
-
-
-                        _.each(workflows, function (workflow, index) {
-                            $("<div class='column applicationColumn' data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.name + "</h2></div></div>").appendTo(".kanban");
-                        });
+                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
                         $(".column").last().addClass("lastColumn");
-
                         _.each(workflows, function (workflow, i) {
-                            var counter = 0,
-                                remaining = 0;
+                            var counter = 0;
                             var column = this.$(".column").eq(i);
                             var kanbanItemView;
-                            _.each(this.collection.models, function (model) {
+                            _.each(models, function (model) {
                                 if (model.get("workflow").name === column.data("name")) {
-                                    kanbanItemView = new ApplicationsKanbanItemView({ model: model });
+                                    kanbanItemView = new KanbanItemView({ model: model });
                                     kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
                                     column.append(kanbanItemView.render().el);
-                                    counter++;
-                                    remaining += model.get("estimated") - model.get("loged");
+                                    counter++;                                  
                                 }
                             }, this);
-                            column.find(".columnNameDiv").append("<p class='counter'>" + counter + "</p><a class='foldUnfold' href='#'><img hidden='hidden' src='./images/downCircleBlack.png'/></a><ul hidden='hidden' class='dropDownMenu'></ul>");
+                            var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
+                            var content = "</br><p class='remaining'></p>";
+                            column.find(".columnNameDiv h2").append(count);
+                            column.find(".columnNameDiv").append(content);
                         }, this);
                         break;
                     }
