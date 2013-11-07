@@ -57,35 +57,42 @@
 							<% if(address.country) { %>
                             <dd> <%=address.country%></dd>
 							<% } %>
+            </dl>
 
                         </dl>
 
 </div>
                     <div class="clearfix"></div>
                 </div>
+        <div class="details right">...</div>
+
                 <div class="social">
                     <a class="facebook" href="#"></a>
                     <a class="linkedin" href="#"></a>
                     <a class="skype" href="#"></a>
                     <div class="clearfix"></div>
                 </div>
-                <div class="details right">...</div>
-                <div id="details">
+          <div class="clearfix"></div>
+        <div id="details" class="person-details">
+          <div class="half-block left">
 				  <dl class="person-info">
 					<dt>Website</dt><dd>: <%=website%></dd>
 					<dt>Skype</dt><dd>: <%=skype%></dd>
 					<dt>Fax</dt><dd>: <%=phones.fax%></dd>
 					<dt>Title</dt><dd>: <%=title%></dd>
 				  </dl>
+		  </div>
+          <div class="half-block left">
                     <div class="sale-purchase">
                         <span>Sales & Purchases</span>
 				  <dl class="person-info">
-					<dt>Customer</dt><dd><a class="person-checkbox <% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-					<dt>Supplier</dt><dd><a class="person-checkbox <% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-					<dt>Active</dt><dd><a class="person-checkbox <% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
+			  <dt>Customer</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
+			  <dt>Supplier</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
+			  <dt>Active</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
 				  </dl>
-
+		  </div>
                     </div>
+		  <div class="clearfix"></div> 
                 </div>
             </div>
         </form>
