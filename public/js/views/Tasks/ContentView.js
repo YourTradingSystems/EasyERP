@@ -93,7 +93,8 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                                     kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
                                     column.append(kanbanItemView.render().el);
                                     counter++;
-                                    remaining += model.get("estimated") - model.get("logged");
+                                    var exptRev = model.get("expectedRevenue");
+                                    remaining += exptRev.value;
                                 }
                             }, this);
                             var content = "<p class='counter'>" + counter + "</p>" +
@@ -107,6 +108,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     }
                 case "list":
                     {
+
                         var jsonCollection = this.collection.toJSON();
                         /*$.each(jsonCollection, function(index,value){
                             value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
@@ -157,9 +159,9 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                             var currentModel = models[itemIndex];
 
                             var extrainfo = currentModel.get('extrainfo');
-                            extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
-                            extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
-                            deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
+                            //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
+                            //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
+                            //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
                             //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
 
                             //currentModel.on('change', this.render, this);
@@ -168,7 +170,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
                             _.each(workflows, function (workflow, index) {
                                 if (index < workflows.length - 2) {
-                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
+                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
                                 }
                             });
 

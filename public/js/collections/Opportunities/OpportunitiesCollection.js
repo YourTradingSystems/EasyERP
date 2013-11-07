@@ -1,7 +1,8 @@
 define([
-    'models/OpportunityModel'
+    'models/OpportunityModel',
+    'common'
 ],
-    function (OpportunityModel) {
+    function (OpportunityModel, common) {
         var OpportunitiesCollection = Backbone.Collection.extend({
             model: OpportunityModel,
             url: function () {
@@ -10,7 +11,6 @@ define([
 
             initialize: function () {
                 console.log("Opportunities Collection Init");
-
                 var mid = 39;
 
                 this.fetch({
@@ -27,6 +27,14 @@ define([
             parse: true,
 
             parse: function (response) {
+                if (response.data) {
+                    _.map(response.data, function (opportunity) {
+                        opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
+                        opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
+                        opportunity.nextAction.date = common.utcDateToLocaleDate(opportunity.nextAction.date);
+                        return opportunity;
+                    });
+                }
                 return response.data;
             },
 
@@ -35,7 +43,6 @@ define([
             },
 
             fetchError: function (error) {
-
             }
 
         });

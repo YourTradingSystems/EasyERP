@@ -3,13 +3,12 @@
         idAttribute: "_id",
 
         defaults: {
-            wId:'',
+            wId: '',
             name: '',
-            value:[
+            value: [
                 {
-                    _id:'',
-                    name:'',
-                    status:'',
+                    name: '',
+                    status: '',
                     sequence: 0
                 }
             ]

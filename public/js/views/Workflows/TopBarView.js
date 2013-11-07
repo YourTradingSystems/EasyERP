@@ -10,15 +10,11 @@ define([
             template: _.template(ContentTopBarTemplate),
 
             events: {
-                "click #top-bar-createBtn" : "createEvent",
+                "click a.changeContentView": 'changeContentViewType',
+                "click ul.changeContentIndex a": 'changeItemIndex',
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent"
-            },
-
-            createEvent: function(event){
-                 event.preventDefault();
-                 this.trigger('createEvent');
             },
 
             changeContentViewType: Custom.changeContentViewType,

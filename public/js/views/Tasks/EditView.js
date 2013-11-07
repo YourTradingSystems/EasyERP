@@ -128,14 +128,14 @@
                         assignedTo = currentModel.defaults.assignedTo;
                     }
 
-                    var deadlineSt = $.trim($("#deadline").val());
-                    var deadline = "";
-                    if (!deadlineSt) {
-                        deadline = null;
-                    }
-                    else {
-                        deadline = new Date(Date.parse(deadlineSt)).toISOString();
-                    }
+                    var deadline = $.trim($("#deadline").val());
+                    //var deadline = "";
+                    //if (!deadlineSt) {
+                    //    deadline = null;
+                    //}
+                    //else {
+                    //    deadline = new Date(Date.parse(deadlineSt)).toISOString();
+                    //}
 
                     var tags = $.trim($("#tags").val()).split(',');
                     if (tags.length == 0) {
@@ -152,23 +152,23 @@
                         sequence = null;
                     }
 
-                    var startDateSt = $.trim($("#StartDate").val());
-                    var StartDate = "";
-                    if (!startDateSt) {
-                        StartDate = null;
-                    }
-                    else {
-                        StartDate = new Date(Date.parse(startDateSt)).toISOString();
-                    }
+                    var StartDate = $.trim($("#StartDate").val());
+                    //var StartDate = "";
+                    //if (!startDateSt) {
+                    //    StartDate = null;
+                    //}
+                    //else {
+                    //    StartDate = new Date(Date.parse(startDateSt)).toISOString();
+                    //}
 
-                    var endDateSt = $.trim($("#EndDate").val());
-                    var EndDate = "";
-                    if (!endDateSt) {
-                        EndDate = null;
-                    }
-                    else {
-                        EndDate = new Date(Date.parse(endDateSt)).toISOString();
-                    }
+                    var EndDate = $.trim($("#EndDate").val());
+                    //var EndDate = "";
+                    //if (!endDateSt) {
+                    //    EndDate = null;
+                    //}
+                    //else {
+                    //    EndDate = new Date(Date.parse(endDateSt)).toISOString();
+                    //}
 
                     var idCustomer = $(this.el).find("#customerDd option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersDdCollection);
@@ -250,11 +250,11 @@
                 else {
                     var currentModel = this.tasksCollection.models[itemIndex];
                     //currentModel.on('change', this.render, this);
-                    var extrainfo = currentModel.get('extrainfo');
-                    extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
-                    extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
-                    deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
-                    currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
+                    //var extrainfo = currentModel.get('extrainfo');
+                    //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
+                    //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
+                    //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
+                    //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
                     this.$el.html(_.template(EditTemplate, {
                         model: currentModel.toJSON(), projectsDdCollection: this.projectsDdCollection, accountsDdCollection: this.accountsDdCollection,
                         customersDdCollection: this.customersDdCollection, workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection
@@ -275,9 +275,9 @@
                         }
                     }, this);
                 }
-                $('#deadline').datepicker();
-                $('#StartDate').datepicker();
-                $('#EndDate').datepicker();
+                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $('#StartDate').datepicker({ dateFormat: "d M, yy" });
+                $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 return this;
             }
 

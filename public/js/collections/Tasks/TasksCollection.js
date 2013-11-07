@@ -1,7 +1,8 @@
 define([
-    'models/TasksModel'
+    'models/TasksModel',
+    'common'
 ],
-    function (TaskModel) {
+    function (TaskModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
             url: function () {
@@ -25,6 +26,14 @@ define([
             parse: true,
 
             parse: function (response) {
+                if (response.data) {
+                    _.map(response.data, function (task) {
+                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
+                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
+                        task.deadline = common.utcDateToLocaleDate(task.deadline);
+                        return task;
+                    });
+                }
                 return response.data;
             },
 

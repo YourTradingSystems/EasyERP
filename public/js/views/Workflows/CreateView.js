@@ -1,28 +1,42 @@
 define([
     "text!templates/Workflows/CreateTemplate.html",
-    "collections/Workflows/WorkflowsCollection",
+    "text!templates/Workflows/createList.html",
     "collections/RelatedStatuses/RelatedStatusesCollection",
     "models/WorkflowsModel",
     "common",
     "custom"
 ],
-    function (CreateTemplate, WorkflowsCollection, RelatedStatusesCollection, WorkflowsModel, common, Custom) {
+    function (CreateTemplate, createList, RelatedStatusesCollection, WorkflowsModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "LeadsWorkflow",
+            contentType: "Workflows",
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
                 this.relatedStatusesCollection = new RelatedStatusesCollection();
                 this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
-                this.leadsWorkflowCollection = options.collection;
+                this.collection = options.collection;
                 this.render();
             },
 
             close: function () {
                 this._modelBinder.unbind();
+            },
+
+            events: {
+                "click button#add": "addNameStatus",
+                "click button.remove": "removeNameStatus"
+            },
+
+            addNameStatus: function (e) {
+                e.preventDefault();
+                $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
+            },
+
+            removeNameStatus: function (e) {
+                $(e.target).closest(".nameStatus").remove();
             },
 
             saveItem: function () {
@@ -31,24 +45,32 @@ define([
 
                 var mid = 39;
 
-                var leadsWorkflowModel = new LeadsWorkflowModel();
+                var workflowsModel = new WorkflowsModel();
 
-                var name = $.trim($("#name").val());
+                var wId = this.$("#wId option:selected").val();
 
-                var statusId = this.$("#status option:selected").val();
-                var status = common.toObject(statusId, this.relatedStatusesCollection);
+                var name = $.trim($("#workflowsName").val());
 
-                var sequence = this.collection.length;
+                var value = [];
+                var names = [],
+                    statuses = [];
+                this.$(".nameStatus").each(function () {
+                    names.push($(this).find(".name").val());
+                    statuses.push($(this).find(".status option:selected").text());
+                });
 
-                leadsWorkflowModel.save({
+                for (var i = 0; i < names.length; i++) {
+                    value.push({ name: names[i], status: statuses[i], sequence: i });
+                }
+
+                workflowsModel.save({
+                    wId: wId,
                     name: name,
-                    status: status,
-                    sequence: sequence
+                    value: value
                 },
                 {
                     headers: {
-                        mid: mid,
-                        id: 'lead'
+                        mid: mid
                     },
                     wait: true,
                     success: function (model) {
@@ -61,7 +83,8 @@ define([
             },
 
             render: function () {
-                this.$el.html(this.template({ relatedStatusesCollection: this.relatedStatusesCollection }));
+                var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
+                this.$el.html(this.template({ relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds }));
                 return this;
             }
 

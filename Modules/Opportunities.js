@@ -187,11 +187,11 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                             _opportunitie.nextAction.desc = data.nextAction.desc;
                         }
                         if (data.nextAction.date) {
-                            _opportunitie.nextAction.date = data.nextAction.date;
+                            _opportunitie.nextAction.date = new Date(data.nextAction.date);
                         }
                     }
                     if (data.expectedClosing) {
-                        _opportunitie.expectedClosing = data.expectedClosing;
+                        _opportunitie.expectedClosing = new Date(data.expectedClosing);
                     }
                     if (data.priority) {
                         if (data.priority) {

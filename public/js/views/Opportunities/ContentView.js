@@ -1,8 +1,7 @@
 define([
-    'jqueryui',
     'text!templates/Opportunities/list/ListTemplate.html',
     'text!templates/Opportunities/form/FormTemplate.html',
-    'text!templates/Opportunities/kanban/KanbanTemplate.html',
+    'text!templates/Opportunities/kanban/WorkflowsTemplate.html',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Leads/LeadsCollection',
     'collections/Workflows/WorkflowsCollection',
@@ -11,7 +10,7 @@ define([
     'common'
 ],
 
-function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, KanbanItemView, Custom, common) {
+function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, OpportunitiesKanbanItemView, Custom, common) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -19,25 +18,19 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             var that = this;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
+            this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.render();         
-
-            $(window).resize(function () {
-                that.$(".scroll-x").css("min-height", function () { var h = $(window).height() - 101; var height = h + 'px'; return height; });
-                that.$(".column").css("height", function () { var h = $(".kanban").height(); var height = h + 'px'; return height; });
-            });
 
         },
 
         events: {
             "click .checkbox": "checked",
-            "click .foldUnfold": "openDropDown",
-            "click .fold": "foldUnfoldColumn",
             "click .breadcrumb a, #lost, #won": "changeWorkflow",
             "click #hire": "isEmployee",
             "click #tabList a": "switchTab",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click .list td:not(:has('input[type='checkbox']'))": "gotoForm"
         },
 
         gotoForm: function (e) {
@@ -62,39 +55,47 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             console.log('Render Opportunities View');
             var viewType = Custom.getCurrentVT();
             var mid = 39;
+            var models = [];
             var workflows = this.workflowsCollection.toJSON()[0].value;
+            var opportunitieId = window.location.hash.split('/')[3];
+            if (!opportunitieId || opportunitieId.length < 24) {
+                models = this.collection.models;
+                App.hash = null;
+            }
+            else {
+                App.hash = opportunitieId;
+                _.each(this.collection.models, function (item) {                   
+                    if (item.get("item").id == opportunitieId) models.push(item);
+                }, this);
+            }
             switch (viewType) {
                 case "kanban":
                     {
-                        this.$el.html(_.template(KanbanTemplate));
-
-                        _.each(workflows, function (workflow, index) {
-                            $("<div class='column' data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><div class='columnNameDiv'><h2 class='columnName'>" + workflow.name + "</h2></div></div>").appendTo(".kanban");
-                        });
-
+                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
                         $(".column").last().addClass("lastColumn");
-
                         _.each(workflows, function (workflow, i) {
                             var counter = 0,
-                                revenue = 0,
-                                kanbanItemView;
+                                revenue = 0;
                             var column = this.$(".column").eq(i);
-                            _.each(this.collection.models, function (model) {
+                           _.each(models, function (model) {
                                 if (model.get("workflow").name === column.data("name")) {
-                                    kanbanItemView = new KanbanItemView({ model: model });
-                                    kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
-                                    column.append(kanbanItemView.render().el);
+                                    opportunitieItemView = new OpportunitiesKanbanItemView({ model: model });
+                                    opportunitieItemView.bind('deleteEvent', this.deleteItems, opportunitieItemView);
+                                    column.append(opportunitieItemView.render().el);
                                     counter++;
                                     revenue += model.get("expectedRevenue").value;
                                 }
                             }, this);
-                            column.find(".columnNameDiv").append("<p class='counter'>" + counter + "</p><a class='foldUnfold' href='#'><img hidden='hidden' src='./images/downCircleBlack.png'/></a><ul hidden='hidden' class='dropDownMenu'></ul><p class='revenue'>Expected Revenues: <span>" + revenue + "</span></p>");
+                            var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
+                            var content = "<p class='revenue'>Expected Revenue: <span>" + revenue + "</span></p>";
+                            column.find(".columnNameDiv h2").append(count);
+                            column.find(".columnNameDiv").append(content);
                         }, this);
                         break;
                     }
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {opportunitiesCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(ListTemplate, { opportunitiesCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -121,7 +122,6 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                             this.$el.html();
                         } else {
                             var currentModel = this.collection.models[itemIndex];
-                            //currentModel.set({ nextAction: currentModel.get("nextAction").split('T')[0].replace(/-/g, '/') });
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
@@ -153,10 +153,6 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         break;
                     }
             }
-
-            this.$(".scroll-x").css("height", function () { var h = $(window).height() - 101; var fh = h + 'px'; return fh });
-            this.$(".column").css("height", function () { var h; h = $(".kanban").height(); var height = h + 'px';  return height; });
-            //this.$(".kanban").width((this.$(".column").width() + 1) * workflows.length);
 
             this.$(".column").sortable({
                 connectWith: ".column",
@@ -284,13 +280,13 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                 column.find(".dropDownMenu").hide();
                 column.find(".columnNameDiv");
                 column.removeClass("rotate");
-                column.find(".counter, .foldUnfold img").attr('style', '');;
+               // column.find(".counter, .foldUnfold img").attr('style', '');;
             } else {
                 column.css('max-width', '40px');
                 column.find(".opportunity, .dropDownMenu, .revenue").hide();
                 column.addClass("rotate");
                 column.find(".columnNameDiv").removeClass("selected");
-                column.find(".counter, .foldUnfold img").css({ 'position': 'relative', 'right': '6px', 'top': '-12px' });
+               // column.find(".counter, .foldUnfold img").css({ 'position': 'relative', 'right': '6px', 'top': '-12px' });
             }
 
         },
@@ -310,11 +306,10 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
             switch (viewType) {
                 case "kanban":
                     {
-                        model = this.collection.get(this.$el.attr("id"));
-                        var revenue = model.get("expectedRevenue").value;
-                        this.$("#delete").closest(".opportunity").fadeToggle(300, function () {
-                            model.destroy(
-                               {
+                        model = this.model;
+                        var remaining = model.get("estimated");
+                        this.$("#delete").closest(".task").fadeToggle(200, function () {
+                            model.destroy({
                                    headers: {
                                        mid: mid
                                    }
@@ -323,8 +318,8 @@ function (jqueryui, ListTemplate, FormTemplate, KanbanTemplate, OpportunitiesCol
                         });
                         var column = this.$el.closest(".column");
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                        column.find(".revenue span").html(parseInt(column.find(".revenue span").html()) - revenue);
-                        this.collection.trigger('reset');
+                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - remaining);
+                        //this.collection.trigger('reset');
                         break;
                     }
                 case "list":

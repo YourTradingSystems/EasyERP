@@ -270,70 +270,70 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
-    var projectFormatDate = function (_projects, count, bool) {
-        try {
-            if (bool) {
-                if (_projects.length > count) {
-                    var startday = _projects[count].info.StartDate.getDate();
-                    var startmonth = _project[count].info.StartDate.getMonth() + 1;
-                    var startyear = _project[count].info.StartDate.getFullYear();
-                    var startdate = startday + "/" + startmonth + "/" + startyear;
-                    _projects[count].info.StartDate = startdate;
-                    var endday = _project[count].info.EndDate.getDate();
-                    ;
-                    var endmounth = _project[count].info.EndDate.getMounth() + 1;
-                    var endyear = _project[count].info.EndDate.getFullYear();
-                    var enddate = endday + "/" + endmounth + "/" + endyear;
-                    _projects[count].info.EndDate = enddate;
-                    console.log('=======Project Date Was Formated=================');
-                    console.log("StartDate: " + startdate + " EndDate: " + enddate);
-                    console.log('================================================');
-                    count++;
-                    projectFormatDate(_projects, count, true);
-                } else {
-                    projectFormatDate(_projects, count, false);
-                }
-            } else {
-                return _projects;
-            }
-        } catch (exeption) {
+    //var projectFormatDate = function (_projects, count, bool) {
+    //    try {
+    //        if (bool) {
+    //            if (_projects.length > count) {
+    //                var startday = _projects[count].info.StartDate.getDate();
+    //                var startmonth = _project[count].info.StartDate.getMonth() + 1;
+    //                var startyear = _project[count].info.StartDate.getFullYear();
+    //                var startdate = startday + "/" + startmonth + "/" + startyear;
+    //                _projects[count].info.StartDate = startdate;
+    //                var endday = _project[count].info.EndDate.getDate();
+    //                ;
+    //                var endmounth = _project[count].info.EndDate.getMounth() + 1;
+    //                var endyear = _project[count].info.EndDate.getFullYear();
+    //                var enddate = endday + "/" + endmounth + "/" + endyear;
+    //                _projects[count].info.EndDate = enddate;
+    //                console.log('=======Project Date Was Formated=================');
+    //                console.log("StartDate: " + startdate + " EndDate: " + enddate);
+    //                console.log('================================================');
+    //                count++;
+    //                projectFormatDate(_projects, count, true);
+    //            } else {
+    //                projectFormatDate(_projects, count, false);
+    //            }
+    //        } else {
+    //            return _projects;
+    //        }
+    //    } catch (exeption) {
 
-        }
-    };
+    //    }
+    //};
 
-    var taskFormatDate = function (_tasks, count) {
-        try {
-            if (_tasks.length > count) {
-                if (_tasks[count].extrainfo.StartDate) {
-                    var startday = _tasks[count].extrainfo.StartDate.getDate();
-                    var startmonth = _tasks[count].extrainfo.StartDate.getMonth() + 1;
-                    var startyear = _tasks[count].extrainfo.StartDate.getFullYear();
-                    var startdate = startday + "/" + startmonth + "/" + startyear;
-                    _tasks[count].extrainfo.StartDate = startdate;
-                    console.log(startdate);
-                } else {
-                    _tasks[count].extrainfo.StartDate = '';
-                }
-                if (_tasks[count].extrainfo.EndDate) {
-                    var endday = _tasks[count].extrainfo.EndDate.getDate();
-                    var endmounth = _tasks[count].extrainfo.EndDate.getMonth() + 1;
-                    var endyear = _tasks[count].extrainfo.EndDate.getFullYear();
-                    var enddate = endday + "/" + endmounth + "/" + endyear;
-                    _tasks[count].extrainfo.EndDate = enddate;
-                    console.log(enddate);
-                } else {
-                    _tasks[count].extrainfo.EndDate = '';
-                }
-                count++;
-                taskFormatDate(_tasks, count);
-            } else {
-                console.log(_tasks);
-                return _tasks;
-            }
-        } catch (exeption) {
-            console.log(exeption);
-        }
-    };
+    //var taskFormatDate = function (_tasks, count) {
+    //    try {
+    //        if (_tasks.length > count) {
+    //            if (_tasks[count].extrainfo.StartDate) {
+    //                var startday = _tasks[count].extrainfo.StartDate.getDate();
+    //                var startmonth = _tasks[count].extrainfo.StartDate.getMonth() + 1;
+    //                var startyear = _tasks[count].extrainfo.StartDate.getFullYear();
+    //                var startdate = startday + "/" + startmonth + "/" + startyear;
+    //                _tasks[count].extrainfo.StartDate = startdate;
+    //                console.log(startdate);
+    //            } else {
+    //                _tasks[count].extrainfo.StartDate = '';
+    //            }
+    //            if (_tasks[count].extrainfo.EndDate) {
+    //                var endday = _tasks[count].extrainfo.EndDate.getDate();
+    //                var endmounth = _tasks[count].extrainfo.EndDate.getMonth() + 1;
+    //                var endyear = _tasks[count].extrainfo.EndDate.getFullYear();
+    //                var enddate = endday + "/" + endmounth + "/" + endyear;
+    //                _tasks[count].extrainfo.EndDate = enddate;
+    //                console.log(enddate);
+    //            } else {
+    //                _tasks[count].extrainfo.EndDate = '';
+    //            }
+    //            count++;
+    //            taskFormatDate(_tasks, count);
+    //        } else {
+    //            console.log(_tasks);
+    //            return _tasks;
+    //        }
+    //    } catch (exeption) {
+    //        console.log(exeption);
+    //    }
+    //};
 
     var _updateTask = function (tasksArray, fieldsObject) {
         var n = tasksArray.length;
@@ -576,7 +576,7 @@ var Project = function (logWriter, mongoose) {
                         }
                     });
                 } else {
-                    projectFormatDate(_projects, 0, true);
+                    //projectFormatDate(_projects, 0, true);
                     res['data'] = _projects;
                     response.send(res);
                 }
@@ -721,7 +721,7 @@ var Project = function (logWriter, mongoose) {
                         }
                     }
                     if (data.deadline) {
-                        _task.deadline = data.deadline;
+                        _task.deadline = new Date(data.deadline);
                     }
                     if (data.tags) {
                         _task.tags = data.tags;
@@ -745,8 +745,8 @@ var Project = function (logWriter, mongoose) {
                             }
                         }
                         if (data.extrainfo.StartDate) {
-                            _task.extrainfo.StartDate = data.extrainfo.StartDate;
-                            if (!data.estimated) _task.extrainfo.EndDate = data.extrainfo.StartDate;
+                            _task.extrainfo.StartDate = new Date(data.extrainfo.StartDate);
+                            if (!data.estimated) _task.extrainfo.EndDate = new Date(data.extrainfo.StartDate);
                         }
                     }
                     if (data.workflow) {

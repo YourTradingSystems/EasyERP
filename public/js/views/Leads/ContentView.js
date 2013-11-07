@@ -74,10 +74,10 @@ define([
                 else {
                     var workflow = {};
                     if ($(e.target).attr("id") == "cancelCase") {
-                        workflow = this.workflowsCollection.models[this.workflowsCollection.models.length - 1];
+                        workflow = this.workflowsCollection.toJSON()[0].value.models[this.workflowsCollection.toJSON()[0].value.models.length - 1];
                     }
                     else {
-                        workflow = this.workflowsCollection.models[0];
+                        workflow = this.workflowsCollection.toJSON()[0].value.models[0];
                     }
                     name = workflow.get('name');
                     status = workflow.get('status');
