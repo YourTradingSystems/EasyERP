@@ -12,7 +12,7 @@ define([
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'project', fetch:true });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Project', fetch:true });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
