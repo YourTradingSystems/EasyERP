@@ -105,9 +105,7 @@
                 var self = this;
 
                 var mid = 39;
-
                 var summary = $("#summary").val().trim();
-
                 var idProject = this.$el.find("#projectDd option:selected").val();
                 var _project = common.toObject(idProject, this.projectsDdCollection);
                 var project = {};
@@ -204,11 +202,12 @@
                     },
                     wait: true,
                     success: function (model) {
+                        self.$el.dialog('close');
                         if (project.id == '0' || !project.id) {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
 
                         } else {
-                            self.$el.dialog('close');
+
                             Backbone.history.navigate("home/content-Tasks/kanban/" + project.id, { trigger: true });
                         }
                     },

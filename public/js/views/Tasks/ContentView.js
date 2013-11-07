@@ -16,15 +16,12 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
-            var that = this;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
             this.projectsCollection = new ProjectsCollection();
             this.projectsCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            //this.render();
-
         },
 
         events: {
