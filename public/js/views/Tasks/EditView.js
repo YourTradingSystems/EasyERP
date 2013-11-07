@@ -12,7 +12,6 @@
     function (EditTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
-            el: ".form-holder",
             contentType: "Tasks",
             template: _.template(EditTemplate),
             initialize: function (options) {
