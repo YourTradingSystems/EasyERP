@@ -3,12 +3,7 @@ var Workflow = function (logWriter, mongoose) {
     var workflowSchema = mongoose.Schema({
         wId: String,
         name: String,
-        value: [{
-            name: { type: String, default: '' },
-            status: { type: String, default: 'New' },
-            sequence: { type: Number, default: 0 },
-            color: { type: String, default: '#2C3E50' }
-        }]
+        value: {type: Array, default: []}
     }, { collection: 'workflows' });
 
     var relatedStatusSchema = mongoose.Schema({
