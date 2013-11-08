@@ -1,75 +1,61 @@
-<div class="form-holder" id="createFormDiv">
-    <form id="createProjectForm" class="form" data-id="<%=model._id%>">
-        <fieldset>
-            <div class="inner">
-                <p>
-                    <label for="projectName">Project Name</label>
-                    <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>"/>
-                </p>
-                <p>
-                    <label for="projectShortDesc">Project Short Description</label>
-                    <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" />
-                </p>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label for="managerDd">Project Manager</label>
-                        </p>
-                        <p>
-                            <label for="customerDd">Project Customer</label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <select id="managerDd">
-                                <option selected="selected" value="0">Select...</option>
-                                <% accountsDdCollection.forEach(function(option){ %>
-                                <option value="<%= option._id %>" <%= (option._id == model.projectmanager.id) ? 'selected' : ''%>><%= option.name.first %> <%= option.name.last %></option>
-                                <% }); %>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="customerDd">
-                                <option selected="selected" value="0">Select...</option>
-                                <% customersDdCollection.forEach(function(option){ %>
-                                <option value="<%= option._id %>" <%= (option._id == model.customer.id) ? 'selected' : ''%> ><%= option.name %> (<%= option.type %>)</option>
-                                <% }); %>
-                            </select>
-                        </p>
+<div class="form-holder" id="createFormDiv" >
+  <form id="createProjectForm" class="form" data-id="<%=model._id%>">
+    <fieldset>
+      <div class="inner">
+        <div class="half-block left">
+          <dl class="person-info">
+            <dt><label for="projectName">Project Name: </label></dt>
+            <dd><input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>"/></dd>
+            <dt><label for="projectShortDesc">Project Short Description: </label></dt>
+            <dd><input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" /></dd>
+			<dt><label for="managerDd">Project Manager: </label></dt>
+			<dd>
+			  <select id="managerDd">
+                <option selected="selected" value="0">Select...</option>
+                <% accountsDdCollection.forEach(function(option){ %>
+                <option value="<%= option._id %>" <%= (option._id == model.projectmanager.id) ? 'selected' : ''%>><%= option.name.first %> <%= option.name.last %></option>
+                <% }); %>
+              </select>
+			</dd>
+			<dt><label for="customerDd">Project Customer: </label></dt>
+			<dd>
+			  <select id="customerDd">
+                <option selected="selected" value="0">Select...</option>
+                <% customersDdCollection.forEach(function(option){ %>
+                <option value="<%= option._id %>" <%= (option._id == model.customer.id) ? 'selected' : ''%> ><%= option.name %> (<%= option.type %>)</option>
+                <% }); %>
+              </select>
+			</dd>
 
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label for="workflowDd">Project Workflow</label>
-                        </p>
-                        <p>
-                            <label for="usereditDd">Users Can Edit Project</label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <select id="workflowDd">
-                                <option selected="selected" value="0">Select...</option>
-                                <% workflowsDdCollection.forEach(function(option){ %>
-                                <option value="<%= option._id %>"  <%= (option.name == model.workflow.name) ? 'selected' : ''%> ><%= option.name %> (<%= option.status %>)</option>
-                                <% }); %>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="usereditDd" size="3" multiple>
-                                <option selected="selected" value="0">No one...</option>
-                                <% accountsDdCollection.forEach(function(option){ %>
-                                <option value="<%= option._id %>"><%= option.name.first%> <%= option.name.last %></option>
-                                <% }); %>
-                            </select>
-                        </p>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </fieldset>
+		  </dl>
+		</div>
+        <div class="half-block left">
+		  <dl class="person-info">
+			<dt><label for="workflowDd">Project Workflow: </label></dt>
+			<dd>
+			  <select id="workflowDd">
+                <option selected="selected" value="0">Select...</option>
+                <% workflowsDdCollection.forEach(function(option){ %>
+                <option value="<%= option._id %>"  <%= (option.name == model.workflow.name) ? 'selected' : ''%> ><%= option.name %> (<%= option.status %>)</option>
+                <% }); %>
+              </select>
+			</dd>
+			<dt><label for="usereditDd">Users Can Edit Project: </label></dt>
+			<dd>
+			  <select id="usereditDd" size="3" multiple>
+                <option selected="selected" value="0">No one...</option>
+                <% accountsDdCollection.forEach(function(option){ %>
+                <option value="<%= option._id %>"><%= option.name.first%> <%= option.name.last %></option>
+                <% }); %>
+              </select>
+			</dd>
+		  </dl>
 
-    </form>
+        </div>
+
+        <div class="clearfix"></div>
+      </div>
+    </fieldset>
+
+  </form>
 </div>

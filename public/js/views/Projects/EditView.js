@@ -57,8 +57,11 @@ define([
                 });
 
             },
-
+			cancelItem: function (event) {	
+				$(".edit-project-dialog").remove();
+			},
             saveItem: function (event) {
+		
                 var self = this;
                 var itemIndex = Custom.getCurrentII() - 1;
 
@@ -114,7 +117,8 @@ define([
                             mid: mid
                         },
                         wait: true,
-                        success: function () {
+                        success: function () {	
+							$(".edit-project-dialog").remove();
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                         },
                         error: function () {
@@ -137,11 +141,17 @@ define([
                     autoOpen:true,
                     resizable:true,
                     title: "Edit Project",
+					dialogClass:"edit-project-dialog",
                     buttons:{
                         "Save": {
                             text:"Save",
                             class: "btn",
                             click: self.saveItem
+                        },
+						"Cancel": {
+                            text:"Cancel",
+                            class: "btn",
+                            click: self.cancelItem
                         }
 
                     }
