@@ -244,7 +244,6 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             var calendarIdList = $.map(checkboxes,function(item){
                 return $(item).attr('data-id');
             });
-			alert(calendarIdList);
 			$.ajax({
 				type: "POST",
 				url: "/GoogleCalSync",
@@ -258,7 +257,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 					
 				}
 			});
-
+			this.closeSyncDialog();
 
         },
 
