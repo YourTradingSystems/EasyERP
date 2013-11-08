@@ -53,7 +53,7 @@
 @blue: #4d5a75;
 @lightmagenta: #7c7bad;
 @lightgrey: #c8c8d3;
-@lightblue: #468eff;
+@lightblue: #008bbf;
 @dark-blue: #444f67;
 @bold-border: 3px solid;
 @thin-border: 1px solid;
@@ -100,6 +100,7 @@ body {
     font-size: 12px;
     height: 100%;
     overflow: hidden;
+      background:rgba(0, 0, 0, 0.05);
 }
 
 html {
@@ -170,7 +171,15 @@ article {
     border-right: 1px solid #dddddd;
     border-spacing: 2px;
 }
-
+.margin(@margin:5px) {
+margin:@margin;
+}
+.content-box {
+    display:block;
+.margin(15px);
+.box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.1));
+background:#fff;
+}
 .bold {
     font-weight: bold;
 }
@@ -218,6 +227,8 @@ article {
     width: 100%;
     position: absolute;
     height: 100%;
+  
+
 }
 
 #topmenu-holder {
@@ -228,7 +239,7 @@ article {
     left: 0;
     width: 100%;
     height: 30px;
-    background: #f0eeee;
+    background: #fff;
     /*background: @blue;*/
     .no-marpad;
 
@@ -238,70 +249,69 @@ article {
         ul {
             .no-marpad;
             display: block;
-            height: 29px;
-            border-bottom: @thin-border @lightgrey;
+            height: 30px;
+            /*border-bottom: @thin-border @lightgrey;*/
 
             &:nth-child(1) {
-                border-bottom-left: @thin-border @lightgrey;
+                /*border-bottom-left: @thin-border @lightgrey;*/
             }
 
             li {
-                height: 29px;
-                width: 98px;
+                height: 30px;
+                width: 100px;
                 text-align: center;
                 color: #fff;
                 line-height: 27px;
                 overflow: hidden;
+                margin-right:5px;
                 .left;
                 position: relative;
                 cursor: pointer;
-                  border-top: 1px solid @lightgrey;
-                        //border-left: 1px solid @lightgrey;
-                        border-right: 1px solid @lightgrey;
-
+                /*border-top: 1px solid @lightgrey;
+                //border-left: 1px solid @lightgrey;
+                border-right: 1px solid @lightgrey;*/
                 a {
                     color: #333;
                     text-decoration: none;
                     display: block;
                     //font-weight: bold;
                     .fullsize;
-                    font-size: 16px;
+                    font-size: 14px;
                     line-height: 24px;
 
                     &:hover {
-                        width: 98px;
-                        height: 29px;
+                        width: 100px;
+                        height: 30px;
                         line-height: 22px;
-                        border-top: 1px solid @lightgrey;
+                        /*border-top: 1px solid @lightgrey;
                         //border-left: 1px solid @lightgrey;
-                        border-right: 1px solid @lightgrey;
+                        border-right: 1px solid @lightgrey;*/
                     }
                 }
 
                 &:hover {
                     background-color: white;
-                    text-decoration:underline;
-
-
+                    /*text-decoration: underline;*/
+                    border-bottom:2px solid @lightblue;
+                    height:28px;
                     a {
                         color: @lightblue;
                     }
                 }
 
                 &.selected {
-                    /*border-bottom: @bold-border #a0b6e5;*/
                     background-color: white;
-                    height: 29px;
-
+                    height: 28px;
+                    border-bottom: 2px solid @lightblue;
 
                     a {
                         font-weight: bold;
                         color: @lightblue;
                         line-height: 22px;
-                        width: 98px;
-                        border-top: 1px solid @lightgrey;
+                        width: 100px;
+                        /*border-top: 1px solid @lightgrey;
                        // border-left: 1px solid @lightgrey;
-                        border-right: 1px solid @lightgrey;
+                        border-right: 1px solid @lightgrey;*/
                     }
                 }
             }
@@ -323,7 +333,7 @@ article {
             // padding: 5px 10px;
             width: auto;
             /*text-shadow: 1px 1px #fff;*/
-            font-size: 16px;
+            font-size: 14px;
             color: @lightblue;
             line-height: 30px;
             float: left;
@@ -341,7 +351,7 @@ article {
             a {
                 color: #333;
                 text-decoration: none;
-                font-size: 16px;
+                font-size: 14px;
                 line-height: 30px;
                 display: block;
                 .fullsize;
@@ -388,22 +398,23 @@ article {
 }
 
 #content-holder {
-    position: absolute;
+    position: inherit;
     height: auto;
     display: block;
     background: #fff;
+    clear:both;
     width: 100%;
+    
 }
 
 #top-bar {
     position: relative;
     display: block;
     width: auto;
-    margin-top: 0px;
     height: 30px;
     border-bottom: 1px solid #cacaca;
     background: #fff;
-    clear: both;
+    clear: both;   
     /*.gradient(#ededed);
     -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
@@ -974,7 +985,7 @@ dl.person-info {
 .loginPanelBtnHoover {
     background: rgba(0, 0, 0, 0.2);
     text-shadow: black 0px 0px 3px;
-    color: white;
+    color:#fff;
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
@@ -990,10 +1001,10 @@ dl.person-info {
         background: transparent;
         border: none;
         position: relative;
-        top: -3px;
+        /*top: -3px;*/
         box-sizing: border-box;
         box-shadow: none;
-        color: white;
+        
         width: 32px;
         height: 32px;
         padding: 0px;
@@ -1005,7 +1016,7 @@ dl.person-info {
 }
 
 .dropdown-button {
-    width: 150px;
+    width: 130px;
     float: left;
     height: 30px;
     padding: 0px;
@@ -1019,7 +1030,7 @@ dl.person-info {
     span {
         display: block;
         line-height: 30px;
-        color: white;
+        color: #333;
     }
 
     &:hover {
@@ -1518,7 +1529,7 @@ input, textarea, select {
 
 .topbarBtnHolder {
     float: left;
-    margin-top: 5px;
+    margin-top: 8px;
     margin-left: 10px;
 }
 
@@ -1889,20 +1900,21 @@ button {
 
 .icon-img {
     display: block;
-    height: 18px;
-    width: 18px;
+    height: 15px;
+    width: 15px;
     background: url("@{imagesfolder}/gray.png");
+    background-size:15px 80px;
 
     &.add {
-        background-position: 0px -60px;
+        background-position: 0px -48px;
     }
 
     &.edit {
-        background-position: 0px -82px;
+        background-position: 0px -65px;
     }
 
     &.remove {
-        background-position: 0px -22px;
+        background-position: 0px -18px;
     }
 
     &:hover {
