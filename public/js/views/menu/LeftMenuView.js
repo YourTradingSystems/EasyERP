@@ -7,15 +7,21 @@ define([
         var LeftMenuView = Backbone.View.extend({
             tagName: 'nav',
             className: 'menu',
-            el: '#leftmenu-holder nav',
+            el: '#submenu-holder nav',
             currentSection: null,
+            selectedId: null,
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
             },
             mouseOver: function (section) {
-                this.leftMenu.currentSection = section;
-                this.leftMenu.render();
+                if (this.leftMenu) {
+                    this.leftMenu.currentSection = section;
+                    this.leftMenu.render(true);
+                } else {
+                    this.currentSection = section;
+                    this.render(true);
+                }
             },
 
             initialize: function (options) {
@@ -25,9 +31,10 @@ define([
                 _.bindAll(this, 'render');
                 this.render();
                 this.collection.bind('reset', _.bind(this.render, this));
+                this.mouseLeave = _.debounce(this.mouseLeaveEl, 2000);
             },
 
-            render: function () {
+            render: function (onMouseOver) {
                 console.log("Render LeftMenuView");
                 var $el = $(this.el);
                 $el.html('');
@@ -43,24 +50,50 @@ define([
                     }
                 }
                 if (currentModule == null) currentModule = root[0];
-                var elem = $el.append(this.renderMenu(this.collection.children(currentModule)));
+                var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
                 return this;
             },
 
             events: {
                 "click a": "selectMenuItem",
-                "mouseover a": "hoverItem"
+                "mouseover a": "hoverItem",
+                "mouseleave a": "mouseLeave"
             },
             hoverItem: function (e) {
-                console.log('hover');
+                this.$el.find('li.hover').removeClass('hover');
+                $(e.target).closest('li').addClass('hover');
             },
             selectMenuItem: function (e) {
-                this.$('li.hover').removeClass('hover');
-                $(e.target).closest('li').addClass('hover');
-
+                this.$('li.selected').removeClass('selected');
+                $(e.target).closest('li').addClass('selected');
+                var root = this.collection.root();
+                for (var i = 0; i < root.length; i++) {
+                    if (root[i].get('mname') == this.currentSection) {
+                        $('#mainmenu-holder .selected').removeClass('selected');
+                        $('#' + this.currentSection).closest('li').addClass('selected');
+                    }
+                }
             },
-
-            renderMenu: function (list) {
+            mouseLeaveEl: function (option) {
+                var that = this;
+                var unSelect = function(section) {
+                    var selectSection = $('#mainmenu-holder .selected > a').text();
+                    if (selectSection === section) {
+                        return;
+                    } else {
+                        that.selectedId = $('#submenu-holder .selected > a').data('module-id');                        that.mouseOver(selectSection);
+                        $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
+                    }
+                };
+                unSelect(option);
+                //_.delay(unSelect, 1000, option);
+            },
+            mouseLeave: function (event) {
+                this.mouseLeaveEl = _.bind(this.mouseLeaveEl, this, this.currentSection);
+                //this.mouseLeaveEl = _.debounce(this.mouseLeaveEl, 2000);
+                this.mouseLeaveEl();
+            },
+            renderMenu: function (list, onMouseOver) {
                 if (_.size(list) === 0) {
                     return null;
                 }
@@ -71,15 +104,23 @@ define([
 
                     $dom.append(html);
                     var kids = this.collection.children(model);
-                    $dom.find(':last').append(this.renderMenu(kids));
+                    $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
                 }, this);
-                var clickEl = $($dom).find('a')[0];
-                $($dom.find('a')[0]).click(function () {
-                    $(clickEl).closest('li').addClass('hover');
-
+                
+                var clickEl = $dom.find('a')[0];
+                var _el = $('.selected > a').text();
+                var that = this;
+                
+                $(clickEl).click({ mouseOver: onMouseOver }, function (option) {
+                    if (_el == that.currentSection) {
+                        $(clickEl).closest('li').addClass('selected');
+                    }
+                    if (!option.data.mouseOver) {
+                        $(clickEl).closest('li').addClass('selected');
+                        clickEl.click();
+                    }
                 });
                 $(clickEl).click();
-                //$($dom.find('a')[0]).trigger('click');
                 return $dom;
             },
 
