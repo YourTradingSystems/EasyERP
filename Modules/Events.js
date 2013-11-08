@@ -473,18 +473,15 @@ var Events = function (logWriter, mongoose) {
         });
     }; //end get
 
-    function update(_id, data, res) {
-        console.log('Excellent');
-        try {
-           // delete data._id;
-            event.find({ id: _id }, function (err, result) {
-                console.log(result);
+    function update(id, data, res) {        
+        try {          
+            event.find({ id: id }, function (err, result) {
                 if (err) {
 
                 }
                 else if (result.length > 0) {
                   
-                    event.update({ id: _id }, data, function (err, result) {
+                    event.update({ id: id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -498,10 +495,8 @@ var Events = function (logWriter, mongoose) {
                             logWriter.log("Events.js getEvents event.find " + exception);
                         }
                     });
-                } else {
-                    console.log('**********************');
-                    console.log(data);
-                    data.id = _id;
+                } else {                   
+                    data.id = id;
                     create(data, res);
                 }
             });

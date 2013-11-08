@@ -102,20 +102,20 @@ define([
                         model = model.toJSON();
                         self.hideDialog();
                         if (!model.project._id) {
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("home/content-Tasks/kanban/" + model.project._id, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
                         }
                     },
                     error: function (model, xhr, options) {
-                        Backbone.history.navigate("home", { trigger: true });
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
             },
 
             render: function () {
-                var projectID = (window.location.hash).split('/')[2];
+                var projectID = (window.location.hash).split('/')[3];
                 model = projectID
                     ? {
                          project: {

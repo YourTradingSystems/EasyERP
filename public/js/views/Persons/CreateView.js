@@ -3,7 +3,7 @@ define([
     "collections/Companies/CompaniesCollection",
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
-    "models/PersonModel",
+    "models/PersonsModel",
     "common"
 ],
     function (CreateTemplate, CompaniesCollection, PersonsCollection, DepartmentsCollection, PersonModel, common) {

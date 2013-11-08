@@ -102,14 +102,15 @@
         if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
             if(viewType == "form"){
-                //$("#top-bar-createBtn").hide();
+                $("#top-bar-createBtn").hide();
                 $('#top-bar-editBtn').show();
-                $("ul.changeContentIndex").show();
+                $("ul.changeContentIndex").hide();
                 $('#top-bar-deleteBtn').show();
             }
             if(viewType == "thumbnails" || viewType == "list"){
                 $('#top-bar-editBtn').hide();
-            }        }
+            }
+        }
         else if(actionType === "View"){
             $('#top-bar-createBtn').show();
             $('#top-bar-editBtn').show();

@@ -179,6 +179,17 @@ var requestHandler = function (fs, mongoose) {
         // console.log("Requst getPersons is success");
     };
 
+    function getPersonById(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+            customer.getPersonById(data.id, res);
+        } else {
+            res.send(401);
+        }
+        // console.log("Requst getPersons is success");
+    };
+
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
         if (req.session && req.session.loggedIn) {
@@ -236,7 +247,7 @@ var requestHandler = function (fs, mongoose) {
     function getProjects(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn) {
-            project.get(res);
+            project.get(data, res);
         } else {
             res.send(401);
         }
@@ -298,6 +309,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     function getTasksByProjectId(req, res, data) {
         console.log("Requst getTasksByProjectId is success");
         if (req.session && req.session.loggedIn) {
@@ -398,12 +410,14 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //---------------------Companies-------------------------------
+
     function getCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            customer.getCompanies(res);
+            customer.getCompanies(data, res);
         } else {
             res.send(401);
         }
@@ -840,9 +854,7 @@ var requestHandler = function (fs, mongoose) {
 
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
-        if (req.session && req.session.loggedIn) {
-            //console.log(id);
-            //console.log(data);
+        if (req.session && req.session.loggedIn) {            
             events.update(id, data.event, res);
         } else {
             res.send(401);
@@ -916,6 +928,7 @@ var requestHandler = function (fs, mongoose) {
 
         createPerson: createPerson,
         getPersons: getPersons,
+        getPersonById: getPersonById,
         updatePerson: updatePerson,
         removePerson: removePerson,
         // getPersonsForDd: getPersonsForDd,

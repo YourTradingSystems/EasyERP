@@ -225,14 +225,21 @@ app.post('/Persons', function (req, res) {
     requestHandler.createPerson(req, res, data);
 });
 
-app.get('/Persons', function (req, res) {
-    console.log('---------SERVER----getPersons-------------------------------');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersons(req, res, data);
+app.get('/Persons/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getPersonById(req, res, data);
+            break;
+        default: requestHandler.getPersons(req, res, data);
+            break;
+    }
 });
 
-app.put('/Persons/:_id', function (req, res) {
+app.put('/Persons/:viewType/:_id', function (req, res) {
     console.log(req.body);
     data = {};
     var id = req.param('_id');
@@ -299,16 +306,13 @@ app.get('/Projects/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(')))))))))))))data :');
-    console.log(data);
-    viewType = req.params.viewType;
-    requestHandler.getProjectsById(req, res, data);
-  /*  switch (viewType) {
+    var viewType = req.params.viewType;
+    switch (viewType) {
         case "form": requestHandler.getProjectsById(req, res, data);
             break;
-        default: requestHandler.getTasksByProjectId(req, res, data);
+        default: requestHandler.getProjects(req, res, data);
             break;
-    }*/
+    }
 
 });
 
@@ -357,7 +361,7 @@ app.put('/Tasks/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
-app.delete('/Tasks/:_id', function (req, res) {
+app.delete('/Tasks/:contentType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -450,6 +454,21 @@ app.get('/ownCompanies', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getOwnCompanies(req, res, data);
+});
+
+app.get('/Companies/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getTaskById(req, res, data);
+            break;
+        default: requestHandler.getCompanies(req, res, data);
+            break;
+    }
+
 });
 
 app.put('/Companies/:_id', function (req, res) {

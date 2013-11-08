@@ -16,10 +16,12 @@ define([
         },
         parse: true,
 
-        parse: function(response){
-            response.extrainfo.StartDate = common.utcDateToLocaleDate(response.extrainfo.StartDate);
-            response.extrainfo.EndDate = common.utcDateToLocaleDate(response.extrainfo.EndDate);
-            response.deadline = common.utcDateToLocaleDate(response.deadline);
+        parse: function (response) {
+            if (response && response.extrainfo) {
+                response.extrainfo.StartDate = common.utcDateToLocaleDate(response.extrainfo.StartDate);
+                response.extrainfo.EndDate = common.utcDateToLocaleDate(response.extrainfo.EndDate);
+                response.deadline = common.utcDateToLocaleDate(response.deadline);
+            }
             return response;
         },
 

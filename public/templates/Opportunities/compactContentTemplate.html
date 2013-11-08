@@ -10,7 +10,7 @@
         <% _.each(collection, function(model, index){ %>
 		
 		<% if (company && (company.type == 'Person')) { %>
-	        <% if (model.customer._id == company._id){ %>
+	        <% if (model.customer && (model.customer._id == company._id)){ %>
 	        <li class="inner">
 	            <div class="half-block left">
 	                <p>
@@ -37,7 +37,7 @@
 	    	<% }%>  
 	    	
 	    	<% if (company && (company.type == 'Company')) { %>
-	    	<% if (model.customer.company == company._id){ %>
+	    	<% if (model.customer && (model.customer.company == company._id)){ %>
 	        <li class="inner">
 	            <div class="half-block left">
 	                <p>

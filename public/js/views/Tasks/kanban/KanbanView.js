@@ -38,6 +38,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
 
         showMoreContent: function (newModels) {
             var workflows = this.workflowsCollection.toJSON();
+            this.collection.set(newModels.models);
             $(".column").last().addClass("lastColumn");
             _.each(workflows, function (workflow, i) {
                 var counter = 0,
@@ -88,8 +89,8 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                 column.find(".columnNameDiv h2").append(count);
                 column.find(".columnNameDiv").append(content);
             }, this);
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             var that = this;
+            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",
