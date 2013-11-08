@@ -9,6 +9,7 @@ define([
             className: 'menu',
             el: '#submenu-holder nav',
             currentSection: null,
+            selectedId: null,
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
@@ -80,7 +81,7 @@ define([
                     if (selectSection === section) {
                         return;
                     } else {
-                        that.mouseOver(selectSection);
+                        that.selectedId = $('#submenu-holder .selected > a').data('module-id');                        that.mouseOver(selectSection);
                         $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
                     }
                 };
