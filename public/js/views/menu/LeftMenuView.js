@@ -14,8 +14,13 @@ define([
                 this.leftMenu.render();
             },
             mouseOver: function (section) {
-                this.leftMenu.currentSection = section;
-                this.leftMenu.render(true);
+                if (this.leftMenu) {
+                    this.leftMenu.currentSection = section;
+                    this.leftMenu.render(true);
+                } else {
+                    this.currentSection = section;
+                    this.render(true);
+                }
             },
 
             initialize: function (options) {
@@ -25,6 +30,7 @@ define([
                 _.bindAll(this, 'render');
                 this.render();
                 this.collection.bind('reset', _.bind(this.render, this));
+                this.mouseLeave = _.debounce(this.mouseLeaveEl, 2000);
             },
 
             render: function (onMouseOver) {
@@ -49,17 +55,43 @@ define([
 
             events: {
                 "click a": "selectMenuItem",
-                "mouseover a": "hoverItem"
+                "mouseover a": "hoverItem",
+                "mouseleave a": "mouseLeave"
             },
             hoverItem: function (e) {
-                console.log('hover');
+                this.$el.find('li.hover').removeClass('hover');
+                $(e.target).closest('li').addClass('hover');
             },
             selectMenuItem: function (e) {
-                this.$('li.hover').removeClass('hover');
-                $(e.target).closest('li').addClass('hover');
-
+                this.$('li.selected').removeClass('selected');
+                $(e.target).closest('li').addClass('selected');
+                var root = this.collection.root();
+                for (var i = 0; i < root.length; i++) {
+                    if (root[i].get('mname') == this.currentSection) {
+                        $('#mainmenu-holder .selected').removeClass('selected');
+                        $('#' + this.currentSection).closest('li').addClass('selected');
+                    }
+                }
             },
-
+            mouseLeaveEl: function (option) {
+                var that = this;
+                var unSelect = function(section) {
+                    var selectSection = $('#mainmenu-holder .selected > a').text();
+                    if (selectSection === section) {
+                        return;
+                    } else {
+                        that.mouseOver(selectSection);
+                        $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
+                    }
+                };
+                unSelect(option);
+                //_.delay(unSelect, 1000, option);
+            },
+            mouseLeave: function (event) {
+                this.mouseLeaveEl = _.bind(this.mouseLeaveEl, this, this.currentSection);
+                //this.mouseLeaveEl = _.debounce(this.mouseLeaveEl, 2000);
+                this.mouseLeaveEl();
+            },
             renderMenu: function (list, onMouseOver) {
                 if (_.size(list) === 0) {
                     return null;
@@ -80,10 +112,10 @@ define([
                 
                 $(clickEl).click({ mouseOver: onMouseOver }, function (option) {
                     if (_el == that.currentSection) {
-                        $(clickEl).closest('li').addClass('hover');
+                        $(clickEl).closest('li').addClass('selected');
                     }
                     if (!option.data.mouseOver) {
-                        $(clickEl).closest('li').addClass('hover');
+                        $(clickEl).closest('li').addClass('selected');
                         clickEl.click();
                     }
                 });

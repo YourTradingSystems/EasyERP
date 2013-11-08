@@ -20,7 +20,7 @@ define([
 
             events: {
                 "click": "clickItem",
-                "mouseover": "mouseOver"
+                "mouseover > li": "mouseOver"
             },
 
             clickItem: function (event) {
@@ -35,7 +35,8 @@ define([
 
             mouseOver: function (event) {
                 event.preventDefault();
-               
+                this.$el.find('.hover').removeClass('hover');
+                $(event.target).closest('li').addClass('hover');
                 this.selectedModule = $(event.target).text();             
                 
                 this.trigger('mouseOver', this.selectedModule);
