@@ -1,0 +1,109 @@
+<div class="form-holder">
+
+    <form method="post" action="" id="createPersonsForm" class="form">
+        <fieldset>
+            <legend>Personal Info</legend>
+            <div class="avatar">
+                <input type="file" value="Edit" id="inputImg" accept="image/*">
+                <canvas id="avatar" width="120" height="120"></canvas>
+            </div>
+            <p>
+                <label for="firstName">First Name</label>
+                <input type="text" name="firstName" id="firstName" value="<%= model.name.first %>" required/> <br/>
+                <label for="lastName">Last Name</label>
+                <input type="text" name="lastName" id="lastName" value="<%= model.name.last %>" required/>
+            </p>
+
+            <p>
+                <label for="companiesDd">Company</label>
+                <select id="companiesDd">
+                    <option selected="selected" value="0">Select...</option>
+                    <% companiesCollection.each(function(option){ %>
+                        <option value="<%= option.id %>" <%= (option.get('_id') == model.company.id) ? 'selected="selected"' : ''%>><%= option.get('name')%></option>
+                    <% }); %>
+                </select>
+            </p>
+
+            <p>
+                <label for="tagsDd">Tags</label>
+                <select id="tagsDd">
+                    <option selected="selected" value="0">Select...</option>
+                </select>
+            </p>
+
+        </fieldset>
+        <br/>
+
+        <fieldset>
+            <legend>Address Info</legend>
+            <p>
+                <label for="addressInput">Address</label>
+                <input type="text" id="addressInput" value="<%= model.address.street%>" placeholder="Street..."/>
+                <input type="text" id="cityInput" value="<%= model.address.city%>" placeholder="City"/>
+                <input type="text" id="stateInput" value="<%= model.address.state%>" placeholder="State"/>
+                <input type="text" id="zipInput" value="<%= model.address.zip%>" placeholder="Zip"/>
+                <input type="text" id="countryInput" value="<%= model.address.country%>" placeholder="Country"/>
+            </p>
+        </fieldset>
+
+        <p>
+            <label for="websiteInput">Website</label>
+            <input type="text" id="websiteInput" value="<%= model.website%>" placeholder="e.g. www.site.com"/>
+        </p>
+        <p>
+            <label for="skype">Skype</label>
+            <input type="text" id="skype" value="<%=model.skype%>"/>
+        </p>
+
+        <p>
+            <label for="jobPositionInput">Job Position</label>
+            <input type="text" id="jobPositionInput" value="<%= model.jobPosition%>" placeholder="e.g. Sales Manager"/>
+        </p>
+        <p>
+            <label for="department">Department</label>
+            <select id="department">
+                <option value="0">Select...</option>
+                <% departmentsCollection.each(function(option){ %>
+                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                <% }); %>
+            </select>
+        </p>
+        <p>
+            <label for="phoneInput">Phone</label>
+            <input type="text" id="phoneInput" value="<%= model.phones.phone%>"/>
+        </p>
+        <p>
+            <label for="mobileInput">Mobile</label>
+            <input type="text" id="mobileInput" value="<%= model.phones.mobile%>"/>
+        </p>
+        <p>
+            <label for="faxInput">Fax</label>
+            <input type="text" id="faxInput" value="<%= model.phones.fax%>"/>
+        </p>
+        <p>
+            <label for="emailInput">Email</label>
+            <input type="text" id="emailInput" value="<%= model.email%>"/>
+        </p>
+        <p>
+            <label for="dateBirth">Date Of Birth</label>
+            <input type="text" id="dateBirth" value="<%= model.dateBirth%>"/>
+        </p>
+        <p>
+            <label for="titleDd">Title</label>
+            <select id="titleDd">
+                <option selected="selected" value="0">Select...</option>
+            </select>
+        </p>
+        <br/>
+        <div>
+            <span>Sales & Purchases</span>
+            <p>
+                <label>Customer: <input type="checkbox" <% if(model.salesPurchases.isCustomer) { %> checked="checked" <% } %>  id="isCustomerInput"/> </label>
+                <label>Supplier: <input type="checkbox" <% if(model.salesPurchases.isSupplier) { %> checked="checked" <% } %>  id="isSupplierInput"/> </label>
+                <label>Active: <input type="checkbox" <% if(model.salesPurchases.active) { %> checked="checked" <% } %>  id="isActiveInput"/> </label>
+            </p>
+        </div>
+        <input type="submit" id="saveBtn" class="btn" value="Save"/>
+        <input type="button" id="cancelBtn" class="btn" value="Cancel"/>
+    </form>
+</div>

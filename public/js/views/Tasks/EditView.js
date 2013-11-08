@@ -226,11 +226,11 @@
                     customersDdCollection: this.customersDdCollection.toJSON(),
                     priorityCollection: this.priorityCollection.toJSON(),
                     workflowsDdCollection: this.workflowsDdCollection.toJSON()});
-
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,
-                    title: "Edit Task"
+					dialogClass: "edit-task-dialog",
+                    title: ""
                 });
                 this.delegateEvents(this.events);
                 //this.el = $('.form-holder');

@@ -1533,6 +1533,14 @@ input, textarea, select {
         margin-right: 10px;
         border-right: 1px solid #dddddd;
     }
+	&.withPaddingLeft{
+		>div{
+			margin-right:15px;
+		}
+		.formTitle{
+			width:auto;
+		}
+	}
 }
 
 .topbarBtnHolder {
@@ -1930,6 +1938,16 @@ button {
 }
 .ui-dialog{
 	width:80% !important;
+	&.edit-task-dialog{
+		width:50% !important;
+		min-width:950px;
+		.ui-dialog-titlebar {
+			display:none;
+			padding-left:35px;
+			padding-right:45px;
+		}
+
+	}
 	.ui-widget-header{
 		border: none !important;
 		background: none !important;
@@ -1983,11 +2001,14 @@ button {
 	}
 }
 
-#createProjectForm{
+#createProjectForm,#createTaskForm,#createPersonsForm{
 	border:none;
 	margin:0 auto;
 	width:auto;
 	max-width:95%;
+	#description{
+		margin-top:15px;
+	}
 	.buttons{
 		text-align:center;
 		input{
@@ -2073,6 +2094,29 @@ button {
 		font-family: Arial, Helvetica, sans-serif;
 		font-size: 14px;
 		color: #666;
+	}
+}
+#createTaskForm{
+	min-width:100%;
+	dl{
+		dd,dt{
+			line-height:20px;
+			label{
+				font-size:12px;
+			}
+		}
+
+	}
+	.withPaddingLeft{
+		.inner{
+			margin-bottom:0px;
+			textarea{
+				height:363px;
+			}
+		}
+	}
+	.blueback, select {
+		width:100%;
 	}
 }
 .createFormDatepicker {
@@ -2530,7 +2574,6 @@ button {
 
 
 .formHeader {
-    .gradient( #ddd);
     border-bottom: 1px solid #ddd;
     height: 33px;
 
