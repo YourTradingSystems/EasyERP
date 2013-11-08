@@ -1,8 +1,9 @@
 define([
     'text!templates/Persons/TopBarTemplate.html',
-    'custom'
+    'custom',
+    'common'
 ],
-    function (ContentTopBarTemplate, Custom) {
+    function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Persons",
@@ -14,7 +15,8 @@ define([
             	"click ul.changeContentIndex a": 'changeItemIndex',
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
-            	"click #top-bar-discardBtn": "discardEvent"
+            	"click #top-bar-discardBtn": "discardEvent",
+            	"click #top-bar-editBtn": "editEvent"
             },
             
             changeContentViewType: Custom.changeContentViewType,
@@ -36,8 +38,9 @@ define([
                 var itemIndex = Custom.getCurrentII();
             	
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                
-                if (this.actionType == "Content")
+
+                Common.displayControlBtnsByActionType(this.actionType);
+               /* if (this.actionType == "Content")
                 {
                 	$("#createBtnHolder").show();
                 	$("#saveDiscardHolder").hide();
@@ -62,11 +65,16 @@ define([
                 {
                 	$("ul.changeContentIndex").show();
                 	$("#template-switcher>span").show();
-                }
+                }*/
                 
                 return this;
             },
-            
+
+            editEvent: function(event){
+                event.preventDefault();
+                this.trigger('editEvent');
+            },
+
             deleteEvent: function(event)
             {
             	event.preventDefault();

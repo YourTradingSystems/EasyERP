@@ -9,7 +9,6 @@ define([
             className: 'menu',
             el: '#leftmenu-holder nav',
             currentSection: null,
-
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
@@ -72,18 +71,23 @@ define([
 
                     $dom.append(html);
                     var kids = this.collection.children(model);
-                    $dom.find(':last').append(this.renderMenu(kids));
+                    $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
                 }, this);
+                
                 var clickEl = $dom.find('a')[0];
-
+                var _el = $('.selected > a').text();
+                var that = this;
+                
                 $(clickEl).click({ mouseOver: onMouseOver }, function (option) {
+                    if (_el == that.currentSection) {
+                        $(clickEl).closest('li').addClass('hover');
+                    }
                     if (!option.data.mouseOver) {
                         $(clickEl).closest('li').addClass('hover');
                         clickEl.click();
                     }
                 });
                 $(clickEl).click();
-                //clickEl.click();
                 return $dom;
             },
 

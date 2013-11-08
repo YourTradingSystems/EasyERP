@@ -5,9 +5,10 @@ define([
     'views/Persons/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
     'custom',
-    'common'
+    'common',
+    'views/Persons/EditView'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -26,7 +27,10 @@ define([
             "mouseout .social a": "socialNotActive",
             "click .company": "gotoCompanyForm"
         },
-      
+        editItem: function(){
+            //create editView in dialog here
+            new EditView({collection:this.collection});
+        },
         
         personsSalesChecked: function (e) {
 			if ($(e.target).get(0).tagName.toLowerCase()=="span"){
