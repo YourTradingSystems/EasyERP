@@ -231,7 +231,7 @@ background:#fff;
 
 }
 
-#topmenu-holder {
+#mainmenu-holder {
     display: block;
     float: none;
     position: relative;
@@ -279,21 +279,15 @@ background:#fff;
                     font-size: 14px;
                     line-height: 24px;
 
-                    &:hover {
-                        width: 100px;
-                        height: 30px;
-                        line-height: 22px;
-                        /*border-top: 1px solid @lightgrey;
-                        //border-left: 1px solid @lightgrey;
-                        border-right: 1px solid @lightgrey;*/
-                    }
+                   
                 }
 
-                &:hover {
+                &.hover {
                     background-color: white;
                     /*text-decoration: underline;*/
                     border-bottom:2px solid @lightblue;
                     height:28px;
+                    line-height:22px;
                     a {
                         color: @lightblue;
                     }
@@ -319,7 +313,7 @@ background:#fff;
     }
 }
 
-#leftmenu-holder {
+#submenu-holder {
     display: block;
     position: relative;
     width: 100%;
@@ -342,7 +336,7 @@ background:#fff;
             height: 30px;
             text-align: center;
 
-            &:hover {
+            &.hover {
                 a {
                     color: @lightblue;
                 }
@@ -357,7 +351,7 @@ background:#fff;
                 .fullsize;
             }
 
-            &.hover {
+            &.selected {
                 //background: @dark-blue;
                 /*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
                 -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);

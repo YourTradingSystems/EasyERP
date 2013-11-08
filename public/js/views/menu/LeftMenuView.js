@@ -7,7 +7,7 @@ define([
         var LeftMenuView = Backbone.View.extend({
             tagName: 'nav',
             className: 'menu',
-            el: '#leftmenu-holder nav',
+            el: '#submenu-holder nav',
             currentSection: null,
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;

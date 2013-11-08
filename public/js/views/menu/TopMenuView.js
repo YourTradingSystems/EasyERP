@@ -5,7 +5,7 @@ define([
 
         var TopMenuView = Backbone.View.extend({
             tagName: 'ul',
-            el: '#topmenu-holder nav ul',
+            el: '#mainmenu-holder nav ul',
             selectedModule: null,
             initialize: function (options) {
                 console.log("init MenuView");
@@ -26,6 +26,7 @@ define([
             clickItem: function (event) {
                 this.unbind('mouseOver');
                 event.preventDefault();
+              
                 this.selectedModule = $(event.target).text();
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
@@ -34,7 +35,9 @@ define([
 
             mouseOver: function (event) {
                 event.preventDefault();
-                this.selectedModule = $(event.target).text();
+               
+                this.selectedModule = $(event.target).text();             
+                
                 this.trigger('mouseOver', this.selectedModule);
                 //this.render();
             },
