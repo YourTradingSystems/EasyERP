@@ -257,12 +257,12 @@ app.get('/Projects', function (req, res) {
     requestHandler.getProjects(req, res, data);
 });
 
-app.get('/Projects/:_id', function (req, res) {
+/*app.get('/Projects/:_id', function (req, res) {
     data = {};
     data.id = req.params._id;
     data.mid = req.param('mid');
     requestHandler.getProjectsById(req, res, data);
-});
+});*/
 
 app.get('/getProjectsForDd', function (req, res) {
     data = {};
@@ -294,6 +294,25 @@ app.delete('/Projects/:_id', function (req, res) {
     requestHandler.removeProject(req, res, id, data);
 });
 
+app.get('/Projects/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(')))))))))))))data :');
+    console.log(data);
+    viewType = req.params.viewType;
+    requestHandler.getProjectsById(req, res, data);
+  /*  switch (viewType) {
+        case "form": requestHandler.getProjectsById(req, res, data);
+            break;
+        default: requestHandler.getTasksByProjectId(req, res, data);
+            break;
+    }*/
+
+});
+
+
 //--------------Tasks----------------------------------------------------------
 
 app.post('/Tasks', function (req, res) {
@@ -310,12 +329,11 @@ app.get('/Tasks', function (req, res) {
 });
 
 app.get('/Tasks/:viewType', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(req.params);
-    viewType = req.params.viewType;
+    var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getTaskById(req, res, data);
             break;
@@ -809,11 +827,6 @@ app.post('/GoogleCalSync', function (req, res) {
     data.mid = req.body.mid;
     data.calendars = req.body.calendars;
     requestHandler.googleCalSync(req, res, data);
-});
-app.get('/LoadResource', function (req, res) {
-    data = {};
-	var link = req.param('link');
-    requestHandler.loadResource(req, res, link, data);
 });
 app.listen(8088);
 

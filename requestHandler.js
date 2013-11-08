@@ -16,7 +16,6 @@ var requestHandler = function (fs, mongoose) {
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
-    	request = require('request');
 
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
@@ -244,9 +243,9 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function getProjectsById(req, res, data) {
-        console.log("Requst getProjects is success");
+        console.log(data);
         if (req.session && req.session.loggedIn) {
-            project.getById(data.id, res);
+            project.getById(data, res);
         } else {
             res.send(401);
         }
@@ -903,18 +902,6 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     //---------END------Events----------------------------------
-    function loadResource(req, res,link, data) {
-        console.log("Requst loadResource is success");
-        if (req.session && req.session.loggedIn) {
-            request(link, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-				res.send(body)
-			}
-		});
-        } else {
-            res.send(401);
-        }
-    }
     return {
 
         mongoose: mongoose,
@@ -1023,9 +1010,7 @@ var requestHandler = function (fs, mongoose) {
         updateCalendar: updateCalendar,
         removeCalendar: removeCalendar,
 
-        googleCalSync: googleCalSync,
-		loadResource: loadResource
-
+        googleCalSync: googleCalSync
     }
 }
 //---------EXPORTS----------------------------------------
