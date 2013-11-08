@@ -2,11 +2,9 @@ define([
     "text!templates/Workflows/CreateTemplate.html",
     "text!templates/Workflows/createList.html",
     "collections/RelatedStatuses/RelatedStatusesCollection",
-    "models/WorkflowsModel",
-    "common",
-    "custom"
+    "models/WorkflowsModel"
 ],
-    function (CreateTemplate, createList, RelatedStatusesCollection, WorkflowsModel, common) {
+    function (CreateTemplate, createList, RelatedStatusesCollection, WorkflowsModel) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -85,6 +83,8 @@ define([
             render: function () {
                 var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
                 this.$el.html(this.template({ relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds }));
+                $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
+                $("#allNamesStatuses .nameStatus:first-of-type button.remove").remove();
                 return this;
             }
 

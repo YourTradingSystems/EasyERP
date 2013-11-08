@@ -23,21 +23,7 @@
                 </p>
             </div>
             <div id="allNamesStatuses">
-                <div class="nameStatus">
-                    <p>
-                        <label>Name</label>
-                        <input type="text" class="name" />
-                    </p>
-                    <p>
-                        <label>Status</label>
-                        <select class="status">
-                            <option selected="selected" value="0">Select...</option>
-                            <% relatedStatusesCollection.forEach(function(option){ %>
-                            <option value="<%= option.get('_id') %>"><%= option.get('status') %></option>
-                            <% }); %>
-                        </select>
-                    </p>
-                </div>
+               
             </div>
             <button id="add" class="btn">Add</button>
         </fieldset>

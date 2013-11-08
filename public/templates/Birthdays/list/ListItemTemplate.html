@@ -13,7 +13,8 @@
 		<a><%=model.name.first%> <%=model.name.last%></a>
       </div>
 	  <img class="ava" alt="" width="100" src="<%=model.imageSrc%>" />
-	  <span class="text"></span>
+	  <p class="text"><%=model.department.name%> / <%= model.jobPosition.name%></p>
+      <p class="text">Phone: <%=model.workPhones.mobile%></p>
 	  <br/>
 	  <a href="#" class="readMore">
 		Read more <i></i>                              
