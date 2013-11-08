@@ -1,104 +1,104 @@
 <div class="form-holder">
-    <div class="formLeftColumn">
-        <form class="form" id="createEmployeeForm" data-id="<%=_id%>">
-            <div class="formTitle">
-                <h3 class="left">Details</h3>
-                <div class="btnHolder">
-                    <div class="icon-img add left" title="Create Companie"></div>
-                    <div class="icon-img edit left" title="Edit Companie"></div>
-                    <div class="icon-img remove left" title="Remove Companie"></div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="inner">
-                <div class="avatar left">
-                    <img alt="" src="<%=imageSrc%>" />
-                </div>
-                <div class="mainInfo">
-                    <div class="half-block left">
-                        <h3>
-                            <%=name.first%> <%=name.last%>
-                        </h3>
-                        <dl class="person-info">
-                            <dt>Position</dt>
-                            <dd>: <%=jobPosition%></dd>
-                            <dt>Company</dt>
-                            <dd>: <a  class="bold company" data-id="<%=company.id%>" href="#"><%=company.name%></a></dd>
-                            <dt>Birthday</dt>
-                            <dd>: <%=dateBirth%></dd>
-                            <dt>Email</dt>
-                            <dd class="bold ">: <a href="mailto:<%=email%>"><%=email%></a></dd>
-                            <dt>Mobile</dt>
-                            <dd>: <%=phones.mobile%> </dd>
-                            <dt>Phone</dt>
-                            <dd>: <%=phones.phone%> </dd>
-                        </dl>
-                    </div>
-                    <div class="half-block left">
-                        <h3></h3>     
-                        <dl class="person-info">
-                            <dt>Address:</dt>
-							<% if(address.street) { %>
-                            <dd> <%=address.street%></dd>
-							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.city) { %>
-                            <dd> <%=address.city%></dd>
-							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.state) { %>
-                            <dd> <%=address.state%></dd>
-							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.zip) { %>
-                            <dd> <%=address.zip%></dd>
-							<dt>&nbsp;</dt>
-							<% } %>
-							<% if(address.country) { %>
-                            <dd> <%=address.country%></dd>
-							<% } %>
+  <div class="formLeftColumn">
+    <form class="form" id="createEmployeeForm" data-id="<%=_id%>">
+      <div class="formTitle">
+        <h3 class="left">Details</h3>
+        <div class="btnHolder">
+          <div class="icon-img add left" title="Create Companie"></div>
+          <div class="icon-img edit left" title="Edit Companie"></div>
+          <div class="icon-img remove left" title="Remove Companie"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="inner">
+        <div class="avatar left">
+          <img alt="" src="<%=imageSrc%>" />
+        </div>
+        <div class="mainInfo">
+          <div class="half-block left">
+            <h3>
+              <%=name.first%> <%=name.last%>
+            </h3>
+            <dl class="person-info">
+              <dt>Position :</dt>
+              <dd><%=jobPosition%></dd>
+              <dt>Company :</dt>
+              <dd><a  class="bold company" data-id="<%=company.id%>" href="#"><%=company.name%></a></dd>
+              <dt>Birthday :</dt>
+              <dd><%=dateBirth%></dd>
+              <dt>Email</dt>
+              <dd class="bold "><a href="mailto:<%=email%>"><%=email%></a></dd>
+              <dt>Mobile :</dt>
+              <dd><%=phones.mobile%> </dd>
+              <dt>Phone :</dt>
+              <dd><%=phones.phone%> </dd>
+            </dl>
+          </div>
+          <div class="half-block left">
+            <h3></h3>     
+            <dl class="person-info">
+              <dt>Address :</dt>
+			  <% if(address.street) { %>
+              <dd> <%=address.street%></dd>
+			  <dt>&nbsp;</dt>
+			  <% } %>
+			  <% if(address.city) { %>
+              <dd> <%=address.city%></dd>
+			  <dt>&nbsp;</dt>
+			  <% } %>
+			  <% if(address.state) { %>
+              <dd> <%=address.state%></dd>
+			  <dt>&nbsp;</dt>
+			  <% } %>
+			  <% if(address.zip) { %>
+              <dd> <%=address.zip%></dd>
+			  <dt>&nbsp;</dt>
+			  <% } %>
+			  <% if(address.country) { %>
+              <dd> <%=address.country%></dd>
+			  <% } %>
             </dl>
 
-                        </dl>
 
-</div>
-                    <div class="clearfix"></div>
-                </div>
-        <div class="details right">...</div>
 
-                <div class="social">
-                    <a class="facebook" href="#"></a>
-                    <a class="linkedin" href="#"></a>
-                    <a class="skype" href="#"></a>
-                    <div class="clearfix"></div>
-                </div>
-          <div class="clearfix"></div>
-        <div id="details" class="person-details">
-          <div class="half-block left">
-				  <dl class="person-info">
-					<dt>Website</dt><dd>: <%=website%></dd>
-					<dt>Skype</dt><dd>: <%=skype%></dd>
-					<dt>Fax</dt><dd>: <%=phones.fax%></dd>
-					<dt>Title</dt><dd>: <%=title%></dd>
-				  </dl>
 		  </div>
-          <div class="half-block left">
-                    <div class="sale-purchase">
-                        <span>Sales & Purchases</span>
-				  <dl class="person-info">
-			  <dt>Customer</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-			  <dt>Supplier</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-			  <dt>Active</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-				  </dl>
+		  <div class="clearfix"></div>
+		</div>
+		<div class="details right">...</div>
+
+		<div class="social">
+		  <a class="facebook" href="#"></a>
+		  <a class="linkedin" href="#"></a>
+		  <a class="skype" href="#"></a>
+		  <div class="clearfix"></div>
+		</div>
+		<div class="clearfix"></div>
+		<div id="details" class="person-details">
+		  <div class="half-block left">
+			<dl class="person-info">
+			  <dt>Website: </dt><dd><%=website%></dd>
+			  <dt>Skype :</dt><dd><%=skype%></dd>
+			  <dt>Fax :</dt><dd><%=phones.fax%></dd>
+			  <dt>Title :</dt><dd><%=title%></dd>
+			</dl>
 		  </div>
-                    </div>
+		  <div class="half-block left">
+			<div class="sale-purchase">
+			  <span>Sales & Purchases</span>
+			  <dl class="person-info">
+				<dt>Customer :</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
+				<dt>Supplier :</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
+				<dt>Active :</dt><dd class="with-checkbox"><a class="person-checkbox <% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
+			  </dl>
+			</div>
+		  </div>
 		  <div class="clearfix"></div> 
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="formRightColumn">
+		</div>
+	  </div>
+	</form>
+  </div>
+  <div class="formRightColumn">
 
-    </div>
-    <div class="clearfix"></div>
+  </div>
+  <div class="clearfix"></div>
 </div>
