@@ -1,33 +1,35 @@
 define([
     'views/menu/TopMenuItemView'
 ],
-    function(TopMenuItemView){
+    function (TopMenuItemView) {
 
         var TopMenuView = Backbone.View.extend({
-            tagName:'ul',
+            tagName: 'ul',
             el: '#topmenu-holder nav ul',
-            selectedModule:null,
-            initialize: function(options){
+            selectedModule: null,
+            initialize: function (options) {
                 console.log("init MenuView");
-                if(!options.collection) throw "No collection specified!";
+                if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
-
+                this.leftMenu = options.leftMenu;
                 this.render();
 
                 _.bindAll(this, 'render', 'clickItem');
 
             },
 
-            events:{
+            events: {
                 "click": "clickItem",
                 "mouseover": "mouseOver"
             },
-           
-            clickItem: function(event){
+
+            clickItem: function (event) {
+                this.unbind('mouseOver');
                 event.preventDefault();
                 this.selectedModule = $(event.target).text();
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
+                this.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
             },
 
             mouseOver: function (event) {
@@ -37,16 +39,16 @@ define([
                 //this.render();
             },
 
-            render: function(){
+            render: function () {
                 if (this.selectedModule == null)
                     this.selectedModule = (this.collection[0]).get('mname');
                 console.log("Render TopMenuView");
                 var self = this;
                 this.$el.empty();
-                _.each(this.collection,function(model){
-                    var view = new TopMenuItemView({model:model});
+                _.each(this.collection, function (model) {
+                    var view = new TopMenuItemView({ model: model });
                     var item = view.render().el;
-                    if(model.get('mname')==self.selectedModule)
+                    if (model.get('mname') == self.selectedModule)
                         $(item).addClass('selected');
                     self.$el.append(item);
                 });

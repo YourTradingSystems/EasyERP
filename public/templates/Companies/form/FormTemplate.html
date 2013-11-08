@@ -18,6 +18,15 @@
           <h2><%=name%></h2>
           <div class="half-block left">
             <dl class="person-info company">
+			  <dt>Website :</dt><dd> <%=website%></dd>
+			  <dt>Phone :</dt><dd><%=phones.phone%></dd>
+			  <dt>Mobile :</dt><dd><%=phones.mobile%></dd>
+			  <dt>Fax :</dt><dd><%=phones.fax%></dd>
+            </dl>
+
+         </div>
+          <div class="half-block left">
+            <dl class="person-info company">
 			  <dt>Address :</dt>
 			  <% if(address.street) { %>
               <dd> <%=address.street%></dd>
@@ -39,15 +48,7 @@
               <dd> <%=address.country%></dd>
 			  <% } %>
             </dl>
-          </div>
-          <div class="half-block left">
-            <dl class="person-info company">
-			  <dt>Website</dt><dd>: <%=website%></dd>
-			  <dt>Phone</dt><dd>: <%=phones.phone%></dd>
-			  <dt>Mobile</dt><dd>: <%=phones.mobile%></dd>
-			  <dt>Fax</dt><dd>: <%=phones.fax%></dd>
-            </dl>
-
+ 
           </div>
 
           <div class="clearfix"></div>
@@ -79,19 +80,19 @@
       <div class="inner sales-purchases">
         <div class="half-block left">
             <dl class="person-info company long">
-			  <dt>Sales Person</dt><dd>: <%=salesPurchases.salesPerson.name%></dd>
-			  <dt>Sales Team</dt><dd>: <%=salesPurchases.salesTeam.name%></dd>
-			  <dt>Reference</dt><dd>: <%=salesPurchases.reference%></dd>
-			  <dt>Language</dt><dd>: <%=salesPurchases.language%></dd>
+			  <dt>Sales Person :</dt><dd><%=salesPurchases.salesPerson.name%></dd>
+			  <dt>Sales Team :</dt><dd><%=salesPurchases.salesTeam.name%></dd>
+			  <dt>Reference :</dt><dd><%=salesPurchases.reference%></dd>
+			  <dt>Language :</dt><dd><%=salesPurchases.language%></dd>
             </dl>
         </div>
         <div class="half-block left">
 
             <dl class="person-info company long">
-			  <dt>Date</dt><dd>: <%=salesPurchases.date%></dd>
-			  <dt>Customer</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-			  <dt>Supplier</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
-			  <dt>Active</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a>:</dd>
+			  <dt>Date :</dt><dd><%=salesPurchases.date%></dd>
+			  <dt>Customer :</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
+			  <dt>Supplier :</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
+			  <dt>Active :</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
             </dl>
         </div>
         <div class="clearfix"></div>

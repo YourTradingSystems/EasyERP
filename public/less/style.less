@@ -1143,8 +1143,24 @@ dl.person-info {
 .lightgrey {
     color: #cecece;
 }
+.task-list{
+	tr,th{
+
+	}
+	tr{
+		&:nth-child(odd){
+			background-color: #F5F5F5;
+			background-color: #F9F9F9;
+		}
+		&:hover{
+			background-color: #F5F5F5;
+		}
+	}
+	
+}
 
 .list {
+	color: #000 !important;
     font-family: @lucida-font;
     width: 100%;
 
@@ -1158,7 +1174,6 @@ dl.person-info {
         th {
             padding: 3px 6px;
             line-height: 18px;
-            color: #6c6c6c;
             font-weight: 400;
             font-size: 13px;
             text-align: center;
@@ -1180,7 +1195,6 @@ dl.person-info {
     }
 
     tr {
-        color: #4c4c4c;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
         border-top: 1px solid #cacaca;
 
@@ -1210,8 +1224,11 @@ dl.person-info {
     }
 
         tr:nth-child(odd) {
-            background-color: rgba(77, 104, 160, 0.05);
+			background-color: #F9F9F9;
         }
+		tr:hover{
+			background-color: #F5F5F5;
+		}
 }
 
 .form(@width: 860px, @border: 1px) {
@@ -1472,7 +1489,9 @@ dl.person-info {
     width: 60%;
     float: left;
     display: block;
-
+	&.full-width{
+		width:100%;
+	}
     .form {
         .form(98%, 0px);
         margin-bottom: 10px;
@@ -1921,7 +1940,153 @@ button {
         opacity: 0.7;
     }
 }
+.ui-dialog{
+	width:80% !important;
+	.ui-widget-header{
+		border: none !important;
+		background: none !important;
+	}
+	.ui-dialog-content{
+		height:auto !important;
+	}
+	.ui-dialog-titlebar{
+		.ui-dialog-title{
+			border-bottom: 1px solid #C8C8D3;
+			color: #333 !important;
+			margin: 0;
+			font-family: Title;
+			font-size: 18px;
+			font-weight: normal;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			padding: 4px;
+			width:100% !important;
+		}
+		.ui-dialog-titlebar-close{
+			display:none;
+		}
+	}
+	.ui-dialog-buttonpane{
+		border-top:0 !important;
+		text-align:center !important;
+		.ui-dialog-buttonset{
+			float:none !important;
+			.ui-state-default{
+				height:25px !important;
+				line-height:25px !important;
+				background-image:url("@{imagesfolder}/bt-bg.png") !important;
+				font-size: 11px;
+				font-family: Tahoma,Arial,Helvetica,sans-serif;
+				text-shadow: 0 1px 0 #FFF;
+				color: #222 !important;
+				border: 1px solid #C3C3C3 !important;
+				.ui-button-text{
+					padding: .4em 1.3em !important;
+				}
+				&:hover{
+					border: 1px solid #888 !important;
+					color: #222 !important;
+				}
+				span{
+					line-height:15px;
+				}
+			}
+		}
+	}
+}
 
+#createProjectForm{
+	border:none;
+	margin:0 auto;
+	width:auto;
+	max-width:95%;
+	.buttons{
+		text-align:center;
+		input{
+				height:25px !important;
+				line-height:15px !important;
+				background-image:url("@{imagesfolder}/bt-bg.png") !important;
+				font-size: 11px;
+				font-family: Tahoma,Arial,Helvetica,sans-serif;
+				text-shadow: 0 1px 0 #FFF;
+				color: #222 !important;
+				border: 1px solid #C3C3C3 !important;
+				padding:5px 15px;
+				&:hover{
+					border: 1px solid #888 !important;
+					color: #222 !important;
+				}
+
+
+		}
+	}
+	label{
+		font-weight:normal;
+		border:none;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+		display:inline;
+		float:none;
+	}
+	dl{
+		dt,dd{
+			line-height:30px;
+		}
+		dt{
+			margin-top:10px;
+		}
+		dd{
+			margin-top:10px;
+		}
+	}
+	select{
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+		max-width:290px;
+		width:71%;
+		border: 1px solid #E2E9EF;
+		border-top: 1px solid #CBD3E2;
+		color: #262626;
+		&:focus{
+			outline: -webkit-focus-ring-color auto 5px;
+		}
+	}
+	.inner{
+		margin-top:0px;
+	}
+	.blueback{
+		.border-radius(0px);
+		border: 1px solid #E2E9EF;
+		border-top: 1px solid #CBD3E2;
+		max-width:280px;
+		width:70%;
+		height:18px;
+		background-color:white;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+		padding: 2px;
+		color: #262626;
+		&:focus{
+			.box-shadow(0,0,5px,rgba(82, 168, 236, 0.5));
+			outline: medium none;
+			border: 1px solid rgba(121, 187, 238, 0.75) !important;
+		}
+	}
+}
+#createFormDiv>#createProjectForm{
+	margin:0;
+	width:auto;
+	max-width:100%;
+
+	label{
+		float:right;
+		width:auto;
+		line-height:30px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+		color: #666;
+	}
+}
 .createFormDatepicker {
     border-radius: 0 !important;
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;

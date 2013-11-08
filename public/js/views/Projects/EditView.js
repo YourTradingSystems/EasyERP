@@ -62,70 +62,72 @@ define([
                 });
 
             },
-
-            saveItem: function (event) {
+			cancelItem: function (event) {	
+				$(".edit-project-dialog").remove();
+			},
+			saveItem: function (event) {
                 event.preventDefault();
                 var self = this;
 
-                var mid = 39;
-                var projectName = $("#projectName").val();
-                var projectShortDesc = $("#projectShortDesc").val();
+                    var mid = 39;
+                    var projectName = $("#projectName").val();
+                    var projectShortDesc = $("#projectShortDesc").val();
                 var idCustomer = this.$el.find("#customerDd option:selected").val();
-                var _customer = common.toObject(idCustomer, self.customersDdCollection);
-                var customer = {};
-                if (_customer) {
-                    customer.id = _customer._id;
-                    customer.name = _customer.name;
-                } else {
-                    customer = self.currentModel.defaults.customer;
-                }
+                    var _customer = common.toObject(idCustomer, self.customersDdCollection);
+                    var customer = {};
+                    if (_customer) {
+                        customer.id = _customer._id;
+                        customer.name = _customer.name;
+                    } else {
+                        customer = self.currentModel.defaults.customer;
+                    }
                 var idManager = this.$el.find("#managerDd option:selected").val();
-                var _projectmanager = common.toObject(idManager, self.accountsDdCollection);
-                var projectmanager = {};
-                if (_projectmanager) {
-                    projectmanager.id = _projectmanager._id;
-                    projectmanager.imageSrc = _projectmanager.imageSrc;
-                    projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
-                } else {
-                    projectmanager = this.currentModel.defaults.projectmanager;
-                }
+                    var _projectmanager = common.toObject(idManager, self.accountsDdCollection);
+                    var projectmanager = {};
+                    if (_projectmanager) {
+                        projectmanager.id = _projectmanager._id;
+                        projectmanager.imageSrc = _projectmanager.imageSrc;
+                        projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
+                    } else {
+                        projectmanager = this.currentModel.defaults.projectmanager;
+                    }
 
                 var idWorkflow = this.$el.find("#workflowDd option:selected").val();
-                var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
-                if (!workflow) {
-                    workflow = this.currentModel.defaults.workflow;
-                }
+                    var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+                    if (!workflow) {
+                        workflow = this.currentModel.defaults.workflow;
+                    }
 
                 var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
-                $userNodes.each(function (key, val) {
-                    users.push({
-                        id: val.value,
-                        name: val.innerHTML
+                    $userNodes.each(function (key, val) {
+                        users.push({
+                            id: val.value,
+                            name: val.innerHTML
+                        });
                     });
-                });
 
                 self.currentModel.save({
-                    projectName: projectName,
-                    projectShortDesc: projectShortDesc,
-                    customer: customer,
-                    projectmanager: projectmanager,
-                    workflow: workflow,
-                    teams: {
-                        users: users
-                    }
-                }, {
-                    headers: {
-                        mid: mid
-                    },
-                    wait: true,
-                    success: function () {
+                        projectName: projectName,
+                        projectShortDesc: projectShortDesc,
+                        customer: customer,
+                        projectmanager: projectmanager,
+                        workflow: workflow,
+                        teams: {
+                            users: users
+                        }
+                    }, {
+                        headers: {
+                            mid: mid
+                        },
+                        wait: true,
+                        success: function () {
                         self.$el.dialog('close');
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
-                    },
-                    error: function () {
-                        Backbone.history.navigate("home", { trigger: true });
-                    }
-                });
+                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        },
+                        error: function () {
+                            Backbone.history.navigate("home", { trigger: true });
+                        }
+                    });
             },
 
             render: function () {
@@ -139,7 +141,23 @@ define([
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,
-                    title: "Edit Project"
+                    title: "Edit Project",
+					dialogClass:"edit-project-dialog",
+                 /*   buttons:{
+                        "Save": {
+                            text:"Save",
+                            class: "btn",
+                            id: "saveBtn",
+                            click: self.saveItem
+                        },
+						"Cancel": {
+                            text:"Cancel",
+                            class: "btn",
+                            id:"cancelBtn",
+                            click: self.cancelItem
+                        }
+
+                    }*/
                 });
                 this.delegateEvents(this.events);
 
