@@ -595,7 +595,23 @@ var Events = function (logWriter, mongoose, googleModule) {
     }
 	function sendToGoogleCalendar(req,res){
 	    var calendarsId = req.body.calendarsId;
-		googleModule.sendEventsToGoogle(req,res,event);
+		var query = event.find({"isGoogle":false});
+		var calendar = []
+		calendarsId.forEach(function(id){
+			query.where({"calendarId":id}).exec(function(err,events){
+				if (err){
+                    console.log(err);
+                    logWriter.log("send to google " + err);
+					
+				}else{
+					calendar.push({"id":id,"items":events});
+					if (calendar.length==calendarsId.length){
+						googleModule.sendEventsToGoogle(res, calendar);
+					
+					}
+				}
+			});
+		})
 	}
 
 
