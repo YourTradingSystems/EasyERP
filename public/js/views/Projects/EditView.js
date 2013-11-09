@@ -116,20 +116,22 @@ define([
                 var mid = 39;
                 event.preventDefault();
                 var self = this;
-
-                this.currentModel.destroy({
-                    headers: {
-                        mid: mid
-                    },
-                    success: function () {
-                        $('.edit-project-dialog').remove();
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-                    },
-                    error: function () {
-                        $('.edit-project-dialog').remove();
-                        Backbone.history.navigate("home", { trigger: true });
-                    }
-                });
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-project-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-project-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
             },
 
             render: function () {

@@ -58,7 +58,7 @@ define([
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
                     var id = this.$el.attr("id");
-                    window.location.hash = "#home/content-Employees/form/" + id;
+                    window.location.hash = "#easyErp/Employees/form/" + id;
                 }
             },
             calculateAge: function(dateString){
