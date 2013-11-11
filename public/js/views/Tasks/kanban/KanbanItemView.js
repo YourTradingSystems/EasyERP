@@ -5,9 +5,9 @@ define([
     function (KanbanItemTemplate, common) {
         var TasksItemView = Backbone.View.extend({
             className: "task",
-            id: function () {
+            /*id: function () {
                 return this.model.get("_id");
-            },
+            },*/
             colors:[
                 {dataColor: "#1ABC9C", className: "color_0"},
                 {dataColor: "#2ECC71", className: "color_1"},
@@ -23,7 +23,7 @@ define([
             ],
 
             initialize: function () {
-                this.render();
+                //this.render();
             },
 
             events: {
@@ -39,6 +39,7 @@ define([
             gotoEditForm: function (e) {
                 e.preventDefault();
                 var itemIndex = $(e.target).closest(".task").data("index") + 1;
+                //var inder = this.data("index");
                 window.location.hash = "#home/action-Tasks/Edit/" + itemIndex;
             },
 
@@ -54,7 +55,7 @@ define([
 
             openDropDown: function (e) {
                 e.preventDefault();
-                this.$(".dropDown > a").toggleClass("selected").siblings(".dropDownOpened").fadeToggle("normal");
+                this.$(".dropDown > a").toggleClass("selected").siblings(".dropDownOpened").fadeToggle("fast");
             },
 
             pickColor: function (e) {
@@ -97,6 +98,8 @@ define([
                 }
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", index);
+
+                this.$el.attr("data-id", this.model.get('_id'));
                 return this;
             }
         });
