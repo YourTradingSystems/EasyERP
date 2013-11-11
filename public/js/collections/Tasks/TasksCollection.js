@@ -25,6 +25,12 @@ define([
 
             parse: true,
 
+            currentWorkflow: function(workflow){
+                return this.filter(function(data){
+                    return data.get("workflow").name == workflow;
+                });
+            },
+
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (task) {
