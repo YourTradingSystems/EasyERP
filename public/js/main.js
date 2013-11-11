@@ -34,6 +34,7 @@ var App = App ||
 require.config({
     paths: {
         jQuery: './libs/jquery',
+        ajaxForm: './libs/jquery.form',
         jqueryui: './libs/jquery-ui-1.10.3.custom.min',
         Underscore: './libs/underscore_1.5.2',
         Backbone: './libs/backbone v_1_1',
@@ -45,8 +46,9 @@ require.config({
     },
     shim: {
         'jqueryui': ['jQuery'],
+        'ajaxForm': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less', 'jqueryui'],
+        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm'],
         'dateFormat': {
             exports: 'dateFormat'
         }
