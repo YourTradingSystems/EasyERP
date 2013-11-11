@@ -101,7 +101,7 @@
             $("#saveDiscardHolder").show();
         }
         else if(actionType === "Create"){
-            $('#top-bar-saveBtn').hide();
+            $('#top-bar-saveBtn').show();
             $('#top-bar-nextBtn').show();
             $('#top-bar-discardBtn').show();
             $("#saveDiscardHolder").show();

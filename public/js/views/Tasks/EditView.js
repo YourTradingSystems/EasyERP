@@ -230,7 +230,7 @@
                     autoOpen:true,
                     resizable:true,
 					dialogClass: "edit-task-dialog",
-                    title: ""
+                    title: $(".formTitle").eq(0).text().trim().split(" ")[0]
                 });
                 this.delegateEvents(this.events);
                 //this.el = $('.form-holder');

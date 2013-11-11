@@ -18,11 +18,7 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             "click .checkbox": "checked",
             "click td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click a.workflow": "chooseWorkflowNames",
-            "click a.workflow-sub": "chooseSubWorkflowNames",
-            "click .workflow-sub-list li": "chooseSubWorkflowNames",
-            "click .workflow-list li": "chooseWorkflowNames",
-            "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
-            "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes"
+            "click #workflowNames p": "chooseWorkflowDetailes"
         },
         gotoForm: function (e) {
             App.ownContentType = true;
@@ -30,28 +26,9 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             window.location.hash = "#home/content-Workflows/form/" + itemIndex;
         },
 
-        chooseSubWorkflowNames: function (e) {
-			$(e.target).parents(".workflow-sub-list").find(".active").removeClass("active");
-			if ($(e.target).hasClass("workflow-sub")){
-				$(e.target).parent().addClass("active");
-			}else{
-				$(e.target).addClass("active");
-			}
-			
-		},
         chooseWorkflowNames: function (e) {
-			this.$("#details").removeClass("active").hide();
             this.$("#workflowNames").html("");
-			$(e.target).parents(".workflow-list").find(".active").removeClass("active");
-			var wId="";
-			if ($(e.target).hasClass("workflow")){
-				$(e.target).parent().addClass("active");
-				wId = $(e.target).text();
-			}else{
-				$(e.target).addClass("active");
-				wId = $(e.target).find("a").text();
-				
-			}
+            var wId = $(e.target).text();
             var names = [];
             _.each(this.collection.models, function (model) {
                 if (model.get('wId') == wId) {
@@ -59,25 +36,14 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                 }
             }, this);
             _.each(names, function (name) {
-                this.$("#workflowNames").append("<div class='cathegory' data-id='" + name + "'><a data-id='"+name+"'href='javascript:;'>" + name + "</a></div>");
-                this.$("#sub-details").html("");
+                this.$("#workflowNames").append("<p data-id='" + name + "'>" + name + "</p>");
+                this.$("#details").html("");
             }, this);
         },
+
         chooseWorkflowDetailes: function (e) {
-            this.$("#sub-details").html("");
+            this.$("#details").html("");
             var name = $(e.target).data("id");
-			var nameDetails = this.$("#sub-details").attr("data-id");
-			if (name==nameDetails && this.$("#sub-details").hasClass("active")){
-				this.$("#details").hide(150,function(){
-					$(this).removeClass("active");
-				})
-				return;
-			}
-			else{
-				this.$("#details").show(150,function(){
-					$(this).addClass("active");
-				})
-			}
             var values;
             _.each(this.collection.models, function (model) {
                 if (model.get('name') == name) {
@@ -85,9 +51,8 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                     values = model.get('value');
                 }
             }, this);
-			this.$("#sub-details").attr("data-id",name)
             _.each(values, function (value) {
-                this.$("#sub-details").append(new ListItemView({ model: value }).render().el);
+                this.$("#details").append(new ListItemView({ model: value }).render().el);
             }, this);
         },
 

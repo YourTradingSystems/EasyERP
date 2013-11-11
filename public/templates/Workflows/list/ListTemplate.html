@@ -1,11 +1,39 @@
-<div class="half-block left">
+<div class="workflow-list-wrapper left">   
+<ul class="workflow-list">
+
     <% workflowsWIds.forEach(function(wId, index){ %>
-      <a class="workflow"><%=wId%></a> <br/>  
-<% }) %>
+	<% if (index==0){%>
+    <li class="active first"><a class="workflow"><%=wId%></a>  </li>
+	<%}else{%>
+    <li><a class="workflow"><%=wId%></a>  </li>
+	<%}%>
+	  <% }) %>
+  </ul>
 </div>
-<div id="workflowNames" class="half-block left">
+<div id="workflowAccord" class="left">
+<div id="workflowNames">
       
-</div>   
- <div id="details" class="half-block left">
-    
+</div> 
+ <div id="details" class="workflow-details">
+<div class="workflow-sub-list-wrapper left">   
+   <ul class="workflow-sub-list">
+	 <li class="active"><a class="workflow-sub">Element 1</a></li>
+	 <li><a class="workflow-sub">Element 2</a></li>
+   </ul>    
+</div>
+<div id="workflowSubAccord" class="left">
+<!--  <div id="workflowSubNames">
+	<div class="cathegory">
+	  <a href="javascript:;">Element 1</a>
+	</div>
+  </div>-->
+   <div id="sub-details" class="workflow-details">
+   </div>
+</div>
+<div class="clearfix">
+</div>
 </div>     
+
+</div>
+  
+
