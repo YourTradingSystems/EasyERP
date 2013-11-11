@@ -89,6 +89,7 @@ app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     //data = req.body;
+    //console.log(req);
     console.log(req.files);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var newPath = __dirname + "\\uploads\\" + req.files.attachfile.name;
