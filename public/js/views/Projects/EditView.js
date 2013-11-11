@@ -62,7 +62,7 @@ define([
                 });
 
             },
-			cancelItem: function (event) {	
+			cancelItem: function () {	
 				$(".edit-project-dialog").remove();
 			},
 			saveItem: function (event) {
@@ -99,11 +99,11 @@ define([
                     }
 
                 var userNodes = this.$el.find("#usereditDd option:selected"), users = [];
-                users = $.map(userNodes,function(item){
+                users = $.map(userNodes,function(item) {
                     return {
                         id: item.value,
                         name: item.innerHTML
-                    }
+                    };
                 });
                 /*userNodes.each(function (key, val) {
                         users.push({
@@ -151,20 +151,6 @@ define([
 					dialogClass:"edit-project-dialog"
                 });
                 this.delegateEvents(this.events);
-
-
-                /*var workflows = this.workflowsDdCollection.models;
-
-                _.each(workflows, function (workflow, index) {
-                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                });
-
-                _.each(workflows, function (workflow, i) {
-                    var breadcrumb = this.$(".breadcrumb li").eq(i);
-                    if (this.currentModel.get("workflow").name === breadcrumb.data("name")) {
-                        breadcrumb.find("a").addClass("active");
-                    }
-                }, this);*/
 
                 return this;
             }

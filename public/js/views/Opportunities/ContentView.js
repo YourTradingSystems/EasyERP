@@ -64,7 +64,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
             }
             else {
                 App.hash = opportunitieId;
-                _.each(this.collection.models, function (item) {                   
+                _.each(this.collection.models, function (item) {
                     if (item.get("item").id == opportunitieId) models.push(item);
                 }, this);
             }
@@ -77,7 +77,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                             var counter = 0,
                                 revenue = 0;
                             var column = this.$(".column").eq(i);
-                           _.each(models, function (model) {
+                            _.each(models, function (model) {
                                 if (model.get("workflow").name === column.data("name")) {
                                     opportunitieItemView = new OpportunitiesKanbanItemView({ model: model });
                                     opportunitieItemView.bind('deleteEvent', this.deleteItems, opportunitieItemView);
@@ -124,32 +124,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                             var currentModel = this.collection.models[itemIndex];
                             currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-
-
-                            _.each(workflows, function (workflow, index) {
-                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
-                                if (index == workflows.length - 1)
-                                    this.$(".breadcrumb li").last().hide();
-                            });
-
-                            _.each(workflows, function (workflow, i) {
-                                var breadcrumb = this.$(".breadcrumb li").eq(i);
-                                if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                                    breadcrumb.find("a").addClass("active");
-                                    var button = breadcrumb.closest(".breadcrumb").siblings();
-                                    if (breadcrumb.is(':nth-last-child(2)') || breadcrumb.is(':last-child')) {
-                                        button.hide();
-                                    }
-                                    else {
-                                        button.show();
-                                    }
-                                    if (breadcrumb.is(':last-child')) {
-                                        this.$(".breadcrumb li").last().show();
-                                    }
-                                }
-                            }, this);
                         }
-
                         break;
                     }
             }
@@ -195,43 +170,17 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
         changeWorkflow: function (e) {
             var mid = 39;
             var name = '', status = '';
-            var breadcrumbList = $(e.target).closest(".formHeader").find(".breadcrumb");
-            var length = this.workflowsCollection.models.length;
-            var breadcrumb = $(e.target).closest('li');
-            var button = breadcrumb.closest(".breadcrumb").siblings();
-            var a = breadcrumb.siblings().find("a");
-            this.$(".breadcrumb li").last().hide();
-            if (a.hasClass("active")) {
-                a.removeClass("active");
-            }
-            breadcrumb.find("a").addClass("active");
-            if (breadcrumb.is(':nth-last-child(2)')) {
-                button.hide();
+            var length = this.workflowsCollection.length;
+            var workflow = {};
+            if ($(e.target).attr("id") == "won") {
+                workflow = this.workflowsCollection.models[length - 2];
             }
             else {
-                button.show();
+                workflow = this.workflowsCollection.models[length - 1];
             }
-            if ($(e.target).hasClass("applicationWorkflowLabel")) {
-                name = breadcrumb.data("name");
-                status = breadcrumb.data("status");
-            }
-            else {
-                var workflow = {};
-                if ($(e.target).attr("id") == "won") {
-                    workflow = this.workflowsCollection.models[length - 2];
-                }
-                else {
-                    workflow = this.workflowsCollection.models[length - 1];
-                    console.log(breadcrumbList.children().length);
-                    if (breadcrumbList.children().length == length) {
-                        this.$(".breadcrumb li").last().show();
-                    }
-                }
-                name = workflow.get('name');
-                status = workflow.get('status');
-            }
+            name = workflow.get('name');
+            status = workflow.get('status');
             var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
-            model.unbind('change');
             var ob = {
                 workflow: {
                     name: name,
@@ -244,9 +193,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                 headers: {
                     mid: mid
                 }
-
             });
-
         },
 
         isEmployee: function (e) {
@@ -280,18 +227,17 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                 column.find(".dropDownMenu").hide();
                 column.find(".columnNameDiv");
                 column.removeClass("rotate");
-               // column.find(".counter, .foldUnfold img").attr('style', '');;
+                // column.find(".counter, .foldUnfold img").attr('style', '');;
             } else {
                 column.css('max-width', '40px');
                 column.find(".opportunity, .dropDownMenu, .revenue").hide();
                 column.addClass("rotate");
                 column.find(".columnNameDiv").removeClass("selected");
-               // column.find(".counter, .foldUnfold img").css({ 'position': 'relative', 'right': '6px', 'top': '-12px' });
+                // column.find(".counter, .foldUnfold img").css({ 'position': 'relative', 'right': '6px', 'top': '-12px' });
             }
-
         },
 
-        checked: function (event) {
+        checked: function () {
             if ($("input:checked").length > 0)
                 $("#top-bar-deleteBtn").show();
             else
@@ -310,10 +256,10 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                         var remaining = model.get("estimated");
                         this.$("#delete").closest(".task").fadeToggle(200, function () {
                             model.destroy({
-                                   headers: {
-                                       mid: mid
-                                   }
-                               });
+                                headers: {
+                                    mid: mid
+                                }
+                            });
                             $(this).remove();
                         });
                         var column = this.$el.closest(".column");

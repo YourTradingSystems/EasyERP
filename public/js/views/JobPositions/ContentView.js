@@ -37,7 +37,6 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                 case "list":
                     {
                         this.$el.html(_.template(ListTemplate, {jobPositionsCollection:this.collection.toJSON()}));
-
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
@@ -60,24 +59,11 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             //currentModel.off('change');
                             //currentModel.on('change:workflow', _.bind(this.render, this));
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            var workflows = this.workflowsCollection.toJSON()[0].value;
-
-                            _.each(workflows, function (workflow, index) {
-                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
-                            });
-
-                            _.each(workflows, function (workflow, i) {
-                                var breadcrumb = this.$(".breadcrumb li").eq(i);
-                                if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                                    breadcrumb.find("a").addClass("active");
-                                }
-                            }, this);
                         }
                         break;
                     }
             }
             return this;
-
         },
 
         changeWorkflow: function (e) {

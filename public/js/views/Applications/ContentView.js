@@ -111,21 +111,7 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                         } else {
                             var currentModel = this.collection.models[itemIndex];
                             this.$el.html(_.template(ApplicationsFormTemplate, currentModel.toJSON()));
-
-                            _.each(workflows, function (workflow, index) {
-                                if (index < workflows.length - 1) {
-                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
-                                }
-                            });
-
-                            _.each(workflows, function (workflow, i) {
-                                var breadcrumb = this.$(".breadcrumb li").eq(i);
-                                if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                                    breadcrumb.find("a").addClass("active");
-                                }
-                            }, this);
                         }
-
                         break;
                     }
             }         

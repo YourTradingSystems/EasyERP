@@ -33,9 +33,17 @@
 			<select id="assignedToDd">
 			</select>
 		  </dd>
+            
+            <dt><label>Type</label></dt><dd>
+			<select id="type">
+              <option value="<%=model.assignedTo.id%>">Select...</option>
+              <% ['Task', 'Bug', 'Feature'].forEach(function(option){ %>
+              <option <%= (option == model.type) ? 'selected="selected"' : ''%>> <%= option%></option>
+              <% }); %>
+			</select>
+		  </dd>
 
-
-		  <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
+		    <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
 
 		  <dt><label for="priorityDd">Priority </label></dt><dd>
 		    <select id="priorityDd">

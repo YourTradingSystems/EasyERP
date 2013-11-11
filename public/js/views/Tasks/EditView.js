@@ -17,20 +17,22 @@
                 this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
                 //this.customersDdCollection.bind('reset', _.bind(this.render, this));
                 this.render();
+
             },
-            renderView:function(){
+            renderView: function () {
                 console.log('RENDERVIEW');
             },
             events: {
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
-                "click #saveBtn" : "saveItem",
-                "click #cancelBtn" : "hideDialog"
+                "click #saveBtn": "saveItem",
+                "click #cancelBtn": "hideDialog"
             },
 
             hideDialog: function(){
                 //this.$el.dialog('close');
                 $('.edit-task-dialog').remove();
+
             },
 
             changeWorkflow: function (e) {
@@ -165,8 +167,10 @@
                     priority = this.currentModel.defaults.extrainfo.priority;
                 }
 
+                var type = this.$("#type option:selected").text();
 
                 this.currentModel.save({
+                    type: type,
                     summary: summary,
                     assignedTo: assignedTo,
                     workflow: workflow,

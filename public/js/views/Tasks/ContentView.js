@@ -62,7 +62,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                 {
-
                     //draw kanbas header with workflows
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
@@ -167,20 +166,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                         //currentModel.on('change', this.render, this);
                         //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
                         this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
-                        /*
-                         _.each(workflows, function (workflow, index) {
-                         if (index < workflows.length - 2) {
-                         $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
-                         }
-                         });
-
-                         _.each(workflows, function (workflow, i) {
-
-                         var breadcrumb = this.$(".breadcrumb li").eq(i);
-                         if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                         breadcrumb.find("a").addClass("active");
-                         }
-                         }, this);*/
                     }
 
                     break;

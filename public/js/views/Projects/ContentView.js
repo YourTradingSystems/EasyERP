@@ -12,7 +12,7 @@ define([
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Project'});
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Project' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
@@ -24,12 +24,12 @@ define([
                 "click td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
 
-            editItem: function(){
+            editItem: function () {
                 //create editView in dialog here
-                new EditView({collection:this.collection});
+                new EditView({ collection: this.collection });
             },
 
-            gotoForm: function(e) {
+            gotoForm: function (e) {
                 App.ownContentType = true;
                 var itemIndex = $(e.target).closest("tr").data("index") + 1;
                 window.location.hash = "#home/content-Projects/form/" + itemIndex;
@@ -41,77 +41,64 @@ define([
                 Custom.setCurrentCL(models.length);
                 switch (viewType) {
                     case "list":
-                    {
-                        this.$el.html(_.template(ListTemplate, { projectsCollection: this.collection.toJSON() }));
+                        {
+                            this.$el.html(_.template(ListTemplate, { projectsCollection: this.collection.toJSON() }));
 
-                        $('#check_all').click(function () {
-                            var c = this.checked;
-                            $(':checkbox').prop('checked', c);
-                        });
-                        break;
-                    }
-                    case "thumbnails":
-                    {
-                        this.$el.html('');
-                        if (this.collection.length > 0) {
-                            var holder = this.$el,
-                                thumbnailsItemView;
-                            _.each(models, function (model) {
-                                thumbnailsItemView = new ThumbnailsItemView({ model: model });
-                                thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                                $(holder).append(thumbnailsItemView.render().el);
-                            }, this);
-                        } else {
-                            this.$el.html('<h2>No projects found</h2>');
-                        }
-                        break;
-                    }
-                    case "form":
-                    {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > models.length - 1) {
-                            itemIndex = models.length - 1;
-                            Custom.setCurrentII(models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html('<h2>No projects found</h2>');
-                        } else {
-                            var currentModel;
-                            if (App.hash) {
-                                currentModel = this.collection.get(App.hash);
-                            } else {
-                                currentModel = models[itemIndex];
-                            }
-                            this.collection.setElement(currentModel);
-                            currentModel.on('change', this.render, this);
-                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            var workflows = this.workflowsCollection.toJSON()[0].value;
-
-                            _.each(workflows, function (workflow, index) {
-                                $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
+                            $('#check_all').click(function () {
+                                var c = this.checked;
+                                $(':checkbox').prop('checked', c);
                             });
-
-                            _.each(workflows, function (workflow, i) {
-                                var breadcrumb = this.$(".breadcrumb li").eq(i);
-
-                                if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                                    breadcrumb.find("a").addClass("active");
-                                }
-                            }, this);
+                            break;
                         }
+                    case "thumbnails":
+                        {
+                            this.$el.html('');
+                            if (this.collection.length > 0) {
+                                var holder = this.$el,
+                                    thumbnailsItemView;
+                                _.each(models, function (model) {
+                                    thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                                    $(holder).append(thumbnailsItemView.render().el);
+                                }, this);
+                            } else {
+                                this.$el.html('<h2>No projects found</h2>');
+                            }
+                            break;
+                        }
+                    case "form":
+                        {
+                            var itemIndex = Custom.getCurrentII() - 1;
+                            if (itemIndex > models.length - 1) {
+                                itemIndex = models.length - 1;
+                                Custom.setCurrentII(models.length);
+                            }
 
-                        break;
-                    }
+                            if (itemIndex == -1) {
+                                this.$el.html('<h2>No projects found</h2>');
+                            } else {
+                                var currentModel;
+                                if (App.hash) {
+                                    currentModel = this.collection.get(App.hash);
+                                } else {
+                                    currentModel = models[itemIndex];
+                                }
+                                this.collection.setElement(currentModel);
+                                currentModel.on('change', this.render, this);
+                                this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                            }
+
+                            break;
+                        }
                     case "gantt":
-                    {
-                        this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
-                        GanttChart.create("GanttDiv");
-                        if (this.collection.length > 0)
-                            GanttChart.parseProjects(this.collection);
+                        {
+                            this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
+                            GanttChart.create("GanttDiv");
+                            if (this.collection.length > 0)
+                                GanttChart.parseProjects(this.collection);
 
-                        break;
-                    }
+                            break;
+                        }
                 }
                 return this;
 
@@ -157,47 +144,47 @@ define([
                     viewType = Custom.getCurrentVT();
                 switch (viewType) {
                     case "list":
-                    {
-                        $.each($("tbody input:checked"), function (index, checkbox) {
-                            model = that.collection.get(checkbox.value);
-                            model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
+                        {
+                            $.each($("tbody input:checked"), function (index, checkbox) {
+                                model = that.collection.get(checkbox.value);
+                                model.destroy({
+                                    headers: {
+                                        mid: mid
+                                    }
+                                });
                             });
-                        });
 
-                        this.collection.trigger('reset');
-                        break;
-                    }
+                            this.collection.trigger('reset');
+                            break;
+                        }
                     case "thumbnails":
-                    {
-                        model = this.model.collection.get(this.$el.attr("id"));
-                        this.$el.fadeToggle(300, function () {
-                            model.destroy({
-                                headers: {
-                                    mid: mid
-                                }
+                        {
+                            model = this.model.collection.get(this.$el.attr("id"));
+                            this.$el.fadeToggle(300, function () {
+                                model.destroy({
+                                    headers: {
+                                        mid: mid
+                                    }
+                                });
+                                $(this).remove();
                             });
-                            $(this).remove();
-                        });
-                        break;
-                    }
+                            break;
+                        }
 
                     case "form":
-                    {
-                        model = this.collection.get($(".form-holder form").data("id"));
-                        model.on('change', this.render, this);
-                        model.destroy({
-                            headers: {
-                                mid: mid
-                            },
-                            success: function () {
-                                Backbone.history.navigate("#home/content-Projects", { trigger: true });
-                            }
-                        });
-                        break;
-                    }
+                        {
+                            model = this.collection.get($(".form-holder form").data("id"));
+                            model.on('change', this.render, this);
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                },
+                                success: function () {
+                                    Backbone.history.navigate("#home/content-Projects", { trigger: true });
+                                }
+                            });
+                            break;
+                        }
                 }
             }
         });

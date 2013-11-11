@@ -38,6 +38,7 @@ define([
 
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
+
                 return this;
             },
 
