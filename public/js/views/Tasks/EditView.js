@@ -104,7 +104,7 @@
                 var self = this;
 
                 var mid = 39;
-                var summary = $("#summary").val().trim();
+                var summary = $("#summary").val();
                 var idProject = this.$el.find("#projectDd option:selected").val();
                 var _project = common.toObject(idProject, this.projectsDdCollection);
                 var project = {};
@@ -133,7 +133,7 @@
                     tags = null;
                 }
 
-                var description = $("#description").val().trim();
+                var description = $("#description").val();
 
                 var sequence = parseInt($.trim($("#sequence").val()));
                 if (!sequence) {

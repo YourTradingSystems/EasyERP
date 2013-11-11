@@ -3,7 +3,7 @@ define([
     'custom',
     'common'
 ],
-    function (ContentTopBarTemplate, Custom) {
+    function (ContentTopBarTemplate, Custom, Common){
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Tasks",
@@ -55,7 +55,8 @@ define([
 
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
 
-                if (this.actionType == "Content") {
+                Common.displayControlBtnsByActionType(this.actionType);
+                /*if (this.actionType == "Content") {
                     $("#createBtnHolder").show();
                     $("#saveDiscardHolder").hide();
                 } else {
@@ -76,7 +77,7 @@ define([
                     if ((viewType == "form") && (this.actionType === "Edit")) {
                         $("ul.changeContentIndex").show();
                         $("#template-switcher>span").show();
-                    }
+                    }*/
 
                 return this;
             },

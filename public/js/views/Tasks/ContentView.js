@@ -15,13 +15,16 @@ define([
 function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart, EditView) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
+
         initialize: function (options) {
-            this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
-            this.workflowsCollection.bind('reset', _.bind(this.render, this));
-            this.projectsCollection = new ProjectsCollection();
-            this.projectsCollection.bind('reset', _.bind(this.render, this));
+            this.renderView = _.after(2, this.render);
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
+            this.start = new Date();
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
+            this.projectsCollection = new ProjectsCollection();
+            this.projectsCollection.bind('reset', _.bind(this.renderView, this));
+            this.workflowsCollection.bind('reset', _.bind(this.renderView, this));
+
         },
 
         events: {
@@ -32,6 +35,205 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
             "click #tabList a": "switchTab",
             "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        renderView: function(){  },
+
+        render: function () {
+
+            console.log('Tasks render ');
+            var that = this;
+            Custom.setCurrentCL(this.collection.models.length);
+            var viewType = Custom.getCurrentVT();
+            var mid = 39;
+            var models = [];
+            var workflows = this.workflowsCollection.toJSON()[0].value;
+            var projectId = window.location.hash.split('/')[3];
+            if (!projectId || projectId.length < 24) {
+                models = this.collection.models;
+                App.hash = null;
+            }
+            else {
+                App.hash = projectId;
+                _.each(this.collection.models, function (item) {
+                    if (item.get("project").id == projectId) models.push(item);
+                }, this);
+            }
+            switch (viewType) {
+                case "kanban":
+                {
+
+                    //draw kanbas header with workflows
+                    this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
+
+                    //$(".column").last().addClass("lastColumn");
+
+                     _.each(workflows, function (workflow, i) {
+                         var counter = 0,
+                         remaining = 0;
+                         var column = this.$(".column").eq(i);
+                         var kanbanItemView;
+                         var workflowModels = this.collection.currentWorkflow(workflow.name);
+                         _.each(workflowModels, function (wfModel) {
+                             kanbanItemView = new TasksKanbanItemView({ model: wfModel });
+                             kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
+                             column.append(kanbanItemView.render().el);
+                             counter++;
+                             remaining += wfModel.get("remaining");
+
+                         }, this);
+                         var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
+                         var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                         column.find(".columnNameDiv h2").append(count);
+                         column.find(".columnNameDiv").append(content);
+                     }, this);
+
+
+                    /*_.each(workflows, function (workflow, i) {
+                        var counter = 0,
+                            remaining = 0;
+                        var column = this.$(".column").eq(i);
+                        var kanbanItemView;
+                        _.each(models, function (model) {
+                            if (model.get("workflow").name === column.data("name")) {
+                                kanbanItemView = new TasksKanbanItemView({ model: model });
+                                kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
+                                column.append(kanbanItemView.render().el);
+                                counter++;
+                                var _remaining = model.get("remaining");
+                                remaining += _remaining;
+                            }
+                        }, this);
+                        var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
+                        var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                        column.find(".columnNameDiv h2").append(count);
+                        column.find(".columnNameDiv").append(content);
+                    }, this);*/
+                    //console.log(new Date() - this5.start);
+                    break;
+                }
+                case "list":
+                {
+
+                    var jsonCollection = this.collection.toJSON();
+                    this.$el.html(_.template(TasksListTemplate, { tasksCollection: jsonCollection }));
+
+                    $('#check_all').click(function () {
+                        var c = this.checked;
+                        $(':checkbox').prop('checked', c);
+                    });
+                    break;
+                }
+                case "thumbnails":
+                {
+                    this.$el.html('');
+                    if (models.length > 0) {
+                        var holder = this.$el;
+                        var thumbnailsItemView;
+                        _.each(models, function (model) {
+                            thumbnailsItemView = new TasksThumbnailsItemView({ model: model });
+                            thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                            $(holder).append(thumbnailsItemView.render().el);
+                        }, this);
+                    } else {
+                        this.$el.html('<h2>No tasks found</h2>');
+                    }
+                    break;
+                }
+                case "form":
+                {
+                    this.$el.html('');
+                    var itemIndex = Custom.getCurrentII() - 1;
+                    if (itemIndex > models.length - 1) {
+                        itemIndex = models.length - 1;
+
+                        var urlParts = window.location.hash.split('/');
+                        if (urlParts[4]) {
+                            urlParts[4] = models.length;
+                            window.location.hash = urlParts.join('/');
+                        }
+                        Custom.setCurrentII(models.length);
+                    }
+
+                    if (itemIndex == -1) {
+                        this.$el.html('<h2>No tasks found</h2>');
+                    } else {
+                        var currentModel = models[itemIndex];
+
+                        var extrainfo = currentModel.get('extrainfo');
+                        //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
+                        //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
+                        //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
+                        //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
+
+                        //currentModel.on('change', this.render, this);
+                        //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
+                        this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
+                        /*
+                         _.each(workflows, function (workflow, index) {
+                         if (index < workflows.length - 2) {
+                         $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
+                         }
+                         });
+
+                         _.each(workflows, function (workflow, i) {
+
+                         var breadcrumb = this.$(".breadcrumb li").eq(i);
+                         if (currentModel.get("workflow").name === breadcrumb.data("name")) {
+                         breadcrumb.find("a").addClass("active");
+                         }
+                         }, this);*/
+                    }
+
+                    break;
+                }
+
+                case "gantt":
+                {
+                    this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
+                    GanttChart.create("GanttDiv");
+                    if (this.projectsCollection.length > 0)
+                        GanttChart.parseTasks(this.projectsCollection);
+                    break;
+                }
+            }
+            //this.$(".kanban").width((this.$(".column").width() + 10) * workflows.length);
+            this.$(".column").sortable({
+                connectWith: ".column",
+                cancel: "h2",
+                cursor: "move",
+                items: ".task",
+                opacity: 0.7,
+                revert: true,
+                helper: 'clone',
+                start: function (event, ui) {
+                    var column = ui.item.closest(".column");
+                    var id = ui.item.attr('data-id');
+                    var model = that.collection.get(id);
+                    if(model){
+                        column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
+                    }
+
+                },
+                stop: function (event, ui) {
+                    var id = ui.item.attr('data-id');
+                    var model = that.collection.get(id);
+                    var column = ui.item.closest(".column");
+                    if(model){
+                        model.get('workflow').name = column.data('name');
+                        model.get('workflow').status = column.data('status');
+
+                        model.save({}, {
+                            headers: {
+                                mid: mid
+                            }
+                        });
+                        column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
+                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
+                    }
+                }
+            }).disableSelection();
+            return this;
         },
 
         editItem: function(){
@@ -61,175 +263,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             window.location.hash = "#home/content-Projects/form/" + itemIndex;
         },
 
-        render: function () {
-            var that = this;
-            Custom.setCurrentCL(this.collection.models.length);
-            var viewType = Custom.getCurrentVT();
-            var mid = 39;
-            var models = [];
-            var workflows = this.workflowsCollection.toJSON()[0].value;
-            var projectId = window.location.hash.split('/')[3];
-            if (!projectId || projectId.length < 24) {
-                models = this.collection.models;
-                App.hash = null;
-            }
-            else {
-                App.hash = projectId;
-                _.each(this.collection.models, function (item) {
-                    if (item.get("project").id == projectId) models.push(item);
-                }, this);
-            }
-            switch (viewType) {
-                case "kanban":
-                    {
-                        this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
-                        $(".column").last().addClass("lastColumn");
-                        _.each(workflows, function (workflow, i) {                         
-                            var counter = 0,
-                                remaining = 0;
-                            var column = this.$(".column").eq(i);
-                            var kanbanItemView;
-                            _.each(models, function (model) {
-                                if (model.get("workflow").name === column.data("name")) {
-                                    kanbanItemView = new TasksKanbanItemView({ model: model });
-                                    kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
-                                    column.append(kanbanItemView.render().el);
-                                    counter++;
-                                    var _remaining = model.get("remaining");
-                                    remaining += _remaining;
-                                }
-                            }, this);
-                            var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
-                            var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
-                            column.find(".columnNameDiv h2").append(count);
-                            column.find(".columnNameDiv").append(content);
-                        }, this);
-                        break;
-                    }
-                case "list":
-                    {
-
-                        var jsonCollection = this.collection.toJSON();
-                        /*$.each(jsonCollection, function(index,value){
-                            value.extrainfo.StartDate = common.utcDateToLocaleDate(value.extrainfo.StartDate);
-                            value.extrainfo.EndDate = common.utcDateToLocaleDate(value.extrainfo.EndDate);
-                        });*/
-                        this.$el.html(_.template(TasksListTemplate, { tasksCollection: jsonCollection }));
-
-                        $('#check_all').click(function () {
-                            var c = this.checked;
-                            $(':checkbox').prop('checked', c);
-                        });
-                        break;
-                    }
-                case "thumbnails":
-                    {
-                        this.$el.html('');
-                        if (models.length > 0) {
-                            var holder = this.$el;
-                            var thumbnailsItemView;
-                            _.each(models, function (model) {
-                                thumbnailsItemView = new TasksThumbnailsItemView({ model: model });
-                                thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                                $(holder).append(thumbnailsItemView.render().el);
-                            }, this);
-                        } else {
-                            this.$el.html('<h2>No tasks found</h2>');
-                        }
-                        break;
-                    }
-                case "form":
-                    {
-                        this.$el.html('');
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > models.length - 1) {
-                            itemIndex = models.length - 1;
-
-                            var urlParts = window.location.hash.split('/');
-                            if (urlParts[4]) {
-                                urlParts[4] = models.length;
-                                window.location.hash = urlParts.join('/');
-                            }
-                            Custom.setCurrentII(models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html('<h2>No tasks found</h2>');
-                        } else {
-                            var currentModel = models[itemIndex];
-
-                            var extrainfo = currentModel.get('extrainfo');
-                            //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
-                            //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
-                            //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
-                            //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
-
-                            //currentModel.on('change', this.render, this);
-                            //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
-                            this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
-                            /*
-                            _.each(workflows, function (workflow, index) {
-                                if (index < workflows.length - 2) {
-                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
-                                }
-                            });
-
-                            _.each(workflows, function (workflow, i) {
-                              
-                                var breadcrumb = this.$(".breadcrumb li").eq(i);
-                                if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                                    breadcrumb.find("a").addClass("active");
-                                }
-                            }, this);*/
-                        }
-
-                        break;
-                    }
-
-                case "gantt":
-                    {
-                        this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
-                        GanttChart.create("GanttDiv");
-                        if (this.projectsCollection.length > 0)
-                            GanttChart.parseTasks(this.projectsCollection);
-                        break;
-                    }
-            }
-            //this.$(".kanban").width((this.$(".column").width() + 10) * workflows.length);
-            this.$(".column").sortable({
-                connectWith: ".column",
-                cancel: "h2",
-                cursor: "move",
-                items: ".task",
-                opacity: 0.7,
-                revert: true,
-                helper: 'clone',
-                start: function (event, ui) {
-                    var column = ui.item.closest(".column");
-                    var model = that.collection.get(ui.item.attr("id"));
-                    column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                    column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
-                },
-                stop: function (event, ui) {
-                    var model = that.collection.get(ui.item.attr("id"));
-                    var column = ui.item.closest(".column");
-
-                    model.get('workflow').name = column.data('name');
-                    model.get('workflow').status = column.data('status');
-
-                    model.save({}, {
-                        headers: {
-                            mid: mid
-                        }
-
-                    });
-                    column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
-                    column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
-                }
-            }).disableSelection();
-            return this;
-        },
 
         changeWorkflow: function (e) {
             var mid = 39;
