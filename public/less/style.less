@@ -124,7 +124,7 @@ html {
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
-.box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
+.box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15), @inset: '') {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
@@ -287,7 +287,8 @@ article {
 
                 &.hover {
                     background-color: transparent;
-                    height: @height;                  
+                    height: @height;
+
                     a {
                         //  color: @activeColor;
                         text-decoration: none;
@@ -375,17 +376,16 @@ article {
                 &.selected {
                     position: relative;
                     height: @height;
-                    line-height: @height; 
+                    line-height: @height;
                     width: 98px;
                     border-top: 1px solid @background;
                     border-left: 1px solid @background;
                     border-right: 1px solid @background;
                     border-bottom: 1px solid #fff;
-                   // background: #FFF;
-
+                    // background: #FFF;
                     a {
-                      line-height: @height -2px;
-                      height:@height - 2px;
+                        line-height: @height -2px;
+                        height: @height - 2px;
                     }
                     //  background: #1e8fc6; //; #2D323D; 2e3539
                     &.hover {
@@ -1012,12 +1012,10 @@ dl.person-info {
 }
 
 .loginPanelBtnHoover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 114, 222, 0.67);
     text-shadow: black 0px 0px 3px;
-    color: #fff;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
+    color: #fff !important;
+    .box-shadow(0 1px 2px rgba(0, 0, 0, 0.4) inset);
 }
 
 #loginPanel {
@@ -1025,7 +1023,7 @@ dl.person-info {
     width: auto;
     height: 30px;
 
-    button {
+    .dropdown-button {
         float: left;
         background: transparent;
         border: none;
@@ -1033,8 +1031,6 @@ dl.person-info {
         /*top: -3px;*/
         box-sizing: border-box;
         box-shadow: none;
-        width: 32px;
-        height: 32px;
         padding: 0px;
 
         &:hover {
@@ -1058,7 +1054,7 @@ dl.person-info {
     span {
         display: block;
         line-height: 30px;
-        color: #333;
+        //  color: #333;
     }
 
     &:hover {
@@ -1208,7 +1204,6 @@ dl.person-info {
             text-align: center;
             text-shadow: 0 1px 1px rgba(222, 222, 222, 0.5);
 
-
             input[type="checkbox"] {
                 margin-top: 2.5px;
             }
@@ -1223,42 +1218,45 @@ dl.person-info {
         }
     }
 
-    tr {
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
-        border-top: 1px solid #cacaca;
+    tbody {
+       
+        tr {
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+            border-top: 1px solid #cacaca;
 
-        td {
-            cursor: pointer;
-            padding: 4px 5px;
-            white-space: pre-line;
-            line-height: 18px;
-            font-size: 11px;
+            td {
+                cursor: pointer;
+                padding: 4px 5px;
+                // white-space: pre-line;
+                line-height: 18px;
+                font-size: 11px;
 
-            &:nth-child(2) {
-                text-align: right;
-            }
+                &:nth-child(2) {
+                    text-align: right;
+                }
 
-            progress {
-                width: 100%;
-            }
+                progress {
+                    width: 100%;
+                }
 
-            &:first-of-type {
-                padding-left: 7px;
+                &:first-of-type {
+                    padding-left: 7px;
 
-                input {
-                    cursor: pointer;
+                    input {
+                        cursor: pointer;
+                    }
                 }
             }
         }
     }
 
-        tr:nth-child(odd) {
-            background-color: #F9F9F9;
-        }
+    tr:nth-child(odd) {
+        background-color: #F9F9F9;
+    }
 
-        tr:hover {
-            background-color: #F5F5F5;
-        }
+    tr:hover {
+        background-color: #F5F5F5;
+    }
 }
 
 .form(@width: 860px, @border: 1px) {
@@ -2427,13 +2425,21 @@ button {
 ////////////////////////////////////////////////////////
 // kanban styles
 &.scroll-x {
-    overflow-x: auto;
+    /*overflow-x: auto;
     overflow-y: hidden;
-    height: auto;
+    height: auto;*/
 }
 
 
 .kanban {
+    margin: 0;
+    padding: 0;
+  //  display: inline-flexbox;
+   width:100%;
+    tbody {
+     width:100%;
+    }
+
     .opportunity-header {
         h3 {
             text-align: right;
@@ -2444,10 +2450,10 @@ button {
         border-left: 10px solid #fff;
         vertical-align: text-top;
         min-height: 100%;
-        padding: 0px 0px 10px 0px;
+        // padding: 0px 0px 10px 0px;
         /*float: left;
         display: block;*/
-        width: 350px;
+        width: auto;
         height: auto;
         background: url("@{imagesfolder}/form_sheetbg.png");
 
@@ -2487,8 +2493,16 @@ button {
 
             span {
                 font-weight: normal;
-                vertical-align: top;
+                // vertical-align: middle;
+                line-height: 13px;
                 font-size: 13px;
+
+                span {
+                    font-weight: normal;
+                    //vertical-align: middle;
+                    line-height: 13px;
+                    font-size: 13px;
+                }
             }
         }
 
@@ -2513,10 +2527,7 @@ button {
             }
         }
 
-        .counter {
-            font-size: 13px;
-            vertical-align: top;
-        }
+
 
         .remaining, .revenue {
             margin-left: 3px;

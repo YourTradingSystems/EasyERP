@@ -61,12 +61,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                 {
-
-                    //draw kanbas header with workflows
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
-
-                    //$(".column").last().addClass("lastColumn");
-
                      _.each(workflows, function (workflow, i) {
                          var counter = 0,
                          remaining = 0;
