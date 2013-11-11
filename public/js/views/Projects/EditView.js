@@ -98,13 +98,19 @@ define([
                         workflow = this.currentModel.defaults.workflow;
                     }
 
-                var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
-                    $userNodes.each(function (key, val) {
+                var userNodes = this.$el.find("#usereditDd option:selected"), users = [];
+                users = $.map(userNodes,function(item){
+                    return {
+                        id: item.value,
+                        name: item.innerHTML
+                    }
+                });
+                /*userNodes.each(function (key, val) {
                         users.push({
                             id: val.value,
                             name: val.innerHTML
                         });
-                    });
+                    });*/
 
                 self.currentModel.save({
                         projectName: projectName,
@@ -142,22 +148,7 @@ define([
                     autoOpen:true,
                     resizable:true,
                     title: "Edit Project",
-					dialogClass:"edit-project-dialog",
-                 /*   buttons:{
-                        "Save": {
-                            text:"Save",
-                            class: "btn",
-                            id: "saveBtn",
-                            click: self.saveItem
-                        },
-						"Cancel": {
-                            text:"Cancel",
-                            class: "btn",
-                            id:"cancelBtn",
-                            click: self.cancelItem
-                        }
-
-                    }*/
+					dialogClass:"edit-project-dialog"
                 });
                 this.delegateEvents(this.events);
 

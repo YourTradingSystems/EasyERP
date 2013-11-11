@@ -1,17 +1,12 @@
 ﻿<div class="form-holder">
   <form method="post" action="" id="createTaskForm" class="form" data-id="<%=model._id%>">
-	<div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span id="ui-id-2" class="ui-dialog-title"><%=model.project.projectShortDesc%></span><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button" aria-disabled="false" title="close"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span></button></div>
-      <div class="formTitle">
-		<h3 class="left"><%=model.project.projectShortDesc%></h3>
-		<div class="clearfix"></div>
-	  </div>
     <div class="half-block left withPaddingLeft">
       <div class="formTitle">
 		<h3 class="left">Description</h3>
 		<div class="clearfix"></div>
 	  </div>
 	  <div class="inner">
-		<textarea type="text" name="description" placeholder="Add a Description" id="description" value="<%=model.description%>" required />
+		<textarea type="text" name="description" placeholder="Add a Description" id="description" required ><%=model.description%> </textarea>
 	  </div>
     </div>
     <div class="half-block left">
