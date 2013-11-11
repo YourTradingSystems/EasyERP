@@ -87,19 +87,15 @@ app.get('/getModules', function (req, res) {
 
 app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
-    //data = req.body;
-    //console.log(req);
     console.log(req.files);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var newPath = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(newPath, data, function (err) {
             if (err) throw err;
             console.log(req.files.attachfile.name);
-            res.send(204);
+            res.send(200);
         });
     });
-    //requestHandler.login(req, res, data);
 });
 
 app.post('/login', function (req, res, next) {
