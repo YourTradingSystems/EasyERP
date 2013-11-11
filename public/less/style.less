@@ -177,9 +177,10 @@ article {
 }
 
 .content-box {
+	border: 1px solid #CACACA;
     display: block;
     .margin(15px);
-    .box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.1));
+    //.box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.1));
     background: #fff;
 }
 
@@ -220,7 +221,9 @@ article {
         clear: both;
     }
 }
-
+.clearfixRight {
+    clear: right;
+}
 .no-marpad {
     margin: 0;
     padding: 0;
@@ -782,12 +785,33 @@ dl.person-info {
     display: block;
 }
 
-#details {
+#details,
+#sub-details {
     >dl {
         padding-left: 156px;
     }
+	&.workflow-details{
+		margin-left:10px;
+		margin-right:10px;
+		padding-left:20px;
+		padding-top:20px;
+		padding-bottom:20px;
+		border: 1px solid #DDD;
+		border-top: 1px solid rgba(0,0,0,0);
+		display:none;
+		&.active{
+			display:block;
+		}
+	}
 }
+#sub-details {
+	&.workflow-details{
+		display:block;
+		padding-top:0px;
+		border: 1px solid rgba(0,0,0,0);
+	}
 
+}
 .sales-purchases.inner {
     margin-left: 150px !important;
 }
@@ -1962,9 +1986,8 @@ button {
 		width:50% !important;
 		min-width:950px;
 		.ui-dialog-titlebar {
-			display:none;
-			padding-left:35px;
-			padding-right:45px;
+			padding-left:15px;
+			padding-right:22px;
 		}
 
 	}
@@ -2049,7 +2072,7 @@ button {
 				text-shadow: 0 1px 0 #FFF;
 				color: #222 !important;
 				border: 1px solid #C3C3C3 !important;
-            padding: 5px 15px;
+				padding: 5px 15px;
 
             &:hover {
 					border: 1px solid #888 !important;
@@ -2119,7 +2142,9 @@ button {
 		}
 	}
 }
-
+.textarea-wrapper{
+	margin-left:10px;
+}
 #createFormDiv > #createProjectForm {
     margin: 0;
     width: auto;
@@ -2133,6 +2158,77 @@ button {
 		font-size: 14px;
 		color: #666;
 	}
+}
+#workflowAccord,
+#workflowSubAccord{
+	width:88%;
+}
+#workflowNames,
+#workflowSubNames{
+	padding-left:10px;
+	padding-right:10px;
+	
+	.cathegory{
+		height:40px;
+		line-height:40px;
+		background-color: #F5F5F5;
+		border:1px solid #DDD;
+		border-top:1px solid rgba(0, 0, 0, 0);
+		a{
+			padding-left:20px;
+			font-family: 'Open Sans', sans-serif;
+			font-size: 16px;
+			font-weight: 300;
+			&:hover{
+				text-decoration:underline;
+			}
+		}
+	}
+}
+#workflowSubNames{
+	.cathegory{
+		border-top:1px solid #DDD;
+	}
+}
+.workflow-list-wrapper,
+.workflow-sub-list-wrapper{
+	width:12%;
+}
+.workflow-list,
+.workflow-sub-list{
+	color:#2A6496;
+	width:100%;
+	font-size: 13px;
+
+	li{
+		border:1px solid rgba(0, 0, 0, 0);
+		border-right:1px solid #ddd;
+		height: 40px;
+		line-height:40px;
+		&:hover{
+			background-color: #EEE;
+		}
+		&.active{
+			border:1px solid #ddd;
+			border-right:none;
+			&.first{
+				border-top:1px solid rgba(0, 0, 0, 0);
+			}
+			&:hover{
+				background-color: white;
+			}
+
+		}
+
+		a{
+			padding-bottom: 10px;
+			padding-left: 15px;
+			padding-right: 15px;
+			padding-top: 10px;
+		}
+
+	}
+	
 }
 #createTaskForm{
 	min-width:100%;
@@ -2156,6 +2252,21 @@ button {
 	.blueback, select {
 		width:100%;
 	}
+	&.notDialog{
+		.blueback{
+			max-width:none;
+			width:95%;
+		}
+		select{
+			max-width:none;
+			width:96%;
+		}
+		textarea{
+			height:402px !important;
+		}
+
+	}
+
 }
 .createFormDatepicker {
     border-radius: 0 !important;

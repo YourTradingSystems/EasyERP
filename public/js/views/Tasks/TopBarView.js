@@ -1,6 +1,7 @@
 define([
     'text!templates/Tasks/TopBarTemplate.html',
-    'custom'
+    'custom',
+    'common'
 ],
     function (ContentTopBarTemplate, Custom) {
         var TopBarView = Backbone.View.extend({
