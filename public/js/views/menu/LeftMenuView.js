@@ -17,10 +17,10 @@ define([
             mouseOver: function (section, selectedId) {
                 if (this.leftMenu) {
                     this.leftMenu.currentSection = section;
-                    //this.leftMenu.render(true, selectedId);
+                    this.leftMenu.render(true, selectedId);
                 } else {
                     this.currentSection = section;
-                    //this.render(true, selectedId);
+                    this.render(true, selectedId);
                 }
             },
 
@@ -51,6 +51,8 @@ define([
                 }
                 if (currentModule == null) currentModule = root[0];
                 var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver, selectedId));
+                var erger = document.getElementById(selectedId);
+                $(erger).addClass('selected');
                 return this;
             },
 
@@ -81,8 +83,8 @@ define([
                     if (selectSection === section) {
                         return;
                     } else {
-                        //that.selectedId = $('#submenu-holder .selected > a').data('module-id');
-                        //that.mouseOver(selectSection, that.selectedId);
+                        that.selectedId = $('#submenu-holder .selected > a').data('module-id');
+                        that.mouseOver(selectSection, that.selectedId);
                         $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
                     }
                 };
@@ -91,7 +93,7 @@ define([
             },
             mouseLeave: function (event) {
                 this.mouseLeaveEl = _.bind(this.mouseLeaveEl, this, this.currentSection);
-                //this.mouseLeaveEl = _.debounce(this.mouseLeaveEl, 2000);
+                this.mouseLeaveEl = _.debounce(this.mouseLeaveEl, 2000);
                 this.mouseLeaveEl();
             },
             renderMenu: function (list, onMouseOver, selectedId) {
@@ -102,7 +104,6 @@ define([
 
                 _.each(list, function (model) {
                     var html = this.renderMenuItem(model);
-
                     $dom.append(html);
                     var kids = this.collection.children(model);
                     $dom.find(':last').append(this.renderMenu(kids, onMouseOver, selectedId));

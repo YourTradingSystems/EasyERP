@@ -15,9 +15,11 @@ define([
                 this.unbind();
                 this.model.unbind();
             },
-            render: function(){
-                var template = this.template(this.model.toJSON());
+            render: function() {
+                var model = this.model.toJSON();
+                var template = this.template(model);
                 $(this.el).html(template);
+                this.el.id = model._id;
                 return this;
             }
         });
