@@ -68,6 +68,7 @@ var Project = function (logWriter, mongoose) {
             name: { type: String, default: 'Analysis' },
             status: { type: String, default: 'New' }
         },
+        type: { type: String, default: '' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
@@ -719,6 +720,9 @@ var Project = function (logWriter, mongoose) {
                         if (data.assignedTo.name) {
                             _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.last;
                         }
+                    }
+                    if (data.deadline) {
+                        _task.type = data.type;
                     }
                     if (data.deadline) {
                         _task.deadline = new Date(data.deadline);
