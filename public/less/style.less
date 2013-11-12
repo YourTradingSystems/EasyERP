@@ -764,6 +764,7 @@ dl.person-info {
 
     dt {
         width: 35%;
+		max-width:110px;
         float: left;
         clear: both;
         line-height: 20px;
@@ -799,6 +800,8 @@ dl.person-info {
 		border: 1px solid #DDD;
 		border-top: 1px solid rgba(0,0,0,0);
 		display:none;
+		font-family: 'Segoe UI', sans-serif;
+		font-size: 13px;
 		&.active{
 			display:block;
 		}
@@ -2053,7 +2056,11 @@ button {
 	}
 }
 
-#createProjectForm,#createTaskForm,#createPersonsForm{
+#createProjectForm,
+#createTaskForm,
+#createEmployeeForm,
+#editEmployeeForm,
+#createPersonsForm{
 	border:none;
 	margin:0 auto;
 	width:auto;
@@ -2140,6 +2147,15 @@ button {
 			outline: medium none;
 			border: 1px solid rgba(121, 187, 238, 0.75) !important;
 		}
+	}
+}
+#createEmployeeForm,
+#editEmployeeForm{
+	textarea{
+		margin-top:10px;
+	}
+	#addContact{
+		margin-top:10px;
 	}
 }
 .textarea-wrapper{
@@ -2262,7 +2278,7 @@ button {
 			width:96%;
 		}
 		textarea{
-			height:402px !important;
+			height:438px !important;
 		}
 
 	}
