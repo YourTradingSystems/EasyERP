@@ -1,6 +1,5 @@
-var requestHandler = function (mongoose) {
-    var fs = require("fs"),
-        logWriter = require("./Modules/additions/logWriter.js")(fs),
+var requestHandler = function (fs, mongoose) {
+    var logWriter = require("./Modules/additions/logWriter.js")(fs),
         company = require("./Modules/Companies.js")(logWriter, mongoose),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
@@ -383,6 +382,15 @@ var requestHandler = function (mongoose) {
         console.log("Requst createWorkflow is success");
         if (req.session && req.session.loggedIn) {
             workflow.create(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+    
+    function updateWorkflow(req, res, _id, data) {
+        console.log("Requst createWorkflow is success");
+        if (req.session && req.session.loggedIn) {
+            workflow.update(_id, data, res);
         } else {
             res.send(401);
         }
@@ -861,6 +869,7 @@ var requestHandler = function (mongoose) {
         getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,
         createWorkflow: createWorkflow,
+        updateWorkflow: updateWorkflow,
 
         getProfile: getProfile,
         createProfile: createProfile,

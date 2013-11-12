@@ -1,13 +1,14 @@
 // JavaScript source code
 var http = require('http'),
-    url = require('url');
+    url = require('url'),
+    fs = require("fs");
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
 
 var express = require('express');
-var requestHandler = require("./requestHandler.js")(mongoose);
+var requestHandler = require("./requestHandler.js")(fs, mongoose);
 
 var app = express();
 
@@ -22,7 +23,7 @@ var config = {
     //mongoose_connection: mongoose.connections[0]
 };
 
-var allowCrossDomain = function(req, res, next) {
+var allowCrossDomain = function (req, res, next) {
     //var allowedHost = [
     //    'http://backbonetutorials.com',
     //    'http://localhost'
@@ -82,6 +83,23 @@ app.get('/account/authenticated', function (req, res, next) {
 
 app.get('/getModules', function (req, res) {
     requestHandler.getModules(req, res);
+});
+
+app.post('/uploadFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    //data = req.body;
+    //console.log(req);
+    console.log(req.files);
+    fs.readFile(req.files.attachfile.path, function (err, data) {
+        var newPath = __dirname + "\\uploads\\" + req.files.attachfile.name;
+        fs.writeFile(newPath, data, function (err) {
+            if (err) throw err;
+            console.log(req.files.attachfile.name);
+            res.send(204);
+        });
+    });
+    //requestHandler.login(req, res, data);
 });
 
 app.post('/login', function (req, res, next) {
@@ -340,12 +358,13 @@ app.post('/Workflows', function (req, res) {
 
 app.put('/Workflows/:id', function (req, res) {
     data = {};
-    data.id = req.param('id');
+    var _id = req.param('id');
     data.mid = req.headers.mid;
-    data.value = req.body;
-    data.name = req.headers.id;
+    data.value = req.body.value;
+    data.name = req.body.name;
+    data.wId = req.body.wId;
     console.log(data);
-    //requestHandler.createWorkflow(req, res, data);
+    requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
 
