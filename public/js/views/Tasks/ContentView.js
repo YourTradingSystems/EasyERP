@@ -49,26 +49,32 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             var workflows = this.workflowsCollection.toJSON()[0].value;
             var projectId = window.location.hash.split('/')[3];
             if (!projectId || projectId.length < 24) {
-                models = this.collection.models;
+                models = this.collection;
                 App.hash = null;
             }
             else {
                 App.hash = projectId;
-                _.each(this.collection.models, function (item) {
+                models = this.collection.filterByProject(projectId);
+                /*_.each(this.collection.models, function (item) {
                     if (item.get("project").id == projectId) models.push(item);
-                }, this);
+                }, this);*/
             }
             switch (viewType) {
                 case "kanban":
                 {
+
+                    //draw kanbas header with workflows
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
+
+                    $(".column").last().addClass("lastColumn");
+
                      _.each(workflows, function (workflow, i) {
                          var counter = 0,
                          remaining = 0;
                          var column = this.$(".column").eq(i);
                          var kanbanItemView;
-                         var workflowModels = this.collection.currentWorkflow(workflow.name);
-                         _.each(workflowModels, function (wfModel) {
+                         var modelWorkflows = models.filterByWorkflow(workflow.name);
+                         _.each(modelWorkflows, function (wfModel) {
                              kanbanItemView = new TasksKanbanItemView({ model: wfModel });
                              kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
                              column.append(kanbanItemView.render().el);
@@ -108,9 +114,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 }
                 case "list":
                 {
-
-                    var jsonCollection = this.collection.toJSON();
-                    this.$el.html(_.template(TasksListTemplate, { tasksCollection: jsonCollection }));
+                    this.$el.html(_.template(TasksListTemplate, { tasksCollection: models.toJSON() }));
 
                     $('#check_all').click(function () {
                         var c = this.checked;
@@ -124,7 +128,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     if (models.length > 0) {
                         var holder = this.$el;
                         var thumbnailsItemView;
-                        _.each(models, function (model) {
+                        _.each(models.models, function (model) {
                             thumbnailsItemView = new TasksThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
@@ -152,7 +156,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     if (itemIndex == -1) {
                         this.$el.html('<h2>No tasks found</h2>');
                     } else {
-                        var currentModel = models[itemIndex];
+                        var currentModel = models.models[itemIndex];
 
                         var extrainfo = currentModel.get('extrainfo');
                         //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
@@ -257,8 +261,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             var itemIndex = this.projectsCollection.indexOf(this.projectsCollection.get($(e.target).closest("a").attr("id"))) + 1;
             window.location.hash = "#home/content-Projects/form/" + itemIndex;
         },
-
-
 
         changeWorkflow: function (e) {
             var mid = 39;

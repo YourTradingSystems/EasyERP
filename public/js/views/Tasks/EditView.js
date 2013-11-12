@@ -1,35 +1,28 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "collections/Projects/ProjectsDdCollection",
-    "collections/Customers/AccountsDdCollection",
     "collections/Tasks/TasksCollection",
     "collections/Customers/CustomersCollection",
-    "collections/Workflows/WorkflowsCollection",
     "collections/Priority/TaskPriority",
     "common",
-    "custom"
+    "custom",
+    "views/Tasks/partialViews/ProjectsDdView",
+    "views/Tasks/partialViews/AccountsDdView",
+    "views/Tasks/partialViews/WorkflowsDdView"
 ],
-    function (EditTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, common, Custom) {
+    function (EditTemplate, TasksCollection, CustomersCollection, PriorityCollection, common, Custom, ProjectsDdView,AccountsDdView,WorkflowsDdView) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                this.renderView = _.after(5, this.render);
-                this.projectsDdCollection = new ProjectsDdCollection();
-                this.accountsDdCollection = new AccountsDdCollection();
                 this.customersDdCollection = new CustomersCollection();
-                this.workflowsDdCollection = new WorkflowsCollection({ id: "task" });
                 this.priorityCollection = new PriorityCollection();
                 this.tasksCollection = options.collection;
-                this.currentModel = this.tasksCollection.models[Custom.getCurrentII()-1];
-                this.projectsDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.tasksCollection.bind('reset', _.bind(this.renderView, this));
-                this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.customersDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.workflowsDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.priorityCollection.bind('reset', _.bind(this.renderView, this));
+                this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
+                //this.customersDdCollection.bind('reset', _.bind(this.render, this));
+                //this.priorityCollection.bind('reset', _.bind(this.render, this));
+                this.render();
             },
             renderView:function(){
                 console.log('RENDERVIEW');
@@ -221,55 +214,22 @@
                 //var itemIndex = Custom.getCurrentII() - 1;
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
-                    projectsDdCollection: this.projectsDdCollection.toJSON(),
-                    accountsDdCollection: this.accountsDdCollection.toJSON(),
                     customersDdCollection: this.customersDdCollection.toJSON(),
-                    priorityCollection: this.priorityCollection.toJSON(),
-                    workflowsDdCollection: this.workflowsDdCollection.toJSON()});
+                    priorityCollection: this.priorityCollection.toJSON()});
+
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,
 					dialogClass: "edit-task-dialog",
+                    //title: this.currentModel.get('project').projectShortDesc
                     title: $(".formTitle").eq(0).text().trim().split(" ")[0]
                 });
-                this.delegateEvents(this.events);
-                //this.el = $('.form-holder');
-                //this.delegateEvents(this.events);
-
-                /*if (itemIndex == -1) {
-                    this.$el.html();
-                }
-                else {*/
-                    //var currentModel = this.tasksCollection.models[itemIndex];
-                    //currentModel.on('change', this.render, this);
-                    //var extrainfo = currentModel.get('extrainfo');
-                    //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
-                    //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
-                    //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
-                    //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
-                   /* this.$el.html(_.template(EditTemplate, {
-                        model: this.currentModel.toJSON(), projectsDdCollection: this.projectsDdCollection, accountsDdCollection: this.accountsDdCollection,
-                        customersDdCollection: this.customersDdCollection, workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection
-                    }));*/
-                   
-                 /*   var workflows = this.workflowsDdCollection.models;
-                    var that = this;
-                    _.each(workflows, function (workflow, index) {
-                        if (index < workflows.length - 2) {
-                            $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                        }
-                    });
-
-                    _.each(workflows, function (workflow, i) {
-                        var breadcrumb = this.$(".breadcrumb li").eq(i);
-                        if (this.currentModel.get("workflow").name === breadcrumb.data("name")) {
-                            breadcrumb.find("a").addClass("active");
-                        }
-                    }, this);
-                //}
-                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $('#projectDd').append(new ProjectsDdView().render().el);
+                $('#assignedToDd').append(new AccountsDdView().render().el);
+                $('#workflowDd').append(new WorkflowsDdView().render().el);
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
-                $('#EndDate').datepicker({ dateFormat: "d M, yy" });*/
+                $('#EndDate').datepicker({ dateFormat: "d M, yy" });
+                this.delegateEvents(this.events);
                 return this;
             }
 
