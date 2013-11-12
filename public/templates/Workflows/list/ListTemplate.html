@@ -3,7 +3,7 @@
 
     <% workflowsWIds.forEach(function(wId, index){ %>
 	<% if (index==0){%>
-    <li class="active first"><a class="workflow"><%=wId%></a>  </li>
+    <li class="first"><a class="workflow"><%=wId%></a>  </li>
 	<%}else{%>
     <li><a class="workflow"><%=wId%></a>  </li>
 	<%}%>
@@ -17,8 +17,6 @@
  <div id="details" class="workflow-details">
 <div class="workflow-sub-list-wrapper left">   
    <ul class="workflow-sub-list">
-	 <li class="active"><a class="workflow-sub">Element 1</a></li>
-	 <li><a class="workflow-sub">Element 2</a></li>
    </ul>    
 </div>
 <div id="workflowSubAccord" class="left">
