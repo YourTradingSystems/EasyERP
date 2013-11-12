@@ -86,16 +86,26 @@ app.get('/getModules', function (req, res) {
 });
 
 app.post('/uploadFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
+    data = {};
+    //data = req.body;
+    data.uploaderId = req.session.uId;
+    //console.log(req);
     console.log(req.files);
+    console.log(req.headers);
     fs.readFile(req.files.attachfile.path, function (err, data) {
-        var newPath = __dirname + "\\uploads\\" + req.files.attachfile.name;
-        fs.writeFile(newPath, data, function (err) {
+        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+        fs.writeFile(path, data, function (err) {
             if (err) throw err;
             console.log(req.files.attachfile.name);
-            res.send(200, {success: 'OK'});
+            res.send(204);
+            data.path = path;
         });
+        console.log(data);
+        //requestHandler.updateEmployees(req, res, id, data);      
     });
+
+    //requestHandler.login(req, res, data);
 });
 
 app.post('/login', function (req, res, next) {

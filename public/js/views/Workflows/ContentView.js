@@ -18,8 +18,7 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             "click .checkbox": "checked",
             "click td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click a.workflow": "chooseWorkflowNames",
-            "click a.workflow-sub": "chooseSubWorkflowNames",
-            "click .workflow-sub-list li": "chooseSubWorkflowNames",
+            "click .workflow-sub-list li": "chooseWorkflowDetailes",
             "click .workflow-list li": "chooseWorkflowNames",
             "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
             "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes"
@@ -31,16 +30,12 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
         },
 
         chooseSubWorkflowNames: function (e) {
-			$(e.target).parents(".workflow-sub-list").find(".active").removeClass("active");
-			if ($(e.target).hasClass("workflow-sub")){
-				$(e.target).parent().addClass("active");
-			}else{
-				$(e.target).addClass("active");
-			}
+			alert($(e.target).hasClass("workflow-sub"));
 			
 		},
         chooseWorkflowNames: function (e) {
-			this.$("#details").removeClass("active").hide();
+            this.$(".workflow-sub-list>*").remove();
+			this.$("#details").addClass("active").show();
             this.$("#workflowNames").html("");
 			$(e.target).parents(".workflow-list").find(".active").removeClass("active");
 			var wId="";
@@ -58,12 +53,25 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                     names.push(model.get('name'));
                 }
             }, this);
+			var first = false;
             _.each(names, function (name) {
-                this.$("#workflowNames").append("<div class='cathegory' data-id='" + name + "'><a data-id='"+name+"'href='javascript:;'>" + name + "</a></div>");
+				if (first){
+					this.$(".workflow-sub-list").append("<li class='active'><a class='workflow-sub' data-id='"+name+"'href='javascript:;'>" + name + "</a></li>");
+					first = false;
+				}
+				else{
+					this.$(".workflow-sub-list").append("<li data-id='"+name+"'><a class='workflow-sub' data-id='"+name+"'href='javascript:;'>" + name + "</a></li>");
+				}
                 this.$("#sub-details").html("");
             }, this);
         },
         chooseWorkflowDetailes: function (e) {
+			$(e.target).parents(".workflow-sub-list").find(".active").removeClass("active");
+			if ($(e.target).hasClass("workflow-sub")){
+				$(e.target).parent().addClass("active");
+			}else{
+				$(e.target).addClass("active");
+			}
             this.$("#sub-details").html("");
             var name = $(e.target).data("id");
 			var nameDetails = this.$("#sub-details").attr("data-id");

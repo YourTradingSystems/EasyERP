@@ -8,8 +8,8 @@ define([
             className: "thumbnail",
 
             initialize: function () {
-                this.model.on('change', this.render, this);
-                this.render();
+                //this.model.on('change', this.render, this);
+                //this.render();
             },
 
             events: {

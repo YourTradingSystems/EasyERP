@@ -77,7 +77,7 @@
             canvasDrawing({ model: model }, context);
         };
 
-        var displayControlBtnsByActionType = function(actionType){
+        var displayControlBtnsByActionType = function(actionType, viewType){
         $("#saveDiscardHolder").hide();
         $("#top-bar-createBtn").hide();
         $("#top-bar-deleteBtn").hide();
@@ -86,9 +86,16 @@
         $("#top-bar-nextBtn").hide();
         $("#top-bar-discardBtn").hide();
         $('#top-bar-saveBtn').hide();
+        $("ul.changeContentIndex").hide();
         if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
-            $('#top-bar-editBtn').show();
+            if(viewType == "form"){
+                $('#top-bar-editBtn').show();
+                $("ul.changeContentIndex").show();
+                $('#top-bar-deleteBtn').show();
+            }
+
+
         }
         else if(actionType === "View"){
             $('#top-bar-createBtn').show();
@@ -104,6 +111,7 @@
             $('#top-bar-saveBtn').show();
             $('#top-bar-nextBtn').show();
             $('#top-bar-discardBtn').show();
+            $('#top-bar-saveBtn').show();
             $("#saveDiscardHolder").show();
         }
     }

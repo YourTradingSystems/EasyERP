@@ -56,10 +56,11 @@ var Persons = function (logWriter, mongoose, findCompany) {
             id: { type: String, default: '' },
             login: { type: String, default: '' }
         },
+        
         social: {
             FB: { type: String, default: '' },
             LI: { type: String, default: '' }
-        },
+        },       
         notes: { type: Array, default: [] },
         attachments: { type: Array, default: [] },
         history: { type: Array, default: [] }
@@ -210,7 +211,7 @@ var Persons = function (logWriter, mongoose, findCompany) {
                             if (data.imageSrc) {
                                 _person.imageSrc = data.imageSrc;
                             }
-                        }
+                        }                     
                         if (data.relatedUser) {
                             if (data.relatedUser._id) {
                                 _person.relatedUser.id = data.relatedUser._id;

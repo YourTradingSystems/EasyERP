@@ -1,8 +1,9 @@
 define([
     'text!templates/Degrees/TopBarTemplate.html',
-    'custom'
+    'custom',
+    'Common'
 ],
-    function (ContentTopBarTemplate, Custom) {
+    function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Degrees",
@@ -36,33 +37,7 @@ define([
                 var itemIndex = Custom.getCurrentII();
             	
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                
-                if (this.actionType == "Content")
-                {
-                	$("#createBtnHolder").show();
-                	$("#saveDiscardHolder").hide();
-                }else
-                {
-                	$("#createBtnHolder").hide();
-                	$("#saveDiscardHolder").show();
-                }
-                
-                $("ul.changeContentIndex").hide();
-            	$("#top-bar-editBtn").hide();
-            	$("#top-bar-deleteBtn").hide();
-                
-                if ((viewType == "form") && (this.actionType === "Content"))
-                {
-                	$("ul.changeContentIndex").show();
-                	$("#top-bar-editBtn").show();
-                	$("#top-bar-deleteBtn").show();
-                	$("#template-switcher>span").show();
-                }else
-                if ((viewType == "form") && (this.actionType === "Edit"))
-                {
-                    $("ul.changeContentIndex").show();
-                    $("#template-switcher>span").show();
-                }
+                Common.displayControlBtnsByActionType(this.actionType, viewType);
                 
                 return this;
             },
