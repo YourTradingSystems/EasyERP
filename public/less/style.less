@@ -237,7 +237,7 @@ article {
     height: 100%;
 }
 
-.mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 24px) {
+.mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 30px) {
     display: block;
     float: none;
     position: relative;
@@ -286,12 +286,9 @@ article {
                 }
 
                 &.hover {
-                    background-color: transparent;
                     height: @height;
 
                     a {
-                        //  color: @activeColor;
-                        text-decoration: none;
                         text-decoration: underline;
                         display: block;
                     }
@@ -323,50 +320,48 @@ article {
     .mainmenu;
 }
 
-.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 26px,@background: #36a9e1 ) {
-    //#007acc
-    //#36a9e1
+.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 26px,@bg: #36a9e1, @activebg ) {
     display: block;
     position: relative;
     height: @height;
     width: auto;
-    //background: #fff;
-    top: -1px;
+    border-bottom: 1px solid @bg;
 
     nav {
         height: @height;
-        float: left;
-        // border-bottom: 1px solid @background;
+
         ul {
             height: @height;
 
 
             li {
+                top: -1px;
                 list-style: none;
                 width: auto;
                 font-size: 14px;
-                color: @background;
-                line-height: 30px;
+                color: @bg;
+                line-height: @height;
                 float: left;
                 display: block;
                 width: 100px;
                 height: @height;
                 text-align: center;
-                border-bottom: 1px solid @background;
+                background: #fff;
+
 
                 &.hover {
                     height: @height;
                     line-height: @height;
 
                     a {
-                        color: @background;
+                        color: @bg;
                         text-decoration: underline;
                     }
                 }
 
                 a {
                     font-family: 'Lato',Helvetica,Arial,sans-serif;
-                    color: @background;
+                    color: @bg;
                     font-size: 12px;
                     line-height: @height;
                     display: block;
@@ -375,19 +370,18 @@ article {
 
                 &.selected {
                     position: relative;
-                    height: @height;
+                    height: @height + 1px;
                     line-height: @height;
                     width: 98px;
                     border-top: 1px solid @background;
                     border-left: 1px solid @background;
                     border-right: 1px solid @background;
-                    border-bottom: 1px solid #fff;
-                    // background: #FFF;
+                    // border-bottom: 1px solid #fff;
                     a {
-                        line-height: @height -2px;
-                        height: @height - 2px;
+                        line-height: @height;
+                        height: @height;
                     }
-                    //  background: #1e8fc6; //; #2D323D; 2e3539
+
                     &.hover {
                         a {
                             text-decoration: none;
@@ -1219,7 +1213,7 @@ dl.person-info {
     }
 
     tbody {
-       
+
         tr {
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
             border-top: 1px solid #cacaca;
@@ -2434,10 +2428,11 @@ button {
 .kanban {
     margin: 0;
     padding: 0;
-  //  display: inline-flexbox;
-   width:100%;
+    //  display: inline-flexbox;
+    width: 100%;
+
     tbody {
-     width:100%;
+        width: 100%;
     }
 
     .opportunity-header {

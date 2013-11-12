@@ -73,7 +73,7 @@ var Employee = function (logWriter, mongoose) {
         otherInfo: { type: String, default: '' },
         expectedSalary: Number,
         proposedSalary: Number,
-        color: { type: String, default: '#4d5a75' },
+        color: { type: String, default: '#4d5a75' },       
         creationDate: { type: Date, default: Date.now }
     }, { collection: 'Employees' });
 
@@ -83,7 +83,7 @@ var Employee = function (logWriter, mongoose) {
         try {
             if (!data) {
                 logWriter.log('Employees.create Incorrect Incoming Data');
-                res.send(400, { error: 'Employees.create Incorrect Incoming Data'});
+                res.send(400, { error: 'Employees.create Incorrect Incoming Data' });
                 return;
             } else {
                 var query = {
@@ -192,7 +192,7 @@ var Employee = function (logWriter, mongoose) {
                             _employee.manager.id = data.manager._id;
                         }
                         if (data.manager.name) {
-                            _employee.manager.name = data.manager.name.first + ' '  + data.manager.name.last;
+                            _employee.manager.name = data.manager.name.first + ' ' + data.manager.name.last;
                         }
                     }
                     if (data.coach) {
@@ -274,7 +274,7 @@ var Employee = function (logWriter, mongoose) {
                     }
                     if (data.color) {
                         _employee.color = data.color;
-                    }
+                    }                   
                     if (data.imageSrc) {
                         _employee.imageSrc = data.imageSrc;
                     }
@@ -312,7 +312,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
-        query.sort({'name.first': 1});
+        query.sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
