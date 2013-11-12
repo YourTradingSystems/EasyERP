@@ -88,7 +88,7 @@ app.get('/getModules', function (req, res) {
 app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
     data = {};
-    data = req.body;
+    //data = req.body;
     data.uploaderId = req.session.uId;
     //console.log(req);
     console.log(req.files);
