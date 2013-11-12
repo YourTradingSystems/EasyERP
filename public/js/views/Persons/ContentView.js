@@ -25,8 +25,40 @@ define([
             "click .details": "toggle",
             "mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
-            "click .company": "gotoCompanyForm"
+            "click .company": "gotoCompanyForm",
+            "click #attachSubmit":"addAttach"
         },
+        
+        addAttach: function(){
+        	//event.preventDefault();
+        	var addFrmAttach = $("#addAttachments");
+        	var addInptAttach = $("#inputAttach").serialize(); 
+        	addFrmAttach.submit(function(e){
+        		var formURL = addFrmAttach.attr("action");
+        		e.preventDefault();
+        		addFrmAttach.ajaxSubmit({
+        			url:formURL,
+        			type: "POST",
+        			cache: false,
+        			processData: false,
+        			data:addInptAttach,
+        		
+        			
+        			beforeSend: function(xhr){
+	                        xhr.setRequestHeader("id","123456789");
+        			},
+        			
+        			success:function(data){
+        				console.log('Attach file');
+        			},
+        			error: function (){
+        				console.log("Attach file error");
+        			} 
+        		});
+        	});
+
+        },
+        
         editItem: function(){
             //create editView in dialog here
             new EditView({collection:this.collection});

@@ -92,6 +92,7 @@ app.post('/uploadFiles', function (req, res, next) {
     data.uploaderId = req.session.uId;
     //console.log(req);
     console.log(req.files);
+    console.log(req.headers);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
