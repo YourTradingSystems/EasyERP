@@ -1986,7 +1986,9 @@ button {
 
 .ui-dialog {
     width: 80% !important;
-
+		.ui-dialog-titlebar {
+			display:none;
+		}
     &.edit-task-dialog {
         width: 50% !important;
         min-width: 950px;
@@ -1994,6 +1996,7 @@ button {
 		.ui-dialog-titlebar {
             padding-left: 15px;
             padding-right: 22px;
+			display:block;
 		}
 
         .ui-widget-header {
