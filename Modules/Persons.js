@@ -60,7 +60,7 @@ var Persons = function (logWriter, mongoose, findCompany) {
             FB: { type: String, default: '' },
             LI: { type: String, default: '' }
         },
-        notes: { type: String, default: "" },
+        notes: { type: Array, default: [] },
         attachments: { type: Array, default: [] },
         history: { type: Array, default: [] }
     }, { collection: 'Persons' });

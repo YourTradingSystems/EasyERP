@@ -3,7 +3,7 @@ var Workflow = function (logWriter, mongoose) {
     var workflowSchema = mongoose.Schema({
         wId: String,
         name: String,
-        value: {type: Array, default: []}
+        value: { type: Array, default: [] }
     }, { collection: 'workflows' });
 
     var relatedStatusSchema = mongoose.Schema({
@@ -54,6 +54,28 @@ var Workflow = function (logWriter, mongoose) {
                                     result.send(500, { error: 'WorkFlow.js create error' });
                                 }
                             }
+                        }
+                    });
+                }
+            }
+            catch (exception) {
+                logWriter.log("Workflow.js  create " + exception);
+            }
+        },
+
+        update: function (_id, data, result) {
+            try {
+                if (data) {
+                    delete data._id;
+                    workflow.update({ _id: _id }, data, function (err, res) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log('WorkFlow.js update workflow.update ' + err);
+                            result.send(400, { error: 'WorkFlow.js update workflow error ' });
+                            return;
+                        } else {
+                            console.log(res);
+                            result.send(200, { success: 'WorkFlow update success' });
                         }
                     });
                 }
