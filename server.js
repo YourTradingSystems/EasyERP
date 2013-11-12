@@ -93,7 +93,7 @@ app.post('/uploadFiles', function (req, res, next) {
         fs.writeFile(newPath, data, function (err) {
             if (err) throw err;
             console.log(req.files.attachfile.name);
-            res.send(200);
+            res.send(200, {success: 'OK'});
         });
     });
 });

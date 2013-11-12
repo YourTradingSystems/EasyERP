@@ -1,8 +1,8 @@
 var requestHandler = function (fs, mongoose) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
-        company = require("./Modules/Companies.js")(logWriter, mongoose),
-        findCompany = require("./Modules/additions/findCompany.js")(company.Company),
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
+        company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee),
+        findCompany = require("./Modules/additions/findCompany.js")(company.Company),
         events = require("./Modules/Events.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
         persons = require("./Modules/Persons.js")(logWriter, mongoose, findCompany),

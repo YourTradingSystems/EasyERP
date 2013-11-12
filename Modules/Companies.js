@@ -1,5 +1,9 @@
-var Company = function (logWriter, mongoose) {
-
+var Company = function (logWriter, mongoose, employeeModel) {
+    var events = require('events');
+    var event = new events.EventEmitter();
+    event.on('SendResponse', function (response, data) {
+        response.send(data);
+    });
     var CompanySchema = mongoose.Schema({
         type: { type: String, default: 'Company' },
         imageSrc: { type: String, default: '' },
@@ -24,7 +28,7 @@ var Company = function (logWriter, mongoose) {
         salesPurchases: {
             isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
-            salesPerson: {
+            salesPerson: {                                     //fromEmployees
                 id: { type: String, default: '' },
                 name: { type: String, default: '' }
             },
@@ -283,15 +287,44 @@ var Company = function (logWriter, mongoose) {
             var res = {};
             res['data'] = [];
             var query = company.find({});
-            query.sort({ name: 1 });
+            //query.sort({ name: 1 });
             query.exec(function (err, companies) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Company.js get Company.find " + err);
                     response.send(500, { error: "Can't find Person" });
                 } else {
-                    res['data'] = companies;
-                    response.send(res);
+                    //res['data'] = companies;
+                    companies.forEach(function (company, index) {
+                        if (company.salesPurchases && company.salesPurchases.salesPerson && company.salesPurchases.salesPerson.id) {
+                            employeeModel.findById(company.salesPurchases.salesPerson.id, function (err, result) {
+                                if (err) {
+                                    console.log(err);
+                                } else if (result) {
+                                    company.salesPurchases.salesPerson.name = result.name.first + ' ' + result.name.first;
+                                    console.log(company.salesPurchases.salesPerson.name);
+                                    res['data'].push(company);
+                                    if (res['data'].length == companies.length) {
+                                        res['data'].sort(function (a, b) {
+                                            return a.name.localeCompare(b.name);
+                                        });
+                                        event.emit('SendResponse', response, res);
+                                    }
+                                }
+                            });
+                        } else {
+                            res['data'].push(company);
+                            if (res['data'].length == companies.length) {
+                                res['data'].sort(function(a, b) {
+                                    return a.name.localeCompare(b.name);
+                                });
+                                event.emit('SendResponse', response, res);
+                            }
+                        };
+                        
+                    });
+                    //res['data'] = companies;
+                    //response.send(res);
                 }
             });
         },
@@ -299,7 +332,7 @@ var Company = function (logWriter, mongoose) {
         getOwn: function (response) {
             var res = {};
             res['data'] = [];
-            var query = company.find({isOwnCompany: true});
+            var query = company.find({ isOwnCompany: true });
             query.sort({ name: 1 });
             query.exec(function (err, companies) {
                 if (err) {
