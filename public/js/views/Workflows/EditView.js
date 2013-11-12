@@ -2,12 +2,13 @@ define([
     "text!templates/Workflows/EditTemplate.html",
     "text!templates/Workflows/editList.html",
     "text!templates/Workflows/createList.html",
+    "text!templates/Workflows/selectTemplate.html",
     "collections/Workflows/WorkflowsCollection",
     "collections/RelatedStatuses/RelatedStatusesCollection",
     "common",
     "custom"
 ],
-    function (EditTemplate, editList, createList, WorkflowsCollection, RelatedStatusesCollection, common, Custom) {
+    function (EditTemplate, editList, createList, selectTemplate, WorkflowsCollection, RelatedStatusesCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -18,17 +19,43 @@ define([
                 this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
-                this.render();
+                this.render = _.after(1, this.render);
             },
-            
+
             events: {
                 "click button#add": "addNameStatus",
-                "click button.remove": "removeNameStatus"
+                "click button.remove": "removeNameStatus",
+                "change #wId": "changeWNames",
+                "change #workflowsName": "changeDetails"
+            },
+
+            changeWNames: function (e) {
+                if (!e) {
+                    var wId = "Opportunity";
+                } else {
+                    wId = this.$("#wId option:selected").val();
+                }
+                $("#selectWNames").html(_.template(selectTemplate, { workflowsNames: this.getWorkflowNames(wId) }));
+            },
+
+            getWorkflowNames: function (wId) {
+                var names = [];
+                _.each(this.collection.models, function (model) {
+                    if (model.get('wId') == wId) {
+                        names.push(model.get('name'));
+                    }
+                }, this);
+                return names;
+            },
+
+            changeDetails: function (e) {
+                var wname=this.$("#selectWNames option:selected").val();
+                console.log(this.collection.where({ name: wname }));
             },
 
             addNameStatus: function (e) {
-                    e.preventDefault();
-                    $("#allNamesStatuses").append(_.template(createList, {relatedStatusesCollection: this.relatedStatusesCollection }));
+                e.preventDefault();
+                $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
             },
 
             removeNameStatus: function (e) {
@@ -81,7 +108,6 @@ define([
                         }
                     });
                 }
-
             },
 
             render: function () {
@@ -92,15 +118,12 @@ define([
                     this.$el.html();
                 } else {
                     var currentModel = this.collection.models[itemIndex];
-                    console.log(currentModel);
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds }));
+                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds, workflowsCollection: this.collection }));
                 }
-                
                 for (var i = 0; i < currentModel.get("value").length; i++) {
-                    console.log(currentModel.get("value")[i]);
                     $("#allNamesStatuses").append(_.template(editList, { value: currentModel.get("value")[i], relatedStatusesCollection: this.relatedStatusesCollection }));
                 }
-                
+                $("#selectWNames").html(_.template(selectTemplate, { workflowsNames: this.getWorkflowNames("Opportunity") }));
                 $("#allNamesStatuses .nameStatus:first-of-type button.remove").remove();
                 return this;
             }

@@ -245,7 +245,8 @@ define([
                         customersCollection: this.customersCollection,
                         employeesCollection: this.employeesCollection,
                         departmentsCollection: this.departmentsCollection,
-                        priorityCollection: this.priorityCollection
+                        priorityCollection: this.priorityCollection,
+                        workflowsCollection: this.workflowsCollection
                     }));
                 }
                 return this;

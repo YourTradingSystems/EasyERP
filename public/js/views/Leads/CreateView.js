@@ -5,11 +5,12 @@ define([
     "collections/Customers/CustomersCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
+    "collections/Workflows/WorkflowsCollection",
     "collections/Priority/TaskPriority",
     "models/LeadModel",
     "common"
 ],
-    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, LeadModel, common) {
+    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, LeadModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -17,6 +18,8 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
+                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.companiesCollection = new CompaniesCollection();
                 this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.customersCollection = new CustomersCollection();
@@ -29,7 +32,7 @@ define([
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.contentCollection = options.collection;
-                this.render();
+                this.render = _.after(6, this.render);
             },
 
             close: function () {
@@ -41,7 +44,7 @@ define([
                 "change #customer": "selectCustomer"
             },
 
-            selectCustomer: function(e){
+            selectCustomer: function (e) {
                 e.preventDefault();
                 var id = $(e.target).val();
                 var customer = this.customersCollection.get(id).toJSON();
@@ -157,9 +160,26 @@ define([
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
 
             },
+            
+            getWorkflowsValue: function() {
+                var workflowsValue = [];
+                this.workflowsCollection.models.forEach(function (option) {
+                    workflowsValue.push(option.get('value'));
+                });
+                return workflowsValue;
+            },
 
             render: function () {
-                this.$el.html(this.template({ companiesCollection: this.companiesCollection, customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
+                var workflows = this.getWorkflowsValue();
+                console.log(workflows);
+                this.$el.html(this.template({
+                    companiesCollection: this.companiesCollection,
+                    customersCollection: this.customersCollection,
+                    employeesCollection: this.employeesCollection,
+                    departmentsCollection: this.departmentsCollection,
+                    priorityCollection: this.priorityCollection,
+                    workflowsValue: workflows
+                }));
                 return this;
             }
 

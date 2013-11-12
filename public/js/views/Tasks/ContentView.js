@@ -63,6 +63,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 case "kanban":
                 {
                     //draw kanbas header with workflows
+
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
                     $(".column").last().addClass("lastColumn");
