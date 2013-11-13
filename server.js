@@ -364,6 +364,15 @@ app.get('/taskWorkflows', function (req, res) {
     console.log(data);
     requestHandler.gettaskWorkflows(req, res, data);
 });
+
+app.get('/projectWorkflows', function (req, res) {
+    data = {};
+    data.id = req.param('id');
+    data.mid = req.param('mid');
+    console.log(data);
+    requestHandler.getprojectWorkflows(req, res, data);
+});
+
 app.post('/Workflows', function (req, res) {
     data = {};
     //data.mid = req.headers.mid;

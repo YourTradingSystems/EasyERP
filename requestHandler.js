@@ -406,6 +406,19 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getprojectWorkflows(req, res, data) {
+        console.log("Requst gettaskWorkflow is success");
+        if (req.session && req.session.loggedIn) {
+            console.log('>>>>>>>>>>>>>>>');
+            console.log(data);
+            console.log('<<<<<<<<<<<');
+            workflow.getProjectsforDd(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+
     function createWorkflow(req, res, data) {
         console.log("Requst createWorkflow is success");
         if (req.session && req.session.loggedIn) {
@@ -901,6 +914,7 @@ var requestHandler = function (fs, mongoose) {
         updateWorkflow: updateWorkflow,
 
         gettaskWorkflows: gettaskWorkflows,
+        getprojectWorkflows: getprojectWorkflows,
 
         getProfile: getProfile,
         createProfile: createProfile,
