@@ -47,7 +47,15 @@ var Opportunities = function (logWriter, mongoose, customer) {
         active: { type: Boolean, default: true },
         optout: { type: Boolean, default: false },
         reffered: { type: String, default: '' },
-        workflow: { type: ObjectId, ref: 'workflows', default: null }
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
+        },
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date }
+        }
     }, { collection: 'Opportunities' });
 
     var opportunitie = mongoose.model('Opportunities', opportunitiesSchema);
@@ -196,6 +204,9 @@ var Opportunities = function (logWriter, mongoose, customer) {
                     if (data.reffered) {
                         _opportunitie.reffered = data.reffered;
                     }
+                    if (data.uId) {
+                        _opportunitie.createdBy.user = data.uId;
+                    }
                     _opportunitie.save(function (err, result) {
                         if (err) {
                             console.log(err);
@@ -294,6 +305,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            delete data.createdBy;
             var createPersonCustomer = function (company) {
                 if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
                     var _person = {
@@ -336,6 +348,8 @@ var Opportunities = function (logWriter, mongoose, customer) {
                 data.company = data.company._id;
             } else if (data.company) {
                 data.tempCompanyField = data.company;
+                delete data.company;
+            } else {
                 delete data.company;
             }
             if (data.customer && data.customer._id) {

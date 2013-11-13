@@ -22,7 +22,7 @@ define([
                 //}
             },
 
-            filterById: function (idArray) {
+            filterById: function (idArray, callback) {
                 //var events = [];
                 var self = this;
                 //_.each(idArray, function (item) {
@@ -35,11 +35,11 @@ define([
                 this.fetch({
                     data: { idArray: idArray },
                     success: function() {
-                        return self;
+                        callback(self);
                     },
                     error: function() {
                         console.log('error');
-                        return null;
+                        callback(null);
                     }
                 });
   

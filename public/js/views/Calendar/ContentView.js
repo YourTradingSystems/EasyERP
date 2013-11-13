@@ -223,9 +223,9 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
            }
            var currentCalendarId = curCalendarId.length > 0 ? curCalendarId[0] : $('#calendarList option:selected').val();
            this.setCurrentCalendarId(currentCalendarId);
-           var filtered = this.eventsCollection.filterById(curCalendarId);
+           var filtered = this.eventsCollection.filterById(curCalendarId, this.displayEventsOnCalendar);
            //var filtered = this.eventsCollection;
-           this.displayEventsOnCalendar(filtered);
+           //this.displayEventsOnCalendar(filtered);
        },
         closeSyncDialog: function(){
             $('#syncDialog').remove();

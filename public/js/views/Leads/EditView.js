@@ -11,9 +11,8 @@ define([
             contentType: "Leads",
             template: _.template(EditTemplate),
             initialize: function (options) {
-                _.bindAll(this, "saveItem");
-                this.collection = options.collection;
-                this.currentModel = this.collection.getElement();
+                _.bindAll(this, "render", "saveItem");
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 
@@ -24,9 +23,9 @@ define([
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler'
             },
-            
-            keydownHandler: function(e){
-                switch (e.which){
+
+            keydownHandler: function (e) {
+                switch (e.which) {
                     case 27:
                         this.hideDialog();
                         break;
@@ -38,7 +37,7 @@ define([
             hideDialog: function () {
                 $(".edit-leads-dialog").remove();
             },
-            
+
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -148,7 +147,7 @@ define([
                     },
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("home/content-Leads", { trigger: true });
+                        Backbone.history.navigate("easyErp/Leads", { trigger: true });
                     },
                     error: function (model, xhr, options) {
                         Backbone.history.navigate("home", { trigger: true });
@@ -163,28 +162,28 @@ define([
                     dialogClass: "edit-leads-dialog",
                     width: 900,
                     height: 650,
-                    buttons:{
+                    buttons: {
                         save: {
                             text: "Save",
                             class: "btn",
                             click: self.saveItem
                         },
                         cancel: {
-                            text:"Cancel",
-                            class:"btn",
-                            click:self.hideDialog
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
                         }
                     }
                 });
-				common.populateCustomers(App.ID.customerDd, "/Customer",this.currentModel.toJSON());
-                common.populateDepartments(App.ID.salesTeam, "/Departments",this.currentModel.toJSON());
-                common.populateEmployeesDd(App.ID.salesPerson, "/Employees",this.currentModel.toJSON());
-                common.populatePriority(App.ID.priorityDd, "/Priority",this.currentModel.toJSON());
-                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",this.currentModel.toJSON());
+                common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
+                common.populateDepartments(App.ID.salesTeam, "/Departments", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.salesPerson, "/Employees", this.currentModel.toJSON());
+                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
+                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
                 this.delegateEvents(this.events);
 
                 return this;
-           }
+            }
 
         });
 

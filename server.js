@@ -12,8 +12,11 @@ var http = require('http'),
 //});
 
 var mongoose = require('mongoose');
+
+
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
+
 var express = require('express');
 var requestHandler = require("./requestHandler.js")(fs, mongoose);
 
@@ -618,6 +621,25 @@ app.put('/Companies/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
+app.put('/Companies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.company = req.body;
+    var remove = req.headers.remove;
+    console.log("---------------UpdateCompany-------------------");
+    //console.log(data.company.salesPurchases.salesPerson);
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
+        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
+    }
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
+        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
+    }
+    //console.log(data.company.salesPurchases.salesPerson);
+    //console.log(data.company.address);
+    requestHandler.updateCompany(req, res, id, data, remove);
+});
+
 app.delete('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -866,7 +888,7 @@ app.put('/Applications/:_id', function (req, res) {
     requestHandler.updateEmployees(req, res, id, data);
 });
 
-app.put('/Applications/:_id', function (req, res) {
+app.put('/Applications/:viewType/:_id', function (req, res) {
     console.log('-----SERVER put Applications---------------');
     var data = {};
     var id = req.body._id;
@@ -972,6 +994,15 @@ app.post('/Leads', function (req, res) {
 });
 
 app.put('/Leads/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.lead = req.body;
+    console.log(data);
+    requestHandler.updateLead(req, res, id, data);
+});
+
+app.put('/Leads/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
