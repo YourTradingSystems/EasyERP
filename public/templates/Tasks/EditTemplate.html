@@ -21,28 +21,16 @@
 
 		  <dt><label>Project</label></dt><dd>
 			<select id="projectDd">
-              <option value="0">Select...</option>
-              <% projectsDdCollection.forEach(function(option){ %>
-              <option value="<%= option._id %>" <%= (option._id == model.project.id) ? 'selected="selected"' : ''%>><%= option.projectName %></option>
-              <% }); %>
 			</select>
 		  </dd>
 		  <dt><label for="workflowDd">Task Workflow</label></dt><dd>
             <select id="workflowDd">
-              <option value="<%=model.workflow.name%>">Select...</option>
-              <% workflowsDdCollection.forEach(function(option){ %>
-              <option value="<%= option._id %>" <%= (option.name == model.workflow.name) ? 'selected="selected"' : ''%>><%= option.name %> (<%= option.status %>)</option>
-              <% }); %>
             </select>
 
 		  </dd>
 
 		  <dt><label>Assigned to</label></dt><dd>
-			<select id="assignedTo">
-              <option value="<%=model.assignedTo.id%>">Select...</option>
-              <% accountsDdCollection.forEach(function(option){ %>
-              <option value="<%= option._id %>" <%= (option._id == model.assignedTo.id) ? 'selected="selected"' : ''%>> <%= option.name.first %> <%= option.name.last %></option>
-              <% }); %>
+			<select id="assignedToDd">
 			</select>
 		  </dd>
 

@@ -52,33 +52,8 @@ define([
                 var viewType = Custom.getCurrentVT();
                 var collectionLength = this.collection.length;
                 var itemIndex = Custom.getCurrentII();
-
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
-
-                Common.displayControlBtnsByActionType(this.actionType);
-                /*if (this.actionType == "Content") {
-                    $("#createBtnHolder").show();
-                    $("#saveDiscardHolder").hide();
-                } else {
-                    $("#createBtnHolder").hide();
-                    $("#saveDiscardHolder").show();
-                }
-
-                $("ul.changeContentIndex").hide();
-                $("#top-bar-editBtn").hide();
-                $("#top-bar-deleteBtn").hide();
-
-                if ((viewType == "form") && (this.actionType === "Content")) {
-                    $("ul.changeContentIndex").show();
-                    $("#top-bar-editBtn").show();
-                    $("#top-bar-deleteBtn").show();
-                    $("#template-switcher>span").show();
-                } else
-                    if ((viewType == "form") && (this.actionType === "Edit")) {
-                        $("ul.changeContentIndex").show();
-                        $("#template-switcher>span").show();
-                    }*/
-
+                Common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;
             },
 
@@ -100,6 +75,7 @@ define([
 
             discardEvent: function (event) {
                 event.preventDefault();
+                $('#content-holder').html('');
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
             }
 

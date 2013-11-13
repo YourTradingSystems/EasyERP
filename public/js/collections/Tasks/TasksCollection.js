@@ -25,10 +25,18 @@ define([
 
             parse: true,
 
-            currentWorkflow: function(workflow){
+            filterByWorkflow: function(workflow){
                 return this.filter(function(data){
                     return data.get("workflow").name == workflow;
                 });
+
+            },
+
+            filterByProject: function(projectId){
+                var filtered = this.filter(function(data){
+                    return data.get("project").id == projectId;
+                });
+                return new TasksCollection(filtered);
             },
 
             parse: function (response) {
