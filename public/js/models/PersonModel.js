@@ -37,7 +37,8 @@ define(function () {
                 name: ''
             },
             color: '#4d5a75',
-            dateBirth: null
+            dateBirth: null,
+            attachments:[]
         },
 
         urlRoot: function () {

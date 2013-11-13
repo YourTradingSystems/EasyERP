@@ -30,6 +30,9 @@ define([
         },
         
         addAttach: function(){
+        	var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex]["id"];
         	//event.preventDefault();
         	var addFrmAttach = $("#addAttachments");
         	var addInptAttach = $("#inputAttach").serialize(); 
@@ -45,7 +48,9 @@ define([
         		
         			
         			beforeSend: function(xhr){
-	                        xhr.setRequestHeader("id","123456789");
+        			    
+
+	                       xhr.setRequestHeader("id",currentModel);
         			},
         			
         			success:function(data){
