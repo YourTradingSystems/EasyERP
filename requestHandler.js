@@ -1,8 +1,9 @@
 var requestHandler = function (fs, mongoose) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
-        company = require("./Modules/Companies.js")(logWriter, mongoose),
-        findCompany = require("./Modules/additions/findCompany.js")(company.Company),
+        event = require("./Modules/additions/eventHandler.js")().event,
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
+        company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
+        findCompany = require("./Modules/additions/findCompany.js")(company.Company),
         events = require("./Modules/Events.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
         persons = require("./Modules/Persons.js")(logWriter, mongoose, findCompany),
@@ -10,12 +11,12 @@ var requestHandler = function (fs, mongoose) {
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
-        department = require("./Modules/Department.js")(logWriter, mongoose),
+        department = require("./Modules/Department.js")(logWriter, mongoose, employee.employee, event),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, persons, company),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
-
+    
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);

@@ -221,8 +221,7 @@
                     autoOpen:true,
                     resizable:true,
 					dialogClass: "edit-task-dialog",
-                    //title: this.currentModel.get('project').projectShortDesc
-                    title: $(".formTitle").eq(0).text().trim().split(" ")[0]
+                    title: this.currentModel.toJSON().project.projectShortDesc
                 });
                 $('#projectDd').append(new ProjectsDdView().render().el);
                 $('#assignedToDd').append(new AccountsDdView().render().el);

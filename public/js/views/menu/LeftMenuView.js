@@ -10,6 +10,13 @@ define([
             el: '#submenu-holder nav',
             currentSection: null,
             selectedId: null,
+            
+            events: {
+                "click a": "selectMenuItem",
+                "mouseover a": "hoverItem",
+                "mouseleave a": "mouseLeave"
+            },
+
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
                 this.leftMenu.render();
@@ -21,6 +28,7 @@ define([
                 } else {
                     this.currentSection = section;
                     this.render(true, selectedId);
+					
                 }
             },
 
@@ -50,23 +58,25 @@ define([
                     }
                 }
                 if (currentModule == null) currentModule = root[0];
-                var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver, selectedId));
-                var erger = document.getElementById(selectedId);
-                $(erger).addClass('selected');
+                var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
+                var currentSelElem = document.getElementById(selectedId);
+				if($(currentSelElem).length==0){
+					currentSelElem = document.getElementById(this.lastClickedLeftMenuItem);
+				}
+				$(currentSelElem).closest("ul").find(".selected").removeClass("selected");
+                $(currentSelElem).addClass('selected');
+
                 return this;
             },
 
-            events: {
-                "click a": "selectMenuItem",
-                "mouseover a": "hoverItem",
-                "mouseleave a": "mouseLeave"
-            },
             hoverItem: function (e) {
                 this.$el.find('li.hover').removeClass('hover');
                 $(e.target).closest('li').addClass('hover');
             },
             selectMenuItem: function (e) {
+                this.selectedId = $(e.target).data('module-id');
                 this.$('li.selected').removeClass('selected');
+				this.lastClickedLeftMenuItem=$(e.target).data('module-id');
                 $(e.target).closest('li').addClass('selected');
                 var root = this.collection.root();
                 for (var i = 0; i < root.length; i++) {
@@ -83,7 +93,7 @@ define([
                     if (selectSection === section) {
                         return;
                     } else {
-                        that.selectedId = $('#submenu-holder .selected > a').data('module-id');
+                        //that.selectedId = $('#submenu-holder .selected > a').data('module-id');
                         that.mouseOver(selectSection, that.selectedId);
                         $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
                     }
@@ -96,7 +106,7 @@ define([
                 this.mouseLeaveEl = _.debounce(this.mouseLeaveEl, 2000);
                 this.mouseLeaveEl();
             },
-            renderMenu: function (list, onMouseOver, selectedId) {
+            renderMenu: function (list, onMouseOver) {
                 if (_.size(list) === 0) {
                     return null;
                 }
@@ -106,7 +116,7 @@ define([
                     var html = this.renderMenuItem(model);
                     $dom.append(html);
                     var kids = this.collection.children(model);
-                    $dom.find(':last').append(this.renderMenu(kids, onMouseOver, selectedId));
+                    $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
                 }, this);
                 
                 var clickEl = $dom.find('a')[0];
