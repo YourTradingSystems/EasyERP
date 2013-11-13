@@ -261,10 +261,10 @@ var Events = function (logWriter, mongoose, googleModule) {
                 }
             }
             if (data.start_date) {
-                _event.start['dateTime'] = data.start_date;
+                _event.start_date= data.start_date;
             }
             if (data.end_date) {
-                _event.end['dateTime'] = data.end_date;
+                _event.end_date = data.end_date;
             }
             if (data.iCalUID) {
                 _event.iCalUID = data.iCalUID;
@@ -593,10 +593,18 @@ var Events = function (logWriter, mongoose, googleModule) {
             }
         });
     }
+	checkEventAsGoogle=function(id){
+		event.findByIdAndUpdate(id, { isGoogle: true }, function(err,ev){
+			if (err){
+				console.log("event check as google ",err)
+			}
+			
+		})
+	}
 	function sendToGoogleCalendar(req,res){
 	    var calendarsId = req.body.calendarsId;
 		var query = event.find({"isGoogle":false});
-		var calendar = []
+		var calendars = []
 		calendarsId.forEach(function(id){
 			query.where({"calendarId":id}).exec(function(err,events){
 				if (err){
@@ -604,11 +612,14 @@ var Events = function (logWriter, mongoose, googleModule) {
                     logWriter.log("send to google " + err);
 					
 				}else{
-					calendar.push({"id":id,"items":events});
-					if (calendar.length==calendarsId.length){
-						googleModule.sendEventsToGoogle(res, calendar);
-					
-					}
+					calendar.findOne({"_id":id}).exec(function(err,result){
+						calendars.push({"id":result.id,"items":events});
+						if (calendars.length==calendarsId.length){
+							googleModule.sendEventsToGoogle(req,res, calendars,checkEventAsGoogle);
+							
+						}
+
+					});
 				}
 			});
 		})

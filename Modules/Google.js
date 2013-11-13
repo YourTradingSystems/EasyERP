@@ -16,66 +16,57 @@
             }
         });
     };
-    var sendEventsToGoogle = function (req, res, Events) {
-        //console.log(checkSessionForToken(req));
+    var sendEventsToGoogle = function (req,res, calendars,checkAsGoogle) {
         checkSessionForToken(req, function (err, response) {
             if (response) {
-                console.log(response);
                 oauth2Client.credentials = response;
                 googleapis
-                          .discover('calendar', 'v3')
-                             .execute(function (err, client) {
-                                 if (err) console.log(err);
-                                 //var eventItem = {
-                                 //    "summary": "rrrrrrrrrr",
-                                 //    'start': {
-                                 //        "date": "2013-12-6"
-                                 //    },
-                                 //    'end': {
-                                 //        "date": "2013-12-6"
-                                 //    }
-
-                                 //};
-                                 Events.forEach(function (_event) {
-                                     var calendarId = _event.id;
-                                     _event.items.forEach(function (item) {
-                                         client.calendar.events.insert({ calendarId: calendarId }, item)
-                                                .withAuthClient(oauth2Client).execute(
-                                                    function (err, result) {
-                                                        if (result) {
-                                                            console.log(result);
-                                                        } else {
-                                                            console.log(err);
-                                                        };
-                                                    });
-                                     });
-                                 });
-
-                             });
-
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+                        if (err) console.log(err);
+                        calendars.forEach(function (_event) {
+                            var calendarId = _event.id;
+                            _event.items.forEach(function (item) {
+								var event = {
+                                    "summary": item.summary,
+                                    'start': {
+                                        "dateTime": item.start_date
+                                    },
+                                    'end': {
+                                        "dateTime": item.end_date
+                                    }
+								}
+                                client.calendar.events.insert({ calendarId: calendarId }, event)
+                                    .withAuthClient(oauth2Client).execute(
+                                        function (err, result) {
+                                            if (result) {
+												checkAsGoogle(item._id);
+                                                console.log(result);
+                                            } else {
+                                                console.log(err);
+                                            };
+                                        });
+                            });
+                        });
+                    });
             } else {
                 console.log(err);
             }
         });
-
-
     }
     var checkSessionForToken = function (req, callback) {
         console.log('Google Sessions');
         if (req.session && req.session.loggedIn) {
 
             if (req.session.credentials && req.session.credentials.access_token && req.session.credentials.refresh_token) {
-                console.log(req.session.credentials);
                 callback(null, req.session.credentials);
 
             } else {
 
                 users.User.findById(req.session.uId, function (err, response) {
                     if (response) {
-                        console.log(response);
-                        if (response.credentials && req.session.credentials.access_token && req.session.credentials.refresh_token) {
+                        if (response.credentials && response.credentials.access_token && response.credentials.refresh_token) {
                             req.session.credentials = response.credentials;
-                            console.log(req.session.credentials);
 
 
                             callback(null, response.credentials);
