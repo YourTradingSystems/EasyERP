@@ -280,6 +280,7 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
         },
 
         get: function (response) {
+            console.log(event);
             var res = {};
             res['data'] = [];
             var query = company.find({});

@@ -1,10 +1,6 @@
 var requestHandler = function (fs, mongoose) {
-    var _events = require('events');
-    var event = new _events.EventEmitter();
-    event.on('SendResponse', function (response, data) {
-        response.send(data);
-    });
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
+        event = require("./Modules/additions/eventHandler.js")().event,
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
@@ -20,7 +16,7 @@ var requestHandler = function (fs, mongoose) {
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, persons, company),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
-
+    
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);
