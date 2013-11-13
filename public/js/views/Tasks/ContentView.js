@@ -353,6 +353,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                     {
+                        var start = new Date();
                         model = this.model;
                         var remaining = model.get("estimated") - model.get("logged");
                         this.$("#delete").closest(".task").fadeToggle(200, function () {
@@ -366,7 +367,13 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                         var column = this.$el.closest(".column");
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                         column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - remaining);
-                        //this.collection.trigger('reset');
+                        $('.popup').html(new Date() - start);
+                        $('#popup-holder').fadeIn();
+                        setTimeout(function(){
+                            $('#popup-holder').fadeOut();
+                            $('.popup').html('');
+
+                        }, 3000);
                         break;
                     }
                 case "list":

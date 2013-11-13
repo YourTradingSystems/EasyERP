@@ -1,15 +1,11 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "collections/Tasks/TasksCollection",
     "collections/Customers/CustomersCollection",
-    "collections/Priority/TaskPriority",
     "common",
     "custom",
-    "views/Tasks/partialViews/ProjectsDdView",
-    "views/Tasks/partialViews/AccountsDdView",
-    "views/Tasks/partialViews/WorkflowsDdView"
+    "dataService"
 ],
-    function (EditTemplate, TasksCollection, CustomersCollection, PriorityCollection, common, Custom, ProjectsDdView,AccountsDdView,WorkflowsDdView) {
+    function (EditTemplate, CustomersCollection, common, Custom, dataService) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
@@ -17,11 +13,9 @@
             initialize: function (options) {
                 _.bindAll(this, "render");
                 this.customersDdCollection = new CustomersCollection();
-                this.priorityCollection = new PriorityCollection();
                 this.tasksCollection = options.collection;
                 this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
                 //this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                //this.priorityCollection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
             renderView:function(){
@@ -35,7 +29,8 @@
             },
 
             hideDialog: function(){
-                this.$el.dialog('close');
+                //this.$el.dialog('close');
+                $('.edit-task-dialog').remove();
             },
 
             changeWorkflow: function (e) {
@@ -210,12 +205,50 @@
 
             },
 
+            populateDropDown: function(type, selectId, url){
+                var selectList = $(selectId);
+                var self = this;
+                dataService.getData(url, {mid:39, id:"Task"}, function(response){
+                    var options = $.map(response.data, function(item){
+                        switch (type){
+                            case "project":
+                                return self.projectOption(item);
+                            case "person":
+                                return self.personOption(item);
+                            case "priority":
+                                return self.priorityOption(item);
+                            case "workflow":
+                                return self.workflowOption(item);
+                        }
+                    });
+                    selectList.append(options);
+                });
+            },
+            workflowOption: function(item){
+                return this.currentModel.get("workflow").id === item._id ?
+                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")").attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")");
+            },
+            projectOption: function(item){
+                return this.currentModel.get("project").id === item._id ?
+                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.projectName);
+            },
+            personOption: function(item){
+                return this.currentModel.get("assignedTo").id === item._id ?
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+            },
+            priorityOption: function(item){
+                return this.currentModel.id === item._id ?
+                    $('<option/>').val(item._id).text(item.priority).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.priority);
+            },
+
             render: function () {
-                //var itemIndex = Custom.getCurrentII() - 1;
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
-                    customersDdCollection: this.customersDdCollection.toJSON(),
-                    priorityCollection: this.priorityCollection.toJSON()});
+                    customersDdCollection: this.customersDdCollection.toJSON()});
 
                 this.$el = $(formString).dialog({
                     autoOpen:true,
@@ -223,12 +256,16 @@
 					dialogClass: "edit-task-dialog",
                     title: this.currentModel.toJSON().project.projectShortDesc
                 });
-                $('#projectDd').append(new ProjectsDdView().render().el);
-                $('#assignedToDd').append(new AccountsDdView().render().el);
-                $('#workflowDd').append(new WorkflowsDdView().render().el);
+
+                this.populateDropDown("project", App.ID.projectDd, "/getProjectsForDd");
+                this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
+                this.populateDropDown("priority", App.ID.priorityDd, "/Priority");
+                this.populateDropDown("workflow", App.ID.workflowDd, "/taskWorkflows");
+
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 this.delegateEvents(this.events);
+
                 return this;
             }
 

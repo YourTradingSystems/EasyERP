@@ -37,12 +37,8 @@
 
 		  <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
 
-		  <dt><label for="priority">Priority </label></dt><dd>
-		    <select id="priority">
-              <option value="<%=model.extrainfo.priority._id%>">Select...</option>
-              <% priorityCollection.forEach(function(option){ %>
-              <option value="<%= option._id %>" <%= (option.priority == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.priority %></option>
-              <% }); %>
+		  <dt><label for="priorityDd">Priority </label></dt><dd>
+		    <select id="priorityDd">
             </select>
 		  </dd>
 
