@@ -28,6 +28,7 @@ define([
                 } else {
                     this.currentSection = section;
                     this.render(true, selectedId);
+					
                 }
             },
 
@@ -59,8 +60,12 @@ define([
                 if (currentModule == null) currentModule = root[0];
                 var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
                 var erger = document.getElementById(selectedId);
-                console.log(selectedId);
+				if($(erger).length==0){
+					erger = document.getElementById(this.lastClickedLeftMenuItem);
+				}
+				$(erger).closest("ul").find(".selected").removeClass("selected");
                 $(erger).addClass('selected');
+
                 return this;
             },
 
@@ -71,6 +76,7 @@ define([
             selectMenuItem: function (e) {
                 this.selectedId = $(e.target).data('module-id');
                 this.$('li.selected').removeClass('selected');
+				this.lastClickedLeftMenuItem=$(e.target).data('module-id');
                 $(e.target).closest('li').addClass('selected');
                 var root = this.collection.root();
                 for (var i = 0; i < root.length; i++) {
