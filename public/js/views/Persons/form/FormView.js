@@ -205,8 +205,8 @@ define([
             },
 
             addNote: function (e) {
-                var val = $('#noteArea').val();
-                var title = $('#noteTitleArea').val();
+                var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
                 if (val || title) {
                     var currentModel = this.formModel;
                     var notes = currentModel.get('notes');
@@ -229,8 +229,8 @@ define([
                                            mid: 39
                                        },
                                        success: function (model, response, options) {
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
                                            $('#getNoteKey').attr("value", '');
                                        }
                                    });

@@ -276,7 +276,10 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
-        query.populate('relatedUser department jobPosition manager coach');
+        query.populate('relatedUser department jobPosition manager coach').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -297,7 +300,10 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
-        query.populate('relatedUser department jobPosition manager coach');
+        query.populate('relatedUser department jobPosition manager coach').
+			populate('createdBy.user').
+            populate('editedBy.user');
+
         query.sort({ 'name.first': 1 });
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
@@ -336,7 +342,10 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', false);
-        query.populate('relatedUser department jobPosition workflow');
+        query.populate('relatedUser department jobPosition workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.sort({ 'name.first': 1 });
         query.exec(function (err, applications) {
             if (err) {
@@ -357,7 +366,10 @@ var Employee = function (logWriter, mongoose) {
         query.populate('coach','name _id');
         query.populate('relatedUser','login _id');
         query.populate('jobPosition','name _id');
-        query.populate('workflow');
+        query.populate('workflow').
+			populate('createdBy.user').
+            populate('editedBy.user');
+
 
         query.exec(function (err, findedEmployee) {
             if (err) {
@@ -431,7 +443,10 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', false);
-        query.populate('relatedUser department jobPosition workflow');
+        query.populate('relatedUser department jobPosition workflow').
+			populate('createdBy.user').
+            populate('editedBy.user');
+
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ 'name.first': 1 });
         query.exec(function (err, applications) {
