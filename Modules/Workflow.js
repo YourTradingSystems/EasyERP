@@ -96,7 +96,7 @@ var Workflow = function (logWriter, mongoose) {
                     logWriter.log('Workflow.js get workflow.find' + err);
                     response.send(500, { error: "Can't find Workflow" });
                 } else {
-                    res['data'] = result.value;
+                    res['data'] = result[0].value;
                     response.send(res);
                 }
             });
