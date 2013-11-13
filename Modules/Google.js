@@ -16,17 +16,21 @@
             }
         });
     };
+
     var sendEventsToGoogle = function (req,res, calendars,checkAsGoogle) {
         checkSessionForToken(req, function (err, response) {
+
             if (response) {
+
                 oauth2Client.credentials = response;
                 googleapis
-                          .discover('calendar', 'v3')
-                             .execute(function (err, client) {
-                                 if (err) console.log(err);
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+
+                        if (err) console.log(err);
                         calendars.forEach(function (_event) {
-                                     var calendarId = _event.id;
-                                     _event.items.forEach(function (item) {
+                            var calendarId = _event.id;
+                            _event.items.forEach(function (item) {
 								var event = {
                                     "summary": item.summary,
                                     'start': {
@@ -36,24 +40,48 @@
                                         "dateTime": item.end_date
                                     }
 								}
+
                                 client.calendar.events.insert({ calendarId: calendarId }, event)
-                                                .withAuthClient(oauth2Client).execute(
-                                                    function (err, result) {
-                                                        if (result) {
+                                    .withAuthClient(oauth2Client).execute(
+                                        function (err, result) {
+                                            if (result) {
 												checkAsGoogle(item._id);
-                                                            console.log(result);
-                                                        } else {
-                                                            console.log(err);
-                                                        };
-                                                    });
-                                     });
-                                 });
-                             });
+                                                console.log(result);
+                                            } else {
+                                                console.log(err);
+                                            };
+                                        });
+                            });
+                        });
+                    });
             } else {
                 console.log(err);
             }
         });
     }
+	var createNewGoogleCalendar = function(req,cal,callback){
+        checkSessionForToken(req, function (err, response) {
+            if (response) {
+                oauth2Client.credentials = response;
+                googleapis
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+						client.calendar.calendars.insert({ summary: cal.summary })
+                            .withAuthClient(oauth2Client).execute(
+                                function (err, result) {
+                                    if (result) {
+										callback(result.id);
+                                    } else {
+                                        console.log(err);
+                                    };
+                                });
+
+					});
+			}
+
+		});
+		
+	}
     var checkSessionForToken = function (req, callback) {
         console.log('Google Sessions');
         if (req.session && req.session.loggedIn) {
@@ -72,7 +100,7 @@
                             callback(null, response.credentials);
                         } else {
 
-                            callback({ "error": "error" }, null);
+                            callback({ "error": req.session.credentials }, null);
                         }
                     } else {
                         console.log(err);
@@ -155,6 +183,7 @@
                                     if (events) {
                                         //console.log(result);
                                         result.items = events.items;
+										result.isSync = true;
                                         calendars.push(result);
                                         if (calendars.length == iDs.length) {
                                             console.log(calendars);
@@ -178,7 +207,8 @@
         getGoogleCalendars: getGoogleCalendars,
         getToken: getToken,
         getEventsByCalendarIds: getEventsByCalendarIds,
-        sendEventsToGoogle: sendEventsToGoogle
+        sendEventsToGoogle: sendEventsToGoogle,
+		createNewGoogleCalendar:createNewGoogleCalendar
     }
 };
 module.exports = googleModule;
