@@ -87,9 +87,9 @@ var Workflow = function (logWriter, mongoose) {
         getTasksforDd: function (data, response) {
             var res = {};
             res['data'] = [];
-            var query = workflow.find({},{ wId: 1, name: 1 });
+            var query = workflow.find({wId: 'Task'},{ value:1 });
             //query.select('_id name imageSrc');
-            query.sort({ 'name': 1 });
+            //query.sort({ 'name': 1 });
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
