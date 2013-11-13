@@ -127,7 +127,7 @@ var Profile = function (app, logWriter, mongoose) {
                     });
                 }
                 catch (error) {
-					console.log(error);
+                    console.log(error);
                     logWriter.log("Profile.js saveProfileToDb " + error);
                     res.send(500, { error: 'Profile.create find error' });
                 }

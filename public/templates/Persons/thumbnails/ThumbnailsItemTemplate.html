@@ -1,7 +1,7 @@
 <div class="inner">
     <div class="dropDown">
         <a href="#">
-            <img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" />
+            <a class = "gotoForm" href="#"><img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" /></a>
         </a>
         <ul class="dropDownOpened" hidden="hidden">
             <li>
@@ -13,11 +13,11 @@
         </ul>
     </div>
     <div class="avatar">
-    <img src="<%=imageSrc%>" />
-</div>
+    	<a class = "gotoForm" href="#"> <img src="<%=imageSrc%>" /></a>
+	</div>
     <div class="info">
-        <p><%=(name.first.length>18)?(name.first.substring(0,18)+"..."):name.first%> <%=(name.last.length>18)?(name.last.substring(0,18)+"..."):name.last%></p>
-        <p><%=(company) ? company.name.first : ''%></p>
-        <p><%=email%></p>
+        <p><a class = "gotoForm" href="#"><%=(name.first.length>18)?(name.first.substring(0,18)+"..."):name.first%> <%=(name.last.length>18)?(name.last.substring(0,18)+"..."):name.last%></a></p>
+       <% if (company){%><a class="company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
+        <p><a href="mailto:<%=email%>" target="_blank"><%=email%></a></p>
     </div>
 </div>

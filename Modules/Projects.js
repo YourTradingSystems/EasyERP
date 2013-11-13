@@ -551,7 +551,7 @@ var Project = function (logWriter, mongoose) {
     };
 
     function removeTasksByPorjectID(_id) {
-        tasks.find({ 'project.id': _id }, function (err, taskss) {
+        tasks.find({ 'project': _id }, function (err, taskss) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js removeTasksByPorjectID task.find " + err);
