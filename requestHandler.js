@@ -900,6 +900,8 @@ var requestHandler = function (fs, mongoose) {
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
 
+        gettaskWorkflows: gettaskWorkflows,
+
         getProfile: getProfile,
         createProfile: createProfile,
         updateProfile: updateProfile,
