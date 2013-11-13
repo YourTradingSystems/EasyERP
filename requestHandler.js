@@ -114,7 +114,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function updateProfile(req, res, id, data) {
-        console.log("Requst updatePerson is success");
+        console.log("Requst updateProfile is success");
         if (req.session && req.session.loggedIn) {
             profile.update(id, data.profile, res);
         } else {
@@ -190,6 +190,21 @@ var requestHandler = function (fs, mongoose) {
     function updatePerson(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
             persons.update(id, data.person, res);
+        } else {
+            res.send(401);
+        }
+    };
+    function uploadFilePerson(req, res, id, file) {
+        console.log("File Uploading to Persons");   
+        if (req.session && req.session.loggedIn) {
+            persons.Person.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                if (err) {
+                    res.send(401);
+                }
+                else {
+                    res.send(200, file);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -369,6 +384,18 @@ var requestHandler = function (fs, mongoose) {
 
     function getWorkflow(req, res, data) {
         console.log("Requst getWorkflow is success");
+        if (req.session && req.session.loggedIn) {
+            console.log('>>>>>>>>>>>>>>>');
+            console.log(data);
+            console.log('<<<<<<<<<<<');
+            workflow.get(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function gettaskWorkflows(req, res, data) {
+        console.log("Requst gettaskWorkflow is success");
         if (req.session && req.session.loggedIn) {
             console.log('>>>>>>>>>>>>>>>');
             console.log(data);
@@ -844,6 +871,7 @@ var requestHandler = function (fs, mongoose) {
         updatePerson: updatePerson,
         removePerson: removePerson,
         getPersonsForDd: getPersonsForDd,
+        uploadFilePerson: uploadFilePerson,
         getCustomer: getCustomer,
 
         getProjects: getProjects,

@@ -87,21 +87,27 @@ app.get('/getModules', function (req, res) {
 
 app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
-    data = {};
+    //data = {};
+    file = {};
+
     //data = req.body;
-    data.uploaderId = req.session.uId;
+    //data.uploaderId = req.session.uId;
     //console.log(req);
-    console.log(req.files);
+    //console.log(req.files);
     console.log(req.headers);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
             if (err) throw err;
             console.log(req.files.attachfile.name);
-            res.send(204);
-            data.path = path;
+            file.name = req.files.attachfile.name;
+            file.path = path;
+            file.size = req.files.attachfile.size;
+            file.uploadDate = new Date();
+            file.uploaderId = req.session.uId;           
+            requestHandler.uploadFilePerson(req, res, req.headers.id, file);           
         });
-        console.log(data);
+       // console.log(data);
         //requestHandler.updateEmployees(req, res, id, data);      
     });
 
@@ -109,7 +115,7 @@ app.post('/uploadFiles', function (req, res, next) {
 });
 
 app.post('/login', function (req, res, next) {
-    console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
     data = {};
     data = req.body;
     console.log(data);
@@ -350,6 +356,14 @@ app.get('/Workflows', function (req, res) {
     requestHandler.getWorkflow(req, res, data);
 });
 
+
+app.get('/taskWorkflows', function (req, res) {
+    data = {};
+    data.id = req.param('id');
+    data.mid = req.param('mid');
+    console.log(data);
+    requestHandler.gettaskWorkflows(req, res, data);
+});
 app.post('/Workflows', function (req, res) {
     data = {};
     //data.mid = req.headers.mid;
