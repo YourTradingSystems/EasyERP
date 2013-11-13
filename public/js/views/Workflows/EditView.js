@@ -36,6 +36,7 @@ define([
                     wId = this.$("#wId option:selected").val();
                 }
                 $("#selectWNames").html(_.template(selectTemplate, { workflowsNames: this.getWorkflowNames(wId) }));
+                this.changeDetails(this.getWorkflowNames(wId)[0]);
             },
 
             getWorkflowNames: function (wId) {
@@ -48,9 +49,16 @@ define([
                 return names;
             },
 
-            changeDetails: function (e) {
-                var wname=this.$("#selectWNames option:selected").val();
-                console.log(this.collection.where({ name: wname }));
+            changeDetails: function (name) {
+                $("#allNamesStatuses").html("");
+                if (typeof name != "string") {
+                    name = this.$("#selectWNames option:selected").val();
+                }
+                var model = this.collection.findWhere({ name: name }).toJSON();
+                for (var i = 0; i < model.value.length; i++) {
+                    $("#allNamesStatuses").append(_.template(editList, { value: model.value[i], relatedStatusesCollection: this.relatedStatusesCollection }));
+                }
+
             },
 
             addNameStatus: function (e) {
@@ -75,7 +83,7 @@ define([
 
                     var wId = this.$("#wId option:selected").val();
 
-                    var name = $.trim($("#workflowsName").val());
+                    var name = this.$("#workflowsName option:selected").val();
 
                     var value = [];
                     var names = [],
@@ -97,7 +105,7 @@ define([
 
                     currentModel.save({}, {
                         headers: {
-                            mid: mid,
+                            mid: mid
                         },
                         wait: true,
                         success: function (model) {

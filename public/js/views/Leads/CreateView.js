@@ -1,5 +1,6 @@
 define([
     "text!templates/Leads/CreateTemplate.html",
+    "text!templates/Leads/selectTemplate.html",
     "collections/Leads/LeadsCollection",
     "collections/Companies/CompaniesCollection",
     "collections/Customers/CustomersCollection",
@@ -10,14 +11,14 @@ define([
     "models/LeadModel",
     "common"
 ],
-    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, LeadModel, common) {
+    function (CreateTemplate, selectTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, LeadModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Leads",
             template: _.template(CreateTemplate),
 
-            initialize: function (options) {
+            initialize: function(options) {
                 this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.companiesCollection = new CompaniesCollection();
@@ -35,16 +36,17 @@ define([
                 this.render = _.after(6, this.render);
             },
 
-            close: function () {
+            close: function() {
                 this._modelBinder.unbind();
             },
 
             events: {
                 "click #tabList a": "switchTab",
-                "change #customer": "selectCustomer"
+                "change #customer": "selectCustomer",
+                "change #workflowNames": "changeWorkflows",
             },
 
-            selectCustomer: function (e) {
+            selectCustomer: function(e) {
                 e.preventDefault();
                 var id = $(e.target).val();
                 var customer = this.customersCollection.get(id).toJSON();
@@ -63,7 +65,7 @@ define([
                 this.$el.find('#country').val(customer.address.country);
             },
 
-            switchTab: function (e) {
+            switchTab: function(e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
                 if (link.hasClass("selected")) {
@@ -73,7 +75,7 @@ define([
                 this.$(".tab").hide().eq(index).show();
             },
 
-            saveItem: function () {
+            saveItem: function() {
 
                 var mid = 39;
 
@@ -87,7 +89,7 @@ define([
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
 
                 var address = {};
-                $("p").find(".address").each(function () {
+                $("p").find(".address").each(function() {
                     var el = $(this);
                     address[el.attr("name")] = el.val();
                 });
@@ -128,58 +130,70 @@ define([
                 var reffered = $.trim($("#reffered").val());
 
                 model.save({
-                    name: name,
-                    company: company,
-                    customer: customer,
-                    address: address,
-                    salesPerson: salesPerson,
-                    salesTeam: salesTeam,
-                    contactName: contactName,
-                    email: email,
-                    func: func,
-                    phones: phones,
-                    fax: fax,
-                    priority: priority,
-                    internalNotes: internalNotes,
-                    active: active,
-                    optout: optout,
-                    reffered: reffered
-                },
-                {
-                    headers: {
-                        mid: mid
+                        name: name,
+                        company: company,
+                        customer: customer,
+                        address: address,
+                        salesPerson: salesPerson,
+                        salesTeam: salesTeam,
+                        contactName: contactName,
+                        email: email,
+                        func: func,
+                        phones: phones,
+                        fax: fax,
+                        priority: priority,
+                        internalNotes: internalNotes,
+                        active: active,
+                        optout: optout,
+                        reffered: reffered
                     },
-                    success: function (model) {
-                        Backbone.history.navigate("home/content-Leads", { trigger: true });
-                    },
-                    error: function (model, xhr, options) {
-                        Backbone.history.navigate("home", { trigger: true });
-                    }
-                });
+                    {
+                        headers: {
+                            mid: mid
+                        },
+                        success: function(model) {
+                            Backbone.history.navigate("home/content-Leads", { trigger: true });
+                        },
+                        error: function(model, xhr, options) {
+                            Backbone.history.navigate("home", { trigger: true });
+                        }
+                    });
 
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
 
             },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
             
-            getWorkflowsValue: function() {
-                var workflowsValue = [];
-                this.workflowsCollection.models.forEach(function (option) {
-                    workflowsValue.push(option.get('value'));
-                });
-                return workflowsValue;
+            changeWorkflows: function () {
+                var name = this.$("#workflowNames option:selected").val();
+                var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             render: function () {
-                var workflows = this.getWorkflowsValue();
-                console.log(workflows);
+                var workflowNames = [];
+                this.workflowsCollection.models.forEach(function (option) {
+                    workflowNames.push(option.get('name'));
+                });
+                
+                //var workflows = this.getWorkflowsValue()[0];
+                console.log(workflowNames);
                 this.$el.html(this.template({
                     companiesCollection: this.companiesCollection,
                     customersCollection: this.customersCollection,
                     employeesCollection: this.employeesCollection,
                     departmentsCollection: this.departmentsCollection,
                     priorityCollection: this.priorityCollection,
-                    workflowsValue: workflows
+                    workflowNames: workflowNames
                 }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
                 return this;
             }
 

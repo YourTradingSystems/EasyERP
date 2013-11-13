@@ -90,7 +90,6 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             var values;
             _.each(this.collection.models, function (model) {
                 if (model.get('name') == name) {
-                    console.log(model);
                     values = model.get('value');
                 }
             }, this);

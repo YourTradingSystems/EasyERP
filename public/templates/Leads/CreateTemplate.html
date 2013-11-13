@@ -109,9 +109,11 @@
 
                         </p>
                         <p>
-                            <label for="workflow">Workflow </label>
+                            <label for="workflowNames">Workflow Name </label>
                         </p>
-                        <p></p>
+                        <p>
+                            <label for="workflow">Workflow</label>
+                        </p>
                         <p>
                             <label for="priority">Priority</label>
                         </p>
@@ -139,14 +141,14 @@
                             <input type="text" id="mobile" />
                         </p>
                         <p>
-                            <select id="workflow">
-                                <option selected="selected" value="0">Select...</option>
-                                <% _.each(workflowsValue, function(item){ %>
-                                <option value="<%= item._id %>"><%= item.name %></option>
+                            <select id="workflowNames">
+                                <% _.each(workflowNames, function(item){ %>
+                                <option><%= item %></option>
                                 <%}); %>
                             </select>
                         </p>
-                        <p></p>
+                        <p id="selectWorkflow">
+                        </p>
                         <p>
                             <select id="priority">
                                 <option selected="selected" value="0">Select...</option>
