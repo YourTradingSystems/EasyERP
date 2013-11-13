@@ -394,6 +394,18 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function gettaskWorkflows(req, res, data) {
+        console.log("Requst gettaskWorkflow is success");
+        if (req.session && req.session.loggedIn) {
+            console.log('>>>>>>>>>>>>>>>');
+            console.log(data);
+            console.log('<<<<<<<<<<<');
+            workflow.get(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function createWorkflow(req, res, data) {
         console.log("Requst createWorkflow is success");
         if (req.session && req.session.loggedIn) {
