@@ -87,7 +87,7 @@ var Workflow = function (logWriter, mongoose) {
         getTasksforDd: function (data, response) {
             var res = {};
             res['data'] = [];
-            var query = workflow.find({wId: 'Task'},{ value:1 });
+            var query = workflow.find({ $and: [{ wId: 'Task'},{name: 'task' }]});
             //query.select('_id name imageSrc');
             //query.sort({ 'name': 1 });
             query.exec(function (err, result) {
@@ -96,7 +96,7 @@ var Workflow = function (logWriter, mongoose) {
                     logWriter.log('Workflow.js get workflow.find' + err);
                     response.send(500, { error: "Can't find Workflow" });
                 } else {
-                    res['data'] = result;
+                    res['data'] = result.value;
                     response.send(res);
                 }
             });
