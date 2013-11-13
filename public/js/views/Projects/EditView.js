@@ -1,32 +1,28 @@
 define([
     "text!templates/Projects/EditTemplate.html",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Workflows/WorkflowsCollection",
     "custom",
-    "common"
+    "common",
+    "dataService"
 ],
-    function (EditTemplate, AccountsDdCollection, CustomersCollection, WorkflowsCollection, Custom, common) {
+    function (EditTemplate, Custom, common, dataService) {
 
         var EditView = Backbone.View.extend({
             contentType: "Projects",
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                this.accountsDdCollection = new AccountsDdCollection();
+               /* this.accountsDdCollection = new AccountsDdCollection();
                 this.customersDdCollection = new CustomersCollection();
-                this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});
+                this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});*/
                 this.projectsCollection = options.collection;
                 this.currentModel = this.projectsCollection.models[Custom.getCurrentII()-1];
-                this.renderView = _.after(3, this.render);
-                this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
+                this.render();
+
+                /*this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
                 this.customersDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.workflowsDdCollection.bind('reset', _.bind(this.renderView, this));
+                this.workflowsDdCollection.bind('reset', _.bind(this.renderView, this));*/
             },
 
-            renderView:function(){
-                console.log('RENDERVIEW');
-            },
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
@@ -34,7 +30,7 @@ define([
                 "click #cancelBtn" : "hideDialog"
             },
             hideDialog: function(){
-                this.$el.dialog('close');
+                $('.edit-project-dialog').remove();
             },
 
             changeWorkflow: function (e) {
@@ -62,9 +58,7 @@ define([
                 });
 
             },
-			cancelItem: function (event) {	
-				$(".edit-project-dialog").remove();
-			},
+
 			saveItem: function (event) {
                 event.preventDefault();
                 var self = this;
@@ -136,35 +130,67 @@ define([
                     });
             },
 
+            populateDropDown: function(type, selectId, url){
+                var selectList = $(selectId);
+                var self = this;
+                dataService.getData(url, {mid:39}, function(response){
+                    var options = $.map(response.data, function(item){
+                        switch (type){
+                            case "customer":
+                                return self.customerOption(item);
+                            case "person":
+                                return self.personOption(item);
+                            case "priority":
+                                return self.priorityOption(item);
+                            case "workflow":
+                                return self.workflowOption(item);
+                            case "userEdit":
+                                return self.userEditOption(item);
+
+                        }
+                    });
+                    selectList.append(options);
+                });
+            },
+            userEditOption: function(item){
+                return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+            },
+            workflowOption: function(item){
+                return this.currentModel.get("workflow").id === item._id ?
+                    $('<option/>').val(item._id).text(item.name + " (" + item.status + ")").attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name + " (" + item.status + ")");
+            },
+            customerOption: function(item){
+                return this.currentModel.get("customer").id === item._id ?
+                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")").attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")");
+            },
+            personOption: function(item){
+                return this.currentModel.get("projectmanager").id === item._id ?
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+            },
+
+
             render: function () {
-                console.log("REnder Projects Edit View");
+
                 var formString = this.template({
-                    model: this.currentModel.toJSON(),
-                    accountsDdCollection: this.accountsDdCollection.toJSON(),
-                    customersDdCollection: this.customersDdCollection.toJSON(),
-                    workflowsDdCollection: this.workflowsDdCollection.toJSON() });
+                    model: this.currentModel.toJSON()});
 
                 this.$el = $(formString).dialog({
                     autoOpen:true,
-                    resizable:true,
+                    resizable:false,
                     title: "Edit Project",
 					dialogClass:"edit-project-dialog"
                 });
+
+                this.populateDropDown("person", App.ID.managerDd, "/getPersonsForDd");
+                this.populateDropDown("customer", App.ID.customerDd, "/Customer");
+                this.populateDropDown("userEdit", App.ID.userEditDd, "/getPersonsForDd");
+                this.populateDropDown("workflow", App.ID.workflowDd, "/projectWorkflows");
+
+
                 this.delegateEvents(this.events);
-
-
-                /*var workflows = this.workflowsDdCollection.models;
-
-                _.each(workflows, function (workflow, index) {
-                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                });
-
-                _.each(workflows, function (workflow, i) {
-                    var breadcrumb = this.$(".breadcrumb li").eq(i);
-                    if (this.currentModel.get("workflow").name === breadcrumb.data("name")) {
-                        breadcrumb.find("a").addClass("active");
-                    }
-                }, this);*/
 
                 return this;
             }

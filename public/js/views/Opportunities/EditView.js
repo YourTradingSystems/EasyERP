@@ -171,7 +171,6 @@
 
                     var reffered = $.trim($("#reffered").val());
 
-
                     currentModel.set({
                         name: name,
                         expectedRevenue: expectedRevenue,
@@ -204,40 +203,16 @@
             changeWorkflow: function (e) {
                 var mid = 39;
                 var name = '', status = '';
-                var breadcrumbList = $(e.target).closest(".formHeader").find(".breadcrumb");
                 var length = this.workflowsCollection.models.length;
-                var breadcrumb = $(e.target).closest('li');
-                var button = breadcrumb.closest(".breadcrumb").siblings();
-                var a = breadcrumb.siblings().find("a");
-                this.$(".breadcrumb li").last().hide();
-                if (a.hasClass("active")) {
-                    a.removeClass("active");
-                }
-                breadcrumb.find("a").addClass("active");
-                if (breadcrumb.is(':nth-last-child(2)')) {
-                    button.hide();
+                var workflow = {};
+                if ($(e.target).attr("id") == "won") {
+                    workflow = this.workflowsCollection.models[length - 2];
                 }
                 else {
-                    button.show();
+                    workflow = this.workflowsCollection.models[length - 1];
                 }
-                if ($(e.target).hasClass("applicationWorkflowLabel")) {
-                    name = breadcrumb.data("name");
-                    status = breadcrumb.data("status");
-                }
-                else {
-                    var workflow = {};
-                    if ($(e.target).attr("id") == "won") {
-                        workflow = this.workflowsCollection.models[length - 2];
-                    }
-                    else {
-                        workflow = this.workflowsCollection.models[length - 1];
-                        if (breadcrumbList.children().length == length) {
-                            this.$(".breadcrumb li").last().show();
-                        }
-                    }
-                    name = workflow.get('name');
-                    status = workflow.get('status');
-                }
+                name = workflow.get('name');
+                status = workflow.get('status');
                 var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
                 var ob = {
                     workflow: {
@@ -251,9 +226,7 @@
                     headers: {
                         mid: mid
                     }
-
                 });
-
             },
 
             render: function () {
@@ -272,31 +245,6 @@
                     //    currentModel.set({ nextAction: nextAction }, { silent: true });
                     //}
                     currentModel.on('change', this.render, this);
-
-                    var workflows = this.workflowsCollection.models;
-                    _.each(workflows, function (workflow, index) {
-                        $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                        if (index == workflows.length - 1)
-                            this.$(".breadcrumb li").last().hide();
-                    });
-
-                    _.each(workflows, function (workflow, i) {
-                        var breadcrumb = this.$(".breadcrumb li").eq(i);
-                        if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                            breadcrumb.find("a").addClass("active");
-                            var button = breadcrumb.closest(".breadcrumb").siblings();
-                            if (breadcrumb.is(':nth-last-child(2)') || breadcrumb.is(':last-child')) {
-                                button.hide();
-                            }
-                            else {
-                                button.show();
-                            }
-                            if (breadcrumb.is(':last-child')) {
-                                this.$(".breadcrumb li").last().show();
-                            }
-                        }
-                    }, this);
-
                 }
                 $('#nextActionDate').datepicker();
                 return this;

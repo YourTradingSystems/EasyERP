@@ -33,31 +33,27 @@
 			<select id="assignedToDd">
 			</select>
 		  </dd>
-
-
-		  <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
-
-		  <dt><label for="priority">Priority </label></dt><dd>
-		    <select id="priority">
-              <option value="<%=model.extrainfo.priority._id%>">Select...</option>
-              <% priorityCollection.forEach(function(option){ %>
-              <option value="<%= option._id %>" <%= (option.priority == model.extrainfo.priority) ? 'selected="selected"' : ''%>> <%= option.priority %></option>
+            
+            <dt><label>Type</label></dt><dd>
+			<select id="type">
+              <option value="0">Select...</option>
+              <% ['Task', 'Bug', 'Feature'].forEach(function(option){ %>
+              <option <%= (option == model.type) ? 'selected="selected"' : ''%>><%= option%></option>
               <% }); %>
+			</select>
+		  </dd>
+
+		    <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
+
+		  <dt><label for="priorityDd">Priority </label></dt><dd>
+		    <select id="priorityDd">
             </select>
 		  </dd>
 
 		  <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%= model.extrainfo.StartDate %>" required /></dd>
 		  <dt><label for="EndDate">End Date </label></dt><dd><input class="extrainfo blueback" type="text" name="EndDate" id="EndDate" value="<%= model.extrainfo.EndDate %>" required /></dd>
 
-		  <dt><label for="customerDd">Customer</label></dt><dd>
-            <select id="customerDd">
-              <option value="<%=model.extrainfo.customer.id%>">Select...</option>
-              <% customersDdCollection.forEach(function(option){ %>
-              <option value="<%= option._id %>" <%= (option._id == model.extrainfo.customer.id) ? 'selected="selected"' : ''%>><%= option.name %> (<%= option.type %>)</option>
-              <% }); %>
-            </select>
 
-		  </dd>
 		  <dt><label for="logged">Logged</label></dt><dd>
 			<input class="blueback" type="text" name="loged" id="logged" value="<%=model.logged%>"/>
 		  </dd>

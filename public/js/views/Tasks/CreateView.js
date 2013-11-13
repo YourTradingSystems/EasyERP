@@ -38,12 +38,12 @@ define([
                 "click #tabList a": "switchTab",
                 "click #deadline": "showDatePicker"
             },
-			showDatePicker: function (e) {
-				if ($(".createFormDatepicker").find(".arrow").length==0){
-					$(".createFormDatepicker").append("<div class='arrow'></div>")
-				}
-				
-			},
+            showDatePicker: function (e) {
+                if ($(".createFormDatepicker").find(".arrow").length == 0) {
+                    $(".createFormDatepicker").append("<div class='arrow'></div>");
+                }
+
+            },
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -104,9 +104,12 @@ define([
                 var logged = $("#loged").val();
 
                 var idPriority = this.$("#priority option:selected").val();
-                var priority = common.toObject(idCustomer, this.customersDdCollection);
+                var priority = common.toObject(idPriority, this.priorityCollection);
+
+                var type = this.$("#type option:selected").text();
 
                 taskModel.save({
+                    type: type,
                     summary: summary,
                     assignedTo: assignedTo,
                     workflow: workflow,
@@ -133,7 +136,7 @@ define([
                         model = model.toJSON();
                         if (!model.project._id) {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
-                            
+
                         } else {
                             Backbone.history.navigate("home/content-Tasks/kanban/" + model.project._id, { trigger: true });
                         }
@@ -150,9 +153,9 @@ define([
                     workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
                 }));
                 $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
-				$("#ui-datepicker-div").addClass("createFormDatepicker");
-				$('#StartDate').datepicker({ dateFormat: "d M, yy" });
-				$('#EndDate').datepicker({ dateFormat: "d M, yy" });
+                $("#ui-datepicker-div").addClass("createFormDatepicker");
+                $('#StartDate').datepicker({ dateFormat: "d M, yy" });
+                $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 return this;
             }
 

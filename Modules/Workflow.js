@@ -84,6 +84,41 @@ var Workflow = function (logWriter, mongoose) {
                 logWriter.log("Workflow.js  create " + exception);
             }
         },
+        getTasksforDd: function (data, response) {
+            var res = {};
+            res['data'] = [];
+            var query = workflow.find({ $and: [{ wId: 'Task'},{name: 'task' }]});
+            //query.select('_id name imageSrc');
+            //query.sort({ 'name': 1 });
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log('Workflow.js get workflow.find' + err);
+                    response.send(500, { error: "Can't find Workflow" });
+                } else {
+                    res['data'] = result[0].value;
+                    response.send(res);
+                }
+            });
+        },
+
+        getProjectsforDd: function (data, response) {
+            var res = {};
+            res['data'] = [];
+            var query = workflow.find({ $and: [{ wId: 'Project' }, { name: 'project' }] });
+            //query.select('_id name imageSrc');
+            //query.sort({ 'name': 1 });
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log('Workflow.js get workflow.find' + err);
+                    response.send(500, { error: "Can't find Workflow" });
+                } else {
+                    res['data'] = result[0].value;
+                    response.send(res);
+                }
+            });
+        },
 
         get: function (data, response) {
             try {

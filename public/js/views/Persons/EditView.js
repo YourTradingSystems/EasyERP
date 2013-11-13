@@ -1,11 +1,10 @@
 define([
     "text!templates/Persons/EditTemplate.html",
-    "collections/Companies/CompaniesCollection",
-    "collections/Departments/DepartmentsCollection",
     "common",
-    "custom"
+    "custom",
+    "dataService"
 ],
-    function (EditTemplate, CompaniesCollection, DepartmentsCollection, common, Custom) {
+    function (EditTemplate, common, Custom, dataService) {
 
         var EditView = Backbone.View.extend({
             contentType: "Persons",
@@ -13,13 +12,14 @@ define([
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                this.renderView = _.after(2, this.render);
+                //this.renderView = _.after(2, this.render);
                 this.personsCollection = options.collection;
-                this.companiesCollection = new CompaniesCollection();
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.renderView, this));
-                this.companiesCollection.bind('reset', _.bind(this.renderView, this));
+                //this.companiesCollection = new CompaniesCollection();
+                //this.departmentsCollection = new DepartmentsCollection();
+                //this.departmentsCollection.bind('reset', _.bind(this.renderView, this));
+                //this.companiesCollection.bind('reset', _.bind(this.renderView, this));
                 this.currentModel = this.personsCollection.models[Custom.getCurrentII()-1];
+                this.render();
 
             },
             events: {
@@ -27,11 +27,9 @@ define([
                 "click #cancelBtn" : "hideDialog"
             },
             hideDialog: function(){
-                this.$el.dialog('close');
+                $('.edit-person-dialog').remove();
             },
-            renderView:function(){
-                console.log('RENDERVIEW');
-            },
+
             saveItem: function (event) {
                 event.preventDefault();
                 var self = this;
@@ -102,6 +100,40 @@ define([
 
             },
 
+            populateDropDown: function(type, selectId, url){
+                var selectList = $(selectId);
+                var self = this;
+                dataService.getData(url, {mid:39, id:"Task"}, function(response){
+                    var options = $.map(response.data, function(item){
+                        switch (type){
+                            case "project":
+                                return self.projectOption(item);
+                            case "company":
+                                return self.companyOption(item);
+                            case "priority":
+                                return self.priorityOption(item);
+                            case "workflow":
+                                return self.workflowOption(item);
+                        }
+                    });
+                    selectList.append(options);
+                });
+            },
+            workflowOption: function(item){
+                return this.currentModel.get("workflow").id === item._id ?
+                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")").attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")");
+            },
+            projectOption: function(item){
+                return this.currentModel.get("project").id === item._id ?
+                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.projectName);
+            },
+            companyOption: function(item){
+                return this.currentModel.get('company').id === item._id ?
+                    $('<option/>').val(item._id).text(item.name).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name);
+            },
             render: function () {
                console.log('render persons dialog');
                 var formString = this.template({
@@ -111,9 +143,13 @@ define([
                 });
                 this.$el = $(formString).dialog({
                     autoOpen:true,
-                    resizable:true,
-                    title: "Edit Person"
+                    resizable:false,
+                    title: "Edit Person",
+                    dialogClass: "edit-person-dialog"
                 });
+                this.populateDropDown("company", App.ID.companiesDd, "/Companies");
+                //this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
+
                 this.delegateEvents(this.events);
 
                 common.canvasDraw({ model:this.currentModel.toJSON() }, this);

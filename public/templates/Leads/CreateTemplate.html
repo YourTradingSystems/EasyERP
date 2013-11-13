@@ -50,11 +50,21 @@
                                 <% }); %>
                             </select>
                         </p>
-                        <p><input type="text" class="address" id="street" name="street" placeholder="Street" /></p>
-                        <p><input type="text" class="address" id="city" name="city" placeholder="City" /></p>
-                        <p><input type="text" class="address" id="state" name="state" placeholder="State" /></p>
-                        <p><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" /></p>
-                        <p><input type="text" class="address" id="country" name="country" placeholder="Country" /></p>
+                        <p>
+                            <input type="text" class="address" id="street" name="street" placeholder="Street" />
+                        </p>
+                        <p>
+                            <input type="text" class="address" id="city" name="city" placeholder="City" />
+                        </p>
+                        <p>
+                            <input type="text" class="address" id="state" name="state" placeholder="State" />
+                        </p>
+                        <p>
+                            <input type="text" class="address" id="zip" name="zip" placeholder="ZIP" />
+                        </p>
+                        <p>
+                            <input type="text" class="address" id="country" name="country" placeholder="Country" />
+                        </p>
                         <p></p>
                         <p>
                             <select id="salesPerson">
@@ -79,7 +89,9 @@
                         <p>
                             <label for="name">Contact name</label>
                         </p>
-                        <p><label></label></p>
+                        <p>
+                            <label></label>
+                        </p>
                         <p>
                             <label for="email">Email</label>
 
@@ -96,8 +108,12 @@
                             <label for="mobile">Mobile </label>
 
                         </p>
-                        <p></p>
-                        <p></p>
+                        <p>
+                            <label for="workflowNames">Workflow Name </label>
+                        </p>
+                        <p>
+                            <label for="workflow">Workflow</label>
+                        </p>
                         <p>
                             <label for="priority">Priority</label>
                         </p>
@@ -106,16 +122,33 @@
                         </p>
                     </div>
                     <div class="half-block left">
-                        <p><input type="text" class="name" id="first" placeholder="First" /></p>
+                        <p>
+                            <input type="text" class="name" id="first" placeholder="First" />
+                        </p>
                         <p>
                             <input type="text" class="name" id="last" placeholder="Last" />
                         </p>
-                        <p><input type="text" id="email" /></p>
-                        <p><input type="text" id="func" /></p>
-                        <p><input type="text" id="phone" /></p>
-                        <p><input type="text" id="mobile" /></p>
-                        <p></p>
-                        <p></p>
+                        <p>
+                            <input type="text" id="email" />
+                        </p>
+                        <p>
+                            <input type="text" id="func" />
+                        </p>
+                        <p>
+                            <input type="text" id="phone" />
+                        </p>
+                        <p>
+                            <input type="text" id="mobile" />
+                        </p>
+                        <p>
+                            <select id="workflowNames">
+                                <% _.each(workflowNames, function(item){ %>
+                                <option><%= item %></option>
+                                <%}); %>
+                            </select>
+                        </p>
+                        <p id="selectWorkflow">
+                        </p>
                         <p>
                             <select id="priority">
                                 <option selected="selected" value="0">Select...</option>
@@ -154,9 +187,8 @@
                         </div>
                         <div class="half-block left">
                             <p>
-
                             </p>
-                        </div>                      
+                        </div>
                     </div>
                     <div class="half-block left">
                         <h3>Mailings</h3>
@@ -167,7 +199,9 @@
                             </p>
                         </div>
                         <div class="half-block left">
-                            <p><input type="checkbox" id="optout" /></p>
+                            <p>
+                                <input type="checkbox" id="optout" />
+                            </p>
                         </div>
                     </div>
                     <div class="half-block left">
@@ -194,8 +228,8 @@
 
 
 
-                   
-                <div class="clearfix"></div>
+
+                    <div class="clearfix"></div>
                 </div>
             </div>
         </fieldset>

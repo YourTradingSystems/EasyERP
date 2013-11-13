@@ -6,9 +6,11 @@ define([
     'views/Opportunities/compactContent',
     'custom',
     'common',
-    'views/Persons/EditView'
+    'views/Persons/EditView',
+    'views/Notes/NoteView',
+    'text!templates/Notes/AddNote.html'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -26,10 +28,75 @@ define([
             "mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
             "click .company": "gotoCompanyForm",
-            "click #attachSubmit":"addAttach"
+            "click #attachSubmit":"addAttach",
+            "click #addNote": "addNote",
+            "click .editDelNote": "editDelNote"
         },
-        
+        editDelNote: function(e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var type = id.substr(0,k);
+            var id_int = parseInt(id.substr(k+1));
+
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var notes = currentModel.get('notes');
+
+            switch (type) {
+                case "edit": {
+                    $('#noteArea').val($('#'+id_int).find('.noteText').text());
+                    $('#getNoteKey').attr("value",id_int);
+                    break;
+                }
+                case "del": {
+                    delete notes[id_int];
+                    currentModel.set('notes',notes);
+                    if (currentModel.save()) {
+                        $('#'+id_int).remove();
+                    }
+                    break;
+                }
+            }
+        },
+        addNote: function() {
+            var val = $('#noteArea').val();
+            if (val) {
+
+                var models = this.collection.models;
+                var itemIndex = Custom.getCurrentII() - 1;
+                //TODO fix some problems with itemIndex
+                var currentModel = models[itemIndex];
+                var notes = currentModel.get('notes');
+                var key = notes.length;
+                var arr_key_str = $('#getNoteKey').attr("value");
+                var note_obj = {
+                    note: ''
+                };
+                if (arr_key_str) {
+                    notes[parseInt(arr_key_str)].note = val;
+                    currentModel.set('notes',notes);
+                    if (currentModel.save()) {
+                        $('#noteArea').val($('#'+ arr_key_str ).find('.noteText').text(val));
+                        $('#getNoteKey').attr("value",'');
+                    }
+                } else {
+                    note_obj.note = val;
+                    notes.push(note_obj);
+                    currentModel.set('notes',notes);
+                    if (currentModel.save()) {
+                        var edit = 'edit_'+key;
+                        var del = 'del_'+key;
+                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, edit: edit, del: del}));
+                    }
+                }
+                $('#noteArea').val('');
+            }
+        },
         addAttach: function(){
+        	var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex]["id"];
         	//event.preventDefault();
         	var addFrmAttach = $("#addAttachments");
         	var addInptAttach = $("#inputAttach").serialize(); 
@@ -45,7 +112,9 @@ define([
         		
         			
         			beforeSend: function(xhr){
-	                        xhr.setRequestHeader("id","123456789");
+        			    
+
+	                       xhr.setRequestHeader("id",currentModel);
         			},
         			
         			success:function(data){
@@ -138,12 +207,28 @@ define([
                             this.$el.html();
                         } else {
                             var currentModel = models[itemIndex];
+                            var notes = currentModel.get('notes');
+                            for (var i = 0; i < notes.length; i++) {
+                                if (notes[i] == null) {
+                                    notes.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                            currentModel.set('notes',notes);
+                            currentModel.save();
+
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     model: currentModel
                                 }).render(true).el
+                            );
+
+                            this.$el.find('.formLeftColumn').append(
+                                new noteView({
+                                    model: currentModel
+                                }).render().el
                             );
                         }
                         break;

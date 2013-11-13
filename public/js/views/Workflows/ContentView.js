@@ -21,7 +21,8 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             "click .workflow-sub-list li": "chooseWorkflowDetailes",
             "click .workflow-list li": "chooseWorkflowNames",
             "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
-            "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes"
+            "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
+            "click #workflowNames span": "chooseWorkflowDetailes"
         },
         gotoForm: function (e) {
             App.ownContentType = true;
@@ -37,16 +38,16 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             this.$(".workflow-sub-list>*").remove();
 			this.$("#details").addClass("active").show();
             this.$("#workflowNames").html("");
-			$(e.target).parents(".workflow-list").find(".active").removeClass("active");
-			var wId="";
-			if ($(e.target).hasClass("workflow")){
-				$(e.target).parent().addClass("active");
-				wId = $(e.target).text();
-			}else{
-				$(e.target).addClass("active");
-				wId = $(e.target).find("a").text();
-				
-			}
+            $(e.target).parents(".workflow-list").find(".active").removeClass("active");
+            var wId = "";
+            if ($(e.target).hasClass("workflow")) {
+                $(e.target).parent().addClass("active");
+                wId = $(e.target).text();
+            } else {
+                $(e.target).addClass("active");
+                wId = $(e.target).find("a").text();
+
+            }
             var names = [];
             _.each(this.collection.models, function (model) {
                 if (model.get('wId') == wId) {
@@ -74,26 +75,25 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
 			}
             this.$("#sub-details").html("");
             var name = $(e.target).data("id");
-			var nameDetails = this.$("#sub-details").attr("data-id");
-			if (name==nameDetails && this.$("#sub-details").hasClass("active")){
-				this.$("#details").hide(150,function(){
-					$(this).removeClass("active");
-				})
-				return;
-			}
-			else{
-				this.$("#details").show(150,function(){
-					$(this).addClass("active");
-				})
-			}
+            var nameDetails = this.$("#sub-details").attr("data-id");
+            if (name == nameDetails && this.$("#sub-details").hasClass("active")) {
+                this.$("#details").hide(150, function () {
+                    $(this).removeClass("active");
+                })
+                return;
+            }
+            else {
+                this.$("#details").show(150, function () {
+                    $(this).addClass("active");
+                })
+            }
             var values;
             _.each(this.collection.models, function (model) {
                 if (model.get('name') == name) {
-                    console.log(model);
                     values = model.get('value');
                 }
             }, this);
-			this.$("#sub-details").attr("data-id",name)
+            this.$("#sub-details").attr("data-id", name)
             _.each(values, function (value) {
                 this.$("#sub-details").append(new ListItemView({ model: value }).render().el);
             }, this);
@@ -127,11 +127,8 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                     }
                 });
             });
-
             this.collection.trigger('reset');
-
         }
-
     });
 
     return ContentView;

@@ -89,6 +89,7 @@
         $("ul.changeContentIndex").hide();
         if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
+            $('#top-bar-editBtn').show();
             if(viewType == "form"){
                 $('#top-bar-editBtn').show();
                 $("ul.changeContentIndex").show();
