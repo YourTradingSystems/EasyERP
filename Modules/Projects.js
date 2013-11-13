@@ -721,7 +721,7 @@ var Project = function (logWriter, mongoose) {
                             _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.last;
                         }
                     }
-                    if (data.deadline) {
+                    if (data.type) {
                         _task.type = data.type;
                     }
                     if (data.deadline) {

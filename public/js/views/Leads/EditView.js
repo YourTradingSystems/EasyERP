@@ -239,27 +239,15 @@ define([
                     this.$el.html();
                 } else {
                     var currentModel = this.contentCollection.models[itemIndex];
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), companiesCollection: this.companiesCollection, customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
-                    var workflows = this.workflowsCollection.models;
-                    _.each(workflows, function (workflow, index) {
-                        $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                    });
-
-                    _.each(workflows, function (workflow, i) {
-                        var breadcrumb = this.$(".breadcrumb li").eq(i);
-                        if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                            breadcrumb.find("a").addClass("active");
-                            var button = breadcrumb.closest(".breadcrumb").siblings();
-                            if (breadcrumb.is(':last-child')) {
-                                button.hide();
-                                button.last().show();
-                            }
-                            else {
-                                button.show();
-                                button.last().hide();
-                            }
-                        }
-                    }, this);
+                    this.$el.html(_.template(EditTemplate, {
+                        model: currentModel.toJSON(),
+                        companiesCollection: this.companiesCollection,
+                        customersCollection: this.customersCollection,
+                        employeesCollection: this.employeesCollection,
+                        departmentsCollection: this.departmentsCollection,
+                        priorityCollection: this.priorityCollection,
+                        workflowsCollection: this.workflowsCollection
+                    }));
                 }
                 return this;
             }

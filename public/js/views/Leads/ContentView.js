@@ -110,7 +110,7 @@ define([
                 switch (viewType) {
                     case "list":
                         {
-                            this.$el.html(_.template(ListTemplate, {leadsCollection: this.collection.toJSON()}));
+                            this.$el.html(_.template(ListTemplate, { leadsCollection: this.collection.toJSON() }));
 
                             $('#check_all').click(function () {
                                 var c = this.checked;
@@ -133,26 +133,6 @@ define([
                                 this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                                 currentModel.off('change');
                                 currentModel.on('change', this.render, this);
-                                var workflows = this.workflowsCollection.toJSON()[0].value;
-                                _.each(workflows, function (workflow, index) {
-                                    $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.status + "' data-name='" + workflow.name + "' data-id='" + workflow._id + "'><a class='applicationWorkflowLabel'>" + workflow.name + "</a></li>");
-                                });
-
-                                _.each(workflows, function (workflow, i) {
-                                    var breadcrumb = this.$(".breadcrumb li").eq(i);
-                                    if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                                        breadcrumb.find("a").addClass("active");
-                                        var button = breadcrumb.closest(".breadcrumb").siblings();
-                                        if (breadcrumb.is(':last-child')) {
-                                            button.hide();
-                                            button.last().show();
-                                        }
-                                        else {
-                                            button.show();
-                                            button.last().hide();
-                                        }
-                                    }
-                                }, this);
                             }
                             $("#dialog-form").dialog({
                                 autoOpen: false,
@@ -189,7 +169,7 @@ define([
                                                 });
                                             }
                                         });
-                                       
+
 
                                         //model.set({
                                         //    isOpportunitie: true,
