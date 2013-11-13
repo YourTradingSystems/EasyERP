@@ -180,7 +180,6 @@ article {
 	border: 1px solid #CACACA;
     display: block;
     .margin(15px);
-    //.box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.1));
     background: #fff;
 }
 
@@ -1665,17 +1664,16 @@ input, textarea, select {
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
-    width: 230px;
-    min-height: 110px;
+    width: 280px;
+    min-height: 130px;
     cursor: pointer;
-
+	
     .inner {
         padding: 5px;
     }
 
     .bottom {
         width: 100%;
-        background: rgba(0,0,0, 0.1);
         height: 20px;
         position: absolute;
         bottom: 0px;
@@ -2865,4 +2863,31 @@ button {
             margin-left: 9px;
         }
     }
+}
+#profileTableWrapper{
+	width:88%;
+	table{
+		width:95%;
+		margin:auto;
+		border-left: 1px solid #CACACA;
+		border-right: 1px solid #CACACA;
+		thead{
+			td{
+				text-align:center;
+			}
+		}
+		tbody{
+			tr{
+				td{
+				text-align:center;
+				}
+			}
+			.mname{
+				text-align:left;
+			}
+		}
+	}
+}
+#modulesAccessTable{
+	display:none;
 }
