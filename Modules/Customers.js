@@ -53,7 +53,15 @@
         },
         notes: { type: Array, default: [] },
         attachments: { type: Array, default: [] },
-        history: { type: Array, default: [] }
+        history: { type: Array, default: [] },
+		createdBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date, default: Date.now}
+		},
+		editedBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date}
+		}
     }, { collection: 'Customers' });
 
     var customer = mongoose.model('Customers', customerSchema);
@@ -99,6 +107,11 @@
                 function savetoBd(data) {
                     try {
                         _customer = new customer();
+                        if (data.uId) {
+						
+                            _customer.createdBy.user=data.uId;
+                        }
+
                         if (data.type) {
                             _customer.type = data.type;
                         }
