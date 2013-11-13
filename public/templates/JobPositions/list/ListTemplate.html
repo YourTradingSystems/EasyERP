@@ -9,5 +9,7 @@
     <td><%=jobPosition.numberOfEmployees%></td>
     <td><%=jobPosition.expectedRecruitment%></td>
     <td><%= jobPosition.workflow?jobPosition.workflow.name:''%></td>
+    <td><%=(jobPosition.createdBy.user) ? jobPosition.createdBy.user.login + " (" + jobPosition.createdBy.date + ")" : ''%></td>
+    <td><%=(jobPosition.editedBy.user) ? jobPosition.editedBy.user.login + " (" + jobPosition.editedBy.date + ")" : ''%></td>
 </tr>
 <% }) %>

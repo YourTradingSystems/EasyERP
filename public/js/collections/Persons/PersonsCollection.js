@@ -35,7 +35,7 @@ define([
                 if (response.data) {
                     _.map(response.data, function (person) {
                         person.createdBy.date = common.utcDateToLocaleDateTime(person.createdBy.date);
-                        person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.createdBy.date) :  null;
+                        person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.editedBy.date) :  null;
                         person.dateBirth = common.utcDateToLocaleDate(person.dateBirth);
                         person.salesPurchases.date.createDate = common.utcDateToLocaleDate(person.salesPurchases.date.createDate);
                         person.salesPurchases.date.updateDate = common.utcDateToLocaleDate(person.salesPurchases.date.updateDate);

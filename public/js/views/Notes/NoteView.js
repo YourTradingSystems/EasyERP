@@ -75,7 +75,7 @@ define([
 
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            this.delegateEvents(this.events);
+            //this.delegateEvents(this.events);
             return this;
         }
     });

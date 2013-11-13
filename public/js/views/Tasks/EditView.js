@@ -136,8 +136,7 @@
                     extrainfo: {
                         //priority: priority ? priority,
                         sequence: sequence,
-                        StartDate: $.trim($("#StartDate").val()),
-                        EndDate: $.trim($("#EndDate").val())
+                        StartDate: $.trim($("#StartDate").val())
                     },
                     estimated: estimated,
                     logged: logged

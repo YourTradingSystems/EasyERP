@@ -60,6 +60,8 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (project) {
+                        project.createdBy.date = common.utcDateToLocaleDateTime(project.createdBy.date);
+                        project.editedBy.date = common.utcDateToLocaleDateTime(project.editedBy.date);
                       //  project.extrainfo.StartDate = common.utcDateToLocaleDate(project.extrainfo.StartDate);
                       //  project.extrainfo.EndDate = common.utcDateToLocaleDate(project.extrainfo.EndDate);
                       //  project.deadline = common.utcDateToLocaleDate(project.deadline);

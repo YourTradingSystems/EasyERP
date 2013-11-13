@@ -16,6 +16,7 @@ define([
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
+                _.bindAll(this, 'render');
                 this.formModel = options.model;
                 this.render = _.after(2, this.render);
                 this.opportunitiesCollection = new OpportunitiesCollection();
@@ -44,7 +45,7 @@ define([
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-                this.$el.find('.formRightColumn').append(
+                /*this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
@@ -60,7 +61,7 @@ define([
                         new noteView({
                             model: this.formModel
                         }).render().el
-                    );
+                    );*/
                 return this;
             },
             
@@ -87,9 +88,7 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                var currentModel = this.collection.getElement();
-
-                Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                //Backbone.history.navigate("#home/content-Companies/form/" + this.formModel.id, { trigger: true });
             },
 
             editClick: function (e) {
@@ -118,14 +117,11 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
                 if (objIndex.length > 1) {
-                    obj = currentModel.get(objIndex[0]);
+                    obj = this.formModel.get(objIndex[0]);
                     obj[objIndex[1]] = $('#editInput').val();
-                    console.log(obj);
                 } else if (objIndex.length == 1) {
                     obj[objIndex[0]] = $('#editInput').val();
-                    console.log(obj);
                 }
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
@@ -133,16 +129,14 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                currentModel.set(obj);
+                this.formModel.set(obj);
 
-                currentModel.save({}, {
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
                     success: function () {
-
-
-                        Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                        //Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },

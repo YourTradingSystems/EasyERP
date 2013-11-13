@@ -465,6 +465,13 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     data.task = req.body;
     requestHandler.updateTask(req, res, id, data);
 });
+app.put('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.task = req.body;
+    requestHandler.updateTask(req, res, id, data);
+});
 
 app.put('/Tasks/:_id', function (req, res) {
     data = {};
@@ -475,6 +482,12 @@ app.put('/Tasks/:_id', function (req, res) {
 });
 
 app.delete('/Tasks/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
+app.delete('/Tasks/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -721,6 +734,13 @@ app.put('/JobPositions/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/JobPositions/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeJobPosition(req, res, id, data);
+});
+
+app.delete('/JobPositions/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -1046,6 +1066,14 @@ app.get('/Opportunities', function (req, res) {
 });
 
 app.put('/Opportunities/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.opportunitie = req.body;
+    requestHandler.updateOpportunitie(req, res, id, data);
+});
+
+app.put('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

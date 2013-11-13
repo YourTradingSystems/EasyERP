@@ -2,8 +2,9 @@
 define([
   'views/main/MainView',
   'views/login/LoginView',
-  'custom'
-], function (MainView, LoginView, Custom) {
+  'custom',
+    'common'
+], function (MainView, LoginView, Custom, Common) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -117,9 +118,9 @@ define([
                 GetModel.fetch({
                     data: { id: modelId },
                     success: function (model, response, options) {
+                        self.convertModelDates(model);
                         var topBarView = new TopBarView({ actionType: "Content" });
                         var contentView = new ContentFormView({ model: model });
-                        
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
@@ -130,6 +131,21 @@ define([
                     error: function () { }
                 });
             });
+        },
+
+        convertModelDates: function(model){
+            if(model.has('createdBy'))
+                model.get('createdBy').date = Common.utcDateToLocaleDateTime(model.get('createdBy').date);
+            if(model.has('editedBy'))
+                model.get('editedBy').date = Common.utcDateToLocaleDateTime(model.get('editedBy').date);
+            if(model.has('dateBirth'))
+                model.set({
+                    dateBirth: Common.utcDateToLocaleDate(model.get('dateBirth'))
+                });
+            if(model.has('nextAction'))
+                model.set({
+                    nextAction: Common.utcDateToLocaleDate(model.get('nextAction'))
+                });
         },
 
         goToKanban: function (contentType, parrentContentId) {

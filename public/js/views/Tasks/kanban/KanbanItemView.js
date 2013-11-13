@@ -95,6 +95,7 @@ define([
                 }
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-id", this.model.get('_id'));
+                this.$el.addClass(this.model.get('extrainfo').priority); 
                 return this;
             }
         });
