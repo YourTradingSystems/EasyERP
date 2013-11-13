@@ -21,12 +21,12 @@
             if (response) {
                 oauth2Client.credentials = response;
                 googleapis
-                    .discover('calendar', 'v3')
-                    .execute(function (err, client) {
-                        if (err) console.log(err);
+                          .discover('calendar', 'v3')
+                             .execute(function (err, client) {
+                                 if (err) console.log(err);
                         calendars.forEach(function (_event) {
-                            var calendarId = _event.id;
-                            _event.items.forEach(function (item) {
+                                     var calendarId = _event.id;
+                                     _event.items.forEach(function (item) {
 								var event = {
                                     "summary": item.summary,
                                     'start': {
@@ -37,18 +37,18 @@
                                     }
 								}
                                 client.calendar.events.insert({ calendarId: calendarId }, event)
-                                    .withAuthClient(oauth2Client).execute(
-                                        function (err, result) {
-                                            if (result) {
+                                                .withAuthClient(oauth2Client).execute(
+                                                    function (err, result) {
+                                                        if (result) {
 												checkAsGoogle(item._id);
-                                                console.log(result);
-                                            } else {
-                                                console.log(err);
-                                            };
-                                        });
-                            });
-                        });
-                    });
+                                                            console.log(result);
+                                                        } else {
+                                                            console.log(err);
+                                                        };
+                                                    });
+                                     });
+                                 });
+                             });
             } else {
                 console.log(err);
             }

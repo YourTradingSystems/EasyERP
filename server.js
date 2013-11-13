@@ -734,6 +734,13 @@ app.delete('/Departments/:viewType/:_id', function (req, res) {
     requestHandler.removeDepartment(req, res, id, data);
 });
 
+app.delete('/Departments//:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeDepartment(req, res, id, data);
+});
+
 //------------------Employee---------------------------------------------------
 
 app.get('/Employees', function (req, res) {
