@@ -22,7 +22,7 @@
                 <p>interviewForm</p>
                 <p><%=description%></p>
                 <p><%=requirements%></p>
-                <p><%=department.name%></p>
+                <p><%= (department) ? department.departmentName : ''%></p>
 			</div>
      	</div>
     </form>

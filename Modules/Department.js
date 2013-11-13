@@ -1,15 +1,12 @@
 var Department = function (logWriter, mongoose, employeeModel, event) {
-
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
         parentDepartment: {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
-        departmentManager: {
-            id: { type: String, default: '' },
-            name: { type: String, default: 'emptyUser' }
-        }
+        departmentManager: { type: ObjectId, ref: 'Employees' },
     }, { collection: 'Department' });
 
     var department = mongoose.model('Department', DepartmentSchema);
@@ -53,12 +50,11 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
                     }
 
                     if (data.departmentManager) {
-                        if (data.departmentManager._id) {
-                            _department.departmentManager.id = data.departmentManager._id;
-                        }
-                        if (data.departmentManager.name) {
-                            _department.departmentManager.name = data.departmentManager.name.first + " " + data.departmentManager.name.last;
-                        }
+                        _department.departmentManager = data.departmentManager;
+                        //}
+                        //if (data.departmentManager.name) {
+                        //    _department.departmentManager.name = data.departmentManager.name.first + " " + data.departmentManager.name.last;
+                        //}
                     }
                     _department.save(function (err, result) {
                         if (err) {
@@ -115,42 +111,43 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         var res = {};
         res['data'] = [];
         var query = department.find({});
-        //query.sort({ departmentName: 1 });
+        query.populate('departmentManager');
+        query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
             if (err) {
                 console.log(err);
                 logWriter.log("Department.js getDepartments Department.find " + err);
                 response.send(500, { error: "Can't find Department" });
             } else {
-                departments.forEach(function (_department, index) {
-                    if (_department.departmentManager && _department.departmentManager.id) {
-                        employeeModel.findById(_department.departmentManager.id, function (err, result) {
-                            if (err) {
-                                console.log(err);
-                            } else if (result) {
-                                _department.departmentManager.name = result.name.first + ' ' + result.name.last;
-                                res['data'].push(_department);
-                                if (res['data'].length == departments.length) {
-                                    res['data'].sort(function (a, b) {
-                                        return a.departmentName.localeCompare(b.departmentName);
-                                    });
-                                    event.emit('SendResponse', response, res);
-                                }
-                            }
-                        });
-                    } else {
-                        res['data'].push(_department);
-                        if (res['data'].length == departments.length) {
-                            res['data'].sort(function (a, b) {
-                                return a.departmentName.localeCompare(b.departmentName);
-                            });
-                            event.emit('SendResponse', response, res);
-                        }
-                    };
+                //departments.forEach(function (_department, index) {
+                //    if (_department.departmentManager && _department.departmentManager.id) {
+                //        employeeModel.findById(_department.departmentManager.id, function (err, result) {
+                //            if (err) {
+                //                console.log(err);
+                //            } else if (result) {
+                //                _department.departmentManager.name = result.name.first + ' ' + result.name.last;
+                //                res['data'].push(_department);
+                //                if (res['data'].length == departments.length) {
+                //                    res['data'].sort(function (a, b) {
+                //                        return a.departmentName.localeCompare(b.departmentName);
+                //                    });
+                //                    event.emit('SendResponse', response, res);
+                //                }
+                //            }
+                //        });
+                //    } else {
+                //        res['data'].push(_department);
+                //        if (res['data'].length == departments.length) {
+                //            res['data'].sort(function (a, b) {
+                //                return a.departmentName.localeCompare(b.departmentName);
+                //            });
+                //            event.emit('SendResponse', response, res);
+                //        }
+                //    };
 
-                });
-                //res['data'] = result;
-                //response.send(res);
+                //});
+                res['data'] = departments;
+                response.send(res);
             }
         });
     };
