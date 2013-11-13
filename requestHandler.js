@@ -394,30 +394,17 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function gettaskWorkflows(req, res, data) {
-        console.log("Requst gettaskWorkflow is success");
+        function getWorkflowsForDd(req, res, data) {
+        console.log("Requst getWorkflowsForDd is Success");
         if (req.session && req.session.loggedIn) {
-            console.log('>>>>>>>>>>>>>>>');
+            console.log('>>>>>>>>>>>');
             console.log(data);
             console.log('<<<<<<<<<<<');
-            workflow.getTasksforDd(data, res);
+            workflow.getWorkflowsForDd(data, res);
         } else {
             res.send(401);
         }
     };
-
-    function getprojectWorkflows(req, res, data) {
-        console.log("Requst gettaskWorkflow is success");
-        if (req.session && req.session.loggedIn) {
-            console.log('>>>>>>>>>>>>>>>');
-            console.log(data);
-            console.log('<<<<<<<<<<<');
-            workflow.getProjectsforDd(data, res);
-        } else {
-            res.send(401);
-        }
-    };
-
 
     function createWorkflow(req, res, data) {
         console.log("Requst createWorkflow is success");
@@ -912,10 +899,8 @@ var requestHandler = function (fs, mongoose) {
         getWorkflow: getWorkflow,
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
-
-        gettaskWorkflows: gettaskWorkflows,
-        getprojectWorkflows: getprojectWorkflows,
-
+        getWorkflowsForDd: getWorkflowsForDd,
+     
         getProfile: getProfile,
         createProfile: createProfile,
         updateProfile: updateProfile,

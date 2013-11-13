@@ -324,7 +324,7 @@ article {
     position: relative;
     height: @height;
     width: auto;
-    border-bottom: 1px solid @bg;
+    border-top: 1px solid @bg;
 
     nav {
         height: @height;
@@ -2459,7 +2459,7 @@ button {
 .kanban {
     margin: 0;
     padding: 0;
-  //  display: inline-flexbox;
+    //  display: inline-flexbox;
     width: 100%;
 
     tbody {
@@ -2472,6 +2472,12 @@ button {
         }
     }
 
+    tr {
+     &:last-child {
+            border-right: 10px solid white;
+        }
+    }
+    
     .column {
         border-left: 10px solid #fff;
         vertical-align: text-top;
@@ -2482,6 +2488,8 @@ button {
         width: auto;
         height: auto;
         background: url("@{imagesfolder}/form_sheetbg.png");
+
+
 
         .task, .opportunity {
             word-wrap: break-word;
@@ -2527,9 +2535,9 @@ button {
                     font-weight: normal;
                     //vertical-align: middle;
                     line-height: 13px;
-                font-size: 13px;
+                    font-size: 13px;
+                }
             }
-        }
         }
 
         .columnNameDiv {

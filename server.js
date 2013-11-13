@@ -359,18 +359,25 @@ app.get('/Workflows', function (req, res) {
 
 app.get('/taskWorkflows', function (req, res) {
     data = {};
+    type = {};
     data.id = req.param('id');
     data.mid = req.param('mid');
+    type.name = 'task';
+    type.id = "Task";
+    data.type = type;   
     console.log(data);
-    requestHandler.gettaskWorkflows(req, res, data);
+    requestHandler.getWorkflowsForDd(req, res, data);
 });
 
 app.get('/projectWorkflows', function (req, res) {
     data = {};
+    type = {};
     data.id = req.param('id');
     data.mid = req.param('mid');
+    type.name = 'project';
+    type.id = "Project";   
     console.log(data);
-    requestHandler.getprojectWorkflows(req, res, data);
+    requestHandler.getWorkflowsForDd(req, res, data);
 });
 
 app.post('/Workflows', function (req, res) {
