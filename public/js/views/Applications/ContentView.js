@@ -53,7 +53,7 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
             else {
                 App.hash = applicationId;
                 _.each(this.collection.models, function (item) {
-                    if (item.get("application").id == applicationId) models.push(item);
+                    if (item.get("item").id == applicationId) models.push(item);
                 }, this);
             }
             switch (viewType) {

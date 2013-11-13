@@ -186,7 +186,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 connectWith: ".column",
                 cancel: "h2",
                 cursor: "move",
-                items: ".task",
+                items: ".item",
                 opacity: 0.7,
                 revert: true,
                 helper: 'clone',

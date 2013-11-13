@@ -133,7 +133,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                 connectWith: ".column",
                 cancel: "h2",
                 cursor: "move",
-                items: ".opportunity",
+                items: ".item",
                 opacity: 0.7,
                 revert: true,
                 helper: 'clone',

@@ -4,7 +4,7 @@ define([
 ],
     function (KanbanItemTemplate, common) {
         var ApplicationsItemView = Backbone.View.extend({
-            className: "application",
+            className: "item",
             id: function () {
                 return this.model.get("_id");
             },
@@ -28,12 +28,12 @@ define([
 
             gotoEditForm: function (e) {
                 e.preventDefault();
-                var itemIndex = $(e.target).closest(".application").data("index") + 1;
+                var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 window.location.hash = "#home/action-Applications/Edit/" + itemIndex;
             },
 
             gotoForm: function (e) {
-                var itemIndex = $(e.target).closest(".application").data("index") + 1;
+                var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 App.ownContentType = true;
                 window.location.hash = "home/content-Applications/form/" + itemIndex;
             },
@@ -61,7 +61,7 @@ define([
         },
 
         changeColor: function (color) {
-            this.$(".colorPicker a").closest(".application-header").css('background-color', color).closest(".application").css('border-color', color);
+            this.$(".colorPicker a").closest(".application-header").css('background-color', color).closest(".item").css('border-color', color);
         },
 
         render: function () {
