@@ -1,27 +1,32 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "collections/Customers/CustomersCollection",
     "common",
     "custom",
-    "dataService"
+    "dataService",
+    "collections/Projects/ProjectsCollection",
+    "collections/Customers/AccountsDdCollection",
+    "collections/Customers/CustomersCollection",
+    "collections/Priority/TaskPriority",
+    "collections/Workflows/WorkflowsCollection"
 ],
-    function (EditTemplate, CustomersCollection, common, Custom, dataService) {
+    function (EditTemplate, common, Custom, dataService, ProjectsCollection, AccountsDdCollection, CustomersDdCollection, PriorityCollection, WorkflowsCollection) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                this.customersDdCollection = new CustomersCollection();
+                this.projectsDdCollection = new ProjectsCollection();
+                this.workflowsDdCollection = new WorkflowsCollection();
+                this.priorityCollection = new PriorityCollection();
+                this.accountsDdCollection = new AccountsDdCollection();
+                this.customersDdCollection = new CustomersDdCollection();
                 this.tasksCollection = options.collection;
                 this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
-                //this.customersDdCollection.bind('reset', _.bind(this.render, this));
                 this.render();
 
             },
-            renderView: function () {
-                console.log('RENDERVIEW');
-            },
+
             events: {
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
@@ -30,9 +35,7 @@
             },
 
             hideDialog: function(){
-                //this.$el.dialog('close');
                 $('.edit-task-dialog').remove();
-
             },
 
             changeWorkflow: function (e) {
@@ -212,7 +215,7 @@
             populateDropDown: function(type, selectId, url){
                 var selectList = $(selectId);
                 var self = this;
-                dataService.getData(url, {mid:39, id:"Task"}, function(response){
+                dataService.getData(url, {mid:39}, function(response){
                     var options = $.map(response.data, function(item){
                         switch (type){
                             case "project":
@@ -251,12 +254,11 @@
 
             render: function () {
                 var formString = this.template({
-                    model: this.currentModel.toJSON(),
-                    customersDdCollection: this.customersDdCollection.toJSON()});
+                    model: this.currentModel.toJSON()});
 
                 this.$el = $(formString).dialog({
                     autoOpen:true,
-                    resizable:true,
+                    resizable:false,
 					dialogClass: "edit-task-dialog",
                     title: this.currentModel.toJSON().project.projectShortDesc
                 });

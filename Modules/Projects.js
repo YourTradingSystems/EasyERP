@@ -521,7 +521,7 @@ var Project = function (logWriter, mongoose) {
     function getForDd(response) {
         var res = {};
         res['data'] = [];
-        var query = project.find({projectName:1});
+        var query = project.find({},{projectName:1, _id:1});
         query.sort({ projectName: 1 });
         query.exec(function (err, projects) {
             if (err) {
@@ -531,6 +531,7 @@ var Project = function (logWriter, mongoose) {
             } else {
                 res['data'] = projects;
                 response.send(res);
+                console.log(res);
             }
         });
     };

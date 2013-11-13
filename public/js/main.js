@@ -30,7 +30,11 @@ var App = App ||
         assignedToDd:"#assignedToDd",
         projectDd:"#projectDd",
         priorityDd: "#priorityDd",
-        workflowDd: "#workflowDd"
+        workflowDd: "#workflowDd",
+        managerDd: "#managerDd",
+        customerDd: "#customerDd",
+        userEditDd: "#userEditDd",
+        companiesDd: "#companiesDd"
     },
     requestedURL: null
 };
