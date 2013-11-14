@@ -19,17 +19,32 @@
                     <p>
                         <label for="interviewForm">Interview Form</label>
                     </p>
+                    <p>
+                        <label for="workflowNames">Workflow Name </label>
+                    </p>
+                    <p>
+                        <label for="workflow">Workflow</label>
+                    </p>
                 </div>
                 <div class="half-block left">
                     <p>0</p>
                     <p>
-                        <input type="number" name="expectedRecruitment" id="expectedRecruitment" placeholder="0.00" min="0"/>
+                        <input type="number" name="expectedRecruitment" id="expectedRecruitment" placeholder="0.00" min="0" />
                     </p>
                     <p>0</p>
                     <p>
                         <select id="interviewForm">
                             <option selected="selected" value="0">Select...</option>
                         </select>
+                    </p>
+                    <p>
+                        <select id="workflowNames">
+                            <% _.each(workflowNames, function(item){ %>
+                                <option><%= item %></option>
+                            <%}); %>
+                        </select>
+                    </p>
+                    <p id="selectWorkflow">
                     </p>
                 </div>
                 <p>
@@ -49,6 +64,7 @@
                         <% }); %>
                     </select>
                 </p>
+
             </div>
         </fieldset>
     </form>
