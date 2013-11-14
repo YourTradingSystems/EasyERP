@@ -360,7 +360,7 @@ app.get('/Workflows', function (req, res) {
 app.get('/taskWorkflows', function (req, res) {
     data = {};
     type = {};
-    data.id = req.param('id');
+    //data.id = req.param('id');
     data.mid = req.param('mid');
     type.name = 'task';
     type.id = "Task";
@@ -372,10 +372,11 @@ app.get('/taskWorkflows', function (req, res) {
 app.get('/projectWorkflows', function (req, res) {
     data = {};
     type = {};
-    data.id = req.param('id');
+    //data.id = req.param('id');
     data.mid = req.param('mid');
     type.name = 'project';
-    type.id = "Project";   
+    type.id = "Project";
+    data.type = type;
     console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
 });
