@@ -35,6 +35,7 @@ define([
         },
         cancelNote: function(e) {
             $('#noteArea').val('');
+            $('#noteTitleArea').val('');
             $('#getNoteKey').attr("value",'');
         },
         editDelNote: function(e) {
@@ -51,6 +52,7 @@ define([
             switch (type) {
                 case "edit": {
                     $('#noteArea').val($('#'+id_int).find('.noteText').text());
+                    $('#noteTitleArea').val($('#'+id_int).find('.noteTitle').text());
                     $('#getNoteKey').attr("value",id_int);
                     break;
                 }
@@ -66,7 +68,8 @@ define([
         },
         addNote: function() {
             var val = $('#noteArea').val();
-            if (val) {
+            var title = $('#noteTitleArea').val();
+            if (val || title) {
                 var models = this.collection.models;
                 var itemIndex = Custom.getCurrentII() - 1;
                 //TODO fix some problems with itemIndex
@@ -76,29 +79,36 @@ define([
                 var arr_key_str = $('#getNoteKey').attr("value");
                 var note_obj = {
                     note: '',
-                    date: ''
+                    date: '',
+                    title: ''
                 };
                 if (arr_key_str) {
                     notes[parseInt(arr_key_str)].note = val;
+                    notes[parseInt(arr_key_str)].title = title;
+
                     currentModel.set('notes',notes);
                     if (currentModel.save()) {
                         $('#noteArea').val($('#'+ arr_key_str ).find('.noteText').text(val));
+                        $('#noteTitleArea').val($('#'+ arr_key_str ).find('.noteTitle').text(title));
                         $('#getNoteKey').attr("value",'');
                     }
                 } else {
                     var today_date = new Date();
                     note_obj.date = today_date;
                     note_obj.note = val;
+                    note_obj.title = title;
+
                     notes.push(note_obj);
                     currentModel.set('notes',notes);
                     if (currentModel.save()) {
                         var edit = 'edit_'+key;
                         var del = 'del_'+key;
                         var author = currentModel.get('name').first ;
-                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, edit: edit, del: del,author: author, date: today_date }));
+                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, title: title, edit: edit, del: del,author: author, date: today_date }));
                     }
                 }
                 $('#noteArea').val('');
+                $('#noteTitleArea').val('');
             }
         },
         addAttach: function(){
