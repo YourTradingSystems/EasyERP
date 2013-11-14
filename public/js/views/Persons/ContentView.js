@@ -8,9 +8,11 @@ define([
     'common',
     'views/Persons/EditView',
     'views/Notes/NoteView',
-    'text!templates/Notes/AddNote.html'
+    'text!templates/Notes/AddNote.html',
+    'views/Attachments/AttachmentsView',
+    'text!templates/Attachments/AddAttachments.html'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate, attachView, addAttachTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -93,39 +95,51 @@ define([
                 $('#noteArea').val('');
             }
         },
-        addAttach: function(){
+
+       
+        addAttach: function(event){
+        	
+        	event.preventDefault();
         	var models = this.collection.models;
             var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex]["id"];
-        	//event.preventDefault();
+            var currentModel = models[itemIndex];
+            var currentModelID = models[itemIndex]["id"];
         	var addFrmAttach = $("#addAttachments");
-        	var addInptAttach = $("#inputAttach").serialize(); 
+        	var addInptAttach = $("#inputAttach")[0].files[0];     	
         	addFrmAttach.submit(function(e){
+   
         		var formURL = addFrmAttach.attr("action");
         		e.preventDefault();
         		addFrmAttach.ajaxSubmit({
         			url:formURL,
         			type: "POST",
-        			cache: false,
         			processData: false,
-        			data:addInptAttach,
-        		
-        			
+        			contentType: false,
+        			data:[addInptAttach],
         			beforeSend: function(xhr){
-        			    
-
-	                       xhr.setRequestHeader("id",currentModel);
+	                       xhr.setRequestHeader("id",currentModelID);
         			},
         			
         			success:function(data){
+        				var attach = {
+        						
+        				}
+        	            
+        	            $('#attachBody').prepend( _.template(addAttachTemplate,{ data:data }));
         				console.log('Attach file');
+               			addFrmAttach[0].reset();	
         			},
+        			
         			error: function (){
         				console.log("Attach file error");
-        			} 
+        			},
+        			
         		});
+         		
         	});
-
+        	
+        	addFrmAttach.submit();
+        	addFrmAttach.off('submit');
         },
         
         editItem: function(){
@@ -230,6 +244,12 @@ define([
                                     model: currentModel
                                 }).render().el
                             );
+                            
+                            this.$el.find('.formAttachments').append(
+                                    new attachView({
+                                        model: currentModel
+                                    }).render().el
+                                );
                         }
                         break;
                     }
