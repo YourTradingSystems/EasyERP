@@ -4,8 +4,12 @@
             <label>Note:
                 <textarea  id="noteArea"></textarea>
             </label>
+            <label>Title:
+                <input type="text" id="noteTitleArea" value="">
+            </label>
         </p>
         <button id="addNote">Add</button>
+        <button id="cancelNote">Cancel</button>
         <input type="hidden" id="getNoteKey" value="">
     </div>
 
@@ -14,6 +18,7 @@
         notes.reverse();
         _.each(notes, function(val,key){ %>
         <div id="<%=(n-key) %>" class="noteContainer">
+                   <div class="noteTitle"><%=val['title']  %></div>
                <div class="noteText"><%=val['note'] %></div>
                <span  style="">
                    <span>
@@ -24,6 +29,8 @@
                       <a id="<%=('del_' + (n-key)) %>" class="editDelNote">Del</a>
                    </span>
                </span>
+               <div><%=name.first %></div>
+               <div><%=val['date'] %></div>
         </div>
         <% }); notes.reverse(); %>
     </div>
