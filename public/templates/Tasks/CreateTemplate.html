@@ -31,17 +31,20 @@
               
             </select>
 		  </dd>
-		  <dt><label for="workflowDd">Task Workflow :</label></dt><dd>
-            <select id="workflowDd">
-              <option selected="selected" value="0">Select...</option>
-              <% workflowsDdCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"><%= option.get('name') %> (<%= option.get('status') %>)</option>
+		  <dt><label for="workflowNames">Workflow Name:</label></dt><dd>
+            <select id="workflowNames">
+             <% _.each(workflowNames, function(item){ %>
+              <option><%= item %></option>
               <% }); %>
             </select>
 
 		  </dd>
+            
+		    <dt><label for="workflow">Workflow:</label></dt><dd id="selectWorkflow">
+		                                                                   
+		    </dd>
 
-		  <dt><label>Assigned to :</label></dt><dd>
+		    <dt><label>Assigned to :</label></dt><dd>
             <select id="assignedTo" required>
               <option selected="selected" value="0">Select...</option>
               <% accountDdCollection.each(function(option){ %>
@@ -63,7 +66,17 @@
               <% }); %>
             </select>
 		  </dd>
-		  <dt><label for="StartDate">Start Date :</label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="" required /></dd>
+		    
+            <dt><label for="type">Type :</label></dt><dd>
+            <select id="type">
+                <option selected="selected" value="0">Select...</option>
+                <option>Task</option>
+                <option>Bug</option>
+                <option>Feature</option>
+            </select>
+		  </dd>
+
+		    <dt><label for="StartDate">Start Date :</label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="" required /></dd>
 		  <dt><label for="EndDate">End Date :</label></dt><dd><input class="extrainfo blueback" type="text" name="EndDate" id="EndDate" value="" required /></dd>
 
 		  <dt><label for="customerDd">Customer :</label></dt><dd>

@@ -1,21 +1,25 @@
 define([
     "jqueryui",
     "text!templates/Opportunities/CreateTemplate.html",
+    "text!templates/Opportunities/selectTemplate.html",
     "collections/Customers/CustomersCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
+     "collections/Workflows/WorkflowsCollection",
     "collections/Priority/TaskPriority",
     "models/OpportunityModel",
     "common",
     "custom"
 ],
-    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, OpportunityModel, common, Custom) {
+    function (jqueryui, CreateTemplate, selectTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, OpportunityModel, common, Custom) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
             template: _.template(CreateTemplate),
 
             initialize: function () {
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
+                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.customersCollection = new CustomersCollection();
                 this.customersCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
@@ -24,12 +28,27 @@ define([
                 this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.priorityCollection = new PriorityCollection();
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.render();
+                this.render = _.after(4, this.render);
             },
 
             events: {
                 "click #tabList a": "switchTab",
-                "change #customer": "selectCustomer"
+                "change #customer": "selectCustomer",
+                "change #workflowNames": "changeWorkflows"
+            },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            changeWorkflows: function () {
+                var name = this.$("#workflowNames option:selected").val();
+                var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             selectCustomer: function (e) {
@@ -178,7 +197,18 @@ define([
             },
 
             render: function () {
-                this.$el.html(this.template({ customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
+                var workflowNames = [];
+                this.workflowsCollection.models.forEach(function (option) {
+                    workflowNames.push(option.get('name'));
+                });
+                this.$el.html(this.template({
+                    customersCollection: this.customersCollection,
+                    employeesCollection: this.employeesCollection,
+                    departmentsCollection: this.departmentsCollection,
+                    priorityCollection: this.priorityCollection,
+                    workflowNames: workflowNames
+                }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
                 return this;
