@@ -30,7 +30,12 @@ define([
             "click .company": "gotoCompanyForm",
             "click #attachSubmit":"addAttach",
             "click #addNote": "addNote",
-            "click .editDelNote": "editDelNote"
+            "click .editDelNote": "editDelNote",
+            "click #cancelNote": "cancelNote"
+        },
+        cancelNote: function(e) {
+            $('#noteArea').val('');
+            $('#getNoteKey').attr("value",'');
         },
         editDelNote: function(e) {
             var id = e.target.id;
@@ -62,7 +67,6 @@ define([
         addNote: function() {
             var val = $('#noteArea').val();
             if (val) {
-
                 var models = this.collection.models;
                 var itemIndex = Custom.getCurrentII() - 1;
                 //TODO fix some problems with itemIndex
@@ -71,7 +75,8 @@ define([
                 var key = notes.length;
                 var arr_key_str = $('#getNoteKey').attr("value");
                 var note_obj = {
-                    note: ''
+                    note: '',
+                    date: ''
                 };
                 if (arr_key_str) {
                     notes[parseInt(arr_key_str)].note = val;
@@ -81,13 +86,16 @@ define([
                         $('#getNoteKey').attr("value",'');
                     }
                 } else {
+                    var today_date = new Date();
+                    note_obj.date = today_date;
                     note_obj.note = val;
                     notes.push(note_obj);
                     currentModel.set('notes',notes);
                     if (currentModel.save()) {
                         var edit = 'edit_'+key;
                         var del = 'del_'+key;
-                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, edit: edit, del: del}));
+                        var author = currentModel.get('name').first ;
+                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, edit: edit, del: del,author: author, date: today_date }));
                     }
                 }
                 $('#noteArea').val('');
