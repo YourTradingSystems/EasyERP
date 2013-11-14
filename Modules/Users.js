@@ -135,6 +135,7 @@ var Users = function (logWriter, mongoose, findCompany) {
                                     if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {
                                         req.session.loggedIn = true;
                                         req.session.uId = _users[0]._id;
+                                        req.session.uName = _users[0].login;
                                         func(200);
                                     } else {
                                         func(400);

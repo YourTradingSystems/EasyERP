@@ -89,11 +89,6 @@ app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
-
-    //data = req.body;
-    //data.uploaderId = req.session.uId;
-    //console.log(req);
-    //console.log(req.files);
     console.log(req.headers);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
@@ -104,14 +99,10 @@ app.post('/uploadFiles', function (req, res, next) {
             file.path = path;
             file.size = req.files.attachfile.size;
             file.uploadDate = new Date();
-            file.uploaderId = req.session.uId;           
-            requestHandler.uploadFilePerson(req, res, req.headers.id, file);           
+            file.uploaderId = req.session.uName;
+            requestHandler.uploadFilePerson(req, res, req.headers.id, file);
         });
-       // console.log(data);
-        //requestHandler.updateEmployees(req, res, id, data);      
     });
-
-    //requestHandler.login(req, res, data);
 });
 
 app.post('/login', function (req, res, next) {
@@ -350,7 +341,7 @@ app.get('/relatedStatus', function (req, res) {
 
 app.get('/Workflows', function (req, res) {
     data = {};
-    data.id = req.param('id');
+    //data.id = req.param('id');
     data.mid = req.param('mid');
     console.log(data);
     requestHandler.getWorkflow(req, res, data);
@@ -364,7 +355,7 @@ app.get('/taskWorkflows', function (req, res) {
     data.mid = req.param('mid');
     type.name = 'task';
     type.id = "Task";
-    data.type = type;   
+    data.type = type;
     console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
 });
@@ -375,7 +366,7 @@ app.get('/projectWorkflows', function (req, res) {
     //data.id = req.param('id');
     data.mid = req.param('mid');
     type.name = 'project';
-    type.id = "Project";   
+    type.id = "Project";
     data.type = type;
     console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
@@ -383,7 +374,7 @@ app.get('/projectWorkflows', function (req, res) {
 
 app.post('/Workflows', function (req, res) {
     data = {};
-    //data.mid = req.headers.mid;
+    data.mid = req.headers.mid;
     data.value = req.body.value;
     //data._id = req.headers.id;
     data._id = req.body.wId;
@@ -394,14 +385,17 @@ app.post('/Workflows', function (req, res) {
 });
 
 app.put('/Workflows/:id', function (req, res) {
+    console.log('Request for update Workflow');
     data = {};
     var _id = req.param('id');
+    console.log(_id);
     data.mid = req.headers.mid;
     data.value = req.body.value;
     data.name = req.body.name;
     data.wId = req.body.wId;
     console.log(data);
-    requestHandler.updateWorkflow(req, res, _id, data);
+
+    // requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
 

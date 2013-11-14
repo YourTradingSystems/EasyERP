@@ -64,6 +64,8 @@ var Workflow = function (logWriter, mongoose) {
         },
 
         update: function (_id, data, result) {
+            console.log('>>>>>>>Incoming Workflow Update>>>>>>>');
+            console.log(data);
             try {
                 if (data) {
                     delete data._id;
@@ -84,11 +86,11 @@ var Workflow = function (logWriter, mongoose) {
                 logWriter.log("Workflow.js  create " + exception);
             }
         },
-  
+
         getWorkflowsForDd: function (data, response) {
             var res = {};
             res['data'] = [];
-            var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name  }] });
+            var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             //query.sort({ 'name': 1 });
             query.exec(function (err, result) {
                 if (err) {
