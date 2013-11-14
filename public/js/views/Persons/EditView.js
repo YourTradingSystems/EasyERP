@@ -112,7 +112,10 @@ define([
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,
-                    title: "Edit Person"
+					dialogClass:"edit-person-dialog",
+                    title: "Personal Info",
+					width:"80%",
+					height:690
                 });
                 this.delegateEvents(this.events);
 

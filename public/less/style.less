@@ -83,11 +83,15 @@
 }
 
 a {
-    color: @lightmagenta;
+    //color: @lightmagenta;
+	color:#36a9e1;
+
     text-decoration: none;
 
     &:hover {
-        color: @lightmagenta - #333333;
+		text-decoration:underline;
+        //color: @lightmagenta - #333333;
+
     }
 
     &:focus {
@@ -1657,7 +1661,7 @@ input, textarea, select {
     position: relative;
     display: block;
     background: white !important;
-    border: 1px solid rgba(0, 0, 0, 0.16);
+    border: 1px solid @taskBorderColor;
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
     width: 280px;
@@ -1690,7 +1694,7 @@ input, textarea, select {
     }
 
     a.tasksByProject {
-        color: #7c7bad;
+		//color: #7c7bad;
         cursor: pointer;
         text-decoration: none;
 
@@ -1750,6 +1754,9 @@ input, textarea, select {
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
         line-height: 20px;
+		a{
+			font-weight:bold;
+		}
     }
 
     .inner {
@@ -1765,9 +1772,10 @@ input, textarea, select {
 
                 a {
                     word-break: break-all;
-                    text-decoration: none;
                     word-wrap: break-word;
-                    color: #7c7bad;
+					.bold{
+						font-weight:bold;
+					}
                 }
             }
         }
@@ -1830,9 +1838,9 @@ input, textarea, select {
 
                 a {
                     word-break: break-all;
-                    text-decoration: none;
+                    //text-decoration: none;
                     word-wrap: break-word;
-                    color: #7c7bad;
+                    //color: #7c7bad;
                 }
             }
         }
@@ -1979,15 +1987,19 @@ button {
 }
 
 .ui-dialog {
-    width: 80% !important;
+//    width: 80% !important;
 
 		.ui-dialog-titlebar {
         display: none;
 		}
 
+		.ui-dialog-content {
+			//height:auto !important;
+		}
+
     &.edit-task-dialog {
-        width: 50% !important;
-        min-width: 950px;
+        //width: 50% !important;
+        //min-width: 950px;
 
 		.ui-dialog-titlebar {
             padding-left: 15px;
@@ -2001,7 +2013,7 @@ button {
 	}
 
     .ui-dialog-content {
-        height: auto !important;
+        //height: auto !important;
 	}
 
     .ui-dialog-titlebar {
@@ -2154,7 +2166,13 @@ button {
 		}
 	}
 }
-
+#createProjectForm{
+	dl{
+		dt{
+			max-width:180px;
+		}
+	}
+}
 #createEmployeeForm,
 #editEmployeeForm {
     textarea {
@@ -2167,9 +2185,15 @@ button {
 
 	.textarea-wrapper {
 		margin-left: 10px;
+	}
 }
+#createEmployeeForm.notDialog{
+	dl{
+		dt,dd{
+			line-height:17px;
+		}
+	}
 }
-
 #createFormDiv > #createProjectForm {
     margin: 0;
     width: auto;
@@ -2330,7 +2354,7 @@ button {
 		}
 	}
 
-.createFormDatepicker {
+ #ui-datepicker-div{
     border-radius: 0 !important;
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
@@ -2894,8 +2918,8 @@ button {
 		border-left: 1px solid #CACACA;
 		border-right: 1px solid #CACACA;
 		thead{
-			td{
-				text-align:center;
+			th:first-of-type {
+			width:auto;
 			}
 		}
 		tbody{

@@ -35,7 +35,7 @@
             },
 
             hideDialog: function(){
-                this.$el.dialog('close');
+                $(".edit-task-dialog").remove();
             },
 
             changeWorkflow: function (e) {
@@ -216,18 +216,20 @@
                     model: this.currentModel.toJSON(),
                     customersDdCollection: this.customersDdCollection.toJSON(),
                     priorityCollection: this.priorityCollection.toJSON()});
-
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,
 					dialogClass: "edit-task-dialog",
-                    title: this.currentModel.toJSON().project.projectShortDesc
-                });
+					width:"50%",
+					height:513,
+                    title: this.currentModel.toJSON().project.projectShortDesc  
+				});
                 $('#projectDd').append(new ProjectsDdView().render().el);
                 $('#assignedToDd').append(new AccountsDdView().render().el);
                 $('#workflowDd').append(new WorkflowsDdView().render().el);
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
+                $('#deadline').datepicker({ dateFormat: "d M, yy" });
                 this.delegateEvents(this.events);
                 return this;
             }
