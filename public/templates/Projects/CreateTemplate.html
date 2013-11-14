@@ -29,16 +29,18 @@
 		</div>
         <div class="half-block left">
           <dl class="person-info">
-			<dt><label for="workflowDd">Project Status :</label></dt>
-			<dd>
-			  <select id="workflowDd">
-                <option selected="selected" value="0">Select...</option>
-                <% workflowsDdCollection.each(function(option){ %>
-                <option value="<%= option.get('_id') %>" <%= (option.get('name') == 'New') ? 'selected' : ''%>><%= option.get('name') %> (<%= option.get('status') %>)</option>
-                <% }); %>
-              </select>
+			 <dt><label for="workflowNames">Workflow Name:</label></dt><dd>
+            <select id="workflowNames">
+             <% _.each(workflowNames, function(item){ %>
+              <option><%= item %></option>
+              <% }); %>
+            </select>
 
-			</dd>
+		  </dd>
+            
+		    <dt><label for="workflow">Workflow:</label></dt><dd id="selectWorkflow">
+		                                                                   
+		    </dd>
 			<dt><label for="usereditDd">Users Can Edit Project :</label></dt>
 			<dd>
               <select id="usereditDd" size="3" multiple>

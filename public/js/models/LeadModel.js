@@ -40,19 +40,20 @@
                 phone: '',
                 fax: ''
             },
-            
+
             priority: 'Trivial',
             categories: {
                 id: '',
                 name: ''
             },
-            internalNotes:'',
+            internalNotes: '',
             active: true,
             optout: false,
             reffered: '',
             workflow: {
+                wName: 'lead',
                 name: 'New',
-                status:'New'
+                status: 'New'
             }
         },
 
