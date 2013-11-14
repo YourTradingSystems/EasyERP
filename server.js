@@ -375,7 +375,8 @@ app.get('/projectWorkflows', function (req, res) {
     data.id = req.param('id');
     data.mid = req.param('mid');
     type.name = 'project';
-    type.id = "Project";   
+    type.id = "Project";
+    data.type = type;
     console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
 });
