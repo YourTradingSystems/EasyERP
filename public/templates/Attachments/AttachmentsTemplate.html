@@ -1,8 +1,17 @@
   	<div id="attachBody">
-	<div id="" class="attachContainer">
 
+       <ul  class="attachContainer">
+               <% var n = attachments.length-1;
+        	attachments.reverse();
+        _.each(attachments, function(data,key){ %>
+       <li class="attachFile_<%=(n-key) %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderId'] %>, <%=data['uploadDate'] %></li>
+           <span>
+              <a id="delete_<%=(n-key) %>" class="deleteAttach" class="deletelAttach">Delete</a>
+           </span>
+           <% }); attachments.reverse(); %>
+       </ul>
 	</div>
-  	</div>
+
   	<form enctype="multipart/form-data" id="addAttachments" action="http://localhost:8088/uploadFiles" method="POST">
   		<input type="file" id="inputAttach" name="attachfile">
   		<input type="button" value="Attach" id="attachSubmit">

@@ -31,9 +31,11 @@ define([
             "mouseout .social a": "socialNotActive",
             "click .company": "gotoCompanyForm",
             "click #attachSubmit":"addAttach",
+            "click .deleteAttach":"deleteAttach",
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
-            "click #cancelNote": "cancelNote"
+            "click #cancelNote": "cancelNote",
+            
         },
         cancelNote: function(e) {
             $('#noteArea').val('');
@@ -123,7 +125,9 @@ define([
             var currentModel = models[itemIndex];
             var currentModelID = models[itemIndex]["id"];
         	var addFrmAttach = $("#addAttachments");
-        	var addInptAttach = $("#inputAttach")[0].files[0];     	
+        	var addInptAttach = $("#inputAttach")[0].files[0]; 
+        	
+           
         	addFrmAttach.submit(function(e){
    
         		var formURL = addFrmAttach.attr("action");
@@ -139,13 +143,16 @@ define([
         			},
         			
         			success:function(data){
-        				var attach = {
-        						
+        				var attachments = currentModel.get('attachments');
+        				var key = attachments.length;
+        				attachments.push(data);
+        				currentModel.set('attachments',attachments);
+        				
+        				if (currentModel.save()) {
+        					$('#attachBody').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
+        					console.log('Attach file');
+        					addFrmAttach[0].reset();
         				}
-        	            
-        	            $('#attachBody').prepend( _.template(addAttachTemplate,{ data:data }));
-        				console.log('Attach file');
-               			addFrmAttach[0].reset();	
         			},
         			
         			error: function (){
@@ -158,6 +165,23 @@ define([
         	
         	addFrmAttach.submit();
         	addFrmAttach.off('submit');
+        },
+        
+        deleteAttach:function(e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var id_int = parseInt(id.substr(k+1));
+            
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var attachments = currentModel.get('attachments');
+            
+            delete attachments[id_int];
+            currentModel.set('attachments',attachments);
+            if (currentModel.save()) {
+                $('.attachFile'+id_int).remove();
+            }
         },
         
         editItem: function(){

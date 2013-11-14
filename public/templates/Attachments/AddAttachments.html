@@ -1,9 +1,9 @@
 <div id="" class="attachContainer">
        <ul>
-       <li class="attachFile"><a href = "<%=path %>"><%=name %></a> (<%=size %>) <%=uploader %>, <%=uploadDate %></li>
+       <li class="attachFile_<%=key %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderId'] %>, <%=data['uploadDate'] %></li>
 
            <span>
-              <a id="" class="deleteAttach">Delete</a>
+              <a id="delete_<%=key %>" class="deleteAttach">Delete</a>
            </span>
        </ul>
 </div>
