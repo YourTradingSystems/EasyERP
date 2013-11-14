@@ -1,11 +1,13 @@
-<div class="noteWrapper">
-    <div class="addNote">
-      <label>Note content:</label>
-	  <br/>
-      <textarea  id="noteArea"></textarea>
-	  <br/>
-      <button id="addNote">Add</button>
-      <input type="hidden" id="getNoteKey" value="">
+<div>
+    <div>
+        <p>
+            <label>Note:
+                <textarea  id="noteArea"></textarea>
+            </label>
+        </p>
+        <button id="addNote">Add</button>
+        <button id="cancelNote">Cancel</button>
+        <input type="hidden" id="getNoteKey" value="">
     </div>
 
     <div id="noteBody">
@@ -23,6 +25,8 @@
                       <a id="<%=('del_' + (n-key)) %>" class="editDelNote">Del</a>
                    </span>
                </span>
+               <div><%=name.first %></div>
+               <div><%=val['date'] %></div>
         </div>
         <% }); notes.reverse(); %>
     </div>
