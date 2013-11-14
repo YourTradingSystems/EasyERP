@@ -5,5 +5,7 @@
     <td><%=person.name.first%> <%=person.name.last%></td>
     <td><%=person.email%></td>
     <td><%=person.phones.phone%></td>
+    <td><%=person.createdBy.date + ' (' + person.createdBy.user.login + ')'%></td>
+    <td><%=(person.editedBy.user) ? person.editedBy.date + ' (' + person.editedBy.user.login + ')' : ''%></td>
 </tr>
 <% }) %>

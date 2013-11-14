@@ -331,6 +331,7 @@ var requestHandler = function (fs, mongoose) {
     function createTask(req, res, data) {
         console.log("Requst createTask is success");
         if (req.session && req.session.loggedIn) {
+            data.task.uId = req.session.uId;
             project.createTask(data.task, res);
         } else {
             res.send(401);
@@ -377,7 +378,12 @@ var requestHandler = function (fs, mongoose) {
 
     function updateTask(req, res, id, data) {
         console.log("Requst updateTask is success");
+        var date = Date.now();
         if (req.session && req.session.loggedIn) {
+            data.task['editedBy'] = {
+                user: req.session.uId,
+                date: date
+            };
             project.updateTask(id, data.task, res);
         } else {
             res.send(401);

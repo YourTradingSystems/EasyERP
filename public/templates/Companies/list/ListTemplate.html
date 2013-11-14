@@ -8,5 +8,7 @@
         <span><%=company.phones.phone%></span>
         <span><%=company.phones.mobile%></span>
     </td>
+    <td><%=company.createdBy.date + ' (' + company.createdBy.user.login + ')'%></td>
+    <td><%=(company.editedBy.date) ? company.editedBy.date + ' (' + company.editedBy.user.login + ')' : ''%></td>
 </tr>
 <% }) %>
