@@ -59,12 +59,12 @@ define([
                 }
                 if (currentModule == null) currentModule = root[0];
                 var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
-                var erger = document.getElementById(selectedId);
-				if($(erger).length==0){
-					erger = document.getElementById(this.lastClickedLeftMenuItem);
+                var currentSelElem = document.getElementById(selectedId);
+				if($(currentSelElem).length==0){
+					currentSelElem = document.getElementById(this.lastClickedLeftMenuItem);
 				}
-				$(erger).closest("ul").find(".selected").removeClass("selected");
-                $(erger).addClass('selected');
+				$(currentSelElem).closest("ul").find(".selected").removeClass("selected");
+                $(currentSelElem).addClass('selected');
 
                 return this;
             },

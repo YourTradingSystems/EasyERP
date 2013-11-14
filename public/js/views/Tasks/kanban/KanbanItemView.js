@@ -4,7 +4,7 @@ define([
 ],
     function (KanbanItemTemplate, common) {
         var TasksItemView = Backbone.View.extend({
-            className: "task",
+            className: "item",
             /*id: function () {
                 return this.model.get("_id");
             },*/
@@ -38,13 +38,13 @@ define([
 
             gotoEditForm: function (e) {
                 e.preventDefault();
-                var itemIndex = $(e.target).closest(".task").data("index") + 1;
+                var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 //var inder = this.data("index");
                 window.location.hash = "#home/action-Tasks/Edit/" + itemIndex;
             },
 
             gotoForm: function (e) {
-                var itemIndex = $(e.target).closest(".task").data("index") + 1;
+                var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 App.ownContentType = true;
                 window.location.hash = "home/content-Tasks/form/" + itemIndex;
             },
@@ -72,7 +72,7 @@ define([
             },
 
             changeColor: function (color) {
-                this.$(".colorPicker a").closest(".task-header").css('background-color', color).closest(".task").css('border-color', color);
+                this.$(".colorPicker a").closest(".task-header").css('background-color', color).closest(".item").css('border-color', color);
             },
 
             isLater: function (str1, str2) {

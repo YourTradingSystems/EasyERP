@@ -1,0 +1,30 @@
+<div>
+    <div>
+        <p>
+            <label>Note:
+                <textarea  id="noteArea"></textarea>
+            </label>
+        </p>
+        <button id="addNote">Add</button>
+        <input type="hidden" id="getNoteKey" value="">
+    </div>
+
+    <div id="noteBody">
+        <% var n = notes.length-1;
+        notes.reverse();
+        _.each(notes, function(val,key){ %>
+        <div id="<%=(n-key) %>" class="noteContainer">
+               <div class="noteText"><%=val['note'] %></div>
+               <span  style="">
+                   <span>
+                      <a id="<%=('edit_' + (n-key)) %>" class="editDelNote" >Edit</a>
+                   </span>
+                   <span  class="sep" >|</span>
+                   <span>
+                      <a id="<%=('del_' + (n-key)) %>" class="editDelNote">Del</a>
+                   </span>
+               </span>
+        </div>
+        <% }); notes.reverse(); %>
+    </div>
+</div>

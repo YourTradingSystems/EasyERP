@@ -26,7 +26,15 @@ var App = App ||
         createBtnHolder: "#createBtnHolder",
         projectForm: "#createProjectForm",
         privacyDD: "#privacyDD",
-        managerSelect: "#projectManagerDD"
+        managerSelect: "#projectManagerDD",
+        assignedToDd:"#assignedToDd",
+        projectDd:"#projectDd",
+        priorityDd: "#priorityDd",
+        workflowDd: "#workflowDd",
+        managerDd: "#managerDd",
+        customerDd: "#customerDd",
+        userEditDd: "#userEditDd",
+        companiesDd: "#companiesDd"
     },
     requestedURL: null
 };

@@ -249,9 +249,8 @@ article {
     width: 100%;
     background: #fff;
     height: @height;
-    background: #fff;
-    /*background: @blue;*/
     .no-marpad;
+    border-bottom: 1px solid @activeColor;
 
     nav {
         .left;
@@ -323,12 +322,12 @@ article {
     .mainmenu;
 }
 
-.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 26px, @bg: #36a9e1) {
+.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #36a9e1) {
     display: block;
     position: relative;
     height: @height;
     width: auto;
-    border-bottom: 1px solid @bg;
+
 
     nav {
         height: @height;
@@ -376,14 +375,13 @@ article {
                     height: @height;
                     line-height: @height;
                     width: 100x;
-                    border-top: 1px solid @bg;
+                    /*border-top: 1px solid @bg;
                     border-left: 1px solid @bg;
-                    border-right: 1px solid @bg;
-
+                    border-right: 1px solid @bg;*/
                 a {
                         line-height: @height;
                         height: @height;
-                        text-decoration:underline;
+                        text-decoration: underline;
                 }
 
                     &.hover {
@@ -1727,7 +1725,7 @@ input, textarea, select {
     }
 
     .avatar {
-        .avatar-small;
+        .avatar(64px, 5px, 20px, 5px, 5px);
     }
 }
 
@@ -1775,9 +1773,9 @@ input, textarea, select {
                     word-wrap: break-word;
 					.bold{
 						font-weight:bold;
-					}
                 }
             }
+        }
         }
 
         &:hover {
@@ -1987,20 +1985,12 @@ button {
 }
 
 .ui-dialog {
-//    width: 80% !important;
-
-		.ui-dialog-titlebar {
+	border-radius:0 !important;
+	.ui-dialog-titlebar {
         display: none;
-		}
-
-		.ui-dialog-content {
-			//height:auto !important;
-		}
+	}
 
     &.edit-task-dialog {
-        //width: 50% !important;
-        //min-width: 950px;
-
 		.ui-dialog-titlebar {
             padding-left: 15px;
             padding-right: 22px;
@@ -2010,11 +2000,7 @@ button {
         .ui-widget-header {
 		border: none !important;
 		background: none !important;
-	}
-
-    .ui-dialog-content {
-        //height: auto !important;
-	}
+		}
 
     .ui-dialog-titlebar {
         .ui-dialog-title {
@@ -2185,7 +2171,7 @@ button {
 
 	.textarea-wrapper {
 		margin-left: 10px;
-	}
+}
 }
 #createEmployeeForm.notDialog{
 	dl{
@@ -2496,21 +2482,26 @@ button {
         }
     }
 
+    tr {
+        &:last-child {
+            border-right: 10px solid white;
+        }
+    }
+
     .column {
         border-left: 10px solid #fff;
         vertical-align: text-top;
         min-height: 100%;
-        // padding: 0px 0px 10px 0px;
-        /*float: left;
-        display: block;*/
         width: auto;
+        min-width:150px;
         height: auto;
         background: url("@{imagesfolder}/form_sheetbg.png");
 
-        .task, .opportunity {
+        .item {
             word-wrap: break-word;
             margin: 5px auto;
             width: 95%;
+            min-height:60px;
             text-align: left;
             border: 1px solid @taskBorderColor;
             background-color: #fff;
@@ -2609,9 +2600,7 @@ button {
         }
     }
 
-    .applicationColumn {
-        width: 16%;
-    }
+
 
     .dropDownMenu {
         height: 10px;
@@ -2632,37 +2621,21 @@ button {
     }
 }
 
-.task,
-.application,
-.opportunity {
-    word-wrap: break-word;
-    margin: 5px auto;
-    width: 95%;
-    text-align: left;
-    border: 1px solid @taskBorderColor;
-    border-radius: 3px;
-    background-color: #fff;
-    color: #2C3E50;
-    cursor: move;
-    transition: box-shadow 1s ease;
-    transition: border-color 1s ease;
 
-    &:hover {
-        box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    }
-}
-
-.avatar-small {
+.avatar(@size:32px, @t:5px, @r:5px, @b:5px, @l:5px) {
     display: block;
     overflow: hidden;
-    width: 32px;
-    height: 32px;
-    margin: 5px;
+    width: @size;
+    height: @size;
+    margin: @t @r @b @l;
 
     img {
         height: auto;
         width: 100%;
     }
+}
+.avatar-small {
+.avatar;
 }
 
 .task-header,
@@ -2895,26 +2868,30 @@ button {
         }
     }
 }
+
 #popup-holder {
-    display:none;
+    display: none;
     width: 100%;
     position: absolute;
     top: 0;
-    height:30px;
-    z-index:9999;
+    height: 30px;
+    z-index: 9999;
+
     .popup {
-        display:none;
-    width:150px;
-    margin:0 auto;
-    min-height:30px;
-    background:rgba(0,0,0, 0.5);
+        display: none;
+        width: 150px;
+        margin: 0 auto;
+        min-height: 30px;
+        background: rgba(0,0,0, 0.5);
     }
 }
-#profileTableWrapper{
-	width:88%;
-	table{
-		width:95%;
-		margin:auto;
+
+#profileTableWrapper {
+    width: 88%;
+
+    table {
+        width: 95%;
+        margin: auto;
 		border-left: 1px solid #CACACA;
 		border-right: 1px solid #CACACA;
 		thead{
@@ -2922,18 +2899,21 @@ button {
 			width:auto;
 			}
 		}
-		tbody{
-			tr{
-				td{
-				text-align:center;
+
+        tbody {
+            tr {
+                td {
+                    text-align: center;
 				}
 			}
-			.mname{
-				text-align:left;
+
+            .mname {
+                text-align: left;
 			}
 		}
 	}
 }
-#modulesAccessTable{
-	display:none;
+
+#modulesAccessTable {
+    display: none;
 }

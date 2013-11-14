@@ -12,17 +12,20 @@ define([
             },
 
             events: {
-                "click": "gotoForm",
-                "click #delete": "deleteEvent",
-                "click .dropDown > a": "openDropDown",
-                "click .colorPicker a": "pickColor",
-                "click #edit": "gotoEditForm"
+                "click :not(#tasksList)": "gotoEditForm",
+                "click #tasksKanban,  #tasksList": "gotoTasks"
+                //"click #delete": "deleteEvent",
+                //"click .dropDown > a": "openDropDown",
+                //"click .colorPicker a": "pickColor",
+                //"click #edit": "gotoEditForm"
             },
 
             gotoEditForm: function (e) {
                 e.preventDefault();
                 var itemIndex = this.$el.data("index") + 1;
-                window.location.hash = "#home/action-Projects/Edit/" + itemIndex;
+                if ($(e.target).closest("div").attr("class") != "dropDown") {
+                    window.location.hash = "#home/action-Projects/Edit/" + itemIndex;
+                }
             },
 
             openDropDown: function (e) {
@@ -48,18 +51,22 @@ define([
                 this.$el.css('background-color', 'rgba(' + rgbColor.r + ',' + rgbColor.g + ',' + rgbColor.b + ', 0.20)');
                 this.$('p').css({ 'color': color, 'font-weight': 'bold', 'text-shadow': '0 1px 1px rgba(' + 255 + ',' + 255 + ',' + 255 + ', 0.5)' });
             },
-            
+
             deleteEvent: function (e) {
                 common.deleteEvent(e, this);
             },
 
-
-            gotoForm: function (e) {
+            gotoTasks: function (e) {
+                e.preventDefault();
                 App.ownContentType = true;
-                if ($(e.target).closest("div").attr("class") != "dropDown") {
-                    window.location.hash = "#home/content-Tasks/kanban/" + this.model.get("_id");
+                if ($(e.target).attr("id") == "tasksKanban") {
+                    Backbone.history.navigate("#home/content-Tasks/kanban/" + this.model.get("_id"), { trigger: true });
+                } else {
+                    Backbone.history.navigate("#home/content-Tasks/list/" + this.model.get("_id"), { trigger: true });
                 }
             },
+            
+            
 
             template: _.template(ThumbnailsItemTemplate),
 

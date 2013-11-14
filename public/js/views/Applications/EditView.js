@@ -229,20 +229,6 @@
                         degreesCollection: this.degreesCollection,
                         sourceOfApplicantsCollection: this.sourceOfApplicantsCollection
                     }));
-                    var workflows = this.workflowsCollection.models;
-
-                    _.each(workflows, function (workflow, index) {
-                        if (index < workflows.length - 1) {
-                            $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
-                        }
-                    });
-
-                    _.each(workflows, function (workflow, i) {
-                        var breadcrumb = this.$(".breadcrumb li").eq(i);
-                        if (currentModel.get("workflow").name === breadcrumb.data("name")) {
-                            breadcrumb.find("a").addClass("active");
-                        }
-                    }, this);
                 };
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
                 $('#nextAction').datepicker();

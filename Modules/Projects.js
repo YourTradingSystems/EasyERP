@@ -521,7 +521,7 @@ var Project = function (logWriter, mongoose) {
     function getForDd(response) {
         var res = {};
         res['data'] = [];
-        var query = project.find({});
+        var query = project.find({},{projectName:1, _id:1});
         query.sort({ projectName: 1 });
         query.exec(function (err, projects) {
             if (err) {
@@ -531,6 +531,7 @@ var Project = function (logWriter, mongoose) {
             } else {
                 res['data'] = projects;
                 response.send(res);
+                console.log(res);
             }
         });
     };
@@ -721,7 +722,7 @@ var Project = function (logWriter, mongoose) {
                             _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.last;
                         }
                     }
-                    if (data.deadline) {
+                    if (data.type) {
                         _task.type = data.type;
                     }
                     if (data.deadline) {

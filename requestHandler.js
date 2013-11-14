@@ -1,10 +1,6 @@
 var requestHandler = function (fs, mongoose) {
-    var _events = require('events');
-    var event = new _events.EventEmitter();
-    event.on('SendResponse', function (response, data) {
-        response.send(data);
-    });
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
+        event = require("./Modules/additions/eventHandler.js")().event,
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
@@ -20,7 +16,7 @@ var requestHandler = function (fs, mongoose) {
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, persons, company),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
-
+    
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);
@@ -118,7 +114,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function updateProfile(req, res, id, data) {
-        console.log("Requst updatePerson is success");
+        console.log("Requst updateProfile is success");
         if (req.session && req.session.loggedIn) {
             profile.update(id, data.profile, res);
         } else {
@@ -194,6 +190,21 @@ var requestHandler = function (fs, mongoose) {
     function updatePerson(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
             persons.update(id, data.person, res);
+        } else {
+            res.send(401);
+        }
+    };
+    function uploadFilePerson(req, res, id, file) {
+        console.log("File Uploading to Persons");   
+        if (req.session && req.session.loggedIn) {
+            persons.Person.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                if (err) {
+                    res.send(401);
+                }
+                else {
+                    res.send(200, file);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -374,10 +385,22 @@ var requestHandler = function (fs, mongoose) {
     function getWorkflow(req, res, data) {
         console.log("Requst getWorkflow is success");
         if (req.session && req.session.loggedIn) {
-            console.log('>>>>>>>>>>>>>>>');
+            console.log('>>>>>>>>>>>');
             console.log(data);
             console.log('<<<<<<<<<<<');
             workflow.get(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+        function getWorkflowsForDd(req, res, data) {
+        console.log("Requst getWorkflowsForDd is Success");
+        if (req.session && req.session.loggedIn) {
+            console.log('>>>>>>>>>>>');
+            console.log(data);
+            console.log('<<<<<<<<<<<');
+            workflow.getWorkflowsForDd(data, res);
         } else {
             res.send(401);
         }
@@ -848,6 +871,7 @@ var requestHandler = function (fs, mongoose) {
         updatePerson: updatePerson,
         removePerson: removePerson,
         getPersonsForDd: getPersonsForDd,
+        uploadFilePerson: uploadFilePerson,
         getCustomer: getCustomer,
 
         getProjects: getProjects,
@@ -875,7 +899,8 @@ var requestHandler = function (fs, mongoose) {
         getWorkflow: getWorkflow,
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
-
+        getWorkflowsForDd: getWorkflowsForDd,
+     
         getProfile: getProfile,
         createProfile: createProfile,
         updateProfile: updateProfile,

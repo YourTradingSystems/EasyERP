@@ -4,7 +4,7 @@ define([
 ],
     function (KanbanItemTemplate, common) {
         var OpportunitiesItemView = Backbone.View.extend({
-            className: "opportunity",
+            className: "item",
             id: function () {
                 return this.model.get("_id");
             },
@@ -38,12 +38,12 @@ define([
 
             gotoEditForm: function (e) {
                 e.preventDefault();
-                var itemIndex = $(e.target).closest(".opportunity").data("index") + 1;
+                var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 window.location.hash = "#home/action-Opportunities/Edit/" + itemIndex;
             },
 
             gotoForm: function (e) {
-                var itemIndex = $(e.target).closest(".opportunity").data("index") + 1;
+                var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 App.ownContentType = true;
                 window.location.hash = "home/content-Opportunities/form/" + itemIndex;
             },
@@ -71,7 +71,7 @@ define([
             },
 
             changeColor: function (color) {
-                this.$(".colorPicker a").closest(".opportunity").css('border-color', color);
+                this.$(".colorPicker a").closest(".item").css('border-color', color);
             },
 
             render: function () {

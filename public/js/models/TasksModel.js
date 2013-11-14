@@ -1,10 +1,10 @@
 define(function () {
     var TaskModel = Backbone.Model.extend({
         idAttribute: "_id",
-        initialize: function(){
-            this.on('invalid', function(model, errors){
-                if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
+        initialize: function () {
+            this.on('invalid', function (model, errors) {
+                if (errors.length > 0) {
+                    var msg = $.map(errors, function (error) {
                         return error.msg;
                     }).join('\n');
                     alert(msg);
@@ -12,23 +12,24 @@ define(function () {
             });
         },
 
-        validate: function(attrs){
+        validate: function (attrs) {
             var errors = [];
-            if(attrs.summary.trim() == ""){
+            if (attrs.summary.trim() == "") {
                 errors.push(
                     {
-                        name:"Summary",
-                        field:"summary",
-                        msg:"Summary name can not be empty"
+                        name: "Summary",
+                        field: "summary",
+                        msg: "Summary name can not be empty"
                     }
                 );
             }
-            if(errors.length > 0)
+            if (errors.length > 0)
                 return errors;
         },
         defaults: {
             summary: '',
             taskCount: 0,
+            type: '',
             project: {
                 id: '',
                 name: '',
