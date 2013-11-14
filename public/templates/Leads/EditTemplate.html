@@ -103,7 +103,9 @@
                         <p>
                             <label for="mobile">Mobile </label>
                         </p>
-                        <p></p>                       
+                        <p>
+                            <label for="workflow">Workflow </label>
+                        </p>                       
                         <p></p>
                         <p>
                             <label for="priority">Priority </label>
@@ -119,7 +121,14 @@
                         <p><input type="text" id="func" value="<%=model.func%>" /></p>
                         <p><input type="text" id="phone" value="<%=model.phones.phone%>" /></p>
                         <p><input type="text" id="mobile" value="<%=model.phones.mobile%>" /></p>
-                        <p></p>                      
+                        <p>
+                            <select id="workflow">
+                                <option selected="selected" value="0">Select...</option>
+                                <% workflowsCollection.each(function(option){ %>
+                                <option value="<%= option.get('status') %>"<%=(option.get('name')==model.workflow.name)?'selected="selected"':''%>><%= option.get('name') %></option>
+                                <% }); %>
+                            </select>
+                        </p>                      
                         <p></p>
                         <p>
                             <select id="priority">

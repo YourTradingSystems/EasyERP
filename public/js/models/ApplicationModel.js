@@ -42,6 +42,7 @@
             proposedSalary: 0,
             otherInfo: '',
             workflow: {
+                wName: 'application',
                 name: 'Initial Qualification',
                 status: 'New'
             }
