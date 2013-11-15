@@ -132,6 +132,12 @@ html {
     -webkit-box-shadow: @arguments;
 }
 
+.box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
+    box-shadow: @arguments;
+    -moz-box-shadow: @arguments;
+    -webkit-box-shadow: @arguments;
+}
+
 .border-radius(@radius: 4px) {
     -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
@@ -278,7 +284,7 @@ article {
                     line-height: @height - 2px;
                     font-weight: 400;
                     text-transform: uppercase;
-                }
+                    }
 
                 &.hover {
                     height: @height;
@@ -325,45 +331,45 @@ article {
     nav {
         height: @height;
 
-        ul {
+    ul {
             height: @height;
 
 
-            li {
-                // top: -1px;
-                list-style: none;
-                width: auto;
-                font-size: 14px;
+        li {
+               // top: -1px;
+            list-style: none;
+            width: auto;
+            font-size: 14px;
                 color: @bg;
                 line-height: @height;
-                float: left;
-                display: block;
-                width: 100px;
+            float: left;
+            display: block;
+            width: 100px;
                 height: @height;
-                text-align: center;
+            text-align: center;
                 background: @defaultColor;
 
 
-                &.hover {
+            &.hover {
                     height: @height;
                     line-height: @height;
-
+                   
                     a {
                         color: @bg;
                         text-decoration: underline;
-                    }
                 }
+            }
 
-                a {
-                    font-family: 'Lato',Helvetica,Arial,sans-serif;
+            a {
+                font-family: 'Lato',Helvetica,Arial,sans-serif;
                     color: @bg;
-                    font-size: 12px;
+                font-size: 12px;
                     line-height: @height;
-                    display: block;
-                    .fullsize;
-                }
+                display: block;
+                .fullsize;
+            }
 
-                &.selected {
+            &.selected {
                     position: relative;
                     height: @height;
                     line-height: @height;
@@ -371,22 +377,22 @@ article {
                     /*border-top: 1px solid @bg;
                     border-left: 1px solid @bg;
                     border-right: 1px solid @bg;*/
-                    a {
+                a {
                         line-height: @height;
                         height: @height;
                         text-decoration: underline;
-                    }
+                }
 
                     &.hover {
                         a {
                             //text-decoration: none;
                         }
                     }
+                    }
                 }
             }
         }
     }
-}
 
 #submenu-holder {
     .submenu;
@@ -401,7 +407,7 @@ article {
     width: 100%;
     & .inner-holder {
         .margin(20px);
-    }
+}
 }
 
 #top-bar {
@@ -765,7 +771,7 @@ dl.person-info {
         width: 65%;
 
         &.with-checkbox {
-            margin-top: 15px !important;
+			margin-top: 15px !important;
             width: 35px;
         }
     }
@@ -789,13 +795,13 @@ dl.person-info {
         padding-bottom: 20px;
         //border-top: 1px solid rgba(0,0,0,0);
         display: none;
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 13px;
+		font-family: 'Segoe UI', sans-serif;
+		font-size: 13px;
 
         &.active {
             display: block;
-        }
-    }
+		}
+	}
 }
 
 #sub-details {
@@ -803,7 +809,7 @@ dl.person-info {
         display: block;
         padding-top: 0px;
         //border: 1px solid rgba(0,0,0,0);
-    }
+	}
 }
 
 .sales-purchases.inner {
@@ -1125,6 +1131,12 @@ dl.person-info {
         float: left;
         height: 24px;
         width: 24px;
+        a {
+			&:hover{
+				text-decoration:none;
+    }
+        }
+
     }
 
     .selected {
@@ -1138,6 +1150,7 @@ dl.person-info {
             color: white;
             text-shadow: 0px 1px 2px black;
         }
+		
     }
 
     &:first-child {
@@ -1164,22 +1177,22 @@ dl.person-info {
 
 .task-list {
     tr, th {
-    }
+	}
 
     tr {
         &:nth-child(odd) {
-            background-color: #F5F5F5;
-            background-color: #F9F9F9;
-        }
+			background-color: #F5F5F5;
+			background-color: #F9F9F9;
+		}
 
         &:hover {
-            background-color: #F5F5F5;
-        }
-    }
+			background-color: #F5F5F5;
+		}
+	}
 }
 
 .list {
-    color: #000 !important;
+	color: #000 !important;
     font-family: @lucida-font;
     width: 100%;
 
@@ -1213,44 +1226,44 @@ dl.person-info {
     }
 
     tbody {
+       
+    tr {
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+        border-top: 1px solid #cacaca;
 
-        tr {
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
-            border-top: 1px solid #cacaca;
-
-            td {
-                cursor: pointer;
-                padding: 4px 5px;
+        td {
+            cursor: pointer;
+            padding: 4px 5px;
                 // white-space: pre-line;
-                line-height: 18px;
-                font-size: 11px;
+            line-height: 18px;
+            font-size: 11px;
 
-                &:nth-child(2) {
-                    text-align: right;
-                }
+            &:nth-child(2) {
+                text-align: right;
+            }
 
-                progress {
-                    width: 100%;
-                }
+            progress {
+                width: 100%;
+            }
 
-                &:first-of-type {
-                    padding-left: 7px;
+            &:first-of-type {
+                padding-left: 7px;
 
-                    input {
-                        cursor: pointer;
-                    }
+                input {
+                    cursor: pointer;
                 }
             }
         }
     }
-
-    tr:nth-child(odd) {
-        background-color: #F9F9F9;
     }
 
-    tr:hover {
-        background-color: #F5F5F5;
-    }
+        tr:nth-child(odd) {
+			background-color: #F9F9F9;
+        }
+
+        tr:hover {
+			background-color: #F5F5F5;
+		}
 }
 
 .form(@width: 860px, @border: 1px) {
@@ -1514,7 +1527,7 @@ dl.person-info {
 
     &.full-width {
         width: 100%;
-    }
+	}
 
     .form {
         .form(98%, 0px);
@@ -1572,12 +1585,12 @@ input, textarea, select {
     &.withPaddingLeft {
         >div {
             margin-right: 15px;
-        }
+}
 
         .formTitle {
             width: auto;
-        }
-    }
+		}
+	}
 }
 
 .topbarBtnHolder {
@@ -1686,7 +1699,7 @@ input, textarea, select {
     }
 
     a.tasksByProject {
-        //color: #7c7bad;
+		//color: #7c7bad;
         cursor: pointer;
         text-decoration: none;
 
@@ -1749,7 +1762,7 @@ input, textarea, select {
 
         a {
             font-weight: bold;
-        }
+		}
     }
 
     .inner {
@@ -1769,9 +1782,9 @@ input, textarea, select {
 
                     .bold {
                         font-weight: bold;
-                    }
                 }
             }
+        }
         }
 
         &:hover {
@@ -1983,75 +1996,95 @@ button {
 .ui-dialog {
     border-radius: 0 !important;
 
-    .ui-dialog-titlebar {
+	.ui-dialog-titlebar {
         display: none;
-    }
+	}
 
     &.edit-task-dialog {
-        .ui-dialog-titlebar {
+		.ui-dialog-titlebar {
             padding-left: 15px;
             padding-right: 22px;
             display: block;
-        }
+		}
 
         .ui-widget-header {
-            border: none !important;
-            background: none !important;
-        }
+		border: none !important;
+		background: none !important;
+		}
 
-        .ui-dialog-titlebar {
-            .ui-dialog-title {
-                border-bottom: 1px solid #C8C8D3;
-                color: #333 !important;
-                margin: 0;
-                font-family: Title;
-                font-size: 18px;
-                font-weight: normal;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                padding: 4px;
-                width: 100% !important;
-            }
+    .ui-dialog-titlebar {
+        .ui-dialog-title {
+			border-bottom: 1px solid #C8C8D3;
+			color: #333 !important;
+			margin: 0;
+			font-family: Title;
+			font-size: 18px;
+			font-weight: normal;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			padding: 4px;
+            width: 100% !important;
+		}
 
-            .ui-dialog-titlebar-close {
-                display: none;
-            }
-        }
+        .ui-dialog-titlebar-close {
+            display: none;
+		}
+	}
 
-        .ui-dialog-buttonpane {
-            border-top: 0 !important;
-            text-align: center !important;
+    .ui-dialog-buttonpane {
+        border-top: 0 !important;
+        text-align: center !important;
 
-            .ui-dialog-buttonset {
-                float: none !important;
+        .ui-dialog-buttonset {
+            float: none !important;
 
-                .ui-state-default {
-                    height: 25px !important;
-                    line-height: 25px !important;
-                    background-image: url("@{imagesfolder}/bt-bg.png") !important;
-                    font-size: 11px;
-                    font-family: Tahoma,Arial,Helvetica,sans-serif;
-                    text-shadow: 0 1px 0 #FFF;
-                    color: #222 !important;
-                    border: 1px solid #C3C3C3 !important;
+            .ui-state-default {
+                height: 25px !important;
+                line-height: 25px !important;
+                background-image: url("@{imagesfolder}/bt-bg.png") !important;
+				font-size: 11px;
+				font-family: Tahoma,Arial,Helvetica,sans-serif;
+				text-shadow: 0 1px 0 #FFF;
+				color: #222 !important;
+				border: 1px solid #C3C3C3 !important;
 
-                    .ui-button-text {
-                        padding: .4em 1.3em !important;
-                    }
+                .ui-button-text {
+					padding: .4em 1.3em !important;
+				}
 
-                    &:hover {
-                        border: 1px solid #888 !important;
-                        color: #222 !important;
-                    }
+                &:hover {
+					border: 1px solid #888 !important;
+					color: #222 !important;
+				}
 
-                    span {
-                        line-height: 15px;
-                    }
-                }
-            }
-        }
-    }
+                span {
+                    line-height: 15px;
+				}
+			}
+		}
+	}
 }
+}
+.dialog-buttons {
+        text-align: center;
+
+        input {
+            height: 25px !important;
+            line-height: 15px !important;
+            background-image: url("@{imagesfolder}/bt-bg.png") !important;
+				font-size: 11px;
+				font-family: Tahoma,Arial,Helvetica,sans-serif;
+				text-shadow: 0 1px 0 #FFF;
+				color: #222 !important;
+				border: 1px solid #C3C3C3 !important;
+				padding: 5px 15px;
+
+            &:hover {
+					border: 1px solid #888 !important;
+					color: #222 !important;
+				}
+		}
+	}
 
 #createProjectForm,
 #createTaskForm,
@@ -2065,121 +2098,104 @@ button {
 
     #description {
         margin-top: 15px;
-    }
+	}
 
     .buttons {
-        text-align: center;
-
-        input {
-            height: 25px !important;
-            line-height: 15px !important;
-            background-image: url("@{imagesfolder}/bt-bg.png") !important;
-            font-size: 11px;
-            font-family: Tahoma,Arial,Helvetica,sans-serif;
-            text-shadow: 0 1px 0 #FFF;
-            color: #222 !important;
-            border: 1px solid #C3C3C3 !important;
-            padding: 5px 15px;
-
-            &:hover {
-                border: 1px solid #888 !important;
-                color: #222 !important;
-            }
-        }
-    }
+		.dialog-buttons;
+	}
 
     label {
         font-weight: normal;
         border: none;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 14px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
         display: inline;
         float: none;
-    }
+	}
 
     dl {
         dt, dd {
             line-height: 30px;
-        }
+		}
 
         dt {
             margin-top: 10px;
-        }
+		}
 
         dd {
             margin-top: 10px;
-        }
-    }
+		}
+	}
 
     select {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
         max-width: 290px;
         width: 71%;
-        border: 1px solid #E2E9EF;
-        border-top: 1px solid #CBD3E2;
-        color: #262626;
+		border: 1px solid #E2E9EF;
+		border-top: 1px solid #CBD3E2;
+		color: #262626;
 
         &:focus {
-            outline: -webkit-focus-ring-color auto 5px;
-        }
-    }
+			outline: -webkit-focus-ring-color auto 5px;
+		}
+	}
 
     .inner {
         margin-top: 0px;
-    }
+	}
 
     .blueback {
-        .border-radius(0px);
-        border: 1px solid #E2E9EF;
-        border-top: 1px solid #CBD3E2;
+		.border-radius(0px);
+		border: 1px solid #E2E9EF;
+		border-top: 1px solid #CBD3E2;
         max-width: 280px;
         width: 70%;
         height: 18px;
         background-color: white;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        padding: 2px;
-        color: #262626;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+		padding: 2px;
+		color: #262626;
 
         &:focus {
-            .box-shadow(0,0,5px,rgba(82, 168, 236, 0.5));
-            outline: medium none;
-            border: 1px solid rgba(121, 187, 238, 0.75) !important;
-        }
-    }
+			.box-shadow(0,0,5px,rgba(82, 168, 236, 0.5));
+			outline: medium none;
+			border: 1px solid rgba(121, 187, 238, 0.75) !important;
+		}
+	}
 }
 
 #createProjectForm {
     dl {
         dt {
             max-width: 180px;
-        }
-    }
+		}
+	}
 }
 
 #createEmployeeForm,
 #editEmployeeForm {
     textarea {
         margin-top: 10px;
-    }
+	}
 
     #addContact {
         margin-top: 10px;
-    }
+	}
 
-    .textarea-wrapper {
-        margin-left: 10px;
-    }
+	.textarea-wrapper {
+		margin-left: 10px;
+}
 }
 
     #createEmployeeForm.notDialog {
         dl {
             dt, dd {
                 line-height: 17px;
-            }
-        }
-    }
+		}
+	}
+}
 
 #createFormDiv > #createProjectForm {
     margin: 0;
@@ -2190,10 +2206,10 @@ button {
         float: right;
         width: auto;
         line-height: 30px;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 14px;
-        color: #666;
-    }
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 14px;
+		color: #666;
+	}
 }
 
 #createTaskForm {
@@ -2219,31 +2235,31 @@ button {
 #workflowSubNames {
     padding-left: 10px;
     padding-right: 10px;
-
+	
     .cathegory {
         height: 40px;
         line-height: 40px;
-        background-color: #F5F5F5;
+		background-color: #F5F5F5;
         border: 1px solid #DDD;
         border-top: 1px solid rgba(0, 0, 0, 0);
 
         a {
             padding-left: 20px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
+			font-family: 'Open Sans', sans-serif;
+			font-size: 16px;
+			font-weight: 300;
 
             &:hover {
                 text-decoration: underline;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 #workflowSubNames {
     .cathegory {
         border-top: 1px solid #DDD;
-    }
+	}
 }
 
 .workflow-list-wrapper,
@@ -2255,17 +2271,20 @@ button {
 .workflow-sub-list {
     color: #2A6496;
     width: 100%;
-    font-size: 13px;
+	font-size: 13px;
 
     li {
         border: 1px solid rgba(0, 0, 0, 0);
         border-right: 1px solid #ddd;
-        height: 40px;
+		height: 40px;
         line-height: 40px;
 
         &:hover {
-            background-color: #EEE;
-        }
+			background-color: #EEE;
+			a{
+			text-decoration:underline;
+		}
+		}
 
         &.active {
             border: 1px solid #ddd;
@@ -2273,19 +2292,22 @@ button {
 
             &.first {
                 border-top: 1px solid rgba(0, 0, 0, 0);
-            }
+			}
 
             &:hover {
-                background-color: white;
-            }
-        }
+				background-color: white;
+			}
+			a{
+				text-decoration:none;
+		}
+		}
 
         a {
-            padding-bottom: 10px;
-            padding-left: 15px;
-            padding-right: 15px;
-            padding-top: 10px;
-        }
+			padding-bottom: 10px;
+			padding-left: 15px;
+			padding-right: 15px;
+			padding-top: 10px;
+		}
     }
 }
 
@@ -2295,51 +2317,51 @@ button {
     dl {
         dd, dt {
             line-height: 20px;
-        }
+		}
 
         label {
             font-size: 12px;
         }
-    }
-
+	}
+	
     .withPaddingLeft {
         .inner {
             margin-bottom: 0px;
 
-            textarea {
-                height: 363px;
-            }
-        }
-    }
+			textarea {
+				height: 363px;
+}
+			}
+		}
 
-    .blueback, select {
-        width: 100%;
-    }
+        .blueback, select {
+            width: 100%;
+	}
 
-    &.notDialog {
+        &.notDialog {
         .inner {
             padding-left: 20px;
-        }
+		}
 
-        .blueback {
-            max-width: none;
-            width: 95%;
-        }
+            .blueback {
+                max-width: none;
+                width: 95%;
+	}
 
-        select {
-            max-width: none;
-            width: 96%;
-        }
+            select {
+                max-width: none;
+                width: 96%;
+	}
 
-        textarea {
-            height: 442px !important;
-        }
-    }
+            textarea {
+                height: 442px !important;
+		}
+		}
 
     textarea {
         height: 364px !important;
-    }
-}
+		}
+	}
 
 #ui-datepicker-div {
     border-radius: 0 !important;
@@ -2470,7 +2492,7 @@ button {
 .kanban {
     margin: 0;
     padding: 0;
-    //  display: inline-flexbox;
+  //  display: inline-flexbox;
     width: 100%;
 
     tbody {
@@ -2543,9 +2565,9 @@ button {
                     font-weight: normal;
                     //vertical-align: middle;
                     line-height: 13px;
-                    font-size: 13px;
-                }
+                font-size: 13px;
             }
+        }
         }
 
         .columnNameDiv {
@@ -2637,7 +2659,7 @@ button {
 }
 
 .avatar-small {
-    .avatar;
+.avatar;
 }
 
 .task-header,
@@ -2887,29 +2909,150 @@ button {
     table {
         width: 95%;
         margin: auto;
-        border-left: 1px solid #CACACA;
-        border-right: 1px solid #CACACA;
+		border-left: 1px solid #CACACA;
+		border-right: 1px solid #CACACA;
 
         thead {
-            th:first-of-type {
+			th:first-of-type {
                 width: auto;
-            }
-        }
+			}
+		}
 
         tbody {
             tr {
                 td {
                     text-align: center;
-                }
-            }
+				}
+			}
 
             .mname {
                 text-align: left;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 #modulesAccessTable {
     display: none;
+}
+.noteWrapper{
+	width:50%;
+	margin:0 25px;
+	>label{
+		font-size: 16px;
+		color:#555;
+	}
+	.addNote{
+		background-color: #EDEFF4;
+		padding:10px 12px 10px 10px;
+		margin-bottom:5px;
+		label{
+			font: normal 12px arial;
+			color: #555;
+			display:none;
+		}
+		.addTitle{
+			display:none;
+		}
+		.title-wrapper{
+			display:none;
+			margin-top:10px;
+			margin-bottom:10px;
+		}
+		#cancelNote{
+			display:none;
+		}
+		input{
+			display:none;
+			width:100%;
+			margin-right:10px;
+			padding-left:0;
+			padding-right:0;
+			.border-radius(0);
+
+		}
+		textarea{
+			width:100%;
+			height:15px;
+			padding-left:0;
+			padding-right:0;
+			.border-radius(0);
+			&:focus{
+		    	.box-shadow(0,0,5px,rgba(82,168,236,0.5));
+				border: 1px solid rgba(121, 187, 238, 0.75)
+			}
+		}
+		&.active{
+			.buttons{
+				margin-top:3px;
+				.dialog-buttons;
+				input{
+					width:auto;
+				}
+				input,a{
+					float:left;
+				}
+				#cancelNote{
+					line-height:24px;
+					display:block;
+				}
+			}
+			label{
+				display:block;
+			}
+			textarea{
+				height:60px;
+			}
+			input{
+				display:block;
+			&:focus{
+		    	.box-shadow(0,0,5px,rgba(82,168,236,0.5));
+				border: 1px solid rgba(121, 187, 238, 0.75)
+			}
+			}
+			.addTitle{
+				display:block;
+				line-height:30px;
+			}
+
+		}
+	}
+	#noteBody{
+		.noteContainer{
+			padding:10px 0;
+			border-bottom: 1px dotted #EEE;
+			.name{
+				margin-right:15px;
+				font-size: 11px;
+			}
+			.date{
+				font-size: 11px;
+				color: #777;
+			}
+			.noteTitle{
+				line-height: 17px;
+				font-weight:bold;
+			}
+			.right{
+				float:right;
+				margin-right:10px;
+				display:none;
+				.sep{
+					padding: 0px 3px;
+					font-size: 12px;
+					color: #CCC;
+				}
+			}
+			&:hover{
+				background-color: #FAFAFA;
+				.right{
+					display:block;
+					a{
+						font-size: 11px;
+					}
+				}
+			}
+			
+		}
+	}
 }
