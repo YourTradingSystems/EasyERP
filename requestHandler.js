@@ -562,6 +562,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //---------END------Employees-----------------------------------
 
     //---------------------Application--------------------------------
@@ -675,6 +676,14 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst removeDepartment is success");
         if (req.session && req.session.loggedIn) {
             department.remove(id, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getDepartmentForDd(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            department.getForDd(res);
         } else {
             res.send(401);
         }

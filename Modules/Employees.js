@@ -330,7 +330,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
-        query.select('_id name imageSrc');
+        query.select('_id name ');
         query.sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {
