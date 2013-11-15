@@ -40,6 +40,7 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
         },
         color: { type: String, default: '#4d5a75' },
         attachments: { type: Array, default: [] },
+        notes: { type: Array, default: [] },
         social: {
             fb: { type: String, default: '' },
             li: { type: String, default: '' }

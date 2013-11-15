@@ -309,7 +309,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     new noteView({
                                         model: currentModel
                                     }).render().el
-                                );
+                                );console.log(currentModel);
                         }
 
                         break;
