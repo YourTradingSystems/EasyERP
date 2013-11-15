@@ -419,7 +419,6 @@
 
         update: function (_id, remove, data, res) {
             try {
-                console.log(data);
                 delete data._id;
                 delete data.createdBy;
                 if (data.notes && data.notes.length != 0 && !remove) {

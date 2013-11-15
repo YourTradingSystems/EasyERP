@@ -56,7 +56,14 @@ var Employee = function (logWriter, mongoose) {
         expectedSalary: Number,
         proposedSalary: Number,
         color: { type: String, default: '#4d5a75' },
-        creationDate: { type: Date, default: Date.now }
+        creationDate: { type: Date, default: Date.now },
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date, default: Date.now}
+		},
+		editedBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date}
+		}
     }, { collection: 'Employees' });
 
     var employee = mongoose.model('Employees', employeeSchema);
@@ -91,7 +98,11 @@ var Employee = function (logWriter, mongoose) {
             function savetoDb(data) {
                 try {
                     _employee = new employee();
-                    if (data.isEmployee) {
+                    if (data.uId) {
+						
+                        _employee.createdBy.user=data.uId;
+                    }
+					if (data.isEmployee) {
                         _employee.isEmployee = data.isEmployee;
                     }
                     if (data.name) {
@@ -361,6 +372,7 @@ var Employee = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            delete data.createdBy;
             if (data.relatedUser && data.relatedUser._id) {
                 data.relatedUser = data.relatedUser._id;
             }
