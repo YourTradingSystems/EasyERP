@@ -1,5 +1,5 @@
 ﻿// JavaScript source code
-var Events = function (logWriter, mongoose) {
+var Events = function (logWriter, mongoose, googleModule) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
 
     var eventsSchema = mongoose.Schema({
@@ -345,7 +345,6 @@ var Events = function (logWriter, mongoose) {
             if (data.location) {
                 _calendar.location = data.location;
             }
-			console.log("link!!!!!!!");
 			console.log(data.link);
             if (data.link) {
                 _calendar.link = data.link;
@@ -586,7 +585,6 @@ var Events = function (logWriter, mongoose) {
                                                     } else {
                                                         // Create new Event
                                                         try {
-															console.log("events tut");
 															console.log(ev);
                                                             if (!ev || !ev.id) {
                                                                 logWriter.log('Events.create Incorrect Incoming Data');

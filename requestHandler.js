@@ -15,9 +15,7 @@ var requestHandler = function (fs, mongoose) {
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
-        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile),
-	    request = require('request');
-
+        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);
@@ -1036,25 +1034,7 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     function getXML(req, res, link, data) {
-		link = link.replace("basic","full")+"?alt=json";
-		request({url:link,json:true}, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-				var event=[];
-				for (var i in body.feed.entry){
-
-					var content = body.feed.entry[i].content.$t;
-					var startDate = new Date(body.feed.entry[i].gd$when[0].startTime).toISOString();
-					var endDate = new Date(body.feed.entry[i].gd$when[0].endTime).toISOString();
-					var subject = body.feed.entry[i].author[0].name.$t
-					event.push({"id":body.feed.entry[i].id.$t.split("/")[6],"summary":body.feed.entry[i].title.$t,"description":content,start:{"dateTime":startDate},end:{"dateTime":endDate},"title":subject});
-				}
-				var calendar = {"id":body.feed.id.$t.split("/")[6],"summary":body.feed.title.$t,"description":body.feed.subtitle.$t,"summary":body.feed.title.$t,"link":link}
-				calendar.items = event;
-				data=[calendar]
-				events.googleCalSync(data,res)
-//				res.send(JSON.stringify(calendar));
-			}
-		});
+		googleModule.getXML(res,link);
 	}
     //---------END------Events----------------------------------
     return {
