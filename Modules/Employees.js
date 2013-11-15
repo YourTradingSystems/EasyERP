@@ -67,6 +67,7 @@ var Employee = function (logWriter, mongoose) {
         referredBy: { type: String, default: '' },
         active: { type: Boolean, default: true },
         workflow: {
+            wName: { type: String, default: '' },
             name: { type: String, default: '' },
             status: { type: String, default: '' }
         },
@@ -257,6 +258,9 @@ var Employee = function (logWriter, mongoose) {
                     }
                     if (data.workflow) {
                         if (data.workflow.name) {
+                            _employee.workflow.wName = data.workflow.wName;
+                        }
+                        if (data.workflow.name) {
                             _employee.workflow.name = data.workflow.name;
                         }
                         if (data.workflow.status) {
@@ -330,7 +334,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
-        query.select('_id name imageSrc');
+        query.select('_id name ');
         query.sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {

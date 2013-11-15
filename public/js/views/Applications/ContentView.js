@@ -121,17 +121,20 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                 cursor: "move",
                 items: ".item",
                 opacity: 0.7,
+                option: "tolerance",
                 revert: true,
                 helper: 'clone',
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
                     column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                    
                 },
                 stop: function (event, ui) {
                     var model = that.collection.get(ui.item.attr("id"));
                     var column = ui.item.closest(".column");
                     var ob = {
                         workflow: {
+                            wName: column.data("wName"),
                             name: column.data("name"),
                             status: column.data("status")
                         }

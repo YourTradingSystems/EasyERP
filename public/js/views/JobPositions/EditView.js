@@ -1,12 +1,13 @@
 define([
     "text!templates/JobPositions/EditTemplate.html",
+    "text!templates/JobPositions/editSelectTemplate.html",
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     "custom",
     'common'
 ],
-    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common) {
+    function (EditTemplate, editSelectTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -17,17 +18,40 @@ define([
                 this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.jobPositionsCollection = options.collection;
                 this.jobPositionsCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsCollection = new WorkflowsCollection({ id: 'jobposition' });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Job Position' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
-
-                this.render();
+                this.collection = options.collection;
+                this.collection.bind('reset', _.bind(this.render, this));
+                this.render = _.after(3, this.render);
             },
 
             events: {
-                "click .breadcrumb a": "changeWorkflow"
+                "click .breadcrumb a": "changeWorkflow",
+                "change #workflowNames": "changeWorkflows"
             },
 
-            changeWorkflow: function (e) {
+            changeWorkflows: function () {
+                var itemIndex = Custom.getCurrentII() - 1;
+
+                if (itemIndex == -1) {
+                    this.$el.html();
+                } else {
+                    var currentModel = this.collection.models[itemIndex].toJSON();
+                    var name = this.$("#workflowNames option:selected").val();
+                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
+                }
+            },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            /*changeWorkflow: function (e) {
                 var mid = 39;
                 var breadcrumb = $(e.target).closest('li');
                 var a = breadcrumb.siblings().find("a");
@@ -51,7 +75,7 @@ define([
 
                 });
 
-            },
+            },*/
 
             saveItem: function () {
 
@@ -82,12 +106,19 @@ define([
                         department = currentModel.defaults.department;
                     }
 
+                    var workflow = {
+                        wName: this.$("#workflowNames option:selected").text(),
+                        name: this.$("#workflow option:selected").text(),
+                        status: this.$("#workflow option:selected").val(),
+                    };
+
                     currentModel.set({
                         name: name,
                         expectedRecruitment: expectedRecruitment,
                         description: description,
                         requirements: requirements,
-                        department: department
+                        department: department,
+                        workflow: workflow
                     });
 
                     currentModel.save({}, {
@@ -114,8 +145,16 @@ define([
                 } else {
                     var currentModel = this.jobPositionsCollection.models[itemIndex];
                     currentModel.on('change', this.render, this);
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), departmentsCollection: this.departmentsCollection }));
-                    var workflows = this.workflowsCollection.models;
+                    var workflowModel = this.workflowsCollection.findWhere({ name: currentModel.toJSON().workflow.wName });
+                    this.$el.html(_.template(EditTemplate, {
+                        model: currentModel.toJSON(),
+                        departmentsCollection: this.departmentsCollection,
+                        workflowsCollection: this.workflowsCollection
+                    }));
+                    
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(workflowModel.toJSON().value) }));
+
+                    /*var workflows = this.workflowsCollection.models;
 
                     _.each(workflows, function (workflow, index) {
                         $(".breadcrumb").append("<li data-index='" + index + "' data-status='" + workflow.get('status') + "' data-name='" + workflow.get('name') + "' data-id='" + workflow.get('_id') + "'><a class='applicationWorkflowLabel'>" + workflow.get('name') + "</a></li>");
@@ -126,7 +165,7 @@ define([
                         if (currentModel.get("workflow").name === breadcrumb.data("name")) {
                             breadcrumb.find("a").addClass("active");
                         }
-                    }, this);
+                    }, this);*/
                 }
                 return this;
             }
