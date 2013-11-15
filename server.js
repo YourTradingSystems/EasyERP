@@ -536,7 +536,7 @@ app.delete('/Employees/:_id', function (req, res) {
 app.get('/getSalesPerson', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getPersonsforDd(req, res, data);
+    requestHandler.getPersonsForDd(req, res, data);
 });
 
 app.get('/getSalesTeam', function (req, res) {

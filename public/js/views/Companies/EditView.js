@@ -17,9 +17,9 @@ define([
 
             initialize: function (options) {
                 this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
+                //this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
+                //this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.companiesCollection = options.collection;
                 this.currentModel = this.companiesCollection.models[Custom.getCurrentII() - 1];
                 this.render();
@@ -156,6 +156,8 @@ define([
                 var selectList = $(selectId);
                 var self = this;
                 dataService.getData(url, {mid:39}, function(response){
+                    console.log('++++++++++++');
+                    console.log(response);
                     var options = $.map(response.data, function(item){
                         switch (type){
                             case "salesPerson":
@@ -169,8 +171,8 @@ define([
             },
             salesPersonOption: function(item){
                 return  this.currentModel.get("salesPurchases").salesPerson.id === item._id ?
-                    $('<option/>').val(item._id).text(item.first +' '+item.last).attr('selected','selected') :
-                    $('<option/>').val(item._id).text(item.first +' '+item.last);
+                    $('<option/>').val(item._id).text(item.name.first +' '+item.name.last).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name.first +' '+item.name.last);
             },
             salesTeamOption: function(item){
                 return this.currentModel.get("salesPurchases").salesTeam.id === item._id ?
