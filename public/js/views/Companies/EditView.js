@@ -5,9 +5,10 @@ define([
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
     "common",
-    "custom"
+    "custom",
+    "dataService"
 ],
-    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common, Custom) {
+    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common, Custom,dataService) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,11 +16,12 @@ define([
             imageSrc: '',
 
             initialize: function (options) {
-                this.companiesCollection = options.collection;
                 this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
+              //  this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
+                //this.departmentsCollection.bind('reset', _.bind(this.render, this));
+                this.companiesCollection = options.collection;
+                this.currentModel = this.companiesCollection.models[Custom.getCurrentII() - 1];
                 this.render();
             },
 
@@ -149,8 +151,51 @@ define([
                 }
 
             },
-
+            template: _.template(EditTemplate),
+            populateDropDown: function(type, selectId, url){
+                var selectList = $(selectId);
+                var self = this;
+                dataService.getData(url, {mid:39}, function(response){
+                    var options = $.map(response.data, function(item){
+                        switch (type){
+                            case "salesPerson":
+                                return self.salesPersonOption(item);
+                            case "salesTeam":
+                                return self.salesTeamOption(item);
+                        }
+                    });
+                    selectList.append(options);
+                });
+            },
+            salesPersonOption: function(item){
+                return  this.currentModel.get("salesPurchases").salesPerson.id === item._id ?
+                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.departmentName);
+            },
+            salesTeamOption: function(item){
+                return this.currentModel.get("salesPurchases").salesTeam.id === item._id ?
+                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.departmentName);
+            },
             render: function () {
+
+                var formString = this.template({
+                    model: this.currentModel.toJSON()});
+
+                this.$el = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:false,
+                    dialogClass: "edit-companies-dialog",
+                    width:"50%",
+                    height:513
+                    //title: this.currentModel.toJSON().project.projectShortDesc
+                });
+
+                this.populateDropDown("salesPerson", App.ID.salesPerson, "/getSalesPerson");
+                this.populateDropDown("salesTeam", App.ID.salesTeam, "/getSalesTeam");
+
+                this.delegateEvents(this.events);
+                /*
                 var itemIndex = Custom.getCurrentII() - 1;
                 var currentModel = this.companiesCollection.models[itemIndex];
                 if (itemIndex == -1) {
@@ -158,8 +203,11 @@ define([
                 } else {
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection }));
                 }
+
                 common.canvasDraw({ model: currentModel.toJSON() }, this);
+
                 $('#date').datepicker({ dateFormat: "d M, yy" });
+                 */
                 return this;
             }
 
