@@ -180,7 +180,7 @@ define([
                         }
                     });
 
-                Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+                //Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
 
             },
 

@@ -43,3 +43,15 @@ Fri Nov 15 2013 13:18:33 GMT+0200 (Фінляндія (зима)) ---- Customer.
 -------------------------------------------------------------------------------------
 Fri Nov 15 2013 13:18:43 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
 -------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 15:19:19 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 15:19:19 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 15:19:47 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 15:19:47 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------

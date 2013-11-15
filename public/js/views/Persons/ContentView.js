@@ -280,8 +280,8 @@ define([
                                     i--;
                                 }
                             }
-                            currentModel.set('attachments',attachments);
-                            currentModel.save();
+                            currentModel.set('attachments', attachments);
+                           
 
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(
