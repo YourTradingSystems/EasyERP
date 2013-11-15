@@ -1,6 +1,6 @@
 <div class="form-holder">
   <div class="formLeftColumn">
-    <form class="form" id="createEmployeeForm" data-id="<%=_id%>">
+    <form class="form notDialog" id="createEmployeeForm" data-id="<%=_id%>">
       <div class="formTitle">
         <h3 class="left">Details</h3>
         <div class="btnHolder">
@@ -11,9 +11,18 @@
         <div class="clearfix"></div>
       </div>
       <div class="inner">
-        <div class="avatar left">
+        <div class="avatar-wrapper left">
+        <div class="avatar">
           <img alt="" src="<%=imageSrc%>" />
         </div>
+		<div class="social">
+		  <a class="facebook" href="#"></a>
+		  <a class="linkedin" href="#"></a>
+		  <a class="skype" href="#"></a>
+		  <div class="clearfix"></div>
+		</div>
+
+		</div>
         <div class="mainInfo">
           <div class="half-block left">
             <h3>
@@ -66,12 +75,7 @@
 		</div>
 		<div class="details right">...</div>
 
-		<div class="social">
-		  <a class="facebook" href="#"></a>
-		  <a class="linkedin" href="#"></a>
-		  <a class="skype" href="#"></a>
-		  <div class="clearfix"></div>
-		</div>
+
 		<div class="clearfix"></div>
 		<div id="details" class="person-details">
 		  <div class="half-block left">
@@ -101,11 +105,6 @@
 
   </div>
   <div class="clearfix"></div>
-   <div class="firmAttachments">
-  <form enctype="multipart/form-data" id="addAttachments" action="http://localhost:8088/uploadFiles" method="POST">
-  		<input type="file" id="inputAttach" name="attachfile">
-  		<input type="submit" value="Attach" id="attachSubmit">
-  		
-  </form>
-  </div>
+   <div class="formAttachments">  
+   </div>
 </div>

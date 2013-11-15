@@ -19,6 +19,12 @@
                     <p>
                         <label for="interviewForm">Interview Form</label>
                     </p>
+                    <p>
+                        <label for="workflowNames">Workflow Names </label>
+                    </p>
+                    <p>
+                         <label for="workflow">Workflow</label>
+                    </p>
                 </div>
                 <div class="half-block left">
                     <p><%= model.numberOfEmployees %></p>
@@ -30,6 +36,17 @@
                         <select id="interviewForm">
                             <option selected="selected" value="0">Select...</option>
                         </select>
+                    </p>
+                    <p>
+                        <select id="workflowNames">
+                            <option selected="selected" value="0">Select...</option>
+                            <% workflowsCollection.each(function(option){ %>
+                            <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
+                            <% }); %>
+                        </select>
+                    </p> 
+                    <p id="selectWorkflow">
+                           
                     </p>
                 </div>
                 <p>

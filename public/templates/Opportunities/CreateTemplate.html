@@ -37,6 +37,19 @@
                     <label for="phone">Phone </label>
                     <input type="text" id="phone" />
                 </p>
+
+                <p>
+                    <label for="workflowNames">Workflow Names </label>
+                    <select id="workflowNames">
+                        <% _.each(workflowNames, function(item){ %>
+                    <option><%= item %></option>
+                        <%}); %>
+                    </select>
+                </p>
+
+                <p id="selectWorkflow">
+                </p>
+
                 <p>
                     <label for="salesPerson">Salesperson</label>
                     <select id="salesPerson">
@@ -134,11 +147,16 @@
                                 <input type="text" id="company" disabled />
                             </p>
                             <p>
-                            <p><input type="text" class="address" id="street" name="street" placeholder="Street" /></p>
-                            <p><input type="text" class="address" id="city" name="city" placeholder="City" /></p>
-                            <p><input type="text" class="address" id="state" name="state" placeholder="State" /></p>
-                            <p><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" /></p>
-                            <p><input type="text" class="address" id="country" name="country" placeholder="Country" /></p>
+                                <p>
+                                    <input type="text" class="address" id="street" name="street" placeholder="Street" /></p>
+                                <p>
+                                    <input type="text" class="address" id="city" name="city" placeholder="City" /></p>
+                                <p>
+                                    <input type="text" class="address" id="state" name="state" placeholder="State" /></p>
+                                <p>
+                                    <input type="text" class="address" id="zip" name="zip" placeholder="ZIP" /></p>
+                                <p>
+                                    <input type="text" class="address" id="country" name="country" placeholder="Country" /></p>
                             </p>
                             <p></p>
                             <p>

@@ -1,0 +1,6 @@
+﻿<label for="workflow">Workflow</label>
+<select id="workflow">
+    <% _.each(workflows, function(item){ %>
+    <option value="<%= item.status %>"><%= item.name %></option>
+    <%}); %>
+</select>

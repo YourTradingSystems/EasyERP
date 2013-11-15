@@ -1,44 +1,26 @@
-<div>
-  <!--            <thead>
-                  <tr>
-                    <td>Tools</td>
-                    <td>Profile Name</td>
-                    <td>Description</td>
-                  </tr>
-  </thead>-->
-  <div class="workflow-list-wrapper left">
-  <ul class="workflow-list profile-list">
-    <% profilesCollection.each(function(profile,index){ %>
-	<% if (index==0){%>
-    <li class="first"><a href="#home/action-<%=contentType%>/View/<%= profile.get('_id')%> " data-id="<%= profile.get('_id')%>"><%= profile.get('profileName') %> Profile</a> 
-	  <% }else{%>
-    <li><a href="#home/action-<%=contentType%>/View/<%= profile.get('_id')%> " data-id="<%= profile.get('_id')%>"><%= profile.get('profileName') %> Profile</a> 
-	  <% }%>
-	  <!--                        <td><%= profile.get('profileDescription') %> </td>-->
-	</li>
-	<% }) %>
-  </ul>
+<div class="inner-holder">
+    <div class="workflow-list-wrapper left">
+        <ul class="workflow-list profile-list">
+            <% profilesCollection.each(function(profile,index){ %>
+            <li>
+                <a href="#home/action-<%=contentType%>/View/<%= profile.get('_id')%> " data-id="<%= profile.get('_id')%>"><%= profile.get('profileName') %> Profile</a>
+                <!--<td><%= profile.get('profileDescription') %> </td>-->
+            </li>
+            <% }) %>
+        </ul>
+    </div>
+    <div id="profileTableWrapper" class="left">
+        <table class="list" id="modulesAccessTable">
+            <thead>
+                <tr>
+                    <th>Module Name</th>
+                    <th>View</th>
+                    <th>Write/Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
-  <div id="profileTableWrapper" class="left">
-<table class="list" id="modulesAccessTable">
-    <thead>
-        <tr>
-            <td>Module Name</td>
-            <td>View </td>
-            <td>Write/Edit </td>
-            <td>Delete </td>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-  </div>
-</div>
-<!--<select id="companiesList" size="3">
-    <% profilesCollection.each(function(profile){ %>
-    <option class='profile'> <%= profile.get('profileName') %>  </option>
-    <% }) %>
-</select>
-
-<div id="modulesContent"></div>-->
 

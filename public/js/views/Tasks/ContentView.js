@@ -21,9 +21,10 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             this.collection = options.collection;
             this.start = new Date();
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
+            this.workflowsCollection.bind('reset', _.bind(this.renderView, this));
             this.projectsCollection = new ProjectsCollection();
             this.projectsCollection.bind('reset', _.bind(this.renderView, this));
-            this.workflowsCollection.bind('reset', _.bind(this.renderView, this));
+            
 
         },
 
@@ -40,7 +41,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
         render: function () {
 
-            console.log('Tasks render ');
+            console.log('Tasks render');
             var that = this;
             Custom.setCurrentCL(this.collection.models.length);
             var viewType = Custom.getCurrentVT();
@@ -186,7 +187,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 connectWith: ".column",
                 cancel: "h2",
                 cursor: "move",
-                items: ".task",
+                items: ".item",
                 opacity: 0.7,
                 revert: true,
                 helper: 'clone',

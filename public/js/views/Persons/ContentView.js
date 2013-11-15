@@ -8,9 +8,11 @@ define([
     'common',
     'views/Persons/EditView',
     'views/Notes/NoteView',
-    'text!templates/Notes/AddNote.html'
+    'text!templates/Notes/AddNote.html',
+    'views/Attachments/AttachmentsView',
+    'text!templates/Attachments/AddAttachments.html'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate, attachView, addAttachTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -30,7 +32,14 @@ define([
             "click .company": "gotoCompanyForm",
             "click #attachSubmit":"addAttach",
             "click #addNote": "addNote",
-            "click .editDelNote": "editDelNote"
+            "click .editDelNote": "editDelNote",
+            "click #cancelNote": "cancelNote",
+            "click .deleteAttach":"deleteAttach"
+        },
+        cancelNote: function(e) {
+            $('#noteArea').val('');
+            $('#noteTitleArea').val('');
+            $('#getNoteKey').attr("value",'');
         },
         editDelNote: function(e) {
             var id = e.target.id;
@@ -46,6 +55,7 @@ define([
             switch (type) {
                 case "edit": {
                     $('#noteArea').val($('#'+id_int).find('.noteText').text());
+                    $('#noteTitleArea').val($('#'+id_int).find('.noteTitle').text());
                     $('#getNoteKey').attr("value",id_int);
                     break;
                 }
@@ -61,8 +71,8 @@ define([
         },
         addNote: function() {
             var val = $('#noteArea').val();
-            if (val) {
-
+            var title = $('#noteTitleArea').val();
+            if (val || title) {
                 var models = this.collection.models;
                 var itemIndex = Custom.getCurrentII() - 1;
                 //TODO fix some problems with itemIndex
@@ -71,61 +81,107 @@ define([
                 var key = notes.length;
                 var arr_key_str = $('#getNoteKey').attr("value");
                 var note_obj = {
-                    note: ''
+                    note: '',
+                    date: '',
+                    title: ''
                 };
                 if (arr_key_str) {
                     notes[parseInt(arr_key_str)].note = val;
+                    notes[parseInt(arr_key_str)].title = title;
+
                     currentModel.set('notes',notes);
                     if (currentModel.save()) {
                         $('#noteArea').val($('#'+ arr_key_str ).find('.noteText').text(val));
+                        $('#noteTitleArea').val($('#'+ arr_key_str ).find('.noteTitle').text(title));
                         $('#getNoteKey').attr("value",'');
                     }
                 } else {
+                    var today_date = new Date();
+                    note_obj.date = today_date;
                     note_obj.note = val;
+                    note_obj.title = title;
+
                     notes.push(note_obj);
                     currentModel.set('notes',notes);
                     if (currentModel.save()) {
                         var edit = 'edit_'+key;
                         var del = 'del_'+key;
-                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, edit: edit, del: del}));
+                        var author = currentModel.get('name').first ;
+                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, title: title, edit: edit, del: del,author: author, date: today_date }));
                     }
                 }
                 $('#noteArea').val('');
+                $('#noteTitleArea').val('');
             }
         },
-        addAttach: function(){
+
+       
+        addAttach: function(event){
+        	
+        	event.preventDefault();
         	var models = this.collection.models;
             var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex]["id"];
-        	//event.preventDefault();
+            var currentModel = models[itemIndex];
+            var currentModelID = models[itemIndex]["id"];
         	var addFrmAttach = $("#addAttachments");
-        	var addInptAttach = $("#inputAttach").serialize(); 
+        	var addInptAttach = $("#inputAttach")[0].files[0]; 
+        	
+           
         	addFrmAttach.submit(function(e){
+   
         		var formURL = addFrmAttach.attr("action");
         		e.preventDefault();
         		addFrmAttach.ajaxSubmit({
         			url:formURL,
         			type: "POST",
-        			cache: false,
         			processData: false,
-        			data:addInptAttach,
-        		
-        			
+        			contentType: false,
+        			data:[addInptAttach],
         			beforeSend: function(xhr){
-        			    
-
-	                       xhr.setRequestHeader("id",currentModel);
+	                       xhr.setRequestHeader("id",currentModelID);
         			},
         			
         			success:function(data){
-        				console.log('Attach file');
+        				var attachments = currentModel.get('attachments');
+        				var key = attachments.length;
+        				attachments.push(data);
+        				currentModel.set('attachments',attachments);
+        				
+        				if (currentModel.save()) {
+        					$('#attachBody').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
+        					console.log('Attach file');
+        					console.log(data);
+        					addFrmAttach[0].reset();
+        				}
         			},
+        			
         			error: function (){
         				console.log("Attach file error");
-        			} 
+        			},
+        			
         		});
+         		
         	});
-
+        	
+        	addFrmAttach.submit();
+        	addFrmAttach.off('submit');
+        },
+        
+        deleteAttach:function(e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var id_int = parseInt(id.substr(k+1));
+            
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var attachments = currentModel.get('attachments');
+            
+            delete attachments[id_int];
+            currentModel.set('attachments',attachments);
+            if (currentModel.save()) {
+                $('.attachFile_'+id_int).remove();
+            }
         },
         
         editItem: function(){
@@ -216,6 +272,16 @@ define([
                             }
                             currentModel.set('notes',notes);
                             currentModel.save();
+                            
+                            var attachments = currentModel.get('attachments');
+                            for (var i = 0; i < attachments.length; i++) {
+                                if (attachments[i] == null) {
+                                	attachments.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                            currentModel.set('attachments',attachments);
+                            currentModel.save();
 
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(
@@ -230,6 +296,12 @@ define([
                                     model: currentModel
                                 }).render().el
                             );
+                            
+                            this.$el.find('.formAttachments').append(
+                                    new attachView({
+                                        model: currentModel
+                                    }).render().el
+                                );
                         }
                         break;
                     }

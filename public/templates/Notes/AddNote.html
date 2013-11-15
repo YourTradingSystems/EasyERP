@@ -1,13 +1,16 @@
-
 <div id="<%=key %>" class="noteContainer">
-       <div class="noteText"><%=val %></div>
-       <span  style="">
-           <span>
-              <a id="<%=edit %>" class="editDelNote" >Edit</a>
-           </span>
-           <span  class="sep" >|</span>
-           <span>
-              <a id="<%=del %>" class="editDelNote">Del</a>
-           </span>
-       </span>
+  <div class="noteTitle"><%=title %></div>
+  <div class="noteText"><%=val %></div>
+  <div>
+	<a class="name" href="javascript:;"><%=author %></a><span class="date"><%=date %></span>
+    <div class="right">
+	  <span>
+		<a href="javascript:;" id="<%=edit %>" class="editDelNote" >Edit</a>
+        <span  class="sep" >|</span>
+        <span>
+          <a href="javascript:;" id="<%=del %>" class="editDelNote">Del</a>
+        </span>
+	  </span>
+    </div>
+  </div>
 </div>

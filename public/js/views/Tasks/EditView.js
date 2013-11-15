@@ -24,7 +24,6 @@
                 this.tasksCollection = options.collection;
                 this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
                 this.render();
-
             },
 
             events: {
@@ -35,7 +34,7 @@
             },
 
             hideDialog: function(){
-                $('.edit-task-dialog').remove();
+                $(".edit-task-dialog").remove();
             },
 
             changeWorkflow: function (e) {
@@ -260,6 +259,8 @@
                     autoOpen:true,
                     resizable:false,
 					dialogClass: "edit-task-dialog",
+					width:"50%",
+					height:513,
                     title: this.currentModel.toJSON().project.projectShortDesc
                 });
 
@@ -270,6 +271,7 @@
 
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
+                $('#deadline').datepicker({ dateFormat: "d M, yy" });
                 this.delegateEvents(this.events);
 
                 return this;

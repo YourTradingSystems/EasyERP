@@ -1,30 +1,45 @@
-<div>
-    <div>
-        <p>
-            <label>Note:
-                <textarea  id="noteArea"></textarea>
-            </label>
-        </p>
-        <button id="addNote">Add</button>
-        <input type="hidden" id="getNoteKey" value="">
-    </div>
-
-    <div id="noteBody">
-        <% var n = notes.length-1;
-        notes.reverse();
-        _.each(notes, function(val,key){ %>
-        <div id="<%=(n-key) %>" class="noteContainer">
-               <div class="noteText"><%=val['note'] %></div>
-               <span  style="">
-                   <span>
-                      <a id="<%=('edit_' + (n-key)) %>" class="editDelNote" >Edit</a>
-                   </span>
-                   <span  class="sep" >|</span>
-                   <span>
-                      <a id="<%=('del_' + (n-key)) %>" class="editDelNote">Del</a>
-                   </span>
-               </span>
+<div class="noteWrapper">
+  <label>Note:</label>
+  <div class="addNote">
+	<div>
+      <label>Note Content:</label>
+      <textarea id="noteArea" placeholder="Add a Note..."></textarea>
+	  <a class="addTitle" href="javascript:;">Add a title</a>
+      <div class="title-wrapper">
+		<label>Note Title:</label>
+		<input type="text" id="noteTitleArea" value="">
+	  </div>
+      <div class="buttons">
+		<input type="submit" id="addNote" class="btn" value="Save">
+		<a href="javascript:;" id="cancelNote">Cancel</a>
+        <div class="clearfix">
         </div>
-        <% }); notes.reverse(); %>
+	  </div>
+      <input type="hidden" id="getNoteKey" value="">
+	</div>
+  </div>
+
+  <div id="noteBody">
+    <% var n = notes.length-1;
+       notes.reverse();
+       _.each(notes, function(val,key){ %>
+    <div id="<%=(n-key) %>" class="noteContainer">
+      <div class="noteTitle"><%=val['title']  %></div>
+      <div class="noteText"><%=val['note'] %></div>
+      <div>
+		<a class="name" href="javascript:;"><%=name.first %></a><span class="date"><%=val['date'] %></span>
+        <div class="right">
+          <span>
+            <a href="javascript:;" id="<%=('edit_' + (n-key)) %>" class="editDelNote editNote" >Edit</a>
+          </span>
+          <span  class="sep" >|</span>
+          <span>
+            <a href="javascript:;" id="<%=('del_' + (n-key)) %>" class="editDelNote">Del</a>
+          </span>
+
+        </div>
+	  </div>
     </div>
+    <% }); notes.reverse(); %>
+  </div>
 </div>

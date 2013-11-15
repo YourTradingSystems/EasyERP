@@ -53,7 +53,7 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
             else {
                 App.hash = applicationId;
                 _.each(this.collection.models, function (item) {
-                    if (item.get("application").id == applicationId) models.push(item);
+                    if (item.get("item").id == applicationId) models.push(item);
                 }, this);
             }
             switch (viewType) {
@@ -119,19 +119,22 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                 connectWith: ".column",
                 cancel: "h2",
                 cursor: "move",
-                items: ".application",
+                items: ".item",
                 opacity: 0.7,
+                option: "tolerance",
                 revert: true,
                 helper: 'clone',
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
                     column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                    
                 },
                 stop: function (event, ui) {
                     var model = that.collection.get(ui.item.attr("id"));
                     var column = ui.item.closest(".column");
                     var ob = {
                         workflow: {
+                            wName: column.data("wName"),
                             name: column.data("name"),
                             status: column.data("status")
                         }

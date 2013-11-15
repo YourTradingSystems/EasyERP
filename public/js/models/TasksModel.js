@@ -55,6 +55,7 @@ define(function () {
                 EndDate: null
             },
             workflow: {
+                wName: 'Task',
                 name: 'Analysis',
                 status: 'New'
             },

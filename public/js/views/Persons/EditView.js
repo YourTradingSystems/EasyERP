@@ -143,9 +143,11 @@ define([
                 });
                 this.$el = $(formString).dialog({
                     autoOpen:true,
-                    resizable:false,
-                    title: "Edit Person",
-                    dialogClass: "edit-person-dialog"
+                    resizable:true,
+					dialogClass:"edit-person-dialog",
+					title: "Edit Person",
+					width:"80%",
+					height:690
                 });
                 this.populateDropDown("company", App.ID.companiesDd, "/Companies");
                 //this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");

@@ -181,7 +181,9 @@ define([
                     autoOpen:true,
                     resizable:false,
                     title: "Edit Project",
-					dialogClass:"edit-project-dialog"
+					dialogClass:"edit-project-dialog",
+					width:"80%",
+					height:225
                 });
 
                 this.populateDropDown("person", App.ID.managerDd, "/getPersonsForDd");
