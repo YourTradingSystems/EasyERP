@@ -42,7 +42,9 @@
                 fb: '',
                 li: ''
             },
-            history: []
+            history: [],
+            attachments:[],
+            notes:[]
         },
 
         urlRoot: function () {
