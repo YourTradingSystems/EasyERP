@@ -12,12 +12,13 @@ define([
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "Workflows",
+            contentType: "/Workflows",
 
             initialize: function (options) {
                 this.relatedStatusesCollection = new RelatedStatusesCollection();
                 this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
+                this.collection.url = '/Workflows'
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.render = _.after(1, this.render);
             },

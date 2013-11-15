@@ -38,8 +38,8 @@ define([
                 var departmentId = this.$("#parentDepartment option:selected").val();
                 var parentDepartment = common.toObject(departmentId, this.departmentsCollection);
 
-                var managerId = this.$("#departmentManager option:selected").val();
-                var departmentManager = common.toObject(managerId, this.accountDdCollection);
+                var departmentManager = this.$("#departmentManager option:selected").val();
+                //var departmentManager = common.toObject(managerId, this.accountDdCollection);
 
                 departmentModel.save({
                     departmentName: departmentName,

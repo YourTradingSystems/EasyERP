@@ -8,7 +8,7 @@
 <div id="opportunities" class="scroll">
     <ul class="compactList">
         <% _.each(collection, function(model, index){ %>
-        <% if (model.company == company.name) { %>
+        <% if (company && (model.company == company.name)) { %>
         <li class="inner">
             <div class="half-block left">
                 <p>

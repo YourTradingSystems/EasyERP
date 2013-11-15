@@ -1,12 +1,9 @@
 var Project = function (logWriter, mongoose) {
-
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var ProjectSchema = mongoose.Schema({
         projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
-        task: {
-            avaliable: { type: Boolean, default: false },
-            tasks: { type: Array, default: [] }
-        },
+        task: [{ type: ObjectId, ref: 'Tasks' }],
         privacy: { type: String, default: 'All Users' },
         customer: {
             id: { type: String, default: '' },

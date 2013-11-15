@@ -17,7 +17,7 @@
 </div>
     <div class="info">
         <p><%=name.first%> <%=name.last%></p>
-        <p><%=company.name%></p>
+        <p><%=(company) ? company.name.first : ''%></p>
         <p><%=email%></p>
     </div>
 </div>

@@ -13,7 +13,7 @@
                 <td><input type="checkbox" value="<%=department._id%>" class="checkbox"/></td>
                 <td><%=index + 1%></td>
                 <td><%=department.departmentName%></td>
-                <td><%=department.departmentManager.name%></td>
+                <td><%= (department.departmentManager) ? department.departmentManager.name.first + ' ' + department.departmentManager.name.last : '' %></td>
             </tr>
         <% }) %>
         </tbody>

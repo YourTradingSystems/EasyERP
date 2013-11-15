@@ -42,7 +42,10 @@ define([
 
                 var companyModel = new CompanyModel();
 
-                var name = $("#name").val();
+                var name = {
+                    first: $("#name").val(),
+                    last:''
+                };
 
                 var address = {};
                 $("p").find(".address").each(function () {
@@ -62,11 +65,11 @@ define([
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
-                var salesPersonId = this.$("#salesPerson option:selected").val();
-                var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
+                var salesPerson = this.$("#salesPerson option:selected").val();
+                //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
-                var salesTeamId = this.$("#salesTeam option:selected").val();
-                var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
+                var salesTeam = this.$("#salesTeam option:selected").val();
+                //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var reference = $("#reference").val();
 

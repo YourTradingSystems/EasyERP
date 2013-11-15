@@ -2,7 +2,7 @@
   <form method="post" action="" id="editEmployeeForm" class="form">
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="name">Company Name :</label></dt><dd><input class="blueback" type="text" name="name" id="name" required value="<%=model.name%>" /></dd>
+		<dt><label for="name">Company Name :</label></dt><dd><input class="blueback" type="text" name="name" id="name" required value="<%=model.name.first%>" /></dd>
 	  </dl>
 	</div>
 	<div class="half-block left">
@@ -59,7 +59,7 @@
             <select id="salesPerson">
               <option selected="selected" value="0">Select...</option>
               <% employeesCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesPerson.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
+              <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesPerson._id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
               <% }); %>
             </select>
 		  </dd>
@@ -68,7 +68,7 @@
             <select id="salesTeam">
               <option selected="selected" value="0">Select...</option>
               <% departmentsCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesTeam.id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
+              <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesTeam._id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
               <% }); %>
             </select>
 		  </dd>
@@ -83,7 +83,7 @@
 	  </div>
       <div class="half-block left">
 		<dl class="person-info">
-		  <dt><label for="date">Date :</label></dt><dd><input class="blueback" type="text" id="text" value="<%=model.salesPurchases.date%>" /></dd>
+		  <dt><label for="date">Date :</label></dt><dd><input class="blueback" type="text" id="text" value="<%=model.salesPurchases.date.createDate%>" /></dd>
 		  <dt><label for="isCustomer">Customer :</label></dt><dd><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></dd>
 		  <dt><label for="isSupplier">Supplier :</label></dt><dd><input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></dd>
 		  <dt><label for="active">Active :</label></dt><dd><input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> /></dd>

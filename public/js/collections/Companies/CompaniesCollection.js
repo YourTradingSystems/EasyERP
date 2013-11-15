@@ -29,7 +29,8 @@ define([
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (company) {
-                        company.salesPurchases.date = common.utcDateToLocaleDate(company.salesPurchases.date);
+                        company.salesPurchases.date.createDate = common.utcDateToLocaleDate(company.salesPurchases.date.createDate);
+                        company.salesPurchases.date.updateDate = common.utcDateToLocaleDate(company.salesPurchases.date.updateDate);
                         return company;
                     });
                 }

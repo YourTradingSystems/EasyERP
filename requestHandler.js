@@ -8,6 +8,7 @@ var requestHandler = function (fs, mongoose) {
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
         persons = require("./Modules/Persons.js")(logWriter, mongoose, findCompany),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
+        customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
@@ -171,7 +172,8 @@ var requestHandler = function (fs, mongoose) {
     function getPersons(req, res, data) {
         console.log("Requst getPersons is success");
         if (req.session && req.session.loggedIn) {
-            persons.get(res);
+            //persons.get(res);
+            customer.getPersons(res);
         } else {
             res.send(401);
         }
@@ -181,7 +183,7 @@ var requestHandler = function (fs, mongoose) {
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
         if (req.session && req.session.loggedIn) {
-            persons.create(data.person, res);
+            customer.create(data.person, res);
         } else {
             res.send(401);
         }
@@ -189,7 +191,8 @@ var requestHandler = function (fs, mongoose) {
 
     function updatePerson(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            persons.update(id, data.person, res);
+            console.log('----------->>>>>>>>>>>>>>>update');
+            customer.update(id, data.person, res);
         } else {
             res.send(401);
         }
@@ -197,7 +200,7 @@ var requestHandler = function (fs, mongoose) {
     function uploadFilePerson(req, res, id, file) {
         console.log("File Uploading to Persons");   
         if (req.session && req.session.loggedIn) {
-            persons.Person.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+            customer.customer.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
                 if (err) {
                     res.send(401);
                 }
@@ -213,7 +216,7 @@ var requestHandler = function (fs, mongoose) {
     function removePerson(req, res, id) {
         console.log("Requst removePerson is success");
         if (req.session && req.session.loggedIn) {
-            persons.remove(id, res);
+            customer.remove(id, res);
         } else {
             res.send(401);
         }
@@ -440,7 +443,8 @@ var requestHandler = function (fs, mongoose) {
     function getCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
-            company.get(res);
+            //company.get(res);
+            customer.getCompanies(res);
         } else {
             res.send(401);
         }
@@ -449,7 +453,7 @@ var requestHandler = function (fs, mongoose) {
     function getOwnCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
-            company.getOwn(res);
+            customer.getOwnCompanies(res);
         } else {
             res.send(401);
         }
@@ -458,7 +462,7 @@ var requestHandler = function (fs, mongoose) {
     function removeCompany(req, res, id, data) {
         console.log("Requst removeCompany is success");
         if (req.session && req.session.loggedIn) {
-            company.remove(id, res);
+            customer.remove(id, res);
         } else {
             res.send(401);
         }
@@ -467,7 +471,7 @@ var requestHandler = function (fs, mongoose) {
     function createCompany(req, res, data) {
         console.log("Requst createCompany is success");
         if (req.session && req.session.loggedIn) {
-            company.create(data.company, res);
+            customer.create(data.company, res);
         } else {
             res.send(401);
         }
@@ -475,7 +479,7 @@ var requestHandler = function (fs, mongoose) {
 
     function updateCompany(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            company.update(id, data.company, res);
+            customer.update(id, data.company, res);
         } else {
             res.send(401);
         }

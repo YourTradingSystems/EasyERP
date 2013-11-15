@@ -130,7 +130,7 @@ define([
                     $('<option/>').val(item._id).text(item.projectName);
             },
             companyOption: function(item){
-                return this.currentModel.get('company').id === item._id ?
+                return (this.currentModel.get('company') && this.currentModel.get('company').id === item._id) ?
                     $('<option/>').val(item._id).text(item.name).attr('selected','selected') :
                     $('<option/>').val(item._id).text(item.name);
             },

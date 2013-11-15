@@ -29,8 +29,8 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var idCompany = $(this.el).find('#companiesDd option:selected').val();
-                var company = common.toObject(idCompany, this.companiesCollection);
+                var company = $(this.el).find('#companiesDd option:selected').val();
+                //var company = common.toObject(idCompany, this.companiesCollection);
 
                 var dateBirth = $.trim($("#dateBirth").val());
                 //var dateBirth = "";
@@ -38,8 +38,8 @@ define([
                 //    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 //}
 
-                var departmentId = this.$("#department option:selected").val();
-                var department = common.toObject(departmentId, this.departmentsCollection);
+                var department = this.$("#department option:selected").val();
+                //var department = common.toObject(departmentId, this.departmentsCollection);
 
                 var data = {
                     name: {

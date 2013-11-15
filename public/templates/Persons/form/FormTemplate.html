@@ -23,7 +23,7 @@
               <dt>Position :</dt>
               <dd><%=jobPosition%></dd>
               <dt>Company :</dt>
-              <dd><a  class="bold company" data-id="<%=company.id%>" href="#"><%=company.name%></a></dd>
+              <dd><a class="bold company" data-id="<%=(company) ? company._id : ''%>" href="#"><%=(company) ? company.name.first : ''%></a></dd>
               <dt>Birthday :</dt>
               <dd><%=dateBirth%></dd>
               <dt>Email</dt>
