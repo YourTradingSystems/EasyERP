@@ -39,6 +39,7 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
             receiveMessages: { type: Number, default: 0 }
         },
         color: { type: String, default: '#4d5a75' },
+        attachments: { type: Array, default: [] },
         social: {
             fb: { type: String, default: '' },
             li: { type: String, default: '' }
@@ -156,6 +157,9 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
                             if (data.imageSrc) {
                                 _company.imageSrc = data.imageSrc;
                             }
+                        }
+                        if (data.attachments) {
+                            _company.attachments = data.attachments;
                         }
                         if (data.history) {
                             _company.history = data.history;
