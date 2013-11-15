@@ -1002,7 +1002,7 @@ var requestHandler = function (fs, mongoose) {
     function getEvents(req, res, data) {
         console.log("Requst getEvents is success");
         if (req.session && req.session.loggedIn) {
-            events.get(res);
+            events.get(data.idArray, res);
         } else {
             res.send(401);
         }
