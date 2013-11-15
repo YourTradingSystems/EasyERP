@@ -5,12 +5,13 @@ define(
         var clientId    =   '38156718110.apps.googleusercontent.com';
         var redirectURI    =   'http://localhost:8088'
         var respType        =   'code';
-        var scope       = "openid%20email";
+        var scope       = "https://www.googleapis.com/auth/calendar";
         var userProfileScope = "https://www.googleapis.com/plus/v1/people/me";
         var _url        =   authUrl + 'scope=' + scope + '&client_id=' + clientId + '&redirect_uri=' + redirectURI + '&response_type=' + respType;
+		var calendarUrl = "http://www.google.com/calendar/feeds/default/allcalendars/full?orderby=starttime&oauth_consumer_key=localhost:8088";
         var winObject;
 
-
+		
         var authorize = function(){
             console.log(_url);
             var strWindowFeatures = "resizable=yes,width=800, height=600";
@@ -19,15 +20,29 @@ define(
                 if(winObject.document.URL.indexOf(redirectURI) != -1){
                     window.clearInterval(pollTimer);
                     var url = winObject.document.URL;
-                    var acToken = parseURL(url, 'access_token');
-                    var tokenType = parseURL(url, 'token_type');
-                    var expiresIn = parseURL(url, 'expires_in');
+                    var acToken = parseURL(url, 'code');
+                    //var tokenType = parseURL(url, 'token_type');
+                    var expiresIn = parseURL(url, 'session_state');
+					getAllCalendars(acToken,expiresIn);
                     winObject.close();
                     validateToken(acToken);
                 }
             }, 100);
         }
-
+		var getAllCalendars = function(token,expiresIn){
+			console.log(calendarUrl +"&oauth_token="+ token+"&oauth_timestamp="+expiresIn);
+			$.ajax({
+                url: calendarUrl +"&oauth_token="+ token+"&oauth_timestamp="+expiresIn,
+                data: null,
+                success: function(response){
+                    console.log(response);
+                },
+				error: function (request, status, error) {
+					console.log(calendarUrl +"&oauth_token="+ token+"&oauth_timestamp="+expiresIn);
+				},
+                dataType: "jsonp"
+            });
+		}
         var parseURL = function(url, name){
             name = name.replace(/[[]/,"\[").replace(/[]]/,"\]");
             var regexS = "[\?&]"+name+"=([^&#]*)";
