@@ -57,6 +57,7 @@ var Employee = function (logWriter, mongoose) {
         proposedSalary: Number,
         color: { type: String, default: '#4d5a75' },
         creationDate: { type: Date, default: Date.now },
+		createdBy:{
 			user:{type:ObjectId, ref: 'Users', default:null},
 			date:{type:Date, default: Date.now}
 		},

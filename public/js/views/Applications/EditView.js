@@ -139,7 +139,7 @@
                         Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                         self.hideDialog();
                     },
-                    error: function () {
+                    error: function (err) {
                         Backbone.history.navigate("home", { trigger: true });
                         self.hideDialog();
                     }

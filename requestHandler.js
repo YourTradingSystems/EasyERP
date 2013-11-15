@@ -519,7 +519,9 @@ var requestHandler = function (fs, mongoose) {
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
     function createJobPosition(req, res, data) {
-        if (req.session && req.session.loggedIn) {
+
+        if (req.session && req.session.loggedIn) {			
+			data.jobPosition.uId = req.session.uId;
             jobPosition.create(data.jobPosition, res);
         } else {
             res.send(401);
@@ -556,6 +558,10 @@ var requestHandler = function (fs, mongoose) {
 
     function updateJobPosition(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
+			data.jobPosition.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             jobPosition.update(id, data.jobPosition, res);
         } else {
             res.send(401);
@@ -575,6 +581,7 @@ var requestHandler = function (fs, mongoose) {
     function createEmployee(req, res, data) {
         console.log("Requst createEmployee is success");
         if (req.session && req.session.loggedIn) {
+			data.employee.uId = req.session.uId;
             employee.create(data.employee, res);
         } else {
             res.send(401);
@@ -637,6 +644,11 @@ var requestHandler = function (fs, mongoose) {
     function updateEmployees(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn) {
+			data.employee.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
+
             employee.update(id, data.employee, res);
         } else {
             res.send(401);
@@ -768,6 +780,7 @@ var requestHandler = function (fs, mongoose) {
     function createDepartment(req, res, data) {
         console.log("Requst createDepartment is success");
         if (req.session && req.session.loggedIn) {
+			data.department.uId = req.session.uId;
             department.create(data.department, res);
         } else {
             res.send(401);
@@ -785,6 +798,11 @@ var requestHandler = function (fs, mongoose) {
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
         if (req.session && req.session.loggedIn) {
+			data.department.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
+
             department.update(id, data.department, res);
         } else {
             res.send(401);
