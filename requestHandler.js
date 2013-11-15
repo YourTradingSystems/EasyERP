@@ -1036,6 +1036,10 @@ var requestHandler = function (fs, mongoose) {
     function getXML(req, res, link, data) {
 		googleModule.getXML(res,link);
 	}
+    function getXML(req, res, link, data) {
+		googleModule.getXML(res,link);
+	}
+
     //---------END------Events----------------------------------
     return {
 
