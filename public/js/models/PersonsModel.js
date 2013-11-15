@@ -16,7 +16,7 @@ define(["Validation"],function (Validation) {
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.name.first) == ""){
+            if($.trim(attrs.name.first) === ""){
                 errors.push(
                     {
                         name: "Person",
@@ -25,8 +25,7 @@ define(["Validation"],function (Validation) {
                     }
                 );
             }
-            
-            if($.trim(attrs.name.last) == ""){
+            if($.trim(attrs.name.last) === ""){
                 errors.push(
                     {
                         name: "Person",
@@ -36,6 +35,39 @@ define(["Validation"],function (Validation) {
                 );
             }
 
+            if($.trim(attrs.name.last).length > 0){
+                if(!Validation.validName(attrs.name.last)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "lastName",
+                            msg: "Last name should contain only letters"
+                        }
+                    );
+                }
+            }
+            if($.trim(attrs.name.first).length > 0){
+                if(!Validation.validName(attrs.name.first)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "firstName",
+                            msg: "First name should contain only letters"
+                        }
+                    );
+                }
+            }
+            if($.trim(attrs.dateBirth).length > 0){
+                if(!Validation.validDate(attrs.dateBirth)){
+                    errors.push(
+                        {
+                            name: "Persons",
+                            field: "dateBirth",
+                            msg: "Birth date is not a valid date"
+                        }
+                    );
+                }
+            }
             if(attrs.phones.phone.length > 0){
                 if(!Validation.validPhone(attrs.phones.phone)){
                     errors.push(
@@ -69,60 +101,30 @@ define(["Validation"],function (Validation) {
                     );
                 }
             }
-            if(attrs.name.last.length > 0){
-                if(!Validation.validName(attrs.name.last)){
+
+            if($.trim(attrs.address.street).length > 0){
+                if(!Validation.validStreet(attrs.address.street)){
                     errors.push(
                         {
                             name: "Person",
-                            field: "lastName",
-                            msg: "Last name should contain only letters"
+                            field: "street",
+                            msg: "Street field should contain only letters, numbers and signs: . , - /"
                         }
                     );
                 }
             }
-            if(attrs.name.first.length > 0){
-                if(!Validation.validName(attrs.name.first)){
+            if($.trim(attrs.address.city).length > 0){
+                if(!Validation.validStreet(attrs.address.city)){
                     errors.push(
                         {
                             name: "Person",
                             field: "firstName",
                             msg: "First name should contain only letters"
-                    }
-                );
-            }
+                        }
+                    );
+                }
             }
 
-            if ($.trim(attrs.jobPosition).length > 20) {
-                errors.push(
-                    {
-                        name: "Person",
-                        field: "jobPosition",
-                        msg: "Person position can not be more than 20 chars"
-                    }
-                );
-            }
-          
-            if (new Date($.trim(attrs.dateBirth)) > new Date(Date.now())) {
-                errors.push(
-                    {
-                        name: "Person",
-                        field: "dateBirth",
-                        msg: "Person birthday can not be more than current date"
-                    }
-                );
-            }
-     
-          
-            if ($.trim(attrs.phones.mobile).length > 20) {
-                errors.push(
-                    {
-                        name: "Person",
-                        field: "mobile",
-                        msg: "Person mobile can not be more than 20 chars"
-                    }
-                );
-            }
-            
             if(errors.length > 0)
                 return errors;
         },
