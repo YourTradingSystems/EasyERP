@@ -926,6 +926,9 @@ var requestHandler = function (fs, mongoose) {
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
 
+        getPersonsforDd: getPersonsforDd,
+        getDepartmentForDd:getDepartmentForDd,
+
         //createApplication: createApplication,
         getApplications: getApplications,
         //removeApplication: removeApplication,
