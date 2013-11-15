@@ -1,7 +1,8 @@
 <div class="inner">
     <div class="opportunity-header">
         <h3>$<%=model.expectedRevenue.value%></h3>
-        <div class="dropDown">
+        <h4 class="bold"><%=model.name%></h4>
+        <!--<div class="dropDown">
             <a href="#">
                 <img hidden="hidden" src="./images/downCircleWhite.png" alt="Down" />
             </a>
@@ -22,11 +23,16 @@
                     </ul>
                 </li>
             </ul>
-        </div>
+        </div>-->
     </div>
     <div class="opportunity-content">
         <p class="bold"><%=model.company.name%></p>
-        <p><%=model.customer.name%></p>
-        <p><%=model.nextAction.date%>: <%=model.nextAction.desc%></p>
+        <div class="half-block left">
+            <p class="left"><%=model.customer.name%></p>
+        </div>
+        <div class="half-block right">
+            <p style="text-align:right;"><%=model.nextAction.desc%> <%=model.nextAction.date%></p>
+        </div>
+        <div class="clearfix"></div>
     </div>
 </div>

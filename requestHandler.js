@@ -883,7 +883,7 @@ var requestHandler = function (fs, mongoose) {
         getPersons: getPersons,
         updatePerson: updatePerson,
         removePerson: removePerson,
-        getPersonsForDd: getPersonsForDd,
+       // getPersonsForDd: getPersonsForDd,
         uploadFilePerson: uploadFilePerson,
         getCustomer: getCustomer,
 
@@ -929,6 +929,9 @@ var requestHandler = function (fs, mongoose) {
         getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
+
+        getPersonsForDd: getPersonsForDd,
+        getDepartmentForDd: getDepartmentForDd,
 
         //createApplication: createApplication,
         getApplications: getApplications,
