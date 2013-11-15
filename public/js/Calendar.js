@@ -92,7 +92,35 @@ function(UsersCollection){
         }
         var b = true;
         if(!scheduler.checkEvent("onLightBox")){
-            scheduler.attachEvent('onLightBox', function(id){        
+            scheduler.attachEvent('onLightBox', function(id){ 
+				//chooce calendar
+				var curCalendarId = $('#calendarList').val();
+				if (curCalendarId&&curCalendarId.length>1){
+					var curCalendarText = [];
+					for (var i;i<curCalendarId.length;i++){
+						curCalendarText.push($('#calendarList option[value="'+curCalendarId+'"]').text())
+						
+					}
+					$('#calendarList option:selected').each(function(){
+						curCalendarText.push($(this).text());
+					});
+					var s = "";
+					for (var i=0; i<curCalendarId.length;i++){
+						s+="<option value='"+curCalendarId[i]+"'>"+curCalendarText[i]+"</option>";
+					}
+					App.Calendar.currentCalendarId = curCalendarId[0]
+					$(".dhx_cal_light .dhx_cal_larea").prepend('<div id="chooseCalendarDiv" class="dhx_wrap_section"><div class="dhx_cal_lsection">Calendar:</div><div class="dhx_cal_ltext" style="height:30px;"><select id="chooseCurrentCalendar" style="width:100%;">'+s+'</select></div></div>');
+					$(".dhx_cal_light .dhx_cal_larea").css({"height":"478px"});
+					$(".dhx_cal_light").css({"height":"554px"});
+				}else{
+					$("#chooseCalendarDiv").remove();
+					$(".dhx_cal_light .dhx_cal_larea").css({"height":"454px"});
+					$(".dhx_cal_light").css({"height":"544px"});
+
+				}
+				$(".dhx_cal_light").on("change","#chooseCurrentCalendar",function(){
+					App.Calendar.currentCalendarId=$("#chooseCurrentCalendar option:selected").val();
+				});
 				//multiselect
 				$(".dhx_multi_select_assignedTo").hide();
 				var s="<select id='newAssignedTo' multiple>";
