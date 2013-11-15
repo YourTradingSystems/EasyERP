@@ -47,6 +47,7 @@ var Events = function (logWriter, mongoose) {
         selected: Boolean,
         accessRole: String,
         description: { type: String, default: '' },
+        link : { type: String, default: '' },
         events: [{ type: ObjectId, ref: 'Events', default: null }],
         location: { type: String, default: '' }
 
@@ -344,6 +345,11 @@ var Events = function (logWriter, mongoose) {
             if (data.location) {
                 _calendar.location = data.location;
             }
+			console.log("link!!!!!!!");
+			console.log(data.link);
+            if (data.link) {
+                _calendar.link = data.link;
+            }
             if (data.timeZone) {
                 _calendar.timeZone = data.timeZone;
             }
@@ -525,6 +531,7 @@ var Events = function (logWriter, mongoose) {
     };// end remove
 
     function googleCalSync(data, res) {
+		
         try {
             if (!data) {
                 logWriter.log('Events.googleCalSync Incorrect Incoming Data');
@@ -533,12 +540,14 @@ var Events = function (logWriter, mongoose) {
             } else {
                 data.forEach(function (cal) {
                     calendar.find({ id: cal.id }, function (err, result) {
+
                         if (err) {
                             console.log(err);
                             logWriter.log("Events.js googleCalSync calendar.find " + err);
                             res.send(500, { error: "Can't googleCalSync Events" });
                         }
                         else if (result.length > 0) {
+
                             //Updating an Existing Calendar in DataBase
                             var curentCalendarId = result._id;
                             calendar.update({ _id: result._id }, cal, function (err, result) {
@@ -548,6 +557,7 @@ var Events = function (logWriter, mongoose) {
                                         logWriter.log("Events.js googleCalSync calendar.update " + err);
                                         res.send(500, { error: "Can't update Calendar" });
                                     } else {
+
                                         if (items) {
                                             //Update Existing Calendar Events
                                             cal.items.forEach(function (ev) {
@@ -576,6 +586,8 @@ var Events = function (logWriter, mongoose) {
                                                     } else {
                                                         // Create new Event
                                                         try {
+															console.log("events tut");
+															console.log(ev);
                                                             if (!ev || !ev.id) {
                                                                 logWriter.log('Events.create Incorrect Incoming Data');
                                                                 res.send(400, { error: 'Events.create Incorrect Incoming Data' });
@@ -603,12 +615,14 @@ var Events = function (logWriter, mongoose) {
                         } else {
                             //Creating a new Calendar in DataBase
                             try {
+
                                 if (!cal) {
                                     logWriter.log('Events.googleCalSync Incorrect Incoming Data');
                                     res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
                                     return;
                                 } else {
                                     saveCalendarToDb(cal, res);
+                                    res.send(200);
                                 }
                             } catch (exception) {
                                 console.log(exception);

@@ -1,5 +1,11 @@
 <div id="addCalendarDlg">
+  <input class="changeType" type="radio" name="calendarType" value="newCal" checked="checked"/> Create New Calendar<br/>
+  <input class="changeType" type="radio" name="calendarType" value="fromXml"/> From Xml<br/>
+  <div class="newCal swicher">
     <label for="calendarNameTxt">Calendar Name: <input type="text"  id="calendarNameTxt"/> </label> <br/>
     <label for="synchronize">Synchronize with Google: <input type="checkbox" id="synchronize"/> </label><br />
+  </div>
+  <div class="fromXml swicher">
     <label for="fromPublicCalendar">Link (optional): <input type="text" id="fromPublicCalendar" /> </label>
+  </div>
 </div>

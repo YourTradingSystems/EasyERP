@@ -1035,66 +1035,24 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
-	function getMonthFromLocal(s){
-		switch(s){
-			case "гру.":
-			return 11;
- 			case "січ.":
-			return 1;
- 			case "лис.":
-			return 10;
-		}
-		return "mon";
-	}
-	function getDateFromString(s){
-		console.log(s);
-		var n = s.indexOf(":");
-		s=s.substring(n+2,s.length-n);
-		n = s.indexOf(" ");
-		s=s.substring(n+1,s.length-n+2);
-		
-		var st = s.split("–")[0].trim();
-		var end = s.split("–")[1].trim();
-		st = st.split(" ")[0]+" "+getMonthFromLocal(st.split(" ")[1])+" "+st.split(" ")[2]+" "+st.split(" ")[3];
-		if (end.split(" ").length>1){
-			n = end.indexOf(" ");
-			end=end.substring(n+1,end.length-n+2);
-			end = end.split(" ")[0]+" "+getMonthFromLocal(end.split(" ")[1])+" "+end.split(" ")[2]+" "+end.split(" ")[3];
-		}
-		else{
-			end = st.split(" ")[0]+" "+st.split(" ")[1]+" "+st.split(" ")[2]+" "+end;
-		}
-		return [st,end];
-	}
     function getXML(req, res, link, data) {
-		var headers = {
-			'User-Agent':       'Opera/9.80 (Windows NT 6.1; Win64; x64) Presto/2.12.388 Version/12.11',
-			'Content-Type':     'application/x-www-form-urlencoded'
-		}
-		var options = {
-			url: link,
-			method: 'GET',
-			headers: headers
-		}
-		request(options, function (error, response, body) {
+		link = link.replace("basic","full")+"?alt=json";
+		request({url:link,json:true}, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
-				var parseString = require('xml2js').parseString;
-				console.log(body);
-				parseString(body, function (err, result) {
-					var events=[];
-					for (var i in result.feed.entry){
-//						console.log(result.feed.entry[i]);
-						var content = result.feed.entry[i].content[0]._.replace(/\n/g,"");
-						var startDate = getDateFromString(content.split("<br />")[0]);
-						var endDate = startDate[1];
-						startDate = startDate[0];
-						content = content.replace(/<br \/>/g," ");
-						events.push({"id":result.feed.entry[i].id[0].split("/")[6],"title":result.feed.entry[i].title[0]._,"summary":content,"startDate":startDate,"endDate":endDate});
-					}
-					var calendar = {"id":result.feed.id[0].split("/")[6],"summary":result.feed.title[0]._,"description":result.feed.subtitle[0]._}
-					calendar.entry = events;
-					res.send(JSON.stringify(calendar));
-				});
+				var event=[];
+				for (var i in body.feed.entry){
+
+					var content = body.feed.entry[i].content.$t;
+					var startDate = new Date(body.feed.entry[i].gd$when[0].startTime).toISOString();
+					var endDate = new Date(body.feed.entry[i].gd$when[0].endTime).toISOString();
+					var subject = body.feed.entry[i].author[0].name.$t
+					event.push({"id":body.feed.entry[i].id.$t.split("/")[6],"summary":body.feed.entry[i].title.$t,"description":content,start:{"dateTime":startDate},end:{"dateTime":endDate},"title":subject});
+				}
+				var calendar = {"id":body.feed.id.$t.split("/")[6],"summary":body.feed.title.$t,"description":body.feed.subtitle.$t,"summary":body.feed.title.$t,"link":link}
+				calendar.items = event;
+				data=[calendar]
+				events.googleCalSync(data,res)
+//				res.send(JSON.stringify(calendar));
 			}
 		});
 	}
