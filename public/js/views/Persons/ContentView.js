@@ -8,9 +8,11 @@ define([
     'common',
     'views/Persons/EditView',
     'views/Notes/NoteView',
-    'text!templates/Notes/AddNote.html'
+    'text!templates/Notes/AddNote.html',
+    'views/Attachments/AttachmentsView',
+    'text!templates/Attachments/AddAttachments.html'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate, attachView, addAttachTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -31,7 +33,8 @@ define([
             "click #attachSubmit":"addAttach",
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
-            "click #cancelNote": "cancelNote"
+            "click #cancelNote": "cancelNote",
+            "click .deleteAttach":"deleteAttach"
         },
         cancelNote: function(e) {
             $('#noteArea').val('');
@@ -111,39 +114,74 @@ define([
                 $('#noteTitleArea').val('');
             }
         },
-        addAttach: function(){
+
+       
+        addAttach: function(event){
+        	
+        	event.preventDefault();
         	var models = this.collection.models;
             var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex]["id"];
-        	//event.preventDefault();
+            var currentModel = models[itemIndex];
+            var currentModelID = models[itemIndex]["id"];
         	var addFrmAttach = $("#addAttachments");
-        	var addInptAttach = $("#inputAttach").serialize(); 
+        	var addInptAttach = $("#inputAttach")[0].files[0]; 
+        	
+           
         	addFrmAttach.submit(function(e){
+   
         		var formURL = addFrmAttach.attr("action");
         		e.preventDefault();
         		addFrmAttach.ajaxSubmit({
         			url:formURL,
         			type: "POST",
-        			cache: false,
         			processData: false,
-        			data:addInptAttach,
-        		
-        			
+        			contentType: false,
+        			data:[addInptAttach],
         			beforeSend: function(xhr){
-        			    
-
-	                       xhr.setRequestHeader("id",currentModel);
+	                       xhr.setRequestHeader("id",currentModelID);
         			},
         			
         			success:function(data){
-        				console.log('Attach file');
+        				var attachments = currentModel.get('attachments');
+        				var key = attachments.length;
+        				attachments.push(data);
+        				currentModel.set('attachments',attachments);
+        				
+        				if (currentModel.save()) {
+        					$('#attachBody').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
+        					console.log('Attach file');
+        					console.log(data);
+        					addFrmAttach[0].reset();
+        				}
         			},
+        			
         			error: function (){
         				console.log("Attach file error");
-        			} 
+        			},
+        			
         		});
+         		
         	});
-
+        	
+        	addFrmAttach.submit();
+        	addFrmAttach.off('submit');
+        },
+        
+        deleteAttach:function(e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var id_int = parseInt(id.substr(k+1));
+            
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var attachments = currentModel.get('attachments');
+            
+            delete attachments[id_int];
+            currentModel.set('attachments',attachments);
+            if (currentModel.save()) {
+                $('.attachFile_'+id_int).remove();
+            }
         },
         
         editItem: function(){
@@ -234,6 +272,16 @@ define([
                             }
                             currentModel.set('notes',notes);
                             currentModel.save();
+                            
+                            var attachments = currentModel.get('attachments');
+                            for (var i = 0; i < attachments.length; i++) {
+                                if (attachments[i] == null) {
+                                	attachments.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                            currentModel.set('attachments',attachments);
+                            currentModel.save();
 
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(
@@ -248,6 +296,12 @@ define([
                                     model: currentModel
                                 }).render().el
                             );
+                            
+                            this.$el.find('.formAttachments').append(
+                                    new attachView({
+                                        model: currentModel
+                                    }).render().el
+                                );
                         }
                         break;
                     }

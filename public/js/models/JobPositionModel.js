@@ -15,6 +15,7 @@
             description: "",
             requirements: "",
             workflow: {
+                wName: 'jobposition',
                 name: 'No Recruitment',
                 status: 'New' 
             }

@@ -1,5 +1,6 @@
 define([
     "text!templates/Leads/EditTemplate.html",
+    "text!templates/Leads/editSelectTemplate.html",
     "collections/Leads/LeadsCollection",
     'collections/Workflows/WorkflowsCollection',
     "collections/Customers/CustomersCollection",
@@ -9,14 +10,14 @@ define([
     "custom",
     'common'
 ],
-    function (EditTemplate, LeadsCollection, WorkflowsCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, Custom, common) {
+    function (EditTemplate, editSelectTemplate, LeadsCollection, WorkflowsCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Leads",
 
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'lead' });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.customersCollection = new CustomersCollection();
                 this.customersCollection.bind('reset', _.bind(this.render, this));
@@ -28,13 +29,14 @@ define([
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
                 this.contentCollection = options.collection;
                 this.contentCollection.bind('reset', _.bind(this.render, this));
-                this.render();
+                this.render = _.after(5, this.render);
             },
 
             events: {
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #cancelCase, #reset": "changeWorkflow",
-                "change #customer": "selectCustomer"
+                "change #customer": "selectCustomer",
+                "change #workflowNames": "changeWorkflows"
             },
 
             selectCustomer: function (e) {
@@ -66,7 +68,28 @@ define([
                 this.$(".tab").hide().eq(index).show();
             },
 
-            changeWorkflow: function (e) {
+            changeWorkflows: function () {
+                var itemIndex = Custom.getCurrentII() - 1;
+
+                if (itemIndex == -1) {
+                    this.$el.html();
+                } else {
+                    var currentModel = this.contentCollection.models[itemIndex].toJSON();
+                    var name = this.$("#workflowNames option:selected").val();
+                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
+                }
+            },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            /*changeWorkflow: function (e) {
                 var mid = 39;
 
                 var breadcrumb = $(e.target).closest('li');
@@ -118,7 +141,7 @@ define([
 
                 });
                 model.on('change', this.render, this);
-            },
+            },*/
 
             saveItem: function () {
 
@@ -132,7 +155,7 @@ define([
                     var name = $.trim($("#name").val());
 
                     var company = $(this.el).find("#company").val();
-                    
+
                     var idCustomer = $(this.el).find("#customer option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersCollection);
                     var customer = {};
@@ -158,7 +181,7 @@ define([
                     } else {
                         salesPerson = currentModel.defaults.salesPerson;
                     }
-                    
+
                     var salesTeamId = this.$("#salesTeam option:selected").val();
                     var objSalesTeam = common.toObject(salesTeamId, this.departmentsCollection);
                     var salesTeam = {};
@@ -178,7 +201,7 @@ define([
 
                     var email = $.trim($("#email").val());
                     var func = $.trim($("#func").val());
-                    
+
                     var phone = $.trim($("#phone").val());
                     var mobile = $.trim($("#mobile").val());
                     var fax = $.trim($("#fax").val());
@@ -186,6 +209,12 @@ define([
                         phone: phone,
                         mobile: mobile,
                         fax: fax,
+                    };
+
+                    var workflow = {
+                        wName: this.$("#workflowNames option:selected").text(),
+                        name: this.$("#workflow option:selected").text(),
+                        status: this.$("#workflow option:selected").val(),
                     };
 
                     var priority = $("#priority").val();
@@ -213,6 +242,7 @@ define([
                         email: email,
                         func: func,
                         phones: phones,
+                        workflow: workflow,
                         fax: fax,
                         priority: priority,
                         internalNotes: internalNotes,
@@ -238,9 +268,10 @@ define([
                 if (itemIndex == -1) {
                     this.$el.html();
                 } else {
-                    var currentModel = this.contentCollection.models[itemIndex];
+                    var currentModel = this.contentCollection.models[itemIndex].toJSON();
+                    var workflowModel = this.workflowsCollection.findWhere({ name: currentModel.workflow.wName }).toJSON();
                     this.$el.html(_.template(EditTemplate, {
-                        model: currentModel.toJSON(),
+                        model: currentModel,
                         companiesCollection: this.companiesCollection,
                         customersCollection: this.customersCollection,
                         employeesCollection: this.employeesCollection,
@@ -248,6 +279,7 @@ define([
                         priorityCollection: this.priorityCollection,
                         workflowsCollection: this.workflowsCollection
                     }));
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(workflowModel.value) }));
                 }
                 return this;
             }

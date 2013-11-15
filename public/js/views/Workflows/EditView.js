@@ -18,6 +18,7 @@ define([
                 this.relatedStatusesCollection = new RelatedStatusesCollection();
                 this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
+                this.collection.url = '/Workflows';
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.render = _.after(1, this.render);
             },

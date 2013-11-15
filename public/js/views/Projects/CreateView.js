@@ -1,12 +1,13 @@
 define([
     "text!templates/Projects/CreateTemplate.html",
+    "text!templates/Projects/selectTemplate.html",
     "collections/Customers/AccountsDdCollection",
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
     "models/ProjectsModel",
     "common"
 ],
-    function (CreateTemplate, AccountsDdCollection, CustomersCollection, WorkflowsCollection, ProjectModel, common) {
+    function (CreateTemplate, selectTemplate, AccountsDdCollection, CustomersCollection, WorkflowsCollection, ProjectModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -18,18 +19,34 @@ define([
                 this.accountDdCollection.bind('reset', _.bind(this.render, this));
                 this.customersDdCollection = new CustomersCollection();
                 this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsDdCollection = new WorkflowsCollection({ id: 'project' });
+                this.workflowsDdCollection = new WorkflowsCollection({ id: 'Project' });
                 this.workflowsDdCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.projectsCollection = options.collection;
                 this.projectsCollection.bind('reset', _.bind(this.render, this));
-                this.render();
+                this.render = _.after(4, this.render);
             },
 
             events: {
-                "submit form" : "formSubmitHandler"
+                "submit form": "formSubmitHandler",
+                "change #workflowNames": "changeWorkflows"
             },
-            formSubmitHandler : function(event){
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            changeWorkflows: function () {
+                var name = this.$("#workflowNames option:selected").val();
+                var value = this.workflowsDdCollection.findWhere({ name: name }).toJSON().value;
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
+            },
+
+            formSubmitHandler: function (event) {
                 event.preventDefault();
             },
 
@@ -39,10 +56,10 @@ define([
 
                 var projectModel = new ProjectModel();
 
-               /* var projectName = $("#projectName").val();
-                if ($.trim(projectName) == "") {
-                    projectName = "New Project";
-                }*/
+                /* var projectName = $("#projectName").val();
+                 if ($.trim(projectName) == "") {
+                     projectName = "New Project";
+                 }*/
 
                 var idCustomer = $(this.el).find("#customerDd option:selected").val();
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
@@ -50,8 +67,14 @@ define([
                 var idManager = $("#managerDd option:selected").val();
                 var projectmanager = common.toObject(idManager, this.accountDdCollection);
 
-                var idWorkflow = $("#workflowDd option:selected").val();
-                var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+                //var idWorkflow = $("#workflowDd option:selected").val();
+                //var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+
+                var workflow = {
+                    wName: this.$("#workflowNames option:selected").text(),
+                    name: this.$("#workflow option:selected").text(),
+                    status: this.$("#workflow option:selected").val(),
+                };
 
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
@@ -86,7 +109,17 @@ define([
             },
 
             render: function () {
-                this.$el.html(this.template({ accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection, workflowsDdCollection: this.workflowsDdCollection }));
+                var workflowNames = [];
+                this.workflowsDdCollection.models.forEach(function (option) {
+                    workflowNames.push(option.get('name'));
+                });
+                this.$el.html(this.template({
+                    accountDdCollection: this.accountDdCollection,
+                    customersDdCollection: this.customersDdCollection,
+                    workflowsDdCollection: this.workflowsDdCollection,
+                    workflowNames: workflowNames
+                }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsDdCollection.models[0].get('value')) }));
                 return this;
             }
 

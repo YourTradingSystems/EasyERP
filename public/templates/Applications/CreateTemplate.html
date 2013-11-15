@@ -36,6 +36,18 @@
             </p>
 
             <p>
+                <label for="workflowNames">Workflow Names </label>
+                <select id="workflowNames">
+                    <% _.each(workflowNames, function(item){ %>
+                    <option><%= item %></option>
+                    <%}); %>
+                </select>
+            </p>
+            
+            <p id="selectWorkflow">
+            </p>
+
+            <p>
                 <label for="degree">Degree </label>
                 <select id="degree">
                     <option selected="selected" value="0">Select...</option>
@@ -104,12 +116,12 @@
 
             <p>
                 <label for="expectedSalary">Expected Salary </label>
-                <input type="text" id="expectedSalary" placeholder="0.00"/>
+                <input type="text" id="expectedSalary" placeholder="0.00" />
             </p>
 
             <p>
                 <label for="proposedSalary">Proposed Salary </label>
-                <input type="text" id="proposedSalary" placeholder="0.00"/>
+                <input type="text" id="proposedSalary" placeholder="0.00" />
             </p>
 
             <p>

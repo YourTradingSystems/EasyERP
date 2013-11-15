@@ -1,15 +1,17 @@
 define([
     "text!templates/Applications/CreateTemplate.html",
+    "text!templates/Applications/selectTemplate.html",
     "collections/Applications/ApplicationsCollection",
     "collections/Employees/EmployeesCollection",
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Degrees/DegreesCollection",
     "collections/SourceOfApplicants/SourceOfApplicantsCollection",
+    "collections/Workflows/WorkflowsCollection",
     "models/ApplicationModel",
     "common"
 ],
-    function (CreateTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, ApplicationModel, common) {
+    function (CreateTemplate, selectTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, WorkflowsCollection, ApplicationModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -17,6 +19,8 @@ define([
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
+                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.jobPositionsCollection = new JobPositionsCollection();
@@ -29,7 +33,7 @@ define([
                 this.sourceOfApplicantsCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.applicationsCollection = options.collection;
-                this.render();
+                this.render = _.after(6, this.render);
             },
 
             close: function () {
@@ -38,7 +42,22 @@ define([
 
             events: {
                 "click #tabList a": "switchTab",
-                "click #hire": "isEmployee"
+                "click #hire": "isEmployee",
+                "change #workflowNames": "changeWorkflows"
+            },
+            
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            changeWorkflows: function () {
+                var name = this.$("#workflowNames option:selected").val();
+                var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             isEmployee: function (e) {
@@ -81,6 +100,12 @@ define([
                 var wphones = {
                     phone: phone,
                     mobile: mobile
+                };
+
+                var workflow = {
+                    wName: this.$("#workflowNames option:selected").text(),
+                    name: this.$("#workflow option:selected").text(),
+                    status: this.$("#workflow option:selected").val(),
                 };
 
                 var degreeId = this.$("#degree option:selected").val();
@@ -134,7 +159,8 @@ define([
                     expectedSalary: expectedSalary,
                     proposedSalary: proposedSalary,
                     tags: tags,
-                    otherInfo: otherInfo
+                    otherInfo: otherInfo,
+                    workflow: workflow
                 },
                 {
                     headers: {
@@ -151,10 +177,22 @@ define([
             },
 
             render: function () {
+                var workflowNames = [];
+                this.workflowsCollection.models.forEach(function (option) {
+                    workflowNames.push(option.get('name'));
+                });
                 var applicationModel = new ApplicationModel();
-                this.$el.html(this.template({ employeesCollection: this.employeesCollection, jobPositionsCollection: this.jobPositionsCollection, departmentsCollection: this.departmentsCollection, degreesCollection: this.degreesCollection, sourceOfApplicantsCollection: this.sourceOfApplicantsCollection }));
+                this.$el.html(this.template({
+                    employeesCollection: this.employeesCollection,
+                    jobPositionsCollection: this.jobPositionsCollection,
+                    departmentsCollection: this.departmentsCollection,
+                    degreesCollection: this.degreesCollection,
+                    sourceOfApplicantsCollection: this.sourceOfApplicantsCollection,
+                    workflowNames: workflowNames
+                }));
                 common.canvasDraw({ model: applicationModel.toJSON() }, this);
                 $('#nextAction').datepicker();
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
                 return this;
             }
 
