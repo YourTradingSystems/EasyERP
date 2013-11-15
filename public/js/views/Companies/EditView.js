@@ -17,9 +17,9 @@ define([
 
             initialize: function (options) {
                 this.employeesCollection = new EmployeesCollection();
-              //  this.employeesCollection.bind('reset', _.bind(this.render, this));
+                this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
-                //this.departmentsCollection.bind('reset', _.bind(this.render, this));
+                this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.companiesCollection = options.collection;
                 this.currentModel = this.companiesCollection.models[Custom.getCurrentII() - 1];
                 this.render();
@@ -169,12 +169,12 @@ define([
             },
             salesPersonOption: function(item){
                 return  this.currentModel.get("salesPurchases").salesPerson.id === item._id ?
-                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
-                    $('<option/>').val(item._id).text(item.departmentName);
+                    $('<option/>').val(item._id).text(item.first +' '+item.last).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.first +' '+item.last);
             },
             salesTeamOption: function(item){
                 return this.currentModel.get("salesPurchases").salesTeam.id === item._id ?
-                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.departmentName).attr('selected','selected') :
                     $('<option/>').val(item._id).text(item.departmentName);
             },
             render: function () {

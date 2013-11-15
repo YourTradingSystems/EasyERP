@@ -57,19 +57,13 @@
 		  <dt><label for="salesPerson">Salesperson :</label></dt>
 		  <dd>
             <select id="salesPerson">
-              <option selected="selected" value="0">Select...</option>
-              <% employeesCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesPerson.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
-              <% }); %>
+
             </select>
 		  </dd>
 		  <dt><label for="salesTeam">Sales Team :</label></dt>
 		  <dd>
             <select id="salesTeam">
-              <option selected="selected" value="0">Select...</option>
-              <% departmentsCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"<%=(option.get('_id')===model.salesPurchases.salesTeam.id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
-              <% }); %>
+
             </select>
 		  </dd>
 		  <dt><label for="reference">Reference :</label></dt><dd><input class="blueback" type="text" id="reference" value="<%=model.salesPurchases.reference%>" /></dd>
