@@ -492,12 +492,16 @@ var Events = function (logWriter, mongoose, googleModule) {
             res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
             return;
         } else {
+			var countCal = 0;
             data.forEach(function (cal) {
+				countCal++;
                 var query = calendar.findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
                 query.exec(function (err, googleCalendar) {
                     if (googleCalendar) {
                         var curentCalendarId = googleCalendar._id;
+						var countEv = 0;
                         cal.items.forEach(function (ev) {
+							countEv++;
                             ev.calendarId = curentCalendarId;
                             ev.isGoogle = true;
                             var eventQuery = event.findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
@@ -509,6 +513,9 @@ var Events = function (logWriter, mongoose, googleModule) {
                                             logWriter.log("Events.js googleCalSync calendar.update " + error);
                                             res.send(500, { error: "Can't update Events" });
                                         } else {
+											if(countCal==data.length&&countEv==cal.items.length){
+												res.send(200);
+											}
                                             console.log('>>>>>>>>>SetToupdateGoogleCallendar<<<<<<<<<<<<<');
                                             console.log(upRes);
                                         }

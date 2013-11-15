@@ -48,7 +48,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 					
 					
 				},
-				error: function (error, statusText,sdfdf){
+				error: function (error, statusText){
 
 
 				},
@@ -96,8 +96,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 							
 						},
 						error: function (error, statusText,sdfdf){
-
-
+							
 						},
 						dataType: "json"
 					});
@@ -287,7 +286,8 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 						   });
 					}
 				},
-				error:function(){
+				error:function(error, statusText){
+					alert("sdfsdfsf");
 					
 				}
 			});
