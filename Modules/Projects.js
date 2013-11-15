@@ -460,7 +460,10 @@ var Project = function (logWriter, mongoose) {
 
     function getById(data, response) {
         var query = project.findById(data.id, function (err, res) { });
-        query.populate('projectmanager', 'name');
+        query.populate('projectmanager', 'name _id');
+        query.populate('customer', 'name _id');
+        query.populate('workflow');
+
         query.exec(function (err, project) {
             if (err) {
                 logWriter.log("Project.js getProjectById project.find " + err);
