@@ -24,7 +24,6 @@
                 this.tasksCollection = options.collection;
                 this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
                 this.render();
-
             },
 
             events: {
