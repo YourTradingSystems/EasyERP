@@ -3,7 +3,7 @@ define(
         var authUrl    =   'https://accounts.google.com/o/oauth2/auth?';
         var validURI    =   'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
         var clientId    =   '38156718110.apps.googleusercontent.com';
-        var redirectURI    =   'http://localhost:8088'
+        var redirectURI    =   'http://localhost:8088';
         var respType        =   'token';
         var scope       = "openid%20email";
         var userProfileScope = "https://www.googleapis.com/plus/v1/people/me";
