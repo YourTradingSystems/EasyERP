@@ -31,6 +31,7 @@ function (ListHeader, CreateView, ListItemView) {
             });*/
             //this.startNumber += this.collection.length;
             //this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            return this;
         },
 
         showMore: function () {

@@ -12,6 +12,7 @@ define([
     function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, common) {
         var PersonTasksView = Backbone.View.extend({
             el: '#content-holder',
+
             initialize: function (options) {
                 this.formModel = options.model;
                 this.opportunitiesCollection = new OpportunitiesCollection();
@@ -272,8 +273,15 @@ define([
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
+                if(!addInptAttach){
+                    alert('No files to attach');
+                    return;
+                }
+                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                    return;
+                }
                 addFrmAttach.submit(function (e) {
-
                     var formURL = "http://" + window.location.host + "/uploadFiles";
                     e.preventDefault();
                     addFrmAttach.ajaxSubmit({
@@ -303,6 +311,10 @@ define([
                 addFrmAttach.off('submit');
             },
 
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
 
             deleteAttach: function (e) {
                 var id = e.target.id;

@@ -65,7 +65,10 @@ var App = App ||
         priorities: "/Priority",
         workflows: "/Workflows?id=Lead"
     },
-
+    File:{
+        MAXSIZE: 3145728,  //size in kilobytes  = 3 MB
+        MaxFileSizeDisplay: "3 MB"
+    },
     requestedURL: null,
     Calendar:{
         currentCalendarId:""

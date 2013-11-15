@@ -20,7 +20,18 @@ define([
             events: {
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit"
+                "mouseleave .avatar": "hideEdit",
+                'keydown': 'keydownHandler'
+            },
+
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
             },
             hideDialog: function () {
                 $(".edit-dialog").remove();

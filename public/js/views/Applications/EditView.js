@@ -11,14 +11,9 @@
             imageSrc: '',
             template: _.template(EditTemplate),
             initialize: function (options) {
-                _.bindAll(this, 'saveItem');
-
-            if (options.collection) {
+                _.bindAll(this, "saveItem");
                 this.employeesCollection = options.collection;
-                this.currentModel = this.employeesCollection.getElement();
-            } else {
-                this.currentModel = options.model;
-            }
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 
@@ -136,11 +131,11 @@
                     },
                     wait: true,
                     success: function (model) {
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/Applications", { trigger: true });
                         self.hideDialog();
                     },
-                    error: function (err) {
-                        Backbone.history.navigate("home", { trigger: true });
+                    error: function () {
+                        Backbone.history.navigate("easyErp", { trigger: true });
                         self.hideDialog();
                     }
                 });
@@ -148,8 +143,7 @@
             },
 
             render: function () {
-                console.log(this.currentModel.toJSON());
-                var formString = this.template(this.currentModel.toJSON());
+                var formString = this.template({ model: this.currentModel.toJSON() });
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "applications-edit-dialog",

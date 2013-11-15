@@ -19,7 +19,18 @@ define([
             events: {
                 "click #tabList a": "switchTab",
                 "click #deadline": "showDatePicker",
-                "change #workflowNames": "changeWorkflows"
+                "change #workflowNames": "changeWorkflows",
+                'keydown': 'keydownHandler'
+            },
+
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
             },
 
             getWorkflowValue: function (value) {

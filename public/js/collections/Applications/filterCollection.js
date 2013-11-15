@@ -48,14 +48,12 @@
 
             parse: true,
             parse: function (response) {
-                /*if (response.data) {
-                    _.map(response.data, function (task) {
-                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        task.deadline = common.utcDateToLocaleDate(task.deadline);
-                        return task;
+                if (response.data) {
+                    _.map(response.data, function (application) {
+                    	application.creationDate = common.utcDateToLocaleDate(application.creationDate);
+                        return application;
                     });
-                }*/
+                }
                 return response.data;
             },
 
