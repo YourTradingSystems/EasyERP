@@ -95,8 +95,9 @@
                 $("ul.changeContentIndex").show();
                 $('#top-bar-deleteBtn').show();
             }
-
-
+            if(viewType == "thumbnails" || viewType == "list"){
+                $('#top-bar-editBtn').hide();
+            }
         }
         else if(actionType === "View"){
             $('#top-bar-createBtn').show();
