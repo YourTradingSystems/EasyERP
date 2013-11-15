@@ -132,7 +132,7 @@ define([
                     var name = $.trim($("#name").val());
 
                     var company = $(this.el).find("#company").val();
-                    
+
                     var idCustomer = $(this.el).find("#customer option:selected").val();
                     var _customer = common.toObject(idCustomer, this.customersCollection);
                     var customer = {};
@@ -158,7 +158,7 @@ define([
                     } else {
                         salesPerson = currentModel.defaults.salesPerson;
                     }
-                    
+
                     var salesTeamId = this.$("#salesTeam option:selected").val();
                     var objSalesTeam = common.toObject(salesTeamId, this.departmentsCollection);
                     var salesTeam = {};
@@ -178,7 +178,7 @@ define([
 
                     var email = $.trim($("#email").val());
                     var func = $.trim($("#func").val());
-                    
+
                     var phone = $.trim($("#phone").val());
                     var mobile = $.trim($("#mobile").val());
                     var fax = $.trim($("#fax").val());
@@ -238,9 +238,11 @@ define([
                 if (itemIndex == -1) {
                     this.$el.html();
                 } else {
-                    var currentModel = this.contentCollection.models[itemIndex];
+                    var currentModel = this.contentCollection.models[itemIndex].toJSON();
+                    
+                    console.log(this.workflowsCollection.findWhere({ name: currentModel.name }));
                     this.$el.html(_.template(EditTemplate, {
-                        model: currentModel.toJSON(),
+                        model: currentModel,
                         companiesCollection: this.companiesCollection,
                         customersCollection: this.customersCollection,
                         employeesCollection: this.employeesCollection,

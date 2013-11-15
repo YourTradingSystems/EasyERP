@@ -56,6 +56,7 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
         optout: { type: Boolean, default: false },
         reffered: { type: String, default: '' },
         workflow: {
+            wName: { type: String, default: '' },
             status: { type: String, default: '' },
             name: { type: String, default: '' }
         }
@@ -208,8 +209,12 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                     }
                     if (data.workflow) {
                         if (data.workflow.name) {
+                            _opportunitie.workflow.wName = data.workflow.wName;
+                        }
+                        if (data.workflow.name) {
                             _opportunitie.workflow.name = data.workflow.name;
                         }
+
                         if (data.workflow.status) {
                             _opportunitie.workflow.status = data.workflow.status;
                         }

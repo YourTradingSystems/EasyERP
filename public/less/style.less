@@ -84,14 +84,12 @@
 
 a {
     //color: @lightmagenta;
-	color:#36a9e1;
-
+    color: #36a9e1;
     text-decoration: none;
 
     &:hover {
-		text-decoration:underline;
+        text-decoration: underline;
         //color: @lightmagenta - #333333;
-
     }
 
     &:focus {
@@ -186,12 +184,7 @@ article {
     margin: @margin;
 }
 
-.content-box {
-	border: 1px solid #CACACA;
-    display: block;
-    .margin(15px);
-    background: #fff;
-}
+
 
 .bold {
     font-weight: bold;
@@ -412,6 +405,9 @@ article {
     background: #fff;
     clear: both;
     width: 100%;
+    & .inner-holder {
+        .margin(20px);
+}
 }
 
 #top-bar {
@@ -796,10 +792,8 @@ dl.person-info {
         margin-left: 10px;
         margin-right: 10px;
         padding-left: 20px;
-        padding-top: 20px;
         padding-bottom: 20px;
-		border: 1px solid #DDD;
-		border-top: 1px solid rgba(0,0,0,0);
+        //border-top: 1px solid rgba(0,0,0,0);
         display: none;
 		font-family: 'Segoe UI', sans-serif;
 		font-size: 13px;
@@ -814,7 +808,7 @@ dl.person-info {
     &.workflow-details {
         display: block;
         padding-top: 0px;
-		border: 1px solid rgba(0,0,0,0);
+        //border: 1px solid rgba(0,0,0,0);
 	}
 }
 
@@ -1140,7 +1134,7 @@ dl.person-info {
         a {
 			&:hover{
 				text-decoration:none;
-			}
+    }
         }
 
     }
@@ -1765,8 +1759,9 @@ input, textarea, select {
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
         line-height: 20px;
-		a{
-			font-weight:bold;
+
+        a {
+            font-weight: bold;
 		}
     }
 
@@ -1784,8 +1779,9 @@ input, textarea, select {
                 a {
                     word-break: break-all;
                     word-wrap: break-word;
-					.bold{
-						font-weight:bold;
+
+                    .bold {
+                        font-weight: bold;
                 }
             }
         }
@@ -1998,7 +1994,8 @@ button {
 }
 
 .ui-dialog {
-	border-radius:0 !important;
+    border-radius: 0 !important;
+
 	.ui-dialog-titlebar {
         display: none;
 	}
@@ -2069,25 +2066,25 @@ button {
 }
 }
 .dialog-buttons {
-    text-align: center;
+        text-align: center;
 
-    input {
-        height: 25px !important;
-        line-height: 15px !important;
-        background-image: url("@{imagesfolder}/bt-bg.png") !important;
-		font-size: 11px;
-		font-family: Tahoma,Arial,Helvetica,sans-serif;
-		text-shadow: 0 1px 0 #FFF;
-		color: #222 !important;
-		border: 1px solid #C3C3C3 !important;
-		padding: 5px 15px;
-		
-        &:hover {
-			border: 1px solid #888 !important;
-			color: #222 !important;
+        input {
+            height: 25px !important;
+            line-height: 15px !important;
+            background-image: url("@{imagesfolder}/bt-bg.png") !important;
+				font-size: 11px;
+				font-family: Tahoma,Arial,Helvetica,sans-serif;
+				text-shadow: 0 1px 0 #FFF;
+				color: #222 !important;
+				border: 1px solid #C3C3C3 !important;
+				padding: 5px 15px;
+
+            &:hover {
+					border: 1px solid #888 !important;
+					color: #222 !important;
+				}
 		}
 	}
-}
 
 #createProjectForm,
 #createTaskForm,
@@ -2168,13 +2165,15 @@ button {
 		}
 	}
 }
-#createProjectForm{
-	dl{
-		dt{
-			max-width:180px;
+
+#createProjectForm {
+    dl {
+        dt {
+            max-width: 180px;
 		}
 	}
 }
+
 #createEmployeeForm,
 #editEmployeeForm {
     textarea {
@@ -2189,13 +2188,15 @@ button {
 		margin-left: 10px;
 }
 }
-#createEmployeeForm.notDialog{
-	dl{
-		dt,dd{
-			line-height:17px;
+
+    #createEmployeeForm.notDialog {
+        dl {
+            dt, dd {
+                line-height: 17px;
 		}
 	}
 }
+
 #createFormDiv > #createProjectForm {
     margin: 0;
     width: auto;
@@ -2282,13 +2283,13 @@ button {
 			background-color: #EEE;
 			a{
 			text-decoration:underline;
-			}
+		}
 		}
 
         &.active {
             border: 1px solid #ddd;
             border-right: none;
-			
+
             &.first {
                 border-top: 1px solid rgba(0, 0, 0, 0);
 			}
@@ -2298,7 +2299,7 @@ button {
 			}
 			a{
 				text-decoration:none;
-			}
+		}
 		}
 
         a {
@@ -2362,7 +2363,7 @@ button {
 		}
 	}
 
- #ui-datepicker-div{
+#ui-datepicker-div {
     border-radius: 0 !important;
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
@@ -2515,7 +2516,7 @@ button {
         vertical-align: text-top;
         min-height: 100%;
         width: auto;
-        min-width:150px;
+        min-width: 150px;
         height: auto;
         background: url("@{imagesfolder}/form_sheetbg.png");
 
@@ -2523,7 +2524,7 @@ button {
             word-wrap: break-word;
             margin: 5px auto;
             width: 95%;
-            min-height:60px;
+            min-height: 60px;
             text-align: left;
             border: 1px solid @taskBorderColor;
             background-color: #fff;
@@ -2644,7 +2645,7 @@ button {
 }
 
 
-.avatar(@size:32px, @t:5px, @r:5px, @b:5px, @l:5px) {
+.avatar(@size: 32px, @t: 5px, @r: 5px, @b: 5px, @l: 5px) {
     display: block;
     overflow: hidden;
     width: @size;
@@ -2656,6 +2657,7 @@ button {
         width: 100%;
     }
 }
+
 .avatar-small {
 .avatar;
 }
@@ -2916,9 +2918,10 @@ button {
         margin: auto;
 		border-left: 1px solid #CACACA;
 		border-right: 1px solid #CACACA;
-		thead{
+
+        thead {
 			th:first-of-type {
-			width:auto;
+                width: auto;
 			}
 		}
 

@@ -1,5 +1,6 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
+    "text!templates/Tasks/selectTemplate.html",
     "collections/Projects/ProjectsDdCollection",
     "collections/Customers/AccountsDdCollection",
     "collections/Tasks/TasksCollection",
@@ -10,7 +11,7 @@ define([
     "common",
     "custom"
 ],
-    function (CreateTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, TaskModel, common, Custom) {
+    function (CreateTemplate, selectTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, TaskModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -24,20 +25,36 @@ define([
                 this.accountDdCollection.bind('reset', _.bind(this.render, this));
                 this.customersDdCollection = new CustomersCollection();
                 this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsDdCollection = new WorkflowsCollection({ id: "task" });
+                this.workflowsDdCollection = new WorkflowsCollection({ id: "Task" });
                 this.workflowsDdCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.priorityCollection = new PriorityCollection();
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
                 this.tasksCollection = options.collection;
                 this.pId = options.pId;
-                this.render();
+                this.render = _.after(5, this.render);
             },
 
             events: {
                 "click #tabList a": "switchTab",
-                "click #deadline": "showDatePicker"
+                "click #deadline": "showDatePicker",
+                "change #workflowNames": "changeWorkflows"
             },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            changeWorkflows: function () {
+                var name = this.$("#workflowNames option:selected").val();
+                var value = this.workflowsDdCollection.findWhere({ name: name }).toJSON().value;
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
+            },
+
             showDatePicker: function (e) {
                 if ($(".createFormDatepicker").find(".arrow").length == 0) {
                     $(".createFormDatepicker").append("<div class='arrow'></div>");
@@ -96,8 +113,14 @@ define([
                 var customer = common.toObject(idCustomer, this.customersDdCollection);
 
 
-                var idWorkflow = this.$("#workflowDd option:selected").val();
-                var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+                //var idWorkflow = this.$("#workflowDd option:selected").val();
+                //var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+
+                var workflow = {
+                    wName: this.$("#workflowNames option:selected").text(),
+                    name: this.$("#workflow option:selected").text(),
+                    status: this.$("#workflow option:selected").val(),
+                };
 
                 var estimated = $("#estimated").val();
 
@@ -148,10 +171,16 @@ define([
             },
 
             render: function () {
+                var workflowNames = [];
+                this.workflowsDdCollection.models.forEach(function (option) {
+                    workflowNames.push(option.get('name'));
+                });
+
                 this.$el.html(this.template({
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
-                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId
+                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId, workflowNames: workflowNames
                 }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsDdCollection.models[0].get('value')) }));
                 $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
