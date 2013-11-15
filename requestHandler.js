@@ -4,7 +4,8 @@ var requestHandler = function (fs, mongoose) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
-        events = require("./Modules/Events.js")(logWriter, mongoose),
+        google = require("./Modules/Google.js")(logWriter, mongoose),
+        events = require("./Modules/Events.js")(logWriter, mongoose,google),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
@@ -1034,11 +1035,12 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     function getXML(req, res, link, data) {
-		googleModule.getXML(res,link);
+		events.getXML(res,link);
 	}
-    function getXML(req, res, link, data) {
-		googleModule.getXML(res,link);
+    function googleCalendars(req, res, link, data) {
+		google.getGoogleCalendars(res,link);
 	}
+
 
     //---------END------Events----------------------------------
     return {
