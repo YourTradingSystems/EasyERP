@@ -877,6 +877,19 @@ app.delete('/Calendars/:_id', function (req, res) {
     requestHandler.removeCalendar(req, res, id, data);
 });
 
+app.get('/getXML', function (req, res) {
+    data = {};
+    var link = req.param('link');
+    data.mid = req.body.mid;
+    data.calendars = req.body.calendars;
+    requestHandler.getXML(req, res, link, data);
+});
+app.delete('/Calendars/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCalendar(req, res, id, data);
+});
 app.post('/GoogleCalSync', function (req, res) {
     data = {};
     data.mid = req.body.mid;

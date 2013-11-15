@@ -15,7 +15,8 @@ var requestHandler = function (fs, mongoose) {
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
-        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
+        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile),
+	    request = require('request');
 
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
@@ -993,6 +994,69 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+	function getMonthFromLocal(s){
+		switch(s){
+			case "гру.":
+			return 11;
+ 			case "січ.":
+			return 1;
+ 			case "лис.":
+			return 10;
+		}
+		return "mon";
+	}
+	function getDateFromString(s){
+		console.log(s);
+		var n = s.indexOf(":");
+		s=s.substring(n+2,s.length-n);
+		n = s.indexOf(" ");
+		s=s.substring(n+1,s.length-n+2);
+		
+		var st = s.split("–")[0].trim();
+		var end = s.split("–")[1].trim();
+		st = st.split(" ")[0]+" "+getMonthFromLocal(st.split(" ")[1])+" "+st.split(" ")[2]+" "+st.split(" ")[3];
+		if (end.split(" ").length>1){
+			n = end.indexOf(" ");
+			end=end.substring(n+1,end.length-n+2);
+			end = end.split(" ")[0]+" "+getMonthFromLocal(end.split(" ")[1])+" "+end.split(" ")[2]+" "+end.split(" ")[3];
+		}
+		else{
+			end = st.split(" ")[0]+" "+st.split(" ")[1]+" "+st.split(" ")[2]+" "+end;
+		}
+		return [st,end];
+	}
+    function getXML(req, res, link, data) {
+		var headers = {
+			'User-Agent':       'Opera/9.80 (Windows NT 6.1; Win64; x64) Presto/2.12.388 Version/12.11',
+			'Content-Type':     'application/x-www-form-urlencoded'
+		}
+		var options = {
+			url: link,
+			method: 'GET',
+			headers: headers
+		}
+		request(options, function (error, response, body) {
+			if (!error && response.statusCode == 200) {
+				var parseString = require('xml2js').parseString;
+				console.log(body);
+				parseString(body, function (err, result) {
+					var events=[];
+					for (var i in result.feed.entry){
+//						console.log(result.feed.entry[i]);
+						var content = result.feed.entry[i].content[0]._.replace(/\n/g,"");
+						var startDate = getDateFromString(content.split("<br />")[0]);
+						var endDate = startDate[1];
+						startDate = startDate[0];
+						content = content.replace(/<br \/>/g," ");
+						events.push({"id":result.feed.entry[i].id[0].split("/")[6],"title":result.feed.entry[i].title[0]._,"summary":content,"startDate":startDate,"endDate":endDate});
+					}
+					var calendar = {"id":result.feed.id[0].split("/")[6],"summary":result.feed.title[0]._,"description":result.feed.subtitle[0]._}
+					calendar.entry = events;
+					res.send(JSON.stringify(calendar));
+				});
+			}
+		});
+	}
     //---------END------Events----------------------------------
     return {
 
@@ -1111,7 +1175,8 @@ var requestHandler = function (fs, mongoose) {
         updateCalendar: updateCalendar,
         removeCalendar: removeCalendar,
 
-        googleCalSync: googleCalSync
+        googleCalSync: googleCalSync,
+		getXML: getXML
     }
 }
 //---------EXPORTS----------------------------------------
