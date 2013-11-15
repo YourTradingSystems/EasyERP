@@ -11,7 +11,6 @@ define([
             },
 
             render: function () {
-                debugger;
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(EmployeesFormTemplate, formModel));
                 return this;

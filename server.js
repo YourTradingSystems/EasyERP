@@ -94,6 +94,7 @@ app.get('/getGoogleToken', function (req, res) {
         oauth2Client.getToken(query.code, function (err, tokens) {
             // contains an access_token and optionally a refresh_token.
             // save them permanently.
+            console.log(tokens);
             oauth2Client.credentials = {
                 access_token: tokens.access_token
             };
@@ -125,16 +126,16 @@ app.get('/getGoogleToken', function (req, res) {
                                 }
                            
                             };
-                            client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-                                .withAuthClient(oauth2Client).execute(
-                                function (err, result) {
-                                    if (result) {
-                                        console.log(result);
-                                    } else {
-                                        console.log(err);
-                                    }
-                                    ;
-                                });
+                            //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+                            //    .withAuthClient(oauth2Client).execute(
+                            //    function (err, result) {
+                            //        if (result) {
+                            //            console.log(result);
+                            //        } else {
+                            //            console.log(err);
+                            //        }
+                            //        ;
+                            //    });
                         });
                     res.redirect('/#easyErp/Calendar');
                 });

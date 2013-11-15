@@ -376,13 +376,13 @@
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
                 if (model && model.workflow) {
-					if (model.workflow._id == undefined){
+					if (model.workflow._id == undefined) {
                     options = $.map(response.data, function (item) {
                         return model.workflow == item._id ?
                             $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
-					}else{
+					} else {
                     options = $.map(response.data, function (item) {
                         return model.workflow._id === item._id ?
                             $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :

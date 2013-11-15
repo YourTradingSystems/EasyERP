@@ -345,6 +345,7 @@ var Employee = function (logWriter, mongoose) {
         query.populate('coach','name _id');
         query.populate('relatedUser','login _id');
         query.populate('jobPosition','name _id');
+        query.populate('workflow');
 
         query.exec(function (err, findedEmployee) {
             if (err) {

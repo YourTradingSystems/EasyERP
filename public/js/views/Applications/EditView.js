@@ -86,11 +86,15 @@
             },
 
             saveItem: function () {
-                debugger;
                 var self = this;
                 var mid = 39;
 
-                var relatedUserId = this.$el.find("#relatedUsersDd option:selected").val() ? this.$el.find("#relatedUsersDd option:selected").val() : null;
+                var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
+                relatedUser = relatedUser ? relatedUser : null;
+
+                var department = this.$el.find("#departmentsDd option:selected").val();
+                department = department ? department : null;
+
                 var nextActionSt = $.trim(this.$el.find("#nextAction").val());
                 var nextAction = "";
                 if (nextActionSt) {
@@ -111,19 +115,19 @@
                         mobile: $.trim(this.$el.find("#mobile").val())
                     },
                     degree: this.$el.find("#degreesDd option:selected").val(),
-                    relatedUser: relatedUserId,
+                    relatedUser:relatedUser,
                     nextAction: nextAction,
                     source: {
                         id: this.$el.find("#sourceDd option:selected").val()
                     },
                     referredBy: $.trim(this.$el.find("#referredBy").val()),
-                    department: this.$el.find("#departmentDd option:selected").val() ? this.$el.find("#departmentDd option:selected").val() : null,
+                    department: department,
                     jobPosition: jobPositionId,
                     expectedSalary: $.trim(this.$el.find("#expectedSalary").val()),
                     proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
-                    workflow: this.$el.find("#workflowNamesDd option:selected").val() ? this.$el.find("#workflowNamesDd option:selected").val() : null
+                    workflow: this.$el.find("#workflowsDd option:selected").val() ? this.$el.find("#workflowsDd option:selected").val() : null
                 };
 
                 this.currentModel.save(data, {
@@ -144,6 +148,7 @@
             },
 
             render: function () {
+                console.log(this.currentModel.toJSON());
                 var formString = this.template(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
