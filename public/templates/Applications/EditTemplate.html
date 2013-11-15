@@ -38,8 +38,21 @@
                 <label for="mobile">Mobile </label>
                 <input type="text" id="mobile" value="<%=model.workPhones.mobile%>"/>
             </p>
+            
+            <p>
+                <label for="workflowNames">Workflow Names </label>
+                <select id="workflowNames">
+                    <option selected="selected" value="0">Select...</option>
+                    <% workflowsCollection.each(function(option){ %>
+                    <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
+                    <% }); %>
+                </select>
+            </p> 
+            <p id="selectWorkflow">
+                           
+            </p>
 
-             <p>
+            <p>
                 <label for="degree">Degree </label>
                 <select id="degree">
                     <option selected="selected" value="0">Select...</option>

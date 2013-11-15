@@ -1,5 +1,6 @@
 ﻿define([
     "text!templates/Applications/EditTemplate.html",
+    "text!templates/Applications/editSelectTemplate.html",
     "collections/Applications/ApplicationsCollection",
     "collections/Employees/EmployeesCollection",
     "collections/JobPositions/JobPositionsCollection",
@@ -10,7 +11,7 @@
     "common",
     "custom"
 ],
-    function (EditTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, WorkflowsCollection, common, Custom) {
+    function (EditTemplate, editSelectTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, WorkflowsCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -18,6 +19,8 @@
             imageSrc: '',
 
             initialize: function (options) {
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
+                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.jobPositionsCollection = new JobPositionsCollection();
@@ -28,20 +31,40 @@
                 this.degreesCollection.bind('reset', _.bind(this.render, this));
                 this.sourceOfApplicantsCollection = new SourceOfApplicantsCollection();
                 this.sourceOfApplicantsCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsCollection = new WorkflowsCollection({ id: 'application' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.applicationsCollection = options.collection;
                 this.applicationsCollection.bind('reset', _.bind(this.render, this));
-                //this.render();
+                this.render = _.after(6, this.render);
             },
 
             events: {
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #refuse": "changeWorkflow",
-                "click #hire": "isEmployee"
+                "click #hire": "isEmployee",
+                "change #workflowNames": "changeWorkflows"
             },
 
-            changeWorkflow: function (e) {
+            changeWorkflows: function () {
+                var itemIndex = Custom.getCurrentII() - 1;
+
+                if (itemIndex == -1) {
+                    this.$el.html();
+                } else {
+                    var currentModel = this.applicationsCollection.models[itemIndex].toJSON();
+                    var name = this.$("#workflowNames option:selected").val();
+                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
+                }
+            },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
+            },
+
+            /*changeWorkflow: function (e) {
                 var mid = 39;
                 var model = {};
                 var name = '', status = '';
@@ -77,8 +100,8 @@
 
                 });
 
-            },
-            
+            },*/
+
             isEmployee: function (e) {
                 var mid = 39;
                 var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
@@ -179,6 +202,12 @@
                     var tags = $.trim($("#tags").val()).split(',');
                     var otherInfo = $("#otherInfo").val();
 
+                    var workflow = {
+                        wName: this.$("#workflowNames option:selected").text(),
+                        name: this.$("#workflow option:selected").text(),
+                        status: this.$("#workflow option:selected").val(),
+                    };
+
                     currentModel.set({
                         subject: subject,
                         imageSrc: this.imageSrc,
@@ -195,7 +224,8 @@
                         expectedSalary: expectedSalary,
                         proposedSalary: proposedSalary,
                         tags: tags,
-                        otherInfo: otherInfo
+                        otherInfo: otherInfo,
+                        workflow: workflow
                     });
                     currentModel.save({}, {
                         headers: {
@@ -219,18 +249,20 @@
                     this.$el.html();
                 }
                 else {
-                    var currentModel = this.applicationsCollection.models[itemIndex];
-                    //currentModel.on('change', this.render, this);
+                    var currentModel = this.applicationsCollection.models[itemIndex].toJSON();
+                    var workflowModel = this.workflowsCollection.findWhere({ name: currentModel.workflow.wName });
                     this.$el.html(_.template(EditTemplate, {
-                        model: currentModel.toJSON(),
+                        model: currentModel,
                         employeesCollection: this.employeesCollection,
                         jobPositionsCollection: this.jobPositionsCollection,
                         departmentsCollection: this.departmentsCollection,
                         degreesCollection: this.degreesCollection,
-                        sourceOfApplicantsCollection: this.sourceOfApplicantsCollection
+                        sourceOfApplicantsCollection: this.sourceOfApplicantsCollection,
+                        workflowsCollection: this.workflowsCollection
                     }));
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(workflowModel.toJSON().value) }));
                 };
-                common.canvasDraw({ model: currentModel.toJSON() }, this);
+                common.canvasDraw({ model: currentModel }, this);
                 $('#nextAction').datepicker();
                 return this;
             }
