@@ -156,6 +156,12 @@ define([
                     mobile: mobile,
                     fax: fax,
                 };
+                
+                var workflow = {
+                    wName: this.$("#workflowNames option:selected").text(),
+                    name: this.$("#workflow option:selected").text(),
+                    status: this.$("#workflow option:selected").val(),
+                };
 
                 var active = ($("#active").is(":checked")) ? true : false;
 
@@ -173,6 +179,7 @@ define([
                     nextAction: nextAction,
                     expectedClosing: expectedClosing,
                     priority: priority,
+                    workflow: workflow,
                     internalNotes: internalNotes,
                     company: company,
                     address: address,

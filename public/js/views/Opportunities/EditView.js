@@ -1,5 +1,6 @@
 ﻿define([
     "text!templates/Opportunities/EditTemplate.html",
+    "text!templates/Opportunities/editSelectTemplate.html",
     "collections/Opportunities/OpportunitiesCollection",
     "collections/Customers/CustomersCollection",
     "collections/Employees/EmployeesCollection",
@@ -9,7 +10,7 @@
     "common",
     "custom"
 ],
-    function (EditTemplate, OpportunitiesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, WorkflowsCollection, common, Custom) {
+    function (EditTemplate, editSelectTemplate, OpportunitiesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, WorkflowsCollection, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -24,7 +25,7 @@
                 this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.priorityCollection = new PriorityCollection();
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsCollection = new WorkflowsCollection({ id: 'opportunity' });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.opportunitiesCollection = options.collection;
                 this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
@@ -34,7 +35,29 @@
             events: {
                 "click .breadcrumb a, #lost, #won": "changeWorkflow",
                 "click #tabList a": "switchTab",
-                "change #customer": "selectCustomer"
+                "change #customer": "selectCustomer",
+                "change #workflowNames": "changeWorkflows"
+            },
+            
+            changeWorkflows: function () {
+                var itemIndex = Custom.getCurrentII() - 1;
+
+                if (itemIndex == -1) {
+                    this.$el.html();
+                } else {
+                    var currentModel = this.opportunitiesCollection.models[itemIndex].toJSON();
+                    var name = this.$("#workflowNames option:selected").val();
+                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
+                }
+            },
+
+            getWorkflowValue: function (value) {
+                var workflows = [];
+                for (var i = 0; i < value.length; i++) {
+                    workflows.push({ name: value[i].name, status: value[i].status });
+                }
+                return workflows;
             },
 
             selectCustomer: function (e) {
@@ -165,6 +188,12 @@
                         fax: fax,
                     };
 
+                    var workflow = {
+                        wName: this.$("#workflowNames option:selected").text(),
+                        name: this.$("#workflow option:selected").text(),
+                        status: this.$("#workflow option:selected").val(),
+                    };
+
                     var active = ($("#active").is(":checked")) ? true : false;
 
                     var optout = ($("#optout").is(":checked")) ? true : false;
@@ -187,6 +216,7 @@
                         contactName: contactName,
                         func: func,
                         phones: phones,
+                        workflow: workflow,
                         active: active,
                         optout: optout,
                         reffered: reffered
@@ -200,7 +230,7 @@
                 }
             },
 
-            changeWorkflow: function (e) {
+           /* changeWorkflow: function (e) {
                 var mid = 39;
                 var name = '', status = '';
                 var length = this.workflowsCollection.models.length;
@@ -227,7 +257,7 @@
                         mid: mid
                     }
                 });
-            },
+            },*/
 
             render: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
@@ -237,8 +267,16 @@
                 }
                 else {
                     var currentModel = this.opportunitiesCollection.models[itemIndex];
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), customersCollection: this.customersCollection, employeesCollection: this.employeesCollection, departmentsCollection: this.departmentsCollection, priorityCollection: this.priorityCollection }));
-
+                    var workflowModel = this.workflowsCollection.findWhere({ name: currentModel.toJSON().workflow.wName });
+                    this.$el.html(_.template(EditTemplate, {
+                        model: currentModel.toJSON(),
+                        customersCollection: this.customersCollection,
+                        employeesCollection: this.employeesCollection,
+                        departmentsCollection: this.departmentsCollection,
+                        priorityCollection: this.priorityCollection,
+                        workflowsCollection: this.workflowsCollection
+                    }));
+                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(workflowModel.toJSON().value) }));
                     var nextAction = currentModel.get('nextAction').date;
                     //if (nextAction) {
                     //    nextAction['date'] = this.ISODateToDate(nextAction);
