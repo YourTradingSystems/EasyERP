@@ -117,8 +117,8 @@ define([
                 //    nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
                 //}
                 var nextAction = {
-                    date: nextActionDate,
-                    desc: nextActionDescription
+                    date: nextActionSt,
+                    desc: nextActionDate
                 };
 
                 var expectedClosing = $.trim($("#expectedClosing").val());
