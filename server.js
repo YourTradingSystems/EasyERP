@@ -341,7 +341,8 @@ app.get('/relatedStatus', function (req, res) {
 
 app.get('/Workflows', function (req, res) {
     data = {};
-    //data.id = req.param('id');
+    data.id = req.param('id');
+    //console.log(req.body);
     data.mid = req.param('mid');
     console.log(data);
     requestHandler.getWorkflow(req, res, data);
@@ -388,14 +389,15 @@ app.put('/Workflows/:id', function (req, res) {
     console.log('Request for update Workflow');
     data = {};
     var _id = req.param('id');
+    console.log("*************");
     console.log(_id);
+
     data.mid = req.headers.mid;
     data.value = req.body.value;
     data.name = req.body.name;
     data.wId = req.body.wId;
     console.log(data);
-
-    // requestHandler.updateWorkflow(req, res, _id, data);
+    //requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
 
