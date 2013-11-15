@@ -1,7 +1,7 @@
 define(
     function () {
         var authUrl    =   'https://accounts.google.com/o/oauth2/auth?';
-        var validURI    =   ' https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=';
+        var validURI    =   'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
         var clientId    =   '38156718110.apps.googleusercontent.com';
         var redirectURI    =   'http://localhost:8088'
         var respType        =   'token';
@@ -42,6 +42,7 @@ define(
 
         var validateToken = function(token){
             $.ajax({
+                type:"GET",
                 url: validURI + token,
                 data: null,
                 success: function(response){
