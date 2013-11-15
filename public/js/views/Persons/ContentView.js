@@ -31,11 +31,10 @@ define([
             "mouseout .social a": "socialNotActive",
             "click .company": "gotoCompanyForm",
             "click #attachSubmit":"addAttach",
-            "click .deleteAttach":"deleteAttach",
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
-            
+            "click .deleteAttach":"deleteAttach"
         },
         cancelNote: function(e) {
             $('#noteArea').val('');
@@ -151,6 +150,7 @@ define([
         				if (currentModel.save()) {
         					$('#attachBody').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
         					console.log('Attach file');
+        					console.log(data);
         					addFrmAttach[0].reset();
         				}
         			},
@@ -180,7 +180,7 @@ define([
             delete attachments[id_int];
             currentModel.set('attachments',attachments);
             if (currentModel.save()) {
-                $('.attachFile'+id_int).remove();
+                $('.attachFile_'+id_int).remove();
             }
         },
         
@@ -271,6 +271,16 @@ define([
                                 }
                             }
                             currentModel.set('notes',notes);
+                            currentModel.save();
+                            
+                            var attachments = currentModel.get('attachments');
+                            for (var i = 0; i < attachments.length; i++) {
+                                if (attachments[i] == null) {
+                                	attachments.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                            currentModel.set('attachments',attachments);
                             currentModel.save();
 
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));

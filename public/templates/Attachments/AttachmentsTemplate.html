@@ -4,10 +4,9 @@
                <% var n = attachments.length-1;
         	attachments.reverse();
         _.each(attachments, function(data,key){ %>
-       <li class="attachFile_<%=(n-key) %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderId'] %>, <%=data['uploadDate'] %></li>
-           <span>
+       <li class="attachFile_<%=(n-key) %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderId'] %> , <%=data['uploadDate'] %>
               <a id="delete_<%=(n-key) %>" class="deleteAttach" class="deletelAttach">Delete</a>
-           </span>
+       </li>
            <% }); attachments.reverse(); %>
        </ul>
 	</div>
