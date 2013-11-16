@@ -1,6 +1,7 @@
-define(function () {
+define(["Validation"],function (Validation) {
     var PersonModel = Backbone.Model.extend({
         idAttribute: "_id",
+
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
@@ -18,22 +19,110 @@ define(function () {
             if($.trim(attrs.name.first) == ""){
                 errors.push(
                     {
-                        name:"Person",
-                        field:"firstName",
-                        msg:"Person first name can not be empty"
+                        name: "Person",
+                        field: "firstName",
+                        msg: "First name can not be empty or contain whitespaces"
                     }
                 );
             }
+            
             if($.trim(attrs.name.last) == ""){
                 errors.push(
                     {
-                        name:"Person",
-                        field:"lastName",
-                        msg:"Person last name can not be empty"
+                        name: "Person",
+                        field: "lastName",
+                        msg: "Last name can not be empty or contain whitespaces"
                     }
                 );
             }
 
+            if(attrs.phones.phone.length > 0){
+                if(!Validation.validPhone(attrs.phones.phone)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "phone",
+                            msg: "Phone should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.phones.fax.length > 0){
+                if(!Validation.validPhone(attrs.phones.fax)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "fax",
+                            msg: "Fax should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.phones.mobile.length > 0){
+                if(!Validation.validPhone(attrs.phones.mobile)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "mobile",
+                            msg: "Mobile phone should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.name.last.length > 0){
+                if(!Validation.validName(attrs.name.last)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "lastName",
+                            msg: "Last name should contain only letters"
+                        }
+                    );
+                }
+            }
+            if(attrs.name.first.length > 0){
+                if(!Validation.validName(attrs.name.first)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "firstName",
+                            msg: "First name should contain only letters"
+                    }
+                );
+            }
+            }
+
+            if ($.trim(attrs.jobPosition).length > 20) {
+                errors.push(
+                    {
+                        name: "Person",
+                        field: "jobPosition",
+                        msg: "Person position can not be more than 20 chars"
+                    }
+                );
+            }
+          
+            if (new Date($.trim(attrs.dateBirth)) > new Date(Date.now())) {
+                errors.push(
+                    {
+                        name: "Person",
+                        field: "dateBirth",
+                        msg: "Person birthday can not be more than current date"
+                    }
+                );
+            }
+     
+          
+            if ($.trim(attrs.phones.mobile).length > 20) {
+                errors.push(
+                    {
+                        name: "Person",
+                        field: "mobile",
+                        msg: "Person mobile can not be more than 20 chars"
+                    }
+                );
+            }
+            
             if(errors.length > 0)
                 return errors;
         },

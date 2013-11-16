@@ -11,7 +11,6 @@ define([
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
-            contentType: "Companies",
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
@@ -76,9 +75,6 @@ define([
 
                 var language = $("#language").val();
 
-                var dateSt = $.trim($("#date").val());
-                var date = (dateSt) ? new Date(Date.parse(dateSt)) : "";
-
                 var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
 
                 var isSupplier = ($("#isSupplier").is(":checked")) ? true : false;
@@ -105,8 +101,7 @@ define([
                         salesPerson: salesPerson,
                         salesTeam: salesTeam,
                         reference: reference,
-                        language: language,
-                        date: date
+                        language: language
                     }
                 },
                     {
@@ -116,7 +111,7 @@ define([
                         wait: true,
                         success: function (model) {
 							self.hideDialog();
-							Backbone.history.navigate("easyErp/ownCompanies/thumbnails", { trigger: true });
+							Backbone.history.navigate("easyErp/ownCompanies", { trigger: true });
                         },
                         error: function () {
                             Backbone.history.navigate("home", { trigger: true });

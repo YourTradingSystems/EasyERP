@@ -24,11 +24,15 @@ function (OpportunitiesListTemplate, CreateView, ListItemView) {
         render: function () {
 
             console.log('Opportunities render');
+            $('.ui-dialog ').remove();
             this.$el.html(_.template(OpportunitiesListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
-                var c = this.checked;
-                $(':checkbox').prop('checked', c);
+                $(':checkbox').prop('checked', this.checked);
+                if ($("input.checkbox:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
             });
             this.startNumber += this.collection.length;
             this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
@@ -56,10 +60,13 @@ function (OpportunitiesListTemplate, CreateView, ListItemView) {
 
         checked: function () {
             if (this.collection.length > 0) {
-                if ($("input:checked").length > 0)
+                if ($("input.checkbox:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else
+                {
                     $("#top-bar-deleteBtn").hide();
+                    $('#check_all').prop('checked', false);
+                }
             }
         },
 

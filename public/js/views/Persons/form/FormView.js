@@ -36,7 +36,6 @@ define([
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
                 "click #saveSpan": "saveClick"
-
             },
 
             quickEdit: function (e) {
@@ -68,8 +67,8 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
 
-                var currentModel = this.collection.getElement();
-                Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                var currentModel = this.model;
+                Backbone.history.navigate("#easyErp/Persons/form/" + currentModel.id, { trigger: true });
             },
 
 
@@ -97,13 +96,13 @@ define([
                 this.text = $('#' + parent[0].id).text();
                 if ($("#" + parent[0].id).hasClass('date')) {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" type="text" class="left has-datepicker"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left has-datepicker"/>');
                     $('.has-datepicker').datepicker();
                 } else if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left"/>');
                 }
                 $('#editInput').val(this.text);
                 this.prevQuickEdit = parent[0];
@@ -116,6 +115,8 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
+                var currentModel = this.model;
+
                 if (objIndex.length > 1) {
                     if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                         obj = this.formModel.get(objIndex[0]);
@@ -151,7 +152,7 @@ define([
                         mid: 39
                     },
                     success: function () {
-                        //Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                        Backbone.history.navigate("#easyErp/Persons/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
@@ -352,7 +353,7 @@ define([
             gotoCompanyForm: function (e) {
                 e.preventDefault();
                 var id = $(e.target).closest("a").attr("data-id");
-                window.location.hash = "#home/content-Companies/form/" + id;
+                window.location.hash = "#easyErp/Companies/form/" + id;
             },
             toggle: function () {
                 this.$('#details').animate({

@@ -19,8 +19,28 @@ define([
                 this.model = new PersonModel();
                 this.render();
             },
+            
+            events: {
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
+            },
+            
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
 
+            },
+            
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -116,7 +136,7 @@ define([
                     changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',
-                    maxDate: '-1d'
+                    maxDate: '-18y'
                 });
                 common.populateCompanies(App.ID.companiesDd, "/Companies");
                 common.populateDepartments(App.ID.departmentDd, "/Departments");

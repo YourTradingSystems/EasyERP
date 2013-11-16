@@ -62,9 +62,9 @@ define([
 					var c1 = "";
 					var c2 = "";
 					var c3 = "";
-					if (pr[i].access[0]){c1='checked="checked"'}
-					if (pr[i].access[1]){c2='checked="checked"'}
-					if (pr[i].access[2]){c3='checked="checked"'}
+					if (pr[i].access.read){c1='checked="checked"'}
+					if (pr[i].access.editWrite){c2='checked="checked"'}
+					if (pr[i].access.del){c3='checked="checked"'}
 					$("#modulesAccessTable").find("tbody").append('<tr><td class="mname">'+pr[i].module.mname+'</td><td><input type="checkbox" class="read" '+c1+' disabled /></td><td><input type="checkbox" class="write" '+c2+' disabled/></td><td><input type="checkbox" class="delete" '+c3+' disabled/></td></tr>')
 				}
 				$("#modulesAccessTable").show();

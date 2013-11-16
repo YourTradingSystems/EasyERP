@@ -24,6 +24,7 @@ function (ProjectsListTemplate, CreateView, ListItemView) {
         render: function () {
 
             console.log('Projects list render');
+            $('.ui-dialog ').remove();
             this.$el.html(_.template(ProjectsListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {

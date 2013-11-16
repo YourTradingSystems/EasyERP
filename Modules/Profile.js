@@ -1,21 +1,67 @@
-var Profile = function (logWriter, mongoose) {
+var Profile = function (app, logWriter, mongoose) {
 
     var ProfileSchema = mongoose.Schema({
+        _id: Number,
         profileName: { type: String, default: 'emptyProfile' },
         profileDescription: { type: String, default: 'No description' },
         profileAccess: [{
-            module: {
-                mid: { type: Number, default: '' },
-                mname: { type: String, default: '' }
-            },
-            access: { type: [Boolean], default: [false, false, false] }
+            module: { type: Number, ref: "modules" },
+            access: {
+                read: { type: Boolean, default: false },
+                editWrite: { type: Boolean, default: false },
+                del: { type: Boolean, default: false }
+            }
         }]
 
     }, { collection: 'Profile' });
 
     var profile = mongoose.model('Profile', ProfileSchema);
 
-    function create(data, res) {
+    app.post('/Profiles', function (req, res) {
+        var data = {};
+        data.mid = req.headers.mid;
+        if (req.session && req.session.loggedIn) {
+            createProfile(req.body, res);
+        } else {
+            res.send(401);
+        }
+    });
+
+    app.get('/Profiles', function (req, res) {
+        console.log('---------SERVER----getProfiles-------------------------------');
+        data = {};
+        data.mid = req.param('mid');
+        if (req.session && req.session.loggedIn) {
+            getProfile(res);
+        } else {
+            res.send(401);
+        }
+    });
+
+    app.put('/Profiles/:_id', function (req, res) {
+        console.log(req.body);
+        data = {};
+        var id = req.param('_id');
+        data.mid = req.headers.mid;
+        if (req.session && req.session.loggedIn) {
+            updateProfile(id, req.body, res);
+        } else {
+            res.send(401);
+        }
+    });
+
+    app.delete('/Profiles/:_id', function (req, res) {
+        data = {};
+        var id = req.param('_id');
+        data.mid = req.headers.mid;
+        if (req.session && req.session.loggedIn) {
+            removeProfile(id, res);
+        } else {
+            res.send(401);
+        }
+    });
+
+    function createProfile(data, res) {
         try {
             console.log('createProfile');
             if (!data.profileName) {
@@ -89,11 +135,12 @@ var Profile = function (logWriter, mongoose) {
         }
     };
 
-    function get(response) {
+    function getProfile(response) {
         var res = {};
         res['data'] = [];
         var query = profile.find({});
-        query.sort({profileName: 1 });
+        query.sort({profileName: 1 }).
+        populate('profileAccess.module');
         query.exec(function (err, result) {
             if (err || result.length == 0) {
                 if (err) {
@@ -108,7 +155,7 @@ var Profile = function (logWriter, mongoose) {
         });
     };
 
-    function update(_id, data, res) {
+    function updateProfile(_id, data, res) {
         try {
             delete data._id;
             profile.update({ _id: _id }, data, function (err, result) {
@@ -130,7 +177,7 @@ var Profile = function (logWriter, mongoose) {
         }
     };
 
-    function remove(_id, res) {
+    function removeProfile(_id, res) {
         profile.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
@@ -143,13 +190,14 @@ var Profile = function (logWriter, mongoose) {
     };
 
     return {
-        create: create,
         
-        get: get,
+        createProfile: createProfile,
         
-        update: update,
+        getProfile: getProfile,
         
-        remove: remove,
+        updateProfile: updateProfile,
+        
+        removeProfile: removeProfile,
         
         profile: profile
     };

@@ -20,6 +20,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         render: function () {
+        	$('.ui-dialog ').remove();
             console.log('Person render');
             this.$el.html('');
             if (this.collection.length > 0) {

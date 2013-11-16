@@ -151,8 +151,6 @@ define([
             template: _.template(EditTemplate),
 
             render: function () {
-                console.log(this.currentModel);
-
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
