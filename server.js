@@ -1176,7 +1176,7 @@ app.post('/SendToGoogleCalendar', function (req, res) {
 app.get('/ChangeSyncCalendar', function (req, res) {
     var id = req.param('id');
     var isSync = req.param('isSync');
-    requestHandler.changeSyncCalendar(id, isSync, res);
+    requestHandler.changeSyncCalendar(id, isSync, res, req);
 });
 app.listen(8088);
 

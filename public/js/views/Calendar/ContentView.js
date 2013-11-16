@@ -203,11 +203,11 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
            else{
                this.calendarsCollection.create({
                    summary: data.calName,
-                   synchronize: data.sync,
+                   isSync: data.sync,
                    description: "EasyERP calendar events",
                    events: []
                },{
-                   success:function(){
+                   success:function(err,resp){
                        self.calendarsCollection.fetch({
                            success: function(){
                                self.populateCalendarsList();
@@ -231,7 +231,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                        text: "Create",
                        click: function(){
                            var calendarName = $('#calendarNameTxt').val();
-                           var synchronize = $('#synchronize').attr('checked');
+                           var synchronize = $('#synchronize').is(':checked');
                            var link = $('#fromPublicCalendar').val();
                            if(calendarName.length === 0&&link.length === 0){
                                alert('Calendar name or link can not be empty!');
@@ -433,6 +433,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
         render: function () {
             console.log('Render Calendar');
+			this.$el.empty();
             this.$el.html(this.template());
 
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);

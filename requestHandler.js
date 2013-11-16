@@ -1055,7 +1055,7 @@ var requestHandler = function (fs, mongoose) {
     function removeEvent(req, res, id, data) {
         console.log("Requst removeEvents is success");
         if (req.session && req.session.loggedIn) {
-            events.remove(id, res);
+            events.remove(id, res, req);
         } else {
             res.send(401);
         }
@@ -1123,8 +1123,8 @@ var requestHandler = function (fs, mongoose) {
     function sendToGoogleCalendar(req, res) {
         events.sendToGoogleCalendar(req, res);
     }
-	function changeSyncCalendar(id,isSync,res){
-        events.changeSyncCalendar(id,isSync, res);
+	function changeSyncCalendar(id, isSync, res, req){
+        events.changeSyncCalendar(id, isSync, res, req);
 
 	}
 
