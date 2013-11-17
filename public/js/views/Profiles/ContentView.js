@@ -16,8 +16,8 @@ define([
             },
             events:{
                 "click .profile": "viewProfile",
-                "click .profile-list li": "viewProfileDetails",				
-                "click .profile-list li a": "viewProfileDetails",				
+                //"click .profile-list li": "viewProfileDetails",
+                "click .profile-list li a": "viewProfileDetails",
                 "click .editProfile":"editProfile",
                 "click #newProfileBtn": "createProfile"
             },
@@ -41,14 +41,38 @@ define([
 					if (pr[i].access[2]){c3='checked="checked"'}
 					$("#modulesAccessTable").find("tbody").append('<tr><td class="mname">'+pr[i].module.mname+'</td><td><input type="checkbox" class="read" '+c1+' disabled /></td><td><input type="checkbox" class="write" '+c2+' disabled/></td><td><input type="checkbox" class="delete" '+c3+' disabled/></td></tr>')
 				}
-				$("#modulesAccessTable").show(150);
+				$("#modulesAccessTable").show();
 
 				return false;
 			},
+            viewProfileDetails:function(e){
+                e.preventDefault();
+                $("#modulesAccessTable").hide();
+                var currentLi = $(e.target).closest("li");
+                $(currentLi).parent().find(".active").removeClass("active");
+                $(currentLi).addClass("active");
+                var id = $(currentLi).find("a").data("id");
+                this.profileId = id;
+                this.profile = this.profilesCollection.get(this.profileId);
+                $("#modulesAccessTable").find("tbody").empty();
+                var pr = this.profile.toJSON().profileAccess;
+                for (var i=0; i<pr.length;i++){
+                    var c1 = "";
+                    var c2 = "";
+                    var c3 = "";
+                    if (pr[i].access[0]){c1='checked="checked"'}
+                    if (pr[i].access[1]){c2='checked="checked"'}
+                    if (pr[i].access[2]){c3='checked="checked"'}
+                    $("#modulesAccessTable").find("tbody").append('<tr><td class="mname">'+pr[i].module.mname+'</td><td><input type="checkbox" class="read" '+c1+' enabled /></td><td><input type="checkbox" class="write" '+c2+' enabled/></td><td><input type="checkbox" class="delete" '+c3+' enabled/></td></tr>')
+                }
+                $("#modulesAccessTable").show();
+
+                return false;
+            },
             editItem: function(){
                 $('#saveDiscardHolder').show();
                 $('#createBtnHolder').hide();
-                var selectedProfile = $('.profile:selected').text().trim();
+                var selectedProfile = $('.profile li.active a').text().replace(' Profile', '');
                 if(selectedProfile){
                     this.modulesView = new ModulesAccessView({action:"edit", profileName:selectedProfile, profilesCollection:this.profilesCollection});
                 }
@@ -105,6 +129,7 @@ define([
 //                this.modulesView.render();
             },
             render: function () {
+                console.log('render profiles');
                 this.$el.html(_.template(ProfileListTemplate,
                     { profilesCollection:this.profilesCollection,
                         contentType: this.contentType

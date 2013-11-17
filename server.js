@@ -104,6 +104,25 @@ app.post('/uploadFiles', function (req, res, next) {
         });
     });
 });
+app.post('/uploadFilesCompanies', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Companies<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    file = {};
+    console.log(req.headers);
+    fs.readFile(req.files.attachfile.path, function (err, data) {
+        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+        fs.writeFile(path, data, function (err) {
+            if (err) throw err;
+            console.log(req.files.attachfile.name);
+            file.name = req.files.attachfile.name;
+            file.path = path;
+            file.size = req.files.attachfile.size;
+            file.uploadDate = new Date();
+            file.uploaderId = req.session.uName;
+            requestHandler.uploadFileCompanies(req, res, req.headers.id, file);
+        });
+    });
+});
 
 app.post('/login', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');

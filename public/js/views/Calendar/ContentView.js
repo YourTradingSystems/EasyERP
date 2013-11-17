@@ -19,7 +19,12 @@ function (CalendarTemplate, Calendar, EventsCollection, common, GoogleAuth) {
             "click #authBtn" : "authorize"
         },
         authorize: function(){
-            GoogleAuth.Authorize();
+            GoogleAuth.Authorize(this.getCalendarEvents);
+        },
+
+        getCalendarEvents: function(resp){
+            console.log('getCalendarEvents');
+            GoogleAuth.getCalendarEvents();
         },
 
         render: function () {
