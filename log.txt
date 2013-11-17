@@ -55,3 +55,51 @@ Fri Nov 15 2013 15:19:47 GMT+0200 (Фінляндія (зима)) ---- Customer.
 -------------------------------------------------------------------------------------
 Fri Nov 15 2013 15:19:47 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
 -------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:34:10 GMT+0200 (Фінляндія (зима)) ---- Person.js create savetoBd _customer.save CastError: Cast to ObjectId failed for value "0" at path "salesPurchases.salesTeam"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:44:06 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:46:32 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:46:56 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:47:25 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Kornyk" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:48:04 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Kornyk" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:48:17 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 17:48:40 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Kornyk" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 20:11:58 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Fri Nov 15 2013 20:12:34 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Sun Nov 17 2013 16:16:35 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Sun Nov 17 2013 16:16:35 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Dalekorey" at path "salesPurchases.salesPerson"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Sun Nov 17 2013 18:32:55 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Sun Nov 17 2013 18:33:15 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Sun Nov 17 2013 18:33:15 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+Sun Nov 17 2013 18:36:40 GMT+0200 (Фінляндія (зима)) ---- Customer.js update customer.update CastError: Cast to ObjectId failed for value "Android" at path "department"
+-------------------------------------------------------------------------------------
