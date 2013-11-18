@@ -84,7 +84,7 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         }
     };
 
-    function getForDd(func) {
+    function getForDd(response) {
         var res = {};
         res['result'] = {};
         res['result']['status'] = '2';
@@ -97,13 +97,13 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Department.js getDepartmentsForDd Department.find " + err);
-                    res['result']['description'] = err;
-                    func(res);
+                    console.log(err);
+                    response.send(500, { error: "Can't find Person" });
                 } else if (result) {
                     res['result']['status'] = '0';
                     res['result']['description'] = 'returned Departments is success';
                     res['data'] = result;
-                    func(res);
+                    response.send(res);
                 }
             } catch (Exception) {
                 logWriter.log("Department.js getDepartmentsForDd try Department.find " + Exception);

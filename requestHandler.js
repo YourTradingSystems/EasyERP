@@ -16,7 +16,7 @@ var requestHandler = function (fs, mongoose) {
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, persons, company),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
-    
+
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);
@@ -195,9 +195,24 @@ var requestHandler = function (fs, mongoose) {
         }
     };
     function uploadFilePerson(req, res, id, file) {
-        console.log("File Uploading to Persons");   
+        console.log("File Uploading to Persons");
         if (req.session && req.session.loggedIn) {
             persons.Person.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                if (err) {
+                    res.send(401);
+                }
+                else {
+                    res.send(200, file);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    function uploadFileCompanies(req, res, id, file) {
+        console.log("File Uploading to Companies");
+        if (req.session && req.session.loggedIn) {
+            company.Company.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
                 if (err) {
                     res.send(401);
                 }
@@ -394,7 +409,7 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-        function getWorkflowsForDd(req, res, data) {
+    function getWorkflowsForDd(req, res, data) {
         console.log("Requst getWorkflowsForDd is Success");
         if (req.session && req.session.loggedIn) {
             console.log('>>>>>>>>>>>');
@@ -414,7 +429,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
-    
+
     function updateWorkflow(req, res, _id, data) {
         console.log("Requst createWorkflow is success");
         if (req.session && req.session.loggedIn) {
@@ -562,6 +577,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //---------END------Employees-----------------------------------
 
     //---------------------Application--------------------------------
@@ -675,6 +691,14 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst removeDepartment is success");
         if (req.session && req.session.loggedIn) {
             department.remove(id, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getDepartmentForDd(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            department.getForDd(res);
         } else {
             res.send(401);
         }
@@ -870,7 +894,7 @@ var requestHandler = function (fs, mongoose) {
         getPersons: getPersons,
         updatePerson: updatePerson,
         removePerson: removePerson,
-        getPersonsForDd: getPersonsForDd,
+       // getPersonsForDd: getPersonsForDd,
         uploadFilePerson: uploadFilePerson,
         getCustomer: getCustomer,
 
@@ -900,7 +924,7 @@ var requestHandler = function (fs, mongoose) {
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
-     
+
         getProfile: getProfile,
         createProfile: createProfile,
         updateProfile: updateProfile,
@@ -916,6 +940,9 @@ var requestHandler = function (fs, mongoose) {
         getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
+
+        getPersonsForDd: getPersonsForDd,
+        getDepartmentForDd: getDepartmentForDd,
 
         //createApplication: createApplication,
         getApplications: getApplications,

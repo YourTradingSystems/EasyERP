@@ -8,10 +8,13 @@ define([
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
     'custom',
-    'common'
+    'common',
+    'views/Notes/NoteView',
+    'text!templates/Notes/AddNote.html',
+    'text!templates/Notes/AddAttachments.html'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common,noteView, addNoteTemplate, addAttachTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -33,8 +36,174 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 			"click .details": "toggle",
 			"mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm",
+            "click #attachSubmit":"addAttach",
+            "click #addNote": "addNote",
+            "click .editDelNote": "editDelNote",
+            "click #cancelNote": "cancelNote",
+            "click .deleteAttach":"deleteAttach"
         },
+        
+        cancelNote: function(e) {
+            $('#noteArea').val('');
+            $('#noteTitleArea').val('');
+            $('#getNoteKey').attr("value",'');
+        },
+        editDelNote: function(e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var type = id.substr(0,k);
+            var id_int = parseInt(id.substr(k+1));
+
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var notes = currentModel.get('notes');
+
+            switch (type) {
+                case "edit": {
+                    $('#noteArea').val($('#'+id_int).find('.noteText').text());
+                    $('#noteTitleArea').val($('#'+id_int).find('.noteTitle').text());
+                    $('#getNoteKey').attr("value",id_int);
+                    break;
+                }
+                case "del": {
+                    delete notes[id_int];
+                    currentModel.set('notes',notes);
+                    if (currentModel.save()) {
+                    	var notes = currentModel.get('notes');
+                        for (var i = 0; i < notes.length; i++) {
+                            if (notes[i] == null) {
+                                notes.splice(i, 1);
+                                i--;
+                            }
+                        }
+                        currentModel.set('notes',notes);
+                        currentModel.save();
+                        $('#'+id_int).remove();
+                    }
+                    break;
+                }
+            }
+        },
+        
+        addNote: function() {
+            var val = $('#noteArea').val();
+            var title = $('#noteTitleArea').val();
+            if (val || title) {
+                var models = this.collection.models;
+                var itemIndex = Custom.getCurrentII() - 1;
+                //TODO fix some problems with itemIndex
+                var currentModel = models[itemIndex];
+                var notes = currentModel.get('notes');
+                var key = notes.length;
+                var arr_key_str = $('#getNoteKey').attr("value");
+                var note_obj = {
+                    note: '',
+                    date: '',
+                    title: ''
+                };
+                if (arr_key_str) {
+                    notes[parseInt(arr_key_str)].note = val;
+                    notes[parseInt(arr_key_str)].title = title;
+
+                    currentModel.set('notes',notes);
+                    if (currentModel.save()) {
+                        $('#noteArea').val($('#'+ arr_key_str ).find('.noteText').text(val));
+                        $('#noteTitleArea').val($('#'+ arr_key_str ).find('.noteTitle').text(title));
+                        $('#getNoteKey').attr("value",'');
+                    }
+                } else {
+                    var today_date = new Date();
+                    note_obj.date = today_date;
+                    note_obj.note = val;
+                    note_obj.title = title;
+
+                    notes.push(note_obj);
+                    currentModel.set('notes',notes);
+                    if (currentModel.save()) {
+                        var edit = 'edit_'+key;
+                        var del = 'del_'+key;
+                        var author = currentModel.get('name').first ;
+                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, title: title, edit: edit, del: del,author: author, date: today_date }));
+                    }
+                }
+                $('#noteArea').val('');
+                $('#noteTitleArea').val('');
+            }
+        },
+
+        
+        addAttach: function(event){
+        	
+        	event.preventDefault();
+        	var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var currentModelID = models[itemIndex]["id"];
+        	var addFrmAttach = $("#addAttachments");
+        	var addInptAttach = $("#inputAttach")[0].files[0]; 
+        	addFrmAttach.submit(function(e){
+   
+        		var formURL = addFrmAttach.attr("action");
+        		e.preventDefault();
+        		addFrmAttach.ajaxSubmit({
+        			url:formURL,
+        			type: "POST",
+        			processData: false,
+        			contentType: false,
+        			data:[addInptAttach],
+        			beforeSend: function(xhr){
+	                       xhr.setRequestHeader("id",currentModelID);
+        			},
+        			
+        			success:function(data){
+        				var attachments = currentModel.get('attachments');
+        				var key = attachments.length;
+        				attachments.push(data);
+        				currentModel.set('attachments',attachments);
+        				
+        				if (currentModel.save()) {
+        					$('.attachContainer').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
+        					console.log('Attach file');
+        					addFrmAttach[0].reset();
+        				}
+        			},
+        			
+        			error: function (){
+        				console.log("Attach file error");
+        			},
+        		});
+        	});
+        	addFrmAttach.submit();
+        	addFrmAttach.off('submit');
+        },
+        
+        deleteAttach:function(e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var id_int = parseInt(id.substr(k+1));
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var attachments = currentModel.get('attachments');   
+            delete attachments[id_int];
+            currentModel.set('attachments',attachments);
+            if (currentModel.save()) {
+            	var attachments = currentModel.get('attachments');
+                for (var i = 0; i < attachments.length; i++) {
+                    if (attachments[i] == null) {
+                    	attachments.splice(i, 1);
+                        i--;
+                    }
+                }
+                
+                currentModel.set('attachments',attachments);
+                currentModel.save();
+                $('.attachFile_'+id_int).remove();
+            }
+        },
+        
         toggle: function () {
             this.$('#details').animate({
                 height: "toggle"
@@ -123,6 +292,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         else {
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                            
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
@@ -134,6 +304,12 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     model: currentModel
                                 }).render().el
                             );
+                            
+                            this.$el.find('.formLeftColumn').append(
+                                    new noteView({
+                                        model: currentModel
+                                    }).render().el
+                                );console.log(currentModel);
                         }
 
                         break;

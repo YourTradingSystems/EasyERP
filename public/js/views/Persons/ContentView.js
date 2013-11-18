@@ -9,10 +9,9 @@ define([
     'views/Persons/EditView',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
-    'views/Attachments/AttachmentsView',
-    'text!templates/Attachments/AddAttachments.html'
+    'text!templates/Notes/AddAttachments.html'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView ,noteView,addNoteTemplate, attachView, addAttachTemplate) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -63,12 +62,22 @@ define([
                     delete notes[id_int];
                     currentModel.set('notes',notes);
                     if (currentModel.save()) {
+                    	var notes = currentModel.get('notes');
+                        for (var i = 0; i < notes.length; i++) {
+                            if (notes[i] == null) {
+                                notes.splice(i, 1);
+                                i--;
+                            }
+                        }
+                        currentModel.set('notes',notes);
+                        currentModel.save();
                         $('#'+id_int).remove();
                     }
                     break;
                 }
             }
         },
+        
         addNote: function() {
             var val = $('#noteArea').val();
             var title = $('#noteTitleArea').val();
@@ -125,8 +134,6 @@ define([
             var currentModelID = models[itemIndex]["id"];
         	var addFrmAttach = $("#addAttachments");
         	var addInptAttach = $("#inputAttach")[0].files[0]; 
-        	
-           
         	addFrmAttach.submit(function(e){
    
         		var formURL = addFrmAttach.attr("action");
@@ -148,9 +155,8 @@ define([
         				currentModel.set('attachments',attachments);
         				
         				if (currentModel.save()) {
-        					$('#attachBody').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
+        					$('.attachContainer').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
         					console.log('Attach file');
-        					console.log(data);
         					addFrmAttach[0].reset();
         				}
         			},
@@ -158,11 +164,8 @@ define([
         			error: function (){
         				console.log("Attach file error");
         			},
-        			
         		});
-         		
         	});
-        	
         	addFrmAttach.submit();
         	addFrmAttach.off('submit');
         },
@@ -171,15 +174,23 @@ define([
             var id = e.target.id;
             var k = id.indexOf('_');
             var id_int = parseInt(id.substr(k+1));
-            
             var models = this.collection.models;
             var itemIndex = Custom.getCurrentII() - 1;
             var currentModel = models[itemIndex];
-            var attachments = currentModel.get('attachments');
-            
+            var attachments = currentModel.get('attachments');   
             delete attachments[id_int];
             currentModel.set('attachments',attachments);
             if (currentModel.save()) {
+            	var attachments = currentModel.get('attachments');
+                for (var i = 0; i < attachments.length; i++) {
+                    if (attachments[i] == null) {
+                    	attachments.splice(i, 1);
+                        i--;
+                    }
+                }
+                
+                currentModel.set('attachments',attachments);
+                currentModel.save();
                 $('.attachFile_'+id_int).remove();
             }
         },
@@ -263,26 +274,6 @@ define([
                             this.$el.html();
                         } else {
                             var currentModel = models[itemIndex];
-                            var notes = currentModel.get('notes');
-                            for (var i = 0; i < notes.length; i++) {
-                                if (notes[i] == null) {
-                                    notes.splice(i, 1);
-                                    i--;
-                                }
-                            }
-                            currentModel.set('notes',notes);
-                            currentModel.save();
-                            
-                            var attachments = currentModel.get('attachments');
-                            for (var i = 0; i < attachments.length; i++) {
-                                if (attachments[i] == null) {
-                                	attachments.splice(i, 1);
-                                    i--;
-                                }
-                            }
-                            currentModel.set('attachments',attachments);
-                            currentModel.save();
-
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
@@ -297,11 +288,6 @@ define([
                                 }).render().el
                             );
                             
-                            this.$el.find('.formAttachments').append(
-                                    new attachView({
-                                        model: currentModel
-                                    }).render().el
-                                );
                         }
                         break;
                     }

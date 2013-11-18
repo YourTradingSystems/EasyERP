@@ -41,6 +41,19 @@
                 <label for="phone">Phone </label>
                 <input type="text" id="phone" value="<%=model.phones.phone%>"/>
             </p>
+            
+            <p>
+                <label for="workflowNames">Workflow Names </label>
+                <select id="workflowNames">
+                    <option selected="selected" value="0">Select...</option>
+                    <% workflowsCollection.each(function(option){ %>
+                    <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
+                    <% }); %>
+                </select>
+            </p> 
+            <p id="selectWorkflow">
+                           
+            </p>
 
             <p>
                 <label for="salesPerson">Salesperson</label>

@@ -405,6 +405,7 @@ article {
     background: #fff;
     clear: both;
     width: 100%;
+
     & .inner-holder {
         .margin(20px);
 }
@@ -1131,12 +1132,12 @@ dl.person-info {
         float: left;
         height: 24px;
         width: 24px;
+
         a {
-			&:hover{
-				text-decoration:none;
+            &:hover {
+                text-decoration: none;
     }
         }
-
     }
 
     .selected {
@@ -1150,7 +1151,6 @@ dl.person-info {
             color: white;
             text-shadow: 0px 1px 2px black;
         }
-		
     }
 
     &:first-child {
@@ -2065,6 +2065,7 @@ button {
 	}
 }
 }
+
 .dialog-buttons {
         text-align: center;
 
@@ -2281,8 +2282,9 @@ button {
 
         &:hover {
 			background-color: #EEE;
-			a{
-			text-decoration:underline;
+
+            a {
+                text-decoration: underline;
 		}
 		}
 
@@ -2297,8 +2299,9 @@ button {
             &:hover {
 				background-color: white;
 			}
-			a{
-				text-decoration:none;
+
+            a {
+                text-decoration: none;
 		}
 		}
 
@@ -2346,12 +2349,12 @@ button {
             .blueback {
                 max-width: none;
                 width: 95%;
-			}
+	}
 
             select {
                 max-width: none;
                 width: 96%;
-			}
+	}
 
             textarea {
                 height: 505px !important;
@@ -2524,12 +2527,13 @@ button {
             word-wrap: break-word;
             margin: 5px auto;
             width: 95%;
-            min-height: 60px;
+            min-height: 50px;
             text-align: left;
             border: 1px solid @taskBorderColor;
             background-color: #fff;
             color: #2C3E50;
             cursor: move;
+            min-width:150px;
             transition: box-shadow 1s ease;
             transition: border-color 1s ease;
             .border-radius(0px);
@@ -2893,13 +2897,6 @@ button {
     }
 }
 
-#popup-holder {
-    display: none;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    height: 30px;
-    z-index: 9999;
 
     .popup {
         display: none;
@@ -2908,7 +2905,7 @@ button {
         min-height: 30px;
         background: rgba(0,0,0, 0.5);
     }
-}
+
 
 #profileTableWrapper {
     width: 88%;
@@ -2942,124 +2939,149 @@ button {
 #modulesAccessTable {
     display: none;
 }
-.noteWrapper{
-	width:50%;
-	margin:0 25px;
-	>label{
+
+.noteWrapper {
+    width: 50%;
+    margin: 0 25px;
+
+    >label {
 		font-size: 16px;
-		color:#555;
+        color: #555;
 	}
-	.addNote{
+
+    .addNote {
 		background-color: #EDEFF4;
-		padding:10px 12px 10px 10px;
-		margin-bottom:5px;
-		label{
+        padding: 10px 12px 10px 10px;
+        margin-bottom: 5px;
+
+        label {
 			font: normal 12px arial;
 			color: #555;
-			display:none;
+            display: none;
 		}
-		.addTitle{
-			display:none;
+
+        .addTitle {
+            display: none;
 		}
-		.title-wrapper{
-			display:none;
-			margin-top:10px;
-			margin-bottom:10px;
+
+        .title-wrapper {
+            display: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
 		}
-		#cancelNote{
-			display:none;
+
+        #cancelNote {
+            display: none;
 		}
-		input{
-			display:none;
-			width:100%;
-			margin-right:10px;
-			padding-left:0;
-			padding-right:0;
+
+        input {
+            display: none;
+            width: 100%;
+            margin-right: 10px;
+            padding-left: 0;
+            padding-right: 0;
+            .border-radius(0);
+		}
+
+        textarea {
+            width: 100%;
+            height: 15px;
+            padding-left: 0;
+            padding-right: 0;
 			.border-radius(0);
 
-		}
-		textarea{
-			width:100%;
-			height:15px;
-			padding-left:0;
-			padding-right:0;
-			.border-radius(0);
-			&:focus{
+            &:focus {
 		    	.box-shadow(0,0,5px,rgba(82,168,236,0.5));
-				border: 1px solid rgba(121, 187, 238, 0.75)
+                border: 1px solid rgba(121, 187, 238, 0.75);
 			}
 		}
-		&.active{
-			.buttons{
-				margin-top:3px;
+
+        &.active {
+            .buttons {
+                margin-top: 3px;
 				.dialog-buttons;
-				input{
-					width:auto;
+
+                input {
+                    width: auto;
 				}
-				input,a{
-					float:left;
+
+                input, a {
+                    float: left;
 				}
-				#cancelNote{
-					line-height:24px;
-					display:block;
+
+                #cancelNote {
+                    line-height: 24px;
+                    display: block;
 				}
-			}
-			label{
-				display:block;
-			}
-			textarea{
-				height:60px;
-			}
-			input{
-				display:block;
-			&:focus{
-		    	.box-shadow(0,0,5px,rgba(82,168,236,0.5));
-				border: 1px solid rgba(121, 187, 238, 0.75)
-			}
-			}
-			.addTitle{
-				display:block;
-				line-height:30px;
 			}
 
+            label {
+                display: block;
+			}
+
+            textarea {
+                height: 60px;
+			}
+
+            input {
+                display: block;
+
+                &:focus {
+		    	.box-shadow(0,0,5px,rgba(82,168,236,0.5));
+                    border: 1px solid rgba(121, 187, 238, 0.75);
+			}
+			}
+
+            .addTitle {
+                display: block;
+                line-height: 30px;
+            }
 		}
 	}
-	#noteBody{
-		.noteContainer{
-			padding:10px 0;
+
+    #noteBody {
+        .noteContainer {
+            padding: 10px 0;
 			border-bottom: 1px dotted #EEE;
-			.name{
-				margin-right:15px;
+
+            .name {
+                margin-right: 15px;
 				font-size: 11px;
 			}
-			.date{
+
+            .date {
 				font-size: 11px;
 				color: #777;
 			}
-			.noteTitle{
+
+            .noteTitle {
 				line-height: 17px;
-				font-weight:bold;
+                font-weight: bold;
 			}
-			.right{
-				float:right;
-				margin-right:10px;
-				display:none;
-				.sep{
+
+            .right {
+                float: right;
+                margin-right: 10px;
+                display: none;
+
+                .sep {
 					padding: 0px 3px;
 					font-size: 12px;
 					color: #CCC;
 				}
 			}
-			&:hover{
+
+            &:hover {
 				background-color: #FAFAFA;
-				.right{
-					display:block;
-					a{
+
+                .right {
+                    display: block;
+
+                    a {
 						font-size: 11px;
 					}
 				}
 			}
-			
 		}
 	}
 }
