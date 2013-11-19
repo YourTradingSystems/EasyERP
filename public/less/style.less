@@ -859,6 +859,9 @@ h3 {
 .job-create-info {
 	.dl-auto(220px);
 }
+.profile-create {
+	.dl-auto(250px,50%);
+}
 
 .company-info {
     margin-left: 150px;
@@ -1587,7 +1590,7 @@ h3 {
     }
 
     span {
-        padding: 3px 8px;
+        padding: 3px 8px 3px 0;
     }
 
     label {
@@ -1856,7 +1859,7 @@ input, textarea, select {
     display: block;
     position: relative;
     float: left;
-    width: 230px;
+    width: 260px;
     margin-left: 7px;
     margin-top: 7px;
     border: @thin-border transparent;
@@ -2262,6 +2265,7 @@ button {
 #applicationForm,
 #editJobPositionForm,
 #createApplicationForm,
+#createProfileForm,
 #leadForm {
     border: none;
     margin: 0 auto;
@@ -2340,7 +2344,15 @@ button {
         }
     }
 }
+#createProfileForm{
+	input[type='text'] {
+        width: 100%;
+	}
+	select{
+        width: 100%;
+	}
 
+}
 #leadForm input[type='email'],
     #leadForm input[type='text'] {
         width: 71%;

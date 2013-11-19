@@ -41,7 +41,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
                 function createViews() {
-
+					collection.unbind('reset');
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content"});
 

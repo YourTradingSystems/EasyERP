@@ -1,5 +1,7 @@
 define([
-    "text!templates/Profiles/EditTemplate.html"
+    "text!templates/Profiles/EditTemplate.html",
+    "common",
+    "custom"
 ],
     function (EditTemplate) {
         var EditView = Backbone.View.extend({
@@ -12,6 +14,7 @@ define([
                 this.render();
             },
             events:{
+                "click .top-bar-saveBtn": "saveItem",
                 'click .viewAll': 'toggleView',
                 'click .writeAll': 'toggleWrite',
                 'click .deleteAll': 'toggleDelete'
@@ -39,7 +42,6 @@ define([
                     jsonProfile.profileAccess[i].access[1] = writeAccess[i];
                     jsonProfile.profileAccess[i].access[2] = deleteAccess[i];
                 }
-
                 this.profile.save(jsonProfile, {
                     headers: {
                         mid: mid
