@@ -61,8 +61,19 @@ var Persons = function (logWriter, mongoose, findCompany) {
             FB: { type: String, default: '' },
             LI: { type: String, default: '' }
         },       
-        notes: { type: Array, default: [] },
-        attachments: { type: Array, default: [] },
+        notes: [{
+            id: { type: String, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            date: {type: Date, default: Date.now}
+        }],
+        attachments: [{
+            id: { type: Number, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            uploaderName: {type: String, default: ''},
+            uploadDate: { type: Date, default: Date.now }
+        }],
         history: { type: Array, default: [] }
     }, { collection: 'Persons' });
 
@@ -224,10 +235,38 @@ var Persons = function (logWriter, mongoose, findCompany) {
                             _person.history = data.history;
                         }
                         if (data.notes) {
-                            _person.notes = data.notes;
+                            if (data.notes.id) {
+                                _person.notes.id = data.notes.id;
+                            }
+                            if (data.notes.title) {
+                                _person.notes.title = data.notes.title;
+                            }
+                            if (data.notes.note) {
+                                _person.notes.note = data.notes.note;
+                            }
+                            if (data.notes.date) {
+                                _person.notes.date = data.notes.date;
+                            }
                         }
                         if (data.attachments) {
-                            _person.attachments = data.attachments;
+                            if (data.attachments.id) {
+                                _person.attachments.id = data.attachments.id;
+                            }
+                            if (data.attachments.name) {
+                                _person.attachments.name = data.attachments.name;
+                            }
+                            if (data.attachments.path) {
+                                _person.attachments.path = data.attachments.path;
+                            }
+                            if (data.attachments.size) {
+                                _person.attachments.size = data.attachments.size;
+                            }
+                            if (data.attachments.uploadDate) {
+                                _person.attachments.uploadDate = data.attachments.uploadDate;
+                            }
+                            if (data.attachments.uploaderName) {
+                                _person.attachments.uploaderName = data.attachments.uploaderName;
+                            }
                         }
                         _person.save(function (err, result) {
                             if (err) {

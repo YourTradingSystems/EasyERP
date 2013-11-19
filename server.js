@@ -86,7 +86,7 @@ app.get('/getModules', function (req, res) {
 });
 
 app.post('/uploadFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
     console.log(req.headers);
@@ -94,12 +94,12 @@ app.post('/uploadFiles', function (req, res, next) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
             if (err) throw err;
-            console.log(req.files.attachfile.name);
+            file.id = req.files.attachfile.id;
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderId = req.session.uName;
+            file.uploadDate = req.files.attachfile.date;
+            file.uploaderName = req.session.uName;
             requestHandler.uploadFilePerson(req, res, req.headers.id, file);
         });
     });
@@ -113,12 +113,12 @@ app.post('/uploadFilesCompanies', function (req, res, next) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
             if (err) throw err;
-            console.log(req.files.attachfile.name);
+            file.id = req.files.attachfile.id;
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderId = req.session.uName;
+            file.uploadDate = req.files.attachfile.date;
+            file.uploaderName = req.session.uName;
             requestHandler.uploadFileCompanies(req, res, req.headers.id, file);
         });
     });
