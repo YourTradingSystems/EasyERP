@@ -34,7 +34,7 @@ define(
             }, 100);
         }
 
-        var getCalendarEvents = function(token,email){
+        var getCalendarEvents = function(token,email,callback){
 			console.log(calendarList + email+"/events?access_token=" + token);
             $.ajax({
                 type: "GET",
@@ -44,7 +44,7 @@ define(
                     if(response.error){
                         throw new Error(response.error.message);
                     }
-					console.log(response);
+					callback(response.items);
                 },
                 error: function (error){
                     throw new Error(error.message);
@@ -71,8 +71,7 @@ define(
                 data: null,
                 success: function(response){
                     console.log(response);
-                    getCalendarEvents(token,response["email"]);
-                    callback(response);
+                    getCalendarEvents(token,response["email"],callback);
                 },
                 dataType: "jsonp"
             });
