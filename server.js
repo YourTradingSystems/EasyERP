@@ -738,6 +738,34 @@ app.delete('/Events/:_id', function (req, res) {
     requestHandler.removeEvent(req, res, id, data);
 });
 
+app.post('/Calendar', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.event = req.body;
+    requestHandler.createCalendar(req, res, data);
+});
+
+app.get('/Calendar', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getCalendar(req, res, data);
+});
+
+app.put('/Calendar/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.calendar = req.body;
+    requestHandler.updateCalendar(req, res, id, data);
+});
+
+app.delete('/Calendar/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCalendar(req, res, id, data);
+});
+
 app.listen(8088);
 
 //console.log(app.routes);

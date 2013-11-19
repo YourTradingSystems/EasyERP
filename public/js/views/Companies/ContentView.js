@@ -14,7 +14,7 @@ define([
     'text!templates/Notes/AddAttachments.html'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection,ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common,noteView, addNoteTemplate, addAttachTemplate) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -29,31 +29,99 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.collection.bind('reset', _.bind(this.render, this));
             //this.render();
         },
-        flag:true,
+        flag: true,
         events: {
             "click .checkbox": "checked",
             "click #tabList a": "switchTab",
-			"click .details": "toggle",
-			"mouseover .social a": "socialActive",
+            "click .details": "toggle",
+            "mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
             "click td:not(:has('input[type='checkbox']'))": "gotoForm",
-            "click #attachSubmit":"addAttach",
+            "click #attachSubmit": "addAttach",
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
-            "click .deleteAttach":"deleteAttach"
+            "mouseenter .editable:not(.quickEdit)": "quickEdit",
+            "mouseleave .editable": "removeEdit",
+            "click #editSpan": "editClick",
+            "click #cancleSpan": "cancleClick",
+            "click #saveSpan": "saveClick"
         },
-        
-        cancelNote: function(e) {
+
+        quickEdit: function (e) {
+            // alert(e.target.id);
+            $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+        },
+
+        removeEdit: function (e) {
+            console.log('MouseOverWebSite');
+            $('#editSpan').remove();
+        },
+        cancleClick: function (e) {
+            e.preventDefault();
+            var parent = $(e.target).parent().parent();
+            $("#" + parent[0].id).removeClass('quickEdit');
+            $("#" + parent[0].id).text(this.text);
+            $('#editInput').remove();
+            $('#cancleSpan').remove();
+            $('#saveSpan').remove();
+        },
+
+        editClick: function (e) {
+            e.preventDefault();
+            var parent = $(e.target).parent().parent();
+            console.log(parent[0].id)
+            $("#" + parent[0].id).addClass('quickEdit');
+            this.text = $.trim($('#' + parent[0].id).data('text'));
+            console.log(this.text);
+            $("#" + parent[0].id).text('');
+            $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
+            $('#editInput').val(this.text);
+            $('#editSpan').remove();
+            $("#" + parent[0].id).append('<span id="cancleSpan" class="right"><a href="#">Cancle</a></span>');
+            $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
+        },
+
+        saveClick: function (e) {
+            e.preventDefault();
+            var models = this.collection.models;
+            var parent = $(event.target).parent().parent();
+            var objIndex = parent[0].id.split('_');
+            //console.log(objIndex);
+            var obj = {};
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            if (objIndex.length > 1) {             
+                obj = currentModel.get(objIndex[0]);
+                obj[objIndex[1]] = $('#editInput').val();
+            } else if (objIndex.length == 1) {
+                obj[objIndex[0]] = $('#editInput').val();
+            }
+            console.log(obj);          
+            console.log("Current Model:");
+            console.log(currentModel.get(objIndex[0]));
+            currentModel.set(obj);
+            currentModel.save({}, {
+                headers: {
+                    mid: 39
+                },
+                success: function () {
+                    Backbone.history.navigate("#home/content-Companies/form", { trigger: true });
+                }
+            });
+        },
+
+
+        cancelNote: function (e) {
             $('#noteArea').val('');
             $('#noteTitleArea').val('');
-            $('#getNoteKey').attr("value",'');
+            $('#getNoteKey').attr("value", '');
         },
-        editDelNote: function(e) {
+        editDelNote: function (e) {
             var id = e.target.id;
             var k = id.indexOf('_');
-            var type = id.substr(0,k);
-            var id_int = parseInt(id.substr(k+1));
+            var type = id.substr(0, k);
+            var id_int = parseInt(id.substr(k + 1));
 
             var models = this.collection.models;
             var itemIndex = Custom.getCurrentII() - 1;
@@ -62,32 +130,32 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
             switch (type) {
                 case "edit": {
-                    $('#noteArea').val($('#'+id_int).find('.noteText').text());
-                    $('#noteTitleArea').val($('#'+id_int).find('.noteTitle').text());
-                    $('#getNoteKey').attr("value",id_int);
+                    $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                    $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                    $('#getNoteKey').attr("value", id_int);
                     break;
                 }
                 case "del": {
                     delete notes[id_int];
-                    currentModel.set('notes',notes);
+                    currentModel.set('notes', notes);
                     if (currentModel.save()) {
-                    	var notes = currentModel.get('notes');
+                        var notes = currentModel.get('notes');
                         for (var i = 0; i < notes.length; i++) {
                             if (notes[i] == null) {
                                 notes.splice(i, 1);
                                 i--;
                             }
                         }
-                        currentModel.set('notes',notes);
+                        currentModel.set('notes', notes);
                         currentModel.save();
-                        $('#'+id_int).remove();
+                        $('#' + id_int).remove();
                     }
                     break;
                 }
             }
         },
-        
-        addNote: function() {
+
+        addNote: function () {
             var val = $('#noteArea').val();
             var title = $('#noteTitleArea').val();
             if (val || title) {
@@ -107,11 +175,11 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     notes[parseInt(arr_key_str)].note = val;
                     notes[parseInt(arr_key_str)].title = title;
 
-                    currentModel.set('notes',notes);
+                    currentModel.set('notes', notes);
                     if (currentModel.save()) {
-                        $('#noteArea').val($('#'+ arr_key_str ).find('.noteText').text(val));
-                        $('#noteTitleArea').val($('#'+ arr_key_str ).find('.noteTitle').text(title));
-                        $('#getNoteKey').attr("value",'');
+                        $('#noteArea').val($('#' + arr_key_str).find('.noteText').text(val));
+                        $('#noteTitleArea').val($('#' + arr_key_str).find('.noteTitle').text(title));
+                        $('#getNoteKey').attr("value", '');
                     }
                 } else {
                     var today_date = new Date();
@@ -120,12 +188,12 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     note_obj.title = title;
 
                     notes.push(note_obj);
-                    currentModel.set('notes',notes);
+                    currentModel.set('notes', notes);
                     if (currentModel.save()) {
-                        var edit = 'edit_'+key;
-                        var del = 'del_'+key;
-                        var author = currentModel.get('name').first ;
-                        $('#noteBody').prepend( _.template(addNoteTemplate,{key: key, val: val, title: title, edit: edit, del: del,author: author, date: today_date }));
+                        var edit = 'edit_' + key;
+                        var del = 'del_' + key;
+                        var author = currentModel.get('name').first;
+                        $('#noteBody').prepend(_.template(addNoteTemplate, { key: key, val: val, title: title, edit: edit, del: del, author: author, date: today_date }));
                     }
                 }
                 $('#noteArea').val('');
@@ -133,88 +201,88 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             }
         },
 
-        
-        addAttach: function(event){
-        	
-        	event.preventDefault();
-        	var models = this.collection.models;
-            var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex];
-            var currentModelID = models[itemIndex]["id"];
-        	var addFrmAttach = $("#addAttachments");
-        	var addInptAttach = $("#inputAttach")[0].files[0]; 
-        	addFrmAttach.submit(function(e){
-   
-        		var formURL = addFrmAttach.attr("action");
-        		e.preventDefault();
-        		addFrmAttach.ajaxSubmit({
-        			url:formURL,
-        			type: "POST",
-        			processData: false,
-        			contentType: false,
-        			data:[addInptAttach],
-        			beforeSend: function(xhr){
-	                       xhr.setRequestHeader("id",currentModelID);
-        			},
-        			
-        			success:function(data){
-        				var attachments = currentModel.get('attachments');
-        				var key = attachments.length;
-        				attachments.push(data);
-        				currentModel.set('attachments',attachments);
-        				
-        				if (currentModel.save()) {
-        					$('.attachContainer').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
-        					console.log('Attach file');
-        					addFrmAttach[0].reset();
-        				}
-        			},
-        			
-        			error: function (){
-        				console.log("Attach file error");
-        			},
-        		});
-        	});
-        	addFrmAttach.submit();
-        	addFrmAttach.off('submit');
-        },
-        
-        deleteAttach:function(e) {
-            var id = e.target.id;
-            var k = id.indexOf('_');
-            var id_int = parseInt(id.substr(k+1));
+
+        addAttach: function (event) {
+
+            event.preventDefault();
             var models = this.collection.models;
             var itemIndex = Custom.getCurrentII() - 1;
             var currentModel = models[itemIndex];
-            var attachments = currentModel.get('attachments');   
+            var currentModelID = models[itemIndex]["id"];
+            var addFrmAttach = $("#addAttachments");
+            var addInptAttach = $("#inputAttach")[0].files[0];
+            addFrmAttach.submit(function (e) {
+
+                var formURL = addFrmAttach.attr("action");
+                e.preventDefault();
+                addFrmAttach.ajaxSubmit({
+                    url: formURL,
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: [addInptAttach],
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("id", currentModelID);
+                    },
+
+                    success: function (data) {
+                        var attachments = currentModel.get('attachments');
+                        var key = attachments.length;
+                        attachments.push(data);
+                        currentModel.set('attachments', attachments);
+
+                        if (currentModel.save()) {
+                            $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, key: key }));
+                            console.log('Attach file');
+                            addFrmAttach[0].reset();
+                        }
+                    },
+
+                    error: function () {
+                        console.log("Attach file error");
+                    },
+                });
+            });
+            addFrmAttach.submit();
+            addFrmAttach.off('submit');
+        },
+
+        deleteAttach: function (e) {
+            var id = e.target.id;
+            var k = id.indexOf('_');
+            var id_int = parseInt(id.substr(k + 1));
+            var models = this.collection.models;
+            var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = models[itemIndex];
+            var attachments = currentModel.get('attachments');
             delete attachments[id_int];
-            currentModel.set('attachments',attachments);
+            currentModel.set('attachments', attachments);
             if (currentModel.save()) {
-            	var attachments = currentModel.get('attachments');
+                var attachments = currentModel.get('attachments');
                 for (var i = 0; i < attachments.length; i++) {
                     if (attachments[i] == null) {
-                    	attachments.splice(i, 1);
+                        attachments.splice(i, 1);
                         i--;
                     }
                 }
-                
-                currentModel.set('attachments',attachments);
+
+                currentModel.set('attachments', attachments);
                 currentModel.save();
-                $('.attachFile_'+id_int).remove();
+                $('.attachFile_' + id_int).remove();
             }
         },
-        
+
         toggle: function () {
             this.$('#details').animate({
                 height: "toggle"
             }, 250, function () {
-           
+
             });
         },
         socialActive: function (e) {
-            e.preventDefault();           
+            e.preventDefault();
             $(e.target).animate({
-                'background-position-y':'-38px'
+                'background-position-y': '-38px'
 
             }, 300, function () { });
         },
@@ -234,7 +302,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
         },
-        
+
         gotoForm: function (e) {
             App.ownContentType = true;
             var itemIndex = $(e.target).closest("tr").data("index");
@@ -248,7 +316,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {companiesCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -261,10 +329,10 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     {
                         this.$el.html('');
                         var holder = this.$el;
-                        var thumbnailsItemView;                        
+                        var thumbnailsItemView;
                         _.each(models, function (model) {
-                            var address = model.get('address');                          
-                            if (address.city && address.country && this.flag == true ) {
+                            var address = model.get('address');
+                            if (address.city && address.country && this.flag == true) {
                                 console.log(this.flag);
                                 //console.log(address.country);
                                 address.city = address.city + ", ";
@@ -292,7 +360,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         else {
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            
+
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
@@ -304,12 +372,12 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     model: currentModel
                                 }).render().el
                             );
-                            
+
                             this.$el.find('.formLeftColumn').append(
                                     new noteView({
                                         model: currentModel
                                     }).render().el
-                                );console.log(currentModel);
+                                ); console.log(currentModel);
                         }
 
                         break;

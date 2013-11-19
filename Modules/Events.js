@@ -2,8 +2,8 @@
 var Events = function (logWriter, mongoose) {
 
     var eventsSchema = mongoose.Schema({
-        _id: Number,
-        subject: { type: String, default: '' },
+        id: String,
+        summary: { type: String, default: '' },
         description: {type: String, default: ''},
         eventType: { type: String, default: '' },
         start_date: Date,
@@ -15,7 +15,18 @@ var Events = function (logWriter, mongoose) {
         priority: { type: String, default: '' }
     }, { collection: 'Events' });
 
+    var calendarsSchema = mongoose.Schema({
+        kind: String,
+        id: String,
+        etag: String,
+        summary: { type: String, default: '' },
+        description: { type: String, default: '' },
+        location: { type: String, default: '' },
+        timeZone: { type: String, default: '' }
+    }, { collection: 'Calendars' });
+
     var event = mongoose.model('Events', eventsSchema);
+    var calendar = mongoose.model('Calendars', calendarsSchema);
 
     function create(data, res) {
         try {
@@ -31,8 +42,8 @@ var Events = function (logWriter, mongoose) {
                     console.log(data);
                     _event = new event();
                     _event._id = data.id;
-                    if (data.subject) {
-                        _event.subject = data.subject;
+                    if (data.summary) {
+                        _event.summary = data.summary;
                     }
                     if (data.priority) {
                         _event.priority = data.priority;
@@ -88,12 +99,138 @@ var Events = function (logWriter, mongoose) {
         }
     };//End create
 
+    function createCalendar(data, res) {
+        try {
+            if (!data || !data.calendarId) {
+                logWriter.log('Events.createCalendar Incorrect Incoming Data');
+                res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
+                return;
+            } else {
+                savetoDb(data);
+            }
+            function savetoDb(data) {
+                try {
+                    console.log(data);
+                    _calendar = new calendar();
+                    _calendar._id = data.calendarId;
+                    if (data.summary) {
+                        _calendar.summary = data.summary;
+                    }
+                    if (data.description) {
+                        _calendar.description = data.description;
+                    }
+                  
+                    if (data.kind) {
+                        _calendar.kind = data.kind;
+                    }
+                    if (data.etag) {
+                        _calendar.etag = data.etag;
+                    }
+                    if (data.location) {
+                        _calendar.location = data.location;
+                    }
+                    if (data.timeZone) {
+                        _calendar.timeZone = data.timeZone;
+                    }
+                    ///////////////////////////////////////////////////
+                    _calendar.save(function (err, result) {
+                        try {
+                            if (err) {
+                                console.log(err);
+                                logWriter.log("Events.js createCalendar savetoBd _calendar.save " + err);
+                                res.send(500, { error: 'Events.save BD error' });
+                            } else {
+                                res.send(201, { success: 'A new Calendar was created successfully' });
+                            }
+                        } catch (error) {
+                            logWriter.log("Events.js createCalendar savetoBd _calendar.save " + error);
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                    logWriter.log("Events.js create savetoBd " + error);
+                    res.send(500, { error: 'Events.save  error' });
+                }
+            }
+        } catch (exception) {
+            console.log(exception);
+            logWriter.log("Events.js  " + exception);
+            res.send(500, { error: 'Events.save  error' });
+        }
+    };//End createCalendar
+
+    function getCalendar(response) {
+        var res = {}
+        var description = "";
+        res['data'] = [];
+        var query = calendar.find();
+        query.sort({ summary: 1 });
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Events.js getCalendar calendar.find' + description);
+                response.send(500, { error: "Can't find Calendars" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    }; //end getCalendar
+
+    function updateCalendar(_id, data, res) {
+        try {
+            delete data._id;
+            calendar.findById(_id, function (err, result) {
+                if (err) {
+
+                }
+                else if (result) {
+                    calendar.update({ _id: _id }, data, function (err, result) {
+                        try {
+                            if (err) {
+                                console.log(err);
+                                logWriter.log("Events.js updateCalendar calendar.update " + err);
+                                res.send(500, { error: "Can't updateCalendar Calendar" });
+                            } else {
+                                res.send(200, { success: 'Calendars updated success' });
+                            }
+                        }
+                        catch (exception) {
+                            logWriter.log("Events.js getCalendar calendar.find " + exception);
+                        }
+                    });
+                } else if (!result) {
+                    data._id = _id;
+                    createCalendar(data, res);
+                }
+            });
+
+        }
+        catch (exception) {
+            console.log(exception);
+            logWriter.log("Events.js updateCalendar " + exception);
+            res.send(500, { error: 'Events updatedCalndar error' });
+        }
+    };// end updateCalendar
+
+    function removeCalendar(_id, res) {
+        calendar.remove({ _id: _id }, function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Events.js remove event.removeCalendar " + err);
+                res.send(500, { error: "Can't remove Calendar" });
+            } else {
+                res.send(200, { success: 'Calendar removed' });
+            }
+        });
+    };// end removeCalendar
+
     function get(response) {
         var res = {}
         var description = "";
         res['data'] = [];
         var query = event.find();
-        query.sort({ subject: 1 });
+        query.sort({ summary: 1 });
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);

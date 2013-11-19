@@ -43,6 +43,7 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
             id: { type: Number, default: '' },
             name: { type: String, default: '' },
             path: { type: String, default: '' },
+            size:Number,
             uploaderName: { type: String, default: '' },
             uploadDate: { type: Date, default: Date.now }
         }],

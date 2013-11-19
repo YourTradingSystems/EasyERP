@@ -17,9 +17,9 @@
             website: '',
             contacts: [],
             phones: {
-                phone: '',
-                mobile: '',
-                fax: ''
+                phone: null,
+                mobile: null,
+                fax: null
             },
             internalNotes: '',
             salesPurchases: {
