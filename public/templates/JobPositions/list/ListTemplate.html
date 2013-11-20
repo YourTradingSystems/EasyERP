@@ -17,7 +17,7 @@
                 <td><input type="checkbox" value="<%=jobPosition._id%>" class="checkbox"/></td>
                 <td><%=index+1 %></td>
                 <td><%=jobPosition.name%></td>
-                <td><%=jobPosition.department.name%></td>
+                <td><%= (jobPosition.department) ? jobPosition.department.departmentName : ''%> </td>
                 <td><%=jobPosition.totalForecastedEmployees%></td>
                 <td><%=jobPosition.numberOfEmployees%></td>
                 <td><%=jobPosition.expectedRecruitment%></td>

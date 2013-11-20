@@ -293,6 +293,7 @@ app.post('/Projects', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
     data.project = req.body;
+    console.log(data);
     requestHandler.createProject(req, res, data);
 });
 
@@ -444,6 +445,16 @@ app.put('/Companies/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.company = req.body;
+    console.log("---------------UpdateCompany-------------------");
+    //console.log(data.company.salesPurchases.salesPerson);
+    if (data.company.salesPurchases.salesPerson) {
+        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
+    }
+    if (data.company.salesPurchases.salesTeam) {
+        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
+    }
+    //console.log(data.company.salesPurchases.salesPerson);
+    console.log(data);
     requestHandler.updateCompany(req, res, id, data);
 });
 

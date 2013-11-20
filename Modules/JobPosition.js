@@ -1,5 +1,5 @@
 var JobPosition = function (logWriter, mongoose, employee) {
-
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var jobPositionSchema = mongoose.Schema({
         name: { type: String, default: '' },
         expectedRecruitment: { type: Number, default: 0 },
@@ -7,10 +7,9 @@ var JobPosition = function (logWriter, mongoose, employee) {
             id: String,
             name: String
         },
-        department: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        
+        department: { type: ObjectId, ref: 'Department' },
+        
         description: String,
         requirements: String,
         workflow: {
@@ -64,12 +63,14 @@ var JobPosition = function (logWriter, mongoose, employee) {
                         }
                     }
                     if (data.department) {
-                        if (data.department._id) {
-                            _job.department.id = data.department._id;
-                        }
-                        if (data.department.departmentName) {
-                            _job.department.name = data.department.departmentName;
-                        }
+                        //if (data.department._id) {
+                        //    console.log(data.department._id);
+                            _job.department = data.department;
+                        //    console.log(new ObjectId(data.department._id));
+                        //}
+                        //if (data.department.departmentName) {
+                        //    _job.department.name = data.department.departmentName;
+                        //}
                     }
                     if (data.description) {
                         _job.description = data.description;
@@ -105,6 +106,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
         var res = {};
         res['data'] = [];
         var query = job.find({});
+        query.populate('department');
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -112,6 +114,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
                 logWriter.log('JobPosition.js get job.find' + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
+                console.log(result);
                 getTotalEmployees(result, 0);
                 //console.log(res);
                 //response.send(res);

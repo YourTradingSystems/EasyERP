@@ -16,8 +16,8 @@
     <img src="<%=imageSrc%>" />
 </div>
     <div class="info">
-      <p><a class="bold" href="javascript:;"><%=name.first%> <%=name.last%></a></p>
-        <p><%=company.name%></p>
-      <p><a href="mailto:<%=email%>"><%=email%></a></p>
+        <p><%=name.first%> <%=name.last%></p>
+        <p><%=(company) ? company.name.first : ''%></p>
+        <p><%=email%></p>
     </div>
 </div>

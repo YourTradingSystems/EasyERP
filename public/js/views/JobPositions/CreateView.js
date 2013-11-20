@@ -74,8 +74,8 @@ define([
                 //    department.name = objDepartment.get('departmentName');
                 //    department.id = departmentId;
                 //}
-                var departmentId = $("#department option:selected").val();
-                var department = common.toObject(departmentId, this.departmentsCollection);
+                var department = $("#department option:selected").val();
+                //var department = common.toObject(departmentId, this.departmentsCollection);
 
                 console.log(department);
 

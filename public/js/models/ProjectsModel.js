@@ -40,10 +40,7 @@ define(function () {
         defaults: {
             projectName: '',
             projectShortDesc: '',
-            task: {
-                avaliable: false,
-                tasks: []
-            },
+            task: [],
             privacy: 'All Users',
             customer: {
                 id: '',

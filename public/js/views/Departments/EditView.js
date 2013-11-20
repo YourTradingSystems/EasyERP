@@ -43,15 +43,15 @@ define([
                         parentDepartment = currentModel.defaults.parentDepartment;
                     }
 
-                    var managerId = this.$("#departmentManager option:selected").val();
-                    var _departmentManager = common.toObject(managerId, this.accountDdCollection);
-                    var departmentManager = {};
-                    if (_departmentManager) {
-                        departmentManager.name = _departmentManager.name.first + " " + _departmentManager.name.last;
-                        departmentManager.id = _departmentManager._id;
-                    } else {
-                        departmentManager = currentModel.defaults.departmentManager;
-                    }
+                    var departmentManager = this.$("#departmentManager option:selected").val();
+                    //var _departmentManager = common.toObject(managerId, this.accountDdCollection);
+                    //var departmentManager = {};
+                    //if (_departmentManager) {
+                    //    departmentManager.name = _departmentManager.name.first + " " + _departmentManager.name.last;
+                    //    departmentManager.id = _departmentManager._id;
+                    //} else {
+                    //    departmentManager = currentModel.defaults.departmentManager;
+                    //}
 
                     currentModel.set({
                         departmentName: departmentName,

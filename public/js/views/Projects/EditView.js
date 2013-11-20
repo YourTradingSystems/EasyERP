@@ -27,7 +27,8 @@ define([
             events: {
                 "click .breadcrumb a": "changeWorkflow",
                 "click #saveBtn": "saveItem",
-                "click #cancelBtn": "hideDialog"
+                "click #cancelBtn": "hideDialog",
+                "change #workflowDd": "changeWorkflowValues"
             },
             hideDialog: function () {
                 $('.edit-project-dialog').remove();
@@ -129,10 +130,24 @@ define([
                     }
                 });
             },
+            
+            changeWorkflowValues: function () {
+                this.$("#workflowValue").html("");
+                var that = this;
+                var choosedWorkflow = _.find(that.workflows, function (workflow) {
+                    return workflow._id == that.$("#workflowDd option:selected").val();
+                });
+                _.each(choosedWorkflow.value, function (value) {
+                    this.$("#workflowValue").append("<option>" + value.name + " (" + value.status + ")" + "</option>");
+                });
+                this.$("#workflowValue").val(that.currentModel.toJSON().workflow.name + " (" + that.currentModel.toJSON().workflow.status + ")");
+
+            },
 
             populateDropDown: function (type, selectId, url) {
                 var selectList = $(selectId);
                 var self = this;
+                this.workflows = [];
                 dataService.getData(url, { mid: 39 }, function (response) {
                     var options = $.map(response.data, function (item) {
                         switch (type) {
@@ -143,6 +158,7 @@ define([
                             case "priority":
                                 return self.priorityOption(item);
                             case "workflow":
+                                self.workflows.push(item);
                                 return self.workflowOption(item);
                             case "userEdit":
                                 return self.userEditOption(item);
@@ -150,6 +166,8 @@ define([
                         }
                     });
                     selectList.append(options);
+                    if (typeof val != "undefined")
+                        selectList.val(val).trigger("change");
                 });
             },
             userEditOption: function (item) {
@@ -157,8 +175,8 @@ define([
             },
             workflowOption: function (item) {
                 return this.currentModel.get("workflow").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name + " (" + item.status + ")").attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name + " (" + item.status + ")");
+                    $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                    $('<option/>').val(item._id).text(item.name);
             },
             customerOption: function (item) {
                 return this.currentModel.get("customer").id === item._id ?

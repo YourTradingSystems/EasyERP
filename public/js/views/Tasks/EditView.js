@@ -241,7 +241,7 @@
                             case "workflow":
                                 {
                                     self.workflows.push(item);
-                                    return self.workflowOption(item, selectList);
+                                    return self.workflowOption(item);
                                 }
                         }
                     });
@@ -251,7 +251,7 @@
                 });
             },
 
-            workflowOption: function (item, selectList) {
+            workflowOption: function (item) {
                 return this.currentModel.get("workflow")._id === item._id ?
                       $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
                       $('<option/>').val(item._id).text(item.name);

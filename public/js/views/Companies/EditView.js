@@ -157,8 +157,12 @@ define([
                     var currentModel = this.collection.models[itemIndex];
 
                     var mid = 39;
-                    var name = $("#name").val();
-                    var address = {};
+
+                    var name = {
+                        first: $("#name").val(),
+                        last:''
+                    };
+                   var address = {};
                         address.street  = $("input[name='street']").val();
                         address.city    = $("input[name='city']").val();
                         address.state   = $("input[name='state']").val();
@@ -173,29 +177,29 @@ define([
                     var email = $("#email").val();
                     var website = $("#website").val();
                     var internalNotes = $.trim($("#internalNotes").val());
-                    var salesPersonId = this.$("#salesPerson option:selected").val();
-                    var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
-                    var salesPerson = {};
-                    if (_salesPerson) {
-                        salesPerson.id = _salesPerson._id;
-                        salesPerson.name = _salesPerson.name.first + ' ' + _salesPerson.name.last;
-                    } else {
-                        salesPerson = currentModel.defaults.salesPerson;
-                    }
 
-                    var salesTeamId = this.$("#salesTeam option:selected").val();
-                    var _salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-                    var salesTeam = {};
-                    if (_salesTeam) {
-                        salesTeam.id = _salesTeam._id;
-                        salesTeam.name = _salesTeam.departmentName;
-                    } else {
-                        salesTeam = currentModel.defaults.salesTeam;
-                    }
+                    var salesPerson = this.$("#salesPerson option:selected").val();
+                    //var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
+                    //var salesPerson = {};
+                    //if (_salesPerson) {
+                    //    salesPerson.id = _salesPerson._id;
+                    //    salesPerson.name = _salesPerson.name.first + ' ' + _salesPerson.name.last;
+                    //} else {
+                    //    salesPerson = currentModel.defaults.salesPerson;
+                    //}
+
+                    var salesTeam = this.$("#salesTeam option:selected").val();
+                    //var _salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
+                    //var salesTeam = {};
+                    //if (_salesTeam) {
+                    //    salesTeam.id = _salesTeam._id;
+                    //    salesTeam.name = _salesTeam.departmentName;
+                    //} else {
+                    //    salesTeam = currentModel.defaults.salesTeam;
+                    //}
 
                     var reference = $("#reference").val();
                     var language = $("#language").val();
-                    var dateSt = $.trim($("#date").val());
 
                     var date = (dateSt) ? new Date(Date.parse(dateSt)) : "";
                     var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
@@ -218,7 +222,7 @@ define([
                             salesTeam: salesTeam,
                             reference: reference,
                             language: language,
-                            date: date
+                            //date: date
                         }
                     });
 

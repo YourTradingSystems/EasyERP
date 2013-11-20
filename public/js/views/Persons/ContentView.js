@@ -46,9 +46,9 @@ define([
             var type = id.substr(0,k);
             var id_int = parseInt(id.substr(k+1));
 
-            var models = this.collection.models;
-            var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex];
+            //var models = this.collection.models;
+            //var itemIndex = Custom.getCurrentII() - 1;
+            var currentModel = this.collection.getElement();
             var notes = currentModel.get('notes');
 
             switch (type) {
@@ -238,7 +238,7 @@ define([
             }, 300, function () { });
         },
         render: function () {
-            Custom.setCurrentCL(this.collection.length);
+            //Custom.setCurrentCL(this.collection.length);
             console.log('Render Persons View');
             var viewType = Custom.getCurrentVT(),
                 models = this.collection.models;

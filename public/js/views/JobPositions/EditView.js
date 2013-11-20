@@ -96,15 +96,15 @@ define([
 
                     var requirements = $.trim($("#requirements").val());
 
-                    var departmentId = this.$("#department option:selected").val();
-                    var _department = common.toObject(departmentId, this.departmentsCollection);
-                    var department = {};
-                    if (_department) {
-                        department.id = _department._id;
-                        department.name = _department.departmentName;
-                    } else {
-                        department = currentModel.defaults.department;
-                    }
+                    var department = this.$("#department option:selected").val();
+                    //var _department = common.toObject(departmentId, this.departmentsCollection);
+                    //var department = {};
+                    //if (_department) {
+                    //    department.id = _department._id;
+                    //    department.name = _department.departmentName;
+                    //} else {
+                    //    department = currentModel.defaults.department;
+                    //}
 
                     var workflow = {
                         wName: this.$("#workflowNames option:selected").text(),

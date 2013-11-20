@@ -66,6 +66,35 @@ require.config({
 });
 
 require(['app'], function (app) {
+    Backbone.Collection.prototype.next = function () {
+        this.setElement(this.at(this.indexOf(this.getElement()) + 1));
+        return this;
+    };
+    Backbone.Collection.prototype.prev = function() {
+        this.setElement(this.at(this.indexOf(this.getElement()) - 1));
+        return this;
+    };
+    Backbone.Collection.prototype.getElement = function (id) {
+        return (id) ? this.get(id) : ((this.currentElement) ? this.currentElement : this.at(0));
+    };
+    Backbone.Collection.prototype.setElement = function (id, model) {
+        if (arguments.length === 0) {
+            this.currentElement = this.at(0);
+        } else if (arguments.length === 2) {
+            if (model) {
+                this.currentElement = model;
+            } else if (id) {
+                this.currentElement = this.get(id);
+            }
+        } else {
+            if ((typeof (id) == 'string') && id.length == 24) {
+                this.currentElement = this.get(id);
+            } else if (typeof (id) == 'object') {
+                this.currentElement = id;
+            }
+        }
+
+    };
     app.initialize();
     app.applyDefaults();
 });

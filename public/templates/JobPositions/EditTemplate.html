@@ -62,7 +62,7 @@
                     <select id="department">
                         <option value="0">Select...</option>
                          <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                                <option value="<%= option.get('_id') %>" <%=(model.department && option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
                              <% }); %>
                     </select>
                 </p>

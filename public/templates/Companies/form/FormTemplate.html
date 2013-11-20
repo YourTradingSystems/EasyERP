@@ -15,7 +15,7 @@
           <img alt="" src="<%=imageSrc%>" width="120" height="120" />
         </div>
         <div class="company-info">
-          <h2><%=name%></h2>
+          <h2><%=name.first%></h2>
           <div class="half-block left">
             <dl class="person-info company">
 			  <dt>Website :</dt><dd id="website" data-text="<%=website%>" class="editable"> <%=website%></dd>
@@ -30,7 +30,7 @@
 			  <dt>Address :</dt>
 			 
               <dd id="address_street" class="editable" data-text="<%=address.street%>">
-                  <% if(address.street) { %>
+			  <% if(address.street) { %>
                  <%=address.street%>
                   <% } else { %>
                  <label style="color:#c1c1c1;">Street</label>
@@ -82,8 +82,8 @@
       <div class="inner sales-purchases">
         <div class="half-block left">
             <dl class="person-info company long">
-			  <dt>Sales Person :</dt><dd><%=salesPurchases.salesPerson.name%></dd>
-			  <dt>Sales Team :</dt><dd><%=salesPurchases.salesTeam.name%></dd>
+			  <dt>Sales Person :</dt><dd><%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%></dd>
+			  <dt>Sales Team :</dt><dd><%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%></dd>
 			  <dt>Reference :</dt><dd><%=salesPurchases.reference%></dd>
 			  <dt>Language :</dt><dd><%=salesPurchases.language%></dd>
             </dl>
@@ -91,7 +91,7 @@
         <div class="half-block left">
 
             <dl class="person-info company long">
-			  <dt>Date :</dt><dd><%=salesPurchases.date%></dd>
+			  <dt>Date :</dt><dd><%=salesPurchases.date.createDate%></dd>
 			  <dt>Customer :</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
 			  <dt>Supplier :</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
 			  <dt>Active :</dt><dd class="with-checkbox"><a class="person-checkbox disabled<% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
