@@ -30,10 +30,11 @@
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
                 "click #saveBtn": "saveItem",
-                "click #cancelBtn": "hideDialog"
+                "click #cancelBtn": "hideDialog",
+                "change #workflowDd": "changeWorkflowValues"
             },
 
-            hideDialog: function(){
+            hideDialog: function () {
                 $(".edit-task-dialog").remove();
             },
 
@@ -211,12 +212,26 @@
 
             },
 
-            populateDropDown: function(type, selectId, url){
+            changeWorkflowValues: function () {
+                this.$("#workflowValue").html("");
+                var that = this;
+                var choosedWorkflow = _.find(that.workflows, function (workflow) {
+                    return workflow._id == that.$("#workflowDd option:selected").val();
+                });
+                _.each(choosedWorkflow.value, function (value) {
+                    this.$("#workflowValue").append("<option>" + value.name + " (" + value.status + ")" + "</option>");
+                });
+                this.$("#workflowValue").val(that.currentModel.toJSON().workflow.name + " (" + that.currentModel.toJSON().workflow.status + ")");
+
+            },
+
+            populateDropDown: function (type, selectId, url, val) {
                 var selectList = $(selectId);
                 var self = this;
-                dataService.getData(url, {mid:39}, function(response){
-                    var options = $.map(response.data, function(item){
-                        switch (type){
+                this.workflows = [];
+                dataService.getData(url, { mid: 39 }, function (response) {
+                    var options = $.map(response.data, function (item) {
+                        switch (type) {
                             case "project":
                                 return self.projectOption(item);
                             case "person":
@@ -224,50 +239,58 @@
                             case "priority":
                                 return self.priorityOption(item);
                             case "workflow":
-                                return self.workflowOption(item);
+                                {
+                                    self.workflows.push(item);
+                                    return self.workflowOption(item, selectList);
+                                }
                         }
                     });
                     selectList.append(options);
+                    if(typeof val!="undefined")
+                            selectList.val(val).trigger("change");
                 });
             },
-            workflowOption: function(item){
-                return this.currentModel.get("workflow").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")").attr('selected','selected') :
-                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")");
+
+            workflowOption: function (item, selectList) {
+                return this.currentModel.get("workflow")._id === item._id ?
+                      $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                      $('<option/>').val(item._id).text(item.name);
             },
-            projectOption: function(item){
+
+            projectOption: function (item) {
                 return this.currentModel.get("project").id === item._id ?
-                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.projectName).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.projectName);
             },
-            personOption: function(item){
+            personOption: function (item) {
                 return this.currentModel.get("assignedTo").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
-            priorityOption: function(item){
+            priorityOption: function (item) {
                 return this.currentModel.id === item._id ?
-                    $('<option/>').val(item._id).text(item.priority).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.priority);
             },
 
             render: function () {
                 var formString = this.template({
-                    model: this.currentModel.toJSON()});
-
-                this.$el = $(formString).dialog({
-                    autoOpen:true,
-                    resizable:false,
-					dialogClass: "edit-task-dialog",
-					width:"50%",
-					height:513,
-                    title: this.currentModel.toJSON().project.projectShortDesc
+                    model: this.currentModel.toJSON()
                 });
 
+                this.$el = $(formString).dialog({
+                    autoOpen: true,
+                    resizable: false,
+                    dialogClass: "edit-task-dialog",
+                    width: "50%",
+                    height: 513,
+                    title: this.currentModel.toJSON().project.projectShortDesc
+                });
+                var that = this;
                 this.populateDropDown("project", App.ID.projectDd, "/getProjectsForDd");
                 this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
                 this.populateDropDown("priority", App.ID.priorityDd, "/Priority");
-                this.populateDropDown("workflow", App.ID.workflowDd, "/taskWorkflows");
+                this.populateDropDown("workflow", App.ID.workflowDd, "/taskWorkflows", that.currentModel.toJSON().workflow._id);
 
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });

@@ -11,11 +11,11 @@ define([
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-               /* this.accountsDdCollection = new AccountsDdCollection();
-                this.customersDdCollection = new CustomersCollection();
-                this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});*/
+                /* this.accountsDdCollection = new AccountsDdCollection();
+                 this.customersDdCollection = new CustomersCollection();
+                 this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});*/
                 this.projectsCollection = options.collection;
-                this.currentModel = this.projectsCollection.models[Custom.getCurrentII()-1];
+                this.currentModel = this.projectsCollection.models[Custom.getCurrentII() - 1];
                 this.render();
 
                 /*this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
@@ -26,10 +26,10 @@ define([
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
-                "click #saveBtn" : "saveItem",
-                "click #cancelBtn" : "hideDialog"
+                "click #saveBtn": "saveItem",
+                "click #cancelBtn": "hideDialog"
             },
-            hideDialog: function(){
+            hideDialog: function () {
                 $('.edit-project-dialog').remove();
             },
 
@@ -59,45 +59,45 @@ define([
 
             },
 
-			saveItem: function (event) {
+            saveItem: function (event) {
                 event.preventDefault();
                 var self = this;
 
-                    var mid = 39;
-                    var projectName = $("#projectName").val();
-                    var projectShortDesc = $("#projectShortDesc").val();
+                var mid = 39;
+                var projectName = $("#projectName").val();
+                var projectShortDesc = $("#projectShortDesc").val();
                 var idCustomer = this.$el.find("#customerDd option:selected").val();
-                    var _customer = common.toObject(idCustomer, self.customersDdCollection);
-                    var customer = {};
-                    if (_customer) {
-                        customer.id = _customer._id;
-                        customer.name = _customer.name;
-                    } else {
-                        customer = self.currentModel.defaults.customer;
-                    }
+                var _customer = common.toObject(idCustomer, self.customersDdCollection);
+                var customer = {};
+                if (_customer) {
+                    customer.id = _customer._id;
+                    customer.name = _customer.name;
+                } else {
+                    customer = self.currentModel.defaults.customer;
+                }
                 var idManager = this.$el.find("#managerDd option:selected").val();
-                    var _projectmanager = common.toObject(idManager, self.accountsDdCollection);
-                    var projectmanager = {};
-                    if (_projectmanager) {
-                        projectmanager.id = _projectmanager._id;
-                        projectmanager.imageSrc = _projectmanager.imageSrc;
-                        projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
-                    } else {
-                        projectmanager = this.currentModel.defaults.projectmanager;
-                    }
+                var _projectmanager = common.toObject(idManager, self.accountsDdCollection);
+                var projectmanager = {};
+                if (_projectmanager) {
+                    projectmanager.id = _projectmanager._id;
+                    projectmanager.imageSrc = _projectmanager.imageSrc;
+                    projectmanager.name = _projectmanager.name.first + ' ' + _projectmanager.name.last;
+                } else {
+                    projectmanager = this.currentModel.defaults.projectmanager;
+                }
 
                 var idWorkflow = this.$el.find("#workflowDd option:selected").val();
-                    var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
-                    if (!workflow) {
-                        workflow = this.currentModel.defaults.workflow;
-                    }
+                var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
+                if (!workflow) {
+                    workflow = this.currentModel.defaults.workflow;
+                }
 
                 var userNodes = this.$el.find("#usereditDd option:selected"), users = [];
-                users = $.map(userNodes,function(item){
+                users = $.map(userNodes, function (item) {
                     return {
                         id: item.value,
                         name: item.innerHTML
-                    }
+                    };
                 });
                 /*userNodes.each(function (key, val) {
                         users.push({
@@ -107,35 +107,35 @@ define([
                     });*/
 
                 self.currentModel.save({
-                        projectName: projectName,
-                        projectShortDesc: projectShortDesc,
-                        customer: customer,
-                        projectmanager: projectmanager,
-                        workflow: workflow,
-                        teams: {
-                            users: users
-                        }
-                    }, {
-                        headers: {
-                            mid: mid
-                        },
-                        wait: true,
-                        success: function () {
+                    projectName: projectName,
+                    projectShortDesc: projectShortDesc,
+                    customer: customer,
+                    projectmanager: projectmanager,
+                    workflow: workflow,
+                    teams: {
+                        users: users
+                    }
+                }, {
+                    headers: {
+                        mid: mid
+                    },
+                    wait: true,
+                    success: function () {
                         self.$el.dialog('close');
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
-                        },
-                        error: function () {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
-                    });
+                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                    },
+                    error: function () {
+                        Backbone.history.navigate("home", { trigger: true });
+                    }
+                });
             },
 
-            populateDropDown: function(type, selectId, url){
+            populateDropDown: function (type, selectId, url) {
                 var selectList = $(selectId);
                 var self = this;
-                dataService.getData(url, {mid:39}, function(response){
-                    var options = $.map(response.data, function(item){
-                        switch (type){
+                dataService.getData(url, { mid: 39 }, function (response) {
+                    var options = $.map(response.data, function (item) {
+                        switch (type) {
                             case "customer":
                                 return self.customerOption(item);
                             case "person":
@@ -152,22 +152,22 @@ define([
                     selectList.append(options);
                 });
             },
-            userEditOption: function(item){
+            userEditOption: function (item) {
                 return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
-            workflowOption: function(item){
+            workflowOption: function (item) {
                 return this.currentModel.get("workflow").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name + " (" + item.status + ")").attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name + " (" + item.status + ")").attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name + " (" + item.status + ")");
             },
-            customerOption: function(item){
+            customerOption: function (item) {
                 return this.currentModel.get("customer").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")").attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")").attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name + " (" + item.type + ")");
             },
-            personOption: function(item){
+            personOption: function (item) {
                 return this.currentModel.get("projectmanager").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected','selected') :
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
 
@@ -175,15 +175,16 @@ define([
             render: function () {
 
                 var formString = this.template({
-                    model: this.currentModel.toJSON()});
+                    model: this.currentModel.toJSON()
+                });
 
                 this.$el = $(formString).dialog({
-                    autoOpen:true,
-                    resizable:false,
+                    autoOpen: true,
+                    resizable: false,
                     title: "Edit Project",
-					dialogClass:"edit-project-dialog",
-					width:"80%",
-					height:225
+                    dialogClass: "edit-project-dialog",
+                    width: "80%",
+                    height: 225
                 });
 
                 this.populateDropDown("person", App.ID.managerDd, "/getPersonsForDd");

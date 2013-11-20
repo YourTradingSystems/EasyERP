@@ -86,7 +86,7 @@ app.get('/getModules', function (req, res) {
 });
 
 app.post('/uploadFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
     console.log(req.headers);
@@ -94,12 +94,12 @@ app.post('/uploadFiles', function (req, res, next) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
             if (err) throw err;
-            console.log(req.files.attachfile.name);
+            file.id = req.files.attachfile.id;
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderId = req.session.uName;
+            file.uploadDate = req.files.attachfile.date;
+            file.uploaderName = req.session.uName;
             requestHandler.uploadFilePerson(req, res, req.headers.id, file);
         });
     });
@@ -113,12 +113,12 @@ app.post('/uploadFilesCompanies', function (req, res, next) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
             if (err) throw err;
-            console.log(req.files.attachfile.name);
+            file.id = req.files.attachfile.id;
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderId = req.session.uName;
+            file.uploadDate = req.files.attachfile.date;
+            file.uploaderName = req.session.uName;
             requestHandler.uploadFileCompanies(req, res, req.headers.id, file);
         });
     });
@@ -373,7 +373,7 @@ app.get('/taskWorkflows', function (req, res) {
     type = {};
     //data.id = req.param('id');
     data.mid = req.param('mid');
-    type.name = 'task';
+    //type.name = 'task';
     type.id = "Task";
     data.type = type;
     console.log(data);
@@ -565,7 +565,7 @@ app.delete('/Employees/:_id', function (req, res) {
 app.get('/getSalesPerson', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getPersonsforDd(req, res, data);
+    requestHandler.getPersonsForDd(req, res, data);
 });
 
 app.get('/getSalesTeam', function (req, res) {
@@ -746,6 +746,34 @@ app.delete('/Events/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeEvent(req, res, id, data);
+});
+
+app.post('/Calendars', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.event = req.body;
+    requestHandler.createCalendar(req, res, data);
+});
+
+app.get('/Calendars', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getCalendars(req, res, data);
+});
+
+app.put('/Calendars/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.calendar = req.body;
+    requestHandler.updateCalendar(req, res, id, data);
+});
+
+app.delete('/Calendars/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCalendar(req, res, id, data);
 });
 
 app.listen(8088);

@@ -34,7 +34,9 @@ var App = App ||
         managerDd: "#managerDd",
         customerDd: "#customerDd",
         userEditDd: "#userEditDd",
-        companiesDd: "#companiesDd"
+        companiesDd: "#companiesDd",
+        salesPerson: '#salesPerson',
+        salesTeam: '#salesTeam'
     },
     requestedURL: null
 };

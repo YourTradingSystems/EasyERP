@@ -880,6 +880,41 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+    function createCalendar(req, res, data) {
+        console.log("Requst createCalendar is success");
+        if (req.session && req.session.loggedIn) {
+            events.createCalendar(data.calendar, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getCalendars(req, res, data) {
+        console.log("Requst getCalendars is success");
+        if (req.session && req.session.loggedIn) {
+            events.getCalendars(res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function updateCalendar(req, res, id, data) {
+        console.log("Requst updateCalendar is success");
+        if (req.session && req.session.loggedIn) {
+            events.updateCalendar(id, data.calendar, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function removeCalendar(req, res, id, data) {
+        console.log("Requst removeCalendar is success");
+        if (req.session && req.session.loggedIn) {
+            events.removeCalendar(id, res);
+        } else {
+            res.send(401);
+        }
+    }
     //---------END------Events----------------------------------
 
     return {
@@ -898,8 +933,9 @@ var requestHandler = function (fs, mongoose) {
         getPersons: getPersons,
         updatePerson: updatePerson,
         removePerson: removePerson,
-       // getPersonsForDd: getPersonsForDd,
+        // getPersonsForDd: getPersonsForDd,
         uploadFilePerson: uploadFilePerson,
+        uploadFileCompanies: uploadFileCompanies,
         getCustomer: getCustomer,
 
         getProjects: getProjects,
@@ -981,7 +1017,13 @@ var requestHandler = function (fs, mongoose) {
         createEvent: createEvent,
         getEvents: getEvents,
         updateEvent: updateEvent,
-        removeEvent: removeEvent
+        removeEvent: removeEvent,
+
+        createCalendar: createCalendar,
+        getCalendars: getCalendars,
+        updateCalendar: updateCalendar,
+        removeCalendar: removeCalendar
+
     }
 }
 //---------EXPORTS----------------------------------------

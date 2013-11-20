@@ -21,9 +21,9 @@
             website: '',
             contacts: [],
             phones: {
-                phone: '',
-                mobile: '',
-                fax: ''
+                phone: null,
+                mobile: null,
+                fax: null
             },
             internalNotes: '',
             salesPurchases: {
@@ -40,7 +40,9 @@
                 fb: '',
                 li: ''
             },
-            history: []
+            history: [],
+            attachments:[],
+            notes:[]
         },
 
         urlRoot: function () {

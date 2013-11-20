@@ -10,6 +10,22 @@ function(EmployeesCollection){
         scheduler.init(calendarContainer, new Date(), "month");
         populatePersons();
         scheduler.backbone(eventsCollection);
+		console.log("Newww");
+		var events=eventsCollection.toJSON();
+		console.log(events);
+		for (var i=0;i<events.length;i++){
+			if (events[i].start_date&&events[i].end_date){
+				console.log(events);
+				scheduler.setEvent(i,{
+					start_date: new Date(events[i].start_date),
+					end_date:   new Date(events[i].end_date),
+					text:   events[i].description,
+					holder: events[i].assignTo, //userdata
+					room:""
+				});
+				scheduler.showEvent(i);
+			}
+		}
     }
 
     var initMiniCalendar = function(miniCalendarDiv){
@@ -45,6 +61,7 @@ function(EmployeesCollection){
         scheduler.config.start_on_monday = true;
 
         scheduler.attachEvent("onTemplatesReady", function(){
+
             scheduler.templates.event_bar_text = function(start, end, ev){
                 return ev.subject || "New Event";
             };

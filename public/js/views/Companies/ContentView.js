@@ -41,32 +41,27 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
-            "click .deleteAttach": "deleteAttach",
-            "mouseenter #website:not(.quickEdit)": "quickEdit",
-            "mouseleave #website": "removeEdit",
+            "mouseenter .editable:not(.quickEdit)": "quickEdit",
+            "mouseleave .editable": "removeEdit",
             "click #editSpan": "editClick",
             "click #cancleSpan": "cancleClick",
             "click #saveSpan": "saveClick"
         },
 
         quickEdit: function (e) {
-            $('#website').append('<span id="editSpan" class="right"><a href="#">Edit</a></span>');
+            // alert(e.target.id);
+            $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
 
         removeEdit: function (e) {
             console.log('MouseOverWebSite');
             $('#editSpan').remove();
         },
-
-        cancelNote: function (e) {
-            $('#noteArea').val('');
-            $('#noteTitleArea').val('');
-            $('#getNoteKey').attr("value", '');
-        },
-
         cancleClick: function (e) {
             e.preventDefault();
-            $('#website').removeClass('quickEdit');
+            var parent = $(e.target).parent().parent();
+            $("#" + parent[0].id).removeClass('quickEdit');
+            $("#" + parent[0].id).text(this.text);
             $('#editInput').remove();
             $('#cancleSpan').remove();
             $('#saveSpan').remove();
@@ -74,22 +69,54 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
         editClick: function (e) {
             e.preventDefault();
-            $('#website').addClass('quickEdit');
-            $('#website').append('<input id="editInput" type="text" class="left"/>');
+            var parent = $(e.target).parent().parent();
+            console.log(parent[0].id)
+            $("#" + parent[0].id).addClass('quickEdit');
+            this.text = $.trim($('#' + parent[0].id).data('text'));
+            console.log(this.text);
+            $("#" + parent[0].id).text('');
+            $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
+            $('#editInput').val(this.text);
             $('#editSpan').remove();
-            $('#website').append('<span id="cancleSpan" class="right"><a href="#">Cancle</a></span>');
-            $('#website').append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
-            console.log('aClick');
+            $("#" + parent[0].id).append('<span id="cancleSpan" class="right"><a href="#">Cancle</a></span>');
+            $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
         },
 
         saveClick: function (e) {
+            e.preventDefault();
             var models = this.collection.models;
+            var parent = $(event.target).parent().parent();
+            var objIndex = parent[0].id.split('_');
+            //console.log(objIndex);
+            var obj = {};
             var itemIndex = Custom.getCurrentII() - 1;
             var currentModel = models[itemIndex];
-            currentModel.set({ website: $('#editInput').val() });
-            currentModel.save();
+            if (objIndex.length > 1) {             
+                obj = currentModel.get(objIndex[0]);
+                obj[objIndex[1]] = $('#editInput').val();
+            } else if (objIndex.length == 1) {
+                obj[objIndex[0]] = $('#editInput').val();
+            }
+            console.log(obj);          
+            console.log("Current Model:");
+            console.log(currentModel.get(objIndex[0]));
+            currentModel.set(obj);
+            currentModel.save({}, {
+                headers: {
+                    mid: 39
+                },
+                success: function () {
+                    Backbone.history.navigate("#home/content-Companies/form", { trigger: true });
+                }
+            });
         },
 
+
+        cancelNote: function (e) {
+            $('#noteArea').val('');
+            $('#noteTitleArea').val('');
+            $('#getNoteKey').attr("value", '');
+        },
         editDelNote: function (e) {
             var id = e.target.id;
             var k = id.indexOf('_');
@@ -109,17 +136,23 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     break;
                 }
                 case "del": {
-                    notes.splice(id_int, 1);
-                    currentModel.set('notes', notes);
+                	 
+                    var new_notes = _.filter(notes, function(note){
+                    	if(note.id != id_int){
+                    		return note;
+                    	}
+                    });
+                    console.log(new_notes);
+                    currentModel.set('notes',new_notes);
                     currentModel.save({},
-                         {
-                             headers: {
-                                 mid: 39
-                             },
-                             success: function (model, response, options) {
-                                 $('#' + id_int).remove();
-                             }
-                         });
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                success: function (model, response, options) {
+                                    $('#' + id_int).remove();
+                                }
+                            });
                     break;
                 }
             }
@@ -331,23 +364,23 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                             var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
-                            //this.$el.find('.formRightColumn').append(
-                            //    new opportunitiesCompactContentView({
-                            //        collection: this.opportunitiesCollection,
-                            //        companiesCollection: this.collection,
-                            //        model: currentModel
-                            //    }).render().el,
-                            //    new personsCompactContentView({
-                            //        collection: this.personsCollection,
-                            //        model: currentModel
-                            //    }).render().el
-                            //);
+                            this.$el.find('.formRightColumn').append(
+                                new opportunitiesCompactContentView({
+                                    collection: this.opportunitiesCollection,
+                                    companiesCollection: this.collection,
+                                    model: currentModel
+                                }).render().el,
+                                new personsCompactContentView({
+                                    collection: this.personsCollection,
+                                    model: currentModel
+                                }).render().el
+                            );
 
                             this.$el.find('.formLeftColumn').append(
                                     new noteView({
                                         model: currentModel
                                     }).render().el
-                                );console.log(currentModel);
+                                ); console.log(currentModel);
                         }
 
                         break;

@@ -8,7 +8,7 @@ define(
         var respType        =   'token';
         var scope       = "openid email https://www.google.com/calendar/feeds/";
         var userProfileScope = "https://www.googleapis.com/plus/v1/people/me?";
-        var calendarList = "https://www.googleapis.com/calendar/v3/users/me/calendarList?";
+        var calendarList = "https://www.googleapis.com/calendar/v3/calendars/";
         var getCalendar = "https://www.googleapis.com/auth/calendar.readonly";
         var _url        =   authUrl + 'scope=' + scope + '&client_id=' + clientId + '&redirect_uri=' + redirectURI + '&response_type=' + respType + '&approval_prompt=force';
         var winObject;
@@ -34,15 +34,17 @@ define(
             }, 100);
         }
 
-        var getCalendarEvents = function(){
+        var getCalendarEvents = function(token,email,callback){
+			console.log(calendarList + email+"/events?access_token=" + token);
             $.ajax({
                 type: "GET",
-                url: userProfileScope + "access_token=" + acToken,
+                url: calendarList + email+"/events?access_token=" + token,
                 data: null,
                 success: function(response){
                     if(response.error){
                         throw new Error(response.error.message);
                     }
+					callback(response.items);
                 },
                 error: function (error){
                     throw new Error(error.message);
@@ -69,8 +71,7 @@ define(
                 data: null,
                 success: function(response){
                     console.log(response);
-                    //getCalendarsList();
-                    callback(response);
+                    getCalendarEvents(token,response["email"],callback);
                 },
                 dataType: "jsonp"
             });
