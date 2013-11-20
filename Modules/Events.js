@@ -300,7 +300,15 @@ var Events = function (logWriter, mongoose) {
 
         remove: remove,
 
-        Events: Events
+        Events: Events,
+
+        createCalendar: createCalendar,
+
+        getCalendars: getCalendars,
+
+        updateCalendar: updateCalendar,
+
+        removeCalendar: removeCalendar
     };
 };
 
