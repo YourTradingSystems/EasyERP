@@ -86,7 +86,7 @@ app.get('/getModules', function (req, res) {
 });
 
 app.post('/uploadFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File<<<<<<<<<<<<<<<<<<<<<<<');
+    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
     console.log(req.headers);
@@ -94,13 +94,32 @@ app.post('/uploadFiles', function (req, res, next) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
             if (err) throw err;
-            console.log(req.files.attachfile.name);
+            file.id = req.files.attachfile.id;
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderId = req.session.uName;
+            file.uploadDate = req.files.attachfile.date;
+            file.uploaderName = req.session.uName;
             requestHandler.uploadFilePerson(req, res, req.headers.id, file);
+        });
+    });
+});
+app.post('/uploadFilesCompanies', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Companies<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    file = {};
+    console.log(req.headers);
+    fs.readFile(req.files.attachfile.path, function (err, data) {
+        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+        fs.writeFile(path, data, function (err) {
+            if (err) throw err;
+            file.id = req.files.attachfile.id;
+            file.name = req.files.attachfile.name;
+            file.path = path;
+            file.size = req.files.attachfile.size;
+            file.uploadDate = req.files.attachfile.date;
+            file.uploaderName = req.session.uName;
+            requestHandler.uploadFileCompanies(req, res, req.headers.id, file);
         });
     });
 });
@@ -717,6 +736,34 @@ app.delete('/Events/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeEvent(req, res, id, data);
+});
+
+app.post('/Calendar', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.event = req.body;
+    requestHandler.createCalendar(req, res, data);
+});
+
+app.get('/Calendar', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getCalendar(req, res, data);
+});
+
+app.put('/Calendar/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.calendar = req.body;
+    requestHandler.updateCalendar(req, res, id, data);
+});
+
+app.delete('/Calendar/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCalendar(req, res, id, data);
 });
 
 app.listen(8088);

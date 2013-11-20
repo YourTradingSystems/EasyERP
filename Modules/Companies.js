@@ -39,6 +39,20 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
             receiveMessages: { type: Number, default: 0 }
         },
         color: { type: String, default: '#4d5a75' },
+        attachments: [{
+            id: { type: Number, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            size:Number,
+            uploaderName: { type: String, default: '' },
+            uploadDate: { type: Date, default: Date.now }
+        }],
+        notes: [{
+            id: { type: String, default: '' },
+            title: { type: String, default: '' },
+            note: { type: String, default: '' },
+            date: { type: Date, default: Date.now }
+        }],
         social: {
             fb: { type: String, default: '' },
             li: { type: String, default: '' }
@@ -155,6 +169,40 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
                             }
                             if (data.imageSrc) {
                                 _company.imageSrc = data.imageSrc;
+                            }
+                        }
+                        if (data.notes) {
+                            if (data.notes.id) {
+                                _company.notes.id = data.notes.id;
+                            }
+                            if (data.notes.title) {
+                                _company.notes.title = data.notes.title;
+                            }
+                            if (data.notes.note) {
+                                _company.notes.note = data.notes.note;
+                            }
+                            if (data.notes.date) {
+                                _company.notes.date = data.notes.date;
+                            }
+                        }                      
+                        if (data.attachments) {
+                            if (data.attachments.id) {
+                                _company.attachments.id = data.attachments.id;
+                            }
+                            if (data.attachments.name) {
+                                _company.attachments.name = data.attachments.name;
+                            }
+                            if (data.attachments.path) {
+                                _company.attachments.path = data.attachments.path;
+                            }
+                            if (data.attachments.size) {
+                                _company.attachments.size = data.attachments.size;
+                            }
+                            if (data.attachments.uploadDate) {
+                                _company.attachments.uploadDate = data.attachments.uploadDate;
+                            }
+                            if (data.attachments.uploaderName) {
+                                _company.attachments.uploaderName = data.attachments.uploaderName;
                             }
                         }
                         if (data.history) {
