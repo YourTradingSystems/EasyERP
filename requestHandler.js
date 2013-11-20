@@ -1018,7 +1018,7 @@ var requestHandler = function (fs, mongoose) {
         createCalendar: createCalendar,
         getCalendars: getCalendars,
         updateCalendar: updateCalendar,
-        removeCalendar: removeCalendar,
+        removeCalendar: removeCalendar
 
     }
 }

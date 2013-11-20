@@ -89,16 +89,15 @@
         $("ul.changeContentIndex").hide();
         if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
-            $('#top-bar-editBtn').show();
             if(viewType == "form"){
+                $("#top-bar-createBtn").hide();
                 $('#top-bar-editBtn').show();
                 $("ul.changeContentIndex").show();
                 $('#top-bar-deleteBtn').show();
             }
             if(viewType == "thumbnails" || viewType == "list"){
                 $('#top-bar-editBtn').hide();
-            }
-        }
+            }        }
         else if(actionType === "View"){
             $('#top-bar-createBtn').show();
             $('#top-bar-editBtn').show();
