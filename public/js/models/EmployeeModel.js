@@ -22,12 +22,9 @@
                 mobile: '',
                 phone: ''
             },
-            skype:'',
+            skype: '',
             officeLocation: '',
-            relatedUser: {
-                id: '',
-                login: ''
-            },
+            relatedUser: null,
             visibility: 'Public',
             department: {
                 id: '',

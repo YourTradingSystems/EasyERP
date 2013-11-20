@@ -43,12 +43,12 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
             console.log('Tasks render');
             var that = this;
-            Custom.setCurrentCL(this.collection.models.length);
+            //Custom.setCurrentCL(this.collection.models.length);
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
             var workflows = this.workflowsCollection.toJSON()[0].value;
-            var projectId = window.location.hash.split('/')[3];
+            var projectId = window.location.hash.split('/')[4];
             if (!projectId || projectId.length < 24) {
                 models = this.collection;
                 App.hash = null;
@@ -142,24 +142,29 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 case "form":
                 {
                     this.$el.html('');
-                    var itemIndex = Custom.getCurrentII() - 1;
-                    if (itemIndex > models.length - 1) {
-                        itemIndex = models.length - 1;
+                    //var itemIndex = Custom.getCurrentII() - 1;
+                    //if (itemIndex > models.length - 1) {
+                    //    itemIndex = models.length - 1;
 
-                        var urlParts = window.location.hash.split('/');
-                        if (urlParts[4]) {
-                            urlParts[4] = models.length;
-                            window.location.hash = urlParts.join('/');
-                        }
-                        Custom.setCurrentII(models.length);
-                    }
+                    //    var urlParts = window.location.hash.split('/');
+                    //    if (urlParts[4]) {
+                    //        urlParts[4] = models.length;
+                    //        window.location.hash = urlParts.join('/');
+                    //    }
+                    //    Custom.setCurrentII(models.length);
+                    //}
 
-                    if (itemIndex == -1) {
-                        this.$el.html('<h2>No tasks found</h2>');
-                    } else {
-                        var currentModel = models.models[itemIndex];
-
+                    //if (itemIndex == -1) {
+                    //    this.$el.html('<h2>No tasks found</h2>');
+                    //} else {
+                    var currentModel = this.collection.getElement();
+                    if (currentModel) {
                         var extrainfo = currentModel.get('extrainfo');
+                        this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
+                    } else {
+                        this.$el.html('<h2>No tasks found</h2>');
+                    }
+                        //var extrainfo = currentModel.get('extrainfo');
                         //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
                         //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
                         //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
@@ -167,9 +172,8 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
                         //currentModel.on('change', this.render, this);
                         //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
-                        this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
-                    }
-
+                        //this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
+                    
                     break;
                 }
 
@@ -239,8 +243,8 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
-            window.location.hash = "#home/content-Tasks/form/" + itemIndex;
+            var id = $(e.target).closest("tr").data("id");
+            window.location.hash = "#home/content-Tasks/form/" + id;
         },
 
         gotoProjectForm: function (e) {

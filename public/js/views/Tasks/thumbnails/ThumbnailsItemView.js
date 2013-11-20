@@ -57,8 +57,8 @@ define([
             gotoForm: function (e) {
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
-                    var itemIndex = this.$el.data("index") + 1;
-                    window.location.hash = "#home/content-Tasks/form/" + itemIndex;
+                    var id = this.$el.attr("id");
+                    window.location.hash = "#home/content-Tasks/form/" + id;
                 }
             },
 

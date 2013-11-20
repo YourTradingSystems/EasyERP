@@ -67,6 +67,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         cancleClick: function (e) {
             e.preventDefault();
             $('#website').removeClass('quickEdit');
+            $('#website').text(this.text);
             $('#editInput').remove();
             $('#cancleSpan').remove();
             $('#saveSpan').remove();
@@ -75,11 +76,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         editClick: function (e) {
             e.preventDefault();
             $('#website').addClass('quickEdit');
+            this.text = $.trim($('#website').data('text'));
+            $('#website').text('');
             $('#website').append('<input id="editInput" type="text" class="left"/>');
+            $('#editInput').val(this.text);
             $('#editSpan').remove();
             $('#website').append('<span id="cancleSpan" class="right"><a href="#">Cancle</a></span>');
             $('#website').append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
-            console.log('aClick');
         },
 
         saveClick: function (e) {
@@ -87,7 +90,14 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var itemIndex = Custom.getCurrentII() - 1;
             var currentModel = models[itemIndex];
             currentModel.set({ website: $('#editInput').val() });
-            currentModel.save();
+            currentModel.save({}, {
+                headers: {
+                    mid: 39
+                },
+                success: function () {
+                    Backbone.history.navigate("#home/content-Companies", { trigger: true });
+                }
+            });
         },
 
         editDelNote: function (e) {
