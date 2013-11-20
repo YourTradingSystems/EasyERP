@@ -5,11 +5,7 @@ var Project = function (logWriter, mongoose) {
         projectName: { type: String, default: 'emptyProject' },
         task: [{ type: ObjectId, ref: 'Tasks' }],
         privacy: { type: String, default: 'All Users' },
-        customer: {
-            id: { type: String, default: '' },
-            type: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        customer: { type: ObjectId, ref: 'Customers' },
         projectmanager: { type: ObjectId, ref: 'Employees' },
         teams: {
             users: { type: Array, default: [] },
@@ -22,7 +18,7 @@ var Project = function (logWriter, mongoose) {
             sequence: { type: Number, default: 0 },
             parent: { type: String, default: null }
         },
-        workflow: { type: ObjectId, ref: 'Workflows' },
+        workflow: { type: ObjectId, ref: 'workflows' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
@@ -435,42 +431,13 @@ var Project = function (logWriter, mongoose) {
 
                     }
                     if (data.workflow) {
-                        if (data.workflow.name) {
-                            _project.workflow.name = data.workflow.name;
-                        }
-                        if (data.workflow.status) {
-                            _project.workflow.status = data.workflow.status;
-                        }
+                        _project.workflow = data.workflow;
                     }
                     if (data.customer) {
-                        if (data.customer._id) {
-                            _project.customer.id = data.customer._id;
-                        }
-                        if (data.customer.name) {
-                            _project.customer.name = (data.customer.name.first)
-                                ? ((data.customer.name.last)
-                                    ? data.customer.name.first + ' ' + data.customer.name.last
-                                    : data.customer.name.first)
-                                : '';
-                        }
-                        if (data.customer.type) {
-                            _project.customer.type = data.customer.type;
-                        }
+                        _project.customer = data.customer;
                     }
                     if (data.projectmanager) {
-                        if (data.projectmanager._id) {
-                            _project.projectmanager.id = data.projectmanager._id;
-                        }
-                        if (data.projectmanager.imageSrc) {
-                            _project.projectmanager.imageSrc = data.projectmanager.imageSrc;
-                        }
-                        if (data.projectmanager.name) {
-                            _project.projectmanager.name = (data.projectmanager.name.first)
-                                ? ((data.projectmanager.name.last)
-                                    ? data.projectmanager.name.first + ' ' + data.projectmanager.name.last
-                                    : data.projectmanager.name.first)
-                                : '';
-                        }
+                        _project.projectmanager = data.projectmanager;
                     }
                     _project.save(function (err, projectt) {
                         if (err) {
@@ -500,7 +467,7 @@ var Project = function (logWriter, mongoose) {
     function getForDd(response) {
         var res = {};
         res['data'] = [];
-        var query = project.find({},{projectName:1, _id:1});
+        var query = project.find({}, { projectName: 1, _id: 1 });
         query.sort({ projectName: 1 });
         query.exec(function (err, projects) {
             if (err) {
@@ -519,6 +486,7 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = project.find({});
+        query.populate("projectmanager customer workflow task");
         query.sort({ projectName: 1 });
         query.exec(function (err, projects) {
             if (err) {

@@ -293,6 +293,7 @@ app.post('/Projects', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
     data.project = req.body;
+    console.log(data);
     requestHandler.createProject(req, res, data);
 });
 

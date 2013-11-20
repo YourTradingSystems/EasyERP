@@ -24,7 +24,7 @@ define([
                 this.bind('reset', _.bind(this.render, this));
                 this.projectsCollection = options.collection;
                 this.projectsCollection.bind('reset', _.bind(this.render, this));
-                this.render = _.after(4, this.render);
+                this.render = _.after(3, this.render);
             },
 
             events: {
@@ -35,7 +35,7 @@ define([
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
-                    workflows.push({ name: value[i].name, status: value[i].status });
+                    workflows.push({ name: value[i].name, status: value[i].status, _id: value[i]._id });
                 }
                 return workflows;
             },
@@ -61,20 +61,21 @@ define([
                      projectName = "New Project";
                  }*/
 
-                var idCustomer = $(this.el).find("#customerDd option:selected").val();
-                var customer = common.toObject(idCustomer, this.customersDdCollection);
+                var customer = $(this.el).find("#customerDd option:selected").val();
+                //var customer = common.toObject(idCustomer, this.customersDdCollection);
 
-                var idManager = $("#managerDd option:selected").val();
-                var projectmanager = common.toObject(idManager, this.accountDdCollection);
+                var projectmanager = $("#managerDd option:selected").val();
+                //var projectmanager = common.toObject(idManager, this.accountDdCollection);
 
                 //var idWorkflow = $("#workflowDd option:selected").val();
                 //var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
 
-                var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };
+                //var workflow = {
+                //    wName: this.$("#workflowNames option:selected").text(),
+                //    name: this.$("#workflow option:selected").text(),
+                //    status: this.$("#workflow option:selected").val(),
+                //};
+                var workflow = this.$("#workflow option:selected").data("id");
 
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {

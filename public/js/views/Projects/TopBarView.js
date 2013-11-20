@@ -5,16 +5,16 @@ define([
 ],
     function (ContentTopBarTemplate, Custom, common) {
         var TopBarView = Backbone.View.extend({
-            el:'#top-bar',
+            el: '#top-bar',
             contentType: "Projects",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
 
-            events:{
+            events: {
                 "click a.changeContentView": 'changeContentViewType',
                 "click ul.changeContentIndex a": 'changeItemIndex',
                 "click #top-bar-deleteBtn": "deleteEvent",
-                //"click #top-bar-saveBtn": "saveEvent",
+                "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
                 "click #top-bar-editBtn": "editEvent"
             },
@@ -23,7 +23,7 @@ define([
 
             changeItemIndex: Custom.changeItemIndex,
 
-            initialize: function(options){
+            initialize: function (options) {
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
@@ -32,37 +32,34 @@ define([
                 this.render();
             },
 
-            render: function(){
+            render: function () {
                 var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
+                //var collectionLength = this.collection.length;
+                //var itemIndex = Custom.getCurrentII();
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
                 common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;
             },
 
-            editEvent: function(event){
+            editEvent: function (event) {
                 event.preventDefault();
                 this.trigger('editEvent');
             },
 
-            deleteEvent: function(event)
-            {
+            deleteEvent: function (event) {
                 event.preventDefault();
-                var answer=confirm("Realy DELETE items ?!");
-                if (answer==true) this.trigger('deleteEvent');
+                var answer = confirm("Realy DELETE items ?!");
+                if (answer == true) this.trigger('deleteEvent');
             },
 
-            saveEvent: function(event)
-            {
+            saveEvent: function (event) {
                 event.preventDefault();
                 this.trigger('saveEvent');
             },
 
-            discardEvent: function(event)
-            {
+            discardEvent: function (event) {
                 event.preventDefault();
-                Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
+                Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
             }
         });
 

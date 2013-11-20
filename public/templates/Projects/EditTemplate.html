@@ -1,43 +1,59 @@
-<div class="form-holder" id="createFormDiv" >
+<div class="form-holder" id="createFormDiv">
     <form id="createProjectForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <div class="inner">
                 <div class="half-block left">
                     <dl class="person-info">
-                    <dt><label for="projectName">Project Name: </label></dt>
-                    <dd><input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>"/></dd>
-                    <dt><label for="projectShortDesc">Project Short Description: </label></dt>
-                    <dd><input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" /></dd>
-                    <dt><label for="managerDd">Project Manager: </label></dt>
-                    <dd>
-                        <select id="managerDd">
-
-                        </select>
-                    </dd>
-                    <dt><label for="customerDd">Project Customer: </label></dt>
-                    <dd>
-                        <select id="customerDd">
-
-                        </select>
-                    </dd>
+                        <dt>
+                            <label for="projectName">Project Name: </label>
+                        </dt>
+                        <dd>
+                            <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>" /></dd>
+                        <dt>
+                            <label for="projectShortDesc">Project Short Description: </label>
+                        </dt>
+                        <dd>
+                            <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" /></dd>
+                        <dt>
+                            <label for="managerDd">Project Manager: </label>
+                        </dt>
+                        <dd>
+                            <select id="managerDd">
+                            </select>
+                        </dd>
+                        <dt>
+                            <label for="customerDd">Project Customer: </label>
+                        </dt>
+                        <dd>
+                            <select id="customerDd">
+                            </select>
+                        </dd>
 
                     </dl>
                 </div>
                 <div class="half-block left">
-                  <dl class="person-info">
-                        <dt><label for="workflowNames"> Workflow Names: </label></dt>
-                      <dd>
-                         
-                      </dd>
-                       <dt><label for="workflow"> Workflow: </label></dt>
-                      <dd id="selectWorkflow"></dd>
-                        <dt><label for="usereditDd">Users Can Edit Project: </label></dt>
+                    <dl class="person-info">
+                        <dt>
+                            <label for="workflowDd">Project Workflow Name: </label>
+                        </dt>
                         <dd>
-                            <select id="userEditDd" size="3" multiple>
-
+                            <select id="workflowDd">
                             </select>
                         </dd>
-                  </dl>
+                        <dt>
+                            <label for="workflowValue">Workflow</label></dt>
+                        <dd>
+                            <select id="workflowValue">
+                            </select>
+                        </dd>
+                        <dt>
+                            <label for="usereditDd">Users Can Edit Project: </label>
+                        </dt>
+                        <dd>
+                            <select id="userEditDd" size="3" multiple>
+                            </select>
+                        </dd>
+                    </dl>
 
                 </div>
 
@@ -45,8 +61,8 @@
             </div>
         </fieldset>
         <div class="buttons">
-        <input type="submit" id="saveBtn" class="btn" value="Save"/>
-        <input type="button" id="cancelBtn" class="btn" value="Cancel"/>
-		</div>
+            <input type="submit" id="saveBtn" class="btn" value="Save" />
+            <input type="button" id="cancelBtn" class="btn" value="Cancel" />
+        </div>
     </form>
 </div>
