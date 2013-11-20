@@ -3,7 +3,7 @@ define([
     'custom',
     'common'
 ],
-    function (ContentTopBarTemplate, Custom, Common){
+    function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Tasks",
@@ -21,22 +21,17 @@ define([
             },
 
             changeContentViewType: function (e) {
-                var windowLocHash = window.location.hash.split('/')[3];
-                var hash;
-                if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-                    hash = windowLocHash;
-                }
-                Custom.changeContentViewType(e, hash, this.contentType);
+                Custom.changeContentViewType(e, this.contentType, this.collection);
             },
 
             changeItemIndex: function (e) {
-                var windowLocHash = window.location.hash.split('/')[3];
+                //var windowLocHash = window.location.hash.split('/')[3];
                 var actionType = "Content";
-                var hash;
-                if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-                    hash = windowLocHash;
-                }
-                Custom.changeItemIndex(e, hash, actionType, this.contentType);
+                //var hash;
+                //if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
+                //    hash = windowLocHash;
+                //}
+                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
             },
 
             initialize: function (options) {
@@ -50,9 +45,9 @@ define([
 
             render: function () {
                 var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
+                //var collectionLength = this.collection.length;
+                //var itemIndex = Custom.getCurrentII();
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;
             },
@@ -62,7 +57,7 @@ define([
                 var answer = confirm("Realy DELETE items ?!");
                 if (answer == true) this.trigger('deleteEvent');
             },
-            editEvent: function(event){
+            editEvent: function (event) {
                 event.preventDefault();
                 this.trigger('editEvent');
             },

@@ -77,6 +77,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             $("#" + parent[0].id).text('');
             $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             $('#editInput').val(this.text);
+            $('#editInput').val(this.text);
             $('#editSpan').remove();
             $("#" + parent[0].id).append('<span id="cancleSpan" class="right"><a href="#">Cancle</a></span>');
             $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
@@ -145,14 +146,14 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     console.log(new_notes);
                     currentModel.set('notes',new_notes);
                     currentModel.save({},
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                success: function (model, response, options) {
-                                    $('#' + id_int).remove();
-                                }
-                            });
+                         {
+                             headers: {
+                                 mid: 39
+                             },
+                             success: function (model, response, options) {
+                                 $('#' + id_int).remove();
+                             }
+                         });
                     break;
                 }
             }

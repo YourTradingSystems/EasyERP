@@ -44,9 +44,9 @@ define([
             },
 
             gotoForm: function (e) {
-                var itemIndex = $(e.target).closest(".item").data("index") + 1;
+                var id = $(e.target).closest(".item").data("id");
                 App.ownContentType = true;
-                window.location.hash = "home/content-Tasks/form/" + itemIndex;
+                window.location.hash = "home/content-Tasks/form/" + id;
             },
 
             deleteEvent: function (e) {

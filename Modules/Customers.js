@@ -10,8 +10,8 @@
         dateBirth: Date,
         imageSrc: { type: String, default: '' },
         email: { type: String, default: '' },
-        company: { type: ObjectId, ref: 'Customers' },
-        department: { type: ObjectId, ref: 'Department' },
+        company: { type: ObjectId, ref: 'Customers', default: null },
+        department: { type: ObjectId, ref: 'Department', default: null },
         timezone: { type: String, default: 'UTC' },
         address: {
             street: { type: String, default: '' },
@@ -21,7 +21,7 @@
             country: { type: String, default: '' }
         },
         website: { type: String, default: '' },
-        jobPosition: { type: ObjectId, ref: 'JobPosition' },
+        jobPosition: { type: String, default: '' },
         skype: { type: String, default: '' },
         phones: {
             phone: { type: String, default: '' },
@@ -34,8 +34,8 @@
         salesPurchases: {
             isCustomer: { type: Boolean, default: false },
             isSupplier: { type: Boolean, default: false },
-            salesPerson: { type: ObjectId, ref: 'Employees' },
-            salesTeam: { type: ObjectId, ref: 'Department' },
+            salesPerson: { type: ObjectId, ref: 'Employees', default: null },
+            salesTeam: { type: ObjectId, ref: 'Department', default: null },
             active: { type: Boolean, default: true },
             reference: { type: String, default: '' },
             language: { type: String, default: 'English' },
@@ -45,7 +45,7 @@
             },
             receiveMessages: { type: Number, default: 0 }
         },
-        relatedUser: { type: ObjectId, ref: 'Users' },
+        relatedUser: { type: ObjectId, ref: 'Users', default: null },
         color: { type: String, default: '#4d5a75' },
         social: {
             FB: { type: String, default: '' },

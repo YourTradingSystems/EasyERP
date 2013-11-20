@@ -1,4 +1,4 @@
-define(['libs/date.format','common'], function (dateformat, common) {
+define(['libs/date.format', 'common'], function (dateformat, common) {
     var runApplication = function (success, description) {
         if (!Backbone.history.fragment)
             Backbone.history.start({ silent: true });
@@ -18,79 +18,72 @@ define(['libs/date.format','common'], function (dateformat, common) {
 
     };
 
-    var changeItemIndex = function (event, hash, actionType, contentType) {
+    var changeItemIndex = function (event, actionType, contentType, collection) {
         event.preventDefault();
         if (!this.actionType || !this.contentType) {
             this.actionType = actionType;
             this.contentType = contentType;
         }
-        var shift = $(event.target).attr('data-shift'),
-            itemIndex = getCurrentII(),
-            viewType = getCurrentVT();
+        var shift = $(event.target).attr('data-shift');
+        //itemIndex = getCurrentII(),
+        viewType = getCurrentVT();
 
         switch (shift) {
             case "left":
                 {
-                    setCurrentII(parseInt(itemIndex) - 1);
+                    collection.prev();
                     break;
                 }
             case "right":
                 {
-                    setCurrentII(parseInt(itemIndex) + 1);
+                    collection.next();
                     break;
                 }
         }
 
-        itemIndex = getCurrentII();
+        id = collection.getElement().attributes._id;
 
         if (this.actionType == 'Content') {
-            if (!hash) {
-                window.location.hash = "#home/content-" + this.contentType + "/" + viewType + "/" + itemIndex;
-            } else {
-                window.location.hash = "#home/content-" + this.contentType + "/" + viewType + "/" + hash + "/" + itemIndex;
-            }
+            window.location.hash = "#home/content-" + this.contentType + "/" + viewType + "/" + id;
+
         } else if (this.actionType == 'Edit') {
-            window.location.hash = "#home/action-" + this.contentType + "/" + this.actionType + "/" + itemIndex;
+            window.location.hash = "#home/action-" + this.contentType + "/" + this.actionType + "/" + id;
         }
     };
 
-    var changeContentViewType = function (event, hash, contentType) {
+    var changeContentViewType = function (event, contentType, collection) {
 
         event.preventDefault();
-        var itemIndex = getCurrentII();
+        //var itemIndex = getCurrentII();
         if (contentType) {
             this.contentType = contentType;
         }
+        var windowLocHash = window.location.hash.split('/')[3];
+        var id;
+        if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
+            id = windowLocHash;
+        }
         var viewtype = $(event.target).attr('data-view-type'),
-    		url = "#home/content-" + this.contentType + "/" + viewtype;
+            url = "#home/content-" + this.contentType + "/" + viewtype;
 
-        if (hash) {
-            url += "/" + hash;
+        if (id) {
+            url += "/" + id;
+            collection.setElement(id);
+        } else {
+            var model = collection.getElement();
+            if (model) {
+                url += "/" + model.attributes._id;
+            } 
         }
 
-        if (viewtype == "form") {
-            url += "/" + itemIndex;
-        }
+        //if (viewtype == "form") {
+        //    url += "/" + itemIndex;
+        //}
 
         App.ownContentType = true;
 
         Backbone.history.navigate(url, { trigger: true });
     };
-
-    var getElement = function() {
-        return this.currentElement;
-    };
-    var setElement = function(model) {
-        this.currentElement = model;
-    };
-    var next = function (){
-        this.setElement(this.at(this.indexOf(this.getElement()) + 1));
-        return this;
-    };
-    var prev = function() {
-        this.setElement(this.at(this.indexOf(this.getElement()) - 1));
-        return this;
-    }
 
     var getCurrentII = function () {
         if (App.currentItemIndex == null) {
@@ -103,9 +96,9 @@ define(['libs/date.format','common'], function (dateformat, common) {
             App.currentItemIndex = 0;
             itemIndex = 0;
         } else {
-        //if (!App.currentItemIndex){
-        //    itemIndex = null;
-        //} else {
+            //if (!App.currentItemIndex){
+            //    itemIndex = null;
+            //} else {
             itemIndex = App.currentItemIndex;
         }
         return itemIndex;
@@ -113,7 +106,7 @@ define(['libs/date.format','common'], function (dateformat, common) {
 
     var setCurrentII = function (index) {
         var testIndex = new RegExp(/^[1-9]{1}[0-9]*$/),
-    		contentLength = getCurrentCL();
+            contentLength = getCurrentCL();
 
         if (testIndex.test(index) == false)
             index = 1;
@@ -315,10 +308,10 @@ define(['libs/date.format','common'], function (dateformat, common) {
         projects.push({
             'id': 1,
             'text': "Gantt View",
-            'assignedTo' : "Gantt View",
+            'assignedTo': "Gantt View",
             'start_date': minDate,
             'duration': 0,
-            'progress': duration/100,
+            'progress': duration / 100,
             'open': true
         });
 
@@ -397,10 +390,10 @@ define(['libs/date.format','common'], function (dateformat, common) {
 
         calculateHours: calculateHours,
 
-        getElement: getElement,
-        setElement: setElement,
-        next: next,
-        prev: prev,
+        ////getElement: getElement,
+        ////setElement: setElement,
+        ////next: next,
+        ////prev: prev,
 
         runApplication: runApplication,
         changeItemIndex: changeItemIndex,

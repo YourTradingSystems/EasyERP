@@ -19,9 +19,13 @@ define([
             	"click #top-bar-editBtn": "editEvent"
             },
             
-            changeContentViewType: Custom.changeContentViewType,
+            changeContentViewType: function (e) {
+                Custom.changeContentViewType(e, this.contentType, this.collection);
+            },
             
-            changeItemIndex: Custom.changeItemIndex,
+            changeItemIndex: function (e) {
+                Custom.changeItemIndex(e, "Content", this.contentType, this.collection);
+            },
             
             initialize: function(options){
             	this.actionType = options.actionType;
@@ -34,10 +38,7 @@ define([
 
             render: function(){
                 var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
-            	
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType}));
 
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;

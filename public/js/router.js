@@ -15,25 +15,21 @@ define([
         routes: {
             "home": "main",
             "login": "login",
-            "home/content-:type(/:viewtype)(/:hash)(/:curitem)": "getList",
-            "home/action-:type/:action(/:hash)(/:curitem)": "makeAction",
+            "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
+            "home/action-:type/:action(/:curitem)(/:hash)": "makeAction",
             "*actions": "main"
         },
 
-        getList: function (contentType, viewType, hash, itemIndex) {
-            //if (/\s/.test(contentType)) {
-            //    var contentTypeArray = contentType.split(' ');
-            //    contentType = contentTypeArray.join('');
-            //}
+        getList: function (contentType, viewType, itemIndex, hash) {
             if (this.mainView == null) this.main();
-            if (hash) {
-                if (hash.length != 24) {
-                    itemIndex = hash;
-                    hash = null;
-                }
-            }
+            //if (hash) {
+            //    if (hash.length != 24) {
+            //        itemIndex = hash;
+            //        hash = null;
+            //    }
+            //}
 
-            console.log('GetList: ' + contentType + " " + viewType + " " + hash + " " + itemIndex);
+            console.log('GetList: ' + contentType + " " + viewType + " " + itemIndex + " " + hash);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -44,7 +40,7 @@ define([
             } else if (contentType == "ownCompanies") {
                 TopBarViewUrl = "views/Companies/TopBarView";
                 ContentViewUrl = "views/Companies/ContentView";
-                CollectionUrl = "collections/Companies" + "/" + contentType + "Collection"
+                CollectionUrl = "collections/Companies" + "/" + contentType + "Collection";
             }
 
             self.Custom = Custom;
@@ -52,13 +48,9 @@ define([
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 var contentCollection = new ContentCollection();
                 contentCollection.bind('reset', _.bind(createViews, self));
-                contentCollection.next = _.bind(self.Custom.next, contentCollection);
-                contentCollection.prev = _.bind(self.Custom.prev, contentCollection);
-                contentCollection.setElement = _.bind(self.Custom.setElement, contentCollection);
-                contentCollection.getElement = _.bind(self.Custom.getElement, contentCollection);
                 function createViews() {
                     contentCollection.unbind('reset');
-                    this.Custom.setCurrentCL(contentCollection.models.length);
+                    //this.Custom.setCurrentCL(contentCollection.models.length);
 
                     if (viewType) {
                         if (!App.contentType || App.contentType != contentType) {
@@ -75,33 +67,34 @@ define([
                             contentType: contentType
                         });
                     }
-                    if (itemIndex)
-                        this.Custom.setCurrentII(itemIndex);
+                    if (itemIndex) contentCollection.setElement(itemIndex);
 
                     viewType = this.Custom.getCurrentVT({
                         contentType: contentType
                     });
 
-                    itemIndex = this.Custom.getCurrentII();
+                    //itemIndex = this.Custom.getCurrentII();
 
                     var url = "#home/content-" + contentType + "/" + viewType;
 
+                    if (itemIndex) {
+                        url += "/" + itemIndex;
+                    }
                     if (hash) {
                         url += "/" + hash;
                     }
-
-                    if (viewType === "form" && (!hash || hash.length == 24)) {
-                        App.hash = hash;
-                        url += "/" + itemIndex;
-                    }
+                    //if (viewType === "form" && (!hash || hash.length == 24)) {
+                    //    App.hash = hash;
+                    //    url += "/" + itemIndex;
+                    //}
 
                     var contentView = new ContentView({ collection: contentCollection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
 
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
-                    if(contentType === "Projects" || contentType === "Tasks" || contentType === "Persons")
+                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons")
                         topBarView.bind('editEvent', contentView.editItem, contentView);
-                    if(contentType === "LeadsWorkflow")
+                    if (contentType === "LeadsWorkflow")
                         topBarView.bind('createEvent', contentView.createItem, contentView);
 
                     this.changeView(contentView);
@@ -112,17 +105,18 @@ define([
             });
 
         },
-        makeAction: function (contentType, action, hash, itemIndex) {
-            if (/\s/.test(contentType)) {
-                var contentTypeArray = contentType.split(' ');
-                contentType = contentTypeArray.join('');
-            }
-            if (hash) {
-                if (hash.length != 24) {
-                    itemIndex = hash;
-                    hash = null;
-                }
-            }
+
+        makeAction: function (contentType, action, itemIndex, hash) {
+            //if (/\s/.test(contentType)) {
+            //    var contentTypeArray = contentType.split(' ');
+            //    contentType = contentTypeArray.join('');
+            //}
+            //if (hash) {
+            //    if (hash.length != 24) {
+            //        itemIndex = hash;
+            //        hash = null;
+            //    }
+            //}
             if (this.mainView == null) this.main();
             var actionVariants = ["Create", "Edit", "View"];
 
@@ -140,15 +134,15 @@ define([
             require([ActionViewUrl, TopBarViewUrl, CollectionUrl], function (ActionView, TopBarView, ContentCollection) {
                 var contentCollection = new ContentCollection();
                 contentCollection.bind('reset', _.bind(createViews, self));
-
                 function createViews() {
                     contentCollection.unbind('reset');
-                    this.Custom.setCurrentCL(contentCollection.models.length);
+                    //this.Custom.setCurrentCL(contentCollection.models.length);
 
-                    if (itemIndex)
-                        this.Custom.setCurrentII(itemIndex);
+                    //if (itemIndex) 
+                    //    this.Custom.setCurrentII(itemIndex);
+                    if (itemIndex) contentCollection.setElement(itemIndex);
 
-                    itemIndex = this.Custom.getCurrentII();
+                    //itemIndex = this.Custom.getCurrentII();
 
                     var url = "#home/action-" + contentType + "/" + action;
 
@@ -156,10 +150,10 @@ define([
                         url += "/" + itemIndex;
                     }
                     if (!hash && App.hash) {
-                        hash = App.hash
+                        hash = App.hash;
                     }
                     if (hash && (action === "Create" || action === "View" || action === "Edit")) {
-                        url += "/" + hash
+                        url += "/" + hash;
                     }
 
                     Backbone.history.navigate(url, { replace: true });

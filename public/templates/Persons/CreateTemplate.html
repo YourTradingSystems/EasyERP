@@ -13,7 +13,7 @@
 		  <dt><label for="companiesDd">Company :</label></dt>
 		  <dd>
 			<select id="companiesDd">
-              <option selected="selected" value="0"></option>
+              <option selected="selected" value=""></option>
               <% companiesCollection.each(function(option){ %>
               <option value="<%= option.id %>"><%= option.get('name').first%></option>
               <% }) %>
@@ -62,7 +62,7 @@
 		  <dt><label for="department">Department :</label></dt>
 		  <dd>
             <select id="department">
-              <option selected="selected" value="0">Select...</option>
+              <option selected="selected" value="">Select...</option>
               <% departmentsCollection.each(function(option){ %>
               <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
               <% }); %>

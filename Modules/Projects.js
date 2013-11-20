@@ -10,12 +10,11 @@ var Project = function (logWriter, mongoose) {
             type: { type: String, default: '' },
             name: { type: String, default: '' }
         },
-        projectmanager: {
-            id: { type: String, default: '' },
-            imageSrc: { type: String, default: '' },
-            name: { type: String, default: '' }
+        projectmanager: { type: ObjectId, ref: 'Employees' },
+        teams: {
+            users: { type: Array, default: [] },
+            Teams: { type: Array, default: [] }
         },
-        teams: { users: { type: Array, default: [] }, Teams: { type: Array, default: [] } },
         info: {
             StartDate: Date,
             EndDate: Date,
@@ -23,10 +22,7 @@ var Project = function (logWriter, mongoose) {
             sequence: { type: Number, default: 0 },
             parent: { type: String, default: null }
         },
-        workflow: {
-            name: { type: String, default: 'New' },
-            status: { type: String, default: 'New' }
-        },
+        workflow: { type: ObjectId, ref: 'Workflows' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
@@ -37,35 +33,20 @@ var Project = function (logWriter, mongoose) {
     var TasksSchema = mongoose.Schema({
         summary: { type: String, default: '' },
         taskCount: { type: Number, default: 0 },
-        project: {
-            id: String,
-            name: String,
-            projectShortDesc: String
-        },
-        assignedTo: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' },
-            imageSrc: { type: String, default: '' }
-        },
+        project: { type: ObjectId, ref: 'Project' },
+        assignedTo: { type: ObjectId, ref: 'Employees' },
         deadline: Date,
         tags: [String],
         description: String,
         extrainfo: {
             priority: { type: String, default: 'Medium' },
             sequence: { type: Number, default: 0 },
-            customer: {
-                id: { type: String, default: '' },
-                name: { type: String, default: '' }
-            },
+            customer: { type: ObjectId, ref: 'Customers' },
             StartDate: { type: Date, default: Date.now },
             EndDate: { type: Date, default: Date.now },
             duration: { type: Number, default: 0 }
         },
-        workflow: {
-            _id: { type: String, default: 'Analysis' },
-            name: { type: String, default: 'Analysis' },
-            status: { type: String, default: 'New' }
-        },
+        workflow: { type: ObjectId, ref: 'Workflows' },
         type: { type: String, default: '' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
