@@ -65,6 +65,7 @@ var Project = function (logWriter, mongoose) {
             duration: { type: Number, default: 0 }
         },
         workflow: {
+            _id: { type: String, default: 'Analysis' },
             name: { type: String, default: 'Analysis' },
             status: { type: String, default: 'New' }
         },

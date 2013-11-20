@@ -373,7 +373,7 @@ app.get('/taskWorkflows', function (req, res) {
     type = {};
     //data.id = req.param('id');
     data.mid = req.param('mid');
-    type.name = 'task';
+    //type.name = 'task';
     type.id = "Task";
     data.type = type;
     console.log(data);
