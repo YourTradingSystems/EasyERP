@@ -4,8 +4,8 @@ var Events = function (logWriter, mongoose) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
 
     var eventsSchema = mongoose.Schema({
-        _id: Number,
-        id: Number,
+        _id: String,
+        id: String,
         calendar: [{ type: ObjectId, ref: 'Calendars' }],
         summary: { type: String, default: '' },
         description: { type: String, default: '' },
