@@ -888,7 +888,7 @@ var requestHandler = function (fs, mongoose) {
     function getCalendars(req, res, data) {
         console.log("Requst getCalendars is success");
         if (req.session && req.session.loggedIn) {
-            events.getCalendar(res);
+            events.getCalendars(res);
         } else {
             res.send(401);
         }

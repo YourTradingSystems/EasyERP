@@ -159,7 +159,7 @@ var Events = function (logWriter, mongoose) {
         }
     };//End createCalendar
 
-    function getCalendar(response) {
+    function getCalendars(response) {
         var res = {}
         var description = "";
         res['data'] = [];
