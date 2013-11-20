@@ -136,20 +136,23 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     break;
                 }
                 case "del": {
-                    delete notes[id_int];
-                    currentModel.set('notes', notes);
-                    if (currentModel.save()) {
-                        var notes = currentModel.get('notes');
-                        for (var i = 0; i < notes.length; i++) {
-                            if (notes[i] == null) {
-                                notes.splice(i, 1);
-                                i--;
-                            }
-                        }
-                        currentModel.set('notes', notes);
-                        currentModel.save();
-                        $('#' + id_int).remove();
-                    }
+                	 
+                    var new_notes = _.filter(notes, function(note){
+                    	if(note.id != id_int){
+                    		return note;
+                    	}
+                    });
+                    console.log(new_notes);
+                    currentModel.set('notes',new_notes);
+                    currentModel.save({},
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                success: function (model, response, options) {
+                                    $('#' + id_int).remove();
+                                }
+                            });
                     break;
                 }
             }
