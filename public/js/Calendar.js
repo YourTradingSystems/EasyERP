@@ -5,27 +5,15 @@ function(EmployeesCollection){
     var saveEventId;
     var miniCalendar;
 
-    var initCalendar = function(calendarContainer, eventsCollection){
+    var initCalendar = function(calendarContainer){
         applyTemplates();
         scheduler.init(calendarContainer, new Date(), "month");
         populatePersons();
+    }
+
+    var loadCalendarEvents = function(eventsCollection){
         scheduler.backbone(eventsCollection);
-		console.log("Newww");
-		var events=eventsCollection.toJSON();
-		console.log(events);
-		for (var i=0;i<events.length;i++){
-			if (events[i].start_date&&events[i].end_date){
-				console.log(events);
-				scheduler.setEvent(i,{
-					start_date: new Date(events[i].start_date),
-					end_date:   new Date(events[i].end_date),
-					text:   events[i].description,
-					holder: events[i].assignTo, //userdata
-					room:""
-				});
-				scheduler.showEvent(i);
-			}
-		}
+        scheduler.parse(eventsCollection.toJSON(), "json");
     }
 
     var initMiniCalendar = function(miniCalendarDiv){
@@ -41,7 +29,7 @@ function(EmployeesCollection){
     var applyTemplates = function(){
         scheduler.locale.labels.section_assignTo = "Assign To";
         scheduler.locale.labels.section_eventType = "Event type";
-        scheduler.locale.labels.section_subject = "Subject";
+        scheduler.locale.labels.section_summary = "Subject";
         scheduler.locale.labels.section_description = "Description";
         scheduler.locale.labels.section_status = "Status";
         scheduler.locale.labels.section_text = "Text";
@@ -63,13 +51,13 @@ function(EmployeesCollection){
         scheduler.attachEvent("onTemplatesReady", function(){
 
             scheduler.templates.event_bar_text = function(start, end, ev){
-                return ev.subject || "New Event";
+                return ev.summary || "New Event";
             };
             scheduler.templates.event_text = function(start, end, ev){
-                return ev.subject || "New Event";
+                return ev.summary || "New Event";
             };
             scheduler.templates.tooltip_text = function(start,end, event){
-                return "<b>Event: </b>" + event.subject + "<br/><b>Start: </b>" + dateFormat(start, "dd-mm-yyyy hh:mm") + "<br/><b>End: </b>" + dateFormat(end, "dd-mm-yyyy hh:mm");
+                return "<b>Event: </b>" + event.summary + "<br/><b>Start: </b>" + dateFormat(start, "dd-mm-yyyy hh:mm") + "<br/><b>End: </b>" + dateFormat(end, "dd-mm-yyyy hh:mm");
             }
             /*scheduler.tempalte.event_class = function(start, end, event){
              if(start < (new Date()))
@@ -81,17 +69,17 @@ function(EmployeesCollection){
         });
         if(!scheduler.checkEvent("onEventSave")){
             scheduler.attachEvent('onEventSave', function(id, data, flag){
-                if(!data.subject){
+                if(!data.summary){
                     alert('Subject field can not be empty');
                     return false;
                 }
-                if(data.subject.trim().length == 0){
+                if(data.summary.trim().length == 0){
                     alert("Subject field can not contain whitespaces");
-                    scheduler.formSection('subject').setValue('');
+                    scheduler.formSection('summary').setValue('');
                     return false;
                 }
                 attachEventColor(id,data);
-                data.text = data.subject;
+                data.text = data.summary;
                 return true;
             });
         }
@@ -116,7 +104,7 @@ function(EmployeesCollection){
 
         scheduler.config.lightbox.sections = [
             {name:"eventType", height:30, type:"select", map_to:"eventType", options:eventTypeOptions},
-            {name:"subject", height:30, type:"textarea", map_to:"subject", defaultValue:"New Event"},
+            {name:"summary", height:30, type:"textarea", map_to:"summary", defaultValue:"New Event"},
             {name:"description", height:70, type:"textarea", map_to:"description"},
             {name:"time", height:72, type:"calendar_time", map_to:"auto" },
             {name:"assignTo", height: 30, type:"select", map_to: "assignTo", options: personsOptions},
@@ -166,7 +154,8 @@ function(EmployeesCollection){
 
     return {
         initCalendar:initCalendar,
-        initMiniCalendar:initMiniCalendar
+        initMiniCalendar:initMiniCalendar,
+        loadCalendarEvents: loadCalendarEvents
     }
 
 });

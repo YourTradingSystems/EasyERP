@@ -2,6 +2,7 @@
 var Events = function (logWriter, mongoose) {
 
     var eventsSchema = mongoose.Schema({
+        _id: String,
         id: String,
         summary: { type: String, default: '' },
         description: {type: String, default: ''},
@@ -16,6 +17,7 @@ var Events = function (logWriter, mongoose) {
     }, { collection: 'Events' });
 
     var calendarsSchema = mongoose.Schema({
+        _id: String,
         kind: String,
         id: String,
         etag: String,
@@ -42,6 +44,7 @@ var Events = function (logWriter, mongoose) {
                     console.log(data);
                     _event = new event();
                     _event._id = data.id;
+
                     if (data.summary) {
                         _event.summary = data.summary;
                     }
@@ -101,7 +104,7 @@ var Events = function (logWriter, mongoose) {
 
     function createCalendar(data, res) {
         try {
-            if (!data || !data.calendarId) {
+            if (!data || !data.id) {
                 logWriter.log('Events.createCalendar Incorrect Incoming Data');
                 res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
                 return;
@@ -112,7 +115,8 @@ var Events = function (logWriter, mongoose) {
                 try {
                     console.log(data);
                     _calendar = new calendar();
-                    _calendar._id = data.calendarId;
+                    _calendar._id = data.id;
+                    _calendar.id = data.id;
                     if (data.summary) {
                         _calendar.summary = data.summary;
                     }
