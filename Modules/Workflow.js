@@ -21,7 +21,7 @@ var Workflow = function (logWriter, mongoose) {
         create: function (data, result) {
             try {
                 if (data) {
-                    workflow.find({ $and: [{ wId: data._id }, { wName: data.wName }, { name: data.value.name }] }, function (err, workflows) {
+                    workflow.find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
@@ -33,21 +33,25 @@ var Workflow = function (logWriter, mongoose) {
                                 result.send(500, { error: 'WorkFlow.js create save error' });
                             } else {
                                 try {
-                                    _workflow = new workflow();
-                                    _workflow.wId = data._id;
-                                    _workflow.wName = data.wName;
-                                    _workflow.name = data.value.name;
-                                    _workflow.status = data.value.status;
-                                    _workflow.sequence = data.value.sequence;
-                                    _workflow.save(function (err, workfloww) {
-                                        if (err) {
-                                            console.log(err);
-                                            logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
-                                            result.send(500, { error: 'WorkFlow.js create save error' });
-                                        } else {
-                                            result.send(201, { success: 'A new WorkFlow crate success' });
-                                        }
-                                    });
+
+                                    for (var i = 0; i < data.value.length; i++) {
+                                        _workflow = new workflow();
+                                        _workflow.wId = data._id;
+                                        _workflow.wName = data.wName;
+                                        _workflow.name = data.value[i].name;
+                                        _workflow.status = data.value[i].status;
+                                        _workflow.sequence = data.value[i].sequence;
+
+                                        _workflow.save(function(err, workfloww) {
+                                            if (err) {
+                                                console.log(err);
+                                                logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
+                                                result.send(500, { error: 'WorkFlow.js create save error' });
+                                            } else {
+                                                result.send(201, { success: 'A new WorkFlow crate success' });
+                                            }
+                                        });
+                                    }
                                 }
                                 catch (err) {
                                     console.log(err);
