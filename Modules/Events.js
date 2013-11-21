@@ -1,9 +1,10 @@
 ﻿// JavaScript source code
 var Events = function (logWriter, mongoose) {
-
+    var ObjectId = mongoose.Schema.Types.ObjectId;
+    
     var eventsSchema = mongoose.Schema({
         _id: String,
-        id: String,
+        calendarId: { type: ObjectId, ref: 'Calendars', default: null },
         summary: { type: String, default: '' },
         description: {type: String, default: ''},
         eventType: { type: String, default: '' },
@@ -46,6 +47,9 @@ var Events = function (logWriter, mongoose) {
 
                     if (data.summary) {
                         _event.summary = data.summary;
+                    }
+                    if (data.calendarId) {
+                        _event.calendarId = data.calendarId;
                     }
                     if (data.priority) {
                         _event.priority = data.priority;
@@ -232,6 +236,7 @@ var Events = function (logWriter, mongoose) {
         var description = "";
         res['data'] = [];
         var query = event.find();
+        query.populate('calendarId');
         query.sort({ summary: 1 });
         query.exec(function (err, result) {
             if (err) {
