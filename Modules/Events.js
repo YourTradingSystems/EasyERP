@@ -17,7 +17,6 @@ var Events = function (logWriter, mongoose) {
     }, { collection: 'Events' });
 
     var calendarsSchema = mongoose.Schema({
-        _id: String,
         kind: String,
         id: String,
         etag: String,
@@ -115,7 +114,6 @@ var Events = function (logWriter, mongoose) {
                 try {
                     console.log(data);
                     _calendar = new calendar();
-                    _calendar._id = data.id;
                     _calendar.id = data.id;
                     if (data.summary) {
                         _calendar.summary = data.summary;
