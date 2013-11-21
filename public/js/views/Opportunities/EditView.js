@@ -14,7 +14,7 @@
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 this.opportunitiesCollection = options.collection;
-                this.currentModel = this.opportunitiesCollection.getElement();
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 
@@ -86,9 +86,8 @@
             },
 
             saveItem: function () {
-                var currentModel = this.collection.getElement();
-
-                if (currentModel) {
+                event.preventDefault();
+                var self = this;
 
                     var mid = 39;
 
@@ -119,8 +118,8 @@
                     var nextActionDescription = $.trim($("#nextActionDescription").val());
                     var nextActionDate = "";
                     if (nextActionSt) {
-                        nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
-                    }
+                        nextActionDate = $.trim($("#nextActionDate").val());
+                    };
                     var nextAction = {
                         date: nextActionDate,
                         desc: nextActionDescription
@@ -128,9 +127,9 @@
 
                     var expectedClosingSt = $.trim($("#expectedClosing").val());
                     var expectedClosing = "";
-                    if (expectedClosingSt) {
-                        expectedClosing = new Date(Date.parse(expectedClosingSt)).toISOString();
-                    }
+                    if (expectedClosingSt){
+                        expectedClosing = $.trim($("#expectedClosing").val());
+                    };
 
                     var priority = $(App.ID.priorityDd).val();
 
@@ -169,7 +168,7 @@
 
                     var reffered = $.trim($("#reffered").val());
                     var self = this;
-                    currentModel.set({
+                    this.currentModel.set({
                         name: name,
                         expectedRevenue: expectedRevenue,
                         customer: customerId,
@@ -189,7 +188,7 @@
                         optout: optout,
                         reffered: reffered
                     });
-                    currentModel.save({}, {
+                    this.currentModel.save({}, {
                         headers: {
                             mid: mid
                         },
@@ -202,7 +201,6 @@
                             Backbone.history.navigate("home", { trigger: true });
                         }
                     });
-                }
             },
 
             hideDialog: function () {

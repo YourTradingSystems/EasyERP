@@ -2,6 +2,14 @@
 var http = require('http'),
     url = require('url'),
     fs = require("fs");
+var googleapis = require('googleapis'),
+    OAuth2Client = googleapis.OAuth2Client;
+var oauth2Client =
+    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
+var url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: 'http://www.google.com/calendar/feeds/'
+});
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
@@ -77,7 +85,62 @@ app.get('/account/authenticated', function (req, res, next) {
         res.send(401);
     }
 });
-
+app.get('/getGoogleToken', function (req, res) {
+    var query = req.query;
+    console.log(query);
+    if (!query.hasOwnProperty('code')) {
+        res.redirect(url);
+    } else {
+        oauth2Client.getToken(query.code, function (err, tokens) {
+            // contains an access_token and optionally a refresh_token.
+            // save them permanently.
+            oauth2Client.credentials = {
+                access_token: tokens.access_token
+            };
+            googleapis
+                .discover('calendar', 'v3')
+                .execute(function (err, client) {
+                    if (err) console.log(err);
+                    client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+                        function (err, result) {
+                            if (result) {
+                                var calendars = [];
+                                for (var i in result.items) {
+                                    calendars.push({
+                                        id: result.items[i].id,
+                                        summary: result.items[i].summary
+                                    });
+                                }
+                                console.log(calendars);
+                            } else {
+                                console.log(err);
+                            }
+                            var event = {
+                                "summary": "rrrrrrrrrr",
+                                'start': {
+                                    "date": "2013-12-6"
+                                },
+                                'end': {
+                                    "date": "2013-12-6"
+                                }
+                           
+                            };
+                            client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+                                .withAuthClient(oauth2Client).execute(
+                                function (err, result) {
+                                    if (result) {
+                                        console.log(result);
+                                    } else {
+                                        console.log(err);
+                                    }
+                                    ;
+                                });
+                        });
+                    res.redirect('/#easyErp/Calendar');
+                });
+        });
+    }
+});
 //---------------------Users--and Profiles------------------------------------------------
 
 app.get('/getModules', function (req, res) {
@@ -226,6 +289,7 @@ app.post('/Persons', function (req, res) {
 });
 
 app.get('/Persons/:viewType', function (req, res) {
+    console.log(req.session.cookie);
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -518,6 +582,22 @@ app.get('/JobPosition', function (req, res) {
     requestHandler.getJobPosition(req, res, data);
 });
 
+app.get('/JobPositions/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    console.log(data);
+    switch (viewType) {
+        case "form": requestHandler.getJobPositionById(req, res, data);
+            break;
+        default: requestHandler.getCustomJobPosition(req, res, data);
+            break;
+    }
+
+});
+
 app.get('/JobPosition/:_id', function (req, res) {
     data = {};
     data._id = req.params._id;
@@ -527,7 +607,7 @@ app.get('/JobPosition/:_id', function (req, res) {
     //requestHandler.getJobPosition(req, res, data);
 });
 
-app.put('/JobPosition/:_id', function (req, res) {
+app.put('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -535,7 +615,7 @@ app.put('/JobPosition/:_id', function (req, res) {
     requestHandler.updateJobPosition(req, res, id, data);
 });
 
-app.delete('/JobPosition/:_id', function (req, res) {
+app.delete('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -553,6 +633,21 @@ app.post('/Departments', function (req, res) {
     data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.createDepartment(req, res, data);
+});
+
+app.get('/Departments/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getDepartmentById(req, res, data);
+            break;
+        default: requestHandler.getDepartment(req, res, data);
+            break;
+    }
+
 });
 
 app.put('/Departments/:_id', function (req, res) {
@@ -791,10 +886,10 @@ app.get('/Opportunities/:viewType', function (req, res) {
     }
     console.log(req.params);
     viewType = req.params.viewType;
-    switch (viewType) {	
-    case "form": requestHandler.getOpportunityById(req, res, data);
-    	break;
-    default: requestHandler.getFilterOpportunities(req, res, data);
+    switch (viewType) {
+        case "form": requestHandler.getOpportunityById(req, res, data);
+            break;
+        default: requestHandler.getFilterOpportunities(req, res, data);
     }
 });
 

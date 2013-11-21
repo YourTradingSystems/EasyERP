@@ -29,7 +29,7 @@ define([
                 Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
             },
             
-            initialize: function(options){
+            initialize: function(options) {
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
             		Custom.setCurrentVT("form");

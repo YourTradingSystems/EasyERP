@@ -22,8 +22,9 @@
             <span></span>
             <% } %></h4>
         <p><%=(department) ? department.departmentName : ''%> / <%=(jobPosition) ? jobPosition.name : ''%></p>
-            <% if(dateBirth) { %>
         <p><label>Age: </label><%=age%>
+            <% if(dateBirth) { %>
+
             <span>(<%= dateBirth %>)</span>
             <% } else { %>
             <span></span>

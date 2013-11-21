@@ -90,9 +90,9 @@ function(UsersCollection){
                 return true;
             });
         }
-		var b = true;
-        if(!scheduler.checkEvent("onLightbox")){
-            scheduler.attachEvent('onLightbox', function(id){
+        var b = true;
+        if(!scheduler.checkEvent("onLightBox")){
+            scheduler.attachEvent('onLightBox', function(id){        
 				//multiselect
 				$(".dhx_multi_select_assignedTo").hide();
 				var s="<select id='newAssignedTo' multiple>";

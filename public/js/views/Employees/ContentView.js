@@ -17,7 +17,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             this.originalCollection = options.collection;
             this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
             this.allAlphabeticArray = common.buildAllAphabeticArray();
-			this.selectedLetter="All";
+            this.selectedLetter = "All";
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
@@ -28,13 +28,14 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             "click td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click .letter:not(.empty)": "alpabeticalRender"
         },
-		alpabeticalRender:function(e){
-			$(e.target).parent().find(".current").removeClass("current");
-			$(e.target).addClass("current");
-			this.collection = this.originalCollection.filterByLetter($(e.target).text());
-			this.selectedLetter=$(e.target).text();
-			this.render();
-		},
+      
+        alpabeticalRender: function (e) {
+            $(e.target).parent().find(".current").removeClass("current");
+            $(e.target).addClass("current");
+            this.collection = this.originalCollection.filterByLetter($(e.target).text());
+            this.selectedLetter = $(e.target).text();
+            this.render();
+        },
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
@@ -53,9 +54,9 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
         createItem: function () {
             new CreateView();
         },
-        editItem: function(){
+        editItem: function () {
             //create editView in dialog here
-            new EditView({collection:this.collection});
+            new EditView({ collection: this.collection });
         },
 
         render: function () {
@@ -66,8 +67,8 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
-                        this.$el.append(_.template(ListTemplate, {employeesCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray, selectedLetter: this.selectedLetter, allAlphabeticArray: this.allAlphabeticArray }));
+                        this.$el.append(_.template(ListTemplate, { employeesCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -81,7 +82,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                         var holder = this.$el,
                             thumbnailsItemView;
 
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray, selectedLetter: this.selectedLetter, allAlphabeticArray: this.allAlphabeticArray }));
                         _.each(models, function (model) {
                             var age = this.calculateAge(model.get("dateBirth"));
                             model.set({ age: age }, { silent: true });
@@ -114,24 +115,24 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
 
         },
 
-        calculateAge: function(dateString){
-            if(!dateString) return "";
+        calculateAge: function (dateString) {
+            if (!dateString) return "";
             var today = new Date();
             var birthDate = new Date(dateString);
-            if(typeof birthDate.getMonth !== 'function'){
+            if (typeof birthDate.getMonth !== 'function') {
                 console.log("Employees -> calculateAge: birthDate is not a correct Date value");
                 return "";
             }
             var age = today.getFullYear() - birthDate.getFullYear();
             var m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0  && today.getDate() < birthDate.getDate())){
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
             return age;
         },
 
         checked: function () {
-            if(this.collection.length > 0){
+            if (this.collection.length > 0) {
                 if ($("input:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
                 else
@@ -177,7 +178,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-//                        model.on('change', this.render, this);
+                        //                        model.on('change', this.render, this);
                         model.destroy({
                             headers: {
                                 mid: mid

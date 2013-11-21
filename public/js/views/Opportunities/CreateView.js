@@ -1,6 +1,6 @@
 define([
     "text!templates/Opportunities/CreateTemplate.html",
-    "models/OpportunityModel",
+    "models/OpportunitiesModel",
     "common"
 ],
     function (CreateTemplate, OpportunityModel, common) {

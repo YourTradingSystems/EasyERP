@@ -473,8 +473,10 @@ var Events = function (logWriter, mongoose) {
         });
     }; //end get
 
-    function update(id, data, res) {        
-        try {          
+    function update(id, data, res) {
+        //console.log(data);
+        try {
+            delete data._id;
             event.find({ id: id }, function (err, result) {
                 if (err) {
 
