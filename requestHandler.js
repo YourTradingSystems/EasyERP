@@ -274,6 +274,7 @@ var requestHandler = function (fs, mongoose) {
     function createProject(req, res, data) {
         console.log("Requst createProject is success");
         if (req.session && req.session.loggedIn) {
+			data.project.uId = req.session.uId;
             project.create(data.project, res);
         } else {
             res.send(401);
@@ -310,6 +311,10 @@ var requestHandler = function (fs, mongoose) {
     function updateProject(req, res, id, data) {
         console.log("Requst updateProject is success");
         if (req.session && req.session.loggedIn) {
+			data.project.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             project.update(id, data.project, res);
         } else {
             res.send(401);
