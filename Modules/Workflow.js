@@ -2,8 +2,11 @@ var Workflow = function (logWriter, mongoose) {
 
     var workflowSchema = mongoose.Schema({
         wId: String,
+        wName: String,
+        status: String,
         name: String,
-        value: { type: Array, default: [] }
+        color: { type: String, default: "#2C3E50" },
+        sequence: Number
     }, { collection: 'workflows' });
 
     var relatedStatusSchema = mongoose.Schema({
@@ -18,7 +21,7 @@ var Workflow = function (logWriter, mongoose) {
         create: function (data, result) {
             try {
                 if (data) {
-                    workflow.find({ $and: [{ wId: data._id }, { name: data.name }] }, function (err, workflows) {
+                    workflow.find({ $and: [{ wId: data._id }, { wName: data.wName }, { name: data.value.name }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
@@ -26,18 +29,16 @@ var Workflow = function (logWriter, mongoose) {
                             return;
                         } else {
                             console.log(workflows);
-                            if (workflows[0] && workflows[0].name == data.name) {
-                                workflow.update({ _id: workflows[0]._id }, { $push: { value: data.value } }, function (err, res) {
-                                    console.log(res);
-                                    result.send(200, { success: 'WorkFlow updated success' });
-                                });
+                            if (workflows[0]) {
+                                result.send(500, { error: 'WorkFlow.js create save error' });
                             } else {
                                 try {
                                     _workflow = new workflow();
                                     _workflow.wId = data._id;
-                                    _workflow.name = data.name;
-                                    _workflow.value = data.value;
-                                    _workflow.color = data.color;
+                                    _workflow.wName = data.wName;
+                                    _workflow.name = data.value.name;
+                                    _workflow.status = data.value.status;
+                                    _workflow.sequence = data.value.sequence;
                                     _workflow.save(function (err, workfloww) {
                                         if (err) {
                                             console.log(err);

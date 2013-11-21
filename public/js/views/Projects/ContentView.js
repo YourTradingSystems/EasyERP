@@ -31,8 +31,8 @@ define([
 
             gotoForm: function (e) {
                 App.ownContentType = true;
-                var itemIndex = $(e.target).closest("tr").data("index") + 1;
-                window.location.hash = "#home/content-Projects/form/" + itemIndex;
+                var id = $(e.target).closest("tr").data("id");
+                window.location.hash = "#home/content-Projects/form/" + id;
             },
 
             render: function () {

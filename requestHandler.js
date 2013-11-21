@@ -415,9 +415,9 @@ var requestHandler = function (fs, mongoose) {
     function getWorkflowsForDd(req, res, data) {
         console.log("Requst getWorkflowsForDd is Success");
         if (req.session && req.session.loggedIn) {
-            console.log('>>>>>>>>>>>');
+            console.log('<<<<<<<<<<<<>>>>>>>>>>>');
             console.log(data);
-            console.log('<<<<<<<<<<<');
+            console.log('<<<<<<<<<<<>>>>>>>>>>>>>');
             workflow.getWorkflowsForDd(data, res);
         } else {
             res.send(401);

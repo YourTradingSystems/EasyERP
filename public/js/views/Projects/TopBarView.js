@@ -19,9 +19,14 @@ define([
                 "click #top-bar-editBtn": "editEvent"
             },
 
-            changeContentViewType: Custom.changeContentViewType,
+            changeContentViewType: function (e) {
+                Custom.changeContentViewType(e, this.contentType, this.collection);
+            },
 
-            changeItemIndex: Custom.changeItemIndex,
+            changeItemIndex: function (e) {
+                var actionType = "Content";
+                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
+            },
 
             initialize: function (options) {
                 this.actionType = options.actionType;

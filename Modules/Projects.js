@@ -486,7 +486,7 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = project.find({});
-        query.populate("projectmanager customer workflow task");
+        query.populate("projectmanager customer task").populate('workflow');
         query.sort({ projectName: 1 });
         query.exec(function (err, projects) {
             if (err) {

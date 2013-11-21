@@ -47,7 +47,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
-            var workflows = this.workflowsCollection.toJSON()[0].value;
+            var workflows = this.workflowsCollection.toJSON();
             var projectId = window.location.hash.split('/')[4];
             if (!projectId || projectId.length < 24) {
                 models = this.collection;
