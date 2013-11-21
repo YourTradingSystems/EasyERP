@@ -187,7 +187,7 @@ var Events = function (logWriter, mongoose) {
 
                 }
                 else if (result) {
-                    calendar.update({ _id: _id }, data, function (err, result) {
+                    calendar.update({ id: _id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -202,7 +202,7 @@ var Events = function (logWriter, mongoose) {
                         }
                     });
                 } else if (!result) {
-                    data._id = _id;
+                    //data._id = _id;
                     createCalendar(data, res);
                 }
             });
