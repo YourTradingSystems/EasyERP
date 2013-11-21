@@ -399,7 +399,6 @@ app.post('/Workflows', function (req, res) {
     //data._id = req.headers.id;
     data._id = req.body.wId;
     data.wName = req.body.name;
-    //data.value = req.body.value;
     console.log(data);
     requestHandler.createWorkflow(req, res, data);
 });

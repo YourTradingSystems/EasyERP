@@ -31,12 +31,12 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
         },
 
         chooseSubWorkflowNames: function (e) {
-			alert($(e.target).hasClass("workflow-sub"));
-			
-		},
+            alert($(e.target).hasClass("workflow-sub"));
+
+        },
         chooseWorkflowNames: function (e) {
             this.$(".workflow-sub-list>*").remove();
-			this.$("#details").addClass("active").show();
+            this.$("#details").addClass("active").show();
             this.$("#workflowNames").html("");
             $(e.target).parents(".workflow-list").find(".active").removeClass("active");
             var wId = "";
@@ -48,31 +48,33 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                 wId = $(e.target).find("a").text();
 
             }
-            var names = [];
+            var names = [], wName;
             _.each(this.collection.models, function (model) {
-                if (model.get('wId') == wId) {
-                    names.push(model.get('name'));
+                if (model.get('wId') == wId && wName != model.get('wName')) {
+                    names.push(model.get('wName'));
+                    wName = model.get('wName');
                 }
             }, this);
-			var first = false;
+
+            var first = false;
             _.each(names, function (name) {
-				if (first){
-					this.$(".workflow-sub-list").append("<li class='active'><a class='workflow-sub' data-id='"+name+"'href='javascript:;'>" + name + "</a></li>");
-					first = false;
-				}
-				else{
-					this.$(".workflow-sub-list").append("<li data-id='"+name+"'><a class='workflow-sub' data-id='"+name+"'href='javascript:;'>" + name + "</a></li>");
-				}
+                if (first) {
+                    this.$(".workflow-sub-list").append("<li class='active'><a class='workflow-sub' data-id='" + name + "'href='javascript:;'>" + name + "</a></li>");
+                    first = false;
+                }
+                else {
+                    this.$(".workflow-sub-list").append("<li data-id='" + name + "'><a class='workflow-sub' data-id='" + name + "'href='javascript:;'>" + name + "</a></li>");
+                }
                 this.$("#sub-details").html("");
             }, this);
         },
         chooseWorkflowDetailes: function (e) {
-			$(e.target).parents(".workflow-sub-list").find(".active").removeClass("active");
-			if ($(e.target).hasClass("workflow-sub")){
-				$(e.target).parent().addClass("active");
-			}else{
-				$(e.target).addClass("active");
-			}
+            $(e.target).parents(".workflow-sub-list").find(".active").removeClass("active");
+            if ($(e.target).hasClass("workflow-sub")) {
+                $(e.target).parent().addClass("active");
+            } else {
+                $(e.target).addClass("active");
+            }
             this.$("#sub-details").html("");
             var name = $(e.target).data("id");
             var nameDetails = this.$("#sub-details").attr("data-id");
@@ -87,10 +89,12 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                     $(this).addClass("active");
                 })
             }
-            var values;
+            var values = [];
             _.each(this.collection.models, function (model) {
-                if (model.get('name') == name) {
-                    values = model.get('value');
+                if (model.get('wName') == name) {
+                    console.log(model);
+                    values.push({ name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
+                    console.log(values);
                 }
             }, this);
             this.$("#sub-details").attr("data-id", name)
