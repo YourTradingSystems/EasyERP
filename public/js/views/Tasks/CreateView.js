@@ -44,7 +44,7 @@ define([
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
-                    workflows.push({ name: value[i].name, status: value[i].status });
+                    workflows.push({ name: value[i].name, status: value[i].status, _id: value[i]._id });
                 }
                 return workflows;
             },
@@ -79,11 +79,11 @@ define([
 
                 var summary = $("#summary").val();
 
-                var idProject = this.$("#projectDd option:selected").val();
-                var project = common.toObject(idProject, this.projectsDdCollection);
+                var project = this.$("#projectDd option:selected").val();
+                //var project = common.toObject(idProject, this.projectsDdCollection);
 
-                var idAssignedTo = this.$("#assignedTo option:selected").val();
-                var assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
+                var assignedTo = this.$("#assignedTo option:selected").val();
+                //var assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
 
                 var deadline = $.trim($("#deadline").val());
                 //var deadline = "";
@@ -109,19 +109,19 @@ define([
                 //    EndDate = new Date(Date.parse(endDateSt)).toISOString();
                 //}
 
-                var idCustomer = this.$("#customerDd option:selected").val();
-                var customer = common.toObject(idCustomer, this.customersDdCollection);
+                var customer = this.$("#customerDd option:selected").val();
+                //var customer = common.toObject(idCustomer, this.customersDdCollection);
 
 
                 //var idWorkflow = this.$("#workflowDd option:selected").val();
                 //var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
 
-                var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };
-
+                //var workflow = {
+                //    wName: this.$("#workflowNames option:selected").text(),
+                //    name: this.$("#workflow option:selected").text(),
+                //    status: this.$("#workflow option:selected").val(),
+                //};
+                var workflow = this.$("#workflow option:selected").data("id");
                 var estimated = $("#estimated").val();
 
                 var logged = $("#loged").val();
@@ -173,14 +173,14 @@ define([
             render: function () {
                 var workflowNames = [];
                 this.workflowsDdCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('name'));
+                    workflowNames.push(option.get('wName'));
                 });
-
+                var arrWorkflows = _.uniq(workflowNames);
                 this.$el.html(this.template({
                     projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
-                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId, workflowNames: workflowNames
+                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId, workflowNames: arrWorkflows
                 }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsDdCollection.models[0].get('value')) }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsDdCollection.toJSON() }));
                 $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });

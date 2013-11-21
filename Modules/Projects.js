@@ -622,7 +622,7 @@ var Project = function (logWriter, mongoose) {
 
     function createTask(data, res) {
         try {
-            if (!data.summary || (!data.project || !data.project._id)) {
+            if (!data.summary || !data.project) {
                 logWriter.log('Task.create Incorrect Incoming Data');
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
                 return;
@@ -647,27 +647,10 @@ var Project = function (logWriter, mongoose) {
                     _task = new tasks();
                     _task.summary = data.summary;
                     if (data.project) {
-                        if (data.project._id) {
-                            _task.project.id = data.project._id;
-                        }
-                        if (data.project.projectName) {
-                            _task.project.name = data.project.projectName;
-                        }
-                        if (data.project.projectShortDesc) {
-                            _task.project.projectShortDesc = data.project.projectShortDesc;
-                            _task.taskCount = n;
-                        }
+                        _task.project = data.project;
                     }
                     if (data.assignedTo) {
-                        if (data.assignedTo.imageSrc) {
-                            _task.assignedTo.imageSrc = data.assignedTo.imageSrc;
-                        }
-                        if (data.assignedTo._id) {
-                            _task.assignedTo.id = data.assignedTo._id;
-                        }
-                        if (data.assignedTo.name) {
-                            _task.assignedTo.name = data.assignedTo.name.first + ' ' + data.assignedTo.name.last;
-                        }
+                        _task.assignedTo = data.assignedTo;
                     }
                     if (data.type) {
                         _task.type = data.type;
@@ -689,12 +672,7 @@ var Project = function (logWriter, mongoose) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
                         }
                         if (data.extrainfo.customer) {
-                            if (data.extrainfo.customer._id) {
-                                _task.extrainfo.customer.id = data.extrainfo.customer._id;
-                            }
-                            if (data.extrainfo.customer.name) {
-                                _task.extrainfo.customer.name = data.extrainfo.customer.name.first + ' ' + data.extrainfo.customer.name.last;
-                            }
+                            _task.extrainfo.customer = data.extrainfo.customer;
                         }
                         if (data.extrainfo.StartDate) {
                             _task.extrainfo.StartDate = new Date(data.extrainfo.StartDate);
@@ -702,12 +680,7 @@ var Project = function (logWriter, mongoose) {
                         }
                     }
                     if (data.workflow) {
-                        if (data.workflow.name) {
-                            _task.workflow.name = data.workflow.name;
-                        }
-                        if (data.workflow.status) {
-                            _task.workflow.status = data.workflow.status;
-                        }
+                        _task.workflow = data.workflow;
                     }
                     if (data.logged) {
                         _task.logged = data.logged;

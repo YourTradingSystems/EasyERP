@@ -6,7 +6,6 @@ var http = require('http'),
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
-
 var express = require('express');
 var requestHandler = require("./requestHandler.js")(fs, mongoose);
 
@@ -93,13 +92,13 @@ app.post('/uploadFiles', function (req, res, next) {
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
-            if (err) throw err;
-            file.id = req.files.attachfile.id;
+            file._id = mongoose.Types.ObjectId();
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = req.files.attachfile.date;
+            file.uploadDate = new Date();
             file.uploaderName = req.session.uName;
+            console.log(file);
             requestHandler.uploadFilePerson(req, res, req.headers.id, file);
         });
     });
