@@ -3,10 +3,10 @@ var Project = function (logWriter, mongoose) {
     var ProjectSchema = mongoose.Schema({
         projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
-        task: [{ type: ObjectId, ref: 'Tasks' }],
+        task: { type: [ObjectId], ref: 'Tasks', default: null },
         privacy: { type: String, default: 'All Users' },
-        customer: { type: ObjectId, ref: 'Customers' },
-        projectmanager: { type: ObjectId, ref: 'Employees' },
+        customer: { type: ObjectId, ref: 'Customers', default: null },
+        projectmanager: { type: ObjectId, ref: 'Employees', default: null },
         teams: {
             users: { type: Array, default: [] },
             Teams: { type: Array, default: [] }
@@ -18,7 +18,7 @@ var Project = function (logWriter, mongoose) {
             sequence: { type: Number, default: 0 },
             parent: { type: String, default: null }
         },
-        workflow: { type: ObjectId, ref: 'workflows' },
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
@@ -29,20 +29,20 @@ var Project = function (logWriter, mongoose) {
     var TasksSchema = mongoose.Schema({
         summary: { type: String, default: '' },
         taskCount: { type: Number, default: 0 },
-        project: { type: ObjectId, ref: 'Project' },
-        assignedTo: { type: ObjectId, ref: 'Employees' },
+        project: { type: ObjectId, ref: 'Project', default: null },
+        assignedTo: { type: ObjectId, ref: 'Employees', default: null },
         deadline: Date,
         tags: [String],
         description: String,
         extrainfo: {
             priority: { type: String, default: 'Medium' },
             sequence: { type: Number, default: 0 },
-            customer: { type: ObjectId, ref: 'Customers' },
+            customer: { type: ObjectId, ref: 'Customers', default: null },
             StartDate: { type: Date, default: Date.now },
             EndDate: { type: Date, default: Date.now },
             duration: { type: Number, default: 0 }
         },
-        workflow: { type: ObjectId, ref: 'workflows' },
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
         type: { type: String, default: '' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
@@ -245,7 +245,7 @@ var Project = function (logWriter, mongoose) {
             }
         }
     };
-    
+
     var _updateTask = function (tasksArray, fieldsObject) {
         var n = tasksArray.length;
         var i = 0;

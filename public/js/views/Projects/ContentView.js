@@ -38,7 +38,7 @@ define([
             render: function () {
                 var viewType = Custom.getCurrentVT(),
                     models = this.collection.models;
-                Custom.setCurrentCL(models.length);
+                //Custom.setCurrentCL(models.length);
                 switch (viewType) {
                     case "list":
                         {
@@ -68,13 +68,13 @@ define([
                         }
                     case "form":
                         {
-                            var itemIndex = Custom.getCurrentII() - 1;
-                            if (itemIndex > models.length - 1) {
-                                itemIndex = models.length - 1;
-                                Custom.setCurrentII(models.length);
-                            }
-
-                            if (itemIndex == -1) {
+                            //var itemIndex = Custom.getCurrentII() - 1;
+                            //if (itemIndex > models.length - 1) {
+                            //    itemIndex = models.length - 1;
+                            //    Custom.setCurrentII(models.length);
+                            //}
+                            var currentModel = this.collection.getElement();
+                            if (!currentModel) {
                                 this.$el.html('<h2>No projects found</h2>');
                             } else {
                                 var currentModel;

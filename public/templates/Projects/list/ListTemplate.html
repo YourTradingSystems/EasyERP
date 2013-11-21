@@ -20,12 +20,12 @@
                 <td><%= index + 1 %></td>
                 <td><%=project.projectName%></td>
                 <td><%=project.projectShortDesc%></td>
-                <td><%=project.projectmanager.name%></td>
-                <td><%=project.customer.name%></td>
+                <td><%=(project.projectmanager) ? project.projectmanager.name.first + " " + project.projectmanager.name.last : ''%></td>
+                <td><%=(project.customer) ? project.customer.name.first + " " + project.customer.name.last : ''%></td>
                 <td><%=project.estimated%></td>
                 <td><%=project.remaining%></td>
                 <td><progress name="projectProgress" max="100" value="<%=project.progress%>" /></td>
-                <td><%=project.workflow.name%></td>
+                <td><%=(project.workflow) ? project.workflow.name : ''%></td>
             </tr>
             <% }) %>
         </tbody>
