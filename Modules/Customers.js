@@ -355,6 +355,9 @@
                         logWriter.log("Customer.js update customer.update " + err);
                         res.send(500, { error: "Can't update customer" });
                     } else {
+                        var note = {};
+                        note._id = mongoose.Types.ObjectId();
+                        note.date = new Date();
                         res.send(200, { success: 'customer updated success' });
                     }
                 });

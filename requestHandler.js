@@ -197,25 +197,10 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
-    function uploadFilePerson(req, res, id, file) {
+    function uploadFile(req, res, id, file) {
         console.log("File Uploading to Persons");
         if (req.session && req.session.loggedIn) {
             customer.customer.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
-                if (err) {
-                    res.send(401);
-                }
-                else {
-                    res.send(200, file);
-                }
-            });
-        } else {
-            res.send(401);
-        }
-    };
-    function uploadFileCompanies(req, res, id, file) {
-        console.log("File Uploading to Companies");
-        if (req.session && req.session.loggedIn) {
-            company.Company.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
                 if (err) {
                     res.send(401);
                 }
@@ -934,8 +919,7 @@ var requestHandler = function (fs, mongoose) {
         updatePerson: updatePerson,
         removePerson: removePerson,
         // getPersonsForDd: getPersonsForDd,
-        uploadFilePerson: uploadFilePerson,
-        uploadFileCompanies: uploadFileCompanies,
+        uploadFile: uploadFile,
         getCustomer: getCustomer,
 
         getProjects: getProjects,
