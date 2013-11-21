@@ -42,7 +42,7 @@ var Project = function (logWriter, mongoose) {
             EndDate: { type: Date, default: Date.now },
             duration: { type: Number, default: 0 }
         },
-        workflow: { type: ObjectId, ref: 'Workflows' },
+        workflow: { type: ObjectId, ref: 'workflows' },
         type: { type: String, default: '' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
@@ -245,72 +245,7 @@ var Project = function (logWriter, mongoose) {
             }
         }
     };
-
-    //var projectFormatDate = function (_projects, count, bool) {
-    //    try {
-    //        if (bool) {
-    //            if (_projects.length > count) {
-    //                var startday = _projects[count].info.StartDate.getDate();
-    //                var startmonth = _project[count].info.StartDate.getMonth() + 1;
-    //                var startyear = _project[count].info.StartDate.getFullYear();
-    //                var startdate = startday + "/" + startmonth + "/" + startyear;
-    //                _projects[count].info.StartDate = startdate;
-    //                var endday = _project[count].info.EndDate.getDate();
-    //                ;
-    //                var endmounth = _project[count].info.EndDate.getMounth() + 1;
-    //                var endyear = _project[count].info.EndDate.getFullYear();
-    //                var enddate = endday + "/" + endmounth + "/" + endyear;
-    //                _projects[count].info.EndDate = enddate;
-    //                console.log('=======Project Date Was Formated=================');
-    //                console.log("StartDate: " + startdate + " EndDate: " + enddate);
-    //                console.log('================================================');
-    //                count++;
-    //                projectFormatDate(_projects, count, true);
-    //            } else {
-    //                projectFormatDate(_projects, count, false);
-    //            }
-    //        } else {
-    //            return _projects;
-    //        }
-    //    } catch (exeption) {
-
-    //    }
-    //};
-
-    //var taskFormatDate = function (_tasks, count) {
-    //    try {
-    //        if (_tasks.length > count) {
-    //            if (_tasks[count].extrainfo.StartDate) {
-    //                var startday = _tasks[count].extrainfo.StartDate.getDate();
-    //                var startmonth = _tasks[count].extrainfo.StartDate.getMonth() + 1;
-    //                var startyear = _tasks[count].extrainfo.StartDate.getFullYear();
-    //                var startdate = startday + "/" + startmonth + "/" + startyear;
-    //                _tasks[count].extrainfo.StartDate = startdate;
-    //                console.log(startdate);
-    //            } else {
-    //                _tasks[count].extrainfo.StartDate = '';
-    //            }
-    //            if (_tasks[count].extrainfo.EndDate) {
-    //                var endday = _tasks[count].extrainfo.EndDate.getDate();
-    //                var endmounth = _tasks[count].extrainfo.EndDate.getMonth() + 1;
-    //                var endyear = _tasks[count].extrainfo.EndDate.getFullYear();
-    //                var enddate = endday + "/" + endmounth + "/" + endyear;
-    //                _tasks[count].extrainfo.EndDate = enddate;
-    //                console.log(enddate);
-    //            } else {
-    //                _tasks[count].extrainfo.EndDate = '';
-    //            }
-    //            count++;
-    //            taskFormatDate(_tasks, count);
-    //        } else {
-    //            console.log(_tasks);
-    //            return _tasks;
-    //        }
-    //    } catch (exeption) {
-    //        console.log(exeption);
-    //    }
-    //};
-
+    
     var _updateTask = function (tasksArray, fieldsObject) {
         var n = tasksArray.length;
         var i = 0;
@@ -805,6 +740,7 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = tasks.find({});
+        query.populate('project assignedTo extrainfo.customer workflow');
         query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
             if (err) {
