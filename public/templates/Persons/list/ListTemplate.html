@@ -11,7 +11,7 @@
         </thead>
         <tbody>
         <% personsCollection.forEach(function(person, index){ %>
-            <tr>
+            <tr data-id="<%=person._id%>">
                 <td><input type="checkbox" value="<%=person._id%>" class="checkbox" /></td>
                 <td><%=index+1%></td>
                 <td><%=person.name.last%> <%=person.name.first%></td>

@@ -33,7 +33,13 @@ define([
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
-            "click .deleteAttach":"deleteAttach"
+            "click .deleteAttach": "deleteAttach",
+            "click .list": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var id = $(e.target).closest("tr").data("id");
+            window.location.hash = "#home/content-Persons/form/" + id;
         },
         cancelNote: function(e) {
             $('#noteArea').val('');
