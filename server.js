@@ -237,8 +237,9 @@ app.put('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    remove = req.headers.remove;
     data.person = req.body;
-    requestHandler.updatePerson(req, res, id, data);
+    requestHandler.updatePerson(req, res, id, data, remove);
 });
 
 app.delete('/Persons/:_id', function (req, res) {
@@ -423,6 +424,7 @@ app.put('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    remove = req.headers.remove;
     data.company = req.body;
     console.log("---------------UpdateCompany-------------------");
     //console.log(data.company.salesPurchases.salesPerson);
@@ -434,7 +436,7 @@ app.put('/Companies/:_id', function (req, res) {
     }
     //console.log(data.company.salesPurchases.salesPerson);
     //console.log(data.company.address);
-    requestHandler.updateCompany(req, res, id, data);
+    requestHandler.updateCompany(req, res, id, data, remove);
 });
 
 app.delete('/Companies/:_id', function (req, res) {
