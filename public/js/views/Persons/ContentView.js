@@ -267,16 +267,10 @@ define([
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > models.length - 1) {
-                            itemIndex = models.length - 1;
-                            Custom.setCurrentII(models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html();
+                        var currentModel = this.collection.getElement();
+                        if (!currentModel) {
+                            this.$el.html('<h2>No projects found</h2>');
                         } else {
-                            var currentModel = models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
