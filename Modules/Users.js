@@ -7,6 +7,10 @@ var Users = function (logWriter, mongoose, findCompany) {
         login: { type: String, default: '' },
         email: { type: String, default: '' },
         pass: { type: String, default: '' },
+        credentials: {
+			refresh_token:{type:String, default:''},
+			access_token:{type:String, default:''}
+		},
         profile: {
             company: {
                 id: { type: String, default: '' },

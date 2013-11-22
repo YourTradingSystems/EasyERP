@@ -1028,7 +1028,7 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst googleCalSync is success");
         if (req.session && req.session.loggedIn) {
             console.log(data);
-            google.getEventsByCalendarIds(req.session.googleToken, data.calendar, function (eventsArray) {
+            google.getEventsByCalendarIds(req.session.credentials, data.calendar, function (eventsArray) {
                 events.googleCalSync(eventsArray, res);
             });
         } else {
@@ -1046,7 +1046,7 @@ var requestHandler = function (fs, mongoose) {
 	}
 
     function googleCalendars(req, res) {
-        google.getGoogleCalendars(req.session.googleToken, res);
+        google.getGoogleCalendars(req.session.credentials, res);
     }
 
     //---------END------Events----------------------------------
