@@ -25,7 +25,7 @@ define([
         },
 
         goToList: function (contentType) {
-            //console.API.clear();
+            console.API.clear();
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -87,7 +87,6 @@ define([
         },
 
         goToKanban: function (contentType, parrentContentId) {
-            if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
@@ -115,6 +114,7 @@ define([
         },
 
         goToThumbnails: function (contentType, parrentContentId) {
+            console.API.clear();
             if (this.mainView == null) this.main();
             var ContentViewUrl,
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -138,6 +138,7 @@ define([
                     
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
+                    topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);

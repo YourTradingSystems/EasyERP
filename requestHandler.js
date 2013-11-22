@@ -71,6 +71,17 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getUserById(req, res, data) {
+        console.log("Request getUser is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+            users.getUserById(data.id, res);
+        } else {
+            res.send(401);
+        }
+        // console.log("Requst getPersons is success");
+    };
+
     function updateUser(req, res, id, data) {
         console.log("Requst createUser is success");
         if (req.session && req.session.loggedIn) {
@@ -445,7 +456,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function getOwnCompanies(req, res, data) {
-        console.log("Requst getCompanies is success");
+        console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn) {
             customer.getOwnCompanies(res);
         } else {
@@ -1059,6 +1070,7 @@ var requestHandler = function (fs, mongoose) {
         login: login,
         createUser: createUser,
         getUsers: getUsers,
+        getUserById:getUserById,
         updateUser: updateUser,
         removeUser: removeUser,
 

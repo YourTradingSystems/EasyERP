@@ -2,14 +2,14 @@
 var http = require('http'),
     url = require('url'),
     fs = require("fs");
-var googleapis = require('googleapis'),
-    OAuth2Client = googleapis.OAuth2Client;
-var oauth2Client =
-    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
-var url = oauth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: 'http://www.google.com/calendar/feeds/'
-});
+//var googleapis = require('googleapis'),
+//    OAuth2Client = googleapis.OAuth2Client;
+//var oauth2Client =
+//    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
+//var url = oauth2Client.generateAuthUrl({
+//    access_type: 'offline',
+//    scope: 'http://www.google.com/calendar/feeds/'
+//});
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
@@ -175,9 +175,23 @@ app.post('/Users', function (req, res) {
 app.get('/Users', function (req, res) {
     console.log('---------------------getUsers-------------');
     data = {};
-    //data.ownUser = true;
     data.mid = req.param('mid');
     requestHandler.getUsers(req, res, data);
+});
+
+app.get('/Users/:viewType', function (req, res) {
+    console.log('---------------------getUsers-------------');
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getUserById(req, res, data);
+            break;
+        default: requestHandler.getUsers(req, res, data);
+            break;
+    }
 });
 
 app.put('/Users/:_id', function (req, res) {
@@ -314,6 +328,12 @@ app.delete('/Persons/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
 });
+app.delete('/Persons/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removePerson(req, res, id);
+});
 
 //---------------------------Projects--------------------------------------------------------
 
@@ -352,6 +372,13 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data);
 });
 
+app.delete('/Projects/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.params._id;
+    data.mid = req.headers.mid;
+    data.project = req.body;
+    requestHandler.removeProject(req, res, id, data);
+});
 app.delete('/Projects/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
@@ -420,7 +447,7 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
-app.delete('/Tasks/:contentType/:_id', function (req, res) {
+app.delete('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -527,7 +554,20 @@ app.get('/Companies/:viewType', function (req, res) {
         default: requestHandler.getCompanies(req, res, data);
             break;
     }
+});
 
+app.get('/ownCompanies/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getCompanyById(req, res, data);
+            break;
+        default: requestHandler.getOwnCompanies(req, res, data);
+            break;
+    }
 });
 
 app.put('/Companies/:_id', function (req, res) {
@@ -549,12 +589,37 @@ app.put('/Companies/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
+app.delete('/Companies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCompany(req, res, id, data);
+});
 app.delete('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeCompany(req, res, id, data);
 });
+
+app.delete('/ownCompanies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCompany(req, res, id, data);
+});
+
+
+//-----------------------------End Companies--------------------------------------------------
+
+app.delete('/Tasks/:contentType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
+
+
 
 app.post('/JobPosition', function (req, res) {
     data = {};

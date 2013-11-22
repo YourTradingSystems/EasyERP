@@ -33,7 +33,8 @@ var Events = function (logWriter, mongoose, googleModule) {
         textColor: { type: String, default: '' },
         assignTo: { type: String, default: '' },
         status: { type: String, default: '' },
-        priority: { type: String, default: '' }
+        priority: { type: String, default: '' },
+        isGoogle: {type: Boolean, default: false}
     }, { collection: 'Events' });
 
     var calendarsSchema = mongoose.Schema({
@@ -49,7 +50,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         accessRole: String,
         description: { type: String, default: '' },
         link : { type: String, default: '' },
-        events: [{ type: ObjectId, ref: 'Events', default: null }],
+        events: { type: [ObjectId], ref: 'Events', default: null },
         location: { type: String, default: '' }
 
     }, { collection: 'Calendars' });
