@@ -85,35 +85,37 @@ define([
 
                     var data = {
                         name: {
-                            first: $("#name").val(),
+                            first: this.$el.find("#name").val(),
                             last: ''
                         },
                         imageSrc: this.imageSrc,
-                        email: $("#email").val(),
+                        email: this.$el.find("#email").val(),
                         phones: {
-                            phone: $("#phone").val(),
-                            mobile: $("#mobile").val(),
-                            fax: $("#fax").val()
+                            phone: this.$el.find("#phone").val(),
+                            mobile: this.$el.find("#mobile").val(),
+                            fax: this.$el.find("#fax").val()
                         },
                         address: {
-                            street: $('#addressInput').val(),
-                            city: $('#cityInput').val(),
-                            state: $('#stateInput').val(),
-                            zip: $('#zipInput').val(),
-                            country: $('#countryInput').val()
+                            street: this.$el.find('#street').val(),
+                            city: this.$el.find('#city').val(),
+                            state: this.$el.find('#state').val(),
+                            zip: this.$el.find('#zip').val(),
+                            country: this.$el.find('#country').val()
                         },
-                        website: $("#website").val(),
-                        internalNotes: $.trim($("#internalNotes").val()),
+                        website: this.$el.find('#website').val(),
+                        internalNotes: $.trim(this.$el.find("#internalNotes").val()),
+
                         salesPurchases: {
-                            isCustomer: $("#isCustomer").is(":checked"),
-                            isSupplier: $("#isSupplier").is(":checked"),
-                            active: $("#active").is(":checked"),
-                            salesPerson: $('#salesPerson option:selected').val(),
-                            salesTeam: $("#salesTeam option:selected").val(),
-                            reference: $("#reference").val(),
-                            language: $("#language").val()
+                            isCustomer: this.$el.find("#isCustomer").is(":checked"),
+                            isSupplier: this.$el.find("#isSupplier").is(":checked"),
+                            active: this.$el.find("#active").is(":checked"),
+                            salesPerson: this.$el.find('#salesPerson option:selected').val(),
+                            salesTeam: this.$el.find("#salesTeam option:selected").val(),
+                            reference: this.$el.find("#reference").val(),
+                            language: this.$el.find("#language").val()
                         }
                     };
+                console.log(data);
 
                 this.currentModel.save(data, {
                         headers: {
@@ -172,7 +174,7 @@ define([
 
                 var formString = this.template({
                     model: this.currentModel.toJSON()
-                });njls [p]
+                });
 
                 this.$el = $(formString).dialog({
                     autoOpen:true,
