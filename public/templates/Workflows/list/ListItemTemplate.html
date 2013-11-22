@@ -1,2 +1,6 @@
-﻿<%=model.name%> | <%=model.status%> 
-
+﻿<dl class="person-info">
+    <dt>Name: </dt>
+    <dd class="miniEdit"><span class="name" data-id="<%=model.id%>"><%=model.name%></span> <a class="edit" href="#">Edit</a></dd>
+    <dt>Status: </dt>
+    <dd class="miniEdit"><span  class="status" data-id="<%=model.id%>"><%=model.status%></span> <a class="edit" href="#">Edit</a></dd>
+</dl>

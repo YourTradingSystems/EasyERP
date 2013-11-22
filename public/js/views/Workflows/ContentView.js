@@ -22,8 +22,57 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             "click .workflow-list li": "chooseWorkflowNames",
             "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
             "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
-            "click #workflowNames span": "chooseWorkflowDetailes"
+            "click #workflowNames span": "chooseWorkflowDetailes",
+            "click .person-info dd .edit": "edit",
+            "click a:contains('Cancel')": "cancel",
+            "click a:contains('Save')": "save"
         },
+
+        save: function (e) {
+            e.preventDefault();
+            var span = $(e.target).parent().find("span");
+            var id = span.data("id");
+            var model = this.collection.get(id),
+                obj;
+            if (span.hasClass("name")) {
+                obj = {
+                    name: span.text()
+                };
+            } else {
+                obj = {
+                    status: span.text()
+                };
+            }
+            this.collection.url = "/Workflows";
+            console.log(obj);
+            model.set(obj);
+            model.save({}, {
+                headers: {
+                    mid: 39
+                },
+                success: function() {
+                    Backbone.history.navigate("#home/content-Workflows", { trigger: true });
+                }
+            });
+        },
+
+        cancel: function (e) {
+            e.preventDefault();
+            $(e.target).parent().find("span, .edit").removeClass("hidden").end().find("input, a:contains('Cancel'), a:contains('Save')").remove();
+        },
+
+        edit: function (e) {
+            e.preventDefault();
+            var target = $(e.target);
+            var value = target.siblings("span").text();
+            var text = "<a href='#'>";
+            target.parent().find("span, .edit").addClass("hidden").end().append(
+                $("<input>").val(value),
+                $(text).text("Save"),
+                $(text).text("Cancel")
+            );
+        },
+
         gotoForm: function (e) {
             App.ownContentType = true;
             var itemIndex = $(e.target).closest("tr").data("index") + 1;
@@ -93,7 +142,7 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             _.each(this.collection.models, function (model) {
                 if (model.get('wName') == name) {
                     console.log(model);
-                    values.push({ name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
+                    values.push({ id: model.get("_id"), name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
                     console.log(values);
                 }
             }, this);
