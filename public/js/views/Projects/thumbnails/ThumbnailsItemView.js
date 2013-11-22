@@ -22,7 +22,7 @@ define([
 
             gotoEditForm: function (e) {
                 e.preventDefault();
-                var id = this.$el.data("id");
+                var id = this.$el.attr("id");
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
                     window.location.hash = "#home/action-Projects/Edit/" + id;
                 }

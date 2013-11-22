@@ -1,8 +1,10 @@
 ﻿// JavaScript source code
 var Events = function (logWriter, mongoose) {
-
+    var ObjectId = mongoose.Schema.Types.ObjectId;
+    
     var eventsSchema = mongoose.Schema({
-        id: String,
+        _id: String,
+        calendarId: { type: ObjectId, ref: 'Calendars', default: null },
         summary: { type: String, default: '' },
         description: {type: String, default: ''},
         eventType: { type: String, default: '' },
@@ -42,8 +44,12 @@ var Events = function (logWriter, mongoose) {
                     console.log(data);
                     _event = new event();
                     _event._id = data.id;
+
                     if (data.summary) {
                         _event.summary = data.summary;
+                    }
+                    if (data.calendarId) {
+                        _event.calendarId = data.calendarId;
                     }
                     if (data.priority) {
                         _event.priority = data.priority;
@@ -101,7 +107,7 @@ var Events = function (logWriter, mongoose) {
 
     function createCalendar(data, res) {
         try {
-            if (!data || !data.calendarId) {
+            if (!data || !data.id) {
                 logWriter.log('Events.createCalendar Incorrect Incoming Data');
                 res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
                 return;
@@ -112,7 +118,7 @@ var Events = function (logWriter, mongoose) {
                 try {
                     console.log(data);
                     _calendar = new calendar();
-                    _calendar._id = data.calendarId;
+                    _calendar.id = data.id;
                     if (data.summary) {
                         _calendar.summary = data.summary;
                     }
@@ -185,7 +191,7 @@ var Events = function (logWriter, mongoose) {
 
                 }
                 else if (result) {
-                    calendar.update({ _id: _id }, data, function (err, result) {
+                    calendar.update({ id: _id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -200,7 +206,7 @@ var Events = function (logWriter, mongoose) {
                         }
                     });
                 } else if (!result) {
-                    data._id = _id;
+                    //data._id = _id;
                     createCalendar(data, res);
                 }
             });
@@ -230,6 +236,7 @@ var Events = function (logWriter, mongoose) {
         var description = "";
         res['data'] = [];
         var query = event.find();
+        query.populate('calendarId');
         query.sort({ summary: 1 });
         query.exec(function (err, result) {
             if (err) {

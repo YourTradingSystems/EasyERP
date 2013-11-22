@@ -9,7 +9,7 @@
 <div id="persons" class="scroll">
     <ul class="compactList">
         <% _.each(collection, function(model, index){ %>
-        <% if (model.company.name == company.name) { %>
+        <% if (model.company && (model.company.name.first == company.name.first)) { %>
         <li class="inner">
            
              

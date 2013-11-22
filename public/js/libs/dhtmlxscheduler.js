@@ -3336,7 +3336,8 @@ scheduler.init_templates=function(){
 
 scheduler.uid = function() {
 	if (!this._seed) this._seed = (new Date).valueOf();
-	return this._seed++;
+    this._seed++;
+    return this._seed + '';
 };
 scheduler._events = {};
 scheduler.clearAll = function() {

@@ -10,11 +10,11 @@
                 <div class="half-block left">
                     <dl class="person-info">
                         <dt>Project :</dt>
-                        <dd><a id="<%=project.id%>" href="#"><%=project.name%></a></dd>
+                        <dd><a id="<%=project._id%>" href="#"><%=project.projectName%></a></dd>
                         <dt>Assigned to :</dt>
-                        <dd><%=assignedTo.name%></dd>
+                        <dd><%=(assignedTo) ? assignedTo.name.first + ' ' + assignedTo.name.last : ''%></dd>
                         <dt>Workflow :</dt>
-                        <dd><%=workflow.name%></dd>
+                        <dd><%=(workflow) ? workflow.name : ''%></dd>
                     </dl>
                 </div>
                 <div class="half-block left">
@@ -48,7 +48,7 @@
                     <dt>Sequense :</dt>
                     <dd><%=extrainfo.sequence%></dd>
                     <dt>Customer :</dt>
-                    <dd><%=extrainfo.customer.name%></dd>
+                    <dd><%=(extrainfo.customer) ? extrainfo.customer.name.first + ' ' + extrainfo.customer.name.last : ''%></dd>
                     <dt>Logged :</dt>
                     <dd><%=logged%></dd>
                 </dl>

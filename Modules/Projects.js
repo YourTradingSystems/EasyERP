@@ -3,10 +3,10 @@ var Project = function (logWriter, mongoose) {
     var ProjectSchema = mongoose.Schema({
         projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
-        task: [{ type: ObjectId, ref: 'Tasks' }],
+        task: { type: [ObjectId], ref: 'Tasks', default: null },
         privacy: { type: String, default: 'All Users' },
-        customer: { type: ObjectId, ref: 'Customers' },
-        projectmanager: { type: ObjectId, ref: 'Employees' },
+        customer: { type: ObjectId, ref: 'Customers', default: null },
+        projectmanager: { type: ObjectId, ref: 'Employees', default: null },
         teams: {
             users: { type: Array, default: [] },
             Teams: { type: Array, default: [] }
@@ -18,7 +18,7 @@ var Project = function (logWriter, mongoose) {
             sequence: { type: Number, default: 0 },
             parent: { type: String, default: null }
         },
-        workflow: { type: ObjectId, ref: 'workflows' },
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
@@ -29,20 +29,20 @@ var Project = function (logWriter, mongoose) {
     var TasksSchema = mongoose.Schema({
         summary: { type: String, default: '' },
         taskCount: { type: Number, default: 0 },
-        project: { type: ObjectId, ref: 'Project' },
-        assignedTo: { type: ObjectId, ref: 'Employees' },
+        project: { type: ObjectId, ref: 'Project', default: null },
+        assignedTo: { type: ObjectId, ref: 'Employees', default: null },
         deadline: Date,
         tags: [String],
         description: String,
         extrainfo: {
             priority: { type: String, default: 'Medium' },
             sequence: { type: Number, default: 0 },
-            customer: { type: ObjectId, ref: 'Customers' },
+            customer: { type: ObjectId, ref: 'Customers', default: null },
             StartDate: { type: Date, default: Date.now },
             EndDate: { type: Date, default: Date.now },
             duration: { type: Number, default: 0 }
         },
-        workflow: { type: ObjectId, ref: 'Workflows' },
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
         type: { type: String, default: '' },
         color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
@@ -110,8 +110,7 @@ var Project = function (logWriter, mongoose) {
         result.remaining = 0;
         result.progress = 0;
         for (var i in tasksArray) {
-
-            if (tasksArray[i].workflow.status != 'Cancelled') {
+            if (tasksArray[i].length != 0 && tasksArray[i].workflow && tasksArray[i].workflow.status != 'Cancelled') {
                 try {
                     result.estimated += tasksArray[i].estimated;
                     result.remaining += tasksArray[i].remaining;
@@ -245,71 +244,6 @@ var Project = function (logWriter, mongoose) {
             }
         }
     };
-
-    //var projectFormatDate = function (_projects, count, bool) {
-    //    try {
-    //        if (bool) {
-    //            if (_projects.length > count) {
-    //                var startday = _projects[count].info.StartDate.getDate();
-    //                var startmonth = _project[count].info.StartDate.getMonth() + 1;
-    //                var startyear = _project[count].info.StartDate.getFullYear();
-    //                var startdate = startday + "/" + startmonth + "/" + startyear;
-    //                _projects[count].info.StartDate = startdate;
-    //                var endday = _project[count].info.EndDate.getDate();
-    //                ;
-    //                var endmounth = _project[count].info.EndDate.getMounth() + 1;
-    //                var endyear = _project[count].info.EndDate.getFullYear();
-    //                var enddate = endday + "/" + endmounth + "/" + endyear;
-    //                _projects[count].info.EndDate = enddate;
-    //                console.log('=======Project Date Was Formated=================');
-    //                console.log("StartDate: " + startdate + " EndDate: " + enddate);
-    //                console.log('================================================');
-    //                count++;
-    //                projectFormatDate(_projects, count, true);
-    //            } else {
-    //                projectFormatDate(_projects, count, false);
-    //            }
-    //        } else {
-    //            return _projects;
-    //        }
-    //    } catch (exeption) {
-
-    //    }
-    //};
-
-    //var taskFormatDate = function (_tasks, count) {
-    //    try {
-    //        if (_tasks.length > count) {
-    //            if (_tasks[count].extrainfo.StartDate) {
-    //                var startday = _tasks[count].extrainfo.StartDate.getDate();
-    //                var startmonth = _tasks[count].extrainfo.StartDate.getMonth() + 1;
-    //                var startyear = _tasks[count].extrainfo.StartDate.getFullYear();
-    //                var startdate = startday + "/" + startmonth + "/" + startyear;
-    //                _tasks[count].extrainfo.StartDate = startdate;
-    //                console.log(startdate);
-    //            } else {
-    //                _tasks[count].extrainfo.StartDate = '';
-    //            }
-    //            if (_tasks[count].extrainfo.EndDate) {
-    //                var endday = _tasks[count].extrainfo.EndDate.getDate();
-    //                var endmounth = _tasks[count].extrainfo.EndDate.getMonth() + 1;
-    //                var endyear = _tasks[count].extrainfo.EndDate.getFullYear();
-    //                var enddate = endday + "/" + endmounth + "/" + endyear;
-    //                _tasks[count].extrainfo.EndDate = enddate;
-    //                console.log(enddate);
-    //            } else {
-    //                _tasks[count].extrainfo.EndDate = '';
-    //            }
-    //            count++;
-    //            taskFormatDate(_tasks, count);
-    //        } else {
-    //            console.log(_tasks);
-    //            return _tasks;
-    //        }
-    //    } catch (exeption) {
-    //        console.log(exeption);
-    //    }
-    //};
 
     var _updateTask = function (tasksArray, fieldsObject) {
         var n = tasksArray.length;
@@ -502,28 +436,12 @@ var Project = function (logWriter, mongoose) {
         var findTasksById = function (_projects, count) {//���������� �������
             try {
                 if (_projects.length > count) {
-                    tasks.find({ 'project.id': _projects[count]._id }, function (err, taskss) {
-                        try {
-                            if (err) {
-                                console.log(err);
-                                logWriter.log("Project.js getProjects findETasksById tasks.find " + err);
-                                response.send(500, { error: "Can't find Projects" });
-                            } else {
-                                _projects[count].task.tasks = taskss;
-                                var _resultProgress = returnProgress(taskss);
-                                _projects[count].estimated = _resultProgress.estimated;
-                                _projects[count].remaining = _resultProgress.remaining;
-                                _projects[count].progress = _resultProgress.progress;
-                                count++;
-                                findTasksById(_projects, count);
-                            }
-                        }
-                        catch (Exception) {
-                            console.log(Exception);
-                            logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
-                            response.send(500, { error: "Can't find Projects" });
-                        }
-                    });
+                    var _resultProgress = returnProgress(_projects[count].task);
+                    _projects[count].estimated = _resultProgress.estimated;
+                    _projects[count].remaining = _resultProgress.remaining;
+                    _projects[count].progress = _resultProgress.progress;
+                    count++;
+                    findTasksById(_projects, count);
                 } else {
                     //projectFormatDate(_projects, 0, true);
                     res['data'] = _projects;
@@ -627,8 +545,8 @@ var Project = function (logWriter, mongoose) {
                 res.send(400, { error: 'Task.create Incorrect Incoming Data' });
                 return;
             } else {
-                var projectId = data.project._id;
-                var query = tasks.find({ 'project.id': projectId });
+                var projectId = data.project;
+                var query = tasks.find({ project: projectId });
                 query.sort({ taskCount: -1 });
                 query.exec(function (error, _tasks) {
                     if (error) {
@@ -700,6 +618,12 @@ var Project = function (logWriter, mongoose) {
                             logWriter.log("Project.js createTask saveTaskToBd _task.save " + err);
                             res.send(500, { error: 'Task.save BD error' });
                         } else {
+                            project.findByIdAndUpdate(_task.project, { $push: { task: _task._id } }, function (err, doc) {
+                                if (err) {
+                                    console.log(err);
+                                    res.send(500, { error: 'Project.save BD error' });
+                                }
+                            });
                             updateProjectTime(_task);
                             res.send(201, { success: 'An new Task crate success' });
                         }
@@ -721,6 +645,7 @@ var Project = function (logWriter, mongoose) {
 
     function updateTask(_id, data, res) {
         delete data._id;
+        console.log(data);
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
@@ -729,8 +654,8 @@ var Project = function (logWriter, mongoose) {
             data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
             data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         }
-        if (data.project && data.project.id) {
-            var query = tasks.find({ 'project.id': data.project.id });
+        if (data.project && data.project._id) {
+            var query = tasks.find({ project: data.project._id });
             query.sort({ taskCount: -1 });
             query.exec(function (error, _tasks) {
                 if (error) {
@@ -744,9 +669,21 @@ var Project = function (logWriter, mongoose) {
                             logWriter.log("Project.js updateTask tasks.findById " + err);
                             res.send(500, { error: 'Task find error' });
                         } else {
-                            if (!_tasks[0] || (!task || (task.project.id != data.project.id))) {
+                            if (!_tasks[0] || (!task || (task.project != data.project._id))) {
                                 var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
                                 data.taskCount = n;
+                            }
+                            if (data.project && typeof (data.project) == 'object') {
+                                data.project = data.project._id;
+                            }
+                            if (data.assignedTo && typeof (data.assignedTo) == 'object') {
+                                data.assignedTo = data.assignedTo._id;
+                            }
+                            if (data.extrainfo.customer && typeof (data.extrainfo.customer) == 'object') {
+                                data.extrainfo.customer = data.extrainfo.customer._id;
+                            }
+                            if (data.workflow && typeof (data.workflow) == 'object') {
+                                data.workflow = data.workflow._id;
                             }
                             tasks.update({ _id: _id }, data, function (err, taskk) {
                                 if (err) {
@@ -805,6 +742,7 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = tasks.find({});
+        query.populate('project assignedTo extrainfo.customer workflow');
         query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
             if (err) {

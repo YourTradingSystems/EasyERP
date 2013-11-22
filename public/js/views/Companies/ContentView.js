@@ -79,7 +79,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             $('#editInput').val(this.text);
             $('#editInput').val(this.text);
             $('#editSpan').remove();
-            $("#" + parent[0].id).append('<span id="cancleSpan" class="right"><a href="#">Cancle</a></span>');
+            $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancle</a></span>');
             $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
         },
 
@@ -244,7 +244,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
                     error: function () {
                         console.log("Attach file error");
-                    },
+                    }
                 });
             });
             addFrmAttach.submit();
