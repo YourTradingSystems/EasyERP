@@ -16,8 +16,10 @@ define([
             	"click #top-bar-saveBtn": "saveEvent",
             	"click #top-bar-discardBtn": "discardEvent"
             },
-            
-            changeContentViewType: Custom.changeContentViewType,
+
+            changeContentViewType: function (e) {
+                Custom.changeContentViewType(e, this.contentType, this.collection);
+            },
             
             changeItemIndex: Custom.changeItemIndex,
             
