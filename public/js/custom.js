@@ -15,7 +15,6 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             Backbone.history.fragment = "";
             Backbone.history.navigate("login", { trigger: true });
         }
-
     };
 
     var changeItemIndex = function (event, actionType, contentType, collection) {

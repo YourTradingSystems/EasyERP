@@ -28,7 +28,6 @@ define([
             //        hash = null;
             //    }
             //}
-
             console.log('GetList: ' + contentType + " " + viewType + " " + itemIndex + " " + hash);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",

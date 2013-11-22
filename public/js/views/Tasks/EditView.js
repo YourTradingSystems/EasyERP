@@ -258,7 +258,7 @@
             },
 
             projectOption: function (item) {
-                return this.currentModel.get("project").id === item._id ?
+                return this.currentModel.get("project")._id === item._id ?
                     $('<option/>').val(item._id).text(item.projectName).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.projectName);
             },

@@ -349,6 +349,7 @@
             try {
                 console.log(data);
                 delete data._id;
+                console.log(data);
                 customer.update({ _id: _id }, data, function (err, customers) {
                     if (err) {
                         console.log(err);

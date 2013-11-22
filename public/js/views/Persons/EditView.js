@@ -18,7 +18,7 @@ define([
                 //this.departmentsCollection = new DepartmentsCollection();
                 //this.departmentsCollection.bind('reset', _.bind(this.renderView, this));
                 //this.companiesCollection.bind('reset', _.bind(this.renderView, this));
-                this.currentModel = this.personsCollection.models[Custom.getCurrentII()-1];
+                this.currentModel = this.personsCollection.getElement();
                 this.render();
 
             },
@@ -48,14 +48,8 @@ define([
                         last: $('#lastName').val()
                     },
                     dateBirth: dateBirth,
-                    department: {
-                        id: $("#department option:selected").val(),
-                        name: $("#department option:selected").text()
-                    },
-                    company: {
-                        id: $('#companiesDd option:selected').val(),
-                        name: $('#companiesDd option:selected').text()
-                    },
+                    department: $("#department option:selected").val(),
+                    company: $('#companiesDd option:selected').val(),
                     address: {
                         street: $('#addressInput').val(),
                         city: $('#cityInput').val(),
@@ -75,7 +69,7 @@ define([
                     salesPurchases: {
                         isCustomer: $('#isCustomerInput').is(':checked'),
                         isSupplier: $('#isSupplierInput').is(':checked'),
-                        active: $('#isActiveInput').is('checked')
+                        active: $('#isActiveInput').is(':checked')
                     }
                 };
 
@@ -85,7 +79,8 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        self.$el.dialog('close');
+                        debugger;
+                        $('.edit-person-dialog').remove();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function (model, xhr, options) {
@@ -96,8 +91,6 @@ define([
                         }
                     }
                 });
-
-
             },
 
             populateDropDown: function(type, selectId, url){
@@ -118,16 +111,6 @@ define([
                     });
                     selectList.append(options);
                 });
-            },
-            workflowOption: function(item){
-                return this.currentModel.get("workflow").id === item._id ?
-                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")").attr('selected','selected') :
-                    $('<option/>').val(item._id).text(item.name + "(" + item.status + ")");
-            },
-            projectOption: function(item){
-                return this.currentModel.get("project").id === item._id ?
-                    $('<option/>').val(item._id).text(item.projectName).attr('selected','selected') :
-                    $('<option/>').val(item._id).text(item.projectName);
             },
             companyOption: function(item){
                 return (this.currentModel.get('company') && this.currentModel.get('company')._id === item._id) ?

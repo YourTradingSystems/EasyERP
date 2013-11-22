@@ -395,7 +395,7 @@ app.put('/Workflows/:id', function (req, res) {
     data.value = req.body.value;
     data.name = req.body.name;
     data.wId = req.body.wId;
-    console.log(data);
+    //console.log(data);
     //requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
@@ -426,14 +426,14 @@ app.put('/Companies/:_id', function (req, res) {
     data.company = req.body;
     console.log("---------------UpdateCompany-------------------");
     //console.log(data.company.salesPurchases.salesPerson);
-    if (data.company.salesPurchases.salesPerson) {
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
         data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
     }
-    if (data.company.salesPurchases.salesTeam) {
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
         data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
     }
     //console.log(data.company.salesPurchases.salesPerson);
-    console.log(data);
+    //console.log(data.company.address);
     requestHandler.updateCompany(req, res, id, data);
 });
 
