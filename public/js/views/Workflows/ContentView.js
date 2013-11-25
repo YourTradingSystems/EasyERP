@@ -33,15 +33,18 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
 
         save: function (e) {
             e.preventDefault();
-            var tds = $(e.target).parent().siblings();
-            var name = tds.find("span.name").text();
-            var status = tds.find("span.status").text();
-            var id = tds.siblings("td.name").data("id");
+            var tr = $(e.target).closest("tr");
+            var name = tr.find("td.name input").val();
+            var status = tr.find("td.status option:selected").text();
+            var tdName = tr.find("td.name");
+            var id = tdName.data("id");
+            var sequence = tdName.data("sequence");
             var model = this.collection.get(id);
             this.collection.url = "/Workflows";
             var obj = {
                 name: name,
-                status: status
+                status: status,
+                sequence: sequence
             };
             console.log(obj);
             model.set(obj);
@@ -66,19 +69,20 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             e.preventDefault();
             var target = $(e.target);
             var td = target.parent();
-            var value = td.siblings("td:first-of-type").text();
             var text = "<a href='#'>";
             var select = $("<select/>");
             target.closest("tr").find("span, .edit").addClass("hidden");
             td.siblings(".status").append(select);
+            var statusText = td.siblings("td.status").text();
             this.relatedStatusesCollection.forEach(function (status) {
                 var statusJson = status.toJSON();
-                (statusJson.status == value) ?
+                (statusJson.status == statusText) ?
                     select.append($("<option>").text(statusJson.status).attr('selected', 'selected')) :
                     select.append($("<option>").text(statusJson.status));
             });
+
             td.siblings(".name").append(
-                $("<input>").val(value));
+                $("<input>").val(td.siblings("td.name").text()));
             td.append(
                 $(text).text("Save"),
                 $(text).text("Cancel")
@@ -86,10 +90,10 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
         },
 
         gotoForm: function (e) {
-             App.ownContentType = true;
-             var itemIndex = $(e.target).closest("tr").data("index") + 1;
-             window.location.hash = "#home/content-Workflows/form/" + itemIndex;
-         },
+            App.ownContentType = true;
+            var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Workflows/form/" + itemIndex;
+        },
 
         chooseSubWorkflowNames: function (e) {
             alert($(e.target).hasClass("workflow-sub"));

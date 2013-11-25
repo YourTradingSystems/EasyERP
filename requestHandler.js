@@ -419,7 +419,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function updateWorkflow(req, res, _id, data) {
-        console.log("Requst createWorkflow is success");
+        console.log("Requst updateWorkflow is success");
         if (req.session && req.session.loggedIn) {
             workflow.update(_id, data, res);
         } else {
