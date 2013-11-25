@@ -345,21 +345,24 @@
             });
         },
 
-        update: function (_id, data, res) {
+        update: function (_id, remove, data, res) {
             try {
                 console.log(data);
                 delete data._id;
-                console.log(data);
-                customer.update({ _id: _id }, data, function (err, customers) {
+                if (data.notes.length != 0 && !remove) {
+                    var obj = data.notes[data.notes.length - 1];
+                    obj._id = mongoose.Types.ObjectId();
+                    obj.date = new Date();
+                    data.notes[data.notes.length - 1] = obj;
+                }
+                customer.findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
                     if (err) {
                         console.log(err);
                         logWriter.log("Customer.js update customer.update " + err);
                         res.send(500, { error: "Can't update customer" });
                     } else {
-                        var note = {};
-                        note._id = mongoose.Types.ObjectId();
-                        note.date = new Date();
-                        res.send(200, { success: 'customer updated success' });
+                        console.log(customers);
+                        res.send(200, customers);
                     }
                 });
             }

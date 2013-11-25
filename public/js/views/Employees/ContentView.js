@@ -22,8 +22,8 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
         },
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
-            window.location.hash = "#home/content-Employees/form/" + itemIndex;
+            var id = $(e.target).closest("tr").data("id");
+            window.location.hash = "#home/content-Employees/form/" + id;
         },
 
         switchTab: function (e) {
@@ -37,7 +37,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
         },
 
         render: function () {
-            Custom.setCurrentCL(this.collection.models.length);
+            //Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Employees View');
             var viewType = Custom.getCurrentVT(),
                 models = this.collection.models;
@@ -87,16 +87,10 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.models.length - 1) {
-                            itemIndex = this.collection.models.length - 1;
-                            Custom.setCurrentII(this.collection.models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html();
+                        var currentModel = this.collection.getElement();
+                        if (!currentModel) {
+                            this.$el.html('<h2>No Employees found</h2>');
                         } else {
-                            var currentModel = this.collection.models[itemIndex];
                             var dateBirth = currentModel.get('dateBirth');
                             if (dateBirth) {
                                 currentModel.set({ dateBirth: dateBirth.split('T')[0].replace(/-/g, '/') }, { silent: true });

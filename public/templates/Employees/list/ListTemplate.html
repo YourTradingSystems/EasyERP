@@ -16,8 +16,8 @@
     </thead>
     <tbody>
     <% employeesCollection.forEach(function(employee, index){ %>
-        <tr data-index="<%=index + 1%>">
-            <td><input type="checkbox" value="<%=employee._id%>" class="checkbox"/></td>
+        <tr data-index="<%=index + 1%>" data-id="<%=employee._id%>">
+            <td><input type="checkbox" value="<%=employee._id%>" class="checkbox" /></td>
             <td><%=index + 1%></td>
             <td><%=employee.name.first%> <%=employee.name.last%></td>
             <td><%=employee.workPhones.phone%></td>
