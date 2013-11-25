@@ -53,8 +53,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
 
-        removeEdit: function (e) {
-            console.log('MouseOverWebSite');
+        removeEdit: function (e) {           
             $('#editSpan').remove();
         },
         cancleClick: function (e) {
@@ -69,11 +68,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
         editClick: function (e) {
             e.preventDefault();
-            var parent = $(e.target).parent().parent();
-            console.log(parent[0].id)
+            var parent = $(e.target).parent().parent();           
             $("#" + parent[0].id).addClass('quickEdit');
             this.text = $.trim($('#' + parent[0].id).data('text'));
-            console.log(this.text);
             $("#" + parent[0].id).text('');
             $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             $('#editInput').val(this.text);
@@ -94,13 +91,11 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var currentModel = models[itemIndex];
             if (objIndex.length > 1) {             
                 obj = currentModel.get(objIndex[0]);
+                console.log(obj);
                 obj[objIndex[1]] = $('#editInput').val();
             } else if (objIndex.length == 1) {
                 obj[objIndex[0]] = $('#editInput').val();
-            }
-            console.log(obj);          
-            console.log("Current Model:");
-            console.log(currentModel.get(objIndex[0]));
+            }           
             currentModel.set(obj);
             currentModel.save({}, {
                 headers: {

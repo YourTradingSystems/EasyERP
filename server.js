@@ -392,11 +392,10 @@ app.put('/Workflows/:id', function (req, res) {
     console.log(_id);
 
     data.mid = req.headers.mid;
-    data.value = req.body.value;
+    data.status = req.body.status;
     data.name = req.body.name;
-    data.wId = req.body.wId;
     //console.log(data);
-    //requestHandler.updateWorkflow(req, res, _id, data);
+    requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
 

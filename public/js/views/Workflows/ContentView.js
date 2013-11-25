@@ -2,12 +2,15 @@ define([
     'text!templates/Workflows/list/ListTemplate.html',
     'views/Workflows/list/ListItemView',
     'text!templates/Workflows/form/FormTemplate.html',
+    'collections/RelatedStatuses/RelatedStatusesCollection',
     'custom'
 ],
-function (ListTemplate, ListItemView, FormTemplate, Custom) {
+function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, Custom) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
+            this.relatedStatusesCollection = new RelatedStatusesCollection();
+            this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
             console.log('Init Workflows View');
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
@@ -16,41 +19,40 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
 
         events: {
             "click .checkbox": "checked",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm",
+            //"click td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click a.workflow": "chooseWorkflowNames",
             "click .workflow-sub-list li": "chooseWorkflowDetailes",
             "click .workflow-list li": "chooseWorkflowNames",
             "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
             "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
             "click #workflowNames span": "chooseWorkflowDetailes",
-            "click .person-info dd .edit": "edit",
+            "click td .edit": "edit",
             "click a:contains('Cancel')": "cancel",
             "click a:contains('Save')": "save"
         },
 
         save: function (e) {
             e.preventDefault();
-            var span = $(e.target).parent().find("span");
-            var id = span.data("id");
-            var model = this.collection.get(id),
-                obj;
-            if (span.hasClass("name")) {
-                obj = {
-                    name: span.text()
-                };
-            } else {
-                obj = {
-                    status: span.text()
-                };
-            }
+            var tr = $(e.target).closest("tr");
+            var name = tr.find("td.name input").val();
+            var status = tr.find("td.status option:selected").text();
+            var tdName = tr.find("td.name");
+            var id = tdName.data("id");
+            var sequence = tdName.data("sequence");
+            var model = this.collection.get(id);
             this.collection.url = "/Workflows";
+            var obj = {
+                name: name,
+                status: status,
+                sequence: sequence
+            };
             console.log(obj);
             model.set(obj);
             model.save({}, {
                 headers: {
                     mid: 39
                 },
-                success: function() {
+                success: function () {
                     Backbone.history.navigate("#home/content-Workflows", { trigger: true });
                 }
             });
@@ -58,16 +60,30 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
 
         cancel: function (e) {
             e.preventDefault();
-            $(e.target).parent().find("span, .edit").removeClass("hidden").end().find("input, a:contains('Cancel'), a:contains('Save')").remove();
+            var targetParent = $(e.target).parent();
+            targetParent.siblings().find("span").removeClass("hidden").end().find("input, select, a:contains('Cancel'), a:contains('Save')").remove();
+            targetParent.find(".edit").removeClass("hidden").end().find("a:contains('Cancel'), a:contains('Save')").remove();
         },
 
         edit: function (e) {
             e.preventDefault();
             var target = $(e.target);
-            var value = target.siblings("span").text();
+            var td = target.parent();
             var text = "<a href='#'>";
-            target.parent().find("span, .edit").addClass("hidden").end().append(
-                $("<input>").val(value),
+            var select = $("<select/>");
+            target.closest("tr").find("span, .edit").addClass("hidden");
+            td.siblings(".status").append(select);
+            var statusText = td.siblings("td.status").text();
+            this.relatedStatusesCollection.forEach(function (status) {
+                var statusJson = status.toJSON();
+                (statusJson.status == statusText) ?
+                    select.append($("<option>").text(statusJson.status).attr('selected', 'selected')) :
+                    select.append($("<option>").text(statusJson.status));
+            });
+
+            td.siblings(".name").append(
+                $("<input>").val(td.siblings("td.name").text()));
+            td.append(
                 $(text).text("Save"),
                 $(text).text("Cancel")
             );
@@ -114,7 +130,7 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                 else {
                     this.$(".workflow-sub-list").append("<li data-id='" + name + "'><a class='workflow-sub' data-id='" + name + "'href='javascript:;'>" + name + "</a></li>");
                 }
-                this.$("#sub-details").html("");
+                //this.$("#sub-details").html("");
             }, this);
         },
         chooseWorkflowDetailes: function (e) {
@@ -124,7 +140,7 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
             } else {
                 $(e.target).addClass("active");
             }
-            this.$("#sub-details").html("");
+            //this.$("#sub-details").html("");
             var name = $(e.target).data("id");
             var nameDetails = this.$("#sub-details").attr("data-id");
             if (name == nameDetails && this.$("#sub-details").hasClass("active")) {
@@ -146,9 +162,10 @@ function (ListTemplate, ListItemView, FormTemplate, Custom) {
                     console.log(values);
                 }
             }, this);
-            this.$("#sub-details").attr("data-id", name)
+            this.$("#sub-details").attr("data-id", name).find("#workflows").append($("<thead />").append(
+               $("<tr />").append($("<th />").text("Name"), $("<th />").text("Status"))), $("<tbody/>"));
             _.each(values, function (value) {
-                this.$("#sub-details").append(new ListItemView({ model: value }).render().el);
+                this.$("#sub-details tbody").append(new ListItemView({ model: value }).render().el);
             }, this);
         },
 
