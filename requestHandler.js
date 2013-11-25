@@ -189,10 +189,10 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function updatePerson(req, res, id, data, remove) {
+    function updatePerson(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
             console.log('----------->>>>>>>>>>>>>>>update');
-            customer.update(id, remove, data.person, res);
+            customer.update(id, data.person, res);
         } else {
             res.send(401);
         }
@@ -419,7 +419,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function updateWorkflow(req, res, _id, data) {
-        console.log("Requst createWorkflow is success");
+        console.log("Requst updateWorkflow is success");
         if (req.session && req.session.loggedIn) {
             workflow.update(_id, data, res);
         } else {
@@ -464,9 +464,9 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function updateCompany(req, res, id, data, remove) {
+    function updateCompany(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            customer.update(id, remove, data.company, res);
+            customer.update(id, data.company, res);
         } else {
             res.send(401);
         }

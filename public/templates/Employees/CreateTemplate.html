@@ -93,7 +93,7 @@
                             <p><input type="text" name="officeLocation" id="officeLocation" />
                             <p>
                                 <select id="relatedUser">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                     <% usersCollection.each(function(option){ %>
                                     <option value="<%= option.get('_id') %>"><%= option.get('login')%></option>
                                     <% }); %>
@@ -101,12 +101,12 @@
                             </p>
                             <p>
                                 <select id="visibility">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                 </select>
                             </p>
                             <p>
                                 <select id="department">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                     <% departmentsCollection.each(function(option){ %>
                                     <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
                                     <% }); %>
@@ -114,7 +114,7 @@
                             </p>
                             <p>
                                 <select id="jobPosition">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                     <% jobPositionsCollection.each(function(option){ %>
                                     <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
                                     <% }); %>
@@ -122,7 +122,7 @@
                             </p>
                             <p>
                                 <select id="manager">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                     <% accountsDdCollection.each(function(option){ %>
                                     <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
                                     <% }); %>
@@ -130,7 +130,7 @@
                             </p>
                             <p>
                                 <select id="coach">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                     <% accountsDdCollection.each(function(option){ %>
                                     <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
                                     <% }); %>
@@ -153,14 +153,14 @@
                         <div class="half-block left">
                             <p>
                                 <select id="nationality">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                 </select>
                             </p>
                             <p><input type="text" name="identNo" id="identNo" /></p>
                             <p><input type="text" name="passportNo" id="passportNo" /></p>
                             <p>
                                 <select id="bankAccountNo">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                 </select>
                             </p>
                             <p><input type="text" name="otherId" id="otherId" /></p>
@@ -192,12 +192,12 @@
                         <div class="half-block left">
                             <p>
                                 <select id="gender">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                 </select>
                             </p>
                             <p>
                                 <select id="maritalStatus">
-                                    <option selected="selected" value="0">Select...</option>
+                                    <option selected="selected" value="">Select...</option>
                                 </select>
                             </p>
                         </div>

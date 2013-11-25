@@ -237,9 +237,8 @@ app.put('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    remove = req.headers.remove;
     data.person = req.body;
-    requestHandler.updatePerson(req, res, id, data, remove);
+    requestHandler.updatePerson(req, res, id, data);
 });
 
 app.delete('/Persons/:_id', function (req, res) {
@@ -393,11 +392,10 @@ app.put('/Workflows/:id', function (req, res) {
     console.log(_id);
 
     data.mid = req.headers.mid;
-    data.value = req.body.value;
+    data.status = req.body.status;
     data.name = req.body.name;
-    data.wId = req.body.wId;
     //console.log(data);
-    //requestHandler.updateWorkflow(req, res, _id, data);
+    requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
 
@@ -424,7 +422,6 @@ app.put('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    remove = req.headers.remove;
     data.company = req.body;
     console.log("---------------UpdateCompany-------------------");
     //console.log(data.company.salesPurchases.salesPerson);
@@ -436,7 +433,7 @@ app.put('/Companies/:_id', function (req, res) {
     }
     //console.log(data.company.salesPurchases.salesPerson);
     //console.log(data.company.address);
-    requestHandler.updateCompany(req, res, id, data, remove);
+    requestHandler.updateCompany(req, res, id, data);
 });
 
 app.delete('/Companies/:_id', function (req, res) {

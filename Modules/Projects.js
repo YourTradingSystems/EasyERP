@@ -110,6 +110,7 @@ var Project = function (logWriter, mongoose) {
         result.remaining = 0;
         result.progress = 0;
         for (var i = 0; i < tasksArray.length; i++) {
+            console.log(tasksArray[i].summary);
             if (tasksArray[i].length != 0 && tasksArray[i].workflow && tasksArray[i].workflow.status != 'Cancelled') {
                 try {
                     result.estimated += tasksArray[i].estimated;

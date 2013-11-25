@@ -1,20 +1,21 @@
-﻿define([
-    "text!templates/Workflows/list/ListTemplate.html"
-],
-    function (ListItemTemplate) {
-        var ListItemView = Backbone.View.extend({
+﻿//define([
+//    "text!templates/Workflows/list/ListTemplate.html"
+//],
+//    function (ListTemplate) {
+//        var ListItemView = Backbone.View.extend({
+//            tagName: "table",
+//            id: "workflows",
+//            initialize: function () {
+//                //this.render();
+//            },
 
-            initialize: function () {
-                //this.render();
-            },
+//            template: _.template(ListTemplate),
 
-            template: _.template(ListItemTemplate),
+//            render: function () {
+//                this.$el.html(this.template({ model: this.model }));
+//                return this;
+//            }
+//        });
 
-            render: function () {
-                this.$el.html(this.template({ model: this.model }));
-                return this;
-            }
-        });
-
-        return ListItemView;
-    });
+//        return ListItemView;
+//    });

@@ -30,7 +30,6 @@ define([
             "mouseout .social a": "socialNotActive",
             "click .company": "gotoCompanyForm",
             "click #attachSubmit":"addAttach",
-            "click .deleteAttach": "deleteAttach",
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
@@ -89,7 +88,7 @@ define([
                 }
             }
         },
-
+        
         addNote: function (e) {
             var val = $('#noteArea').val();
             var title = $('#noteTitleArea').val();
@@ -156,6 +155,7 @@ define([
             }
         },
 
+       
         addAttach: function (event) {
             event.preventDefault();
             var models = this.collection.models;
@@ -196,6 +196,7 @@ define([
             addFrmAttach.off('submit');
         },
 
+        
         deleteAttach:function(e) {
             var id = e.target.id;
             var models = this.collection.models;
@@ -291,7 +292,7 @@ define([
                     {
                         var currentModel = this.collection.getElement();
                         if (!currentModel) {
-                            this.$el.html('<h2>No projects found</h2>');
+                            this.$el.html('<h2>No persons found</h2>');
                         } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(

@@ -282,7 +282,7 @@
                 }
             });
         },
-
+        
         getCompanies: function (response) {
             var res = {};
             res['data'] = [];
@@ -301,11 +301,11 @@
                 }
             });
         },
-
+        
         getOwnCompanies: function (response) {
             var res = {};
             res['data'] = [];
-            var query = customer.find({ $and: [{ type: 'Company' }, { isOwn: true }] });
+            var query = customer.find({$and:[{ type: 'Company' }, {isOwn:true}]});
             query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName');
             query.sort({ "name.first": 1 });
