@@ -27,27 +27,27 @@
          </div>
           <div class="half-block left">
             <dl class="person-info company">
-			  <dt>Address :</dt>
-			 
+
+			  <dt>Address :</dt>			 
               <dd id="address_street" class="editable" data-text="<%=address.street%>">
 			  <% if(address.street) { %>
                  <%=address.street%>
                   <% } else { %>
-                 <label style="color:#c1c1c1;">Street</label>
+                 <span style="color:#c1c1c1;">Street</span>
                    <% } %>
               </dd>
-			  <dt>&nbsp;</dt>
-			
-              <dd> <%=address.city%></dd>
-			  <dt>&nbsp;</dt>
-		
-              <dd> <%=address.state%></dd>
-			  <dt>&nbsp;</dt>
-		
-              <dd> <%=address.zip%></dd>
-			  <dt>&nbsp;</dt>
-		
-              <dd> <%=address.country%></dd>
+
+			  <dt>&nbsp;</dt>			
+              <dd id="address_city" data-text="<%=address.city%>" class="editable" ><%=address.city%></dd>
+
+			  <dt>&nbsp;</dt>		
+              <dd id="address_state" data-text="<%=address.state%>" class="editable" ><%=address.state%></dd>
+
+			  <dt>&nbsp;</dt>		
+              <dd id="address_zip" data-text="<%=address.zip%>" class="editable"><%=address.zip%></dd>
+
+			  <dt>&nbsp;</dt>		
+              <dd id="address_country" data-text="<%=address.country%>" class="editable"><%=address.country%></dd>
 		
             </dl>
  
