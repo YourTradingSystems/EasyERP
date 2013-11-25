@@ -27,7 +27,7 @@ define([
                 this.accountsDdCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = options.collection;
-                this.render();
+                //this.render();
             },
 
             events: {
@@ -93,20 +93,20 @@ define([
 
                 var officeLocation = $.trim($("#officeLocation").val());
 
-                var relatedUserId = this.$("#relatedUser option:selected").val();
-                var relatedUser = common.toObject(relatedUserId, this.usersCollection);
+                var relatedUser = this.$("#relatedUser option:selected").val();
+                //var relatedUser = common.toObject(relatedUserId, this.usersCollection);
 
-                var departmentId = this.$("#department option:selected").val();
-                var department = common.toObject(departmentId, this.departmentsCollection);
+                var department = this.$("#department option:selected").val();
+                //var department = common.toObject(departmentId, this.departmentsCollection);
 
-                var jobPositionId = this.$("#jobPosition option:selected").val();
-                var jobPosition = common.toObject(jobPositionId, this.jobPositionsCollection);
+                var jobPosition = this.$("#jobPosition option:selected").val();
+                //var jobPosition = common.toObject(jobPositionId, this.jobPositionsCollection);
 
-                var managerId = this.$("#manager option:selected").val();
-                var manager = common.toObject(managerId, this.accountsDdCollection);
+                var manager = this.$("#manager option:selected").val();
+                //var manager = common.toObject(managerId, this.accountsDdCollection);
 
-                var coachId = this.$("#coach option:selected").val();
-                var coach = common.toObject(coachId, this.accountsDdCollection);
+                var coach = this.$("#coach option:selected").val();
+                //var coach = common.toObject(coachId, this.accountsDdCollection);
 
                 var identNo = parseInt($.trim($("#identNo").val()));
 

@@ -23,9 +23,9 @@
             <td><%=employee.workPhones.phone%></td>
             <td><%=employee.workEmail%></td>
             <td><%=employee.skype%></td>
-            <td><%=employee.department.name%></td>
-            <td><%=employee.jobPosition.name%></td>
-            <td><%=employee.manager.name%></td>
+            <td><%=(employee.department) ? employee.department.departmentName : ''%></td>
+            <td><%=(employee.jobPosition) ? employee.jobPosition.name : ''%></td>
+            <td><%=(employee.manager) ? employee.manager.name.first + " " + employee.manager.name.last : ''%></td>
         </tr>
     <% }) %>
 

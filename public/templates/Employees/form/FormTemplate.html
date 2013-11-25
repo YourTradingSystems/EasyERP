@@ -72,7 +72,7 @@
                         <p><label>Visibility </label></p>
                     </div>
                     <div class="half-block left">
-                        <p><span><%=relatedUser.login%></span></p>
+                        <p><span><%=(relatedUser) ? relatedUser.login : ''%></span></p>
                         <p><span><%=visibility%></span></p>
                     </div>
                 </div>
@@ -85,10 +85,10 @@
                         <p><label>Coach </label></p>
                     </div>
                     <div class="half-block left">
-                        <p><span><%=department.name%></span></p>
-                        <p><span><%=jobPosition.name%></span></p>
-                        <p><span><%=manager.name%></span></p>
-                        <p><span><%=coach.name%></span></p>
+                        <p><span><%=(department) ? department.departmentName : ''%></span></p>
+                        <p><span><%=(jobPosition) ? jobPosition.name : ''%></span></p>
+                        <p><span><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></span></p>
+                        <p><span><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></span></p>
                     </div>
                 </div>
                 <div class="clearfix"></div>

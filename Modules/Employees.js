@@ -1,6 +1,6 @@
 // JavaScript source code
 var Employee = function (logWriter, mongoose) {
-
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var employeeSchema = mongoose.Schema({
         isEmployee: { type: Boolean, default: false },
         imageSrc: { type: String, default: '' },
@@ -24,27 +24,12 @@ var Employee = function (logWriter, mongoose) {
         },
         skype: { type: String, default: '' },
         officeLocation: { type: String, default: '' },
-        relatedUser: {
-            id: { type: String, default: '' },
-            login: { type: String, default: '' }
-        },
+        relatedUser: { type: ObjectId, ref: 'Users', default: null },
         visibility: { type: String, default: 'Public' },
-        department: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
-        jobPosition: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
-        manager: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
-        coach: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        department: { type: ObjectId, ref: 'Department', default: null },
+        jobPosition: { type: ObjectId, ref: 'JobPosition', default: null },
+        manager: { type: ObjectId, ref: 'Employees', default: null },
+        coach: { type: ObjectId, ref: 'Employees', default: null },
         nationality: { type: String, default: '' },
         identNo: String,
         passportNo: String,
@@ -66,15 +51,11 @@ var Employee = function (logWriter, mongoose) {
         },
         referredBy: { type: String, default: '' },
         active: { type: Boolean, default: true },
-        workflow: {
-            wName: { type: String, default: '' },
-            name: { type: String, default: '' },
-            status: { type: String, default: '' }
-        },
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
         otherInfo: { type: String, default: '' },
         expectedSalary: Number,
         proposedSalary: Number,
-        color: { type: String, default: '#4d5a75' },       
+        color: { type: String, default: '#4d5a75' },
         creationDate: { type: Date, default: Date.now }
     }, { collection: 'Employees' });
 
@@ -162,47 +143,22 @@ var Employee = function (logWriter, mongoose) {
                         _employee.officeLocation = data.officeLocation;
                     }
                     if (data.relatedUser) {
-                        if (data.relatedUser._id) {
-                            _employee.relatedUser.id = data.relatedUser._id;
-                        }
-                        if (data.relatedUser.login) {
-                            _employee.relatedUser.login = data.relatedUser.login;
-                        }
+                        _employee.relatedUser = data.relatedUser;
                     }
                     if (data.visibility) {
                         _employee.visibility = data.visibility;
                     }
                     if (data.department) {
-                        if (data.department._id) {
-                            _employee.department.id = data.department._id;
-                        }
-                        if (data.department.departmentName) {
-                            _employee.department.name = data.department.departmentName;
-                        }
+                        _employee.department = data.department;
                     }
                     if (data.jobPosition) {
-                        if (data.jobPosition._id) {
-                            _employee.jobPosition.id = data.jobPosition._id;
-                        }
-                        if (data.jobPosition.name) {
-                            _employee.jobPosition.name = data.jobPosition.name;
-                        }
+                        _employee.jobPosition = data.jobPosition;
                     }
                     if (data.manager) {
-                        if (data.manager._id) {
-                            _employee.manager.id = data.manager._id;
-                        }
-                        if (data.manager.name) {
-                            _employee.manager.name = data.manager.name.first + ' ' + data.manager.name.last;
-                        }
+                        _employee.manager = data.manager;
                     }
                     if (data.coach) {
-                        if (data.coach._id) {
-                            _employee.coach.id = data.coach._id;
-                        }
-                        if (data.coach.name) {
-                            _employee.coach.name = data.coach.name.first + ' ' + data.coach.name.last;
-                        }
+                        _employee.coach = data.coach;
                     }
                     if (data.nationality) {
                         _employee.nationality = data.nationality;
@@ -278,7 +234,7 @@ var Employee = function (logWriter, mongoose) {
                     }
                     if (data.color) {
                         _employee.color = data.color;
-                    }                   
+                    }
                     if (data.imageSrc) {
                         _employee.imageSrc = data.imageSrc;
                     }
@@ -316,6 +272,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', true);
+        query.populate('relatedUser department jobPosition manager coach');
         query.sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {
