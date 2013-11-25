@@ -886,6 +886,7 @@ h3 {
     &:hover {
         color: black;
         background-position: 0 -20px;
+		text-decoration:none;
     }
 
     &.disabled {
@@ -2128,7 +2129,8 @@ button {
 #createTaskForm,
 #createEmployeeForm,
 #editEmployeeForm,
-#createPersonsForm {
+#createPersonsForm ,
+#employeeForm{
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2227,13 +2229,19 @@ button {
     }
 }
 
-    #createEmployeeForm.notDialog {
-        dl {
-            dt, dd {
-                line-height: 17px;
-            }
+#createEmployeeForm.notDialog {
+    dl {
+        dt, dd {
+            line-height: 17px;
         }
     }
+}
+#createEmployeeForm,
+#employeeForm {
+	.person-info dt{
+		max-width:140px;
+	}
+}
 
 #createFormDiv > #createProjectForm {
     margin: 0;
@@ -3134,7 +3142,7 @@ table#workflows {
                 display: none;
             }
         }
-
+		
         &:hover {
             a.edit:not(.hidden) {
                 display: inline;
@@ -3147,6 +3155,9 @@ table#workflows {
 
         td {
             min-width: 40%;
+			&.edit-status{
+				width:20%;
+			}
         }
     }
 }

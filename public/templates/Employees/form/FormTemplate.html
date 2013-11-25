@@ -1,168 +1,133 @@
 <div class="form-holder">
-    <form class="form" id="employeeForm" data-id="<%=_id%>">
-        <div class="inner">
-            <div class="avatar">
-                <img alt="" src="<%=imageSrc%>" />
-            </div>
-            <div style="margin-left: 130px; width: 80%; display: block;">
-                <div class="half-block left">
-                    <h2><%=name.first%> <%=name.last%></h2>
-                </div>
-                <p><label>Tags</label></p>
-                <p><span><%=tags%></span></p>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-        <div id="tabs">
-            <div>
-                <ul id="tabList" class="inner">
-                    <li>
-                        <a href="#" class="selected">Public Information</a>
-                    </li>
-                    <li>
-                        <a href="#">Personal Information</a>
-                    </li>
-                    <li>
-                        <a href="#">HR Settings</a>
-                    </li>
-                </ul>
-                <br />
-            </div>
-            <div class="tab">
-                <h2>Contact Information</h2>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p><label>Work Address </label></p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                        <p><label> </label></p>
-                        <p><label> </label></p>
+  <form class="form" id="employeeForm" data-id="<%=_id%>">
+	<div class="half-block left">
+	  <dl class="person-info">
+		<dt><label>First Name :</label></dt><dd><%=name.first%></dd>
+		<dt><label>Last Name :</label></dt><dd><%=name.last%></dd>
+		<dt><label>Tags :</label></dt><dd><span><%=tags%></span></dd>
+	  </dl>
+	</div>
+	<div class="half-block left">
+      <div class="avatar">
+        <img alt="" src="<%=imageSrc%>" />
+      </div>
+	</div>
+    <div class="clearfix">
+    </div>
+    <div class="formTitle">
+	  <h3 class="left"><legend>Public Information</legend></h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="half-block left withPaddingLeft">
+	  <dl class="person-info">
+		<dt><label>Work Address :</label></dt>
+		<% if(workAddress.street){%>
+		<dd><span><%=workAddress.street%></span></dd>
+		<dt>&nbsp;</dt>
+		<%}%>
+		<% if(workAddress.city){%>
+		<dd><span><%=workAddress.city%></span></dd>
+		<dt>&nbsp;</dt>
+		<%}%>
+		<% if(workAddress.state){%>
+		<dd><span><%=workAddress.state%></span></dd>
+		<dt>&nbsp;</dt>
+		<%}%>
+		<% if(workAddress.zip){%>
+		<dd><span><%=workAddress.zip%></span></dd>
+		<dt>&nbsp;</dt>
+		<%}%>
+		<dd><span><%=workAddress.country%></span></dd>
+		<dt><label>Related User :</label></dt><dd><span><%=(relatedUser) ? relatedUser.login : ''%></span></dd>
+		<dt><label>Visibility :</label></dt><dd><span><%=visibility%></span></dd>
+	  </dl>
+	</div>
+	<div class="half-block left withPaddingLeft">
+	  <dl class="person-info">
+		<dt><label>Work Email :</label></dt><dd><span><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></span></dd>
+		<dt><label>Skype :</label></dt><dd><span><%=skype%></span></dd>
+		<dt><label>Work Phone :</label></dt><dd><span><%=workPhones.phone%></span></dd>
+		<dt><label>Work Mobile :</label></dt><dd><span><%=workPhones.mobile%></span></dd>
+		<dt><label>Office Location :</label></dt><dd><span><%=officeLocation%></span></dd>
+		<dt><label>Department :</label></dt><dd><span><%=(department) ? department.departmentName : ''%></span></dd>
+		<dt><label>Job :</label></dt><dd><span><%=(jobPosition) ? jobPosition.name : ''%></span></dd>
+		<dt><label>Manager :</label></dt><dd><span><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></span></dd>
+		<dt><label>Coach :</label></dt><dd><span><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></span></dd>
+	  </dl>
+	</div>
 
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=workAddress.street%></span></p>
-                        <p><span><%=workAddress.city%></span></p>
-                        <p><span><%=workAddress.state%></span></p>
-                        <p><span><%=workAddress.zip%></span></p>
-                        <p><span><%=workAddress.country%></span></p>
-                    </div>
-                </div>
+    <div class="formTitle">
+	  <h3 class="left"><legend>Personal Information</legend></h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="half-block left withPaddingLeft">
+      <div class="formTitle">
+		<h3 class="left"><legend>Citizenship &amp; Other Info</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
 
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p><label>Work Email </label></p>
-                        <p><label>Skype </label></p>
-                        <p><label>Work Phone </label></p>
-                        <p><label>Work Mobile </label></p>
-                        <p><label>Office Location </label></p>
-                        <p></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></span></p>
-                        <p><span><%=skype%></span></p>
-                        <p><span><%=workPhones.phone%></span></p>
-                        <p><span><%=workPhones.mobile%></span></p>
-                        <p><span><%=officeLocation%></span></p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <p></p>
-                    <div class="half-block left">
-                        <p><label>Related User </label></p>
-                        <p><label>Visibility </label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=(relatedUser) ? relatedUser.login : ''%></span></p>
-                        <p><span><%=visibility%></span></p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <h2>Position</h2>
-                    <div class="half-block left">
-                        <p><label>Department </label></p>
-                        <p><label>Job </label></p>
-                        <p><label>Manager </label></p>
-                        <p><label>Coach </label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=(department) ? department.departmentName : ''%></span></p>
-                        <p><span><%=(jobPosition) ? jobPosition.name : ''%></span></p>
-                        <p><span><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></span></p>
-                        <p><span><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></span></p>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="tab">
-                <div class="half-block left">
-                    <h2>Citizenship & Other Info</h2>
-                    <div class="half-block left">
-                        <p><label>Natinality </label></p>
-                        <p><label>Identification No </label></p>
-                        <p><label>Passport No </label></p>
-                        <p><label>Bank Account Number </label></p>
-                        <p><label>Other Id </label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=nationality%></span></p>
-                        <p><span><%=identNo%></span></p>
-                        <p><span><%=passportNo%></span></p>
-                        <p><span><%=bankAccountNo%></span></p>
-                        <p><span><%=otherId%></span></p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <h2>Contact Information</h2>
-                    <div class="half-block left">
-                        <p><label>Home Address </label></p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p> <span><%=homeAddress.street%></span></p>
-                        <p><span><%=homeAddress.city%></span></p>
-                        <p><span><%=homeAddress.state%></span></p>
-                        <p><span><%=homeAddress.zip%></span></p>
-                        <p> <span><%=homeAddress.country%></span></p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <h2>Status</h2>
-                    <div class="half-block left">
-                        <p><label>Gender </label></p>
-                        <p><label>Marital Status</label></p>
-                    </div>
-                    <div class="half-block left"></div>
-                </div>
-                <div class="half-block left">
-                    <h2>Birth</h2>
-                    <div class="half-block left">
-                        <p><label>Date Of Birth </label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p><span><%=dateBirth%></span></p>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="tab">
-                <h2>Active</h2>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p><label>Active </label></p>
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <input type="checkbox" <%=(active)? "checked='checked'":''%> name="active" id="active" disabled />
-                        </p>
+	  <dl class="person-info">
+		<dt><label>Natinality :</label></dt><dd><span><%=nationality%></span></dd>
+		<dt><label>Identification № :</label></dt><dd><span><%=identNo%></span></dd>
+		<dt><label>Passport № :</label></dt><dd><span><%=passportNo%></span></dd>
+		<dt><label>Bank Account Number :</label></dt><dd><span><%=bankAccountNo%></span></dd>
+		<dt><label>Other Id :</label></dt><dd><span><%=otherId%></span></dd>
+	  </dl>
+      <div class="clearfix"></div>
+	</div>
+	<div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left"><legend>Contact Information</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
 
-                    </div>
-                   
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </form>
+	  <dl class="person-info">
+		<dt><label>Home Address :</label></dt><dd> <span><%=homeAddress.street%></span></dd>
+		<dt>&nbsp;</dt><dd><span><%=homeAddress.city%></span></dd>
+		<dt>&nbsp;</dt><dd><span><%=homeAddress.state%></span></dd>
+		<dt>&nbsp;</dt><dd><span><%=homeAddress.zip%></span></dd>
+		<dt>&nbsp;</dt><dd><span><%=homeAddress.country%></span></dd>
+	  </dl>
+      <div class="clearfix"></div>
+    </div>
+      <div class="clearfix"></div>
+	<div class="half-block left withPaddingLeft">
+	      <div class="formTitle">
+		<h3 class="left"><legend>Status</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
+	  <dl class="person-info">
+		<dt><label>Gender :</label></dt><dd>&nbsp;</dd>
+		<dt><label>Marital Status :</label></dt><dd>&nbsp;</dd>
+	  </dl>
+	</div>
+	<div class="half-block left withPaddingLeft">
+	    <div class="formTitle">
+		  <h3 class="left"><legend>Birth</legend></h3>
+		  <div class="clearfix"></div>
+		</div>
+
+		<dl class="person-info">
+		  <dt><label>Date Of Birth :</label></dt><dd><span><%=dateBirth%></span></dd>
+		</dl>		  
+
+	</div>
+
+	  <div class="clearfix"></div>
+      <div class="formTitle">
+		<h3 class="left"><legend>HR Settings</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
+	  <div class="half-block left withPaddingLeft">
+	    <div class="formTitle">
+		  <h3 class="left"><legend>Active</legend></h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="person-info">
+		  <dt><label>Active :</label></dt><dd><input type="checkbox" <%=(active)? "checked='checked'":''%> name="active" id="active" disabled /></dd>
+		</dl>	  
+		
+	  </div>
+      <div class="clearfix"></div>
+  </form>
 </div>

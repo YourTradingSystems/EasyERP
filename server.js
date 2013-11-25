@@ -756,6 +756,13 @@ app.delete('/Calendars/:_id', function (req, res) {
     requestHandler.removeCalendar(req, res, id, data);
 });
 
+app.post('/GoogleCalSync', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.calendars = req.body;
+    requestHandler.googleCalSync(req, res, data);
+});
+
 app.listen(8088);
 
 //console.log(app.routes);

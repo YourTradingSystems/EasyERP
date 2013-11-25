@@ -902,6 +902,15 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+
+    function googleCalSync(req, res, dat) {
+        console.log("Requst googleCalSync is success");
+        if (req.session && req.session.loggedIn) {
+            events.googleCalSync(data.calendars, res);
+        } else {
+            res.send(401);
+        }
+    }
     //---------END------Events----------------------------------
 
     return {
@@ -1008,7 +1017,9 @@ var requestHandler = function (fs, mongoose) {
         createCalendar: createCalendar,
         getCalendars: getCalendars,
         updateCalendar: updateCalendar,
-        removeCalendar: removeCalendar
+        removeCalendar: removeCalendar,
+
+        googleCalSync: googleCalSync
 
     }
 }
