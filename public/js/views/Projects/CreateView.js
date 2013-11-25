@@ -112,15 +112,16 @@ define([
             render: function () {
                 var workflowNames = [];
                 this.workflowsDdCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('name'));
+                    workflowNames.push(option.get('wName'));
                 });
+                var arr = _.uniq(workflowNames);
                 this.$el.html(this.template({
                     accountDdCollection: this.accountDdCollection,
                     customersDdCollection: this.customersDdCollection,
                     workflowsDdCollection: this.workflowsDdCollection,
-                    workflowNames: workflowNames
+                    workflowNames: arr
                 }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsDdCollection.models[0].get('value')) }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsDdCollection.toJSON() }));
                 return this;
             }
 

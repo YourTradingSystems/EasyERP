@@ -55,7 +55,7 @@
     <p><%=projectName%></p>
     <p><%=projectShortDesc%></p>
     <p></p>
-    <p><%=projectmanager.name%></p>
+    <p><%=(projectmanager) ? projectmanager.name.first + " " + projectmanager.name.last : '' %></p>
 </div>
 <div class="bottom">
     <div class="half-block left">

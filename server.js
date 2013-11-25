@@ -6,7 +6,6 @@ var http = require('http'),
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
-
 var express = require('express');
 var requestHandler = require("./requestHandler.js")(fs, mongoose);
 
@@ -93,36 +92,17 @@ app.post('/uploadFiles', function (req, res, next) {
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
-            if (err) throw err;
-            file.id = req.files.attachfile.id;
+            file._id = mongoose.Types.ObjectId();
             file.name = req.files.attachfile.name;
             file.path = path;
             file.size = req.files.attachfile.size;
-            file.uploadDate = req.files.attachfile.date;
+            file.uploadDate = new Date();
             file.uploaderName = req.session.uName;
-            requestHandler.uploadFilePerson(req, res, req.headers.id, file);
+            requestHandler.uploadFile(req, res, req.headers.id, file);
         });
     });
 });
-app.post('/uploadFilesCompanies', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Companies<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
-    file = {};
-    console.log(req.headers);
-    fs.readFile(req.files.attachfile.path, function (err, data) {
-        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
-        fs.writeFile(path, data, function (err) {
-            if (err) throw err;
-            file.id = req.files.attachfile.id;
-            file.name = req.files.attachfile.name;
-            file.path = path;
-            file.size = req.files.attachfile.size;
-            file.uploadDate = req.files.attachfile.date;
-            file.uploaderName = req.session.uName;
-            requestHandler.uploadFileCompanies(req, res, req.headers.id, file);
-        });
-    });
-});
+
 
 app.post('/login', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
@@ -257,8 +237,9 @@ app.put('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    remove = req.headers.remove;
     data.person = req.body;
-    requestHandler.updatePerson(req, res, id, data);
+    requestHandler.updatePerson(req, res, id, data, remove);
 });
 
 app.delete('/Persons/:_id', function (req, res) {
@@ -399,8 +380,7 @@ app.post('/Workflows', function (req, res) {
     data.value = req.body.value;
     //data._id = req.headers.id;
     data._id = req.body.wId;
-    data.name = req.body.name;
-    //data.value = req.body.value;
+    data.wName = req.body.name;
     console.log(data);
     requestHandler.createWorkflow(req, res, data);
 });
@@ -416,7 +396,7 @@ app.put('/Workflows/:id', function (req, res) {
     data.value = req.body.value;
     data.name = req.body.name;
     data.wId = req.body.wId;
-    console.log(data);
+    //console.log(data);
     //requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
@@ -444,18 +424,19 @@ app.put('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    remove = req.headers.remove;
     data.company = req.body;
     console.log("---------------UpdateCompany-------------------");
     //console.log(data.company.salesPurchases.salesPerson);
-    if (data.company.salesPurchases.salesPerson) {
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
         data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
     }
-    if (data.company.salesPurchases.salesTeam) {
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
         data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
     }
     //console.log(data.company.salesPurchases.salesPerson);
-    console.log(data);
-    requestHandler.updateCompany(req, res, id, data);
+    //console.log(data.company.address);
+    requestHandler.updateCompany(req, res, id, data, remove);
 });
 
 app.delete('/Companies/:_id', function (req, res) {

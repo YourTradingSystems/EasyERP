@@ -20,15 +20,15 @@
         <tr data-index="<%= index %>" data-id="<%= task._id%>">
             <td><input type="checkbox" value="<%=task._id%>" class="checkbox" /></td>
             <td><%= index + 1 %></td>
-            <td><%=task.project.name%></td>
-            <td><%=task.project.projectShortDesc%></td>
+            <td><%=(task.project) ? task.project.projectName : ''%></td>
+            <td><%=(task.project) ? task.project.projectShortDesc : ''%></td>
             <td><%=task.summary%></td>
-            <td><%=task.project.projectShortDesc%><%=task.taskCount%></td>
-            <td><%=task.assignedTo.name%></td>
+            <td><%=(task.project) ? task.project.projectShortDesc : ''%><%=task.taskCount%></td>
+            <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
             <td><%=task.extrainfo.StartDate%></td>
             <td><%=task.extrainfo.EndDate%></td>
             <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
-            <td><%=task.workflow.name%></td>
+            <td><%=(task.workflow) ? task.workflow.name : ''%></td>
         </tr>
         <% }) %>
     </tbody>

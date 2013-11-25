@@ -15,7 +15,6 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             Backbone.history.fragment = "";
             Backbone.history.navigate("login", { trigger: true });
         }
-
     };
 
     var changeItemIndex = function (event, actionType, contentType, collection) {
@@ -67,11 +66,13 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             url = "#home/content-" + this.contentType + "/" + viewtype;
 
         if (id) {
-            url += "/" + id;
+            if (viewtype != "list" && (viewtype != "thumbnails")) {
+                url += "/" + id;
+            }
             collection.setElement(id);
         } else {
             var model = collection.getElement();
-            if (model) {
+            if (viewtype == "form" && model) {
                 url += "/" + model.attributes._id;
             } 
         }

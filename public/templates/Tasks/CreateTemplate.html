@@ -23,7 +23,7 @@
 
 		  <dt><label>Project</label></dt><dd>
 			<select id="projectDd">
-              <option selected="selected" value="0">Select...</option>
+              <option selected="selected" value="">Select...</option>
               <% projectsDdCollection.each(function(option){ %>
               
               <option value="<%= option.get('_id') %>"<%= (option.get('_id') == projectId) ? 'selected="selected"' : ''%>><%= option.get('projectName') %> </option>
@@ -46,7 +46,7 @@
 
 		    <dt><label>Assigned to :</label></dt><dd>
             <select id="assignedTo" required>
-              <option selected="selected" value="0">Select...</option>
+              <option selected="selected" value="">Select...</option>
               <% accountDdCollection.each(function(option){ %>
               
               <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
@@ -81,7 +81,7 @@
 
 		  <dt><label for="customerDd">Customer :</label></dt><dd>
             <select id="customerDd">
-              <option selected="selected" value="0">Select...</option>
+              <option selected="selected" value="">Select...</option>
               <% customersDdCollection.each(function(option){ %>
               <option value="<%= option.get('_id') %>"><%= option.get('name') %> (<%= option.get('type') %>)</option>
               <% }); %>

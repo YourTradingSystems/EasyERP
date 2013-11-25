@@ -32,7 +32,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             "click .checkbox": "checked",
             "click .foldUnfold": "openDropDown",
             "click .fold": "foldUnfoldColumn",
-            "click .form p > a": "gotoProjectForm",
+            "click .form dd > a": "gotoProjectForm",
             "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
             "click #tabList a": "switchTab",
             "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
@@ -47,7 +47,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
-            var workflows = this.workflowsCollection.toJSON()[0].value;
+            var workflows = this.workflowsCollection.toJSON();
             var projectId = window.location.hash.split('/')[4];
             if (!projectId || projectId.length < 24) {
                 models = this.collection;
@@ -209,9 +209,9 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     var id = ui.item.attr('data-id');
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
-                    if(model){
-                        model.get('workflow').name = column.data('name');
-                        model.get('workflow').status = column.data('status');
+                    if(model) {
+                        model.set({ workflow: column.data('id') });
+                        //model.get('workflow').status = column.data('status');
 
                         model.save({}, {
                             headers: {
@@ -249,8 +249,8 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
         gotoProjectForm: function (e) {
             e.preventDefault();
-            var itemIndex = this.projectsCollection.indexOf(this.projectsCollection.get($(e.target).closest("a").attr("id"))) + 1;
-            window.location.hash = "#home/content-Projects/form/" + itemIndex;
+            var id = $(e.target).closest("a").attr("id");
+            window.location.hash = "#home/content-Projects/form/" + id;
         },
 
         changeWorkflow: function (e) {

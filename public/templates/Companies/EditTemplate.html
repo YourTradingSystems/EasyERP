@@ -14,16 +14,16 @@
     <div class="clearfix"></div>
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label>Address :</label></dt><dd><input type="text" class="address blueback" name="street" placeholder="Street..." value="<%=model.address.street%>" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city" placeholder="City" value="<%=model.address.city%>" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="state" placeholder="State" value="<%=model.address.state%>" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" placeholder="ZIP" value="<%=model.address.zip%>" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="country" placeholder="Country" value="<%=model.address.country%>" /></dd>
+		<dt><label>Address :</label></dt><dd><input type="text" class="address blueback" name="street" id="street" placeholder="Street..." value="<%=model.address.street%>" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city"  id="city" placeholder="City" value="<%=model.address.city%>" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="state" id="state" placeholder="State" value="<%=model.address.state%>" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" id="zip" placeholder="ZIP" value="<%=model.address.zip%>" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="country" id="country" placeholder="Country" value="<%=model.address.country%>" /></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
 	  <dl class="person-info">
-        <dt><label for="website">Website :</label></dt><dd><input class="blueback" type="text" id="website" value="<%=model.website%>" /></dd>
+        <dt><label for="website1">Website :</label></dt><dd><input class="blueback" type="text" name="website" id="website" value="<%=model.website%>" /></dd>
         <dt><label for="email">Email :</label></dt><dd><input class="blueback" type="text" name="email" id="email" value="<%=model.email%>" /></dd>
         <dt><label for="phone">Phone :</label></dt><dd><input class="blueback" type="text" name="phone" id="phone" value="<%=model.phones.phone%>" /></dd>
         <dt><label for="mobile">Mobile :</label></dt><dd><input class="blueback" type="text" name="mobile" id="mobile" value="<%=model.phones.mobile%>" /></dd>

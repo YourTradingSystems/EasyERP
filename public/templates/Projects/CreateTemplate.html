@@ -9,7 +9,7 @@
 			<dt><label for="managerDd">Project Manager :</label></dt>
 			<dd>
 			  <select id="managerDd">
-                <option selected="selected" value="0">Select...</option>
+                <option selected="selected" value="">Select...</option>
                 <% accountDdCollection.each(function(option){ %>
                 <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
                 <% }); %>
@@ -18,7 +18,7 @@
 			<dt><label for="customerDd">Project Customer :</label></dt><dd>
 
 			  <select id="customerDd">
-                <option selected="selected" value="0">Select...</option>
+                <option selected="selected" value="">Select...</option>
                 <% customersDdCollection.each(function(option){ %>
                 <option value="<%= option.get('_id') %>"><%= option.get('name')%> (<%= option.get('type') %>)</option>
                 <% }); %>
@@ -44,7 +44,7 @@
 			<dt><label for="usereditDd">Users Can Edit Project :</label></dt>
 			<dd>
               <select id="usereditDd" size="3" multiple>
-                <option selected="selected" value="0">No one...</option>
+                <option selected="selected" value="">No one...</option>
                 <% accountDdCollection.each(function(option){ %>
                 <option value="<%= option.get('_id') %>"><%= option.get('name').first + ' ' + option.get('name').last%></option>
                 <% }); %>
