@@ -102,6 +102,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
         chooseWorkflowNames: function (e) {
             this.$(".workflow-sub-list>*").remove();
             this.$("#details").addClass("active").show();
+            this.$("#workflows").empty();
             this.$("#workflowNames").html("");
             $(e.target).parents(".workflow-list").find(".active").removeClass("active");
             var wId = "";
@@ -162,7 +163,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
                     console.log(values);
                 }
             }, this);
-            this.$("#sub-details").attr("data-id", name).find("#workflows").append($("<thead />").append(
+            this.$("#sub-details").attr("data-id", name).find("#workflows").empty().append($("<thead />").append(
                $("<tr />").append($("<th />").text("Name"), $("<th />").text("Status"))), $("<tbody/>"));
             _.each(values, function (value) {
                 this.$("#sub-details tbody").append(new ListItemView({ model: value }).render().el);
