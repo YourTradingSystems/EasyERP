@@ -11,7 +11,6 @@ define(function () {
 
 
             initialize: function () {
-
                 console.log("Customer Collection Init");
                 var mid = 39;
 

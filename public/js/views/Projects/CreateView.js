@@ -51,6 +51,7 @@ define([
             },
 
             saveItem: function () {
+                debugger;
                 var self = this;
                 var mid = 39;
 

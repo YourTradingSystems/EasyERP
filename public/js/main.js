@@ -36,7 +36,9 @@ var App = App ||
         userEditDd: "#userEditDd",
         companiesDd: "#companiesDd",
         salesPerson: '#salesPerson',
-        salesTeam: '#salesTeam'
+        salesTeam: '#salesTeam',
+        workflowValue: '#workflowValue'
+
     },
     requestedURL: null
 };

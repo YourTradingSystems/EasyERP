@@ -104,9 +104,11 @@
             $('#top-bar-deleteBtn').show();
         }
         else if(actionType === "Edit"){
-            $('#top-bar-saveBtn').show();
-            $('#top-bar-discardBtn').show();
-            $("#saveDiscardHolder").show();
+           // $('#top-bar-saveBtn').show();
+           // $('#top-bar-discardBtn').show();
+            //$("#saveDiscardHolder").show();
+            $("#saveDiscardHolder").hide();
+            $("#top-bar-createBtn").show();
         }
         else if(actionType === "Create"){
             $('#top-bar-saveBtn').show();
