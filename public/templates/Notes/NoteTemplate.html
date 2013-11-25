@@ -23,18 +23,18 @@
     <% var n = notes.length-1;
        notes.reverse();
        _.each(notes, function(val,key){ %>
-    <div id="<%=(n-key) %>" class="noteContainer">
+    <div id="<%=val['_id'] %>" class="noteContainer">
       <div class="noteTitle"><%=val['title']  %></div>
       <div class="noteText"><%=val['note'] %></div>
       <div>
 		<a class="name" href="javascript:;"><%=name.first %></a><span class="date"><%=val['date'] %></span>
         <div class="right">
           <span>
-            <a href="javascript:;" id="<%=('edit_' + (n-key)) %>" class="editDelNote editNote" >Edit</a>
+            <a href="javascript:;" id="edit_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote editNote" >Edit</a>
           </span>
           <span  class="sep" >|</span>
           <span>
-            <a href="javascript:;" id="<%=('del_' + (n-key)) %>" class="editDelNote">Del</a>
+            <a href="javascript:;" id="del_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote">Del</a>
           </span>
 
         </div>
@@ -49,9 +49,9 @@
                <% var n = attachments.length-1;
         		attachments.reverse();
         		_.each(attachments, function(data,key){ %>
-       		<li class="attachFile_<%=(n-key) %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderId'] %> , <%=data['uploadDate'] %>
-             	 <a id="delete_<%=(n-key) %>" class="deleteAttach" class="deletelAttach">Delete</a>
-       		</li>
+       <li class="attachFile_<%=data['_id'] %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>, <%=data['uploadDate'] %>
+              <a id="<%=data['_id'] %>" class="deleteAttach">Delete</a>
+	   </li>
            <% }); attachments.reverse(); %>
        </ul>
 	</div>

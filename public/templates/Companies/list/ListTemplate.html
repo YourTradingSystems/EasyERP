@@ -10,7 +10,7 @@
         </thead>
         <tbody>
             <% companiesCollection.forEach(function(company, index){ %>
-            <tr data-index="<%=index + 1%>">
+            <tr data-index="<%=index + 1%>" data-id="<%=company._id%>">
                 <td><input type="checkbox" value="<%=company._id%>" class="checkbox" /></td>
                 <td><%=index + 1%></td>
                 <td><%=company.name.first%></td>

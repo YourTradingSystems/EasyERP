@@ -189,10 +189,10 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function updatePerson(req, res, id, data) {
+    function updatePerson(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
             console.log('----------->>>>>>>>>>>>>>>update');
-            customer.update(id, data.person, res);
+            customer.update(id, remove, data.person, res);
         } else {
             res.send(401);
         }
@@ -419,7 +419,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function updateWorkflow(req, res, _id, data) {
-        console.log("Requst createWorkflow is success");
+        console.log("Requst updateWorkflow is success");
         if (req.session && req.session.loggedIn) {
             workflow.update(_id, data, res);
         } else {
@@ -851,6 +851,8 @@ var requestHandler = function (fs, mongoose) {
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
         if (req.session && req.session.loggedIn) {
+            console.log(id);
+            console.log(data);
             events.update(id, data.event, res);
         } else {
             res.send(401);
@@ -896,6 +898,15 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst removeCalendar is success");
         if (req.session && req.session.loggedIn) {
             events.removeCalendar(id, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function googleCalSync(req, res, dat) {
+        console.log("Requst googleCalSync is success");
+        if (req.session && req.session.loggedIn) {
+            events.googleCalSync(data.calendars, res);
         } else {
             res.send(401);
         }
@@ -1006,7 +1017,9 @@ var requestHandler = function (fs, mongoose) {
         createCalendar: createCalendar,
         getCalendars: getCalendars,
         updateCalendar: updateCalendar,
-        removeCalendar: removeCalendar
+        removeCalendar: removeCalendar,
+
+        googleCalSync: googleCalSync
 
     }
 }

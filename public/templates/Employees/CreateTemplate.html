@@ -1,234 +1,175 @@
 <div class="form-holder">
-    <form method="post" action="" id="createEmployeeForm" class="form">
-        <fieldset>
-            <div class="inner">
-                <div class="avatar">
-                    <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
-                    <canvas id="avatar" width="120" height="120"><input type="file" value="Edit" id="File1"></canvas>
-                </div>
-                <div style="margin-left: 130px; width: 80%; display: block;">
-                    <div class="half-block left">
-                        <p>
-                            <label for="name">First Name</label>
+  <form method="post" action="" id="createEmployeeForm" class="form">
+	<div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="name">First Name :</label></dt><dd><input type="text" class="blueback" id="first" required /></dd>
+		<dt><label for="name">Last Name :</label></dt><dd><input type="text" class="blueback" id="last" required /></dd>
+		<dt><label for="tags">Tags :</label></dt><dd><input type="text" class="blueback" id="tags" /></dd>
+	  </dl>
+	</div>
+	<div class="half-block left">
+      <div class="avatar">
+        <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
+        <canvas id="avatar" width="120" height="120"><input type="file" value="Edit" id="File1"></canvas>
+      </div>
+	</div>
+    <div class="clearfix"></div>
 
-                        </p>
-                        <p>
-                            <label for="name">Last Name</label>
+    <div class="formTitle">
+	  <h3 class="left"><legend>Public Information</legend></h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="half-block left">
+	  <dl class="person-info">
+		<dt><label>Working Address :</label></dt><dd><input type="text" class="blueback workAddress" name="street" placeholder="Street..." /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="city" placeholder="City" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="state" placeholder="State" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="zip" placeholder="ZIP" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="country" placeholder="Country" /></dd>
+		<dt><label for="workEmail">Work Email :</label></dt><dd><input type="text" id="workEmail" class="blueback"/></dd>
+		<dt><label for="skype">Skype :</label></dt><dd><input type="text" id="skype" class="blueback"/></dd>
+	  </dl>
+	</div>
+	<div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="phone">Work Phone :</label></dt><dd><input type="text" id="phone" class="blueback"/></dd>
+		<dt><label for="mobile">Work Mobile :</label></dt><dd><input type="text" id="mobile" class="blueback"/></dd>
+		<dt><label for="officeLocation">Office Location :</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" class="blueback"/></dd>
+		<dt><label for="relatedUser">Related User :</label></dt>
+		<dd>
+		  <select id="relatedUser">
+            <option selected="selected" value="">Select...</option>
+            <% usersCollection.each(function(option){ %>
+            <option value="<%= option.get('_id') %>"><%= option.get('login')%></option>
+            <% }); %>
+          </select>
+		</dd>
+		<dt><label for="visibility">Visibility :</label></dt>
+		<dd>
+		  <select id="visibility">
+            <option selected="selected" value="">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="department">Department :</label></dt>
+		<dd>
+		  <select id="department">
+            <option selected="selected" value="">Select...</option>
+            <% departmentsCollection.each(function(option){ %>
+            <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
+            <% }); %>
+          </select>
+		</dd>
+		<dt><label for="jobPosition">Job :</label></dt>
+		<dd>
+		  <select id="jobPosition">
+            <option selected="selected" value="">Select...</option>
+            <% jobPositionsCollection.each(function(option){ %>
+            <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
+            <% }); %>
+          </select>
+		</dd>
+		<dt><label for="manager">Manager :</label></dt>
+		<dd>
+		  <select id="manager">
+            <option selected="selected" value="">Select...</option>
+            <% accountsDdCollection.each(function(option){ %>
+            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
+            <% }); %>
+          </select>
 
-                        </p>
+		</dd>
+		<dt><label for="coach">Coach :</label></dt>
+		<dd>
+		  <select id="coach">
+            <option selected="selected" value="">Select...</option>
+            <% accountsDdCollection.each(function(option){ %>
+            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
+            <% }); %>
+          </select>
 
-                    </div>
-                    <div class="half-block left">
-                        <p>
-                            <input type="text" class="blueback" id="first" required />
-                        </p>
-                        <p>
-                            <input type="text" class="blueback" id="last" required />
-                        </p>
-                    </div>
+		</dd>
+	  </dl>
+	</div>
+    <div class="formTitle">
+	  <h3 class="left"><legend>Personal Information</legend></h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left"><legend>Citizenship &amp; Other Info</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
 
+	  <dl class="person-info">
+		<dt><label for="nationality">Nationality :</label></dt>
+		<dd>
+		  <select id="nationality">
+            <option selected="selected" value="">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="identNo">Identification № :</label></dt><dd><input type="text" name="identNo" id="identNo" class="blueback"/></dd>
+		<dt><label for="passportNo">Passport № :</label></dt><dd><input type="text" name="passportNo" id="passportNo" class="blueback"/></dd>
+		<dt><label for="bankAccountNo">Bank Account № :</label></dt>
+		<dd>
+		  <select id="bankAccountNo">
+            <option selected="selected" value="">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="otherId">Other Id :</label></dt><dd><input type="text" name="otherId" id="otherId" class="blueback" /></dd>
+	  </dl>
+      <div class="clearfix"></div>
 
-                    <p>
-                        <label for="tags">Tags</label>
-                    </p>
-                    <p>
-                        <input type="text" id="tags" />
-                    </p>
-                </div>
-            </div>
-            <div id="tabs">
-                <div>
-                    <ul id="tabList" class="inner">
-                        <li>
-                            <a href="#" class="selected">Public Information</a>
-                        </li>
-                        <li>
-                            <a href="#">Personal Information</a>
-                        </li>
-                        <li>
-                            <a href="#">HR Settings</a>
-                        </li>
-                    </ul>
-                </div>
-                <br />
-                <div class="tab">
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label>Working Address</label>
-                            </p>
-                            <p><label></label></p>
-                            <p><label></label></p>
-                            <p><label></label></p>
-                            <p><label></label></p>
-                            <p><label for="workEmail">Work Email</label></p>
-                            <p><label for="skype">Skype</label></p>
-                        </div>
-                        <div class="half-block left">
-                            <p> <input type="text" class="workAddress" name="street" placeholder="Street..." /></p>
-                            <p><input type="text" class="workAddress" name="city" placeholder="City" /></p>
-                            <p> <input type="text" class="workAddress" name="state" placeholder="State" /></p>
-                            <p><input type="text" class="workAddress" name="zip" placeholder="ZIP" /></p>
-                            <p><input type="text" class="workAddress" name="country" placeholder="Country" /></p>
-                            <p><input type="text" id="workEmail" /></p>
-                            <p><input type="text" id="skype" /></p>
-                        </div>
+	  <div class="formTitle">
+		<h3 class="left"><legend>Status</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
+	  <dl class="person-info">
+		<dt><label for="gender">Gender :</label></dt>
+		<dd>
+		  <select id="gender">
+            <option selected="selected" value="">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="maritalStatus">Marital Status :</label></dt>
+		<dd>
+		  <select id="maritalStatus">
+            <option selected="selected" value="">Select...</option>
+          </select>
 
-                    </div>
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p><label for="phone">Work Phone</label></p>
-                            <p><label for="mobile">Work Mobile</label></p>
-                            <p><label for="officeLocation">Office Location</label></p>
-                            <p><label for="relatedUser">Related User</label></p>
-                            <p><label for="visibility">Visibility</label></p>
-                            <p><label for="department">Department</label></p>
-                            <p><label for="jobPosition">Job</label></p>
-                            <p><label for="manager">Manager</label></p>
-                            <p><label for="coach">Coach</label></p>
-                        </div>
-                        <div class="half-block left">
-                            <p><input type="text" id="phone" /></p>
-                            <p><input type="text" id="mobile" /></p>
-                            <p><input type="text" name="officeLocation" id="officeLocation" />
-                            <p>
-                                <select id="relatedUser">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% usersCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>"><%= option.get('login')%></option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="visibility">
-                                    <option selected="selected" value="0">Select...</option>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="department">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% departmentsCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="jobPosition">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% jobPositionsCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="manager">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% accountsDdCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="coach">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% accountsDdCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-                                    <% }); %>
-                                </select>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="tab">
-                    <div class="half-block left">
-                        <h3>Citizenship & Other Info</h3>
-                        <div class="half-block left">
-                            <p><label for="nationality">Nationality</label></p>
-                            <p><label for="identNo">Identification No</label></p>
-                            <p><label for="passportNo">Passport No</label></p>
-                            <p><label for="bankAccountNo">Bank Account No</label></p>
-                            <p><label for="otherId">Other Id</label></p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <select id="nationality">
-                                    <option selected="selected" value="0">Select...</option>
-                                </select>
-                            </p>
-                            <p><input type="text" name="identNo" id="identNo" /></p>
-                            <p><input type="text" name="passportNo" id="passportNo" /></p>
-                            <p>
-                                <select id="bankAccountNo">
-                                    <option selected="selected" value="0">Select...</option>
-                                </select>
-                            </p>
-                            <p><input type="text" name="otherId" id="otherId" /></p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <h3>Contact Information</h3>
-                        <div class="half-block left">
-                            <p><label>Home Address</label></p>
-                            <p><label></label></p>
-                            <p><label></label></p>
-                            <p><label></label></p>
-                            <p><label></label></p>
-                        </div>
-                        <div class="half-block left">
-                            <p><input type="text"  name="street" placeholder="Street..." /></p>
-                            <p><input type="text"  name="city" placeholder="City" /></p>
-                            <p><input type="text" name="state" placeholder="State" /></p>
-                            <p><input type="text" name="zip" placeholder="ZIP" /></p>
-                            <p><input type="text" name="country" placeholder="Country" /></p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <h3>Status</h3>
-                        <div class="half-block left">
-                            <p><label for="gender">Gender</label></p>
-                            <p><label for="maritalStatus">Marital Status</label></p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <select id="gender">
-                                    <option selected="selected" value="0">Select...</option>
-                                </select>
-                            </p>
-                            <p>
-                                <select id="maritalStatus">
-                                    <option selected="selected" value="0">Select...</option>
-                                </select>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <h3>Birth</h3>
-                        <div class="half-block left">
-                            <p><label for="dateBirth">Date of Birth</label></p>
-                        </div>
-                        <div class="half-block left">
-                            <p><input type="text" name="dateBirth" id="dateBirth" /></p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="tab">
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label for="active">Active</label>
-                            </p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <input type="checkbox" name="active" id="active" />
-                            </p>
-                        </div>
-                    </div>
+		</dd>
+	  </dl>
+	</div>
+	<div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left"><legend>Contact Information</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
+	  <dl class="person-info">
+		<dt>Home Address :</dt><dd><input type="text"  name="street" placeholder="Street..." class="blueback"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="blueback" name="city" placeholder="City" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="blueback" name="state" placeholder="State" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" name="zip" placeholder="ZIP" class="blueback"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" name="country" placeholder="Country" class="blueback"/></dd>
+	  </dl>
+      <div class="clearfix"></div>
 
-                </div>
-            </div>
-        </fieldset>
-    </form>
+	  <div class="formTitle">
+		<h3 class="left"><legend>Birth</legend></h3>
+		<div class="clearfix"></div>
+	  </div>
+	  <dl class="person-info">
+		<dt><label for="dateBirth">Date of Birth :</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" class="blueback"/></dd>
+	  </dl>
+	</div>
+    <div class="clearfix"></div>
+    <div class="formTitle">
+	  <h3 class="left"><legend>HR Settings</legend></h3>
+	  <div class="clearfix"></div>
+	</div>
+	<dl class="person-info">
+	  <div class="half-block left">
+		<dt><label for="active">Active :</label></dt><dd><input type="checkbox" name="active" id="active" /></dd>
+	</dl>
+	</div>
+  </form>
 </div>

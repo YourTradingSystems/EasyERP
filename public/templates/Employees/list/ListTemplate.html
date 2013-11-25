@@ -16,16 +16,16 @@
     </thead>
     <tbody>
     <% employeesCollection.forEach(function(employee, index){ %>
-        <tr data-index="<%=index + 1%>">
-            <td><input type="checkbox" value="<%=employee._id%>" class="checkbox"/></td>
+        <tr data-index="<%=index + 1%>" data-id="<%=employee._id%>">
+            <td><input type="checkbox" value="<%=employee._id%>" class="checkbox" /></td>
             <td><%=index + 1%></td>
             <td><%=employee.name.first%> <%=employee.name.last%></td>
             <td><%=employee.workPhones.phone%></td>
             <td><%=employee.workEmail%></td>
             <td><%=employee.skype%></td>
-            <td><%=employee.department.name%></td>
-            <td><%=employee.jobPosition.name%></td>
-            <td><%=employee.manager.name%></td>
+            <td><%=(employee.department) ? employee.department.departmentName : ''%></td>
+            <td><%=(employee.jobPosition) ? employee.jobPosition.name : ''%></td>
+            <td><%=(employee.manager) ? employee.manager.name.first + " " + employee.manager.name.last : ''%></td>
         </tr>
     <% }) %>
 

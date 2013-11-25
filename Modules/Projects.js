@@ -3,7 +3,7 @@ var Project = function (logWriter, mongoose) {
     var ProjectSchema = mongoose.Schema({
         projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
-        task: { type: [ObjectId], ref: 'Tasks', default: null },
+        task: [{ type: ObjectId, ref: 'Tasks', default: null }],
         privacy: { type: String, default: 'All Users' },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
@@ -109,7 +109,8 @@ var Project = function (logWriter, mongoose) {
         result.estimated = 0;
         result.remaining = 0;
         result.progress = 0;
-        for (var i in tasksArray) {
+        for (var i = 0; i < tasksArray.length; i++) {
+            console.log(tasksArray[i].summary);
             if (tasksArray[i].length != 0 && tasksArray[i].workflow && tasksArray[i].workflow.status != 'Cancelled') {
                 try {
                     result.estimated += tasksArray[i].estimated;
@@ -451,7 +452,7 @@ var Project = function (logWriter, mongoose) {
             catch (Exception) {
                 console.log(Exception);
                 logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
-                response.send(500, { error: "Can't find Projects" });
+                //response.send(500, { error: "Can't find Projects" });
             }
         }
     };

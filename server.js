@@ -237,8 +237,9 @@ app.put('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    var remove = req.headers.remove;
     data.person = req.body;
-    requestHandler.updatePerson(req, res, id, data);
+    requestHandler.updatePerson(req, res, id, data, remove);
 });
 
 app.delete('/Persons/:_id', function (req, res) {
@@ -392,11 +393,10 @@ app.put('/Workflows/:id', function (req, res) {
     console.log(_id);
 
     data.mid = req.headers.mid;
-    data.value = req.body.value;
+    data.status = req.body.status;
     data.name = req.body.name;
-    data.wId = req.body.wId;
     //console.log(data);
-    //requestHandler.updateWorkflow(req, res, _id, data);
+    requestHandler.updateWorkflow(req, res, _id, data);
 });
 //-------------------Companies--------------------------------------------------
 
@@ -754,6 +754,13 @@ app.delete('/Calendars/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeCalendar(req, res, id, data);
+});
+
+app.post('/GoogleCalSync', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.calendars = req.body;
+    requestHandler.googleCalSync(req, res, data);
 });
 
 app.listen(8088);
