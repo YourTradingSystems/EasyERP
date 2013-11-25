@@ -792,7 +792,7 @@ h3 {
     }
 }
 
-dl.person-info {
+.person-info {
     clear: both;
 
     dt {
@@ -3123,22 +3123,30 @@ button {
     }
 }
 
-.miniEdit {
-    a {
-        margin-left: 3px;
+table#workflows {
+    width: 40%;
 
-        &.edit {
+    tr {
+        a {
+            margin-left: 3px;
+
+            &.edit {
+                display: none;
+            }
+        }
+
+        &:hover {
+            a.edit:not(.hidden) {
+                display: inline;
+            }
+        }
+
+        .hidden {
             display: none;
         }
-    }
 
-    &:hover {
-        a.edit:not(.hidden) {
-            display: inline;
+        td {
+            min-width: 40%;
         }
-    }
-
-    .hidden {
-        display: none;
     }
 }

@@ -2,17 +2,18 @@
     <div class="workflow-list-wrapper left">
         <ul class="workflow-list">
             <% workflowsWIds.forEach(function(wId, index){ %>         
-            <li><a class="workflow"><%=wId%></a></li>        
+            <li><a class="workflow"><%=wId%></a></li>
             <% }) %>
         </ul>
     </div>
     <div id="workflowAccord" class="left">
         <div id="workflowNames">
-
         </div>
+
         <div id="details" class="workflow-details">
             <div class="workflow-sub-list-wrapper left">
-                <ul class="workflow-sub-list"></ul>
+                <ul class="workflow-sub-list">
+                </ul>
             </div>
             <div id="workflowSubAccord" class="left">
                 <!--  <div id="workflowSubNames">
@@ -21,6 +22,8 @@
                     </div>
                   </div>-->
                 <div id="sub-details" class="workflow-details">
+                    <table class="table" id="workflows">
+                    </table>
                 </div>
             </div>
             <div class="clearfix">
