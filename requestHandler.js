@@ -189,10 +189,10 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function updatePerson(req, res, id, data) {
+    function updatePerson(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
             console.log('----------->>>>>>>>>>>>>>>update');
-            customer.update(id, data.person, res);
+            customer.update(id, remove, data.person, res);
         } else {
             res.send(401);
         }

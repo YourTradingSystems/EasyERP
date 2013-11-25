@@ -237,8 +237,9 @@ app.put('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    var remove = req.headers.remove;
     data.person = req.body;
-    requestHandler.updatePerson(req, res, id, data);
+    requestHandler.updatePerson(req, res, id, data, remove);
 });
 
 app.delete('/Persons/:_id', function (req, res) {

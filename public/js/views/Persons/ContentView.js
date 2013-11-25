@@ -29,7 +29,7 @@ define([
             "mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
             "click .company": "gotoCompanyForm",
-            "click #attachSubmit":"addAttach",
+            "click #attachSubmit": "addAttach",
             "click #addNote": "addNote",
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
@@ -41,38 +41,36 @@ define([
             var id = $(e.target).closest("tr").data("id");
             window.location.hash = "#home/content-Persons/form/" + id;
         },
-        cancelNote: function(e) {
+        cancelNote: function (e) {
             $('#noteArea').val('');
             $('#noteTitleArea').val('');
-            $('#getNoteKey').attr("value",'');
+            $('#getNoteKey').attr("value", '');
         },
         editDelNote: function (e) {
             var id = e.target.id;
             var k = id.indexOf('_');
             var type = id.substr(0, k);
             var id_int = id.substr(k + 1);
-            
-            
-            var models = this.collection.models;
-            var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex];
+
+
+            var currentModel = this.collection.getElement();
             var notes = currentModel.get('notes');
 
             switch (type) {
                 case "edit": {
-                	$('#noteArea').val($('#' + id_int).find('.noteText').text());
+                    $('#noteArea').val($('#' + id_int).find('.noteText').text());
                     $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
                     $('#getNoteKey').attr("value", id_int);
                     break;
                 }
                 case "del": {
-                  	 
-                    var new_notes = _.filter(notes, function(note){
-                    	if(note._id != id_int){
-                    		return note;
-                    	}
+
+                    var new_notes = _.filter(notes, function (note) {
+                        if (note._id != id_int) {
+                            return note;
+                        }
                     });
-                    currentModel.set('notes',new_notes);
+                    currentModel.set('notes', new_notes);
                     currentModel.save({},
                             {
                                 headers: {
@@ -80,7 +78,7 @@ define([
                                     remove: true
                                 },
                                 success: function (model, response, options) {
-                                	console.log(response);
+                                    console.log(response);
                                     $('#' + id_int).remove();
                                 }
                             });
@@ -88,66 +86,62 @@ define([
                 }
             }
         },
-        
+
         addNote: function (e) {
             var val = $('#noteArea').val();
             var title = $('#noteTitleArea').val();
             if (val || title) {
-                var models = this.collection.models;
-                var itemIndex = Custom.getCurrentII() - 1;
-                //TODO fix some problems with itemIndex
-                var currentModel = models[itemIndex];
+                var currentModel = this.collection.getElement();
                 var notes = currentModel.get('notes');
                 var arr_key_str = $('#getNoteKey').attr("value");
                 var note_obj = {
-                	note: '',
+                    note: '',
                     title: ''
                 };
                 if (arr_key_str) {
-                	var edit_notes = _.filter(notes, function(note){
-                     	if(note._id == arr_key_str){
-                     		note.note = val;
-                     		note.title = title;
-                     		return note;
-                     	}
-                     });
-                 currentModel.save({},
-                            {
-                                headers: {
-                                    mid: 39,
-                                    remove: true
-                                },
-                                success: function (model, response, options) {
-                                    $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                    $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
-                                    $('#getNoteKey').attr("value", '');
-                                }
-                            });
-             	
-                	
-                	
+                    var edit_notes = _.filter(notes, function (note) {
+                        if (note._id == arr_key_str) {
+                            note.note = val;
+                            note.title = title;
+                            return note;
+                        }
+                    });
+                    currentModel.save({},
+                               {
+                                   headers: {
+                                       mid: 39
+                                   },
+                                   success: function (model, response, options) {
+                                       $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
+                                       $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
+                                       $('#getNoteKey').attr("value", '');
+                                   }
+                               });
+
+
+
                 } else {
-                    
-                	note_obj.note = val;
+
+                    note_obj.note = val;
                     note_obj.title = title;
                     notes.push(note_obj);
                     currentModel.set('notes', notes);
                     currentModel.save({},
                             	{
-                                headers: {
-                                    mid: 39
-                                },
-                                success: function (model, response, options) {
-                                	var key = notes.length-1;
-                                	var notes_data = response.notes;
-                                	var date = response.notes[key].date;
-                                    var author = currentModel.get('name').first;
-                                	var id = response.notes[key]._id;
-                                    
-                                	$('#noteBody').prepend(_.template(addNoteTemplate, {val: val, title: title, author: author,data:notes_data,date:date,id:id}));
+                            	    headers: {
+                            	        mid: 39
+                            	    },
+                            	    success: function (model, response, options) {
+                            	        var key = notes.length - 1;
+                            	        var notes_data = response.notes;
+                            	        var date = response.notes[key].date;
+                            	        var author = currentModel.get('name').first;
+                            	        var id = response.notes[key]._id;
 
-                                }
-                            });
+                            	        $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
+
+                            	    }
+                            	});
 
                 }
                 $('#noteArea').val('');
@@ -155,13 +149,11 @@ define([
             }
         },
 
-       
+
         addAttach: function (event) {
             event.preventDefault();
-            var models = this.collection.models;
-            var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex];
-            var currentModelID = models[itemIndex]["id"];
+            var currentModel = this.collection.getElement();
+            var currentModelID = currentModel["id"];
             var addFrmAttach = $("#addAttachments");
             var addInptAttach = $("#inputAttach")[0].files[0];
             addFrmAttach.submit(function (e) {
@@ -178,14 +170,14 @@ define([
                         xhr.setRequestHeader("id", currentModelID);
                     },
 
-                    success:function(data){
-        				var attachments = currentModel.get('attachments');
-        				var key = attachments.length;
-        				attachments.push(data);
-        				$('.attachContainer').prepend( _.template(addAttachTemplate,{ data:data,key:key }));
-        				console.log('Attach file');
-        				addFrmAttach[0].reset();
-        			},
+                    success: function (data) {
+                        var attachments = currentModel.get('attachments');
+                        var key = attachments.length;
+                        attachments.push(data);
+                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, key: key }));
+                        console.log('Attach file');
+                        addFrmAttach[0].reset();
+                    },
 
                     error: function () {
                         console.log("Attach file error");
@@ -196,42 +188,39 @@ define([
             addFrmAttach.off('submit');
         },
 
-        
-        deleteAttach:function(e) {
-            var id = e.target.id;
-            var models = this.collection.models;
-            var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex];
-            var attachments = currentModel.get('attachments');   
-            var new_attachments = _.filter(attachments, function(attach){
-            	if(attach._id != id){
-            		return attach;
-            	}
+
+        deleteAttach: function (e) {
+            var currentModel = this.collection.getElement();
+            var attachments = currentModel.get('attachments');
+            var new_attachments = _.filter(attachments, function (attach) {
+                if (attach._id != id) {
+                    return attach;
+                }
             });
-            currentModel.set('attachments',new_attachments);
+            currentModel.set('attachments', new_attachments);
             currentModel.save({},
                     {
-		                headers: {
-		                    mid: 39
-		                },
-                    	
-                        	success: function (model, response, options) {
-                        		$('.attachFile_' + id).remove();
+                        headers: {
+                            mid: 39
+                        },
+
+                        success: function (model, response, options) {
+                            $('.attachFile_' + id).remove();
                         }
                     });
         },
-        
-        editItem: function(){
+
+        editItem: function () {
             //create editView in dialog here
-            new EditView({collection:this.collection});
+            new EditView({ collection: this.collection });
         },
-        
+
         personsSalesChecked: function (e) {
-			if ($(e.target).get(0).tagName.toLowerCase()=="span"){
-				$(e.target).parent().toggleClass("active");
-			}else{
-				$(e.target).toggleClass("active");
-			}
+            if ($(e.target).get(0).tagName.toLowerCase() == "span") {
+                $(e.target).parent().toggleClass("active");
+            } else {
+                $(e.target).toggleClass("active");
+            }
         },
 
         gotoCompanyForm: function (e) {
@@ -243,13 +232,13 @@ define([
             this.$('#details').animate({
                 height: "toggle"
             }, 250, function () {
-           
+
             });
         },
         socialActive: function (e) {
-            e.preventDefault();           
+            e.preventDefault();
             $(e.target).animate({
-                'background-position-y':'-38px'
+                'background-position-y': '-38px'
 
             }, 300, function () { });
         },
@@ -268,7 +257,7 @@ define([
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {personsCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON() }));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -307,7 +296,7 @@ define([
                                     model: currentModel
                                 }).render().el
                             );
-                            
+
                         }
                         break;
                     }

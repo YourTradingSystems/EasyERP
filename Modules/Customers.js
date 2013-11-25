@@ -355,6 +355,9 @@
                     obj.date = new Date();
                     data.notes[data.notes.length - 1] = obj;
                 }
+                if (data.company && data.company._id) {
+                    data.company = data.company._id;
+                }
                 customer.findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
                     if (err) {
                         console.log(err);
