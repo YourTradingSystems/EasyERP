@@ -275,7 +275,7 @@ define([
                     {
                         var currentModel = this.collection.getElement();
                         if (!currentModel) {
-                            this.$el.html('<h2>No projects found</h2>');
+                            this.$el.html('<h2>No persons found</h2>');
                         } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             this.$el.find('.formRightColumn').append(

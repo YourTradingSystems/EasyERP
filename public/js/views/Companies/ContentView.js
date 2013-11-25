@@ -53,7 +53,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
 
-        removeEdit: function (e) {           
+        removeEdit: function (e) {
             $('#editSpan').remove();
         },
         cancleClick: function (e) {
@@ -68,7 +68,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
         editClick: function (e) {
             e.preventDefault();
-            var parent = $(e.target).parent().parent();           
+            var parent = $(e.target).parent().parent();
             $("#" + parent[0].id).addClass('quickEdit');
             this.text = $.trim($('#' + parent[0].id).data('text'));
             $("#" + parent[0].id).text('');
@@ -89,13 +89,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var obj = {};
             var itemIndex = Custom.getCurrentII() - 1;
             var currentModel = models[itemIndex];
-            if (objIndex.length > 1) {             
+            if (objIndex.length > 1) {
                 obj = currentModel.get(objIndex[0]);
                 console.log(obj);
                 obj[objIndex[1]] = $('#editInput').val();
             } else if (objIndex.length == 1) {
                 obj[objIndex[0]] = $('#editInput').val();
-            }           
+            }
             currentModel.set(obj);
             currentModel.save({}, {
                 headers: {
@@ -132,14 +132,14 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     break;
                 }
                 case "del": {
-                	 
-                    var new_notes = _.filter(notes, function(note){
-                    	if(note.id != id_int){
-                    		return note;
-                    	}
+
+                    var new_notes = _.filter(notes, function (note) {
+                        if (note.id != id_int) {
+                            return note;
+                        }
                     });
                     console.log(new_notes);
-                    currentModel.set('notes',new_notes);
+                    currentModel.set('notes', new_notes);
                     currentModel.save({},
                          {
                              headers: {
@@ -304,8 +304,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index");
-            window.location.hash = "#home/content-Companies/form/" + itemIndex;
+            var id = $(e.target).closest("tr").data("id");
+            window.location.hash = "#home/content-Companies/form/" + id;
         },
         render: function () {
             console.log('Render Companies View');
@@ -347,17 +347,10 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > models.length - 1) {
-                            itemIndex = models.length - 1;
-                            Custom.setCurrentII(models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html();
-                        }
-                        else {
-                            var currentModel = models[itemIndex];
+                        var currentModel = this.collection.getElement();
+                        if (!currentModel) {
+                            this.$el.html('<h2>No Companies found</h2>');
+                        } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
                             this.$el.find('.formRightColumn').append(
