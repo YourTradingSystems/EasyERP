@@ -1,5 +1,5 @@
 <div class="form-holder">
-    <form method="post" action="" id="editJobPositionForm" class="form" data-id="<%=model._id%>"">
+    <form method="post" action="" id="editJobPositionForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <p>
                 <label for="name">Job Name</label>
@@ -39,9 +39,9 @@
                     </p>
                     <p>
                         <select id="workflowNames">
-                            <option selected="selected" value="0">Select...</option>
-                            <% workflowsCollection.each(function(option){ %>
-                            <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
+                            <option value="0">Select...</option>
+                            <% _.each(workflowNames, function(item){ %>
+                            <option <%=(item.id==model.workflow)?'selected="selected"':''%>><%= item.name %></option>
                             <% }); %>
                         </select>
                     </p> 
@@ -60,9 +60,9 @@
                 <p>
                     <label for="department">Department</label>
                     <select id="department">
-                        <option value="0">Select...</option>
+                        <option value="">Select...</option>
                          <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>" <%=(model.department && option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
+                                <option value="<%= option.get('_id') %>" <%=(model.department && option.get('_id')==model.department._id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
                              <% }); %>
                     </select>
                 </p>

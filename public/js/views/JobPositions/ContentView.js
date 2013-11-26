@@ -3,9 +3,10 @@ define([
     'text!templates/JobPositions/form/FormTemplate.html',
     'collections/JobPositions/JobPositionsCollection',
     'collections/Workflows/WorkflowsCollection',
-    'custom'
+    'custom',
+    'views/JobPositions/EditView'
 ],
-function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom) {
+function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom, EditView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -19,8 +20,8 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
 
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
-            window.location.hash = "#home/content-JobPositions/form/" + itemIndex;
+            var id = $(e.target).parent("tr").data("id") ;
+            window.location.hash = "#home/content-JobPositions/form/" + id;
         },
 
         events: {
@@ -45,7 +46,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
+                       /* var itemIndex = Custom.getCurrentII() - 1;
                         if (itemIndex > this.collection.models.length - 1) {
                             itemIndex = this.collection.models.length - 1;
                             Custom.setCurrentII(this.collection.models.length);
@@ -58,6 +59,12 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             var currentModel = this.collection.models[itemIndex];
                             //currentModel.off('change');
                             //currentModel.on('change:workflow', _.bind(this.render, this));
+                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+                        }*/
+                        var currentModel = this.collection.getElement();
+                        if (!currentModel) {
+                            this.$el.html('<h2>No jobPosition found</h2>');
+                        } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                         }
                         break;
@@ -98,6 +105,10 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                 $("#top-bar-deleteBtn").show();
             else
                 $("#top-bar-deleteBtn").hide();
+        },
+        editItem: function(){
+            //create editView in dialog here
+            new EditView({collection:this.collection});
         },
 
         deleteItems: function () {

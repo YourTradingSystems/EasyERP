@@ -13,7 +13,7 @@
         </thead>
         <tbody>
         <% jobPositionsCollection.forEach(function(jobPosition, index){ %>
-            <tr>
+            <tr data-id="<%=jobPosition._id%>">
                 <td><input type="checkbox" value="<%=jobPosition._id%>" class="checkbox"/></td>
                 <td><%=index+1 %></td>
                 <td><%=jobPosition.name%></td>
