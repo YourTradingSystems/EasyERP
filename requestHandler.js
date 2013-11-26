@@ -464,9 +464,9 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function updateCompany(req, res, id, data) {
+    function updateCompany(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
-            customer.update(id, data.company, res);
+            customer.update(id, remove, data.company, res);
         } else {
             res.send(401);
         }

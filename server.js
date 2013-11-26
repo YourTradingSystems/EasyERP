@@ -424,6 +424,7 @@ app.put('/Companies/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.company = req.body;
+    var remove = req.headers.remove;
     console.log("---------------UpdateCompany-------------------");
     //console.log(data.company.salesPurchases.salesPerson);
     if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
@@ -434,7 +435,7 @@ app.put('/Companies/:_id', function (req, res) {
     }
     //console.log(data.company.salesPurchases.salesPerson);
     //console.log(data.company.address);
-    requestHandler.updateCompany(req, res, id, data);
+    requestHandler.updateCompany(req, res, id, data, remove);
 });
 
 app.delete('/Companies/:_id', function (req, res) {

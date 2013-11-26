@@ -349,7 +349,7 @@
             try {
                 console.log(data);
                 delete data._id;
-                if (data.notes.length != 0 && !remove) {
+                if (data.notes && data.notes.length != 0 && !remove) {
                     var obj = data.notes[data.notes.length - 1];
                     obj._id = mongoose.Types.ObjectId();
                     obj.date = new Date();
@@ -361,10 +361,10 @@
                 if (data.department && data.department._id) {
                     data.department = data.department._id;
                 }
-                if (data.salesPurchases.salesPerson && data.salesPurchases.salesPerson._id) {
+                if (data.salesPurchases && data.salesPurchases.salesPerson && data.salesPurchases.salesPerson._id) {
                     data.salesPurchases.salesPerson = data.salesPurchases.salesPerson._id;
                 }
-                if (data.salesPurchases.salesTeam && data.salesPurchases.salesTeam._id) {
+                if (data.salesPurchases && data.salesPurchases.salesTeam && data.salesPurchases.salesTeam._id) {
                     data.salesPurchases.salesTeam = data.salesPurchases.salesTeam._id;
                 }
                 customer.findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
