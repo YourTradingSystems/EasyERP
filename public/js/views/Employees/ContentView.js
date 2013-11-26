@@ -74,7 +74,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             var relatedUser = model.get("relatedUser");
-                            var login = relatedUser.login;
+                            var login = (relatedUser) ? relatedUser.login : '';
                             if (login) {
                                 var _login = "(" + login + ")";
                                 relatedUser.login = _login;

@@ -48,12 +48,16 @@ define([
 
             selectCustomer: function (e) {
                 e.preventDefault();
-                var id = $(e.target).val();
-                var customer = this.customersCollection.get(id).toJSON();
+                var customerId = $(e.target).val();
+                var customer = this.customersCollection.get(customerId).toJSON();
+                var $company = this.$el.find('#company');
                 if (customer.type == 'Person') {
-                    this.$el.find('#company').val(customer.company.name);
+                    var _customerId = (customer.company) ? customer.company._id : '';
+                    $company.val(customer.company.name);
+                    $company.data('id', _customerId);
                 } else {
-                    this.$el.find('#company').val(customer.name);
+                    $company.data('id', customerId);
+                    $company.val(customer.name);
                 }
                 this.$el.find('#email').val(customer.email);
                 this.$el.find('#phone').val(customer.phones.phone);
@@ -64,7 +68,7 @@ define([
                 this.$el.find('#zip').val(customer.address.zip);
                 this.$el.find('#country').val(customer.address.country);
             },
-            
+
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
@@ -90,17 +94,19 @@ define([
             },
 
             saveItem: function () {
-
+                var $company = this.$("#company");
                 var mid = 39;
 
                 var model = new LeadModel();
 
                 var name = $.trim($("#name").val());
 
-                var company = this.$("#company").val();
-
+                var company = {
+                    name: $company.val(),
+                    id: $company.data('id')
+                }
                 var idCustomer = $(this.el).find("#customer option:selected").val();
-                var customer = common.toObject(idCustomer, this.customersDdCollection);
+                //var customer = common.toObject(idCustomer, this.customersDdCollection);
 
                 var address = {};
                 $("p").find(".address").each(function () {
@@ -109,10 +115,10 @@ define([
                 });
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
-                var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
+                //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-                var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
+                //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
@@ -133,11 +139,12 @@ define([
                     fax: fax,
                 };
 
-                var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };
+                //var workflow = {
+                //    wName: this.$("#workflowNames option:selected").text(),
+                //    name: this.$("#workflow option:selected").text(),
+                //    status: this.$("#workflow option:selected").val(),
+                //};
+                var workflow = this.$("#workflow option:selected").data('id');
 
                 var priority = $("#priority").val();
 
@@ -152,10 +159,10 @@ define([
                 model.save({
                     name: name,
                     company: company,
-                    customer: customer,
+                    customer: idCustomer,
                     address: address,
-                    salesPerson: salesPerson,
-                    salesTeam: salesTeam,
+                    salesPerson: salesPersonId,
+                    salesTeam: salesTeamId,
                     contactName: contactName,
                     email: email,
                     func: func,
@@ -187,8 +194,9 @@ define([
             render: function () {
                 var workflowNames = [];
                 this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('name'));
+                    workflowNames.push(option.get('wName'));
                 });
+                workflowNames = _.uniq(workflowNames);
                 this.$el.html(this.template({
                     companiesCollection: this.companiesCollection,
                     customersCollection: this.customersCollection,
@@ -197,7 +205,7 @@ define([
                     priorityCollection: this.priorityCollection,
                     workflowNames: workflowNames
                 }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsCollection.toJSON() }));
                 return this;
             }
 

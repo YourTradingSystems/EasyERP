@@ -53,10 +53,10 @@
                 </div>
                 <div class="half-block left">
                     <p>
-                        <span><%=company.name%></span>
+                        <span><%= (company) ? company.name : ((_company) ? _company : '')%></span>
                     </p>
                     <p>
-                        <span><%=customer.name%></span>
+                        <span><%=(customer) ? customer.name : ''%></span>
                     </p>
                     <p>
                         <span><%=address.street%></span>
@@ -74,8 +74,8 @@
                         <span><%=address.country%></span>
                     </p>
                     <p></p>
-                    <p><span><%=salesPerson.name%></span></p>
-                    <p><span><%=salesTeam.name%></span></p>
+                    <p><span><%=(salesPerson) ? salesPerson.name : ''%></span></p>
+                    <p><span><%=(salesTeam) ? salesTeam.name : ''%></span></p>
                 </div>
             </div>
             <div class="half-block left">

@@ -21,7 +21,9 @@ define([
                 Custom.changeContentViewType(e, this.contentType, this.collection);
             },
             
-            changeItemIndex: Custom.changeItemIndex,
+            changeItemIndex: function (e) {
+                Custom.changeItemIndex(e, "Content", this.contentType, this.collection);
+            },
             
             initialize: function(options){
             	this.actionType = options.actionType;

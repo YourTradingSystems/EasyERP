@@ -13,7 +13,7 @@
         </thead>
         <tbody>
         <% leadsCollection.forEach(function(lead, index){ %>
-            <tr>
+            <tr data-id="<%=lead._id%>">
                 <td><input type="checkbox" value="<%=lead._id%>" class="checkbox"/></td>
                 <td><%=index+1%></td>
                 <td><%=lead.creationDate%></td>
@@ -21,7 +21,7 @@
                 <td><%=lead.contactName.first%> <%=lead.contactName.last%></td>
                 <td><%=lead.email%></td>
                 <td><%=lead.phones.phone%></td>
-                <td><%=lead.workflow.name%></td>
+                <td><%=(lead.workflow) ? lead.workflow.name : ''%></td>
             </tr>
         <% }) %>
         </tbody>

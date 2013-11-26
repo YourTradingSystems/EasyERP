@@ -1,5 +1,5 @@
-var Opportunities = function (logWriter, mongoose, persons, company) {
-
+var Opportunities = function (logWriter, mongoose, customer) {
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var opportunitiesSchema = mongoose.Schema({
         isOpportunitie: { type: Boolean, default: false },
         name: { type: String, default: '' },
@@ -9,11 +9,9 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
             currency: { type: String, default: '' }
         },
         creationDate: { type: Date, default: Date.now },
-        company: { type: String, default: '' },
-        customer: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        _company: { type: String, default: '' },
+        company: { type: ObjectId, ref: 'Customers', default: null },
+        customer: { type: ObjectId, ref: 'Customers', default: null },
         address: {
             street: { type: String, default: '' },
             city: { type: String, default: '' },
@@ -32,14 +30,8 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
             fax: { type: String, default: '' }
         },
         func: { type: String, default: '' },
-        salesPerson: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
-        salesTeam: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        salesPerson: { type: ObjectId, ref: 'Employees', default: null },
+        salesTeam: { type: ObjectId, ref: 'Department', default: null },
         internalNotes: { type: String, default: '' },
         nextAction: {
             desc: { type: String, default: '' },
@@ -55,11 +47,7 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
         active: { type: Boolean, default: true },
         optout: { type: Boolean, default: false },
         reffered: { type: String, default: '' },
-        workflow: {
-            wName: { type: String, default: '' },
-            status: { type: String, default: '' },
-            name: { type: String, default: '' }
-        }
+        workflow: { type: ObjectId, ref: 'workflows', default: null }
     }, { collection: 'Opportunities' });
 
     var opportunitie = mongoose.model('Opportunities', opportunitiesSchema);
@@ -112,15 +100,14 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                         _opportunitie.creationDate = data.creationDate;
                     }
                     if (data.company) {
-                        _opportunitie.company = data.company;
+                        if (data.company.id) {
+                            _opportunitie.company = data.company.id;
+                        } else if (data.company.name) {
+                            _opportunitie._company = data.company.name;
+                        }
                     }
                     if (data.customer) {
-                        if (data.customer._id) {
-                            _opportunitie.customer.id = data.customer._id;
-                        }
-                        if (data.customer.name) {
-                            _opportunitie.customer.name = data.customer.name;
-                        }
+                        _opportunitie.customer = data.customer;
                     }
                     if (data.address) {
                         if (data.address.street) {
@@ -165,20 +152,10 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                         _opportunitie.func = data.func;
                     }
                     if (data.salesPerson) {
-                        if (data.salesPerson._id) {
-                            _opportunitie.salesPerson.id = data.salesPerson._id;
-                        }
-                        if (data.salesPerson.name) {
-                            _opportunitie.salesPerson.name = data.salesPerson.name.first + ' ' + data.salesPerson.name.last;
-                        }
+                        _opportunitie.salesPerson = data.salesPerson;
                     }
                     if (data.salesTeam) {
-                        if (data.salesTeam._id) {
-                            _opportunitie.salesTeam.id = data.salesTeam._id;
-                        }
-                        if (data.salesTeam.departmentName) {
-                            _opportunitie.salesTeam.name = data.salesTeam.departmentName;
-                        }
+                        _opportunitie.salesTeam = data.salesTeam;
                     }
                     if (data.internalNotes) {
                         _opportunitie.internalNotes = data.internalNotes;
@@ -208,16 +185,7 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                         }
                     }
                     if (data.workflow) {
-                        if (data.workflow.name) {
-                            _opportunitie.workflow.wName = data.workflow.wName;
-                        }
-                        if (data.workflow.name) {
-                            _opportunitie.workflow.name = data.workflow.name;
-                        }
-
-                        if (data.workflow.status) {
-                            _opportunitie.workflow.status = data.workflow.status;
-                        }
+                        _opportunitie.workflow = data.workflow;
                     }
                     if (data.active) {
                         _opportunitie.active = data.active;
@@ -295,19 +263,20 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                     var _person = {
                         name: data.contactName,
                         email: data.email,
-                        company: company,
+                        company: company._id,
                         salesPurchases: {
                             isCustomer: true,
                             salesPerson: data.salesPerson
-                        }
+                        },
+                        type: ''
                     }
-                    persons.Person.find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
+                    customer.customer.find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Opportunities.js update opportunitie.update " + err);
                         } else if (_persons.length > 0) {
                             if (_persons[0].salesPurchases && !_persons[0].salesPurchases.isCustomer) {
-                                persons.Person.update({ _id: _persons[0]._id }, { $set: { 'salesPurchases.isCustomer': true } }, function (err, success) {
+                                customer.customer({ _id: _persons[0]._id }, { $set: { 'salesPurchases.isCustomer': true } }, function (err, success) {
                                     if (err) {
                                         console.log(err);
                                         logWriter.log("Opportunities.js update opportunitie.update " + err);
@@ -315,7 +284,7 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                                 });
                             }
                         } else {
-                            var _Person = new persons.Person(_person);
+                            var _Person = new customer.customer(_person);
                             _Person.save(function (err, _res) {
                                 if (err) {
                                     console.log(err);
@@ -326,6 +295,23 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                     });
                 }                                              //кінець кастомер Person
             };
+
+            if (data.company && data.company._id) {
+                data.company = data.company._id;
+            }
+            if (data.customer && data.customer._id) {
+                data.customer = data.customer._id;
+            }
+            if (data.salesPerson && data.salesPerson._id) {
+                data.salesPerson = data.salesPerson._id;
+            }
+            if (data.salesTeam && data.salesTeam._id) {
+                data.salesTeam = data.salesTeam._id;
+            }
+            if (data.workflow && data.workflow._id) {
+                data.workflow = data.workflow._id;
+            }
+
             opportunitie.update({ _id: _id }, data, function (err, result) {
                 console.log(data);
                 if (err) {
@@ -333,43 +319,49 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                     logWriter.log("Opportunities.js update opportunitie.update " + err);
                     res.send(500, { error: "Can't update Opportunities" });
                 } else {
-                    res.send(200, { success: 'Opportunities updated success' });
                     if (data.createCustomer) {                       //створити кастомера
-                        if (data.company) {                          //кастомер Компанія
+                        console.log('************Cre Cust***********');
+                        console.log(data._company);
+                        console.log('*******************************');
+                        if (data._company) {                          //кастомер Компанія
                             var _company = {
-                                name: data.company,
+                                name: {
+                                    first: data._company,
+                                    last: ''
+                                },
                                 email: data.email,
                                 salesPurchases: {
                                     isCustomer: true,
                                     salesPerson: data.salesPerson
-                                }
-                            }
-                            company.Company.find({ name: data.company }, function (err, companies) {
+                                },
+                                type: 'Company'
+                            };
+                            console.log(_company);
+                            customer.customer.find({ 'name.first': data._company }, function (err, companies) {
                                 if (err) {
                                     console.log(err);
                                     logWriter.log("Opportunities.js update opportunitie.update " + err);
                                 } else if (companies.length > 0) {
                                     if (companies[0].salesPurchases && !companies[0].salesPurchases.isCustomer) {
-                                        company.Company.update({ _id: companies[0]._id }, { $set: { 'salesPurchases.isCustomer': true } }, function (err, success) {
+                                        customer.customer.update({ _id: companies[0]._id }, { $set: { 'salesPurchases.isCustomer': true } }, function (err, success) {
                                             if (success) {
-                                                createPersonCustomer({
-                                                    id: companies[0]._id,
-                                                    name: companies[0].name
-                                                });
+                                                createPersonCustomer(companies[0]);
                                             }
                                         })
                                     }
                                 } else {
-                                    var _Company = new company.Company(_company);
+                                    var _Company = new customer.customer(_company);
                                     _Company.save(function (err, _res) {
                                         if (err) {
                                             console.log(err);
                                             logWriter.log("Opportunities.js update opportunitie.update " + err);
                                         } else {
-                                            createPersonCustomer({
-                                                id: _res._id,
-                                                name: _res.name
+                                            opportunitie.update({ _id: _id }, { $set: { company: _res._id, customer: _res._id } }, function (err, result) {
+                                                if (err) {
+                                                    console.log(err);
+                                                }
                                             });
+                                            createPersonCustomer(_res);
                                         }
                                     });
                                 }
@@ -379,6 +371,7 @@ var Opportunities = function (logWriter, mongoose, persons, company) {
                             createPersonCustomer({});
                         }
                     }
+                    res.send(200, { success: 'Opportunities updated success' });
                 }
             });
         }
