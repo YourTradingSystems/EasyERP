@@ -153,6 +153,12 @@ var JobPosition = function (logWriter, mongoose, employee) {
                 }
             }
             console.log(data);
+            if (data.department && data.department._id) {
+                data.department = data.department._id;
+            }
+            if (data.workflow && data.workflow._id) {
+                data.workflow = data.workflow._id;
+            }
             job.update({ _id: _id }, data, function (err, result) {
                 if (err) {
                     console.log(err);
