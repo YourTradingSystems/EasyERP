@@ -6,7 +6,7 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
             id: { type: String, default: '' },
             name: { type: String, default: '' }
         },
-        departmentManager: { type: ObjectId, ref: 'Employees',defaults:null },
+        departmentManager: { type: ObjectId, ref: 'Employees', default:null },
     }, { collection: 'Department' });
 
     var department = mongoose.model('Department', DepartmentSchema);
