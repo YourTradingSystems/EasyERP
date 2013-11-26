@@ -3,10 +3,11 @@ define([
     'text!templates/Employees/form/FormTemplate.html',
     'views/Employees/thumbnails/ThumbnailsItemView',
     'custom',
-    'common'
+    'common',
+    'views/Employees/EditView'
 
 ],
-function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
+function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -34,6 +35,11 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
             }
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
+        },
+
+        editItem: function(){
+            //create editView in dialog here
+            new EditView({collection:this.collection});
         },
 
         render: function () {
@@ -107,10 +113,12 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common) {
         },
 
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.collection.length > 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
         },
 
         deleteItems: function () {

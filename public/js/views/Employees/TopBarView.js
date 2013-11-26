@@ -15,7 +15,8 @@ define([
             	"click ul.changeContentIndex a": 'changeItemIndex',
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
-            	"click #top-bar-discardBtn": "discardEvent"
+            	"click #top-bar-discardBtn": "discardEvent",
+                "click #top-bar-editBtn": "editEvent"
             },
             
             changeContentViewType: function (e) {
@@ -46,7 +47,10 @@ define([
 
                 return this;
             },
-            
+            editEvent: function (event) {
+                event.preventDefault();
+                this.trigger('editEvent');
+            },
             deleteEvent: function(event)
             {
             	event.preventDefault();

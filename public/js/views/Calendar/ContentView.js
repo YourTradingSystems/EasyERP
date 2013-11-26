@@ -7,25 +7,34 @@ define([
     "common" ,
     "models/EventModel",
     "models/CalendarModel",
-    "GoogleAuth"
+    "GoogleAuth",
+    "dataService"
 ],
-function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCollection, common, EventModel, CalendarModel, GoogleAuth) {
+function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCollection, common, EventModel, CalendarModel, GoogleAuth, dataService) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         template: _.template(CalendarTemplate),
         syncDilalogTpl: _.template(SyncDialog),
+
         initialize: function () {
+            _.bindAll(this, 'syncDlgSubmitBtnClickHandler', 'displayEventsOnCalendar');
             this.eventsCollection = new EventsCollection();
-            _.bindAll(this, 'loadCalendarEvents', 'displayEventsOnCalendar');
-            this.eventsCollection.bind('reset', _.bind(this.displayEventsOnCalendar, this));
             this.calendarsCollection = new CalendarsCollection();
+            this.eventsCollection.bind('reset', _.bind(this.curCalendarChange, this));
             this.calendarsCollection.bind('reset', _.bind(this.populateCalendarsList, this));
-            this.self = this;
 			this.render();
         },
 
         events: {
-            "click #authBtn" : "authorize"
+            "click #authBtn" : "authorize",
+            "change #calendarList" : "curCalendarChange"
+        },
+
+        curCalendarChange: function(){
+            var curCalendarId = $('#calendarList option:selected').val();
+            this.setCurrentCalendarId(curCalendarId);
+            var filtered = this.eventsCollection.filterById([curCalendarId]);
+            this.displayEventsOnCalendar(filtered);
         },
 
         closeSyncDialog: function(){
@@ -33,16 +42,31 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
         },
 
         populateCalendarsList: function(){
-            var select = $('#calendarList');
-            var options = $.map(this.calendarsCollection.toJSON(), function(item){
-                return $('<option/>').val(item.id).text(item.summary);
-            });
-            select.append(options);
+            if(this.calendarsCollection.length > 0){
+                var select = $('#calendarList');
+                var options = $.map(this.calendarsCollection.toJSON(), function(item){
+                    return item.summary == "EasyERP" ? $('<option/>').val(item._id).text(item.summary).attr('selected', 'selected') :
+                        $('<option/>').val(item._id).text(item.summary);
+                });
+                select.empty().append(options);
+                this.setCurrentCalendarId(options[0].val());
+                return;
+            }
+        },
+        setCurrentCalendarId: function(id){
+            App.Calendar.currentCalendarId = id;
+        },
+        getCurrentCalendarId: function(){
+            return App.Calendar.currentCalendarId;
         },
 
-        displayEventsOnCalendar: function(){
-            console.log('displayEventsOnCalendar');
-            Calendar.loadCalendarEvents(this.eventsCollection);
+        displayEventsOnCalendar: function(events){
+            Calendar.loadCalendarEvents(events);
+        },
+
+        syncDlgSubmitBtnClickHandler:function(){
+            this.parseSelectedCalendars();
+            this.loadCalendarEvents();
         },
 
         showSyncDialog: function(calendars){
@@ -54,7 +78,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                 buttons:{
                     submit: {
                         text:"Continue",
-                        click: this.loadCalendarEvents
+                        click: this.syncDlgSubmitBtnClickHandler
                     },
                     cancel: {
                         text: "Cancel",
@@ -71,27 +95,62 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                     var calendarList = resp;
                     if(calendarList.length > 0){
                         self.showSyncDialog(calendarList);
-                        self.saveCalendarsToDB(calendarList);
+                        common.saveToLocalStorage('calendars', JSON.stringify(calendarList));
                     }
                 });
 
             });
         },
 
-        loadCalendarEvents : function(){
+        parseSelectedCalendars: function(){
             var checkboxes = $('input:checkbox[name=calendarSelect]:checked');
+            if(checkboxes.length == 0){
+                alert('Please select calendars to synchronize');
+                return;
+            }
             var calendarIdList = $.map(checkboxes,function(item){
                 return $(item).attr('data-id');
             });
             var self = this;
-            GoogleAuth.LoadCalendarEvents(calendarIdList, function(resp){
-                if(resp && resp.items && resp.items.length > 0){
-                    self.saveEventsToDB(resp.items);
-                }else {
+            var calendarsJSON = JSON.parse(common.getFromLocalStorage("calendars"));
+            var array = [];
+            for(var i = 0; i < calendarsJSON.length; i++){
+                for(var j = 0; j < calendarIdList.length; j++){
+                    if(calendarsJSON[i].id == calendarIdList[i]){
+                        array.push(calendarsJSON[i]);
+                    }
+                }
+            }
+            common.saveToLocalStorage('calendars', JSON.stringify(array));
+        },
+
+        loadCalendarEvents : function(){
+            var calendarsJSON = JSON.parse(common.getFromLocalStorage('calendars'));
+            var calendarIdList = $.map(calendarsJSON, function(item){
+                return item.id;
+            });
+            var counter = 0;
+            GoogleAuth.LoadCalendarEvents(calendarIdList, function(resp, calendarId){
+                counter++;
+                if(resp){
+                    _.each(calendarsJSON, function(item){
+                        if(item.id == calendarId){
+                            item.items = resp.items;
+                        }
+                    });
+
+                } else {
                     if(resp.error) console.log('Error occured: ' + resp.error);
+                }
+                if(counter == calendarIdList.length){
+                    dataService.postData("/GoogleCalSync", calendarsJSON, function(resp){
+                        console.log(resp);
+                    });
                 }
 
             });
+            this.closeSyncDialog();
+
         },
 
         saveCalendarsToDB: function(calendarArray){
@@ -102,8 +161,9 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                     success: function(){ console.log('saved calendar'); }
                 });
             });
+            this.populateCalendarsList();
         },
-        saveEventsToDB: function(eventsArray){
+        saveEventsToDB: function(eventsArray, calendarId){
             var self = this;
             if(eventsArray && eventsArray.length > 0){
                 this.mockFunc = _.after(eventsArray.length, function(){
@@ -119,9 +179,10 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                         summary: item.summary,
                         id: item.id,
                         status: item.status,
-                        description: '',
+                        description: item.description,
                         start_date: item.start.dateTime,
-                        end_date: item.end.dateTime
+                        end_date: item.end.dateTime,
+                        calendarId: calendarId
                     });
                     event.save({},{
                         headers: { mid: 39 },
@@ -142,7 +203,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
         render: function () {
             console.log('Render Calendar');
             this.$el.html(this.template());
-            Calendar.initCalendar("schedulerDiv");
+            Calendar.initCalendar("schedulerDiv", this.eventsCollection);
             //Calendar.initMiniCalendar("miniCalendar");
             return this;
         }

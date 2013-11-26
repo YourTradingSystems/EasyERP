@@ -16,8 +16,8 @@
     </thead>
     <tbody>
     <% applicationsCollection.forEach(function(application, index){ %>
-        <tr data-index="<%= index + 1 %>">
-            <td><input type="checkbox"  value="<%=application._id%>" class="checkbox"/></td>
+        <tr data-index="<%= index + 1 %>" data-id="<%=application._id%>">
+            <td><input type="checkbox" value="<%=application._id%>" class="checkbox" /></td>
             <td><%= index + 1 %></td>
             <td><%=application.creationDate%></td>
             <td><%=application.subject%></td>

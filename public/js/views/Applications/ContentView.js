@@ -34,8 +34,8 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
         },
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
-            window.location.hash = "#home/content-Applications/form/" + itemIndex;
+            var id = $(e.target).closest("tr").data("id");
+            window.location.hash = "#home/content-Applications/form/" + id;
         },
         render: function () {
             var that = this;

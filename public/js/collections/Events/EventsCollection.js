@@ -9,16 +9,25 @@ define([
 
             initialize: function () {
                 var mid = 39;
+                    this.fetch({
+                        data: $.param({
+                            mid: mid
+                        }),
+                        reset: true,
+                        success: this.fetchSuccess
+                    });
+            },
 
-                this.fetch({
-                    data: $.param({
-                        mid: mid
-                    }),
-                    reset: true,
-                    success: this.fetchSuccess
+            filterById: function(idArray){
+                var events;
+                var self = this;
+                _.each(idArray, function(item){
+                    var filtered = self.filter(function(data){
+                        return data.get('calendarId')._id == item;
+                    });
+                    events = filtered;
                 });
-
-
+                return new Backbone.Collection(events);
             },
 
             parse: true,

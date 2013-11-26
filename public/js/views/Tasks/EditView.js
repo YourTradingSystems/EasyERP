@@ -246,8 +246,6 @@
                 });
 
                 this.$el = $(formString).dialog({
-                    autoOpen: true,
-                    resizable: false,
                     dialogClass: "edit-task-dialog",
                     width: "50%",
                     height: 513,

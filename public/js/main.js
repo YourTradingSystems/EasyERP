@@ -37,10 +37,17 @@ var App = App ||
         companiesDd: "#companiesDd",
         salesPerson: '#salesPerson',
         salesTeam: '#salesTeam',
-        workflowValue: '#workflowValue'
+        workflowValue: '#workflowValue',
+        relatedUsersDd: "#relatedUsersDd",
+        departmentsDd: '#departmentsDd',
+        jobPositionDd: '#jobPositionDd',
+        coachDd: '#coachDd'
 
     },
-    requestedURL: null
+    requestedURL: null,
+    Calendar:{
+        currentCalendarId:""
+    }
 };
 
 require.config({

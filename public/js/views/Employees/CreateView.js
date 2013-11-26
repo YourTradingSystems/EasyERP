@@ -66,11 +66,9 @@ define([
 
                 var employeeModel = new EmployeeModel();
 
-                var first = $.trim($("#first").val());
-                var last = $.trim($("#last").val());
                 var name = {
-                    first: first,
-                    last: last
+                    first: $.trim($("#first").val()),
+                    last: $.trim($("#last").val())
                 };
 
                 var workAddress = {};
@@ -94,20 +92,15 @@ define([
                 var officeLocation = $.trim($("#officeLocation").val());
 
                 var relatedUser = this.$("#relatedUser option:selected").val();
-                //var relatedUser = common.toObject(relatedUserId, this.usersCollection);
 
                 var department = this.$("#department option:selected").val();
-                //var department = common.toObject(departmentId, this.departmentsCollection);
 
                 var jobPosition = this.$("#jobPosition option:selected").val();
-                //var jobPosition = common.toObject(jobPositionId, this.jobPositionsCollection);
 
                 var manager = this.$("#manager option:selected").val();
-                //var manager = common.toObject(managerId, this.accountsDdCollection);
 
                 var coach = this.$("#coach option:selected").val();
-                //var coach = common.toObject(coachId, this.accountsDdCollection);
-
+                coach = coach === null ? "" : coach;
                 var identNo = parseInt($.trim($("#identNo").val()));
 
                 var passportNo = parseInt($.trim($("#passportNo").val()));

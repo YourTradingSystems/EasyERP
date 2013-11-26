@@ -35,7 +35,7 @@ define(
                 (function(i) {
                     $myQueue.queue(function(next) {
                         getCalendarEvents(token, calendarlist[i], function(resp){
-                                callback(resp);
+                                callback(resp, calendarlist[i]);
                         });
 
                         next();
