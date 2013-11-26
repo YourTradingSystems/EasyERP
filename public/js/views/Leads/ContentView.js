@@ -4,9 +4,10 @@ define([
     'collections/Leads/LeadsCollection',
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Workflows/WorkflowsCollection',
-    'custom'
+    'custom',
+    'views/Leads/EditView'
 ],
-    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom) {
+    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, EditView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -202,6 +203,10 @@ define([
                     $("#top-bar-deleteBtn").show();
                 else
                     $("#top-bar-deleteBtn").hide();
+            },
+            editItem: function(){
+                //create editView in dialog here
+                new EditView({collection:this.collection});
             },
 
             deleteItems: function () {

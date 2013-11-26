@@ -14,17 +14,11 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
-                //this.bind('reset', _.bind(this.render, this));
-                //    this.jobPositionsCollection = options.collection;
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Jobposition' });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Job Position' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
                 this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.render = _.after(2, this.render);
-            },
-
-            close: function () {
-                this._modelBinder.unbind();
             },
 
             events: {

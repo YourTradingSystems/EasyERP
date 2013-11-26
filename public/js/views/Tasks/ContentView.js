@@ -24,7 +24,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             this.workflowsCollection.bind('reset', _.bind(this.renderView, this));
             this.projectsCollection = new ProjectsCollection();
             this.projectsCollection.bind('reset', _.bind(this.renderView, this));
-            
 
         },
 

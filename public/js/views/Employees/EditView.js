@@ -19,10 +19,7 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
-                this.usersCollection = new UsersCollection();
-                this.jobPositionsCollection = new JobPositionsCollection();
-                this.departmentsCollection = new DepartmentsCollection();
-                this.accountsDdCollection = new AccountsDdCollection();
+
                 this.employeesCollection = options.collection;
                 this.currentModel = this.employeesCollection.getElement();
                 this.render();
@@ -173,7 +170,7 @@ define([
                             case "coach":
                                 return self.personOption(item);
                             case "manager":
-                                return self.personOption(item);
+                                return self.managerOption(item);
                         }
                     });
                     selectList.append(options);
@@ -197,6 +194,11 @@ define([
             },
             personOption: function (item) {
                 return (this.currentModel.get("coach") && this.currentModel.get("coach")._id === item._id) ?
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+            },
+            managerOption: function (item) {
+                return (this.currentModel.get("manager") && this.currentModel.get("manager")._id === item._id) ?
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
