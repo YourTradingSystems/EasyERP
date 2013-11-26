@@ -12,10 +12,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
         
         description: String,
         requirements: String,
-        workflow: {
-            name: { type: String, default: 'No Recruitment' },
-            status: { type: String, default: 'New' }
-        },
+        workflow: { type: ObjectId, ref: 'workflows', default: null },
         numberOfEmployees: { type: Number, default: 0 },
         totalForecastedEmployees: { type: Number, default: 0 }
     }, { collection: 'JobPosition' });
@@ -77,6 +74,9 @@ var JobPosition = function (logWriter, mongoose, employee) {
                     }
                     if (data.requirements) {
                         _job.requirements = data.requirements;
+                    }
+                    if (data.workflow) {
+                        _job.workflow = data.workflow;
                     }
                     _job.save(function (err, result) {
                         if (err) {

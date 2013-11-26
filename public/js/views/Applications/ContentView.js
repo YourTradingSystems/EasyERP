@@ -39,11 +39,11 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
         },
         render: function () {
             var that = this;
-            Custom.setCurrentCL(this.collection.models.length);
+            //Custom.setCurrentCL(this.collection.models.length);
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
-            var workflows = this.workflowsCollection.toJSON()[0].value;
+            var workflows = this.workflowsCollection.toJSON();
             console.log('Render Applications View');                  
             var applicationId = window.location.hash.split('/')[3];
             if (!applicationId || applicationId.length < 24) {
@@ -133,13 +133,8 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                     var model = that.collection.get(ui.item.attr("id"));
                     var column = ui.item.closest(".column");
                     var ob = {
-                        workflow: {
-                            wName: column.data("wName"),
-                            name: column.data("name"),
-                            status: column.data("status")
-                        }
+                        workflow: column.data("id")
                     };
-
                     model.set(ob);
                     model.save({}, {
                         headers: {

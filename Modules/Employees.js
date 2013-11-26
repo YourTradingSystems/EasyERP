@@ -213,15 +213,7 @@ var Employee = function (logWriter, mongoose) {
                         _employee.active = data.active;
                     }
                     if (data.workflow) {
-                        if (data.workflow.name) {
-                            _employee.workflow.wName = data.workflow.wName;
-                        }
-                        if (data.workflow.name) {
-                            _employee.workflow.name = data.workflow.name;
-                        }
-                        if (data.workflow.status) {
-                            _employee.workflow.status = data.workflow.status;
-                        }
+                        _employee.workflow = data.workflow;
                     }
                     if (data.otherInfo) {
                         _employee.otherInfo = data.otherInfo;
@@ -310,6 +302,7 @@ var Employee = function (logWriter, mongoose) {
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', false);
+        query.populate('relatedUser department jobPosition workflow');
         query.sort({ 'name.first': 1 });
         query.exec(function (err, applications) {
             if (err) {
@@ -326,6 +319,24 @@ var Employee = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            if (data.relatedUser && data.relatedUser._id) {
+                data.relatedUser = data.relatedUser._id;
+            }
+            if (data.department && data.department._id) {
+                data.department = data.department._id;
+            }
+            if (data.manager && data.manager._id) {
+                data.manager = data.manager._id;
+            }
+            if (data.coach && data.coach._id) {
+                data.coach = data.coach._id;
+            }
+            if (data.jobPosition && data.jobPosition._id) {
+                data.jobPosition = data.jobPosition._id;
+            }
+            if (data.workflow && data.workflow._id) {
+                data.workflow = data.workflow._id;
+            }
             employee.update({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {

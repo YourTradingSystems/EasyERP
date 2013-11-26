@@ -2,7 +2,6 @@
     <button class="red" id="hire"><span>Hire & Create Employee</span></button>
 </div>
 <div class="form-holder">
-
     <form method="post" action="" id="createApplicationForm" class="form">
         <fieldset>
             <div class="avatar">
@@ -13,122 +12,96 @@
                 <label for="subject">Subject </label>
                 <input type="text" class="title-input blueback" id="subject" required />
             </p>
-
             <p>
                 <label for="name">Name</label>
                 <input type="text" class="name" id="first" placeholder="First" required />
                 <input type="text" class="name" id="last" placeholder="Last" required />
             </p>
-
             <p>
                 <label for="wemail">Email </label>
                 <input type="email" id="wemail" />
             </p>
-
             <p>
                 <label for="phone">Phone </label>
                 <input type="text" id="phone" />
             </p>
-
             <p>
                 <label for="mobile">Mobile </label>
                 <input type="text" id="mobile" />
             </p>
-
             <p>
                 <label for="workflowNames">Workflow Names </label>
                 <select id="workflowNames">
                     <% _.each(workflowNames, function(item){ %>
-                    <option><%= item %></option>
+                    <option><%=item%></option>
                     <%}); %>
                 </select>
             </p>
-            
+
             <p id="selectWorkflow">
             </p>
-
-            <p>
-                <label for="degree">Degree </label>
-                <select id="degree">
-                    <option selected="selected" value="0">Select...</option>
-                    <% degreesCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                    <% }); %>
-                </select>
-            </p>
-
             <p>
                 <label for="relatedUser">Responsible </label>
                 <select id="relatedUser">
-                    <option selected="selected" value="0">Select...</option>
+                    <option selected="selected" value="">Select...</option>
                     <% employeesCollection.each(function(option){ %>
                     <option value="<%= option.get('_id') %>"><%= option.get('name').first%> <%= option.get('name').last%></option>
                     <% }); %>
                 </select>
             </p>
-
             <p>
                 <label for="nextAction">Next Action </label>
                 <input type="text" id="nextAction" />
             </p>
-
             <p>
                 <label for="source">Source </label>
                 <select id="source">
-                    <option selected="selected" value="0">Select...</option>
+                    <option selected="selected" value="">Select...</option>
                     <% sourceOfApplicantsCollection.each(function(option){ %>
                     <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
                     <% }); %>
                 </select>
             </p>
-
             <p>
                 <label for="referredBy">Referred By </label>
                 <input type="text" id="referredBy" />
             </p>
-
             <h2>Job</h2>
             <p>
                 <label for="job">Applied Job </label>
                 <select id="job">
-                    <option selected="selected" value="0">Select...</option>
+                    <option selected="selected" value="">Select...</option>
                     <% jobPositionsCollection.each(function(option){ %>
-                   
+
                     <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
                     <% }); %>
-               
+
                 </select>
             </p>
-
             <p>
                 <label for="department">Department</label>
                 <select id="department">
-                    <option selected="selected" value="0">Select...</option>
+                    <option selected="selected" value="">Select...</option>
                     <% departmentsCollection.each(function(option){ %>
-                   
+
                     <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
                     <% }); %>
-               
+
                 </select>
             </p>
-
             <h2>Contract</h2>
-
             <p>
                 <label for="expectedSalary">Expected Salary </label>
                 <input type="text" id="expectedSalary" placeholder="0.00" />
             </p>
-
             <p>
                 <label for="proposedSalary">Proposed Salary </label>
                 <input type="text" id="proposedSalary" placeholder="0.00" />
             </p>
-
             <p>
                 <label for="tags">Tags </label>
                 <input type="text" id="tags" />
             </p>
-
             <h2>Application Summary</h2>
             <p>
                 <textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>

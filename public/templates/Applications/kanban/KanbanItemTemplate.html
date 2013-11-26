@@ -50,8 +50,8 @@
 </div>
 <div class="application-content">
     <p><%=subject%></p>
-    <p><%=workflow.name%></p>
-    <span><%=jobPosition.name%></span>
+    <p><%=(workflow) ? workflow.name : ''%></p>
+    <span><%=(jobPosition) ? jobPosition.name : ''%></span>
     <img class="person" src="<%=imageSrc%>"/>
     <p>Mobile: <%=workPhones.mobile%></p>
 </div>

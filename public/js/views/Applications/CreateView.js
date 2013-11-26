@@ -102,20 +102,20 @@ define([
                     mobile: mobile
                 };
 
-                var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };
-
-                var degreeId = this.$("#degree option:selected").val();
-                var degree = {
-                    id: degreeId,
-                    name: degreeId
-                };
+                //var workflow = {
+                //    wName: this.$("#workflowNames option:selected").text(),
+                //    name: this.$("#workflow option:selected").text(),
+                //    status: this.$("#workflow option:selected").val(),
+                //};
+                var workflow = this.$("#workflow option:selected").data("id");
+                //var degreeId = this.$("#degree option:selected").val();
+                //var degree = {
+                //    id: degreeId,
+                //    name: degreeId
+                //};
 
                 var relatedUserId = this.$("#relatedUser option:selected").val();
-                var relatedUser = common.toObject(relatedUserId, this.employeesCollection);
+                //var relatedUser = common.toObject(relatedUserId, this.employeesCollection);
 
                 var nextActionSt = $.trim($("#nextAction").val());
                 var nextAction = "";
@@ -124,18 +124,18 @@ define([
                 }
 
                 var sourceId = this.$("#source option:selected").val();
-                var source = {
-                    id: sourceId,
-                    name: sourceId
-                };
+                //var source = {
+                //    id: sourceId,
+                //    name: sourceId
+                //};
 
                 var referredBy = $.trim($("#referredBy").val());
 
                 var departmentId = this.$("#department option:selected").val();
-                var department = common.toObject(departmentId, this.departmentsCollection);
+                //var department = common.toObject(departmentId, this.departmentsCollection);
 
                 var jobId = this.$("#job option:selected").val();
-                var jobPosition = common.toObject(jobId, this.jobPositionsCollection);
+                //var jobPosition = common.toObject(jobId, this.jobPositionsCollection);
 
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());
@@ -149,13 +149,13 @@ define([
                     name: name,
                     wemail: wemail,
                     wphones: wphones,
-                    degree: degree,
-                    relatedUser: relatedUser,
+                    //degree: degree,
+                    relatedUser: relatedUserId,
                     nextAction: nextAction,
-                    source: source,
+                    source: sourceId,
                     referredBy: referredBy,
-                    department: department,
-                    jobPosition: jobPosition,
+                    department: departmentId,
+                    jobPosition: jobId,
                     expectedSalary: expectedSalary,
                     proposedSalary: proposedSalary,
                     tags: tags,
@@ -179,8 +179,9 @@ define([
             render: function () {
                 var workflowNames = [];
                 this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('name'));
+                    workflowNames.push(option.get('wName'));
                 });
+                workflowNames = _.uniq(workflowNames);
                 var applicationModel = new ApplicationModel();
                 this.$el.html(this.template({
                     employeesCollection: this.employeesCollection,
@@ -192,7 +193,8 @@ define([
                 }));
                 common.canvasDraw({ model: applicationModel.toJSON() }, this);
                 $('#nextAction').datepicker();
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
+                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsCollection.toJSON() }));
                 return this;
             }
 
