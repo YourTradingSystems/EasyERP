@@ -10,7 +10,7 @@
                     <p><input type="text" class="title-input blueback" name="departmentName" id="departmentName" value="<%=model.departmentName%>"/></p>
                     <p>
                         <select id="parentDepartment">
-                            <option selected="selected" value="0">Select...</option>
+                            <option selected="selected" value="">Select...</option>
                              <% departmentsCollection.each(function(option){ %>
                                 <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.parentDepartment.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
                              <% }); %>
@@ -18,10 +18,10 @@
                     </p>
                     <p>
                         <select id="departmentManager">
-                            <option selected="selected" value="0">Select...</option>
-                             <% accountDdCollection.each(function(option){ %>
+                          <option selected="selected" value="">Select...</option>
+                             <% if (model.departmentManager){accountDdCollection.each(function(option){ %>
                                 <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.departmentManager.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
-                            <% }); %>
+                            <% });} %>
                         </select>
                     </p>
                 </div>

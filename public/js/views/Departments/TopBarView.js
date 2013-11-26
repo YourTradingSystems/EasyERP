@@ -15,13 +15,23 @@ define([
             	"click ul.changeContentIndex a": 'changeItemIndex',
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
-            	"click #top-bar-discardBtn": "discardEvent"
+            	"click #top-bar-discardBtn": "discardEvent",
+				"click #top-bar-editBtn": "editEvent"
             },
             
-            changeContentViewType: Custom.changeContentViewType,
+            changeContentViewType: function(e){
+                Custom.changeContentViewType(e, this.contentType, this.collection);
+			},
             
-            changeItemIndex: Custom.changeItemIndex,
-            
+            changeItemIndex:  function (e) {
+                var actionType = "Content";
+                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
+            },
+
+            editEvent: function (event) {
+                event.preventDefault();
+                this.trigger('editEvent');
+            },
             initialize: function(options){
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
@@ -33,10 +43,10 @@ define([
 
             render: function(){
                 var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
+                //var collectionLength = this.collection.length;
+                //var itemIndex = Custom.getCurrentII();
             	
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;
             },

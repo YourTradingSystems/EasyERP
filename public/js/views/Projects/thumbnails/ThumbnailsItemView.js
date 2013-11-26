@@ -12,8 +12,8 @@ define([
             },
 
             events: {
-                "click :not(#tasksList)": "gotoEditForm",
-                "click #tasksKanban,  #tasksList": "gotoTasks"
+                "click #tasksKanban,  #tasksList": "gotoTasks",
+                "click": "gotoEditForm"
                 //"click #delete": "deleteEvent",
                 //"click .dropDown > a": "openDropDown",
                 //"click .colorPicker a": "pickColor",
@@ -21,9 +21,12 @@ define([
             },
 
             gotoEditForm: function (e) {
+				if ($(e.target).attr("class")=="tasksByProject"){
+					return;
+				}
                 e.preventDefault();
-                var id = this.$el.attr("id");
-                if ($(e.target).closest("div").attr("class") != "dropDown") {
+                var id = this.$el.closest(".thumbnail").attr("id");
+                if ($(e.target).parent().attr("class") != "dropDown") {
                     window.location.hash = "#home/action-Projects/Edit/" + id;
                 }
             },
@@ -64,6 +67,7 @@ define([
                 } else {
                     Backbone.history.navigate("#home/content-Tasks/list/" + this.model.get("_id"), { trigger: true });
                 }
+				return false;
             },
             
             

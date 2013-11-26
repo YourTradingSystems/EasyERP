@@ -203,7 +203,7 @@ define([
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
 
-                $('#date').datepicker({ dateFormat: "d M, yy" });
+                $('#text').datepicker({ dateFormat: "d M, yy" });
 
                 this.delegateEvents(this.events);
                 return this;
