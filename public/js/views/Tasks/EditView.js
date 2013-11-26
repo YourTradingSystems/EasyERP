@@ -22,7 +22,7 @@
                 this.accountsDdCollection = new AccountsDdCollection();
                 this.customersDdCollection = new CustomersDdCollection();
                 this.tasksCollection = options.collection;
-                this.currentModel = this.tasksCollection.models[Custom.getCurrentII() - 1];
+                this.currentModel = this.tasksCollection.getElement();
                 this.render();
             },
 
@@ -51,8 +51,7 @@
                     breadcrumb.find("a").addClass("active");
                     name = breadcrumb.data("name");
                     status = breadcrumb.data("status");
-                }
-                else {
+                } else {
                     var workflow = {};
                     var length = this.workflowsDdCollection.models.length;
                     if ($(e.target).closest("button").attr("id") == "Cancel") {
@@ -97,112 +96,69 @@
                 var self = this;
 
                 var mid = 39;
-                var summary = $("#summary").val();
-                var idProject = this.$el.find("#projectDd option:selected").val();
-                var _project = common.toObject(idProject, this.projectsDdCollection);
-                var project = {};
-                if (_project) {
-                    project.id = _project._id;
-                    project.name = _project.projectName;
-                    project.projectShortDesc = _project.projectShortDesc;
-                } else {
-                    project = this.currentModel.defaults.project;
-                }
+                debugger;
 
-                var assignedTo = {};
-                var idAssignedTo = this.$el.find("#assignedTo option:selected").val();
-                var _assignedTo = common.toObject(idAssignedTo, this.accountsDdCollection);
-                if (_assignedTo) {
-                    assignedTo.name = _assignedTo.name.first + " " + _assignedTo.name.last;
-                    assignedTo.id = _assignedTo._id;
-                    assignedTo.imageSrc = _assignedTo.imageSrc;
-                } else {
-                    assignedTo = this.currentModel.defaults.assignedTo;
-                }
+                var project = this.$el.find("#projectDd option:selected").val();
+                var assignedTo = this.$el.find("#assignedToDd option:selected").val();
 
-                var deadline = $.trim($("#deadline").val());
-                var tags = $.trim($("#tags").val()).split(',');
+                var tags = $.trim(this.$el.find("#tags").val()).split(',');
                 if (tags.length == 0) {
                     tags = null;
                 }
-
-                var description = $("#description").val();
 
                 var sequence = parseInt($.trim($("#sequence").val()));
                 if (!sequence) {
                     sequence = null;
                 }
-                var StartDate = $.trim($("#StartDate").val());
 
-                var EndDate = $.trim($("#EndDate").val());
+                var customer = this.$el.find("#customerDd option:selected").val();
+                var workflow = this.$el.find("#workflowValue option:selected").val();
 
-                var idCustomer = this.$el.find("#customerDd option:selected").val();
-                var _customer = common.toObject(idCustomer, this.customersDdCollection);
-                var customer = {};
-                if (_customer) {
-                    customer.id = _customer._id;
-                    customer.name = _customer.name;
-                } else {
-                    customer = this.currentModel.defaults.extrainfo.customer;
-                }
-
-                var idWorkflow = this.$el.find("#workflowDd option:selected").val();
-                var workflow = this.workflowsDdCollection.get(idWorkflow);
-                if (!workflow) {
-                    workflow = this.currentModel.defaults.workflow;
-                }
 
                 var estimated = $("#estimated").val();
                 if ($.trim(estimated) == "") {
                     estimated = 0;
                 }
+
                 var logged = $("#logged").val();
                 if ($.trim(logged) == "") {
                     logged = 0;
                 }
 
-                var idPriority = this.$el.find("#priority option:selected").val();
-                var _priority = common.toObject(idPriority, this.priorityCollection);
-                var priority;
-                if (_priority) {
-                    priority = _priority.priority
-                } else {
-                    priority = this.currentModel.defaults.extrainfo.priority;
-                }
+                var priority = this.$el.find("#priority option:selected").val();
 
-                var type = this.$("#type option:selected").text();
-
-                this.currentModel.save({
-                    type: type,
-                    summary: summary,
+                var data = {
+                    type: this.$el.find("#type option:selected").text(),
+                    summary: this.$el.find("#summary").val(),
                     assignedTo: assignedTo,
                     workflow: workflow,
                     project: project,
                     tags: tags,
-                    deadline: deadline,
-                    description: description,
+                    deadline: $.trim(this.$el.find("#deadline").val()),
+                    description: this.$el.find("#description").val(),
                     extrainfo: {
-                        priority: priority,
+                       // priority: priority,
                         sequence: sequence,
-                        customer: customer,
-                        StartDate: StartDate,
-                        EndDate: EndDate
+                       // customer: customer,
+                        StartDate: $.trim(this.$el.find("#StartDate").val()),
+                        EndDate: $.trim(this.$el.find("#EndDate").val())
                     },
                     estimated: estimated,
                     logged: logged
-                }, {
+                };
+
+
+                this.currentModel.save(data, {
                     headers: {
                         mid: mid
                     },
                     wait: true,
                     success: function (model) {
-                        self.$el.dialog('close');
-                        if (project.id == '0' || !project.id) {
+                        $(".edit-task-dialog").remove();
+                        if (project == '0' || !project) {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
-
                         } else {
-
-                            Backbone.history.navigate("home/content-Tasks/kanban/" + project.id, { trigger: true });
+                            Backbone.history.navigate("home/content-Tasks/kanban/" + project, { trigger: true });
                         }
                     },
                     error: function () {
@@ -215,20 +171,23 @@
             changeWorkflowValues: function () {
                 this.$("#workflowValue").html("");
                 var that = this;
-                var choosedWorkflow = _.find(that.workflows, function (workflow) {
-                    return workflow._id == that.$("#workflowDd option:selected").val();
+                var choosedWorkflow = _.filter(that.workflows, function (workflow) {
+                    return workflow.wId == that.$("#workflowDd option:selected").val();
                 });
-                _.each(choosedWorkflow.value, function (value) {
-                    this.$("#workflowValue").append("<option>" + value.name + " (" + value.status + ")" + "</option>");
-                });
-                this.$("#workflowValue").val(that.currentModel.toJSON().workflow.name + " (" + that.currentModel.toJSON().workflow.status + ")");
-
+                console.log(this.currentModel.get('workflow')._id);
+                _.each(choosedWorkflow, function (value,key) {
+                     this.currentModel.get('workflow')._id === value._id ?
+                     this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ).attr('selected', 'selected')):
+                     this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ));
+                },this);
             },
 
             populateDropDown: function (type, selectId, url, val) {
                 var selectList = $(selectId);
                 var self = this;
+                var workflowNames = [];
                 this.workflows = [];
+                var my_wId;
                 dataService.getData(url, { mid: 39 }, function (response) {
                     var options = $.map(response.data, function (item) {
                         switch (type) {
@@ -238,17 +197,25 @@
                                 return self.personOption(item);
                             case "priority":
                                 return self.priorityOption(item);
-                            case "workflow":
-                                {
-                                    self.workflows.push(item);
-                                    return self.workflowOption(item);
-                                }
+                            case "workflow": {
+                                 self.workflows.push(item);
+                                 if ((_.indexOf(workflowNames, item.wName)=== -1) ) {
+                                     $(App.ID.workflowDd).append(self.workflowValueOption(item));
+                                 }
+                                 workflowNames.push(item.wName);
+                            }
                         }
                     });
-                    selectList.append(options);
+                       selectList.append(options);
+
                     if(typeof val!="undefined")
                             selectList.val(val).trigger("change");
                 });
+            },
+            workflowValueOption: function (item) {
+                return this.currentModel.get("workflow").wId === item.wId ?
+                    $('<option/>').val(item.wId).text(item.wName).attr('selected', 'selected') :
+                    $('<option/>').val(item.wId).text(item.wName);
             },
 
             workflowOption: function (item) {
@@ -256,14 +223,13 @@
                       $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
                       $('<option/>').val(item._id).text(item.name);
             },
-
             projectOption: function (item) {
                 return this.currentModel.get("project")._id === item._id ?
                     $('<option/>').val(item._id).text(item.projectName).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.projectName);
             },
             personOption: function (item) {
-                return this.currentModel.get("assignedTo").id === item._id ?
+                return this.currentModel.get("assignedTo")._id === item._id ?
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
@@ -274,6 +240,7 @@
             },
 
             render: function () {
+                console.log(this.currentModel);
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
@@ -291,6 +258,8 @@
                 this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
                 this.populateDropDown("priority", App.ID.priorityDd, "/Priority");
                 this.populateDropDown("workflow", App.ID.workflowDd, "/taskWorkflows", that.currentModel.toJSON().workflow._id);
+
+
 
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });

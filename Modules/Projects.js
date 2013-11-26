@@ -655,8 +655,9 @@ var Project = function (logWriter, mongoose) {
             data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
             data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         }
-        if (data.project && data.project._id) {
-            var query = tasks.find({ project: data.project._id });
+        //if (data.project && data.project._id) {
+        if (data.project) {
+            var query = tasks.find({ project: data.project });
             query.sort({ taskCount: -1 });
             query.exec(function (error, _tasks) {
                 if (error) {
@@ -670,7 +671,7 @@ var Project = function (logWriter, mongoose) {
                             logWriter.log("Project.js updateTask tasks.findById " + err);
                             res.send(500, { error: 'Task find error' });
                         } else {
-                            if (!_tasks[0] || (!task || (task.project != data.project._id))) {
+                            if (!_tasks[0] || (!task || (task.project != data.project))) {
                                 var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
                                 data.taskCount = n;
                             }
