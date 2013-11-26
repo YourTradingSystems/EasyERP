@@ -3,9 +3,10 @@ define([
     'text!templates/Departments/form/FormTemplate.html',
     'collections/Departments/DepartmentsCollection',
     'custom',
-    'common'
+    'common',
+    'views/Departments/EditView'
 ],
-function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
+function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, EditView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -15,8 +16,9 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
         },
         gotoForm: function (e) {
             App.ownContentType = true;
-            var itemIndex = $(e.target).closest("tr").data("index") + 1;
-            window.location.hash = "#home/content-Departments/form/" + itemIndex;
+            var id = $(e.target).parent("tr").data("id");
+            //var itemIndex = $(e.target).closest("tr").data("index") + 1;
+            window.location.hash = "#home/content-Departments/form/" + id;
         },
 
         events: {
@@ -41,6 +43,15 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
                     }
                 case "form":
                     {
+						var currentModel = this.collection.getElement();
+						if (currentModel) {
+							var extrainfo = currentModel.get('extrainfo');
+							this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
+						} else {
+							this.$el.html('<h2>No departments found</h2>');
+						}
+
+						/*
                         var itemIndex = Custom.getCurrentII() - 1;
                         if (itemIndex > this.collection.models.length - 1) {
                             itemIndex = this.collection.models.length - 1;
@@ -52,7 +63,7 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
                         } else {
                             var currentModel = this.collection.models[itemIndex];
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                        }
+                        }*/
 
                         break;
                     }
@@ -67,7 +78,10 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common) {
             else
                 $("#top-bar-deleteBtn").hide();
         },
-
+        editItem: function(){
+            //create editView in dialog here
+            new EditView({collection:this.collection});
+        },
         deleteItems: function () {
             var self = this,
                mid = 39,

@@ -32,6 +32,7 @@ define([
             },
             hideDialog: function () {
                 $('.edit-project-dialog').remove();
+                Backbone.history.navigate("home/content-"+this.contentType);
             },
 
             changeWorkflow: function (e) {
@@ -164,9 +165,14 @@ define([
                     $('<option/>').val(item._id).text(item.name + " (" + item.type + ")");
             },
             personOption: function (item) {
-                return this.currentModel.get("projectmanager")._id === item._id ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+				if (this.currentModel.get("projectmanager")){
+					return this.currentModel.get("projectmanager")._id === item._id ?
+						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
+						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+				}
+				else{
+					return $('<option/>')
+				}
             },
 
             render: function () {
