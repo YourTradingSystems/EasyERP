@@ -82,9 +82,9 @@
 		<dd>
 		  <select id="coach">
             <option selected="selected" value="">Select...</option>
-            <% accountsDdCollection.each(function(option){ %>
-            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-            <% }); %>
+                <% accountsDdCollection.each(function(option){ %>
+                <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
+                <% }); %>
           </select>
 
 		</dd>

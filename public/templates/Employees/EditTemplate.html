@@ -9,18 +9,18 @@
                 <div style="margin-left: 130px; width: 80%; display: block;">
                     <div class="half-block left">
                         <p>
-                            <label for="name">First Name</label>
+                            <label for="first">First Name</label>
                         </p>
                         <p>
-                            <label for="name">Last Name</label>
+                            <label for="last">Last Name</label>
                         </p>
                     </div>
                     <div class="half-block left">
                         <p>
-                            <input type="text" class="blueback" id="first" value="<%=model.name.first%>" required />
+                            <input type="text" class="blueback" id="first" value="<%=name.first%>" required />
                         </p>
                         <p>
-                            <input type="text" class="blueback" id="last" value="<%=model.name.last%>" required />
+                            <input type="text" class="blueback" id="last" value="<%=name.last%>" required />
                         </p>
                     </div>
                       
@@ -29,7 +29,7 @@
                         <label for="tags">Tags</label>
                     </p>
                     <p>
-                        <input type="text" id="tags" value="<%=model.tags%>" />
+                        <input type="text" id="tags" value="<%=tags%>" />
                     </p> 
                     <div class="clearfix"></div>
                 </div>
@@ -81,25 +81,25 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="text" class="workAddress" name="street" value="<%=model.workAddress.street%>" />
+                                <input type="text" class="workAddress" id="street" name="street" value="<%=workAddress.street%>" />
                             </p>
                             <p>
-                                <input type="text" class="workAddress" name="city" value="<%=model.workAddress.city%>" />
+                                <input type="text" class="workAddress" id="city" name="city" value="<%=workAddress.city%>" />
                             </p>
                             <p>
-                                <input type="text" class="workAddress" name="state" value="<%=model.workAddress.state%>"/>
+                                <input type="text" class="workAddress" id="state" name="state" value="<%=workAddress.state%>"/>
                             </p>
                             <p>
-                                <input type="text" class="workAddress" name="zip" value="<%=model.workAddress.zip%>"/>
+                                <input type="text" class="workAddress" id="zip" name="zip" value="<%=workAddress.zip%>"/>
                             </p>
                             <p>
-                                <input type="text" class="workAddress" name="country" value="<%=model.workAddress.country%>" />
+                                <input type="text" class="workAddress" id="country" name="country" value="<%=workAddress.country%>" />
                             </p>
                             <p>
-                                <input type="text"  id="workEmail" value="<%=model.workEmail%>" required />
+                                <input type="text"  id="workEmail" value="<%=workEmail%>" required />
                             </p>
                             <p>
-                                <input type="text" id="skype" value="<%=model.skype%>" />
+                                <input type="text" id="skype" value="<%=skype%>" />
                             </p>
                         </div>
                     </div>
@@ -115,38 +115,38 @@
                                 <label for="officeLocation">Office Location</label>
                             </p>
                             <p>
-                                <label for="relatedUser">Related User</label>
+                                <label for="relatedUsersDd">Related User</label>
                             </p>
                             <p>
                                 <label for="visibility">Visibility</label>
                             </p>
                             <p>
-                                <label for="department">Department</label>
+                                <label for="departmentsDd">Department</label>
                             </p>
                             <p>
-                                <label for="jobPosition">Job</label>
+                                <label for="jobPositionDd">Job</label>
                             </p>
                             <p>
-                                <label for="coach">Coach</label>
+                                <label for="managerDd">Manager</label>
+                            </p>
+                            <p>
+                                <label for="coachDd">Coach</label>
                             </p>
 
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="text" name="phone" id="phone" value="<%=model.workPhones.phone%>" required />
+                                <input type="text" name="phone" id="phone" value="<%=workPhones.phone%>" required />
                             </p>
                             <p>
-                                <input type="text" name="mobile" id="mobile" value="<%=model.workPhones.mobile%>" required />
+                                <input type="text" name="mobile" id="mobile" value="<%=workPhones.mobile%>" required />
                             </p>
                             <p>
-                                <input type="text" name="officeLocation" id="officeLocation" value="<%=model.officeLocation%>" required />
+                                <input type="text" name="officeLocation" id="officeLocation" value="<%=officeLocation%>" required />
                             </p>
                             <p>
-                                <select id="relatedUser">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% usersCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)? 'selected="selected"':''%>><%= option.get('login')%></option>
-                                    <% }); %>
+                                <select id="relatedUsersDd">
+
                                 </select>
                             </p>
                             <p>
@@ -155,27 +155,19 @@
                                 </select>
                             </p>
                             <p>
-                                <select id="department">
-                                    <option value="0">Select...</option>
-                                    <% departmentsCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
-                                    <% }); %>
+                                <select id="departmentsDd">
                                 </select>
                             </p>
                             <p>
-                                <select id="jobPosition">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% jobPositionsCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.jobPosition.id)? 'selected="selected"':''%>><%= option.get('name')%></option>
-                                    <% }); %>
+                                <select id="jobPositionDd">
                                 </select>
                             </p>
                             <p>
-                                <select id="coach">
-                                    <option selected="selected" value="0">Select...</option>
-                                    <% accountsDdCollection.each(function(option){ %>
-                                    <option value="<%= option.get('_id') %>" <%= (option.get('_id') == model.coach.id) ? 'selected="selected"' : ''%>> <%= option.get('name').first %> <%= option.get('name').last %></option> 
-                                    <% }); %>
+                                <select id="managerDd">
+                                </select>
+                            </p>
+                            <p>
+                                <select id="coachDd">
                                 </select>
                             </p>
                         </div>
@@ -211,10 +203,10 @@
                                 </select>
                             </p>
                             <p>
-                                <input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required />
+                                <input type="text" name="identNo" id="identNo" value="<%=identNo%>" required />
                             </p>
                             <p>
-                                <input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required />
+                                <input type="text" name="passportNo" id="passportNo" value="<%=passportNo%>" required />
                             </p>
                             <p>
                                 <select id="bankAccountNo">
@@ -222,7 +214,7 @@
                                 </select>
                             </p>
                             <p>
-                                <input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required />
+                                <input type="text" name="otherId" id="otherId" value="<%=otherId%>" required />
                             </p>
                         </div>
                     </div>
@@ -247,16 +239,16 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" />
+                                <input type="text" class="homeAddress" name="street" value="<%=homeAddress.street%>" />
                             </p>
                             <p>
-                                <input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>"/>
+                                <input type="text" class="homeAddress" name="state" value="<%=homeAddress.state%>"/>
                             </p>
                             <p>
-                                <input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>"/>
+                                <input type="text" class="homeAddress" name="zip" value="<%=homeAddress.zip%>"/>
                             </p>
                             <p>
-                                <input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>"/>
+                                <input type="text" class="homeAddress" name="country" value="<%=homeAddress.country%>"/>
                             </p>
                         </div>
                     </div>
@@ -293,7 +285,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="text" name="dateBirth" id="dateBirth" value="<%=model.dateBirth%>" required />
+                                <input type="text" name="dateBirth" id="dateBirth" value="<%=dateBirth%>" required />
                             </p>
                         </div>
                     </div>
@@ -308,7 +300,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox" <%= (model.active)? "checked='checked'":''%> name="active" id="active" />
+                                <input type="checkbox" <%= (active)? "checked='checked'" : ''%> name="active" id="active" />
                             </p>
                         </div>
                         <div class="clearfix"></div>

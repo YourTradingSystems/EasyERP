@@ -4,8 +4,14 @@ define(function () {
             callback(response);
         });
     }
+    var postData = function(url, data,callback){
+        $.post(url, data,function(resp){
+            callback(resp);
+        });
+    }
     return {
-        getData:getData
+        getData:getData,
+        postData:postData
     }
 
 });

@@ -4,7 +4,9 @@ define([
     function (CalendarModel) {
         var CalendarsCollection = Backbone.Collection.extend({
             model : CalendarModel,
-
+            idAttribute: function(){
+                return "_id";
+            },
             url: "/Calendars",
 
             initialize: function () {

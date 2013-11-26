@@ -5,14 +5,17 @@ function(EmployeesCollection){
     var saveEventId;
     var miniCalendar;
 
-    var initCalendar = function(calendarContainer){
+    var initCalendar = function(calendarContainer, eventsCollection){
         applyTemplates();
         scheduler.init(calendarContainer, new Date(), "month");
+        scheduler.backbone(eventsCollection);
         populatePersons();
+
     }
 
     var loadCalendarEvents = function(eventsCollection){
-        scheduler.backbone(eventsCollection);
+        console.log('--------------------Scheduler parse-----------------------');
+        scheduler.clearAll();
         scheduler.parse(eventsCollection.toJSON(), "json");
     }
 
@@ -39,7 +42,7 @@ function(EmployeesCollection){
         scheduler.config.event_duration = 60;
         scheduler.config.auto_end_date = true;
         scheduler.config.drag_move = true;
-        scheduler.config.details_on_create=true;
+        scheduler.config.details_on_create = true;
         //scheduler.config.server_utc = true;
         scheduler.config.cascade_event_display = true;
         scheduler.config.cascade_event_count = 4;
@@ -47,26 +50,26 @@ function(EmployeesCollection){
         scheduler.config.first_hour = 8;
         scheduler.config.last_hour = 21;
         scheduler.config.start_on_monday = true;
-
         scheduler.attachEvent("onTemplatesReady", function(){
 
-            scheduler.templates.event_bar_text = function(start, end, ev){
-                return ev.summary || "New Event";
-            };
-            scheduler.templates.event_text = function(start, end, ev){
-                return ev.summary || "New Event";
-            };
-            scheduler.templates.tooltip_text = function(start,end, event){
-                return "<b>Event: </b>" + event.summary + "<br/><b>Start: </b>" + dateFormat(start, "dd-mm-yyyy hh:mm") + "<br/><b>End: </b>" + dateFormat(end, "dd-mm-yyyy hh:mm");
-            }
-            /*scheduler.tempalte.event_class = function(start, end, event){
-             if(start < (new Date()))
-             return "past_event";
-             }*/
-            /*scheduler.templates.event_date = function(start, end, ev){
+        scheduler.templates.event_bar_text = function(start, end, ev){
+            return ev.summary || "New Event";
+        };
+        scheduler.templates.event_text = function(start, end, ev){
+            return ev.summary || "New Event";
+        };
+        scheduler.templates.tooltip_text = function(start,end, event){
+            return "<b>Event: </b>" + event.summary + "<br/><b>Start: </b>" + dateFormat(start, "dd-mm-yyyy hh:mm") + "<br/><b>End: </b>" + dateFormat(end, "dd-mm-yyyy hh:mm");
+        }
+        /*scheduler.tempalte.event_class = function(start, end, event){
+         if(start < (new Date()))
+         return "past_event";
+         }*/
+        /*scheduler.templates.event_date = function(start, end, ev){
 
-             }*/
+         }*/
         });
+
         if(!scheduler.checkEvent("onEventSave")){
             scheduler.attachEvent('onEventSave', function(id, data, flag){
                 if(!data.summary){
@@ -79,6 +82,7 @@ function(EmployeesCollection){
                     return false;
                 }
                 attachEventColor(id,data);
+                attachCalendarId(id);
                 data.text = data.summary;
                 return true;
             });
@@ -112,7 +116,11 @@ function(EmployeesCollection){
             {name:"priority", height: 30, type:"select", map_to: "priority", options: priorityOptions}
         ];
     };
-
+    var attachCalendarId = function(id){
+        var event = scheduler.getEvent(id);
+        event.calendarId = App.Calendar.currentCalendarId;
+        scheduler.updateEvent(id);
+    }
     var attachEventColor = function(id, data){
         var event = scheduler.getEvent(id);
         if(event){

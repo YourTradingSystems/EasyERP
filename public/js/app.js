@@ -17,9 +17,8 @@ define([
             modal:true,
             resizable: false,
             draggable:true,
-            width:500,
-            height: 350,
-            autoOpen:true
+            autoOpen:true,
+            width:700
         });
     }
 
