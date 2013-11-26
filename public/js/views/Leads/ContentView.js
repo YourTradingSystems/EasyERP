@@ -32,8 +32,8 @@ define([
             },
             gotoForm: function (e) {
                 App.ownContentType = true;
-                var itemIndex = $(e.target).closest("tr").data("index") + 1;
-                window.location.hash = "#home/content-Leads/form/" + itemIndex;
+                var id = $(e.target).closest("tr").data("id");
+                window.location.hash = "#home/content-Leads/form/" + id;
             },
 
             switchTab: function (e) {
@@ -120,16 +120,10 @@ define([
                         }
                     case "form":
                         {
-                            var itemIndex = Custom.getCurrentII() - 1;
-                            if (itemIndex > this.collection.models.length - 1) {
-                                itemIndex = this.collection.models.length - 1;
-                                Custom.setCurrentII(this.collection.models.length);
-                            }
-
-                            if (itemIndex == -1) {
-                                this.$el.html();
+                            var currentModel = this.collection.getElement();
+                            if (!currentModel) {
+                                this.$el.html('<h2>No Application found</h2>');
                             } else {
-                                var currentModel = this.collection.models[itemIndex];
                                 this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                                 currentModel.off('change');
                                 currentModel.on('change', this.render, this);
@@ -162,8 +156,7 @@ define([
                                                     success: function (model) {
                                                         $(self).dialog("close");
                                                         that.opportunitiesCollection.add(model);
-                                                        itemIndex = that.opportunitiesCollection.indexOf(model) + 1;
-                                                        Backbone.history.navigate("#home/content-Opportunities/form/" + itemIndex, { trigger: true });
+                                                        Backbone.history.navigate("#home/content-Opportunities/form/" + model.id, { trigger: true });
                                                     }
 
                                                 });
