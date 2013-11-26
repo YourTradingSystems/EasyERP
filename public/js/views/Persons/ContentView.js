@@ -34,8 +34,97 @@ define([
             "click .editDelNote": "editDelNote",
             "click #cancelNote": "cancelNote",
             "click .deleteAttach": "deleteAttach",
-            "click .list": "gotoForm"
+            "click .list": "gotoForm",
+            "mouseenter .editable:not(.quickEdit)": "quickEdit",
+            "mouseleave .editable": "removeEdit",
+            "click #editSpan": "editClick",
+            "click #cancelSpan": "cancelClick",
+            "click #saveSpan": "saveClick"
         },
+
+        quickEdit: function (e) {
+            $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+        },
+
+        removeEdit: function (e) {
+            $('#editSpan').remove();
+        },
+
+        cancelClick: function (e) {
+            e.preventDefault();
+
+            var parent = $(e.target).parent().parent();
+            $("#" + parent[0].id).removeClass('quickEdit');
+            $("#" + parent[0].id).text(this.text);
+
+            $('#editInput').remove();
+            $('#cancelSpan').remove();
+            $('#saveSpan').remove();
+
+            var currentModel = this.collection.getElement();
+            Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+        },
+     
+
+        editClick: function (e) {
+            e.preventDefault();
+
+            $('.quickEdit #editInput').remove();
+            $('.quickEdit #cancelSpan').remove();
+            $('.quickEdit #saveSpan').remove();
+            $('.quickEdit').text(this.text).removeClass('quickEdit');
+
+            var parent = $(e.target).parent().parent();
+            $("#" + parent[0].id).addClass('quickEdit');
+            $('#editSpan').remove();
+            this.text = $('#' + parent[0].id).text();
+            $("#" + parent[0].id).text('');   
+            if ($("#" + parent[0].id).hasClass('date')) {              
+                $("#" + parent[0].id).append('<input id="editInput1" type="text" class="left hasDatepicker"/>');
+              
+                $('.hasDatepicker').datepicker();
+            } else {
+                $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
+            }
+
+            $('#editInput').val(this.text);
+
+            $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
+            $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
+        },
+
+        saveClick: function (e) {
+            e.preventDefault();
+            var parent = $(event.target).parent().parent();
+            var objIndex = parent[0].id.split('_');
+            var obj = {};
+            var currentModel = this.collection.getElement();
+
+            if (objIndex.length > 1) {
+                obj = currentModel.get(objIndex[0]);
+                obj[objIndex[1]] = $('#editInput').val();
+            } else if (objIndex.length == 1) {
+                obj[objIndex[0]] = $('#editInput').val();
+            }
+
+            this.text = $('#editInput').val();
+            $("#" + parent[0].id).text(this.text);
+            $("#" + parent[0].id).removeClass('quickEdit');
+            $('#editInput').remove();
+            $('#cancelSpan').remove();
+            $('#saveSpan').remove();
+
+            currentModel.set(obj);
+            currentModel.save({}, {
+                headers: {
+                    mid: 39
+                },
+                success: function () {
+                    Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                }
+            });
+        },
+
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
@@ -250,6 +339,7 @@ define([
             }, 300, function () { });
         },
         render: function () {
+          
             //Custom.setCurrentCL(this.collection.length);
             console.log('Render Persons View');
             var viewType = Custom.getCurrentVT(),
@@ -301,6 +391,7 @@ define([
                         break;
                     }
             }
+         
             return this;
         },
 
