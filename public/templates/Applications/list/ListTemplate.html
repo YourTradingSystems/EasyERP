@@ -24,9 +24,9 @@
             <td><%=application.name.first%> <%=application.name.last%></td>
             <td><%=application.workEmail%></td>
             <td><%=application.workPhones.mobile%></td>
-            <td><%=application.jobPosition.name%></td>
-            <td><%=application.workflow.name%></td>
-            <td><%=application.relatedUser.login%></td>
+            <td><%=(application.jobPosition) ? application.jobPosition.name : ''%></td>
+            <td><%=(application.workflow) ? application.workflow.name : ''%></td>
+            <td><%=(application.relatedUser) ? application.relatedUser.login : ''%></td>
         </tr>
     <% }) %>
     </tbody>

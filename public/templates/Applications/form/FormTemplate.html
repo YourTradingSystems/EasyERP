@@ -1,8 +1,7 @@
 <div class="formHeader">
     <button class="red" id="hire"><span>Hire & Create Employee</span></button>
     <button class="red" id="refuse"><span>Refuse</span></button>
-    <ul class="breadcrumb">
-    </ul>
+    <ul class="breadcrumb"></ul>
 </div>
 <div class="form-holder">
     <form class="form" id="applicationForm" data-id="<%=_id%>">
@@ -24,18 +23,14 @@
                 <label>Mobile</label>
                 <span><%=workPhones.mobile%></span>
             </p>
-            <p>
-                <label>Degree</label>
-                <span><%=degree.name%></span>
-            </p>
             <h3>Job</h3>
             <p>
                 <label>Applied Job</label>
-                <span><%=jobPosition.name%></span>
+                <span><%=(jobPosition) ? jobPosition.name : ''%></span>
             </p>
             <p>
                 <label>Department</label>
-                <span><%=department.name%></span>
+                <span><%=(department) ? department.departmentName : ''%></span>
             </p>
             <p>
                 <label>Tags</label>
@@ -44,7 +39,7 @@
             <h3>Application Summary</h3>
             <p>
                 <label>Responsible</label>
-                <span><%=relatedUser.login%></span>
+                <span><%=(relatedUser) ? relatedUser.login : ''%></span>
             </p>
             <p>
                 <label>Next Action</label>
@@ -52,7 +47,7 @@
             </p>
             <p>
                 <label>Source</label>
-                <span><%=source.name%></span>
+                <span><%=(source) ? source.name : ''%></span>
             </p>
             <p>
                 <label>Referred By</label>

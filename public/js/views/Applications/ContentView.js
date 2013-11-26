@@ -53,7 +53,7 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
             else {
                 App.hash = applicationId;
                 _.each(this.collection.models, function (item) {
-                    if (item.get("item").id == applicationId) models.push(item);
+                    if (item.id == applicationId) models.push(item);
                 }, this);
             }
             switch (viewType) {
@@ -94,22 +94,25 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.models.length - 1) {
-                            itemIndex = this.collection.models.length - 1;
+                        //var itemIndex = Custom.getCurrentII() - 1;
+                        //if (itemIndex > this.collection.models.length - 1) {
+                        //    itemIndex = this.collection.models.length - 1;
 
-                            var urlParts = window.location.hash.split('/');
-                            if (urlParts[4]) {
-                                urlParts[4] = this.collection.models.length;
-                                window.location.hash = urlParts.join('/');
-                            }
-                            Custom.setCurrentII(this.collection.models.length);
-                        }
+                        //    var urlParts = window.location.hash.split('/');
+                        //    if (urlParts[4]) {
+                        //        urlParts[4] = this.collection.models.length;
+                        //        window.location.hash = urlParts.join('/');
+                        //    }
+                        //    Custom.setCurrentII(this.collection.models.length);
+                        //}
 
-                        if (itemIndex == -1) {
-                            this.$el.html();
+                        //if (itemIndex == -1) {
+                        //    this.$el.html();
+                        //} else {
+                        var currentModel = this.collection.getElement();
+                        if (!currentModel) {
+                            this.$el.html('<h2>No Application found</h2>');
                         } else {
-                            var currentModel = this.collection.models[itemIndex];
                             this.$el.html(_.template(ApplicationsFormTemplate, currentModel.toJSON()));
                         }
                         break;
