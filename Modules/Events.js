@@ -315,6 +315,7 @@ var Events = function (logWriter, mongoose) {
                         }
                         else if (result) {
                             //Updating an Existing Calendar in DataBase
+                            var curentCalendarId = result._id;
                             calendar.update({ _id: result._id }, {
                                 kind: cal.kind,
                                 id: cal.id,
@@ -323,7 +324,7 @@ var Events = function (logWriter, mongoose) {
                                 description: cal.description,
                                 location: cal.location,
                                 timeZone: cal.timeZone
-                            }, function (err, result) {
+                            }, function (err, result) {                               
                                 try {
                                     if (err) {
                                         console.log(err);
@@ -356,6 +357,86 @@ var Events = function (logWriter, mongoose) {
                                                         });
                                                     } else {
                                                         // CReate new Events
+                                                        try {
+                                                            if (!ev || !ev.id) {
+                                                                logWriter.log('Events.create Incorrect Incoming Data');
+                                                                res.send(400, { error: 'Events.create Incorrect Incoming Data' });
+                                                                return;
+                                                            } else {
+                                                                savetoDb(ev);
+                                                            }
+                                                            function savetoDb(data) {
+                                                                try {
+                                                                    console.log(data);
+                                                                    _event = new event();
+                                                                    _event._id = data.id;
+                                                                    if (data.summary) {
+                                                                        _event.summary = data.summary;
+                                                                    }
+                                                                    if (data.calendarId) {
+                                                                        _event.calendarId = curentCalendarId;
+                                                                    }
+                                                                    if (data.calendarId) {
+                                                                        _event.calendarId = data.calendarId;
+                                                                    }
+                                                                    if (data.priority) {
+                                                                        _event.priority = data.priority;
+                                                                    }
+                                                                    if (data.assignTo) {
+                                                                        _event.assignTo = data.assignTo;
+                                                                    }
+                                                                    if (data.description) {
+                                                                        _event.description = data.description;
+                                                                    }
+                                                                    if (data.start_date) {
+                                                                        _event.start_date = data.start_date;
+                                                                    }
+                                                                    if (data.end_date) {
+                                                                        _event.end_date = data.end_date;
+                                                                    }
+                                                                    if (data.status) {
+                                                                        _event.status = data.status;
+                                                                    }
+                                                                    if (data.eventType) {
+                                                                        _event.eventType = data.eventType;
+                                                                    }
+                                                                    if (data.color) {
+                                                                        _event.color = data.color;
+                                                                    }
+                                                                    if (data.textColor) {
+                                                                        _event.textColor = data.textColor;
+                                                                    }
+                                                                    ///////////////////////////////////////////////////
+                                                                    _event.save(function (err, result) {
+                                                                        try {
+                                                                            if (err) {
+                                                                                console.log(err);
+                                                                                logWriter.log("Events.js create savetoBd _event.save " + err);
+                                                                                res.send(500, { error: 'Events.save BD error' });
+                                                                            } else {
+                                                                                res.send(201, { success: 'A new event was created successfully' });
+                                                                                calendar.findById(result.calendarId, { $push: { event: result._id } }, function (err, success) {
+                                                                                    if (err) {
+                                                                                        console.log(err);
+                                                                                        res.send(500, { error: 'Event.save BD error' });
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        } catch (error) {
+                                                                            logWriter.log("Events.js create savetoBd _event.save " + error);
+                                                                        }
+                                                                    });
+                                                                } catch (error) {
+                                                                    console.log(error);
+                                                                    logWriter.log("Events.js create savetoBd " + error);
+                                                                    res.send(500, { error: 'Events.save  error' });
+                                                                }
+                                                            }
+                                                        } catch (exception) {
+                                                            console.log(exception);
+                                                            logWriter.log("Events.js  " + exception);
+                                                            res.send(500, { error: 'Events.save  error' });
+                                                        }
                                                        
                                                     }
                                                 });
