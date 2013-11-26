@@ -88,8 +88,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var objIndex = parent[0].id.split('_');
             //console.log(objIndex);
             var obj = {};
-            var itemIndex = Custom.getCurrentII() - 1;
-            var currentModel = models[itemIndex];
+            var currentModel = this.collection.getElement();
             if (objIndex.length > 1) {
                 obj = currentModel.get(objIndex[0]);
                 console.log(obj);
