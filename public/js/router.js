@@ -155,7 +155,7 @@ define([
                         url += "/" + hash;
                     }
 
-                    Backbone.history.navigate(url, { replace: true });
+                    Backbone.history.navigate(url, { replace: true});
 
                     var topBarView = new TopBarView({ actionType: action, collection: contentCollection }),
                         actionView = new ActionView({ collection: contentCollection, pId: hash });

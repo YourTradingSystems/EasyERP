@@ -225,8 +225,8 @@ define([
 
         gotoCompanyForm: function (e) {
             e.preventDefault();
-            var itemIndex = $(e.target).closest("a").attr("data-id");
-            window.location.hash = "#home/content-Company/form/" + itemIndex;
+            var id = $(e.target).closest("a").attr("data-id");
+            window.location.hash = "#home/content-Companies/form/" + id;
         },
         toggle: function () {
             this.$('#details').animate({

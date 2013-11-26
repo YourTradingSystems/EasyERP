@@ -36,7 +36,9 @@ var App = App ||
         userEditDd: "#userEditDd",
         companiesDd: "#companiesDd",
         salesPerson: '#salesPerson',
-        salesTeam: '#salesTeam'
+        salesTeam: '#salesTeam',
+        workflowValue: '#workflowValue'
+
     },
     requestedURL: null
 };
@@ -66,7 +68,6 @@ require.config({
 });
 
 require(['app'], function (app) {
-    window.localStorage.removeItem('conyentType');
     Backbone.Collection.prototype.next = function () {
         this.setElement(this.at(this.indexOf(this.getElement()) + 1));
         return this;
