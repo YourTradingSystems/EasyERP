@@ -16,7 +16,7 @@ define([
             initialize: function (options) {
                 //this.bind('reset', _.bind(this.render, this));
                 //    this.jobPositionsCollection = options.collection;
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Job Position' });
+                this.workflowsCollection = new WorkflowsCollection({ id: 'Jobposition' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
                 this.departmentsCollection.bind('reset', _.bind(this.render, this));
@@ -61,12 +61,12 @@ define([
 
                 var requirements = $.trim($("#requirements").val());
 
-                var workflow = {
+                /*var workflow = {
                     wName: this.$("#workflowNames option:selected").text(),
                     name: this.$("#workflow option:selected").text(),
                     status: this.$("#workflow option:selected").val(),
-                };
-
+                };*/
+                var workflow = this.$("#workflow option:selected").data("id");
                 //var departmentId = this.$("#department option:selected").val();
                 //var objDepartment = this.departmentsCollection.get(departmentId);
                 //var department = {};
@@ -103,14 +103,17 @@ define([
 
             render: function () {
                 var workflowNames = [];
+
                 this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('name'));
+                    workflowNames.push(option.get('wName'));
                 });
+   
+                workflowNames = _.uniq(workflowNames);
                 this.$el.html(this.template({
                     departmentsCollection: this.departmentsCollection,
                     workflowNames: workflowNames
                 }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
+                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsCollection.toJSON() }));
                 return this;
             }
 
