@@ -18,10 +18,10 @@
           <h2><%=name.first%></h2>
           <div class="half-block left">
             <dl class="person-info company">
-			  <dt>Website :</dt><dd id="website" data-text="<%=website%>" class="editable"> <%=website%></dd>
-			  <dt>Phone :</dt><dd id="phones_phone" data-text="<%=phones.phone%>" class="editable"><%=phones.phone%></dd>
-			  <dt>Mobile :</dt><dd id="phones_mobile" data-text="<%=phones.mobile%>" class="editable"><%=phones.mobile%></dd>
-			  <dt>Fax :</dt><dd id="phones_fax" data-text="<%=phones.fax%>" class="editable"><%=phones.fax%></dd>
+			  <dt>Website :</dt><dd id="website" class="editable"><%=website%></dd>
+			  <dt>Phone :</dt><dd id="phones_phone" class="editable"><%=phones.phone%></dd>
+			  <dt>Mobile :</dt><dd id="phones_mobile" class="editable"><%=phones.mobile%></dd>
+			  <dt>Fax :</dt><dd id="phones_fax" class="editable"><%=phones.fax%></dd>
             </dl>
 
          </div>
@@ -29,25 +29,19 @@
             <dl class="person-info company">
 
 			  <dt>Address :</dt>			 
-              <dd id="address_street" class="editable" data-text="<%=address.street%>">
-			  <% if(address.street) { %>
-                 <%=address.street%>
-                  <% } else { %>
-                 <span style="color:#c1c1c1;">Street</span>
-                   <% } %>
-              </dd>
+              <dd id="address_street" class="editable" ><%=address.street%></dd>
 
 			  <dt>&nbsp;</dt>			
-              <dd id="address_city" data-text="<%=address.city%>" class="editable" ><%=address.city%></dd>
+              <dd id="address_city" class="editable" ><%=address.city%></dd>
 
 			  <dt>&nbsp;</dt>		
-              <dd id="address_state" data-text="<%=address.state%>" class="editable" ><%=address.state%></dd>
+              <dd id="address_state" class="editable" ><%=address.state%></dd>
 
 			  <dt>&nbsp;</dt>		
-              <dd id="address_zip" data-text="<%=address.zip%>" class="editable"><%=address.zip%></dd>
+              <dd id="address_zip" class="editable"><%=address.zip%></dd>
 
 			  <dt>&nbsp;</dt>		
-              <dd id="address_country" data-text="<%=address.country%>" class="editable"><%=address.country%></dd>
+              <dd id="address_country" class="editable"><%=address.country%></dd>
 		
             </dl>
  
