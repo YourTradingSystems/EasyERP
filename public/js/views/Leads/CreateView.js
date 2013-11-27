@@ -1,6 +1,5 @@
 define([
     "text!templates/Leads/CreateTemplate.html",
-    "text!templates/Leads/selectTemplate.html",
     "collections/Leads/LeadsCollection",
     "collections/Companies/CompaniesCollection",
     "collections/Customers/CustomersCollection",
@@ -11,7 +10,7 @@ define([
     "models/LeadModel",
     "common"
 ],
-    function (CreateTemplate, selectTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, LeadModel, common) {
+    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, LeadModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -19,6 +18,7 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
+                _.bindAll(this, "saveItem");
                 this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
                 this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.companiesCollection = new CompaniesCollection();
@@ -34,10 +34,6 @@ define([
                 this.bind('reset', _.bind(this.render, this));
                 this.contentCollection = options.collection;
                 this.render = _.after(6, this.render);
-            },
-
-            close: function () {
-                this._modelBinder.unbind();
             },
 
             events: {
@@ -106,8 +102,6 @@ define([
                     id: $company.data('id')
                 }
                 var idCustomer = $(this.el).find("#customer option:selected").val();
-                //var customer = common.toObject(idCustomer, this.customersDdCollection);
-
                 var address = {};
                 $("p").find(".address").each(function () {
                     var el = $(this);
@@ -115,10 +109,8 @@ define([
                 });
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
-                //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-                //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
@@ -136,15 +128,10 @@ define([
                 var phones = {
                     phone: phone,
                     mobile: mobile,
-                    fax: fax,
+                    fax: fax
                 };
+                var workflow = this.$("#workflowDd option:selected").data('id');
 
-                //var workflow = {
-                //    wName: this.$("#workflowNames option:selected").text(),
-                //    name: this.$("#workflow option:selected").text(),
-                //    status: this.$("#workflow option:selected").val(),
-                //};
-                var workflow = this.$("#workflow option:selected").data('id');
 
                 var priority = $("#priority").val();
 
@@ -187,7 +174,6 @@ define([
                         }
                     });
 
-                //Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
 
             },
 
@@ -203,9 +189,9 @@ define([
                     employeesCollection: this.employeesCollection,
                     departmentsCollection: this.departmentsCollection,
                     priorityCollection: this.priorityCollection,
-                    workflowNames: workflowNames
+                    workflowNames: workflowNames,
+                    workflows: this.workflowsCollection.toJSON()
                 }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsCollection.toJSON() }));
                 return this;
             }
 

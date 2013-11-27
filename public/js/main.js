@@ -31,6 +31,7 @@ var App = App ||
         projectDd:"#projectDd",
         priorityDd: "#priorityDd",
         workflowDd: "#workflowDd",
+        workflowNamesDd: "#workflowNamesDd",
         managerDd: "#managerDd",
         customerDd: "#customerDd",
         userEditDd: "#userEditDd",
