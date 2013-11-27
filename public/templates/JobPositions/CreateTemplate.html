@@ -1,71 +1,50 @@
 <div class="form-holder">
-    <form method="post" action="" id="createJobPositionForm" class="form">
-        <fieldset>
-            <p>
-                <label for="name">Job Name</label>
-                <input type="text" class="title-input blueback" name="name" id="name" required />
-            </p>
-            <div class="half-block left">
-                <div class="half-block left">
-                    <p>
-                        <label for="currentNumberEmployees">Current Number of Employees</label>
-                    </p>
-                    <p>
-                        <label for="expectedRecruitment">Expected in Recruitment</label>
-                    </p>
-                    <p>
-                        <label for="totalForecastedEmployees">Total Forecasted Employees</label>
-                    </p>
-                    <p>
-                        <label for="interviewForm">Interview Form</label>
-                    </p>
-                    <p>
-                        <label for="workflowNames">Workflow Name </label>
-                    </p>
-                    <p>
-                        <label for="workflow">Workflow</label>
-                    </p>
-                </div>
-                <div class="half-block left">
-                    <p>0</p>
-                    <p>
-                        <input type="number" name="expectedRecruitment" id="expectedRecruitment" placeholder="0.00" min="0" />
-                    </p>
-                    <p>0</p>
-                    <p>
-                        <select id="interviewForm">
-                            <option selected="selected" value="0">Select...</option>
-                        </select>
-                    </p>
-                    <p>
-                        <select id="workflowNames">
-                            <% _.each(workflowNames, function(item){ %>
-                                <option><%= item %></option>
-                            <%}); %>
-                        </select>
-                    </p>
-                    <p id="selectWorkflow">
-                    </p>
-                </div>
-                <p>
-                    <label for="description">Job Description</label>
-                    <textarea id="description"></textarea>
-                </p>
-                <p>
-                    <label for="requirements">Requirements</label>
-                    <textarea id="requirements"></textarea>
-                </p>
-                <p>
-                    <label for="department">Department</label>
-                    <select id="department">
-                        <option selected="selected" value="0">Select...</option>
-                        <% departmentsCollection.each(function(option){ %>
-                        <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                        <% }); %>
-                    </select>
-                </p>
+  <form method="post" action="" id="createJobPositionForm" class="form">
+    <fieldset>
+	  <div class="half-block left">
+		<dl class="job-create-info">
+		  <dt><label for="name">Job Name :</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" required /></dd>
+		  <dt>
+            <label for="currentNumberEmployees">Current Number of Employees :</label>
+		  </dt>
+		  <dd>0</dd>
+		  <dt><label for="expectedRecruitment">Expected in Recruitment :</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" placeholder="0.00" min="0" /></dd>
+		  <dt><label for="totalForecastedEmployees">Total Forecasted Employees :</label></dt><dd>0</dd>
+		  <dt><label for="workflowNames">Workflow Name :</label></dt>
+		  <dd>
+		    <select id="interviewForm">
+              <option selected="selected" value="0">Select...</option>
+            </select>
 
-            </div>
-        </fieldset>
-    </form>
+		  </dd>
+		  <dt><label for="workflow">Workflow :</label></dt>
+		  <dd>
+            <select id="workflowNames">
+              <% _.each(workflowNames, function(item){ %>
+              <option><%= item %></option>
+              <%}); %>
+            </select>
+
+		  </dd>
+		  <dt><label for="department">Department :</label></dt>
+		  <dd>
+            <select id="department">
+              <option selected="selected" value="0">Select...</option>
+              <% departmentsCollection.each(function(option){ %>
+              <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
+              <% }); %>
+            </select>
+			
+		  </dd>
+		</dl>
+	  </div>
+	  <div class="half-block left">
+		<dl class="job-create-info">
+		  <dt><label for="description">Job Description :</label></dt><dd><textarea id="description"></textarea></dd>
+		  <dt><label for="requirements">Requirements :</label></dt><dd><textarea id="requirements"></textarea></dd>
+		  
+		</dl>
+      </div>
+    </fieldset>
+  </form>
 </div>

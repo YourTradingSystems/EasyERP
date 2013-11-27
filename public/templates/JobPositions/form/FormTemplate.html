@@ -1,25 +1,20 @@
 <div class="form-holder">
+  <div class="formLeftColumn full-width">
     <form class="form" data-id="<%=_id%>">
-        <h2><%=name%></h2>
-        <div class="half-block left">
-        	<div class="half-block left">
-	        	<p><label for="currentNumberEmployees">Current Number of Employees</label></p>
-	        	<p><label for="expectedRecruitment">Expected in Recruitment</label></p>
-	        	<p><label for="totalForecastedEmployees">Total Forecasted Employees</label></p>
-                <p><label for="interviewForm">Interview Form</label></p>
-                <p><label for="description">Job Description</label></p>
-                <p><label for="requirements">Requirements</label></p>
-                <p><label for="department">Department</label></p>
-	        </div>
-        	<div class="half-block left">
-	        	<p><%=numberOfEmployees%></p>
-		        <p><%=expectedRecruitment%></p>
-		        <p>2</p>
-                <p>interviewForm</p>
-                <p><%=description%></p>
-                <p><%=requirements%></p>
-                <p><%= (department) ? department.departmentName : ''%></p>
-			</div>
-     	</div>
+      <div class="formTitle">
+        <h3 class="left"><%=name%></h3>
+		<div class="clearfix"></div>
+      </div>
+        <div class="inner">
+			<dl class="job-info">
+			  <dt><label for="currentNumberEmployees">Current Number of Employees</label></dt><dd><%=numberOfEmployees%></dd>
+			  <dt><label for="expectedRecruitment">Expected in Recruitment</label></dt><dd><%=expectedRecruitment%></dd>
+			  <dt><label for="totalForecastedEmployees">Total Forecasted Employees</label></dt><dd>2</dd>
+			  <dt><label for="interviewForm">Interview Form</label></dt><dd>interviewForm</dd>
+			  <dt><label for="description">Job Description</label></dt><dd><%=description%></dd>
+			  <dt><label for="requirements">Requirements</label></dt><dd><%=requirements%></dd>
+			  <dt><label for="department">Department</label></dt><dd><%= (department) ? department.departmentName : ''%></dd>
+			</dl>
     </form>
+  </div>
 </div>
