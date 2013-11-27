@@ -9,7 +9,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
             currency: { type: String, default: '' }
         },
         creationDate: { type: Date, default: Date.now },
-        _company: { type: String, default: '' },
+        tempCompanyField: { type: String, default: '' },                    //Назва компанії у Ліда, до його конвертації у Оппорт
         company: { type: ObjectId, ref: 'Customers', default: null },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         address: {
@@ -103,7 +103,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
                         if (data.company.id) {
                             _opportunitie.company = data.company.id;
                         } else if (data.company.name) {
-                            _opportunitie._company = data.company.name;
+                            _opportunitie.tempCompanyField = data.company.name;
                         }
                     }
                     if (data.customer) {
@@ -225,6 +225,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: true });
         query.sort({ name: 1 });
+        query.populate('company customer salesPerson salesTeam workflow');
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -242,6 +243,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: false });
         query.sort({ name: 1 });
+        query.populate('customer salesPerson salesTeam workflow');
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -321,12 +323,12 @@ var Opportunities = function (logWriter, mongoose, customer) {
                 } else {
                     if (data.createCustomer) {                       //створити кастомера
                         console.log('************Cre Cust***********');
-                        console.log(data._company);
+                        console.log(data.tempCompanyField);
                         console.log('*******************************');
-                        if (data._company) {                          //кастомер Компанія
+                        if (data.tempCompanyField) {                          //кастомер Компанія
                             var _company = {
                                 name: {
-                                    first: data._company,
+                                    first: data.tempCompanyField,
                                     last: ''
                                 },
                                 email: data.email,
@@ -337,7 +339,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
                                 type: 'Company'
                             };
                             console.log(_company);
-                            customer.customer.find({ 'name.first': data._company }, function (err, companies) {
+                            customer.customer.find({ 'name.first': data.tempCompanyField }, function (err, companies) {
                                 if (err) {
                                     console.log(err);
                                     logWriter.log("Opportunities.js update opportunitie.update " + err);

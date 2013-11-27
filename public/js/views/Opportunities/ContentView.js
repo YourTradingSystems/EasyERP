@@ -55,7 +55,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
-            var workflows = this.workflowsCollection.toJSON()[0].value;
+            var workflows = this.workflowsCollection.toJSON();
             var opportunitieId = window.location.hash.split('/')[3];
             if (!opportunitieId || opportunitieId.length < 24) {
                 models = this.collection.models;
@@ -64,7 +64,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
             else {
                 App.hash = opportunitieId;
                 _.each(this.collection.models, function (item) {
-                    if (item.get("item").id == opportunitieId) models.push(item);
+                    if (item.get("id") == opportunitieId) models.push(item);
                 }, this);
             }
             switch (viewType) {
