@@ -88,130 +88,94 @@ define([
             },
 
             saveItem: function () {
+                var mid = 39;
 
-                var itemIndex = Custom.getCurrentII() - 1;
+                var name = $.trim($("#name").val());
 
-                if (itemIndex != -1) {
-                    var currentModel = this.collection.models[itemIndex];
+                var company = $("#company").val();
 
-                    var mid = 39;
+                var idCustomer = $("#customerDd option:selected").val();
 
-                    var name = $.trim($("#name").val());
+                var address = {};
+                $("p").find(".address").each(function () {
+                    var el = $(this);
+                    address[el.attr("name")] = el.val();
+                });
 
-                    var company = $(this.el).find("#company").val();
+                var salesPersonId = $("#salesPersonDd option:selected").val();
+                salesPersonId = salesPersonId ? salesPersonId : null;
+                var salesTeamId = $("#salesTeamDd option:selected").val();
+                salesTeamId = salesTeamId ? salesTeamId : null;
+                var first = $.trim($("#first").val());
+                var last = $.trim($("#last").val());
+                var contactName = {
+                    first: first,
+                    last: last
+                };
 
-                    var idCustomer = $(this.el).find("#customer option:selected").val();
-                    var _customer = common.toObject(idCustomer, this.customersCollection);
-                    var customer = {};
-                    if (_customer) {
-                        customer.id = _customer._id;
-                        customer.name = _customer.name;
-                    } else {
-                        customer = currentModel.defaults.customer;
+                var email = $.trim($("#email").val());
+                var func = $.trim($("#func").val());
+
+                var phone = $.trim($("#phone").val());
+                var mobile = $.trim($("#mobile").val());
+                var fax = $.trim($("#fax").val());
+                var phones = {
+                    phone: phone,
+                    mobile: mobile,
+                    fax: fax
+                };
+
+                var workflow = $("#workflowDd option:selected").data('id');
+                workflow = workflow ? workflow : null;
+                var priority = $("#priorityDd option:selected").val();
+
+                var internalNotes = $.trim($("#internalNotes").val());
+
+                var active;
+                if ($("#active").is(":checked")) { console.log("true"); active = true; }
+                else { active = false; }
+
+                var optout;
+                if ($("#optout").is(":checked")) { optout = true; }
+                else { optout = false; }
+
+                var reffered = $.trim($("#reffered").val());
+                var self = this;
+                this.currentModel.save({
+                    name: name,
+                    company: company,
+                    customer: idCustomer,
+                    address: address,
+                    salesPerson: salesPersonId,
+                    salesTeam: salesTeamId,
+                    contactName: contactName,
+                    email: email,
+                    func: func,
+                    phones: phones,
+                    workflow: workflow,
+                    fax: fax,
+                    priority: priority,
+                    internalNotes: internalNotes,
+                    active: active,
+                    optout: optout,
+                    reffered: reffered
+                }, {
+                    headers: {
+                        mid: mid
+                    },
+                    success: function (model) {
+                        self.hideDialog();
+                        Backbone.history.navigate("home/content-Leads", { trigger: true });
+                    },
+                    error: function (model, xhr, options) {
+                        Backbone.history.navigate("home", { trigger: true });
                     }
-
-                    var address = {};
-                    $("p").find(".address").each(function () {
-                        var el = $(this);
-                        address[el.attr("name")] = el.val();
-                    });
-
-                    var salesPersonId = this.$("#salesPerson option:selected").val();
-                    var objSalesPerson = common.toObject(salesPersonId, this.employeesCollection);
-                    var salesPerson = {};
-                    if (objSalesPerson) {
-                        salesPerson.id = salesPersonId;
-                        salesPerson.name = objSalesPerson.name.first + " " + objSalesPerson.name.last;
-                    } else {
-                        salesPerson = currentModel.defaults.salesPerson;
-                    }
-
-                    var salesTeamId = this.$("#salesTeam option:selected").val();
-                    var objSalesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-                    var salesTeam = {};
-                    if (objSalesTeam) {
-                        salesTeam.id = salesTeamId;
-                        salesTeam.name = objSalesTeam.departmentName;
-                    } else {
-                        salesTeam = currentModel.defaults.salesTeam;
-                    }
-
-                    var first = $.trim($("#first").val());
-                    var last = $.trim($("#last").val());
-                    var contactName = {
-                        first: first,
-                        last: last
-                    };
-
-                    var email = $.trim($("#email").val());
-                    var func = $.trim($("#func").val());
-
-                    var phone = $.trim($("#phone").val());
-                    var mobile = $.trim($("#mobile").val());
-                    var fax = $.trim($("#fax").val());
-                    var phones = {
-                        phone: phone,
-                        mobile: mobile,
-                        fax: fax,
-                    };
-
-                    var workflow = {
-                        wName: this.$("#workflowNames option:selected").text(),
-                        name: this.$("#workflow option:selected").text(),
-                        status: this.$("#workflow option:selected").val(),
-                    };
-
-                    var priority = $("#priority").val();
-
-                    var internalNotes = $.trim($("#internalNotes").val());
-
-                    var active;
-                    if ($("#active").is(":checked")) { console.log("true"); active = true; }
-                    else { active = false; }
-
-                    var optout;
-                    if ($("#optout").is(":checked")) { optout = true; }
-                    else { optout = false; }
-
-                    var reffered = $.trim($("#reffered").val());
-
-                    currentModel.set({
-                        name: name,
-                        company: company,
-                        customer: customer,
-                        address: address,
-                        salesPerson: salesPerson,
-                        salesTeam: salesTeam,
-                        contactName: contactName,
-                        email: email,
-                        func: func,
-                        phones: phones,
-                        workflow: workflow,
-                        fax: fax,
-                        priority: priority,
-                        internalNotes: internalNotes,
-                        active: active,
-                        optout: optout,
-                        reffered: reffered
-                    });
-
-                    currentModel.save({}, {
-                        headers: {
-                            mid: mid
-                        }
-                    });
-
-                    Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
-                }
-
+                });
             },
 
             populateDropDown: function (type, selectId, url, val) {
                 var selectList = $(selectId);
                 var self = this;
-                var workflowNames = [];
-                this.workflows = [];
-                var my_wId;
                 selectList.append($("<option/>").val('').text('Select...'));
                 dataService.getData(url, { mid: 39 }, function (response) {
                     var options = $.map(response.data, function (item) {
@@ -224,10 +188,11 @@ define([
                                 return self.salesTeamOption(item);
                             case "priority":
                                 return self.priorityOption(item);
-                            case "workflows": {
+                            case "workflows":
+                                return self.workflowOption(item);
+                            case "workflowNames":
+                                return self.workflowNameOption(item);
 
-                                break;
-                            }
                         }
                     });
                     selectList.append(options);
@@ -236,10 +201,15 @@ define([
                         selectList.val(val).trigger("change");
                 });
             },
+            workflowNameOption: function (item) {
+                return this.currentModel.get("workflow") ?
+                    $('<option/>').text(item.wName).attr('selected', 'selected') :
+                    $('<option/>').text(item.wName);
+            },
             workflowOption: function (item) {
-                return (this.currentModel.get("workflow") && this.currentModel.get("workflow").wId === item.wId) ?
-                    $('<option/>').val(item.wId).text(item.wName).attr('selected', 'selected') :
-                    $('<option/>').val(item.wId).text(item.wName);
+                return (this.currentModel.get("workflow") && this.currentModel.get("workflow") === item._Id) ?
+                    $('<option/>').val(item.status).text(item.name).attr('selected', 'selected').attr('data-id', item._id) :
+                    $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
             },
             customerOption: function (item) {
                 return (this.currentModel.get("customer") && this.currentModel.get("customer").id === item._id) ?
@@ -263,8 +233,6 @@ define([
             },
 
             render: function () {
-                //var workflowModel = this.workflowsCollection.findWhere({ name: this.currentModel.workflow.wName }).toJSON();
-                //$("#selectWorkflow").html(_.template(editSelectTemplate, { model: this.currentModel, workflows: this.getWorkflowValue(workflowModel.value) }));
                 var formString = this.template(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
@@ -288,7 +256,8 @@ define([
                 this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
                 this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
                 this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
-                //this.populateDropDown("workflows", App.ID.workflowDd, App.URL.workflows);
+                this.populateDropDown("workflows", App.ID.workflowDd, App.URL.workflows);
+                this.populateDropDown("workflowNames", App.ID.workflowNamesDd, App.URL.workflows);
                 this.delegateEvents(this.events);
 
                 return this;

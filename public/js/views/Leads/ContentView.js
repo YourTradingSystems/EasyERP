@@ -183,12 +183,12 @@ define([
                                         //});
                                     },
                                     Cancel: function () {
-                                        $(this).dialog("close");
+                                        $(this).dialog('close');
                                     }
                                 },
 
                                 close: function () {
-                                    $(this).dialog("close");
+                                    $(this).dialog('close');
                                 }
                             }, this);
                         }
