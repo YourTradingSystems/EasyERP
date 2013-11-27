@@ -791,13 +791,12 @@ h3 {
         }
     }
 }
-
-.person-info {
+.dl-auto(@max-width:110px){
     clear: both;
 
     dt {
         width: 35%;
-        max-width: 110px;
+        max-width: @max-width;
         float: left;
         clear: both;
         line-height: 20px;
@@ -813,8 +812,18 @@ h3 {
             width: 35px;
         }
     }
+
 }
 
+.person-info {
+	.dl-auto();
+}
+.job-info{
+	.dl-auto(200px);
+}
+.job-create-info{
+	.dl-auto(220px);
+}
 .company-info {
     margin-left: 150px;
     display: block;
@@ -2130,7 +2139,9 @@ button {
 #createEmployeeForm,
 #editEmployeeForm,
 #createPersonsForm ,
-#employeeForm{
+#employeeForm,
+#createJobPositionForm,
+#editJobPositionForm{
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2175,7 +2186,7 @@ button {
         border: 1px solid #E2E9EF;
         border-top: 1px solid #CBD3E2;
         color: #262626;
-
+		padding:0;
         &:focus {
             outline: -webkit-focus-ring-color auto 5px;
         }
@@ -2185,7 +2196,8 @@ button {
         margin-top: 0px;
     }
 
-    .blueback {
+    input[type='text'],
+    input[type='number'] {
         .border-radius(0px);
         border: 1px solid #E2E9EF;
         border-top: 1px solid #CBD3E2;
@@ -2205,7 +2217,10 @@ button {
         }
     }
 }
-
+#createJobPositionForm #description,
+#editJobPositionForm #description{
+	margin-top:0;
+}
 #createProjectForm {
     dl {
         dt {
