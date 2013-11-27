@@ -7,9 +7,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
             id: String,
             name: String
         },
-        
         department: { type: ObjectId, ref: 'Department' },
-        
         description: String,
         requirements: String,
         workflow: { type: ObjectId, ref: 'workflows', default: null },

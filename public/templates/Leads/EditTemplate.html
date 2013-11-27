@@ -1,16 +1,11 @@
-<div class="formHeader">
-    <button class="red" id="convertToOpportunity">Convert to Opportunity</button>
-    <button id="cancelCase">Cancel Case</button>
-    <button id="reset">Reset</button>
-    <ul class="breadcrumb"></ul>
-</div>
+
 <div class="form-holder">
-    <form method="post" action="" class="form" id="leadForm" data-id="<%=model._id%>">
+    <form method="post" action="" class="form" id="leadForm" data-id="<%=_id%>">
         <fieldset>
             <div class="inner">
                 <p>
                     <label for="name">Subject</label>
-                    <input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required />
+                    <input type="text" class="title-input blueback" id="name" value="<%=name%>" required />
                 </p>
                 <div class="half-block left">
                     <div class="half-block left">                        
@@ -18,7 +13,7 @@
                             <label for="company">Company Name</label>
                         </p>
                         <p>
-                            <label for="customer">Customer</label>
+                            <label for="customerDd">Customer</label>
                         </p>
                         <p>
                             <label for="name">Address</label>
@@ -29,58 +24,40 @@
                         <p><label></label></p>
                         <p></p>
                         <p>
-                            <label for="salesPerson">Salesperson</label>
+                            <label for="salesPersonDd">Salesperson</label>
 
                         </p>
                         <p>
-                            <label for="salesTeam">Sales Team</label>
+                            <label for="salesTeamDd">Sales Team</label>
 
                         </p>
                     </div>
                     <div class="half-block left">                       
                         <p>
-                            <input type="text" id="company" value="<%= model.company %>" />
+                            <input type="text" id="company" value="<%= company %>" />
                         </p>
                         <p>
-                            <select id="customer">
-                                <option selected="selected" value="0">Select...</option>
-                                <% customersCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"<%=(option.get('_id')==model.customer.id)?'selected="selected"':''%>><%= option.get('name') %></option>
-                                <% }); %>
-                            </select>
+                            <select id="customerDd"> </select>
                         </p>
-                        <p><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=model.address.street%>" /></p>
+                        <p><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" /></p>
                         <p>
-                            <input type="text" id="city" class="address" placeholder="City" name="city" value="<%=model.address.city%>" />
+                            <input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" />
                         </p>
                         <p>
-                            <input type="text" id="state" class="address" placeholder="State" name="state" value="<%=model.address.state%>" />
+                            <input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" />
                         </p>
                         <p>
-                            <input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" />
+                            <input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" />
                         </p>
                         <p>
-                            <input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" />
+                            <input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" />
                         </p>
                         <p></p>
                         <p>
-                            <select id="salesPerson">
-                                <option selected="selected" value="0">Select...</option>
-                                <% employeesCollection.each(function(option){ %>
-
-                                <option value="<%= option.get('_id') %>"<%=(option.get('_id')==model.salesPerson.id)?'selected="selected"':''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
-                                <% }); %>
-
-                            </select>
+                            <select id="salesPersonDd">  </select>
                         </p>
                         <p>
-                            <select id="salesTeam">
-                                <option selected="selected" value="0">Select...</option>
-                                <% departmentsCollection.each(function(option){ %>
-
-                                <option value="<%= option.get('_id') %>"<%=(option.get('_id')==model.salesTeam.id)?'selected="selected"':''%>><%= option.get('departmentName')%></option>
-                                <% }); %>
-
+                            <select id="salesTeamDd">
                             </select>
                         </p>
                     </div>
@@ -104,43 +81,33 @@
                             <label for="mobile">Mobile </label>
                         </p>
                         <p>
-                            <label for="workflowNames">Workflow Names </label>
+                            <label for="workflowNamesDd">Workflow Names </label>
                         </p>                       
                         <p>
-                            <label for="workflow">Workflow </label>
+                            <label for="selectWorkflow">Workflow </label>
                         </p>
                         <p>
-                            <label for="priority">Priority </label>
+                            <label for="priorityDd">Priority </label>
                         </p>
                         <p>
                             <label for="name">Categories</label>
                         </p>
                     </div>
                     <div class="half-block left">
-                        <p><input type="text" class="name" id="first" value="<%=model.name.first%>" /></p>
-                        <p><input type="text" class="name" id="last" value="<%=model.name.last%>" /></p>
-                        <p><input type="text" id="email" value="<%=model.email%>" /></p>
-                        <p><input type="text" id="func" value="<%=model.func%>" /></p>
-                        <p><input type="text" id="phone" value="<%=model.phones.phone%>" /></p>
-                        <p><input type="text" id="mobile" value="<%=model.phones.mobile%>" /></p>
+                        <p><input type="text" class="name" id="first" value="<%=name.first%>" /></p>
+                        <p><input type="text" class="name" id="last" value="<%=name.last%>" /></p>
+                        <p><input type="text" id="email" value="<%=email%>" /></p>
+                        <p><input type="text" id="func" value="<%=func%>" /></p>
+                        <p><input type="text" id="phone" value="<%=phones.phone%>" /></p>
+                        <p><input type="text" id="mobile" value="<%=phones.mobile%>" /></p>
                         <p>
-                            <select id="workflowNames">
-                                <option selected="selected" value="0">Select...</option>
-                                <% workflowsCollection.each(function(option){ %>
-                                <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
-                                <% }); %>
-                            </select>
+                            <select id="workflowNamesDd">  </select>
                         </p>                      
                         <p id="selectWorkflow">
                            
                         </p>
                         <p>
-                            <select id="priority">
-                                <option selected="selected" value="0">Select...</option>
-                                <% priorityCollection.each(function(option){ %>
-                                <option value="<%= option.get('priority') %>"<%=(option.get('priority')==model.priority)?'selected="selected"':''%>><%= option.get('priority') %></option>
-                                <% }); %>
-                            </select>
+                            <select id="priorityDd"> </select>
                         </p>
                     </div>
                 </div>
@@ -160,7 +127,7 @@
                     <br />
                 </div>
                 <div class="tab">
-                    <textarea id="internalNotes"><%=model.internalNotes%></textarea>
+                    <textarea id="internalNotes"><%=internalNotes%></textarea>
                 </div>
                 <div class="tab">
                     <div class="half-block left">
@@ -172,7 +139,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <span><%=model.workflow.status%></span>
+                                <span><%=workflow.status%></span>
                             </p>
                         </div>
                     </div>
@@ -185,7 +152,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox" <%= (model.optout)? 'checked="checked"':''%> id="optout" />
+                                <input type="checkbox" <%= (optout)? 'checked="checked"':''%> id="optout" />
                             </p>
                         </div>
                     </div>
@@ -201,8 +168,8 @@
                             </p>
                         </div>
                         <div class="half-block left">
-                            <p><input type="checkbox" <%= (model.active)? 'checked="checked"':''%> id="active" /></p>
-                            <p><input type="text" id="reffered" value="<%=model.reffered%>" /></p>
+                            <p><input type="checkbox" <%= (active)? 'checked="checked"':''%> id="active" /></p>
+                            <p><input type="text" id="reffered" value="<%=reffered%>" /></p>
                         </div>
                     </div>    
                     <div class="clearfix"></div>   

@@ -45,7 +45,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             "mouseenter .editable:not(.quickEdit)": "quickEdit",
             "mouseleave .editable": "removeEdit",
             "click #editSpan": "editClick",
-            "click #cancleSpan": "cancleClick",
+            "click #cancelSpan": "cancelClick",
             "click #saveSpan": "saveClick"
         },
 
@@ -57,52 +57,72 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         removeEdit: function (e) {
             $('#editSpan').remove();
         },
-        cancleClick: function (e) {
+
+        cancelClick: function (e) {
             e.preventDefault();
+            
             var parent = $(e.target).parent().parent();
             $("#" + parent[0].id).removeClass('quickEdit');
             $("#" + parent[0].id).text(this.text);
             $('#editInput').remove();
-            $('#cancleSpan').remove();
+            $('#cancelSpan').remove();
             $('#saveSpan').remove();
+            var currentModel = this.collection.getElement();
+           
+            Backbone.history.navigate("#home/content-Companies/form/" +currentModel.id , { trigger: true });
         },
 
         editClick: function (e) {
-            e.preventDefault();
+            e.preventDefault();           
+           
+            $('.quickEdit #editInput').remove();
+            $('.quickEdit #cancelSpan').remove();
+            $('.quickEdit #saveSpan').remove();
+            $('.quickEdit').text(this.text).removeClass('quickEdit');
+
             var parent = $(e.target).parent().parent();
-            $("#" + parent[0].id).addClass('quickEdit');
-            this.text = $.trim($('#' + parent[0].id).data('text'));
-            $("#" + parent[0].id).text('');
+            $("#" + parent[0].id).addClass('quickEdit');          
+            $('#editSpan').remove();
+            this.text =$('#' + parent[0].id).text();
+            $("#" + parent[0].id).text('');                     
             $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             $('#editInput').val(this.text);
-            $('#editInput').val(this.text);
-            $('#editSpan').remove();
-            $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancle</a></span>');
+           
+            $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
             $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
         },
 
         saveClick: function (e) {
             e.preventDefault();
-            var models = this.collection.models;
+          
             var parent = $(event.target).parent().parent();
-            var objIndex = parent[0].id.split('_');
-            //console.log(objIndex);
+            var objIndex = parent[0].id.split('_');           
             var obj = {};
-            var currentModel = this.collection.getElement();
+            var currentModel = this.collection.getElement();            
             if (objIndex.length > 1) {
-                obj = currentModel.get(objIndex[0]);
-                console.log(obj);
+                obj = currentModel.get(objIndex[0]);                
                 obj[objIndex[1]] = $('#editInput').val();
+                console.log(obj);
             } else if (objIndex.length == 1) {
                 obj[objIndex[0]] = $('#editInput').val();
+                console.log(obj);
             }
+            this.text = $('#editInput').val();
+            $("#" + parent[0].id).text(this.text);
+            $("#" + parent[0].id).removeClass('quickEdit');
+            $('#editInput').remove();
+            $('#cancelSpan').remove();
+            $('#saveSpan').remove();
             currentModel.set(obj);
+      
             currentModel.save({}, {
                 headers: {
                     mid: 39
                 },
                 success: function () {
-                    Backbone.history.navigate("#home/content-Companies/form", { trigger: true });
+                   
+                   
+                    Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id , { trigger: true });
                 }
             });
         },

@@ -40,11 +40,11 @@
                     </div>
                     <div class="half-block left">
                         <p>
-                            <input type="text" id="company" />
+                            <input type="text" id="company" data-id=""/>
                         </p>
                         <p>
                             <select id="customer">
-                                <option selected="selected" value="0">Select...</option>
+                                <option selected="selected" value="">Select...</option>
                                 <% customersCollection.each(function(option){ %>
                                 <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
                                 <% }); %>
@@ -68,7 +68,7 @@
                         <p></p>
                         <p>
                             <select id="salesPerson">
-                                <option selected="selected" value="0">Select...</option>
+                                <option selected="selected" value="">Select...</option>
                                 <% employeesCollection.each(function(option){ %>
                                 <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
                                 <% }); %>
@@ -76,7 +76,7 @@
                         </p>
                         <p>
                             <select id="salesTeam">
-                                <option selected="selected" value="0">Select...</option>
+                                <option selected="selected" value="">Select...</option>
                                 <% departmentsCollection.each(function(option){ %>
                                 <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
                                 <% }); %>
@@ -151,7 +151,7 @@
                         </p>
                         <p>
                             <select id="priority">
-                                <option selected="selected" value="0">Select...</option>
+                                <option selected="selected" value="">Select...</option>
                                 <% priorityCollection.each(function(option){ %>
                                 <option value="<%= option.get('priority') %>"><%= option.get('priority') %></option>
                                 <% }); %>
@@ -224,11 +224,6 @@
                             </p>
                         </div>
                     </div>
-
-
-
-
-
                     <div class="clearfix"></div>
                 </div>
             </div>

@@ -16,11 +16,6 @@
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                this.projectsDdCollection = new ProjectsCollection();
-                this.workflowsDdCollection = new WorkflowsCollection();
-                this.priorityCollection = new PriorityCollection();
-                this.accountsDdCollection = new AccountsDdCollection();
-                this.customersDdCollection = new CustomersDdCollection();
                 this.tasksCollection = options.collection;
                 this.currentModel = this.tasksCollection.getElement();
                 this.render();
@@ -31,7 +26,17 @@
                 "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
                 "click #saveBtn": "saveItem",
                 "click #cancelBtn": "hideDialog",
-                "change #workflowDd": "changeWorkflowValues"
+                "change #workflowDd": "changeWorkflowValues",
+                'keydown': 'keydownHandler'
+            },
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
             },
 
             hideDialog: function () {
@@ -188,6 +193,7 @@
                 var workflowNames = [];
                 this.workflows = [];
                 var my_wId;
+                selectList.append($("<option/>").val('').text('Select...'));
                 dataService.getData(url, { mid: 39 }, function (response) {
                     var options = $.map(response.data, function (item) {
                         switch (type) {
@@ -213,13 +219,13 @@
                 });
             },
             workflowValueOption: function (item) {
-                return this.currentModel.get("workflow").wId === item.wId ?
+                return (this.currentModel.get("workflow") && this.currentModel.get("workflow").wId === item.wId) ?
                     $('<option/>').val(item.wId).text(item.wName).attr('selected', 'selected') :
                     $('<option/>').val(item.wId).text(item.wName);
             },
 
             workflowOption: function (item) {
-                return this.currentModel.get("workflow")._id === item._id ?
+                return (this.currentModel.get("workflow") && this.currentModel.get("workflow")._id === item._id) ?
                       $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
                       $('<option/>').val(item._id).text(item.name);
             },
@@ -229,7 +235,7 @@
                     $('<option/>').val(item._id).text(item.projectName);
             },
             personOption: function (item) {
-                return this.currentModel.get("assignedTo")._id === item._id ?
+                return (this.currentModel.get("assignedTo") && this.currentModel.get("assignedTo")._id === item._id) ?
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
@@ -240,7 +246,6 @@
             },
 
             render: function () {
-                console.log(this.currentModel);
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });

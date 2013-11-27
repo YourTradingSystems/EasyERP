@@ -1,8 +1,9 @@
 define([
     'text!templates/Leads/TopBarTemplate.html',
-    'custom'
+    'custom',
+    'common'
 ],
-    function (ContentTopBarTemplate, Custom) {
+    function (ContentTopBarTemplate, Custom, common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Leads",
@@ -14,14 +15,17 @@ define([
             	"click ul.changeContentIndex a": 'changeItemIndex',
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
-            	"click #top-bar-discardBtn": "discardEvent"
+            	"click #top-bar-discardBtn": "discardEvent",
+            	"click #top-bar-editBtn": "editEvent"
             },
 
             changeContentViewType: function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
             },
             
-            changeItemIndex: Custom.changeItemIndex,
+            changeItemIndex: function (e) {
+                Custom.changeItemIndex(e, "Content", this.contentType, this.collection);
+            },
             
             initialize: function(options){
             	this.actionType = options.actionType;
@@ -37,37 +41,13 @@ define([
             	var collectionLength = this.collection.length;
             	var itemIndex = Custom.getCurrentII();
             	this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                
-                if (this.actionType == "Content")
-                {
-                	$("#createBtnHolder").show();
-                	$("#saveDiscardHolder").hide();
-                }else
-                {
-                	$("#createBtnHolder").hide();
-                	$("#saveDiscardHolder").show();
-                }
-                
-                $("ul.changeContentIndex").hide();
-            	$("#top-bar-editBtn").hide();
-            	$("#top-bar-deleteBtn").hide();
-                
-                if ((viewType == "form") && (this.actionType === "Content"))
-                {
-                	$("ul.changeContentIndex").show();
-                	$("#top-bar-editBtn").show();
-                	$("#top-bar-deleteBtn").show();
-                	$("#template-switcher>span").show();
-                }else
-                if ((viewType == "form") && (this.actionType === "Edit"))
-                {
-                    $("ul.changeContentIndex").show();
-                    $("#template-switcher>span").show();
-                }
-                
+                common.displayControlBtnsByActionType(this.actionType,viewType);
                 return this;
             },
-            
+            editEvent: function (event) {
+                event.preventDefault();
+                this.trigger('editEvent');
+            },
             deleteEvent: function(event)
             {
             	event.preventDefault();

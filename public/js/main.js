@@ -41,9 +41,20 @@ var App = App ||
         relatedUsersDd: "#relatedUsersDd",
         departmentsDd: '#departmentsDd',
         jobPositionDd: '#jobPositionDd',
-        coachDd: '#coachDd'
+        coachDd: '#coachDd',
+        salesPersonDd: "#salesPersonDd",
+        salesTeamDd: "#salesTeamDd",
+        priorityDd: "#priorityDd"
 
     },
+    URL: {
+        customers: "/Customer",
+        salesPersons: "/Employees",
+        salesTeam: "/Departments",
+        priorities: "/Priority",
+        workflows: "/Workflows?id=Lead"
+    },
+
     requestedURL: null,
     Calendar:{
         currentCalendarId:""

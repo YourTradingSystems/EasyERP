@@ -15,7 +15,7 @@ var requestHandler = function (fs, mongoose) {
         department = require("./Modules/Department.js")(logWriter, mongoose, employee.employee, event),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, persons, company),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
 
     function getModules(req, res) {

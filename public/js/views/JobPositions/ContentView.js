@@ -46,7 +46,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                     }
                 case "form":
                     {
-                       /* var itemIndex = Custom.getCurrentII() - 1;
+                        var itemIndex = Custom.getCurrentII() - 1;
                         if (itemIndex > this.collection.models.length - 1) {
                             itemIndex = this.collection.models.length - 1;
                             Custom.setCurrentII(this.collection.models.length);
@@ -59,12 +59,6 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                             var currentModel = this.collection.models[itemIndex];
                             //currentModel.off('change');
                             //currentModel.on('change:workflow', _.bind(this.render, this));
-                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                        }*/
-                        var currentModel = this.collection.getElement();
-                        if (!currentModel) {
-                            this.$el.html('<h2>No jobPosition found</h2>');
-                        } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                         }
                         break;
@@ -101,10 +95,13 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
         },
 
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.collection.length > 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
+
         },
         editItem: function(){
             //create editView in dialog here

@@ -19,23 +19,29 @@ define([
                 "click #top-bar-discardBtn": "discardEvent"
             },
 
+            //changeContentViewType: function (e) {
+            //    var windowLocHash = window.location.hash.split('/')[3];
+            //    var hash;
+            //    if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
+            //        hash = windowLocHash;
+            //    }
+            //    Custom.changeContentViewType(e, hash, this.contentType);
+            //},
             changeContentViewType: function (e) {
-                var windowLocHash = window.location.hash.split('/')[3];
-                var hash;
-                if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-                    hash = windowLocHash;
-                }
-                Custom.changeContentViewType(e, hash, this.contentType);
+                Custom.changeContentViewType(e, this.contentType, this.collection);
             },
-
+            //changeItemIndex: function (e) {
+            //    var windowLocHash = window.location.hash.split('/')[3];
+            //    var actionType = "Content";
+            //    var hash;
+            //    if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
+            //        hash = windowLocHash;
+            //    }
+            //    Custom.changeItemIndex(e, hash, actionType, this.contentType);
+            //},
             changeItemIndex: function (e) {
-                var windowLocHash = window.location.hash.split('/')[3];
                 var actionType = "Content";
-                var hash;
-                if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-                    hash = windowLocHash;
-                }
-                Custom.changeItemIndex(e, hash, actionType, this.contentType);
+                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
             },
 
             initialize: function (options) {
