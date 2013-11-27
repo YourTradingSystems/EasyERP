@@ -1,7 +1,6 @@
 define([
     "jqueryui",
     "text!templates/Opportunities/CreateTemplate.html",
-    "text!templates/Opportunities/selectTemplate.html",
     "collections/Customers/CustomersCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
@@ -11,7 +10,7 @@ define([
     "common",
     "custom"
 ],
-    function (jqueryui, CreateTemplate, selectTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, OpportunityModel, common, Custom) {
+    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, OpportunityModel, common, Custom) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
@@ -99,16 +98,16 @@ define([
                 }
 
                 var customerId = this.$("#customer option:selected").val();
-                var customer = common.toObject(customerId, this.customersCollection);
+                //var customer = common.toObject(customerId, this.customersCollection);
 
                 var email = $.trim($("#email").val());
 
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
-                var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
+                //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-                var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
+                //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var nextActionSt = $.trim($("#nextActionDate").val());
                 var nextActionDate = $.trim($("#nextActionDescription").val());
@@ -156,12 +155,13 @@ define([
                     mobile: mobile,
                     fax: fax,
                 };
-                
-                var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };
+
+                //var workflow = {
+                //    wName: this.$("#workflowNames option:selected").text(),
+                //    name: this.$("#workflow option:selected").text(),
+                //    status: this.$("#workflow option:selected").val(),
+                //};
+                var workflow = this.$("#workflow option:selected").data('id');
 
                 var active = ($("#active").is(":checked")) ? true : false;
 
@@ -172,10 +172,10 @@ define([
                 opportunityModel.save({
                     name: name,
                     expectedRevenue: expectedRevenue,
-                    customer: customer,
+                    customer: customerId,
                     email: email,
-                    salesPerson: salesPerson,
-                    salesTeam: salesTeam,
+                    salesPerson: salesPersonId,
+                    salesTeam: salesTeamId,
                     nextAction: nextAction,
                     expectedClosing: expectedClosing,
                     priority: priority,
@@ -206,16 +206,17 @@ define([
             render: function () {
                 var workflowNames = [];
                 this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('name'));
+                    workflowNames.push(option.get('wName'));
                 });
+                workflowNames = _.uniq(workflowNames);
                 this.$el.html(this.template({
                     customersCollection: this.customersCollection,
                     employeesCollection: this.employeesCollection,
                     departmentsCollection: this.departmentsCollection,
                     priorityCollection: this.priorityCollection,
-                    workflowNames: workflowNames
+                    workflowNames: workflowNames,
+                    workflows: this.workflowsCollection.toJSON()
                 }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
                 return this;
