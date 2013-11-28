@@ -16,9 +16,9 @@ define([
 
             initialize: function (options) {
                 this.companiesCollection = new CompaniesCollection();
-                this.companiesCollection.bind('reset', _.bind(this.render, this));
+//               this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
+  //              this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = options.collection;
                 this.bind('reset', _.bind(this.render, this));
                 this.render();
@@ -95,11 +95,35 @@ define([
             },
 
             render: function () {
-                var personModel = new PersonModel();
-                this.$el.html(this.template({
+                var formString = this.template({
                     companiesCollection: this.companiesCollection,
                     departmentsCollection: this.departmentsCollection
-                }));
+                });
+				var self = this;
+                this.$el = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:true,
+					dialogClass:"create-person-dialog",
+					title: "Edit Person",
+					width:"80%",
+					height:690,
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); $(this).dialog().remove(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						}]
+
+                });
+                var personModel = new PersonModel();
+/*                this.$el.html(this.template({
+                    companiesCollection: this.companiesCollection,
+                    departmentsCollection: this.departmentsCollection
+                }));*/
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 //common.contentHolderHeightFixer();
                 $('#dateBirth').datepicker({
