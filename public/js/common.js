@@ -277,7 +277,7 @@
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
             var self = this;
-            selectList.append($("<option/>").val('').text('Select...'));
+            //selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
                 if (model && model.workflow) {

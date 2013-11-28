@@ -14,12 +14,21 @@ define(function () {
 
         validate: function (attrs) {
             var errors = [];
-            if (attrs.summary.trim() == "") {
+            if (attrs.summary.trim() === "") {
                 errors.push(
                     {
                         name: "Summary",
                         field: "summary",
                         msg: "Summary name can not be empty"
+                    }
+                );
+            }
+            if ($.trim(attrs.project) === "") {
+                errors.push(
+                    {
+                        name: "Project",
+                        field: "project",
+                        msg: "Project should be selected"
                     }
                 );
             }

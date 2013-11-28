@@ -283,11 +283,11 @@ var requestHandler = function (fs, mongoose) {
 
     function createTask(req, res, data) {
         console.log("Requst createTask is success");
-        if (req.session && req.session.loggedIn) {
+        //if (req.session && req.session.loggedIn) {
             project.createTask(data.task, res);
-        } else {
+        /*} else {
             res.send(401);
-        }
+        }*/
     };
 
     function getTasks(req, res, data) {
@@ -456,11 +456,11 @@ var requestHandler = function (fs, mongoose) {
 
     function createCompany(req, res, data) {
         console.log("Requst createCompany is success");
-        if (req.session && req.session.loggedIn) {
+        //if (req.session && req.session.loggedIn) {
             customer.create(data.company, res);
-        } else {
+        /*} else {
             res.send(401);
-        }
+        }*/
     };
 
     function updateCompany(req, res, id, data, remove) {
