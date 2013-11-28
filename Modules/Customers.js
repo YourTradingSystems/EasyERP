@@ -26,7 +26,7 @@
         phones: {
             phone: { type: String, default: ''  },
             mobile: { type: String, default: '' },
-            fax: { type: String, default: '' },
+            fax: { type: String, default: '' }
         },
         contacts: { type: Array, default: [] },
         internalNotes: { type: String, default: '' },

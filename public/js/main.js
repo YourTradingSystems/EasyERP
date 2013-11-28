@@ -30,7 +30,7 @@ var App = App ||
         assignedToDd:"#assignedToDd",
         projectDd:"#projectDd",
         priorityDd: "#priorityDd",
-        workflowDd: "#workflowDd",
+        workflowDd: "#workflowsDd",
         workflowNamesDd: "#workflowNamesDd",
         managerDd: "#managerDd",
         customerDd: "#customerDd",

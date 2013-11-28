@@ -32,7 +32,7 @@ var Persons = function (logWriter, mongoose, findCompany) {
         phones: {
             phone: { type: String, default: '' },
             mobile: { type: String, default: '' },
-            fax: { type: String, default: '' },
+            fax: { type: String, default: '' }
         },
         title: { type: String, default: 'Mister' },
         salesPurchases: {

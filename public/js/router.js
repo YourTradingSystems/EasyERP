@@ -21,6 +21,7 @@ define([
         },
 
         getList: function (contentType, viewType, itemIndex, hash) {
+            console.API.clear();
             if (this.mainView == null) this.main();
             //if (hash) {
             //    if (hash.length != 24) {
@@ -45,9 +46,12 @@ define([
             self.Custom = Custom;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                var start = new Date();
                 var contentCollection = new ContentCollection();
                 contentCollection.bind('reset', _.bind(createViews, self));
                 function createViews() {
+                    console.log("=========================Collection fetch time:" + (new Date() - start)/1000 + " ms");
+
                     contentCollection.unbind('reset');
                     //this.Custom.setCurrentCL(contentCollection.models.length);
 
@@ -89,10 +93,11 @@ define([
 
                     var contentView = new ContentView({ collection: contentCollection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
-
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
+
                     if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads")
                         topBarView.bind('editEvent', contentView.editItem, contentView);
+                        topBarView.bind('createEvent', contentView.createItem, contentView);
                     if (contentType === "LeadsWorkflow")
                         topBarView.bind('createEvent', contentView.createItem, contentView);
 
