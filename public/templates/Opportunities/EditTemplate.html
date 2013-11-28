@@ -7,7 +7,7 @@
             </p>
             <p>
                 <label for="expectedRevenue">Expected Revenue</label>
-                <input type="text" id="expectedRevenueValue" value="<%=model.expectedRevenue.value%>" />
+                <input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" />
                 <%=model.expectedRevenue.currency%>at
                 <input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" />%
             </p>

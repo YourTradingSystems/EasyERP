@@ -257,7 +257,7 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
+                        return $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
                     });
                 }
                 var wNames = $.map(response.data, function (item) {
