@@ -41,7 +41,6 @@ define([
             "click #cancelSpan": "cancelClick",
             "click #saveSpan": "saveClick"
         },
-
         quickEdit: function (e) {
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
@@ -80,9 +79,9 @@ define([
             this.text = $('#' + parent[0].id).text();
             $("#" + parent[0].id).text('');   
             if ($("#" + parent[0].id).hasClass('date')) {              
-                $("#" + parent[0].id).append('<input id="editInput1" type="text" class="left hasDatepicker"/>');
+                $("#" + parent[0].id).append('<input id="editInput1" type="text" class="left has-datepicker"/>');
               
-                $('.hasDatepicker').datepicker();
+               $('.has-datepicker').datepicker();
             } else {
                 $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             }
@@ -339,7 +338,6 @@ define([
             }, 300, function () { });
         },
         render: function () {
-          
             //Custom.setCurrentCL(this.collection.length);
             console.log('Render Persons View');
             var viewType = Custom.getCurrentVT(),
@@ -388,6 +386,8 @@ define([
                             );
 
                         }
+
+						
                         break;
                     }
             }
@@ -448,6 +448,7 @@ define([
                         });
                         break;
                     }
+
             }
         }
     });

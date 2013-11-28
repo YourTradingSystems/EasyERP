@@ -821,6 +821,9 @@ h3 {
 .job-info{
 	.dl-auto(200px);
 }
+.app-info{
+	.dl-auto(150px);
+}
 .job-create-info{
 	.dl-auto(220px);
 }
@@ -2141,7 +2144,9 @@ button {
 #createPersonsForm ,
 #employeeForm,
 #createJobPositionForm,
-#editJobPositionForm{
+#applicationForm,
+#editJobPositionForm,
+#createApplicationForm{
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2197,6 +2202,7 @@ button {
     }
 
     input[type='text'],
+    input[type='email'],
     input[type='number'] {
         .border-radius(0px);
         border: 1px solid #E2E9EF;
@@ -2216,6 +2222,9 @@ button {
             border: 1px solid rgba(121, 187, 238, 0.75) !important;
         }
     }
+}
+#createApplicationForm #otherInfo{
+	margin-top:10px;
 }
 #createJobPositionForm #description,
 #editJobPositionForm #description{
