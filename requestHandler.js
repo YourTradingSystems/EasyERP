@@ -6,7 +6,6 @@ var requestHandler = function (fs, mongoose) {
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
         events = require("./Modules/Events.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
-        persons = require("./Modules/Persons.js")(logWriter, mongoose, findCompany),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
@@ -158,7 +157,7 @@ var requestHandler = function (fs, mongoose) {
         try {
             console.log("Requst getCustomer is success");
             if (req.session && req.session.loggedIn) {
-                persons.getCustomers(company, res);
+                customer.getCustomers(res);
             } else {
                 res.send(401);
             }

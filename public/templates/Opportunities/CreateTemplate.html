@@ -21,7 +21,7 @@
                 <p>
                     <label for="customer">Customer</label>
                     <select id="customer">
-                        <option selected="selected" value="0">Select...</option>
+                        <option selected="selected" value="">Select...</option>
                         <% customersCollection.each(function(option){ %>
 
                         <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
@@ -59,7 +59,7 @@
                 <p>
                     <label for="salesPerson">Salesperson</label>
                     <select id="salesPerson">
-                        <option selected="selected" value="0">Select...</option>
+                        <option selected="selected" value="">Select...</option>
                         <% employeesCollection.each(function(option){ %>
 
                         <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
@@ -70,7 +70,7 @@
                 <p>
                     <label for="salesTeam">Sales Team</label>
                     <select id="salesTeam">
-                        <option selected="selected" value="0">Select...</option>
+                        <option selected="selected" value="">Select...</option>
                         <% departmentsCollection.each(function(option){ %>
 
                         <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>

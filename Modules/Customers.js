@@ -321,7 +321,7 @@
             });
         },
 
-        getCustomers: function (company, response) {
+        getCustomers: function (response) {
             var res = {};
             res['data'] = [];
             var query = customer.find({ 'salesPurchases.isCustomer': true });
@@ -332,15 +332,8 @@
                     logWriter.log("customer.js getCustomersForDd customer.find " + err);
                     response.send(500, { error: "Can't find Customer" });
                 } else {
-                    for (var i in customers) {
-                        var obj = {};
-                        obj = customers[i];
-                        obj.name = obj.name.first + ' ' + obj.name.last;
-                        obj.type = 'customer';
-                        res['data'].push(obj);
-                    }
-                    //response.send(res);
-                    company.getCustomers(res, response);
+                    res['data'] = customers;
+                    response.send(res);
                 }
             });
         },

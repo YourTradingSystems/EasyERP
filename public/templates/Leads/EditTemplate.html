@@ -94,8 +94,8 @@
                         </p>
                     </div>
                     <div class="half-block left">
-                        <p><input type="text" class="name" id="first" value="<%=contactName.first%>" /></p>
-                        <p><input type="text" class="name" id="last" value="<%=contactName.last%>" /></p>
+                        <p><input type="text" class="name" id="first" value="<%=(contactName) ? contactName.first : ''%>" /></p>
+                        <p><input type="text" class="name" id="last" value="<%=(contactName) ? contactName.last : ''%>" /></p>
                         <p><input type="text" id="email" value="<%=email%>" /></p>
                         <p><input type="text" id="func" value="<%=func%>" /></p>
                         <p><input type="text" id="phone" value="<%=phones.phone%>" /></p>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <span><%=workflow.status%></span>
+                                <span><%=(workflow) ? workflow.status : ''%></span>
                             </p>
                         </div>
                     </div>

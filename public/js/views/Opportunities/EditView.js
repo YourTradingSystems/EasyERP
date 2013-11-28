@@ -1,34 +1,21 @@
 ﻿define([
     "text!templates/Opportunities/EditTemplate.html",
     "text!templates/Opportunities/editSelectTemplate.html",
-    "collections/Opportunities/OpportunitiesCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Employees/EmployeesCollection",
-    "collections/Departments/DepartmentsCollection",
-    "collections/Priority/TaskPriority",
-    "collections/Workflows/WorkflowsCollection",
     "common",
-    "custom"
+    "custom",
+    'dataService'
 ],
-    function (EditTemplate, editSelectTemplate, OpportunitiesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, WorkflowsCollection, common, Custom) {
+    function (EditTemplate, editSelectTemplate, common, Custom, dataService) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
+            template: _.template(EditTemplate),
 
             initialize: function (options) {
-                this.customersCollection = new CustomersCollection();
-                this.customersCollection.bind('reset', _.bind(this.render, this));
-                this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.priorityCollection = new PriorityCollection();
-                this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
+                _.bindAll(this, "saveItem");
                 this.opportunitiesCollection = options.collection;
-                this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+                this.currentModel = this.opportunitiesCollection.getElement();
                 this.render();
             },
 
@@ -38,7 +25,7 @@
                 "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows"
             },
-            
+
             changeWorkflows: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
 
@@ -230,61 +217,101 @@
                 }
             },
 
-           /* changeWorkflow: function (e) {
-                var mid = 39;
-                var name = '', status = '';
-                var length = this.workflowsCollection.models.length;
-                var workflow = {};
-                if ($(e.target).attr("id") == "won") {
-                    workflow = this.workflowsCollection.models[length - 2];
-                }
-                else {
-                    workflow = this.workflowsCollection.models[length - 1];
-                }
-                name = workflow.get('name');
-                status = workflow.get('status');
-                var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
-                var ob = {
-                    workflow: {
-                        name: name,
-                        status: status
+            hideDialog: function () {
+                $(".edit-opportunity-dialog").remove();
+            },
+            populateDropDown: function (type, selectId, url, val) {
+                var selectList = $(selectId);
+                var self = this;
+                selectList.append($("<option/>").val('').text('Select...'));
+                dataService.getData(url, { mid: 39 }, function (response) {
+                    if (type == 'workflowNames') {
+                        response.data = _.uniq(_.map(response.data, function (val) {
+                            return val.wName;
+                        }));
                     }
-                };
+                    var options = $.map(response.data, function (item) {
+                        switch (type) {
+                            case "customers":
+                                return self.customerOption(item);
+                            case "salesPersons":
+                                return self.salesPersonsOption(item);
+                            case "salesTeam":
+                                return self.salesTeamOption(item);
+                            case "priority":
+                                return self.priorityOption(item);
+                            case "workflows":
+                                return self.workflowOption(item);
+                            case "workflowNames":
+                                return self.workflowNameOption(item);
 
-                model.set(ob);
-                model.save({}, {
-                    headers: {
-                        mid: mid
-                    }
+                        }
+                    });
+                    selectList.append(options);
+
+                    if (typeof val != "undefined")
+                        selectList.val(val).trigger("change");
                 });
-            },*/
+            },
+            workflowNameOption: function (item) {
+                return this.currentModel.get("workflow") ?
+                    $('<option/>').text(item).attr('selected', 'selected') :
+                    $('<option/>').text(item);
+            },
+            workflowOption: function (item) {
+                return (item && this.currentModel.get("workflow") && this.currentModel.get("workflow") === item._Id) ?
+                    $('<option/>').val(item.status).text(item.name).attr('selected', 'selected').attr('data-id', item._id) :
+                    $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
+            },
+            customerOption: function (item) {
+                return (item && this.currentModel.get("customer") && this.currentModel.get("customer").id === item._id) ?
+                    $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
+                    $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
+            },
+            salesPersonsOption: function (item) {
+                return (item && this.currentModel.get("salesPerson") && this.currentModel.get("salesPerson").id === item._id) ?
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
+                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+            },
+            salesTeamOption: function (item) {
+                return (item && this.currentModel.get("salesTeam") && this.currentModel.get("salesTeam")._id === item._id) ?
+                    $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
+                    $('<option/>').val(item._id).text(item.departmentName);
+            },
+            priorityOption: function (item) {
+                return this.currentModel.id === item._id ?
+                    $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
+                    $('<option/>').val(item._id).text(item.priority);
+            },
 
             render: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                }
-                else {
-                    var currentModel = this.opportunitiesCollection.models[itemIndex];
-                    var workflowModel = this.workflowsCollection.findWhere({ name: currentModel.toJSON().workflow.wName });
-                    this.$el.html(_.template(EditTemplate, {
-                        model: currentModel.toJSON(),
-                        customersCollection: this.customersCollection,
-                        employeesCollection: this.employeesCollection,
-                        departmentsCollection: this.departmentsCollection,
-                        priorityCollection: this.priorityCollection,
-                        workflowsCollection: this.workflowsCollection
-                    }));
-                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(workflowModel.toJSON().value) }));
-                    var nextAction = currentModel.get('nextAction').date;
-                    //if (nextAction) {
-                    //    nextAction['date'] = this.ISODateToDate(nextAction);
-                    //    currentModel.set({ nextAction: nextAction }, { silent: true });
-                    //}
-                    currentModel.on('change', this.render, this);
-                }
+                var formString = this.template({ model: this.currentModel.toJSON() });
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-opportunity-dialog",
+                    width: 900,
+                    height: 650,
+                    buttons: {
+                        save: {
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
+                });
                 $('#nextActionDate').datepicker();
+                this.populateDropDown("customers", App.ID.customerDd, App.URL.customers);
+                this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
+                this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
+                this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
+                this.populateDropDown("workflows", App.ID.workflowDd, '/Workflows?id=Opportunity');
+                this.populateDropDown("workflowNames", App.ID.workflowNamesDd, '/Workflows?id=Opportunity');
+                this.delegateEvents(this.events);
                 return this;
             }
 

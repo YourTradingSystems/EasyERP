@@ -2,15 +2,14 @@ define([
     'text!templates/Opportunities/list/ListTemplate.html',
     'text!templates/Opportunities/form/FormTemplate.html',
     'text!templates/Opportunities/kanban/WorkflowsTemplate.html',
-    'collections/Opportunities/OpportunitiesCollection',
-    'collections/Leads/LeadsCollection',
     'collections/Workflows/WorkflowsCollection',
     'views/Opportunities/kanban/KanbanItemView',
     'custom',
-    'common'
+    'common',
+    'views/Opportunities/EditView'
 ],
 
-function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection, LeadsCollection, WorkflowsCollection, OpportunitiesKanbanItemView, Custom, common) {
+function (ListTemplate, FormTemplate, WorkflowsTemplate, WorkflowsCollection, OpportunitiesKanbanItemView, Custom, common, EditView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -18,8 +17,6 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
             var that = this;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
             this.workflowsCollection.bind('reset', _.bind(this.render, this));
-            this.opportunitiesCollection = new OpportunitiesCollection();
-            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
         },
@@ -149,10 +146,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                     var model = that.collection.get(ui.item.attr("id"));
                     var column = ui.item.closest(".column");
                     var ob = {
-                        workflow: {
-                            name: column.data("name"),
-                            status: column.data("status")
-                        }
+                        workflow: column.data("id")
                     };
 
                     model.set(ob);
@@ -167,6 +161,11 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, OpportunitiesCollection
                 }
             }).disableSelection();
             return this;
+        },
+
+        editItem: function () {
+            //create editView in dialog here
+            new EditView({ collection: this.collection });
         },
 
         changeWorkflow: function (e) {
