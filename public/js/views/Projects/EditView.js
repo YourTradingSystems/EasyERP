@@ -10,7 +10,7 @@ define([
             contentType: "Projects",
             template: _.template(EditTemplate),
             initialize: function (options) {
-                _.bindAll(this, "render");
+                _.bindAll(this, "render", "saveItem");
                 this.projectsCollection = options.collection;
                 this.currentModel = this.projectsCollection.getElement();
                 this.render();
@@ -18,8 +18,6 @@ define([
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
-                "click #saveBtn": "saveItem",
-                "click #cancelBtn": "hideDialog",
                 "change #workflowDd": "changeWorkflowValues"
             },
             hideDialog: function () {
@@ -117,22 +115,31 @@ define([
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
-
+                var self = this;
                 this.$el = $(formString).dialog({
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
                     dialogClass: "edit-project-dialog",
                     width: "80%",
-                    height: 225
+                    height: 225,
+                    buttons:{
+                        save:{
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
                 });
-                var that = this;
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
-
-
                 this.delegateEvents(this.events);
 
                 return this;
