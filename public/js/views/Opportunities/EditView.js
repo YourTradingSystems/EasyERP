@@ -293,8 +293,8 @@
                 });
                 $('#nextActionDate').datepicker();
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, this.currentModel);
-                this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
-                this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
+                common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, this.currentModel);
+                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, this.currentModel);
                 this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
                 this.populateDropDown("workflows", App.ID.workflowNamesDd, '/Workflows?id=Opportunity');
                 this.delegateEvents(this.events);

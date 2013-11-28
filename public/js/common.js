@@ -143,13 +143,13 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && model.projectmanager){
+                if(model && (model.projectmanager || model.salesPerson)){
                     options = $.map(response.data, function (item) {
-                        return model.projectmanager._id === item._id ?
+                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
-                } else{
+                } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                     });
@@ -185,13 +185,13 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model&&model.department){
+                if(model && (model.department || model.salesTeam)){
                     options = $.map(response.data, function (item) {
-                        return model.department._id === item._id ?
+                        return ((model.department && model.department._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
-                } else{
+                } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.departmentName);
                     });
@@ -199,7 +199,7 @@
                 selectList.append(options);
 
             });
-        }
+        };
 
         var populateCustomers = function (selectId, url, model) {
             var selectList = $(selectId);
