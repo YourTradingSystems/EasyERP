@@ -6,22 +6,16 @@
           <dl class="person-info">
 			<dt><label for="projectName">Project Name :</label></dt><dd><input type="text" class="title-input blueback" name="projectName" id="projectName" required /></dd>
 			<dt><label for="projectShortDesc">Project Short Description :</label></dt><dd><input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required /></dd>
-			<dt><label for="managerDd">Project Manager :</label></dt>
+			<dt><label for="projectManagerDD">Project Manager :</label></dt>
 			<dd>
-			  <select id="managerDd">
-                <option selected="selected" value="">Select...</option>
-                <% accountDdCollection.each(function(option){ %>
-                <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-                <% }); %>
+			  <select id="projectManagerDD">
+
               </select>
 			</dd>
 			<dt><label for="customerDd">Project Customer :</label></dt><dd>
 
 			  <select id="customerDd">
-                <option selected="selected" value="">Select...</option>
-                <% customersDdCollection.each(function(option){ %>
-                <option value="<%= option.get('_id') %>"><%= option.get('name')%> (<%= option.get('type') %>)</option>
-                <% }); %>
+
               </select>
 
 			</dd>
@@ -29,25 +23,22 @@
 		</div>
         <div class="half-block left">
           <dl class="person-info">
-			 <dt><label for="workflowNames">Workflow Name:</label></dt><dd>
-            <select id="workflowNames">
-             <% _.each(workflowNames, function(item){ %>
-              <option><%= item %></option>
-              <% }); %>
+			 <dt><label for="workflowNamesDd">Workflow Name:</label></dt><dd>
+            <select id="workflowNamesDd">
+
             </select>
 
 		  </dd>
             
-		    <dt><label for="workflow">Workflow:</label></dt><dd id="selectWorkflow">
-		                                                                   
+		    <dt><label for="workflowsDd">Workflow:</label></dt><dd id="selectWorkflow">
+		        <select id="workflowsDd">
+
+		        </select>
 		    </dd>
 			<dt><label for="usereditDd">Users Can Edit Project :</label></dt>
 			<dd>
-              <select id="usereditDd" size="3" multiple>
-                <option selected="selected" value="">No one...</option>
-                <% accountDdCollection.each(function(option){ %>
-                <option value="<%= option.get('_id') %>"><%= option.get('name').first + ' ' + option.get('name').last%></option>
-                <% }); %>
+              <select id="userEditDd" size="3" multiple>
+
               </select>
 
 			</dd>

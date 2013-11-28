@@ -11,18 +11,10 @@ define([
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                /* this.accountsDdCollection = new AccountsDdCollection();
-                 this.customersDdCollection = new CustomersCollection();
-                 this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});*/
                 this.projectsCollection = options.collection;
                 this.currentModel = this.projectsCollection.getElement();
                 this.render();
-
-                /*this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.customersDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.workflowsDdCollection.bind('reset', _.bind(this.renderView, this));*/
             },
-
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
@@ -82,9 +74,9 @@ define([
                 var data = {
                     projectName: projectName,
                     projectShortDesc: projectShortDesc,
-                    customer: customer,
-                    projectmanager: projectmanager,
-                    workflow: workflow,
+                    customer: customer ? customer : null,
+                    projectmanager: projectmanager ? projectmanager: null,
+                    workflow: workflow ? workflow : null,
                     teams: {
                         users: users
                     }
@@ -120,11 +112,12 @@ define([
                         this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ));
                 },this);
             },
-            populateDropDown: function (type, selectId, url,val) {
+            populateDropDown: function (type, selectId, url) {
                 var selectList = $(selectId);
                 var self = this;
                 var workflowNames = [];
                 this.workflows = [];
+                selectList.append($('<option/>').text('Select...'));
                 dataService.getData(url, { mid: 39 }, function (response) {
                     var options = $.map(response.data, function (item) {
                         switch (type) {
@@ -147,20 +140,18 @@ define([
                         }
                     });
                     selectList.append(options);
-                    if (typeof val != "undefined")
-                        selectList.val(val).trigger("change");
                 });
             },
             userEditOption: function (item) {
                 return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
             workflowOption: function (item) {
-                return this.currentModel.get("workflow").wId === item.wId ?
+                return (this.currentModel.get("workflow") && this.currentModel.get("workflow").wId === item.wId) ?
                     $('<option/>').val(item.wId).text(item.wName).attr('selected', 'selected') :
                     $('<option/>').val(item.wId).text(item.wName);
             },
             customerOption: function (item) {
-                return this.currentModel.get("customer")._id === item._id ?
+                return (this.currentModel.get("customer") && this.currentModel.get("customer")._id === item._id) ?
                     $('<option/>').val(item._id).text(item.name + " (" + item.type + ")").attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name + " (" + item.type + ")");
             },
@@ -171,13 +162,11 @@ define([
 						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
 				}
 				else{
-					return $('<option/>')
+					return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
 				}
             },
 
             render: function () {
-                console.log(this.currentModel);
-
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
@@ -191,10 +180,10 @@ define([
                     height: 225
                 });
                 var that = this;
-                this.populateDropDown("person", App.ID.managerDd, "/getPersonsForDd");
+                this.populateDropDown("person", App.ID.managerSelect, "/getPersonsForDd");
                 this.populateDropDown("customer", App.ID.customerDd, "/Customer");
                 this.populateDropDown("userEdit", App.ID.userEditDd, "/getPersonsForDd");
-                this.populateDropDown("workflow", App.ID.workflowDd, "/projectWorkflows", that.currentModel.toJSON().workflow._id);
+                this.populateDropDown("workflow", App.ID.workflowDd, "/projectWorkflows");
 
 
                 this.delegateEvents(this.events);

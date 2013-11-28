@@ -6,9 +6,10 @@ define([
     'views/Projects/EditView',
     'custom',
     "GanttChart",
-    'common'
+    'common',
+    'views/Projects/CreateView'
 ],
-    function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, EditView, Custom, GanttChart, common) {
+    function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, EditView, Custom, GanttChart, common, CreateView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -24,6 +25,9 @@ define([
                 "click td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
 
+            createItem: function () {
+                new CreateView();
+            },
             editItem: function () {
                 //create editView in dialog here
                 new EditView({ collection: this.collection });
@@ -68,11 +72,6 @@ define([
                         }
                     case "form":
                         {
-                            //var itemIndex = Custom.getCurrentII() - 1;
-                            //if (itemIndex > models.length - 1) {
-                            //    itemIndex = models.length - 1;
-                            //    Custom.setCurrentII(models.length);
-                            //}
                             var currentModel = this.collection.getElement();
                             if (!currentModel) {
                                 this.$el.html('<h2>No projects found</h2>');
@@ -82,8 +81,7 @@ define([
                                 //} else {
                                 //    currentModel = models[itemIndex];
                                 //}
-                                //this.collection.setElement(currentModel);
-                                currentModel.on('change', this.render, this);
+
                                 this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             }
 
