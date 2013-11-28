@@ -45,8 +45,8 @@ define([
                 var mid = 39;
 
                 var customer = $("#customerDd option:selected").val();
-                var projectmanager = $("#managerDd option:selected").val();
-                var workflow = $("#workflow option:selected").data("id");
+                var projectmanager = $("#projectManagerDD option:selected").val();
+                var workflow = $("#workflowsDd option:selected").data("id");
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
                     users.push({
