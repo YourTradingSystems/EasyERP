@@ -1,111 +1,64 @@
-﻿<div class="formHeader">
-    <button id="won" class="red">Mark Won</button>
-    <button id="lost" class="red">Mark Lost</button>
-    <ul class="breadcrumb">
-    </ul>
-</div>
-<div class="form-holder">
-
+﻿<div class="form-holder">
     <form method="post" action="" id="leadForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <p>
                 <label for="name">Subject </label>
                 <input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required />
             </p>
-
             <p>
                 <label for="expectedRevenue">Expected Revenue</label>
                 <input type="text" id="expectedRevenueValue" value="<%=model.expectedRevenue.value%>" />
                 <%=model.expectedRevenue.currency%>at
                 <input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" />%
             </p>
-
             <p>
                 <label for="customer">Customer</label>
-                <select id="customer">
-                    <option selected="selected" value="0">Select...</option>
-                    <% customersCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.customer.id)?"selected='selected'":''%>><%= option.get('name') %></option>
-                    <% }); %>
-               
-                </select>
+                <select id="customerDd"></select>
             </p>
-
             <p>
                 <label for="email">Email </label>
-                <input type="email" id="email" value="<%=model.email%>"/>
+                <input type="email" id="email" value="<%=model.email%>" />
             </p>
-
             <p>
                 <label for="phone">Phone </label>
-                <input type="text" id="phone" value="<%=model.phones.phone%>"/>
-            </p>
-            
-            <p>
-                <label for="workflowNames">Workflow Names </label>
-                <select id="workflowNames">
-                    <option selected="selected" value="0">Select...</option>
-                    <% workflowsCollection.each(function(option){ %>
-                    <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
-                    <% }); %>
-                </select>
-            </p> 
-            <p id="selectWorkflow">
-                           
+                <input type="text" id="phone" value="<%=model.phones.phone%>" />
             </p>
 
             <p>
+                <label for="workflowNamesDd">Workflow Names </label>
+                <select id="workflowNamesDd"></select>
+            </p>
+            <p>
+                <label for="workflowDd"> Workflows </label>
+                <select id="workflowDd"></select>
+
+            </p>
+            <p>
                 <label for="salesPerson">Salesperson</label>
-                <select id="salesPerson">
-                    <option selected="selected" value="0">Select...</option>
-                    <% employeesCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.salesPerson.id)?"selected='selected'":''%>><%= option.get('name').first %> <%= option.get('name').last %></option>
-                    <% }); %>
-               
-                </select>
+                <select id="salesPersonDd"></select>
             </p>
             <p>
                 <label for="salesTeam">Sales Team</label>
-                <select id="salesTeam">
-                    <option selected="selected" value="0">Select...</option>
-                    <% departmentsCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')===model.salesTeam.id)?"selected='selected'":''%>><%= option.get('departmentName')%></option>
-                    <% }); %>
-               
-                </select>
+                <select id="salesTeamDd"></select>
             </p>
-
             <p>
                 <label for="nextAction">Next Action </label>
-                <input type="text" id="nextActionDate" value="<%=model.nextAction.date%>"/>
+                <input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" />
                 <input type="text" id="nextActionDescription" value="<%=model.nextAction.desc%>" />
             </p>
-
             <p>
                 <label for="expectedClosing">Expected Closing </label>
-                <input type="text" id="expectedClosing" value="<%=model.expectedClosing%>"/>
+                <input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" />
             </p>
-
             <p>
                 <label for="priority">Priority </label>
-                <select id="priority">
-                    <option selected="selected" value="0">Select...</option>
-                    <% priorityCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('priority') %>" <%=(option.get('priority')===model.priority)?"selected='selected'":''%>><%= option.get('priority')%></option>
-                    <% }); %>
-               
-                </select>
+                <select id="priorityDd"></select>
             </p>
-
             <p>
                 <label for="categories">Categories</label>
             </p>
-            
-             <div id="tabs">
+
+            <div id="tabs">
                 <div>
                     <ul id="tabList" class="inner">
                         <li>
@@ -151,9 +104,8 @@
                             </p>
                         </div>
                         <div class="half-block left">
-
                             <p>
-                                <input type="text" id="company" value="<%=model.company%>" disabled/>
+                                <input type="text" id="company" value="<%=model.company%>" disabled />
                             </p>
                             <p>
                                 <input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" />
@@ -164,7 +116,7 @@
                             </p>
                             <p></p>
                             <p>
-                                <input type="checkbox" <%= (model.optout)? 'checked="checked"':''%> id="optout" />
+                                <input type="checkbox" id="optout"><%= (model.optout)? 'checked="checked"':''%>  />
                             </p>
                         </div>
                     </div>
@@ -189,17 +141,17 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                               <input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled/>
-                               <input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled/>
+                                <input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled />
+                                <input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled />
                             </p>
                             <p>
-                               <input type="text" id="func" value="<%=model.func%>"/>
+                                <input type="text" id="func" value="<%=model.func%>" />
                             </p>
                             <p>
-                               <input type="text" id="mobile" value="<%=model.phones.mobile%>"/>
+                                <input type="text" id="mobile" value="<%=model.phones.mobile%>" />
                             </p>
                             <p>
-                                <input type="text" id="fax" value="<%=model.phones.fax%>"/>
+                                <input type="text" id="fax" value="<%=model.phones.fax%>" />
                             </p>
                             <p></p>
                         </div>
@@ -216,10 +168,10 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox" <%= (model.active)? 'checked="checked"':''%> id="active" />
+                                <input type="checkbox" id="active"><%= (model.active)? 'checked="checked"':''%>  />
                             </p>
                             <p>
-                                <input type="text" id="reffered" value="<%=model.reffered%>"/>
+                                <input type="text" id="reffered" value="<%=model.reffered%>" />
                             </p>
                         </div>
                     </div>

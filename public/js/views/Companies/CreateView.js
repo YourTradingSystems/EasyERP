@@ -17,8 +17,6 @@ define([
             initialize: function (options) {
                 this.employeesCollection = new EmployeesCollection();
                 this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
 
@@ -34,6 +32,9 @@ define([
                 }
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
+            },
+            hideDialog: function () {
+                $(".create-company-dialog").remove();
             },
 
             saveItem: function () {
@@ -113,6 +114,7 @@ define([
                         },
                         wait: true,
                         success: function (model) {
+							self.hideDialog();
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                         },
                         error: function () {
@@ -124,10 +126,30 @@ define([
 
             render: function () {
                 var companyModel = new CompanyModel();
-                this.$el.html(this.template({
+                var formString = this.template({
                     employeesCollection: this.employeesCollection,
-                    departmentsCollection: this.departmentsCollection
-                }));
+                });
+				var self = this;
+                this.$el = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:true,
+					dialogClass:"create-company-dialog",
+					title: "Edit Company",
+					width:"80%",
+					height:690,
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						}]
+
+                });
+                common.populateDepartments(App.ID.departmentDd, "/Departments");
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
                 $('#date').datepicker({ dateFormat: "d M, yy" });
                 return this;

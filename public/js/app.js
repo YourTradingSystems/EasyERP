@@ -13,6 +13,13 @@ define([
             //dateFormat:"dd/mm/yy"
             firstDay: 1
         });
+        if (typeof console._commandLineAPI !== 'undefined') {
+            console.API = console._commandLineAPI;
+        } else if (typeof console._inspectorCommandLineAPI !== 'undefined') {
+            console.API = console._inspectorCommandLineAPI;
+        } else if (typeof console.clear !== 'undefined') {
+            console.API = console;
+        }
         $.extend($.ui.dialog.prototype.options, {
             modal:true,
             resizable: false,

@@ -121,8 +121,7 @@ define([
                console.log('render persons dialog');
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
-                    companiesCollection: this.companiesCollection,
-                    departmentsCollection: this.departmentsCollection
+
                 });
                 this.$el = $(formString).dialog({
                     autoOpen:true,
@@ -132,7 +131,10 @@ define([
 					width:"80%",
 					height:690
                 });
-                this.populateDropDown("company", App.ID.companiesDd, "/Companies");
+                common.populateCompanies(App.ID.companiesDd, "/Companies",this.currentModel.toJSON());
+                common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());
+
+//                this.populateDropDown("company", App.ID.companiesDd, "/Companies");
                 //this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
 
                 this.delegateEvents(this.events);

@@ -1,13 +1,10 @@
 define([
     "text!templates/Projects/CreateTemplate.html",
     "text!templates/Projects/selectTemplate.html",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Workflows/WorkflowsCollection",
     "models/ProjectsModel",
     "common"
 ],
-    function (CreateTemplate, selectTemplate, AccountsDdCollection, CustomersCollection, WorkflowsCollection, ProjectModel, common) {
+    function (CreateTemplate, selectTemplate, ProjectModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,16 +12,9 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
-                this.accountDdCollection = new AccountsDdCollection();
-                this.accountDdCollection.bind('reset', _.bind(this.render, this));
-                this.customersDdCollection = new CustomersCollection();
-                this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsDdCollection = new WorkflowsCollection({ id: 'Project' });
-                this.workflowsDdCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));
-                this.projectsCollection = options.collection;
-                this.projectsCollection.bind('reset', _.bind(this.render, this));
-                this.render = _.after(3, this.render);
+                _.bindAll(this, "saveItem");
+                this.model = new ProjectModel();
+                this.render();
             },
 
             events: {
@@ -51,33 +41,12 @@ define([
             },
 
             saveItem: function () {
-                debugger;
                 var self = this;
                 var mid = 39;
 
-                var projectModel = new ProjectModel();
-
-                /* var projectName = $("#projectName").val();
-                 if ($.trim(projectName) == "") {
-                     projectName = "New Project";
-                 }*/
-
-                var customer = $(this.el).find("#customerDd option:selected").val();
-                //var customer = common.toObject(idCustomer, this.customersDdCollection);
-
-                var projectmanager = $("#managerDd option:selected").val();
-                //var projectmanager = common.toObject(idManager, this.accountDdCollection);
-
-                //var idWorkflow = $("#workflowDd option:selected").val();
-                //var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
-
-                //var workflow = {
-                //    wName: this.$("#workflowNames option:selected").text(),
-                //    name: this.$("#workflow option:selected").text(),
-                //    status: this.$("#workflow option:selected").val(),
-                //};
-                var workflow = this.$("#workflow option:selected").data("id");
-
+                var customer = $("#customerDd option:selected").val();
+                var projectmanager = $("#projectManagerDD option:selected").val();
+                var workflow = $("#workflowsDd option:selected").data("id");
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
                     users.push({
@@ -86,12 +55,12 @@ define([
                     });
                 });
 
-                projectModel.save({
+                this.model.save({
                     projectName: $("#projectName").val(),
                     projectShortDesc: $("#projectShortDesc").val(),
-                    customer: customer,
-                    projectmanager: projectmanager,
-                    workflow: workflow,
+                    customer: customer ? customer : "",
+                    projectmanager: projectmanager ? projectmanager : "",
+                    workflow: workflow ? workflow : "",
                     teams: {
                         users: users
                     }
@@ -100,8 +69,9 @@ define([
                     headers: {
                         mid: mid
                     },
-                    wait: true,
+                    //wait: true,
                     success: function (model) {
+                        self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function (model, statusText, xhr) {
@@ -110,19 +80,38 @@ define([
                 });
             },
 
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
+
             render: function () {
-                var workflowNames = [];
-                this.workflowsDdCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('wName'));
+                var formString = this.template();
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "50%",
+                    height: 513,
+                    title: "Create Project",
+                    buttons:{
+                        save:{
+                            text:"Save",
+                            class:"btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text:"Cancel",
+                            class:"btn",
+                            click: function(){
+                                self.hideDialog();
+                            }
+                        }
+                    }
                 });
-                var arr = _.uniq(workflowNames);
-                this.$el.html(this.template({
-                    accountDdCollection: this.accountDdCollection,
-                    customersDdCollection: this.customersDdCollection,
-                    workflowsDdCollection: this.workflowsDdCollection,
-                    workflowNames: arr
-                }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsDdCollection.toJSON() }));
+                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
+                common.populateCustomers(App.ID.customerDd, "/Customer");
+                common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
+                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+                this.delegateEvents(this.events);
                 return this;
             }
 

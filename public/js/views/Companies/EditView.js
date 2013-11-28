@@ -195,7 +195,8 @@ define([
                     modal: true
                 });
                 console.log(this.currentModel.get("salesPurchases"));
-
+					$('#text').datepicker({ dateFormat: "d M, yy" });
+								 
                 this.populateDropDown("salesPerson", App.ID.salesPerson, "/getSalesPerson");
                 this.populateDropDown("salesTeam", App.ID.salesTeam, "/getSalesTeam");
 
@@ -203,7 +204,7 @@ define([
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
 
-                $('#text').datepicker({ dateFormat: "d M, yy" });
+
 
                 this.delegateEvents(this.events);
                 return this;

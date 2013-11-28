@@ -24,9 +24,9 @@
         jobPosition: { type: String, default: '' },
         skype: { type: String, default: '' },
         phones: {
-            phone: { type: String, default: '' },
+            phone: { type: String, default: ''  },
             mobile: { type: String, default: '' },
-            fax: { type: String, default: '' },
+            fax: { type: String, default: '' }
         },
         contacts: { type: Array, default: [] },
         internalNotes: { type: String, default: '' },
@@ -321,7 +321,7 @@
             });
         },
 
-        getCustomers: function (company, response) {
+        getCustomers: function (response) {
             var res = {};
             res['data'] = [];
             var query = customer.find({ 'salesPurchases.isCustomer': true });
@@ -332,15 +332,8 @@
                     logWriter.log("customer.js getCustomersForDd customer.find " + err);
                     response.send(500, { error: "Can't find Customer" });
                 } else {
-                    for (var i in customers) {
-                        var obj = {};
-                        obj = customers[i];
-                        obj.name = obj.name.first + ' ' + obj.name.last;
-                        obj.type = 'customer';
-                        res['data'].push(obj);
-                    }
-                    //response.send(res);
-                    company.getCustomers(res, response);
+                    res['data'] = customers;
+                    response.send(res);
                 }
             });
         },

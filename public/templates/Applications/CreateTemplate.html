@@ -4,108 +4,111 @@
 <div class="form-holder">
     <form method="post" action="" id="createApplicationForm" class="form">
         <fieldset>
+		  <div class="half-block left">
+			<dl class="person-info">
+			  <dt><label for="subject">Subject :</label></dt><dd><input type="text" class="title-input blueback" id="subject" required /></dd>
+			  <dt><label for="name">Name :</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required /></dd>
+			  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required /></dd>
+			</dl>
+		  </div>
+		  <div class="half-block left">
             <div class="avatar">
                 <input type="file" value="Edit" id="inputImg" accept="image/*">
                 <canvas id="avatar" width="120" height="120"></canvas>
             </div>
-            <p>
-                <label for="subject">Subject </label>
-                <input type="text" class="title-input blueback" id="subject" required />
-            </p>
-            <p>
-                <label for="name">Name</label>
-                <input type="text" class="name" id="first" placeholder="First" required />
-                <input type="text" class="name" id="last" placeholder="Last" required />
-            </p>
-            <p>
-                <label for="wemail">Email </label>
-                <input type="email" id="wemail" />
-            </p>
-            <p>
-                <label for="phone">Phone </label>
-                <input type="text" id="phone" />
-            </p>
-            <p>
-                <label for="mobile">Mobile </label>
-                <input type="text" id="mobile" />
-            </p>
-            <p>
-                <label for="workflowNames">Workflow Names </label>
-                <select id="workflowNames">
+		  </div>
+          <div class="clearfix"></div>
+		  <div class="half-block left">
+			<dl class="person-info">
+			  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" /></dd>
+			  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" /></dd>
+			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" /></dd>
+			  <dt><label for="workflowNames">Workflow Names </label></dt>
+			  <dd>
+				<select id="workflowNames">
                     <% _.each(workflowNames, function(item){ %>
                     <option><%=item%></option>
                     <%}); %>
                 </select>
-            </p>
-
-            <p id="selectWorkflow">
-            </p>
-            <p>
-                <label for="relatedUser">Responsible </label>
-                <select id="relatedUser">
-                    <option selected="selected" value="">Select...</option>
-                    <% employeesCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>"><%= option.get('name').first%> <%= option.get('name').last%></option>
-                    <% }); %>
+			  </dd>
+			  <dt><label for="workflow">Workflow</label></dt><dd id="selectWorkflow"></dd>
+			</dl>
+		  </div>
+		  <div class="half-block left">
+			<dl class="person-info">
+			  <dt><label for="relatedUser">Responsible </label></dt>
+			  <dd>
+			    <select id="relatedUser">
+                  <option selected="selected" value="">Select...</option>
+                  <% employeesCollection.each(function(option){ %>
+                  <option value="<%= option.get('_id') %>"><%= option.get('name').first%> <%= option.get('name').last%></option>
+                  <% }); %>
                 </select>
-            </p>
-            <p>
-                <label for="nextAction">Next Action </label>
-                <input type="text" id="nextAction" />
-            </p>
-            <p>
-                <label for="source">Source </label>
-                <select id="source">
-                    <option selected="selected" value="">Select...</option>
-                    <% sourceOfApplicantsCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                    <% }); %>
+			  </dd>
+			  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" /></dd>
+			  <dt><label for="source">Source </label></dt>
+			  <dd>
+			  <select id="source">
+                <option selected="selected" value="">Select...</option>
+                <% sourceOfApplicantsCollection.each(function(option){ %>
+                <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
+                <% }); %>
+              </select>
+			  </dd>
+			  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" /></dd>
+			</dl>
+		  </div>
+          <div class="clearfix"></div>
+		  <div class="half-block left withPaddingLeft">
+			<div class="formTitle">
+			  <h3 class="left">Contract</h3>
+			  <div class="clearfix"></div>
+			</div>
+			<dl class="person-info">
+			  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" placeholder="0.00" /></dd>
+			  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" placeholder="0.00" /></dd>
+			  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
+			</dl>
+		  </div>
+
+		  <div class="half-block left withPaddingLeft">
+			<div class="formTitle">
+			  <h3 class="left">Job</h3>
+			  <div class="clearfix"></div>
+			</div>
+			<dl class="person-info">
+			  <dt><label for="job">Applied Job </label></dt>
+			  <dd>
+				<select id="job">
+                  <option selected="selected" value="">Select...</option>
+                  <% jobPositionsCollection.each(function(option){ %>
+
+                  <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
+                  <% }); %>
+
                 </select>
-            </p>
-            <p>
-                <label for="referredBy">Referred By </label>
-                <input type="text" id="referredBy" />
-            </p>
-            <h2>Job</h2>
-            <p>
-                <label for="job">Applied Job </label>
-                <select id="job">
-                    <option selected="selected" value="">Select...</option>
-                    <% jobPositionsCollection.each(function(option){ %>
+			  </dd>
+			  <dt><label for="department">Department</label></dt>
+			  <dd>
+			    <select id="department">
+                  <option selected="selected" value="">Select...</option>
+                  <% departmentsCollection.each(function(option){ %>
 
-                    <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                    <% }); %>
+                  <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
+                  <% }); %>
 
                 </select>
-            </p>
-            <p>
-                <label for="department">Department</label>
-                <select id="department">
-                    <option selected="selected" value="">Select...</option>
-                    <% departmentsCollection.each(function(option){ %>
 
-                    <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                    <% }); %>
-
-                </select>
-            </p>
-            <h2>Contract</h2>
-            <p>
-                <label for="expectedSalary">Expected Salary </label>
-                <input type="text" id="expectedSalary" placeholder="0.00" />
-            </p>
-            <p>
-                <label for="proposedSalary">Proposed Salary </label>
-                <input type="text" id="proposedSalary" placeholder="0.00" />
-            </p>
-            <p>
-                <label for="tags">Tags </label>
-                <input type="text" id="tags" />
-            </p>
-            <h2>Application Summary</h2>
-            <p>
-                <textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>
-            </p>
+			  </dd>
+			</dl>
+		  </div>
+          <div class="clearfix">
+          </div>
+		  <div class="formTitle">
+			<h3 class="left">Application Summary</h3>
+			<div class="clearfix"></div>
+		  </div>
+          <textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>
         </fieldset>
     </form>
 </div>

@@ -1,34 +1,20 @@
 ﻿define([
     "text!templates/Opportunities/EditTemplate.html",
     "text!templates/Opportunities/editSelectTemplate.html",
-    "collections/Opportunities/OpportunitiesCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Employees/EmployeesCollection",
-    "collections/Departments/DepartmentsCollection",
-    "collections/Priority/TaskPriority",
-    "collections/Workflows/WorkflowsCollection",
     "common",
     "custom"
 ],
-    function (EditTemplate, editSelectTemplate, OpportunitiesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, PriorityCollection, WorkflowsCollection, common, Custom) {
+    function (EditTemplate, editSelectTemplate, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
+            template: _.template(EditTemplate),
 
             initialize: function (options) {
-                this.customersCollection = new CustomersCollection();
-                this.customersCollection.bind('reset', _.bind(this.render, this));
-                this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.priorityCollection = new PriorityCollection();
-                this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
+                _.bindAll(this, "saveItem");
                 this.opportunitiesCollection = options.collection;
-                this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+                this.currentModel = this.opportunitiesCollection.getElement();
                 this.render();
             },
 
@@ -38,7 +24,7 @@
                 "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows"
             },
-            
+
             changeWorkflows: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
 
@@ -90,11 +76,10 @@
             },
 
             saveItem: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
+                var currentModel = this.collection.getElement();
 
-                if (itemIndex != -1) {
-                    var currentModel = this.collection.models[itemIndex];
-
+                if (currentModel) {
+                    
                     var mid = 39;
 
                     var name = $.trim($("#name").val());
@@ -110,36 +95,15 @@
                     }
 
                     var customerId = this.$("#customer option:selected").val();
-                    var _customer = common.toObject(customerId, this.customersCollection);
-                    var customer = {};
-                    if (_customer) {
-                        customer.id = _customer._id;
-                        customer.name = _customer.name;
-                    } else {
-                        customer = currentModel.defaults.customer;
-                    }
+                    customerId = customerId ? customerId : null;
 
                     var email = $.trim($("#email").val());
 
                     var salesPersonId = this.$("#salesPerson option:selected").val();
-                    var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
-                    var salesPerson = {};
-                    if (_salesPerson) {
-                        salesPerson.id = _salesPerson._id;
-                        salesPerson.name = _salesPerson.name.first + ' ' + _salesPerson.name.last;
-                    } else {
-                        salesPerson = currentModel.defaults.salesPerson;
-                    }
+                    salesPersonId = salesPersonId ? salesPersonId : null;
 
                     var salesTeamId = this.$("#salesTeam option:selected").val();
-                    var _salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-                    var salesTeam = {};
-                    if (_salesTeam) {
-                        salesTeam.id = _salesTeam._id;
-                        salesTeam.name = _salesTeam.departmentName;
-                    } else {
-                        salesTeam = currentModel.defaults.salesTeam;
-                    }
+                    salesTeamId = salesTeamId ? salesTeamId : null;
 
                     var nextActionSt = $.trim($("#nextActionDate").val());
                     var nextActionDescription = $.trim($("#nextActionDescription").val());
@@ -188,12 +152,9 @@
                         fax: fax,
                     };
 
-                    var workflow = {
-                        wName: this.$("#workflowNames option:selected").text(),
-                        name: this.$("#workflow option:selected").text(),
-                        status: this.$("#workflow option:selected").val(),
-                    };
-
+                    var workflow = this.$("#workflowDd option:selected").val();
+                    workflow = workflow ? workflow : null;
+                    
                     var active = ($("#active").is(":checked")) ? true : false;
 
                     var optout = ($("#optout").is(":checked")) ? true : false;
@@ -203,10 +164,10 @@
                     currentModel.set({
                         name: name,
                         expectedRevenue: expectedRevenue,
-                        customer: customer,
+                        customer: customerId,
                         email: email,
-                        salesPerson: salesPerson,
-                        salesTeam: salesTeam,
+                        salesPerson: salesPersonId,
+                        salesTeam: salesTeamId,
                         nextAction: nextAction,
                         expectedClosing: expectedClosing,
                         priority: priority,
@@ -230,61 +191,37 @@
                 }
             },
 
-           /* changeWorkflow: function (e) {
-                var mid = 39;
-                var name = '', status = '';
-                var length = this.workflowsCollection.models.length;
-                var workflow = {};
-                if ($(e.target).attr("id") == "won") {
-                    workflow = this.workflowsCollection.models[length - 2];
-                }
-                else {
-                    workflow = this.workflowsCollection.models[length - 1];
-                }
-                name = workflow.get('name');
-                status = workflow.get('status');
-                var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
-                var ob = {
-                    workflow: {
-                        name: name,
-                        status: status
-                    }
-                };
-
-                model.set(ob);
-                model.save({}, {
-                    headers: {
-                        mid: mid
+            hideDialog: function () {
+                $(".edit-opportunity-dialog").remove();
+            },
+            
+            render: function () {
+                var formString = this.template({ model: this.currentModel.toJSON() });
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-opportunity-dialog",
+                    width: 900,
+                    height: 650,
+                    buttons: {
+                        save: {
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
                     }
                 });
-            },*/
-
-            render: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                }
-                else {
-                    var currentModel = this.opportunitiesCollection.models[itemIndex];
-                    var workflowModel = this.workflowsCollection.findWhere({ name: currentModel.toJSON().workflow.wName });
-                    this.$el.html(_.template(EditTemplate, {
-                        model: currentModel.toJSON(),
-                        customersCollection: this.customersCollection,
-                        employeesCollection: this.employeesCollection,
-                        departmentsCollection: this.departmentsCollection,
-                        priorityCollection: this.priorityCollection,
-                        workflowsCollection: this.workflowsCollection
-                    }));
-                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(workflowModel.toJSON().value) }));
-                    var nextAction = currentModel.get('nextAction').date;
-                    //if (nextAction) {
-                    //    nextAction['date'] = this.ISODateToDate(nextAction);
-                    //    currentModel.set({ nextAction: nextAction }, { silent: true });
-                    //}
-                    currentModel.on('change', this.render, this);
-                }
                 $('#nextActionDate').datepicker();
+                common.populateCustomers(App.ID.customerDd, App.URL.customers, this.currentModel);
+                common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, this.currentModel);
+                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, this.currentModel);
+                common.populatePriority(App.ID.priorityDd, App.URL.priorities, this.currentModel);
+                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', this.currentModel);
+                this.delegateEvents(this.events);
                 return this;
             }
 

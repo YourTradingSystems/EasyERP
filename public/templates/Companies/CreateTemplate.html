@@ -64,13 +64,9 @@
 			</select>
 
 		  </dd>
-		  <dt><label for="salesTeam">Sales Team</label></dt>
+		  <dt><label for="departmentDd">Sales Team</label></dt>
 		  <dd>
-			<select id="salesTeam">
-                <option selected="selected" value="">Select...</option>
-			  <% departmentsCollection.each(function(option){ %>
-			  <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-			  <% }); %>
+			<select id="departmentDd">
 			</select>
 
 		  </dd>

@@ -148,6 +148,11 @@
                             </select>
                         </p>
                         <p id="selectWorkflow">
+                            <select id="workflow">
+                                <% _.each(workflows, function(item){ %>
+                                    <option value="<%= item.status %>" data-id="<%=item._id%>"><%= item.name %></option>
+                                <%}); %>
+                            </select>
                         </p>
                         <p>
                             <select id="priority">

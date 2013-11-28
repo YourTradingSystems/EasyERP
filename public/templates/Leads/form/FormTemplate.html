@@ -53,10 +53,10 @@
                 </div>
                 <div class="half-block left">
                     <p>
-                        <span><%= (company) ? company.name : ((_company) ? _company : '')%></span>
+                        <span><%= (company) ? company.name : ((tempCompanyField) ? tempCompanyField : '')%></span>
                     </p>
                     <p>
-                        <span><%=(customer) ? customer.name : ''%></span>
+                        <span><%=(customer) ? customer.name.first + ' ' + customer.name.last: ''%></span>
                     </p>
                     <p>
                         <span><%=address.street%></span>
@@ -74,8 +74,8 @@
                         <span><%=address.country%></span>
                     </p>
                     <p></p>
-                    <p><span><%=(salesPerson) ? salesPerson.name : ''%></span></p>
-                    <p><span><%=(salesTeam) ? salesTeam.name : ''%></span></p>
+                    <p><span><%=(salesPerson) ? salesPerson.name.first + ' ' +  salesPerson.name.last : ''%></span></p>
+                    <p><span><%=(salesTeam) ? salesTeam.departmentName : ''%></span></p>
                 </div>
             </div>
             <div class="half-block left">
@@ -153,7 +153,7 @@
                         </p>                      
                     </div>
                     <div class="half-block left">
-                        <p><span><%=workflow.status%></span></p>
+                        <p><span><%=(workflow) ? workflow.status : ''%></span></p>
                       
                      </div>
                 </div>

@@ -63,7 +63,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 case "kanban":
                 {
                     //draw kanbas header with workflows
-
+                    var start = new Date();
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
                     $(".column").last().addClass("lastColumn");
@@ -87,35 +87,14 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                          column.find(".columnNameDiv h2").append(count);
                          column.find(".columnNameDiv").append(content);
                      }, this);
-
-
-                    /*_.each(workflows, function (workflow, i) {
-                        var counter = 0,
-                            remaining = 0;
-                        var column = this.$(".column").eq(i);
-                        var kanbanItemView;
-                        _.each(models, function (model) {
-                            if (model.get("workflow").name === column.data("name")) {
-                                kanbanItemView = new TasksKanbanItemView({ model: model });
-                                kanbanItemView.bind('deleteEvent', this.deleteItems, kanbanItemView);
-                                column.append(kanbanItemView.render().el);
-                                counter++;
-                                var _remaining = model.get("remaining");
-                                remaining += _remaining;
-                            }
-                        }, this);
-                        var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
-                        var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
-                        column.find(".columnNameDiv h2").append(count);
-                        column.find(".columnNameDiv").append(content);
-                    }, this);*/
-                    //console.log(new Date() - this5.start);
+                    console.log("=========================Tasks -> Kanban: " + (new Date() - start)/1000 + " ms");
                     break;
                 }
                 case "list":
                 {
+                    var start = new Date();
                     this.$el.html(_.template(TasksListTemplate, { tasksCollection: models.toJSON() }));
-
+                    console.log("=========================Persons -> list: " + (new Date() - start)/1000 + " ms");
                     $('#check_all').click(function () {
                         var c = this.checked;
                         $(':checkbox').prop('checked', c);
@@ -124,6 +103,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 }
                 case "thumbnails":
                 {
+                    var start = new Date();
                     this.$el.html('');
                     if (models.length > 0) {
                         var holder = this.$el;
@@ -136,26 +116,12 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     } else {
                         this.$el.html('<h2>No tasks found</h2>');
                     }
+                    console.log("=========================Tasks -> Thumbnails: " + (new Date() - start)/1000 + " ms");
                     break;
                 }
                 case "form":
                 {
                     this.$el.html('');
-                    //var itemIndex = Custom.getCurrentII() - 1;
-                    //if (itemIndex > models.length - 1) {
-                    //    itemIndex = models.length - 1;
-
-                    //    var urlParts = window.location.hash.split('/');
-                    //    if (urlParts[4]) {
-                    //        urlParts[4] = models.length;
-                    //        window.location.hash = urlParts.join('/');
-                    //    }
-                    //    Custom.setCurrentII(models.length);
-                    //}
-
-                    //if (itemIndex == -1) {
-                    //    this.$el.html('<h2>No tasks found</h2>');
-                    //} else {
                     var currentModel = this.collection.getElement();
                     if (currentModel) {
                         var extrainfo = currentModel.get('extrainfo');
@@ -163,16 +129,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                     } else {
                         this.$el.html('<h2>No tasks found</h2>');
                     }
-                        //var extrainfo = currentModel.get('extrainfo');
-                        //extrainfo['StartDate'] = (currentModel.get('extrainfo').StartDate) ? common.ISODateToDate(currentModel.get('extrainfo').StartDate) : '';
-                        //extrainfo['EndDate'] = (currentModel.get('extrainfo').EndDate) ? common.ISODateToDate(currentModel.get('extrainfo').EndDate) : '';
-                        //deadline = (currentModel.get('deadline')) ? common.ISODateToDate(currentModel.get('deadline')) : '';
-                        //currentModel.set({ deadline: deadline, extrainfo: extrainfo }, { silent: true });
-
-                        //currentModel.on('change', this.render, this);
-                        //currentModel.set({ deadline: currentModel.get('deadline').split('T')[0].replace(/-/g, '/') }, { silent: true });
-                        //this.$el.html(_.template(TasksFormTemplate, currentModel.toJSON()));
-                    
                     break;
                 }
 

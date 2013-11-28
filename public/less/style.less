@@ -791,13 +791,12 @@ h3 {
         }
     }
 }
-
-.person-info {
+.dl-auto(@max-width:110px){
     clear: both;
 
     dt {
         width: 35%;
-        max-width: 110px;
+        max-width: @max-width;
         float: left;
         clear: both;
         line-height: 20px;
@@ -813,8 +812,21 @@ h3 {
             
         }
     }
+
 }
 
+.person-info {
+	.dl-auto();
+}
+.job-info{
+	.dl-auto(200px);
+}
+.app-info{
+	.dl-auto(150px);
+}
+.job-create-info{
+	.dl-auto(220px);
+}
 .company-info {
     margin-left: 150px;
     display: block;
@@ -2036,7 +2048,12 @@ button {
     .ui-dialog-titlebar {
         display: none;
     }
-
+	.ui-dialog-buttonpane {
+        .ui-dialog-buttonset {
+			float:none !important;
+			text-align:center;
+		}
+	}
     &.edit-task-dialog {
         .ui-dialog-titlebar {
             padding-left: 15px;
@@ -2129,7 +2146,11 @@ button {
 #createEmployeeForm,
 #editEmployeeForm,
 #createPersonsForm ,
-#employeeForm{
+#employeeForm,
+#createJobPositionForm,
+#applicationForm,
+#editJobPositionForm,
+#createApplicationForm{
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2174,7 +2195,7 @@ button {
         border: 1px solid #E2E9EF;
         border-top: 1px solid #CBD3E2;
         color: #262626;
-
+		padding:0;
         &:focus {
             outline: -webkit-focus-ring-color auto 5px;
         }
@@ -2184,12 +2205,14 @@ button {
         margin-top: 0px;
     }
 
-    .blueback {
+    input[type='text'],
+    input[type='email'],
+    input[type='number'] {
         .border-radius(0px);
         border: 1px solid #E2E9EF;
         border-top: 1px solid #CBD3E2;
         max-width: 280px;
-        width: 70%;
+        width: 60%;
         height: 18px;
         background-color: white;
         font-family: Arial, Helvetica, sans-serif;
@@ -2204,7 +2227,13 @@ button {
         }
     }
 }
-
+#createApplicationForm #otherInfo{
+	margin-top:10px;
+}
+#createJobPositionForm #description,
+#editJobPositionForm #description{
+	margin-top:0;
+}
 #createProjectForm {
     dl {
         dt {

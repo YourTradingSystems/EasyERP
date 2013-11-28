@@ -16,7 +16,8 @@ define([
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
-                "click #top-bar-editBtn": "editEvent"
+                "click #top-bar-editBtn": "editEvent",
+                "click #top-bar-createBtn": "createEvent"
             },
 
             changeContentViewType: function (e) {
@@ -45,7 +46,10 @@ define([
                 common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;
             },
-
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
+            },
             editEvent: function (event) {
                 event.preventDefault();
                 this.trigger('editEvent');

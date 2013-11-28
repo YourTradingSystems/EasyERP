@@ -16,7 +16,8 @@ define([
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
             	"click #top-bar-discardBtn": "discardEvent",
-            	"click #top-bar-editBtn": "editEvent"
+            	"click #top-bar-editBtn": "editEvent",
+                "click #top-bar-createBtn": "createEvent"
             },
             
             changeContentViewType: function (e) {
@@ -35,7 +36,10 @@ define([
             	this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
-
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
+            },
             render: function(){
                 var viewType = Custom.getCurrentVT();
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType}));

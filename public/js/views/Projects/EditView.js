@@ -10,24 +10,14 @@ define([
             contentType: "Projects",
             template: _.template(EditTemplate),
             initialize: function (options) {
-                _.bindAll(this, "render");
-                /* this.accountsDdCollection = new AccountsDdCollection();
-                 this.customersDdCollection = new CustomersCollection();
-                 this.workflowsDdCollection = new WorkflowsCollection({ id: 'project'});*/
+                _.bindAll(this, "render", "saveItem");
                 this.projectsCollection = options.collection;
                 this.currentModel = this.projectsCollection.getElement();
                 this.render();
-
-                /*this.accountsDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.customersDdCollection.bind('reset', _.bind(this.renderView, this));
-                this.workflowsDdCollection.bind('reset', _.bind(this.renderView, this));*/
             },
-
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
-                "click #saveBtn": "saveItem",
-                "click #cancelBtn": "hideDialog",
                 "change #workflowDd": "changeWorkflowValues"
             },
             hideDialog: function () {
@@ -69,8 +59,8 @@ define([
                 var projectName = $("#projectName").val();
                 var projectShortDesc = $("#projectShortDesc").val();
                 var customer = this.$el.find("#customerDd option:selected").val();
-                var projectmanager = this.$el.find("#managerDd option:selected").val();
-                var workflow = this.$el.find("#workflowValue option:selected").val();
+                var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
+                var workflow = this.$el.find("#workflowsDd option:selected").data('id');
 
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
@@ -82,9 +72,9 @@ define([
                 var data = {
                     projectName: projectName,
                     projectShortDesc: projectShortDesc,
-                    customer: customer,
-                    projectmanager: projectmanager,
-                    workflow: workflow,
+                    customer: customer ? customer : null,
+                    projectmanager: projectmanager ? projectmanager: null,
+                    workflow: workflow ? workflow : null,
                     teams: {
                         users: users
                     }
@@ -95,7 +85,7 @@ define([
                     headers: {
                         mid: mid
                     },
-                    wait: true,
+                    //wait: true,
                     success: function () {
                         $('.edit-project-dialog').remove();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
@@ -120,83 +110,36 @@ define([
                         this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ));
                 },this);
             },
-            populateDropDown: function (type, selectId, url,val) {
-                var selectList = $(selectId);
-                var self = this;
-                var workflowNames = [];
-                this.workflows = [];
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "customer":
-                                return self.customerOption(item);
-                            case "person":
-                                return self.personOption(item);
-                            case "priority":
-                                return self.priorityOption(item);
-                            case "userEdit":
-                                return self.userEditOption(item);
-                            case "workflow": {
-                                self.workflows.push(item);
-                                if ((_.indexOf(workflowNames, item.wName)=== -1) ) {
-                                    $(App.ID.workflowDd).append(self.workflowOption(item));
-                                }
-                                workflowNames.push(item.wName);
-                            }
-                            // return self.workflowOption(item);
-                        }
-                    });
-                    selectList.append(options);
-                    if (typeof val != "undefined")
-                        selectList.val(val).trigger("change");
-                });
-            },
-            userEditOption: function (item) {
-                return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-            },
-            workflowOption: function (item) {
-                return this.currentModel.get("workflow").wId === item.wId ?
-                    $('<option/>').val(item.wId).text(item.wName).attr('selected', 'selected') :
-                    $('<option/>').val(item.wId).text(item.wName);
-            },
-            customerOption: function (item) {
-                return this.currentModel.get("customer")._id === item._id ?
-                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")").attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")");
-            },
-            personOption: function (item) {
-				if (this.currentModel.get("projectmanager")){
-					return this.currentModel.get("projectmanager")._id === item._id ?
-						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-				}
-				else{
-					return $('<option/>')
-				}
-            },
 
             render: function () {
-                console.log(this.currentModel);
-
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
-
+                var self = this;
                 this.$el = $(formString).dialog({
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
                     dialogClass: "edit-project-dialog",
                     width: "80%",
-                    height: 225
+                    height: 225,
+                    buttons:{
+                        save:{
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
                 });
-                var that = this;
-                this.populateDropDown("person", App.ID.managerDd, "/getPersonsForDd");
-                this.populateDropDown("customer", App.ID.customerDd, "/Customer");
-                this.populateDropDown("userEdit", App.ID.userEditDd, "/getPersonsForDd");
-                this.populateDropDown("workflow", App.ID.workflowDd, "/projectWorkflows", that.currentModel.toJSON().workflow._id);
-
-
+                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
+                common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
+                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
                 this.delegateEvents(this.events);
 
                 return this;

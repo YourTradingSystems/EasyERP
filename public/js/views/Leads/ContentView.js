@@ -183,12 +183,12 @@ define([
                                         //});
                                     },
                                     Cancel: function () {
-                                        $(this).dialog("close");
+                                        $(this).dialog('close');
                                     }
                                 },
 
                                 close: function () {
-                                    $(this).dialog("close");
+                                    $(this).dialog('close');
                                 }
                             }, this);
                         }
@@ -213,7 +213,7 @@ define([
                 var self = this,
                     mid = 39,
                     model,
-                     viewType = Custom.getCurrentVT();
+                    viewType = Custom.getCurrentVT();
                 switch (viewType) {
                     case "list":
                         {

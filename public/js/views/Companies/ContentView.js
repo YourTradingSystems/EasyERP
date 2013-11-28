@@ -11,23 +11,24 @@ define([
     'common',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
-    'text!templates/Notes/AddAttachments.html'
+    'text!templates/Notes/AddAttachments.html',
+    'views/Companies/CreateView'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate,CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Companies View');
             this.collection = options.collection;
-            this.opportunitiesCollection = new OpportunitiesCollection();
-            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            //this.opportunitiesCollection = new OpportunitiesCollection();
+            /*this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.eventsCollection = new EventsCollection();
             this.eventsCollection.bind('reset', _.bind(this.render, this));
             this.personsCollection = new PersonsCollection();
             this.personsCollection.bind('reset', _.bind(this.render, this));
-            this.collection.bind('reset', _.bind(this.render, this));
-            //this.render();
+            this.collection.bind('reset', _.bind(this.render, this));*/
+            this.render();
         },
         flag: true,
         events: {
@@ -52,6 +53,10 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         quickEdit: function (e) {
             // alert(e.target.id);
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+        },
+        createItem: function () {
+            new CreateView({ collection: this.collection });
+
         },
 
         removeEdit: function (e) {
@@ -341,8 +346,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             switch (viewType) {
                 case "list":
                     {
+                        var start = new Date();
                         this.$el.html(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
-
+                        console.log("=========================Companies -> list: " + (new Date() - start)/1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
@@ -352,6 +358,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                     }
                 case "thumbnails":
                     {
+                        var start = new Date();
                         this.$el.html('');
                         var holder = this.$el;
                         var thumbnailsItemView;
@@ -369,17 +376,19 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);
+                        console.log("=========================Companies-> thumbnails: " + (new Date() - start)/1000 + " ms");
                         break;
                     }
                 case "form":
                     {
+                        var start = new Date();
                         var currentModel = this.collection.getElement();
                         if (!currentModel) {
                             this.$el.html('<h2>No Companies found</h2>');
                         } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
-                            this.$el.find('.formRightColumn').append(
+                            /*this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
@@ -395,9 +404,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     new noteView({
                                         model: currentModel
                                     }).render().el
-                                ); console.log(currentModel);
+                                ); console.log(currentModel);*/
                         }
-
+                        console.log("=========================Companies-> form: " + (new Date() - start)/1000 + " ms");
                         break;
                     }
             }
