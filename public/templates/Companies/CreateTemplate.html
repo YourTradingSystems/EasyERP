@@ -54,13 +54,9 @@
 	<div class="inner">
 	  <div class="half-block left">
 		<dl class="person-info">
-		  <dt><label for="salesPerson">Salesperson</label></dt>
+		  <dt><label for="employeesDd">Salesperson</label></dt>
 		  <dd>
 			<select id="salesPerson">
-			  <option selected="selected" value="">Select...</option>
-			  <% employeesCollection.each(function(option){ %>
-			  <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
-			  <% }); %>
 			</select>
 
 		  </dd>

@@ -15,8 +15,6 @@ define([
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
-                this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
 
@@ -127,13 +125,12 @@ define([
             render: function () {
                 var companyModel = new CompanyModel();
                 var formString = this.template({
-                    employeesCollection: this.employeesCollection,
                 });
 				var self = this;
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,
-					dialogClass:"create-company-dialog",
+					dialogClass:"create-dialog",
 					title: "Edit Company",
 					width:"80%",
 					height:690,
