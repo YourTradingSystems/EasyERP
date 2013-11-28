@@ -101,7 +101,7 @@ define([
                     name: $company.val(),
                     id: $company.data('id')
                 }
-                var idCustomer = $(this.el).find("#customer option:selected").val();
+                var idCustomer = $(this.el).find("#customerDd option:selected").val();
                 var address = {};
                 $("p").find(".address").each(function () {
                     var el = $(this);
@@ -130,10 +130,10 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
-                var workflow = this.$("#workflow option:selected").data('id');
+                var workflow = this.$("#workflowDd option:selected").data('id');
 
 
-                var priority = $("#priority").val();
+                var priority = $("#priorityDd").val();
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
@@ -178,6 +178,7 @@ define([
             },
 
             render: function () {
+				var self=this;
                 var workflowNames = [];
                 this.workflowsCollection.models.forEach(function (option) {
                     workflowNames.push(option.get('wName'));
