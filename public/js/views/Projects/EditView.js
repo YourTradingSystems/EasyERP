@@ -183,7 +183,7 @@ define([
                 this.populateDropDown("person", App.ID.managerSelect, "/getPersonsForDd");
                 this.populateDropDown("customer", App.ID.customerDd, "/Customer");
                 this.populateDropDown("userEdit", App.ID.userEditDd, "/getPersonsForDd");
-                this.populateDropDown("workflow", App.ID.workflowDd, "/projectWorkflows");
+                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
 
 
                 this.delegateEvents(this.events);

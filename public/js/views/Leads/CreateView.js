@@ -130,7 +130,7 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
-                var workflow = this.$("#workflowDd option:selected").data('id');
+                var workflow = this.$("#workflow option:selected").data('id');
 
 
                 var priority = $("#priority").val();

@@ -5,7 +5,7 @@ define([
     'common',
     'dataService'
 ],
-    function (EditTemplate, editSelectTemplate, Custom, common,dataService) {
+    function (EditTemplate, editSelectTemplate, Custom, common, dataService) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -95,7 +95,7 @@ define([
                 var company = $("#company").val();
 
                 var idCustomer = $("#customerDd option:selected").val();
-
+                idCustomer = idCustomer ? idCustomer : null;
                 var address = {};
                 $("p").find(".address").each(function () {
                     var el = $(this);
@@ -207,22 +207,22 @@ define([
                     $('<option/>').text(item.wName);
             },
             workflowOption: function (item) {
-                return (this.currentModel.get("workflow") && this.currentModel.get("workflow") === item._Id) ?
+                return (item && this.currentModel.get("workflow") && this.currentModel.get("workflow") === item._Id) ?
                     $('<option/>').val(item.status).text(item.name).attr('selected', 'selected').attr('data-id', item._id) :
                     $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
             },
             customerOption: function (item) {
-                return (this.currentModel.get("customer") && this.currentModel.get("customer").id === item._id) ?
+                return (item && this.currentModel.get("customer") && this.currentModel.get("customer").id === item._id) ?
                     $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name);
             },
             salesPersonsOption: function (item) {
-                return (this.currentModel.get("salesPerson") && this.currentModel.get("salesPerson").id === item._id) ?
+                return (item && this.currentModel.get("salesPerson") && this.currentModel.get("salesPerson").id === item._id) ?
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
             },
             salesTeamOption: function (item) {
-                return (this.currentModel.get("salesTeam") && this.currentModel.get("salesTeam")._id === item._id) ?
+                return (item && this.currentModel.get("salesTeam") && this.currentModel.get("salesTeam")._id === item._id) ?
                     $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                     $('<option/>').val(item._id).text(item.departmentName);
             },

@@ -213,7 +213,7 @@ define([
                 var self = this,
                     mid = 39,
                     model,
-                     viewType = Custom.getCurrentVT();
+                    viewType = Custom.getCurrentVT();
                 switch (viewType) {
                     case "list":
                         {

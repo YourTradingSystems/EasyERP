@@ -300,10 +300,13 @@ var Opportunities = function (logWriter, mongoose, customer) {
 
             if (data.company && data.company._id) {
                 data.company = data.company._id;
+            } else if (data.company) {
+                data.tempCompanyField = data.company;
+                delete data.company;
             }
             if (data.customer && data.customer._id) {
                 data.customer = data.customer._id;
-            }
+            } 
             if (data.salesPerson && data.salesPerson._id) {
                 data.salesPerson = data.salesPerson._id;
             }

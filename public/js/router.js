@@ -21,8 +21,7 @@ define([
         },
 
         getList: function (contentType, viewType, itemIndex, hash) {
-            console.API.clear();
-            if (this.mainView == null) this.main();
+           if (this.mainView == null) this.main();
             //if (hash) {
             //    if (hash.length != 24) {
             //        itemIndex = hash;
@@ -95,7 +94,7 @@ define([
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
-                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads")
+                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads" || contentType === "Opportunities")
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     if (contentType === "LeadsWorkflow")
