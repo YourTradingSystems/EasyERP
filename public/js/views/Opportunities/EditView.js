@@ -2,10 +2,9 @@
     "text!templates/Opportunities/EditTemplate.html",
     "text!templates/Opportunities/editSelectTemplate.html",
     "common",
-    "custom",
-    'dataService'
+    "custom"
 ],
-    function (EditTemplate, editSelectTemplate, common, Custom, dataService) {
+    function (EditTemplate, editSelectTemplate, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -77,11 +76,10 @@
             },
 
             saveItem: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
+                var currentModel = this.collection.getElement();
 
-                if (itemIndex != -1) {
-                    var currentModel = this.collection.models[itemIndex];
-
+                if (currentModel) {
+                    
                     var mid = 39;
 
                     var name = $.trim($("#name").val());
@@ -97,36 +95,15 @@
                     }
 
                     var customerId = this.$("#customer option:selected").val();
-                    var _customer = common.toObject(customerId, this.customersCollection);
-                    var customer = {};
-                    if (_customer) {
-                        customer.id = _customer._id;
-                        customer.name = _customer.name;
-                    } else {
-                        customer = currentModel.defaults.customer;
-                    }
+                    customerId = customerId ? customerId : null;
 
                     var email = $.trim($("#email").val());
 
                     var salesPersonId = this.$("#salesPerson option:selected").val();
-                    var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
-                    var salesPerson = {};
-                    if (_salesPerson) {
-                        salesPerson.id = _salesPerson._id;
-                        salesPerson.name = _salesPerson.name.first + ' ' + _salesPerson.name.last;
-                    } else {
-                        salesPerson = currentModel.defaults.salesPerson;
-                    }
+                    salesPersonId = salesPersonId ? salesPersonId : null;
 
                     var salesTeamId = this.$("#salesTeam option:selected").val();
-                    var _salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-                    var salesTeam = {};
-                    if (_salesTeam) {
-                        salesTeam.id = _salesTeam._id;
-                        salesTeam.name = _salesTeam.departmentName;
-                    } else {
-                        salesTeam = currentModel.defaults.salesTeam;
-                    }
+                    salesTeamId = salesTeamId ? salesTeamId : null;
 
                     var nextActionSt = $.trim($("#nextActionDate").val());
                     var nextActionDescription = $.trim($("#nextActionDescription").val());
@@ -175,12 +152,9 @@
                         fax: fax,
                     };
 
-                    var workflow = {
-                        wName: this.$("#workflowNames option:selected").text(),
-                        name: this.$("#workflow option:selected").text(),
-                        status: this.$("#workflow option:selected").val(),
-                    };
-
+                    var workflow = this.$("#workflowDd option:selected").val();
+                    workflow = workflow ? workflow : null;
+                    
                     var active = ($("#active").is(":checked")) ? true : false;
 
                     var optout = ($("#optout").is(":checked")) ? true : false;
@@ -190,10 +164,10 @@
                     currentModel.set({
                         name: name,
                         expectedRevenue: expectedRevenue,
-                        customer: customer,
+                        customer: customerId,
                         email: email,
-                        salesPerson: salesPerson,
-                        salesTeam: salesTeam,
+                        salesPerson: salesPersonId,
+                        salesTeam: salesTeamId,
                         nextAction: nextAction,
                         expectedClosing: expectedClosing,
                         priority: priority,
@@ -220,57 +194,7 @@
             hideDialog: function () {
                 $(".edit-opportunity-dialog").remove();
             },
-            populateDropDown: function (type, selectId, url, val) {
-                var selectList = $(selectId);
-                var self = this;
-                selectList.append($("<option/>").val('').text('Select...'));
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "customers":
-                                return self.customerOption(item);
-                            case "salesPersons":
-                                return self.salesPersonsOption(item);
-                            case "salesTeam":
-                                return self.salesTeamOption(item);
-                            case "priority":
-                                return self.priorityOption(item);
-                            case "workflows":
-                                return self.workflowOption(item);
-                        }
-                    });
-                    selectList.append(options);
-
-                    if (typeof val != "undefined")
-                        selectList.val(val).trigger("change");
-                });
-            },
-            workflowOption: function (item) {
-                return (item && this.currentModel.get("workflow") && this.currentModel.get("workflow")._id === item._id) ?
-                    $('<option/>').val(item.status).text(item.name).attr('selected', 'selected').attr('data-id', item._id) :
-                    $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
-            },
-            customerOption: function (item) {
-                return (item && this.currentModel.get("customer") && this.currentModel.get("customer").id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
-            },
-            salesPersonsOption: function (item) {
-                return (item && this.currentModel.get("salesPerson") && this.currentModel.get("salesPerson").id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-            },
-            salesTeamOption: function (item) {
-                return (item && this.currentModel.get("salesTeam") && this.currentModel.get("salesTeam")._id === item._id) ?
-                    $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.departmentName);
-            },
-            priorityOption: function (item) {
-                return this.currentModel.id === item._id ?
-                    $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.priority);
-            },
-
+            
             render: function () {
                 var formString = this.template({ model: this.currentModel.toJSON() });
                 var self = this;
@@ -295,8 +219,8 @@
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, this.currentModel);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, this.currentModel);
                 common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, this.currentModel);
-                this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
-                this.populateDropDown("workflows", App.ID.workflowNamesDd, '/Workflows?id=Opportunity');
+                common.populatePriority(App.ID.priorityDd, App.URL.priorities, this.currentModel);
+                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', this.currentModel);
                 this.delegateEvents(this.events);
                 return this;
             }

@@ -28,7 +28,9 @@
                 <label for="workflowNamesDd">Workflow Names </label>
                 <select id="workflowNamesDd"></select>
             </p>
-            <p id="workflowDd">
+            <p>
+                <label for="workflowDd"> Workflows </label>
+                <select id="workflowDd"></select>
 
             </p>
             <p>
@@ -114,7 +116,7 @@
                             </p>
                             <p></p>
                             <p>
-                                <input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  />
+                                <input type="checkbox" id="optout"><%= (model.optout)? 'checked="checked"':''%>  />
                             </p>
                         </div>
                     </div>
@@ -166,7 +168,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  />
+                                <input type="checkbox" id="active"><%= (model.active)? 'checked="checked"':''%>  />
                             </p>
                             <p>
                                 <input type="text" id="reffered" value="<%=model.reffered%>" />

@@ -14,7 +14,7 @@
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d mmm, yyyy", false) : null;
             return utcDateString;
 
-        }   
+        }
 
         var ISODateToDate = function (ISODate) {
             var date = ISODate.split('T')[0];
@@ -79,60 +79,61 @@
             canvasDrawing({ model: model }, context);
         };
 
-        var displayControlBtnsByActionType = function(actionType, viewType){
-        $("#saveDiscardHolder").hide();
-        $("#top-bar-createBtn").hide();
-        $("#top-bar-deleteBtn").hide();
-        $("#top-bar-editBtn").hide();
-        $("#top-bar-renameBtn").hide();
-        $("#top-bar-nextBtn").hide();
-        $("#top-bar-discardBtn").hide();
-        $('#top-bar-saveBtn').hide();
-        $("ul.changeContentIndex").hide();
-        if(!actionType || actionType === "Content"){
-            $("#top-bar-createBtn").show();
-            if(viewType == "form"){
-                //$("#top-bar-createBtn").hide();
+        var displayControlBtnsByActionType = function (actionType, viewType) {
+            $("#saveDiscardHolder").hide();
+            $("#top-bar-createBtn").hide();
+            $("#top-bar-deleteBtn").hide();
+            $("#top-bar-editBtn").hide();
+            $("#top-bar-renameBtn").hide();
+            $("#top-bar-nextBtn").hide();
+            $("#top-bar-discardBtn").hide();
+            $('#top-bar-saveBtn').hide();
+            $("ul.changeContentIndex").hide();
+            if (!actionType || actionType === "Content") {
+                $("#top-bar-createBtn").show();
+                if (viewType == "form") {
+                    //$("#top-bar-createBtn").hide();
+                    $('#top-bar-editBtn').show();
+                    $("ul.changeContentIndex").show();
+                    $('#top-bar-deleteBtn').show();
+                }
+                if (viewType == "thumbnails" || viewType == "list") {
+                    $('#top-bar-editBtn').hide();
+                }
+            }
+            else if (actionType === "View") {
+                $('#top-bar-createBtn').show();
                 $('#top-bar-editBtn').show();
-                $("ul.changeContentIndex").show();
                 $('#top-bar-deleteBtn').show();
             }
-            if(viewType == "thumbnails" || viewType == "list"){
-                $('#top-bar-editBtn').hide();
-            }        }
-        else if(actionType === "View"){
-            $('#top-bar-createBtn').show();
-            $('#top-bar-editBtn').show();
-            $('#top-bar-deleteBtn').show();
+            else if (actionType === "Edit") {
+                // $('#top-bar-saveBtn').show();
+                // $('#top-bar-discardBtn').show();
+                //$("#saveDiscardHolder").show();
+                $("#saveDiscardHolder").hide();
+                $("#top-bar-createBtn").show();
+            }
+            else if (actionType === "Create") {
+                $('#top-bar-saveBtn').show();
+                $('#top-bar-nextBtn').show();
+                $('#top-bar-discardBtn').show();
+                $('#top-bar-saveBtn').show();
+                $("#saveDiscardHolder").show();
+            }
         }
-        else if(actionType === "Edit"){
-           // $('#top-bar-saveBtn').show();
-           // $('#top-bar-discardBtn').show();
-            //$("#saveDiscardHolder").show();
-            $("#saveDiscardHolder").hide();
-            $("#top-bar-createBtn").show();
-        }
-        else if(actionType === "Create"){
-            $('#top-bar-saveBtn').show();
-            $('#top-bar-nextBtn').show();
-            $('#top-bar-discardBtn').show();
-            $('#top-bar-saveBtn').show();
-            $("#saveDiscardHolder").show();
-        }
-    }
 
-        var getFromLocalStorage = function(key){
-            if(window.localStorage){
+        var getFromLocalStorage = function (key) {
+            if (window.localStorage) {
                 return window.localStorage.getItem(key);
-            } else{
+            } else {
                 throw new Error('Failed to save security token to LocalStorage. It is not supported by browser.');
             }
         }
 
-        var saveToLocalStorage = function(key, value){
-            if(window.localStorage){
-                window.localStorage.setItem(key,value);
-            } else{
+        var saveToLocalStorage = function (key, value) {
+            if (window.localStorage) {
+                window.localStorage.setItem(key, value);
+            } else {
                 throw new Error('Failed to save security token to LocalStorage. It is not supported by browser.');
             }
         }
@@ -143,12 +144,12 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && (model.projectmanager || model.salesPerson)){
+                if (model && (model.projectmanager || model.salesPerson)) {
                     options = $.map(response.data, function (item) {
                         return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-                        });
+                    });
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
@@ -164,13 +165,13 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model&&model.company){
+                if (model && model.company) {
                     options = $.map(response.data, function (item) {
                         return model.company._id === item._id ?
                             $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first);
-                        });
-                } else{
+                    });
+                } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name.first);
                     });
@@ -185,12 +186,12 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && (model.department || model.salesTeam)){
+                if (model && (model.department || model.salesTeam)) {
                     options = $.map(response.data, function (item) {
                         return ((model.department && model.department._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
-                        });
+                    });
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.departmentName);
@@ -200,20 +201,40 @@
 
             });
         };
+        var populatePriority = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.priority) {
+                    options = $.map(response.data, function (item) {
+                        return model.priority._id === item._id ?
+                            $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.priority);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.priority);
+                    });
+                }
+                selectList.append(options);
 
+            });
+        }
         var populateCustomers = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && model.customer){
+                if (model && model.customer) {
                     options = $.map(response.data, function (item) {
-                        return (model.customer && (model.customer._id === item._id) )?
+                        return (model.customer && (model.customer._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
-                        });
-                } else{
+                    });
+                } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                     });
@@ -221,17 +242,17 @@
                 selectList.append(options);
             });
         }
-        var populateWorkflows = function(workflowType, selectId, workflowNamesDd, url, model){
+        var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model) {
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
-                if(model && model.workflow){
+                if (model && model.workflow) {
                     options = $.map(response.data, function (item) {
                         return model.workflow._id === item._id ?
-                            $('<option/>').val(item.status).text(item.name).attr('data-id', item._id).attr('selected','selected'):
+                            $('<option/>').val(item.status).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
                 } else {
@@ -239,11 +260,11 @@
                         return $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
                     });
                 }
-                var wNames = $.map(response.data,function(item){
+                var wNames = $.map(response.data, function (item) {
                     return item.wName;
                 });
                 wNames = _.uniq(wNames);
-                var wfNamesOption = $.map(wNames, function(item){
+                var wfNamesOption = $.map(wNames, function (item) {
                     return $('<option/>').text(item);
                 });
                 workflowNamesDd.append(wfNamesOption);
@@ -251,20 +272,21 @@
             });
         }
 
-    return {
-        populateDepartments:populateDepartments,
-        populateCompanies:populateCompanies,
-        populateWorkflows:populateWorkflows,
-        populateCustomers : populateCustomers,
-        populateEmployeesDd:populateEmployeesDd,
-        utcDateToLocaleDate:utcDateToLocaleDate,
-        toObject: toObject,
-        displayControlBtnsByActionType : displayControlBtnsByActionType,
-        ISODateToDate: ISODateToDate,
-        hexToRgb: hexToRgb,
-        deleteEvent: deleteEvent,
-        canvasDraw: canvasDraw,
-        saveToLocalStorage:saveToLocalStorage,
-        getFromLocalStorage:getFromLocalStorage
-    }
-});
+        return {
+            populatePriority: populatePriority,
+            populateDepartments: populateDepartments,
+            populateCompanies: populateCompanies,
+            populateWorkflows: populateWorkflows,
+            populateCustomers: populateCustomers,
+            populateEmployeesDd: populateEmployeesDd,
+            utcDateToLocaleDate: utcDateToLocaleDate,
+            toObject: toObject,
+            displayControlBtnsByActionType: displayControlBtnsByActionType,
+            ISODateToDate: ISODateToDate,
+            hexToRgb: hexToRgb,
+            deleteEvent: deleteEvent,
+            canvasDraw: canvasDraw,
+            saveToLocalStorage: saveToLocalStorage,
+            getFromLocalStorage: getFromLocalStorage
+        }
+    });
