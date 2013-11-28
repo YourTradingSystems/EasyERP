@@ -185,13 +185,13 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model&&model.department){
+                if(model && model.department){
                     options = $.map(response.data, function (item) {
                         return model.department._id === item._id ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
-                } else{
+                } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.departmentName);
                     });
@@ -199,7 +199,7 @@
                 selectList.append(options);
 
             });
-        }
+        };
 
         var populateCustomers = function (selectId, url, model) {
             var selectList = $(selectId);
