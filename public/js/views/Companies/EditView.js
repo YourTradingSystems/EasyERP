@@ -109,8 +109,8 @@ define([
                         isCustomer: this.$el.find("#isCustomer").is(":checked"),
                         isSupplier: this.$el.find("#isSupplier").is(":checked"),
                         active: this.$el.find("#active").is(":checked"),
-                        salesPerson: this.$el.find('#salesPerson option:selected').val(),
-                        salesTeam: this.$el.find("#salesTeam option:selected").val(),
+                        salesPerson: this.$el.find('#employeesDd option:selected').val()===""?null:this.$el.find('#employeesDd option:selected').val(),
+                        salesTeam: this.$el.find("#departmentDd option:selected").val()===""?null:this.$el.find("#departmentDd option:selected").val(),
                         reference: this.$el.find("#reference").val(),
                         language: this.$el.find("#language").val()
                     }
@@ -183,23 +183,21 @@ define([
                     width: "50%",
                     height: 513,
                     title: 'Edit Company',
-                    buttons: [{
-                        text: "Remove",
-                        click: function () { $(this).dialog().remove(); }
-                    },
+                    buttons: [
                         {
                             text: "Save",
                             click: function () { self.saveItem(); }
-                        }],
+                        },{
+                        text: "Cancel",
+                        click: function () { $(this).dialog().remove(); }
+                    }],
                     //closeOnEscape: false,
                     modal: true
                 });
                 console.log(this.currentModel.get("salesPurchases"));
-					$('#text').datepicker({ dateFormat: "d M, yy" });
-								 
-                this.populateDropDown("salesPerson", App.ID.salesPerson, "/getSalesPerson");
-                this.populateDropDown("salesTeam", App.ID.salesTeam, "/getSalesTeam");
-
+			 $('#text').datepicker({ dateFormat: "d M, yy" });
+			 common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());
+			 common.populateEmployeesDd(App.ID.employeesDd, "/Employees",this.currentModel.toJSON());
                 this.delegateEvents(this.events);
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

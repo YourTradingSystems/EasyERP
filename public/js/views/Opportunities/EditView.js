@@ -79,7 +79,7 @@
                 var currentModel = this.collection.getElement();
 
                 if (currentModel) {
-                    
+
                     var mid = 39;
 
                     var name = $.trim($("#name").val());
@@ -122,7 +122,7 @@
                         expectedClosing = new Date(Date.parse(expectedClosingSt)).toISOString();
                     }
 
-                    var priority = $("#priority").val();
+                    var priority = $(App.ID.priorityDd).val();
 
                     var company = $.trim($("#company").val());
 
@@ -154,7 +154,7 @@
 
                     var workflow = this.$("#workflowDd option:selected").val();
                     workflow = workflow ? workflow : null;
-                    
+
                     var active = ($("#active").is(":checked")) ? true : false;
 
                     var optout = ($("#optout").is(":checked")) ? true : false;
@@ -185,16 +185,22 @@
                     currentModel.save({}, {
                         headers: {
                             mid: mid
+                        },
+                        success: function (model) {
+                            self.hideDialog();
+                            Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+                        },
+                        error: function (model, xhr, options) {
+                            Backbone.history.navigate("home", { trigger: true });
                         }
                     });
-                    Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
                 }
             },
 
             hideDialog: function () {
                 $(".edit-opportunity-dialog").remove();
             },
-            
+
             render: function () {
                 var formString = this.template({ model: this.currentModel.toJSON() });
                 var self = this;

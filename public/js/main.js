@@ -46,7 +46,8 @@ var App = App ||
         coachDd: '#coachDd',
         salesPersonDd: "#salesPersonDd",
         salesTeamDd: "#salesTeamDd",
-        priorityDd: "#priorityDd"
+        priorityDd: "#priorityDd",
+		employeesDd:"#employeesDd"
 
     },
     URL: {
