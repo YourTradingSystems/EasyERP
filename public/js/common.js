@@ -137,7 +137,7 @@
             }
         }
 
-        var populateAccounts = function (selectId, url, model) {
+        var populateEmployeesDd = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -256,7 +256,7 @@
         populateCompanies:populateCompanies,
         populateWorkflows:populateWorkflows,
         populateCustomers : populateCustomers,
-        populateAccounts:populateAccounts,
+        populateEmployeesDd:populateEmployeesDd,
         utcDateToLocaleDate:utcDateToLocaleDate,
         toObject: toObject,
         displayControlBtnsByActionType : displayControlBtnsByActionType,
