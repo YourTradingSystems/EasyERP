@@ -61,8 +61,8 @@ define([
                 var projectName = $("#projectName").val();
                 var projectShortDesc = $("#projectShortDesc").val();
                 var customer = this.$el.find("#customerDd option:selected").val();
-                var projectmanager = this.$el.find("#managerDd option:selected").val();
-                var workflow = this.$el.find("#workflowValue option:selected").val();
+                var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
+                var workflow = this.$el.find("#workflowsDd option:selected").data('id');
 
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
@@ -87,7 +87,7 @@ define([
                     headers: {
                         mid: mid
                     },
-                    wait: true,
+                    //wait: true,
                     success: function () {
                         $('.edit-project-dialog').remove();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
