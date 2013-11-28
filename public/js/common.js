@@ -166,9 +166,9 @@
                 var options = [];
                 if(model){
                     options = $.map(response.data, function (item) {
-                        return model.projectmanager._id === item._id ?
+                        return (model.customer && (model.customer._id === item._id) )?
                             $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.name);
+                            $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                         });
                 } else{
                     options = $.map(response.data, function (item) {

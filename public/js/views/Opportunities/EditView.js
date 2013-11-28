@@ -292,7 +292,7 @@
                     }
                 });
                 $('#nextActionDate').datepicker();
-                this.populateDropDown("customers", App.ID.customerDd, App.URL.customers);
+                common.populateCustomers(App.ID.customerDd, App.URL.customers, this.currentModel);
                 this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
                 this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
                 this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
