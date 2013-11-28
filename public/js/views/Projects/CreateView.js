@@ -13,14 +13,6 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
-                /*this.accountDdCollection = new AccountsDdCollection();
-                this.accountDdCollection.bind('reset', _.bind(this.render, this));
-                this.customersDdCollection = new CustomersCollection();
-                this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsDdCollection = new WorkflowsCollection({ id: 'Project' });
-                this.workflowsDdCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));*/
-                //this.collection = options.collection;
                 this.model = new ProjectModel();
                 this.render();
             },
@@ -115,9 +107,9 @@ define([
                         }
                     }
                 });
-                common.populateAccounts(App.ID.managerSelect, "/getPersonsForDd");
+                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.populateCustomers(App.ID.customerDd, "/Customer");
-                common.populateAccounts(App.ID.userEditDd, "/getPersonsForDd");
+                common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 this.delegateEvents(this.events);
                 return this;

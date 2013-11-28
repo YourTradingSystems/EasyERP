@@ -98,7 +98,6 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                         common.saveToLocalStorage('calendars', JSON.stringify(calendarList));
                     }
                 });
-
             });
         },
 

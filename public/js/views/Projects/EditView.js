@@ -112,59 +112,6 @@ define([
                         this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ));
                 },this);
             },
-            populateDropDown: function (type, selectId, url) {
-                var selectList = $(selectId);
-                var self = this;
-                var workflowNames = [];
-                this.workflows = [];
-                selectList.append($('<option/>').text('Select...'));
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "customer":
-                                return self.customerOption(item);
-                            case "person":
-                                return self.personOption(item);
-                            case "priority":
-                                return self.priorityOption(item);
-                            case "userEdit":
-                                return self.userEditOption(item);
-                            case "workflow": {
-                                self.workflows.push(item);
-                                if ((_.indexOf(workflowNames, item.wName)=== -1) ) {
-                                    $(App.ID.workflowDd).append(self.workflowOption(item));
-                                }
-                                workflowNames.push(item.wName);
-                            }
-                            // return self.workflowOption(item);
-                        }
-                    });
-                    selectList.append(options);
-                });
-            },
-            userEditOption: function (item) {
-                return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-            },
-            workflowOption: function (item) {
-                return (this.currentModel.get("workflow") && this.currentModel.get("workflow").wId === item.wId) ?
-                    $('<option/>').val(item.wId).text(item.wName).attr('selected', 'selected') :
-                    $('<option/>').val(item.wId).text(item.wName);
-            },
-            customerOption: function (item) {
-                return (this.currentModel.get("customer") && this.currentModel.get("customer")._id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")").attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name + " (" + item.type + ")");
-            },
-            personOption: function (item) {
-				if (this.currentModel.get("projectmanager")){
-					return this.currentModel.get("projectmanager")._id === item._id ?
-						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-						$('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-				}
-				else{
-					return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-				}
-            },
 
             render: function () {
                 var formString = this.template({
@@ -180,9 +127,9 @@ define([
                     height: 225
                 });
                 var that = this;
-                this.populateDropDown("person", App.ID.managerSelect, "/getPersonsForDd");
-                this.populateDropDown("customer", App.ID.customerDd, "/Customer");
-                this.populateDropDown("userEdit", App.ID.userEditDd, "/getPersonsForDd");
+                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
+                common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
 
 
