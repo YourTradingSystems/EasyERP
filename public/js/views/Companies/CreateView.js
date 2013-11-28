@@ -32,7 +32,7 @@ define([
                 this.$(".tab").hide().eq(index).show();
             },
             hideDialog: function () {
-                $(".create-company-dialog").remove();
+                $(".create-dialog").remove();
             },
 
             saveItem: function () {
@@ -47,7 +47,7 @@ define([
                 };
 
                 var address = {};
-                $("p").find(".address").each(function () {
+                $(".person-info").find(".address").each(function () {
                     var el = $(this);
                     address[el.attr("name")] = el.val();
                 });
@@ -64,10 +64,10 @@ define([
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
-                var salesPerson = this.$("#salesPerson option:selected").val();
+                var salesPerson = this.$("#employeesDd option:selected").val();
                 //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
-                var salesTeam = this.$("#salesTeam option:selected").val();
+                var salesTeam = this.$("#departmentDd option:selected").val();
                 //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var reference = $("#reference").val();
@@ -147,6 +147,7 @@ define([
 
                 });
                 common.populateDepartments(App.ID.departmentDd, "/Departments");
+                common.populateEmployeesDd(App.ID.employeesDd, "/Employees");
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
                 $('#date').datepicker({ dateFormat: "d M, yy" });
                 return this;
