@@ -24,7 +24,7 @@
         jobPosition: { type: String, default: '' },
         skype: { type: String, default: '' },
         phones: {
-            phone: { type: String, default: '' },
+            phone: { type: String, default: ''  },
             mobile: { type: String, default: '' },
             fax: { type: String, default: '' },
         },
