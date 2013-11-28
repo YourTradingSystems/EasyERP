@@ -14,6 +14,16 @@
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d mmm, yyyy", false) : null;
             return utcDateString;
 
+        }   
+
+        var utcDateToLocaleFullDateTime = function (utcDateString) {
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:m:s TT", false) : null;
+            return utcDateString;
+        }
+
+        var utcDateToLocaleDateTime = function (utcDateString) {
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
+            return utcDateString;
         }
 
         var ISODateToDate = function (ISODate) {
@@ -293,7 +303,10 @@
             });
         }
 
-        return {
+    return {
+         utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
+        utcDateToLocaleDateTime:utcDateToLocaleDateTime,
+        utcDateToLocaleDate:utcDateToLocaleDate,
             populateProjectsDd:populateProjectsDd,
             populatePriority: populatePriority,
             populateDepartments: populateDepartments,
@@ -302,13 +315,13 @@
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
-            toObject: toObject,
+        toObject: toObject,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
-            ISODateToDate: ISODateToDate,
-            hexToRgb: hexToRgb,
-            deleteEvent: deleteEvent,
-            canvasDraw: canvasDraw,
+        ISODateToDate: ISODateToDate,
+        hexToRgb: hexToRgb,
+        deleteEvent: deleteEvent,
+        canvasDraw: canvasDraw,
             saveToLocalStorage: saveToLocalStorage,
             getFromLocalStorage: getFromLocalStorage
-        }
-    });
+    }
+});
