@@ -92,7 +92,7 @@
         if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
             if(viewType == "form"){
-                $("#top-bar-createBtn").hide();
+                //$("#top-bar-createBtn").hide();
                 $('#top-bar-editBtn').show();
                 $("ul.changeContentIndex").show();
                 $('#top-bar-deleteBtn').show();
@@ -143,7 +143,7 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model){
+                if(model && model.projectmanager){
                     options = $.map(response.data, function (item) {
                         return model.projectmanager._id === item._id ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
@@ -164,15 +164,15 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model){
+                if(model && model.customer){
                     options = $.map(response.data, function (item) {
                         return (model.customer && (model.customer._id === item._id) )?
-                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                         });
                 } else{
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item._id).text(item.name);
+                        return $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                     });
                 }
                 selectList.append(options);
@@ -185,9 +185,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
-                if(model){
+                if(model && model.workflow){
                     options = $.map(response.data, function (item) {
-                        return model.projectmanager._id === item._id ?
+                        return model.workflow._id === item._id ?
                             $('<option/>').val(item.status).text(item.name).attr('data-id', item._id).attr('selected','selected'):
                             $('<option/>').val(item._id).text(item.name);
                     });
