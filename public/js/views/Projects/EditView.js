@@ -10,7 +10,7 @@ define([
             contentType: "Projects",
             template: _.template(EditTemplate),
             initialize: function (options) {
-                _.bindAll(this, "render");
+                _.bindAll(this, "render", "saveItem");
                 this.projectsCollection = options.collection;
                 this.currentModel = this.projectsCollection.getElement();
                 this.render();
@@ -18,8 +18,6 @@ define([
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
-                "click #saveBtn": "saveItem",
-                "click #cancelBtn": "hideDialog",
                 "change #workflowDd": "changeWorkflowValues"
             },
             hideDialog: function () {
@@ -61,8 +59,8 @@ define([
                 var projectName = $("#projectName").val();
                 var projectShortDesc = $("#projectShortDesc").val();
                 var customer = this.$el.find("#customerDd option:selected").val();
-                var projectmanager = this.$el.find("#managerDd option:selected").val();
-                var workflow = this.$el.find("#workflowValue option:selected").val();
+                var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
+                var workflow = this.$el.find("#workflowsDd option:selected").data('id');
 
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
@@ -87,7 +85,7 @@ define([
                     headers: {
                         mid: mid
                     },
-                    wait: true,
+                    //wait: true,
                     success: function () {
                         $('.edit-project-dialog').remove();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
@@ -117,22 +115,31 @@ define([
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
-
+                var self = this;
                 this.$el = $(formString).dialog({
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
                     dialogClass: "edit-project-dialog",
                     width: "80%",
-                    height: 225
+                    height: 225,
+                    buttons:{
+                        save:{
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
                 });
-                var that = this;
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
-
-
                 this.delegateEvents(this.events);
 
                 return this;
