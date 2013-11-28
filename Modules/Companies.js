@@ -18,7 +18,7 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
         phones: {
             phone: { type: String, default: '' },
             mobile: { type: String, default: '' },
-            fax: { type: String, default: '' },
+            fax: { type: String, default: '' }
         },
         internalNotes: { type: String, default: '' },
         salesPurchases: {

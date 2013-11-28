@@ -1,68 +1,90 @@
 <div class="formHeader">
-    <button class="red" id="hire"><span>Hire & Create Employee</span></button>
-    <button class="red" id="refuse"><span>Refuse</span></button>
-    <ul class="breadcrumb"></ul>
+  <button class="red" id="hire"><span>Hire & Create Employee</span></button>
+  <button class="red" id="refuse"><span>Refuse</span></button>
+  <ul class="breadcrumb"></ul>
 </div>
 <div class="form-holder">
-    <form class="form" id="applicationForm" data-id="<%=_id%>">
-        <div class="inner">
-            <h2><%=subject%></h2>
-            <h3><%=name.first%> <%=name.last%></h3>
-            <div class="avatar">
-                <img class="person" src="<%=imageSrc%>" />
-            </div>
-            <p>
-                <label>Email</label>
-                <span><%=workEmail%></span>
-            </p>
-            <p>
-                <label>Phone</label>
-                <span><%=workPhones.phone%></span>
-            </p>
-            <p>
-                <label>Mobile</label>
-                <span><%=workPhones.mobile%></span>
-            </p>
-            <h3>Job</h3>
-            <p>
-                <label>Applied Job</label>
-                <span><%=(jobPosition) ? jobPosition.name : ''%></span>
-            </p>
-            <p>
-                <label>Department</label>
-                <span><%=(department) ? department.departmentName : ''%></span>
-            </p>
-            <p>
-                <label>Tags</label>
-                <span><%=tags%></span>
-            </p>
-            <h3>Application Summary</h3>
-            <p>
-                <label>Responsible</label>
-                <span><%=(relatedUser) ? relatedUser.login : ''%></span>
-            </p>
-            <p>
-                <label>Next Action</label>
-                <span><%=nextAction%></span>
-            </p>
-            <p>
-                <label>Source</label>
-                <span><%=(source) ? source.name : ''%></span>
-            </p>
-            <p>
-                <label>Referred By</label>
-                <span><%=referredBy%></span>
-            </p>
-            <h3>Contract</h3>
-            <p>
-                <label>Expected Salary</label>
-                <span><%=expectedSalary%></span>
-            </p>
-            <p>
-                <label>Proposed Salary</label>
-                <span><%=proposedSalary%></span>
-            </p>
-        </div>
-    </form>
+  <form class="form" id="applicationForm" data-id="<%=_id%>">
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label for="tags">Subject :</label></dt><dd><%=subject%></dd>
+		<dt><label for="first">First Name :</label></dt><dd><%=name.first%></dd>
+		<dt><label for="last">Last Name :</label></dt><dd><%=name.last%></dd>
+	  </dl>
+	</div>
+    <div class="half-block left">
+      <div class="avatar">
+        <img class="person" src="<%=imageSrc%>" />
+      </div>
+	  
+	</div>
+    <div class="clearfix">
+    </div>
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Email :</label></dt><dd><span><%=workEmail%></span></dd>
+		<dt><label>Phone :</label></dt><dd><span><%=workPhones.phone%></span></dd>
+	  </dl>
+	</div>
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Mobile :</label></dt><dd><span><%=workPhones.mobile%></span></dd>
+	  </dl>
+	</div>
+
+    <div class="clearfix">
+    </div>
+	<div class="formTitle">
+	  <h3 class="left">Job</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Applied Job :</label></dt><dd><span><%=(jobPosition) ? jobPosition.name : ''%></span></dd>
+		<dt><label>Department :</label></dt><dd><span><%=(department) ? department.departmentName : ''%></span></dd>
+	  </dl>
+	</div>	
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Tags :</label></dt><dd><span><%=tags%></span></dd>
+	  </dl>
+	</div>	
+	<div class="clearfix">
+	</div>
+	<div class="formTitle">
+	  <h3 class="left">Application Summary</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label><label>Responsible :</label></label></dt><dd><span><%=(relatedUser) ? relatedUser.login : ''%></span></dd>
+		<dt><label><label>Next Action :</label></label></dt><dd><span><%=nextAction%></span></dd>
+	  </dl>
+	</div>	
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Source :</label></dt><dd><span><%=(source) ? source.name : ''%></span></dd>
+		<dt><label>Referred By :</label></dt><dd><span><%=referredBy%></span></dd>
+	  </dl>
+	</div>	
+	<div class="clearfix">
+	</div>
+	<div class="formTitle">
+	  <h3 class="left">Contract</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Expected Salary :</label></dt><dd><span><%=expectedSalary%></span></dd>
+	  </dl>
+	</div>	
+    <div class="half-block left">
+	  <dl class="app-info">
+		<dt><label>Proposed Salary :</label></dt><dd><span><%=proposedSalary%></span></dd>
+	  </dl>
+	</div>	
+	<div class="clearfix">
+	</div>
+  </form>
 </div>
 

@@ -17,9 +17,9 @@ define([
         initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
-            this.opportunitiesCollection = new OpportunitiesCollection();
-            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            this.render();
+            /*this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));*/
         },
 
         events: {
@@ -80,9 +80,9 @@ define([
             this.text = $('#' + parent[0].id).text();
             $("#" + parent[0].id).text('');   
             if ($("#" + parent[0].id).hasClass('date')) {              
-                $("#" + parent[0].id).append('<input id="editInput1" type="text" class="left hasDatepicker"/>');
+                $("#" + parent[0].id).append('<input id="editInput1" type="text" class="left has-datepicker"/>');
               
-                $('.hasDatepicker').datepicker();
+               $('.has-datepicker').datepicker();
             } else {
                 $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             }
@@ -339,16 +339,17 @@ define([
             }, 300, function () { });
         },
         render: function () {
-          
             //Custom.setCurrentCL(this.collection.length);
             console.log('Render Persons View');
             var viewType = Custom.getCurrentVT(),
                 models = this.collection.models;
+
             switch (viewType) {
                 case "list":
                     {
+                        var start = new Date();
                         this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON() }));
-
+                        console.log("=========================Persons -> list: " + (new Date() - start)/1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
@@ -357,6 +358,7 @@ define([
                     }
                 case "thumbnails":
                     {
+                        var start = new Date();
                         this.$el.html('');
                         var holder = this.$el,
                             thumbnailsItemView;
@@ -365,16 +367,19 @@ define([
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);
+                        console.log("=========================Persons -> thumbnails: " + (new Date() - start)/1000 + " ms");
                         break;
+
                     }
                 case "form":
                     {
+                        var start = new Date();
                         var currentModel = this.collection.getElement();
                         if (!currentModel) {
                             this.$el.html('<h2>No persons found</h2>');
                         } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            this.$el.find('.formRightColumn').append(
+                            /*this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     model: currentModel
@@ -385,9 +390,10 @@ define([
                                 new noteView({
                                     model: currentModel
                                 }).render().el
-                            );
+                            );*/
 
                         }
+                        console.log("=========================Persons -> form: " + (new Date() - start)/1000 + " ms");
                         break;
                     }
             }

@@ -1,5 +1,7 @@
-﻿define(
-    function () {
+﻿define([
+    "dataService"
+],
+    function (dataService) {
         var toObject = function (_id, collection) {
             var _tempObject = null;
             if (_id && collection) {
@@ -135,7 +137,81 @@
             }
         }
 
+        var populateAccounts = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if(model){
+                    options = $.map(response.data, function (item) {
+                        return model.projectmanager._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+                        });
+                } else{
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+                    });
+                }
+                selectList.append(options);
+
+            });
+        }
+        var populateCustomers = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if(model){
+                    options = $.map(response.data, function (item) {
+                        return model.projectmanager._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                        });
+                } else{
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
+        var populateWorkflows = function(workflowType, selectId, workflowNamesDd, url, model){
+            var selectList = $(selectId);
+            var workflowNamesDd = $(workflowNamesDd);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
+                var options = [];
+                if(model){
+                    options = $.map(response.data, function (item) {
+                        return model.projectmanager._id === item._id ?
+                            $('<option/>').val(item.status).text(item.name).attr('data-id', item._id).attr('selected','selected'):
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else{
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
+                    });
+                }
+                var wNames = $.map(response.data,function(item){
+                    return item.wName;
+                });
+                wNames = _.uniq(wNames);
+                var wfNamesOption = $.map(wNames, function(item){
+                    return $('<option/>').text(item);
+                });
+                workflowNamesDd.append(wfNamesOption);
+                selectList.append(options);
+            });
+        }
+
     return {
+        populateWorkflows:populateWorkflows,
+        populateCustomers : populateCustomers,
+        populateAccounts:populateAccounts,
         utcDateToLocaleDate:utcDateToLocaleDate,
         toObject: toObject,
         displayControlBtnsByActionType : displayControlBtnsByActionType,

@@ -145,7 +145,7 @@ define([
                 applicationModel.save({
                     isEmployee: isEmployee,
                     subject: subject,
-                    imgSrc: this.imageSrc,
+                    imageSrc: this.imageSrc,
                     name: name,
                     wemail: wemail,
                     wphones: wphones,
