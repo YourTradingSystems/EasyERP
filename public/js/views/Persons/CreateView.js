@@ -15,10 +15,6 @@ define([
             imageSrc: '',
 
             initialize: function (options) {
-                this.companiesCollection = new CompaniesCollection();
-//               this.companiesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-  //              this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = options.collection;
                 this.bind('reset', _.bind(this.render, this));
                 this.render();
@@ -29,7 +25,7 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var company = $(this.el).find('#companiesDd option:selected').val();
+                var company = $('#companiesDd option:selected').val();
                 //var company = common.toObject(idCompany, this.companiesCollection);
 
                 var dateBirth = $.trim($("#dateBirth").val());
@@ -38,7 +34,7 @@ define([
                 //    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 //}
 
-                var department = this.$("#department option:selected").val();
+                var department = $("#departmentDd option:selected").val();
                 //var department = common.toObject(departmentId, this.departmentsCollection);
 
                 var data = {
@@ -81,6 +77,7 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+                        self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function (model, xhr, options) {
@@ -93,11 +90,12 @@ define([
                 });
 
             },
+            hideDialog: function () {
+                $(".create-person-dialog").remove();
+            },
 
             render: function () {
                 var formString = this.template({
-                    companiesCollection: this.companiesCollection,
-                    departmentsCollection: this.departmentsCollection
                 });
 				var self = this;
                 this.$el = $(formString).dialog({
@@ -110,7 +108,7 @@ define([
                     buttons: [
                         {
                             text: "Create",
-                            click: function () { self.saveItem(); $(this).dialog().remove(); }
+                            click: function () { self.saveItem(); }
                         },
 
 						{
@@ -133,6 +131,11 @@ define([
                     yearRange: '-100y:c+nn',
                     maxDate: '-1d'
                 });
+                common.populateCompanies(App.ID.companiesDd, "/Companies");
+                common.populateDepartments(App.ID.departmentDd, "/Departments");
+                this.delegateEvents(this.events);
+
+
                 return this;
             }
 

@@ -1,6 +1,42 @@
 define(function () {
     var PersonModel = Backbone.Model.extend({
         idAttribute: "_id",
+        initialize: function(){
+            this.on('invalid', function(model, errors){
+                if(errors.length > 0){
+                    var msg = $.map(errors,function(error){
+                        return error.msg;
+                    }).join('\n');
+                    alert(msg);
+                }
+            });
+        },
+
+        validate: function(attrs){
+            var errors = [];
+
+            if($.trim(attrs.name.first) == ""){
+                errors.push(
+                    {
+                        name:"Person",
+                        field:"firstName",
+                        msg:"Person first name can not be empty"
+                    }
+                );
+            }
+            if($.trim(attrs.name.last) == ""){
+                errors.push(
+                    {
+                        name:"Person",
+                        field:"lastName",
+                        msg:"Person last name can not be empty"
+                    }
+                );
+            }
+
+            if(errors.length > 0)
+                return errors;
+        },
 
         defaults: {
             id: null,

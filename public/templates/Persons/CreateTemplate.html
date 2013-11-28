@@ -13,10 +13,6 @@
 		  <dt><label for="companiesDd">Company :</label></dt>
 		  <dd>
 			<select id="companiesDd">
-              <option selected="selected" value=""></option>
-              <% companiesCollection.each(function(option){ %>
-              <option value="<%= option.id %>"><%= option.get('name').first%></option>
-              <% }) %>
             </select>
 
 		  </dd>
@@ -59,13 +55,9 @@
 		  <dt><label for="websiteInput">Website :</label></dt><dd><input class="blueback" type="text" id="websiteInput" placeholder="e.g. www.site.com" /></dd>
 		  <dt><label for="skype">Skype :</label></dt><dd><input class="blueback" type="text" id="skype" /></dd>
 		  <dt><label for="jobPositionInput">Job Position :</label></dt><dd><input class="blueback" type="text" id="jobPositionInput" placeholder="e.g. Sales Manager" /></dd>
-		  <dt><label for="department">Department :</label></dt>
+		  <dt><label for="departmentDd">Department :</label></dt>
 		  <dd>
-            <select id="department">
-              <option selected="selected" value="">Select...</option>
-              <% departmentsCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-              <% }); %>
+            <select id="departmentDd">
             </select>
 
 		  </dd>

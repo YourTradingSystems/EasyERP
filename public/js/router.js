@@ -97,7 +97,7 @@ define([
 
                     if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads")
                         topBarView.bind('editEvent', contentView.editItem, contentView);
-                        topBarView.bind('createEvent', contentView.createItem, contentView);
+                    topBarView.bind('createEvent', contentView.createItem, contentView);
                     if (contentType === "LeadsWorkflow")
                         topBarView.bind('createEvent', contentView.createItem, contentView);
 

@@ -9,9 +9,10 @@ define([
     'views/Persons/EditView',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
-    'text!templates/Notes/AddAttachments.html'
+    'text!templates/Notes/AddAttachments.html',
+    'views/Persons/CreateView'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate) {
+], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -48,6 +49,10 @@ define([
 
         removeEdit: function (e) {
             $('#editSpan').remove();
+        },
+        createItem: function () {
+            new CreateView({ collection: this.collection });
+
         },
 
         cancelClick: function (e) {

@@ -36,6 +36,7 @@ var App = App ||
         customerDd: "#customerDd",
         userEditDd: "#userEditDd",
         companiesDd: "#companiesDd",
+		departmentDd: "#departmentDd",	
         salesPerson: '#salesPerson',
         salesTeam: '#salesTeam',
         workflowValue: '#workflowValue',

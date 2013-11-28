@@ -158,6 +158,49 @@
 
             });
         }
+        var populateCompanies = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if(model&&model.company){
+                    options = $.map(response.data, function (item) {
+                        return model.company._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first);
+                        });
+                } else{
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name.first);
+                    });
+                }
+                selectList.append(options);
+
+            });
+        }
+        var populateDepartments = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if(model&&model.department){
+                    options = $.map(response.data, function (item) {
+                        return model.department._id === item._id ?
+                            $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.departmentName);
+                        });
+                } else{
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.departmentName);
+                    });
+                }
+                selectList.append(options);
+
+            });
+        }
+
         var populateCustomers = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -209,6 +252,8 @@
         }
 
     return {
+        populateDepartments:populateDepartments,
+        populateCompanies:populateCompanies,
         populateWorkflows:populateWorkflows,
         populateCustomers : populateCustomers,
         populateAccounts:populateAccounts,

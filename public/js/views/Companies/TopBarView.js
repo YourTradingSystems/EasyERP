@@ -15,7 +15,8 @@
                 "click ul.changeContentIndex a": 'changeItemIndex',
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
-                "click #top-bar-discardBtn": "discardEvent"
+                "click #top-bar-discardBtn": "discardEvent",
+                "click #top-bar-createBtn": "createEvent"
             },
 
             changeContentViewType: function (e) {
@@ -25,6 +26,10 @@
             changeItemIndex: function (e) {
                 var actionType = "Content";
                 Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
+            },
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
             },
 
             initialize: function (options) {

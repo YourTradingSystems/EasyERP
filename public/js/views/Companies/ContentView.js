@@ -11,10 +11,11 @@ define([
     'common',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
-    'text!templates/Notes/AddAttachments.html'
+    'text!templates/Notes/AddAttachments.html',
+    'views/Companies/CreateView'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate,CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -52,6 +53,10 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         quickEdit: function (e) {
             // alert(e.target.id);
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+        },
+        createItem: function () {
+            new CreateView({ collection: this.collection });
+
         },
 
         removeEdit: function (e) {
