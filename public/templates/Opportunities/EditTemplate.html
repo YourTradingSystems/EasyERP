@@ -33,11 +33,11 @@
             </p>
             <p>
                 <label for="salesPerson">Salesperson</label>
-                <select id="salesPerson"></select>
+                <select id="salesPersonDd"></select>
             </p>
             <p>
                 <label for="salesTeam">Sales Team</label>
-                <select id="salesTeam"></select>
+                <select id="salesTeamDd"></select>
             </p>
             <p>
                 <label for="nextAction">Next Action </label>
@@ -114,7 +114,7 @@
                             </p>
                             <p></p>
                             <p>
-                                <input type="checkbox"><%= (model.optout)? 'checked="checked"':''%> id="optout" />
+                                <input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  />
                             </p>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox"><%= (model.active)? 'checked="checked"':''%> id="active" />
+                                <input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  />
                             </p>
                             <p>
                                 <input type="text" id="reffered" value="<%=model.reffered%>" />

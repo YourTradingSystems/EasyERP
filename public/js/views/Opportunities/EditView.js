@@ -225,11 +225,6 @@
                 var self = this;
                 selectList.append($("<option/>").val('').text('Select...'));
                 dataService.getData(url, { mid: 39 }, function (response) {
-                    if (type == 'workflowNames') {
-                        response.data = _.uniq(_.map(response.data, function (val) {
-                            return val.wName;
-                        }));
-                    }
                     var options = $.map(response.data, function (item) {
                         switch (type) {
                             case "customers":
@@ -242,9 +237,6 @@
                                 return self.priorityOption(item);
                             case "workflows":
                                 return self.workflowOption(item);
-                            case "workflowNames":
-                                return self.workflowNameOption(item);
-
                         }
                     });
                     selectList.append(options);
@@ -253,13 +245,8 @@
                         selectList.val(val).trigger("change");
                 });
             },
-            workflowNameOption: function (item) {
-                return this.currentModel.get("workflow") ?
-                    $('<option/>').text(item).attr('selected', 'selected') :
-                    $('<option/>').text(item);
-            },
             workflowOption: function (item) {
-                return (item && this.currentModel.get("workflow") && this.currentModel.get("workflow") === item._Id) ?
+                return (item && this.currentModel.get("workflow") && this.currentModel.get("workflow")._id === item._id) ?
                     $('<option/>').val(item.status).text(item.name).attr('selected', 'selected').attr('data-id', item._id) :
                     $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
             },
@@ -309,8 +296,7 @@
                 this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
                 this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
                 this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
-                this.populateDropDown("workflows", App.ID.workflowDd, '/Workflows?id=Opportunity');
-                this.populateDropDown("workflowNames", App.ID.workflowNamesDd, '/Workflows?id=Opportunity');
+                this.populateDropDown("workflows", App.ID.workflowNamesDd, '/Workflows?id=Opportunity');
                 this.delegateEvents(this.events);
                 return this;
             }
