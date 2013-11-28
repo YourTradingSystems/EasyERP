@@ -135,40 +135,6 @@ define([
 
             template: _.template(EditTemplate),
 
-            populateDropDown: function (type, selectId, url) {
-                var selectList = $(selectId);
-                var self = this;
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    debugger;
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "salesPerson":
-                                return self.salesPersonOption(item);
-                            case "salesTeam":
-                                return self.salesTeamOption(item);
-                        }
-                    });
-                    selectList.append(options);
-                });
-            },
-            salesPersonOption: function (item) {
-                if (this.currentModel.get("salesPurchases").salesPerson !== null) {
-                    return this.currentModel.get("salesPurchases").salesPerson._id === item._id ?
-                        $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
-                        $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
-                } else {
-                    return $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
-                }
-            },
-            salesTeamOption: function (item) {
-                if (this.currentModel.get("salesPurchases").salesTeam !== null) {
-                    return this.currentModel.get("salesPurchases").salesTeam._id === item._id ?
-                        $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                        $('<option/>').val(item._id).text(item.departmentName);
-                } else {
-                    return $('<option/>').val(item._id).text(item.departmentName);
-                }
-            },
             render: function () {
                 console.log(this.currentModel);
 

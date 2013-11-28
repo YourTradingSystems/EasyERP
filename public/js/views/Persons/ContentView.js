@@ -390,12 +390,12 @@ define([
                                     model: currentModel
                                 }).render(true).el
                             );
-
+							*/
                             this.$el.find('.formLeftColumn').append(
                                 new noteView({
                                     model: currentModel
                                 }).render().el
-                            );*/
+                            );
 
                         }
                         console.log("=========================Persons -> form: " + (new Date() - start)/1000 + " ms");

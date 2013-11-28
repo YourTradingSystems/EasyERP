@@ -124,8 +124,7 @@ define([
 
             render: function () {
                 var companyModel = new CompanyModel();
-                var formString = this.template({
-                });
+                var formString = this.template({});
 				var self = this;
                 this.$el = $(formString).dialog({
                     autoOpen:true,
