@@ -29,6 +29,21 @@ define([
                         person.dateBirth = common.utcDateToLocaleDate(person.dateBirth);
                         person.salesPurchases.date.createDate = common.utcDateToLocaleDate(person.salesPurchases.date.createDate);
                         person.salesPurchases.date.updateDate = common.utcDateToLocaleDate(person.salesPurchases.date.updateDate);
+                        if (person.notes) {
+                            _.map(person.notes, function (note) {
+                                note.date = common.utcDateToLocaleFullDateTime(note.date);
+                                return note;
+                            });
+                        }
+                      
+                        if (person.attachments) {
+                            _.map(person.attachments, function (attachment) {
+                                attachment.uploadDate = common.utcDateToLocaleDateTime(attachment.uploadDate);
+                                return attachment;
+                            });
+                        }
+                        return person.notes;
+                        return person.attachments;
                         return person;
                     });
                 }
