@@ -22,7 +22,17 @@
                 "click .breadcrumb a, #lost, #won": "changeWorkflow",
                 "click #tabList a": "switchTab",
                 "change #customer": "selectCustomer",
-                "change #workflowNames": "changeWorkflows"
+                "change #workflowNames": "changeWorkflows",
+                'keydown': 'keydownHandler'
+            },
+            keydownHandler: function (e) {
+                switch (e.which) {
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
             },
 
             changeWorkflows: function () {
@@ -124,8 +134,6 @@
 
                     var priority = $(App.ID.priorityDd).val();
 
-                    var company = $.trim($("#company").val());
-
                     var internalNotes = $.trim($("#internalNotes").val());
 
                     var address = {};
@@ -160,7 +168,7 @@
                     var optout = ($("#optout").is(":checked")) ? true : false;
 
                     var reffered = $.trim($("#reffered").val());
-
+                    var self = this;
                     currentModel.set({
                         name: name,
                         expectedRevenue: expectedRevenue,
@@ -172,7 +180,6 @@
                         expectedClosing: expectedClosing,
                         priority: priority,
                         internalNotes: internalNotes,
-                        company: company,
                         address: address,
                         contactName: contactName,
                         func: func,
@@ -188,9 +195,10 @@
                         },
                         success: function (model) {
                             self.hideDialog();
-                            Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+                            Backbone.history.navigate("home/content-" + 'Opportunities', { trigger: true });
                         },
                         error: function (model, xhr, options) {
+                            self.hideDialog();
                             Backbone.history.navigate("home", { trigger: true });
                         }
                     });
@@ -222,11 +230,12 @@
                     }
                 });
                 $('#nextActionDate').datepicker();
-                common.populateCustomers(App.ID.customerDd, App.URL.customers, this.currentModel);
-                common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, this.currentModel);
-                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, this.currentModel);
-                common.populatePriority(App.ID.priorityDd, App.URL.priorities, this.currentModel);
-                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', this.currentModel);
+                var model = this.currentModel.toJSON();
+                common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
+                common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);
+                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, model);
+                common.populatePriority(App.ID.priorityDd, App.URL.priorities, model);
+                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', model);
                 this.delegateEvents(this.events);
                 return this;
             }
