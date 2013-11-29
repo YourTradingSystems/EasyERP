@@ -1,17 +1,9 @@
 define([
     "text!templates/Applications/CreateTemplate.html",
-    "text!templates/Applications/selectTemplate.html",
-    "collections/Applications/ApplicationsCollection",
-    "collections/Employees/EmployeesCollection",
-    "collections/JobPositions/JobPositionsCollection",
-    "collections/Departments/DepartmentsCollection",
-    "collections/Degrees/DegreesCollection",
-    "collections/SourceOfApplicants/SourceOfApplicantsCollection",
-    "collections/Workflows/WorkflowsCollection",
     "models/ApplicationModel",
     "common"
 ],
-    function (CreateTemplate, selectTemplate, ApplicationsCollection, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, DegreesCollection, SourceOfApplicantsCollection, WorkflowsCollection, ApplicationModel, common) {
+    function (CreateTemplate, ApplicationModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -19,25 +11,9 @@ define([
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
-                this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.jobPositionsCollection = new JobPositionsCollection();
-                this.jobPositionsCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.degreesCollection = new DegreesCollection();
-                this.degreesCollection.bind('reset', _.bind(this.render, this));
-                this.sourceOfApplicantsCollection = new SourceOfApplicantsCollection();
-                this.sourceOfApplicantsCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));
-                this.applicationsCollection = options.collection;
-                this.render = _.after(6, this.render);
-            },
-
-            close: function () {
-                this._modelBinder.unbind();
+                _.bindAll(this, "saveItem", "render");
+                this.model = new ApplicationModel();
+                this.render();
             },
 
             events: {
@@ -45,7 +21,9 @@ define([
                 "click #hire": "isEmployee",
                 "change #workflowNames": "changeWorkflows"
             },
-            
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
@@ -57,7 +35,7 @@ define([
             changeWorkflows: function () {
                 var name = this.$("#workflowNames option:selected").val();
                 var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
+                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             isEmployee: function (e) {
@@ -80,13 +58,10 @@ define([
                 var mid = 39;
 
                 var isEmployee = false;
-
                 if (this.$("#hire>span").hasClass("pressed")) {
                     isEmployee = true;
                     self.contentType = "Employees";
                 }
-                var applicationModel = new ApplicationModel();
-
                 var subject = $.trim($("#subject").val());
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
@@ -102,60 +77,37 @@ define([
                     mobile: mobile
                 };
 
-                //var workflow = {
-                //    wName: this.$("#workflowNames option:selected").text(),
-                //    name: this.$("#workflow option:selected").text(),
-                //    status: this.$("#workflow option:selected").val(),
-                //};
-                var workflow = this.$("#workflow option:selected").data("id");
-                //var degreeId = this.$("#degree option:selected").val();
-                //var degree = {
-                //    id: degreeId,
-                //    name: degreeId
-                //};
-
-                var relatedUserId = this.$("#relatedUser option:selected").val();
-                //var relatedUser = common.toObject(relatedUserId, this.employeesCollection);
-
+                var workflow = $("#workflowsDd option:selected").data("id");
+                var relatedUserId = $("#relatedUsersDd option:selected").val();
                 var nextActionSt = $.trim($("#nextAction").val());
                 var nextAction = "";
                 if (nextActionSt) {
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
                 }
-
-                var sourceId = this.$("#source option:selected").val();
-                //var source = {
-                //    id: sourceId,
-                //    name: sourceId
-                //};
-
+                var sourceId = $("#source option:selected").val();
                 var referredBy = $.trim($("#referredBy").val());
+                var departmentId = $("#departmentDd option:selected").val();
 
-                var departmentId = this.$("#department option:selected").val();
-                //var department = common.toObject(departmentId, this.departmentsCollection);
-
-                var jobId = this.$("#job option:selected").val();
-                //var jobPosition = common.toObject(jobId, this.jobPositionsCollection);
+                var jobPositionId = $("#jobPositionDd option:selected").val();
 
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());
                 var tags = $.trim($("#tags").val()).split(',');
                 var otherInfo = $("#otherInfo").val();
 
-                applicationModel.save({
+                this.model.save({
                     isEmployee: isEmployee,
                     subject: subject,
                     imageSrc: this.imageSrc,
                     name: name,
-                    wemail: wemail,
+                    workEmail: wemail,
                     wphones: wphones,
-                    //degree: degree,
                     relatedUser: relatedUserId,
                     nextAction: nextAction,
                     source: sourceId,
                     referredBy: referredBy,
                     department: departmentId,
-                    jobPosition: jobId,
+                    jobPosition: jobPositionId,
                     expectedSalary: expectedSalary,
                     proposedSalary: proposedSalary,
                     tags: tags,
@@ -168,6 +120,7 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+                        self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -177,24 +130,33 @@ define([
             },
 
             render: function () {
-                var workflowNames = [];
-                this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('wName'));
+                var formString = this.template();
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: 800,
+                    title: "Create Application",
+                    buttons:{
+                        save:{
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
                 });
-                workflowNames = _.uniq(workflowNames);
-                var applicationModel = new ApplicationModel();
-                this.$el.html(this.template({
-                    employeesCollection: this.employeesCollection,
-                    jobPositionsCollection: this.jobPositionsCollection,
-                    departmentsCollection: this.departmentsCollection,
-                    degreesCollection: this.degreesCollection,
-                    sourceOfApplicantsCollection: this.sourceOfApplicantsCollection,
-                    workflowNames: workflowNames
-                }));
-                common.canvasDraw({ model: applicationModel.toJSON() }, this);
+                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd");
+                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
+                common.populateDepartments(App.ID.departmentDd, "/Departments");
+                common.populateDegrees(App.ID.degreesDd, "/Degrees");
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition");
+                common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#nextAction').datepicker();
-                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(this.workflowsCollection.models[0].get('value')) }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsCollection.toJSON() }));
                 return this;
             }
 

@@ -38,7 +38,7 @@
             },
 
             hideDialog: function () {
-                $(".edit-task-dialog").remove();
+                $(".edit-dialog").remove();
             },
 
             changeWorkflow: function (e) {
@@ -189,9 +189,8 @@
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "edit-task-dialog",
-                    width: "50%",
-                    height: 513,
+                    dialogClass: "edit-dialog",
+                    width: 800,
                     title: this.currentModel.toJSON().project.projectShortDesc,
                     buttons:{
                         save:{

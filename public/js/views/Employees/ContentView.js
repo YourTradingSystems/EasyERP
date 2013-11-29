@@ -13,6 +13,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
         el: '#content-holder',
         initialize: function (options) {
             this.collection = options.collection;
+            this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
 
