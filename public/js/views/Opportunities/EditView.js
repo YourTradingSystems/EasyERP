@@ -230,6 +230,7 @@
                     }
                 });
                 $('#nextActionDate').datepicker();
+                $('#expectedClosing').datepicker();
                 var model = this.currentModel.toJSON();
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);

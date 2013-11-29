@@ -51,7 +51,9 @@ var App = App ||
 		departmentManager: "#departmentManager",
 		parentDepartment: "#parentDepartment",
 		visibilityDd: "#visibilityDd",
-		genres: "#genresDd"
+		genres: "#genresDd",
+        degreesDd: "#degreesDd",
+        sourceDd: "#sourceDd"
     },
     URL: {
         customers: "/Customer",

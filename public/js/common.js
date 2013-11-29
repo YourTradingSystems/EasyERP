@@ -231,7 +231,7 @@
                 selectList.append(options);
 
             });
-        };
+        }
         var populatePriority = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -262,6 +262,26 @@
                 if (model && model.customer) {
                     options = $.map(response.data, function (item) {
                         return (model.customer && (model.customer._id === item._id)) ?
+                            $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
+        var populateDegrees = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.degree) {
+                    options = $.map(response.data, function (item) {
+                        return (model.customer._id === item._id) ?
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                     });
@@ -350,13 +370,35 @@
                 selectList.append(options);
             });
         }
+        var populateSourceApplicants = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39}, function (response) {
+                var options = [];
+                if (model && model.source) {
+                    options = $.map(response.data, function (item) {
+                        return model.source._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
 
         return {
+            populateDegrees:populateDegrees,
+            populateSourceApplicants:populateSourceApplicants,
             populateJobPositions:populateJobPositions,
             populateUsers: populateUsers,
-         utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
-        utcDateToLocaleDateTime:utcDateToLocaleDateTime,
-        utcDateToLocaleDate:utcDateToLocaleDate,
+            utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
+            utcDateToLocaleDateTime:utcDateToLocaleDateTime,
+            utcDateToLocaleDate:utcDateToLocaleDate,
             populateProjectsDd:populateProjectsDd,
             populatePriority: populatePriority,
             populateDepartments: populateDepartments,
