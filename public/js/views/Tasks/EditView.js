@@ -114,7 +114,7 @@
                 }
 
                 var customer = $("#customerDd option:selected").val();
-                var workflow = $("#workflowValue option:selected").val();
+                var workflow = $("#workflowsDd option:selected").val();
 
 
                 var estimated = $("#estimated").val();
