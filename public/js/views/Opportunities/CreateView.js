@@ -1,33 +1,18 @@
 define([
-    "jqueryui",
     "text!templates/Opportunities/CreateTemplate.html",
-    "collections/Customers/CustomersCollection",
-    "collections/Employees/EmployeesCollection",
-    "collections/Departments/DepartmentsCollection",
-     "collections/Workflows/WorkflowsCollection",
-    "collections/Priority/TaskPriority",
     "models/OpportunityModel",
-    "common",
-    "custom"
+    "common"
 ],
-    function (jqueryui, CreateTemplate, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, OpportunityModel, common, Custom) {
+    function (CreateTemplate, OpportunityModel, common) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
             template: _.template(CreateTemplate),
 
             initialize: function () {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
-                this.customersCollection = new CustomersCollection();
-                this.customersCollection.bind('reset', _.bind(this.render, this));
-                this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.priorityCollection = new PriorityCollection();
-                this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.render = _.after(4, this.render);
+                _.bindAll(this, "saveItem");
+                this.model = new OpportunityModel();
+                this.render();
             },
 
             events: {
@@ -78,7 +63,11 @@ define([
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
             },
-
+            
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
+            
             saveItem: function () {
                 var mid = 39;
 
@@ -98,34 +87,22 @@ define([
                 }
 
                 var customerId = this.$("#customer option:selected").val();
-                //var customer = common.toObject(customerId, this.customersCollection);
-
                 var email = $.trim($("#email").val());
 
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
-                //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
-
+                
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-                //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-
+                
                 var nextActionSt = $.trim($("#nextActionDate").val());
                 var nextActionDate = $.trim($("#nextActionDescription").val());
-                //var nextActionDate = "";
-                //if (nextActionSt) {
-                //    nextActionDate = new Date(Date.parse(nextActionSt)).toISOString();
-                //}
                 var nextAction = {
                     date: nextActionSt,
                     desc: nextActionDate
                 };
 
                 var expectedClosing = $.trim($("#expectedClosing").val());
-                //var expectedClosing = "";
-                //if (expectedClosingSt) {
-                //    expectedClosing = new Date(Date.parse(expectedClosingSt)).toISOString();
-                //}
-
+                
                 var priority = $("#priority").val();
 
                 var company = $.trim($("#company").val());
@@ -156,11 +133,6 @@ define([
                     fax: fax,
                 };
 
-                //var workflow = {
-                //    wName: this.$("#workflowNames option:selected").text(),
-                //    name: this.$("#workflow option:selected").text(),
-                //    status: this.$("#workflow option:selected").val(),
-                //};
                 var workflow = this.$("#workflow option:selected").data('id');
 
                 var active = ($("#active").is(":checked")) ? true : false;
@@ -204,21 +176,36 @@ define([
             },
 
             render: function () {
-                var workflowNames = [];
-                this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('wName'));
+                var formString = this.template();
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "50%",
+                    height: 513,
+                    title: "Create Opportunity",
+                    buttons: {
+                        save: {
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: function () {
+                                self.hideDialog();
+                            }
+                        }
+                    }
                 });
-                workflowNames = _.uniq(workflowNames);
-                this.$el.html(this.template({
-                    customersCollection: this.customersCollection,
-                    employeesCollection: this.employeesCollection,
-                    departmentsCollection: this.departmentsCollection,
-                    priorityCollection: this.priorityCollection,
-                    workflowNames: workflowNames,
-                    workflows: this.workflowsCollection.toJSON()
-                }));
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
+                common.populateCustomers(App.ID.customerDd, App.URL.customers);
+                common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons);
+                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam);
+                common.populatePriority(App.ID.priorityDd, App.URL.priorities);
+                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows');
+                this.delegateEvents(this.events);
                 return this;
             }
 

@@ -25,6 +25,7 @@ define([
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler'
             },
+            
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -53,9 +54,11 @@ define([
                 this.$el.find('#zip').val(customer.address.zip);
                 this.$el.find('#country').val(customer.address.country);
             },
+            
             hideDialog: function () {
                 $(".edit-leads-dialog").remove();
             },
+            
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");

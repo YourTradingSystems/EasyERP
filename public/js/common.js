@@ -267,13 +267,12 @@
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
             var self = this;
-            selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
                 if (model && model.workflow) {
                     options = $.map(response.data, function (item) {
                         return model.workflow._id === item._id ?
-                            $('<option/>').val(item.status).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
                 } else {

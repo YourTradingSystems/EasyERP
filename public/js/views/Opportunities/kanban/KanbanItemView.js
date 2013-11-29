@@ -30,7 +30,7 @@ define([
                 "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
-                "click .opportunity-content": "gotoForm",
+                "click .inner": "gotoForm",
                 "click #edit": "gotoEditForm"
             },
 
