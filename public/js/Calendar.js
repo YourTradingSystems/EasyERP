@@ -90,8 +90,10 @@ function(UsersCollection){
                 return true;
             });
         }
+		var b = true;
         if(!scheduler.checkEvent("onLightbox")){
             scheduler.attachEvent('onLightbox', function(id){
+				//multiselect
 				$(".dhx_multi_select_assignedTo").hide();
 				var s="<select id='newAssignedTo' multiple>";
 				$(".dhx_multi_select_assignedTo label").each(function(){
@@ -109,6 +111,70 @@ function(UsersCollection){
 						$(".dhx_multi_select_assignedTo label input").eq(n).attr("checked","checked")
 					}
 				});
+				//time select
+				if (b){
+					$(".dhx_section_time>select").hide();
+					$(".dhx_section_time>select").each(function(){
+						$(this).after("<span class='newTimeSelectContainer'><span class='text'>"+$(this).find("option:selected").text()+"</span></span>");
+					});
+				}
+ 					$(".dhx_section_time>select").each(function(){
+						$(this).next(".newTimeSelectContainer").find(".text").text($(this).find("option:selected").text());
+					});
+
+				$(".dhx_section_time").on("click",".newTimeSelectContainer",function(){
+					$(".timeModal").remove();
+					var s="<div class='timeModal'><div class='hours'>";
+					for (i=0;i<24;i++){
+						s+="<div>"+i+"</div>";
+					}
+					s+="</div><div class='minute'>";
+					for (i=0;i<60;i=i+5){
+						s+=(i<10)?"<div>:0"+i+"</div>":("<div>:"+i+"</div>");
+					}
+					s+="</div></div>";
+					var tx = $(this).text();
+					$(this).append(s);
+					$(".timeModal .hours div").eq(parseInt(tx.split(":")[0])).addClass("active");
+					$(".timeModal .minute div").eq(parseInt(tx.split(":")[1])/5).addClass("active");
+					return false;
+				});
+				$(".dhx_section_time").on("click",".timeModal .hours div",function(){
+					$(this).parent().find(".active").removeClass("active");
+					$(this).addClass("active");
+					return false;
+				});
+				$(".dhx_section_time").on("click",".timeModal .minute div",function(){
+					$(this).parent().find(".active").removeClass("active");
+					$(this).addClass("active");
+					var h=parseInt($(".timeModal .hours div.active").text());
+					var m=parseInt($(".timeModal .minute div.active").text().replace(":",""));
+					h=60*h+m;
+
+					$(this).parents(".timeModal").parents(".newTimeSelectContainer").find(".text").text($(".timeModal .hours div.active").text()+$(".timeModal .minute div.active").text()).parent().prev().find("option[value='"+h+"']").attr("selected","selected");
+
+					if ($(".dhx_section_time .dhx_readonly").eq(0).val()==$(".dhx_section_time .dhx_readonly").eq(1).val()&&$(".newTimeSelectContainer").index($(this).parents(".timeModal").parents(".newTimeSelectContainer"))==0){
+					if ($(".newTimeSelectContainer").eq(0).find(".text").text().split(":")[0]=="23"){
+						$(".newTimeSelectContainer").eq(1).find(".text").text($(".newTimeSelectContainer").eq(0).find(".text").text());
+					}else{
+						$(".newTimeSelectContainer").eq(1).find(".text").text((parseInt($(".newTimeSelectContainer").eq(0).find(".text").text().split(":")[0])+1)+":"+$(".newTimeSelectContainer").eq(0).find(".text").text().split(":")[1]);			
+					}
+					}
+					if ($(".newTimeSelectContainer").index($(this).parents(".timeModal").parents(".newTimeSelectContainer"))){
+						if ($(".newTimeSelectContainer").eq(1).find(".text").text()<$(".newTimeSelectContainer").eq(0).find(".text").text()){
+							alert("End Time<Start Time");
+						}
+						else
+							$(".timeModal").remove();
+					}
+					else
+						$(".timeModal").remove();
+					return false;
+				});
+				$(document).click(function(){
+					$(".timeModal").remove();
+				});
+				b=false;
             });
         }
 
