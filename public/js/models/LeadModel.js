@@ -1,7 +1,32 @@
 ﻿define(function () {
     var LeadModel = Backbone.Model.extend({
         idAttribute: "_id",
+        initialize: function(){
+            this.on('invalid', function(model, errors){
+                if(errors.length > 0){
+                    var msg = $.map(errors,function(error){
+                        return error.msg;
+                    }).join('\n');
+                    alert(msg);
+                }
+            });
+        },
 
+        validate: function(attrs){
+            var errors = [];
+
+            if($.trim(attrs.name) == ""){
+                errors.push(
+                    {
+                        name:"Leads",
+                        field:"name",
+                        msg:"Lead name can not be empty"
+                    }
+                );
+            }
+            if(errors.length > 0)
+                return errors;
+        },
         defaults: {
             isOpportunitie: false,
             createCustomer: false,

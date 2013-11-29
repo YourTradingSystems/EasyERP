@@ -4,9 +4,10 @@ define([
     'collections/JobPositions/JobPositionsCollection',
     'collections/Workflows/WorkflowsCollection',
     'custom',
-    'views/JobPositions/EditView'
+    'views/JobPositions/EditView',
+    'views/JobPositions/CreateView'
 ],
-function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom, EditView) {
+function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollection, Custom, EditView, CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -18,16 +19,21 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
             //this.render();
         },
 
+
+        events: {
+            "click .checkbox": "checked",
+            "click .breadcrumb a": "changeWorkflow",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).parent("tr").data("id") ;
             window.location.hash = "#home/content-JobPositions/form/" + id;
         },
 
-        events: {
-            "click .checkbox": "checked",
-            "click .breadcrumb a": "changeWorkflow",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        createItem: function () {
+            new CreateView({ collection: this.collection });
         },
 
         render: function () {
@@ -37,6 +43,7 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
             switch (viewType) {
                 case "list":
                     {
+						var p=this.collection.toJSON()
                         this.$el.html(_.template(ListTemplate, {jobPositionsCollection:this.collection.toJSON()}));
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -46,21 +53,12 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.models.length - 1) {
-                            itemIndex = this.collection.models.length - 1;
-                            Custom.setCurrentII(this.collection.models.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html();
+                        var currentModel = this.collection.getElement();
+                        if (!currentModel) {
+                            this.$el.html('<h2>No projects found</h2>');
                         } else {
-                            this.$el.html();
-                            var currentModel = this.collection.models[itemIndex];
-                            //currentModel.off('change');
-                            //currentModel.on('change:workflow', _.bind(this.render, this));
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                        }
+						}
                         break;
                     }
             }
@@ -131,7 +129,6 @@ function (ListTemplate, FormTemplate, JobPositionsCollection, WorkflowsCollectio
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        model.on('change', this.render, this);
                         model.destroy({
                             headers: {
                                 mid: mid

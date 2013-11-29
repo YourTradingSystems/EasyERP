@@ -47,8 +47,9 @@ var App = App ||
         salesPersonDd: "#salesPersonDd",
         salesTeamDd: "#salesTeamDd",
         priority: "#priority",
-		employeesDd:"#employeesDd"
-
+		employeesDd:"#employeesDd",
+		departmentManager: "#departmentManager",
+		parentDepartment: "#parentDepartment"
     },
     URL: {
         customers: "/Customer",

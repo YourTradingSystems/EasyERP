@@ -21,7 +21,7 @@
                 <td><%=jobPosition.totalForecastedEmployees%></td>
                 <td><%=jobPosition.numberOfEmployees%></td>
                 <td><%=jobPosition.expectedRecruitment%></td>
-                <td><%=jobPosition.workflow.name%></td>
+                <td><%= jobPosition.workflow?jobPosition.workflow.name:''%></td>
             </tr>
         <% }) %>
         </tbody>
