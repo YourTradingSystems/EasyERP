@@ -4,9 +4,9 @@ var requestHandler = function (fs, mongoose) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
-        google = require("./Modules/Google.js")(logWriter, mongoose),
-        events = require("./Modules/Events.js")(logWriter, mongoose,google),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
+        google = require("./Modules/Google.js")(users),
+        events = require("./Modules/Events.js")(logWriter, mongoose, google),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
@@ -1036,11 +1036,17 @@ var requestHandler = function (fs, mongoose) {
     }
     function getXML(req, res, link, data) {
 		events.getXML(res,link);
-	}
-    function googleCalendars(req, res, link, data) {
-		google.getGoogleCalendars(res,link);
+    }
+    
+    function getToken(req, res) {
+        google.getToken(req, res, function (token) {
+            res.redirect('#easyErp/Calendars');
+        });
 	}
 
+    function googleCalendars(req, res) {
+        google.getGoogleCalendars(req.session.googleToken, res);
+    }
 
     //---------END------Events----------------------------------
     return {
@@ -1163,7 +1169,9 @@ var requestHandler = function (fs, mongoose) {
         removeCalendar: removeCalendar,
 
         googleCalSync: googleCalSync,
-		getXML: getXML
+        getXML: getXML,
+        getToken: getToken,
+        googleCalendars:googleCalendars
     }
 }
 //---------EXPORTS----------------------------------------

@@ -1,7 +1,6 @@
 ﻿var googleModule = function (users) {
 
     var googleapis = require('googleapis'),
-	request = require('request'),
     OAuth2Client = googleapis.OAuth2Client;
     var oauth2Client =
         new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
@@ -11,22 +10,23 @@
     });
 
     var writeTokenToDb = function (uId, token) {
-        users.update(req.sessions.uId, { $set: { googleToken: token } }, function (err, response) {
+        users.User.update(uId, { $set: { googleToken: token } }, function (err, response) {
             if (err) {
                 console.log(err);
             }
         });
     };
     var checkSessionForToken = function (req) {
-        if (req.sessions && req.sessions.loggedIn) {
-            if (req.sessions.googleToken) {
-                
+        console.log('Google Sessions');
+        if (req.session && req.session.loggedIn) {
+            if (req.session.googleToken) {
+
                 return true;
             } else {
-                users.findById(req.sessions.uId, function (err, response) {
+                users.User.findById(req.session.uId, function(err, response) {
                     if (response) {
                         if (response.googleToken) {
-                            req.sessions.googleToken = response.googleToken;
+                            req.session.googleToken = response.googleToken;
                             return true;
                         } else {
                             return false;
@@ -38,29 +38,64 @@
                 });
             }
         }
-    }
+    };
 
-    var getToken = function(req, res) {
+    var getToken = function(req, res, callback) {
         if (checkSessionForToken(req)) {
-            return req.sessions.googleToken;
+            callback(req.session.googleToken);
         } else {
             var query = req.query;
             console.log(query);
             if (!query.hasOwnProperty('code')) {
                 res.redirect(url);
             } else {
+                console.log('>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
                 oauth2Client.getToken(query.code, function(err, tokens) {
                     // contains an access_token and optionally a refresh_token.
                     // save them permanently.
-                    if (req.sessions && req.sessions.loggedIn) {
-                        writeTokenToDb(req.sessions.uId, tokens.access_token);
-                        req.sessions.googleToken = tokens.access_token;
+                    if (req.session && req.session.loggedIn) {
+                        
+                        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                        writeTokenToDb(req.session.uId, tokens.access_token);
+                        req.session.googleToken = tokens.access_token;
+                        if (callback) callback(tokens.access_token);
                     }
                 });
             }
         }
+    };
+
+    var getGoogleCalendars = function(token, response) {
+        oauth2Client.credentials = {
+            access_token: token
+        };
+        googleapis
+            .discover('calendar', 'v3')
+            .execute(function(err, client) {
+                if (err) console.log(err);
+                client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+                    function(err, result) {
+                        if (result) {
+                            var calendars = [];
+                            for (var i in result.items) {
+                                calendars.push({
+                                    id: result.items[i].id,
+                                    summary: result.items[i].summary
+                                });
+                            }
+                            console.log(calendars);
+                            response.send(calendars);
+                        } else {
+                            console.log(err);
+                            response.send(500, err);
+                        }
+                    });
+            });
     }
     return {
+        googleapis: googleapis,
+        oauth2Client: oauth2Client,
+        getGoogleCalendars:getGoogleCalendars,
         getToken: getToken
     }
 };

@@ -86,61 +86,49 @@ app.get('/account/authenticated', function (req, res, next) {
     }
 });
 app.get('/getGoogleToken', function (req, res) {
-    var query = req.query;
-    console.log(query);
-    if (!query.hasOwnProperty('code')) {
-        res.redirect(url);
-    } else {
-        oauth2Client.getToken(query.code, function (err, tokens) {
-            // contains an access_token and optionally a refresh_token.
-            // save them permanently.
-            console.log(tokens);
-            oauth2Client.credentials = {
-                access_token: tokens.access_token
-            };
-            googleapis
-                .discover('calendar', 'v3')
-                .execute(function (err, client) {
-                    if (err) console.log(err);
-                    client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
-                        function (err, result) {
-                            if (result) {
-                                var calendars = [];
-                                for (var i in result.items) {
-                                    calendars.push({
-                                        id: result.items[i].id,
-                                        summary: result.items[i].summary
-                                    });
-                                }
-                                console.log(calendars);
-                            } else {
-                                console.log(err);
-                            }
-                            var event = {
-                                "summary": "rrrrrrrrrr",
-                                'start': {
-                                    "date": "2013-12-6"
-                                },
-                                'end': {
-                                    "date": "2013-12-6"
-                                }
-                           
-                            };
-                            //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-                            //    .withAuthClient(oauth2Client).execute(
-                            //    function (err, result) {
-                            //        if (result) {
-                            //            console.log(result);
-                            //        } else {
-                            //            console.log(err);
-                            //        }
-                            //        ;
-                            //    });
-                        });
-                    res.redirect('/#easyErp/Calendar');
-                });
-        });
-    }
+    requestHandler.getToken(req, res);
+            //googleapis
+            //    .discover('calendar', 'v3')
+            //    .execute(function (err, client) {
+            //        if (err) console.log(err);
+            //        client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+            //            function (err, result) {
+            //                if (result) {
+            //                    var calendars = [];
+            //                    for (var i in result.items) {
+            //                        calendars.push({
+            //                            id: result.items[i].id,
+            //                            summary: result.items[i].summary
+            //                        });
+            //                    }
+            //                    console.log(calendars);
+            //                } else {
+            //                    console.log(err);
+            //                }
+            //                var event = {
+            //                    "summary": "rrrrrrrrrr",
+            //                    'start': {
+            //                        "date": "2013-12-6"
+            //                    },
+            //                    'end': {
+            //                        "date": "2013-12-6"
+            //                    }
+
+            //                };
+            //                //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+            //                //    .withAuthClient(oauth2Client).execute(
+            //                //    function (err, result) {
+            //                //        if (result) {
+            //                //            console.log(result);
+            //                //        } else {
+            //                //            console.log(err);
+            //                //        }
+            //                //        ;
+            //                //    });
+            //            });
+            //        res.redirect('/#easyErp/Calendar');
+            //    });
+    
 });
 //---------------------Users--and Profiles------------------------------------------------
 
