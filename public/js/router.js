@@ -15,9 +15,16 @@ define([
         routes: {
             "home": "main",
             "login": "login",
+            "kanban/:contentType(/:parrentContentId)": "goToKanban",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "home/action-:type/:action(/:curitem)(/:hash)": "makeAction",
             "*actions": "main"
+        },
+
+        goToKanban: function (contentType, parrentContentId) {
+            var ContentViewUrl = "views/" + contentType + "/kanban/KanbanItemView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                CollectionUrl = "collections/" + contentType + "/" + "kanbanCollection";
         },
 
         getList: function (contentType, viewType, itemIndex, hash) {

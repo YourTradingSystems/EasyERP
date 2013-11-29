@@ -21,26 +21,9 @@ define([
                 "click #top-bar-createBtn": "createEvent"
             },
 
-            //changeContentViewType: function (e) {
-            //    var windowLocHash = window.location.hash.split('/')[3];
-            //    var hash;
-            //    if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-            //        hash = windowLocHash;
-            //    }
-            //    Custom.changeContentViewType(e, hash, this.contentType);
-            //},
             changeContentViewType: function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
             },
-            //changeItemIndex: function (e) {
-            //    var windowLocHash = window.location.hash.split('/')[3];
-            //    var actionType = "Content";
-            //    var hash;
-            //    if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-            //        hash = windowLocHash;
-            //    }
-            //    Custom.changeItemIndex(e, hash, actionType, this.contentType);
-            //},
             changeItemIndex: function (e) {
                 var actionType = "Content";
                 Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
