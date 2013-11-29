@@ -14,8 +14,6 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
-                this.accountDdCollection = new AccountsDdCollection();
-                this.accountDdCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = options.collection;
                 this.render();
@@ -52,6 +50,7 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+						self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -59,9 +58,34 @@ define([
                     }
                 });
             },
+            hideDialog: function () {
+                $(".create-dialog").remove();
+            },
 
             render: function () {
-                this.$el.html(this.template({ accountDdCollection: this.accountDdCollection, departmentsCollection: this.departmentsCollection }));
+				var self = this;
+                var formString = this.template({});
+
+                   this.$el = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:true,
+					dialogClass:"create-dialog",
+					title: "Edit department",
+					width:"80%",
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						}]
+
+                });
+				common.populateDepartments(App.ID.parentDepartment, "/Departments");
+                common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
                 return this;
             }
 

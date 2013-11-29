@@ -62,6 +62,7 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+						self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -70,39 +71,33 @@ define([
                 });
 
             },
-
+            hideDialog: function () {
+                $(".create-dialog").remove();
+            },
             render: function () {
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
-					accountDdCollection: this.accountDdCollection, 
-					departmentsCollection: this.departmentsCollection
                 });
 				var self=this;
                 this.$el = $(formString).dialog({
                     autoOpen: true,
                     resizable: false,
-                    dialogClass: "edit-task-dialog",
+                    dialogClass: "create-dialog",
                     width: "50%",
                     height: 303,
                     title: "Edit Department",
                     buttons: [{
 								  text: "Save",
-								  click: function () { self.saveItem();$(this).remove(); }
+								  click: function () { self.saveItem(); }
 							  },
 							  {
-								  text: "Remove",
+								  text: "Cancel",
 								  click: function () { $(this).remove(); }
 							  }]
                 });
-                var that = this;
-/*                var itemIndex = Custom.getCurrentII() - 1;
+				common.populateDepartments(App.ID.parentDepartment, "/Departments", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON());
 
-                if (itemIndex == -1) {
-                    this.$el.html();
-                } else {
-                    var currentModel = this.departmentsCollection.models[itemIndex];
-                    this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), accountDdCollection: this.accountDdCollection, departmentsCollection: this.departmentsCollection }));
-                }*/
                 return this;
             }
 

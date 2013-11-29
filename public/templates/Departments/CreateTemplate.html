@@ -10,18 +10,10 @@
                     <p><input type="text" class="title-input blueback" name="departmentName" id="departmentName" /></p>
                     <p>
                         <select id="parentDepartment">
-                            <option selected="selected" value="0">Select...</option>
-                             <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                             <% }); %>
                         </select>
                     </p>
                     <p>
                         <select id="departmentManager">
-                            <option selected="selected" value="0">Select...</option>
-                             <% accountDdCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-                            <% }); %>
                         </select>
                     </p>
                 </div>

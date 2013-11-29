@@ -10,29 +10,22 @@
 		  <dd>0</dd>
 		  <dt><label for="expectedRecruitment">Expected in Recruitment :</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" placeholder="0.00" min="0" /></dd>
 		  <dt><label for="totalForecastedEmployees">Total Forecasted Employees :</label></dt><dd>0</dd>
-		  <dt><label for="workflowNames">Workflow Name :</label></dt>
+		  <dt><label for="workflowNamesDd">Workflow Name :</label></dt>
 		  <dd>
-		    <select id="interviewForm">
-              <option selected="selected" value="0">Select...</option>
+		    <select id="workflowNamesDd">
             </select>
 
 		  </dd>
-		  <dt><label for="workflow">Workflow :</label></dt>
+		  <dt><label for="workflowsDd">Workflow :</label></dt>
 		  <dd>
-            <select id="workflowNames">
-              <% _.each(workflowNames, function(item){ %>
-              <option><%= item %></option>
-              <%}); %>
+            <select id="workflowsDd">
             </select>
 
 		  </dd>
-		  <dt><label for="department">Department :</label></dt>
+		  <dt><label for="departmentDd">Department :</label></dt>
 		  <dd>
-            <select id="department">
-              <option selected="selected" value="0">Select...</option>
-              <% departmentsCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-              <% }); %>
+            <select id="departmentDd">
+
             </select>
 			
 		  </dd>

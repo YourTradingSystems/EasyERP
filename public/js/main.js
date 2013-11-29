@@ -48,9 +48,10 @@ var App = App ||
         salesTeamDd: "#salesTeamDd",
         priority: "#priority",
 		employeesDd:"#employeesDd",
-        visibilityDd: "#visibilityDd",
-        genres: "#genresDd"
-
+		departmentManager: "#departmentManager",
+		parentDepartment: "#parentDepartment",
+		visibilityDd: "#visibilityDd",
+		genres: "#genresDd"
     },
     URL: {
         customers: "/Customer",

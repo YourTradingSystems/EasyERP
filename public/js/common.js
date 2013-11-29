@@ -175,9 +175,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson)) {
+                if (model && (model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
+                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
@@ -217,9 +217,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam)) {
+                if (model && (model.department || (model.salesPurchases&&model.salesPurchases.salesTeam) || model.salesTeam||model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases&&model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)||(model.parentDepartment && model.parentDepartment.id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
@@ -280,11 +280,20 @@
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
                 if (model && model.workflow) {
+					if (model.workflow._id == undefined){
+                    options = $.map(response.data, function (item) {
+                        return model.workflow == item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+					}else{
                     options = $.map(response.data, function (item) {
                         return model.workflow._id === item._id ?
                             $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
+
+					}
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
@@ -345,9 +354,9 @@
         return {
             populateJobPositions:populateJobPositions,
             populateUsers: populateUsers,
-            utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
-            utcDateToLocaleDateTime:utcDateToLocaleDateTime,
-            utcDateToLocaleDate:utcDateToLocaleDate,
+         utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
+        utcDateToLocaleDateTime:utcDateToLocaleDateTime,
+        utcDateToLocaleDate:utcDateToLocaleDate,
             populateProjectsDd:populateProjectsDd,
             populatePriority: populatePriority,
             populateDepartments: populateDepartments,

@@ -4,9 +4,10 @@ define([
     'collections/Departments/DepartmentsCollection',
     'custom',
     'common',
-    'views/Departments/EditView'
+    'views/Departments/EditView',
+    'views/Departments/CreateView'
 ],
-function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, EditView) {
+function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, EditView, CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -70,6 +71,9 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
             }
             return this;
 
+        },
+        createItem: function () {
+            new CreateView({ collection: this.collection });
         },
 
         checked: function () {
