@@ -23,47 +23,34 @@
 
 		  <dt><label>Project</label></dt><dd>
 			<select id="projectDd">
-              <option selected="selected" value="">Select...</option>
-              <% projectsDdCollection.each(function(option){ %>
-              
-              <option value="<%= option.get('_id') %>"<%= (option.get('_id') == projectId) ? 'selected="selected"' : ''%>><%= option.get('projectName') %> </option>
-              <% }); %>
-              
+
             </select>
 		  </dd>
-		  <dt><label for="workflowNames">Workflow Name:</label></dt><dd>
-            <select id="workflowNames">
-             <% _.each(workflowNames, function(item){ %>
-              <option><%= item %></option>
-              <% }); %>
+		  <dt><label for="workflowNamesDd">Workflow Name:</label></dt><dd>
+            <select id="workflowNamesDd">
+
             </select>
 
 		  </dd>
             
-		    <dt><label for="workflow">Workflow:</label></dt><dd id="selectWorkflow">
-		                                                                   
+		    <dt><label for="workflowsDd">Workflow:</label></dt><dd id="selectWorkflow">
+		         <select id="workflowsDd">
+
+		         </select>
 		    </dd>
 
 		    <dt><label>Assigned to :</label></dt><dd>
-            <select id="assignedTo" required>
-              <option selected="selected" value="">Select...</option>
-              <% accountDdCollection.each(function(option){ %>
-              
-              <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
-              <% }); %>
-              
+            <select id="assignedToDd" required>
+
             </select>
 		  </dd>
 
 
 		  <dt><label for="deadline">Deadline :</label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" required /></dd>
 
-		  <dt><label for="priority">Priority :</label></dt><dd>
-            <select id="priority">
-              <option selected="selected" value="0">Select...</option>
-              <% priorityCollection.each(function(option){ %>
-              <option value="<%= option.get('priority') %>"><%= option.get('priority') %></option>
-              <% }); %>
+		  <dt><label for="priorityDd">Priority :</label></dt><dd>
+            <select id="priorityDd">
+
             </select>
 		  </dd>
 		    
@@ -79,17 +66,9 @@
 		    <dt><label for="StartDate">Start Date :</label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="" required /></dd>
 		  <dt><label for="EndDate">End Date :</label></dt><dd><input class="extrainfo blueback" type="text" name="EndDate" id="EndDate" value="" required /></dd>
 
-		  <dt><label for="customerDd">Customer :</label></dt><dd>
-            <select id="customerDd">
-              <option selected="selected" value="">Select...</option>
-              <% customersDdCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>"><%= option.get('name') %> (<%= option.get('type') %>)</option>
-              <% }); %>
-            </select>
 
-		  </dd>
 		  <dt><label for="logged">Logged :</label></dt><dd>
-			<input class="blueback" type="text" name="loged" id="loged" value=""/>
+			<input class="blueback" type="text" name="loged" id="logged" value=""/>
 		  </dd>
 		  <dt><label for="estimated">Estimeted</label></dt><dd><input class="blueback" type="text" name="loged" id="estimated" value="" /></dd>
 		  <dt><label for="sequence">Sequense :</label></dt><dd><input class="extrainfo blueback" type="text" name="sequence" id="sequence" required /></dd>
