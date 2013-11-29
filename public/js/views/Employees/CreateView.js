@@ -1,15 +1,10 @@
 define([
     "text!templates/Employees/CreateTemplate.html",
-    "collections/Employees/EmployeesCollection",
-    "collections/Departments/DepartmentsCollection",
-    "collections/JobPositions/JobPositionsCollection",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Users/UsersCollection",
     "models/EmployeeModel",
     "common",
     "custom"
 ],
-    function (CreateTemplate, EmployeesCollection, DepartmentsCollection, JobPositionsCollection, AccountsDdCollection, UsersCollection, EmployeeModel, common, Custom) {
+    function (CreateTemplate, EmployeeModel, common, custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -17,17 +12,9 @@ define([
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
-                this.usersCollection = new UsersCollection();
-                this.usersCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.jobPositionsCollection = new JobPositionsCollection();
-                this.jobPositionsCollection.bind('reset', _.bind(this.render, this));
-                this.accountsDdCollection = new AccountsDdCollection();
-                this.accountsDdCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));
-                this.employeesCollection = options.collection;
-                //this.render();
+                _.bindAll(this, "saveItem");
+                this.model = new EmployeeModel();
+                this.render();
             },
 
             events: {
@@ -35,7 +22,9 @@ define([
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit"
             },
-            
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
             showEdit: function () {
                 $(".upload").animate({
                     height: "20px",
@@ -63,22 +52,17 @@ define([
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-
                 var employeeModel = new EmployeeModel();
-
                 var name = {
                     first: $.trim($("#first").val()),
                     last: $.trim($("#last").val())
                 };
-
                 var workAddress = {};
                 $("p").find(".workAddress").each(function () {
                     var el = $(this);
                     workAddress[el.attr("name")] = el.val();
                 });
-
                 var tags = $.trim($("#tags").val()).split(',');
-
                 var workEmail = $.trim($("#workEmail").val());
                 var skype = $.trim($("#skype").val());
 
@@ -90,37 +74,26 @@ define([
                 };
 
                 var officeLocation = $.trim($("#officeLocation").val());
+                var relatedUser = $("#relatedUsersDd option:selected").val();
+                var department = $("#departmentsDd option:selected").val();
+                var jobPosition = $("#jobPositionDd option:selected").val();
+                var manager = $("#projectManagerDD option:selected").val();
+                var coach = $("#coachDd option:selected").val();
+                var identNo = $.trim($("#identNo").val());
 
-                var relatedUser = this.$("#relatedUser option:selected").val();
-
-                var department = this.$("#department option:selected").val();
-
-                var jobPosition = this.$("#jobPosition option:selected").val();
-
-                var manager = this.$("#manager option:selected").val();
-
-                var coach = this.$("#coach option:selected").val();
-                coach = coach === null ? "" : coach;
-                var identNo = parseInt($.trim($("#identNo").val()));
-
-                var passportNo = parseInt($.trim($("#passportNo").val()));
-
+                var passportNo = $.trim($("#passportNo").val());
                 var otherId = $.trim($("#otherId").val());
-
                 var homeAddress = {};
                 $("p").find(".homeAddress").each(function () {
                     var el = $(this);
                     homeAddress[el.attr("name")] = el.val();
                 });
-
                 var dateBirthSt = $.trim($("#dateBirth").val());
                 var dateBirth = "";
                 if (dateBirthSt) {
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 }
-
                 var active = ($("#active").is(":checked")) ? true : false;
-
                 employeeModel.save({
                     name: name,
                     imageSrc: this.imageSrc,
@@ -129,11 +102,11 @@ define([
                     skype: skype,
                     workPhones: workPhones,
                     officeLocation: officeLocation,
-                    relatedUser: relatedUser,
+                    relatedUser: relatedUser ? relatedUser : "",
                     department: department,
-                    jobPosition: jobPosition,
-                    manager: manager,
-                    coach: coach,
+                    jobPosition: jobPosition? jobPosition : "",
+                    manager: manager ? manager : "",
+                    coach: coach ? coach : "",
                     identNo: identNo,
                     passportNo: passportNo,
                     otherId: otherId,
@@ -147,6 +120,7 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+                        self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -156,14 +130,34 @@ define([
             },
 
             render: function () {
-                var employeeModel = new EmployeeModel();
-                this.$el.html(this.template({
-                    departmentsCollection: this.departmentsCollection,
-                    jobPositionsCollection: this.jobPositionsCollection,
-                    accountsDdCollection: this.accountsDdCollection,
-                    usersCollection: this.usersCollection
-                }));
-                common.canvasDraw({ model: employeeModel.toJSON() }, this);
+                var formString = this.template();
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "50%",
+                    height: 513,
+                    title: "Create Employee",
+                    buttons:{
+                        save:{
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text: "Cancel",
+                            class: "btn",
+                            click: function(){
+                                self.hideDialog();
+                            }
+                        }
+                    }
+                });
+                common.populateUsers(App.ID.relatedUsersDd, "/Users");
+                common.populateDepartments(App.ID.departmentsDd, "/Departments");
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition");
+                common.populateEmployeesDd(App.ID.coachDd, "/getPersonsForDd");
+                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
+                common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
                     changeMonth : true,
                     changeYear : true,

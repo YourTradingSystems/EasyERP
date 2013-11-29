@@ -96,7 +96,7 @@ define([
                 department = department ? department : null;
                 var jobPosition = $("#jobPositionDd option:selected").val();
                 jobPosition = jobPosition ? jobPosition : null;
-                var manager = $("#managerDd option:selected").val();
+                var manager = $("#projectManagerDD option:selected").val();
                 manager = manager ? manager : null;
                 var coach = $("#coachDd option:selected").val();
                 coach = coach ? coach : null;
@@ -154,54 +154,7 @@ define([
                     }
                 });
             },
-            populateDropDown: function (type, selectId, url, val) {
-                var selectList = $(selectId);
-                var self = this;
-                selectList.append($("<option/>").val('').text('Select...'));
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "users":
-                                return self.userOption(item);
-                            case "departments":
-                                return self.departmentsOption(item);
-                            case "jopPositions":
-                                return self.jobPositionOption(item);
-                            case "coach":
-                                return self.personOption(item);
-                            case "manager":
-                                return self.managerOption(item);
-                        }
-                    });
-                    selectList.append(options);
-                });
-            },
 
-            userOption: function(item){
-                return (this.currentModel.get('relatedUser') && this.currentModel.get('relatedUser')._id == item._id) ?
-                    $('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.login);
-            },
-            departmentsOption: function(item){
-                return (this.currentModel.get('department') && this.currentModel.get('department')._id == item._id) ?
-                    $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.departmentName);
-            },
-            jobPositionOption: function(item){
-                return (this.currentModel.get('jobPosition') && this.currentModel.get('jobPosition')._id == item._id) ?
-                    $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name);
-            },
-            personOption: function (item) {
-                return (this.currentModel.get("coach") && this.currentModel.get("coach")._id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-            },
-            managerOption: function (item) {
-                return (this.currentModel.get("manager") && this.currentModel.get("manager")._id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-            },
             render: function () {
                 if (this.currentModel.get('dateBirth')) {
                     this.currentModel.set({
@@ -228,12 +181,11 @@ define([
                         }
                     }
                 });
-                this.populateDropDown("users", App.ID.relatedUsersDd, "/Users");
-                this.populateDropDown("departments", App.ID.departmentsDd, "/Departments");
-                this.populateDropDown("jopPositions", App.ID.jobPositionDd, "/JobPosition");
-                this.populateDropDown("coach", App.ID.coachDd, "/getPersonsForDd");
-                this.populateDropDown("manager", App.ID.managerDd, "/getPersonsForDd");
-
+                common.populateUsers(App.ID.relatedUsersDd, "/Users", this.currentModel.toJSON());
+                common.populateDepartments(App.ID.departmentsDd, "/Departments",this.currentModel.toJSON());
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.coachDd, "/getPersonsForDd", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#dateBirth').datepicker({
                     changeMonth : true,
