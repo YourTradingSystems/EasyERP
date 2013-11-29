@@ -252,12 +252,11 @@ define([
                         }
                     }
                 });
-                this.populateDropDown("customers", App.ID.customerDd, App.URL.customers);
-                this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
-                this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
-                this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
-                this.populateDropDown("workflows", App.ID.workflowDd, App.URL.workflows);
-                this.populateDropDown("workflowNames", App.ID.workflowNamesDd, App.URL.workflows);
+				common.populateCustomers(App.ID.customerDd, "/Customer",this.currentModel.toJSON());
+                common.populateDepartments(App.ID.salesTeam, "/Departments",this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.salesPerson, "/Employees",this.currentModel.toJSON());
+                common.populatePriority(App.ID.priorityDd, "/Priority",this.currentModel.toJSON());
+                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",this.currentModel.toJSON());
                 this.delegateEvents(this.events);
 
                 return this;

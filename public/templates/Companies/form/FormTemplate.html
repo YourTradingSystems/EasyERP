@@ -1,7 +1,7 @@
 <div class="form-holder">
   <div class="formLeftColumn">
     <form class="form notDialog" id="createEmployeeForm" data-id="<%=_id%>">
-      <div class="formTitle">
+      <div class="formTitle withMargin">
         <h3 class="left">Details</h3>  
         <div class="btnHolder">
           <div class="icon-img add left" title="Create Companie"></div>
@@ -11,9 +11,17 @@
         <div class="clearfix"></div>
       </div>
       <div class="inner">
-        <div class="avatar">
-          <img alt="" src="<%=imageSrc%>" width="120" height="120" />
-        </div>
+        <div class="avatar-wrapper left">
+          <div class="avatar">
+			<img alt="" src="<%=imageSrc%>" width="120" height="120" />
+          </div>
+		  <div class="social">
+			<a class="facebook" href="#"></a>
+			<a class="linkedin" href="#" style="background-position-y: 0px;"></a>
+			<div class="clearfix"></div>
+		  </div>
+
+		</div>
         <div class="company-info">
           <h2><%=name.first%></h2>
           <div class="half-block left">
@@ -52,11 +60,6 @@
         <div class="clearfix"></div>
      <div class="details right">...</div>	
 
-	  <div class="social">
-        <a class="facebook" href="#"></a>
-        <a class="linkedin" href="#" style="background-position-y: 0px;"></a>
-        <div class="clearfix"></div>
-      </div>
 
       </div>
 	  <!--
