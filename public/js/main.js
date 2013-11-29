@@ -81,13 +81,19 @@ require.config({
         templates: '../templates',
         text: './libs/text',
         common: 'common',
-        dateFormat: './libs/date.format'
+        dateFormat: './libs/date.format',
+        chosen: './libs/chosen.jquery.min'
     },
     shim: {
         'jqueryui': ['jQuery'],
         'ajaxForm': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
         'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm'],
+        'chosen': {
+            exports: 'chosen'
+        },
+        'Calendar': ['chosen'],
+
         'dateFormat': {
             exports: 'dateFormat'
         }

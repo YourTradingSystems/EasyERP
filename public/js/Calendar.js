@@ -90,6 +90,28 @@ function(UsersCollection){
                 return true;
             });
         }
+        if(!scheduler.checkEvent("onLightbox")){
+            scheduler.attachEvent('onLightbox', function(id){
+				$(".dhx_multi_select_assignedTo").hide();
+				var s="<select id='newAssignedTo' multiple>";
+				$(".dhx_multi_select_assignedTo label").each(function(){
+					s+="<option>"+$(this).text()+"</option>";
+				});
+				s+="</select>";
+				$(".dhx_multi_select_assignedTo").parent().append(s);
+				$("#newAssignedTo").chosen({width: "590px;"});
+				$('.chosen-results').on('click','li', function(e) {
+					var n = $('.chosen-results li').index($(this));
+					if ($(".dhx_multi_select_assignedTo label input").eq(n).attr("checked")=="checked"){
+						$(".dhx_multi_select_assignedTo label input").eq(n).removeAttr("checked")
+					}
+					else{
+						$(".dhx_multi_select_assignedTo label input").eq(n).attr("checked","checked")
+					}
+				});
+            });
+        }
+
     }
 
     var applyDefaults = function(personsOptions){
