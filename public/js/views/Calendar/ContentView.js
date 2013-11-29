@@ -37,8 +37,49 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
 		syncCalendar:function(e){
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
-			window.open("/getGoogleToken","_blank");
-			
+            var strWindowFeatures = "resizable=yes,width=800, height=600";
+            var winObject = window.open("/getGoogleToken", "Google Authorization", strWindowFeatures);
+            var pollTimer = window.setInterval(function(){
+                if(winObject.document.URL.indexOf("easyErp") != -1){
+                    var url = winObject.document.url;
+                    winObject.close();
+					$.ajax({
+						type: "GET",
+						url: "/GoogleCalendars",
+						data: event,
+						success: function(response){
+							if(response){
+								var formString = this.syncDilalogTpl({calendarsCollection:response});
+								this.syncDialog = $(formString).dialog({
+									autoOpen:true,
+									resizable:false,
+									title: "Synchronize calendars",
+									buttons:{
+										submit: {
+											text:"Continue",
+											click: this.syncDlgSubmitBtnClickHandler
+										},
+										cancel: {
+											text: "Cancel",
+											click: this.closeSyncDialog
+										}
+									}
+								});
+
+							}
+							
+							
+						},
+						error: function (error, statusText,sdfdf){
+
+
+						},
+						dataType: "jsonp"
+					});
+
+                }
+            }, 100);
+
 		},
         keydownHandler: function (e) {
             switch (e.which) {
