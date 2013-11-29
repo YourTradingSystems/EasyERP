@@ -6,10 +6,11 @@ define([
     'views/Opportunities/kanban/KanbanItemView',
     'custom',
     'common',
-    'views/Opportunities/EditView'
+    'views/Opportunities/EditView',
+    'views/Opportunities/CreateView'
 ],
 
-function (ListTemplate, FormTemplate, WorkflowsTemplate, WorkflowsCollection, OpportunitiesKanbanItemView, Custom, common, EditView) {
+function (ListTemplate, FormTemplate, WorkflowsTemplate, WorkflowsCollection, OpportunitiesKanbanItemView, Custom, common, EditView, CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -150,6 +151,10 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, WorkflowsCollection, Op
         editItem: function () {
             //create editView in dialog here
             new EditView({ collection: this.collection });
+        },
+
+        createItem: function () {
+            new CreateView();
         },
 
         changeWorkflow: function (e) {

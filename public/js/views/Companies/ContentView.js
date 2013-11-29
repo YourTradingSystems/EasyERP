@@ -59,9 +59,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             // alert(e.target.id);
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
+        
         createItem: function () {
             new CreateView({ collection: this.collection });
-
         },
 
         removeEdit: function (e) {

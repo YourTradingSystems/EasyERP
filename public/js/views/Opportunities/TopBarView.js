@@ -18,7 +18,7 @@ define([
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
                 "click #top-bar-editBtn": "editEvent",
-                
+                "click #top-bar-createBtn": "createEvent"
             },
 
             //changeContentViewType: function (e) {
@@ -70,7 +70,10 @@ define([
                 event.preventDefault();
                 this.trigger('editEvent');
             },
-            
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
+            },
             deleteEvent: function (event) {
                 event.preventDefault();
                 var answer = confirm("Realy DELETE items ?!");

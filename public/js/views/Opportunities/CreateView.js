@@ -11,7 +11,6 @@ define([
 
             initialize: function () {
                 _.bindAll(this, "saveItem");
-                this.model = new OpportunityModel();
                 this.render();
             },
 
@@ -86,13 +85,13 @@ define([
                     };
                 }
 
-                var customerId = this.$("#customer option:selected").val();
+                var customerId = this.$("#customerDd option:selected").val();
                 var email = $.trim($("#email").val());
 
 
-                var salesPersonId = this.$("#salesPerson option:selected").val();
+                var salesPersonId = this.$("#salesPersonDd option:selected").val();
                 
-                var salesTeamId = this.$("#salesTeam option:selected").val();
+                var salesTeamId = this.$("#salesTeamDd option:selected").val();
                 
                 var nextActionSt = $.trim($("#nextActionDate").val());
                 var nextActionDate = $.trim($("#nextActionDescription").val());
@@ -103,7 +102,7 @@ define([
 
                 var expectedClosing = $.trim($("#expectedClosing").val());
                 
-                var priority = $("#priority").val();
+                var priority = $("#priorityDd").val();
 
                 var company = $.trim($("#company").val());
 
@@ -133,14 +132,14 @@ define([
                     fax: fax,
                 };
 
-                var workflow = this.$("#workflow option:selected").data('id');
+                var workflow = this.$("#workflowDd option:selected").data('id');
 
                 var active = ($("#active").is(":checked")) ? true : false;
 
                 var optout = ($("#optout").is(":checked")) ? true : false;
 
                 var reffered = $.trim($("#reffered").val());
-
+                var self = this;
                 opportunityModel.save({
                     name: name,
                     expectedRevenue: expectedRevenue,
@@ -167,6 +166,7 @@ define([
                         mid: mid
                     },
                     success: function (model) {
+                        self.hideDialog();
                         Backbone.history.navigate("home/content-Opportunities", { trigger: true });
                     },
                     error: function (model, xhr, options) {
