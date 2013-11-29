@@ -1,17 +1,17 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
     "text!templates/Tasks/selectTemplate.html",
-    "collections/Projects/ProjectsDdCollection",
+    /*"collections/Projects/ProjectsDdCollection",
     "collections/Customers/AccountsDdCollection",
     "collections/Tasks/TasksCollection",
     "collections/Customers/CustomersCollection",
     "collections/Workflows/WorkflowsCollection",
-    "collections/Priority/TaskPriority",
+    "collections/Priority/TaskPriority",*/
     "models/TasksModel",
     "common",
     "custom"
 ],
-    function (CreateTemplate, selectTemplate, ProjectsDdCollection, AccountsDdCollection, TasksCollection, CustomersCollection, WorkflowsCollection, PriorityCollection, TaskModel, common, Custom) {
+    function (CreateTemplate, selectTemplate, TaskModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -19,20 +19,10 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
-                this.projectsDdCollection = new ProjectsDdCollection();
-                this.projectsDdCollection.bind('reset', _.bind(this.render, this));
-                this.accountDdCollection = new AccountsDdCollection();
-                this.accountDdCollection.bind('reset', _.bind(this.render, this));
-                this.customersDdCollection = new CustomersCollection();
-                this.customersDdCollection.bind('reset', _.bind(this.render, this));
-                this.workflowsDdCollection = new WorkflowsCollection({ id: "Task" });
-                this.workflowsDdCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));
-                this.priorityCollection = new PriorityCollection();
-                this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.tasksCollection = options.collection;
-                this.pId = options.pId;
-                this.render = _.after(5, this.render);
+                _.bindAll(this, "saveItem", "render");
+                this.model = new TaskModel();
+                //this.pId = options.pId;
+                this.render();
             },
 
             events: {
@@ -70,80 +60,41 @@ define([
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
             },
-
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-
-                var taskModel = new TaskModel();
-
                 var summary = $("#summary").val();
-
-                var project = this.$("#projectDd option:selected").val();
-                //var project = common.toObject(idProject, this.projectsDdCollection);
-
-                var assignedTo = this.$("#assignedTo option:selected").val();
-                //var assignedTo = common.toObject(idAssignedTo, this.accountDdCollection);
-
+                var project = $("#projectDd option:selected").val();
+                var assignedTo = $("#assignedToDd option:selected").val();
                 var deadline = $.trim($("#deadline").val());
-                //var deadline = "";
-                //if (deadlineSt) {
-                //    deadline = new Date(Date.parse(deadlineSt)).toISOString();
-                //}
-
                 var tags = $.trim($("#tags").val()).split(',');
-
                 var description = $("#description").val();
-
-                var sequence = parseInt($.trim($("#sequence").val()));
-
+                var sequence = $.trim($("#sequence").val());
                 var StartDate = $.trim($("#StartDate").val());
-                //var StartDate = "";
-                //if (startDateSt) {
-                //    StartDate = new Date(Date.parse(startDateSt)).toISOString();
-                //}
-
                 var EndDate = $.trim($("#EndDate").val());
-                //var EndDate = "";
-                //if (endDateSt) {
-                //    EndDate = new Date(Date.parse(endDateSt)).toISOString();
-                //}
-
-                var customer = this.$("#customerDd option:selected").val();
-                //var customer = common.toObject(idCustomer, this.customersDdCollection);
-
-
-                //var idWorkflow = this.$("#workflowDd option:selected").val();
-                //var workflow = common.toObject(idWorkflow, this.workflowsDdCollection);
-
-                //var workflow = {
-                //    wName: this.$("#workflowNames option:selected").text(),
-                //    name: this.$("#workflow option:selected").text(),
-                //    status: this.$("#workflow option:selected").val(),
-                //};
-                var workflow = this.$("#workflow option:selected").data("id");
+                var workflow = $("#workflowsDd option:selected").data("id");
                 var estimated = $("#estimated").val();
-
-                var logged = $("#loged").val();
-
-                var idPriority = this.$("#priority option:selected").val();
-                var priority = common.toObject(idPriority, this.priorityCollection);
+                var logged = $("#logged").val();
+                var idPriority = $("#priorityDd option:selected").val();
+                //var priority = common.toObject(idPriority, this.priorityCollection);
 
                 var type = this.$("#type option:selected").text();
 
-                taskModel.save({
+                this.model.save({
                     type: type,
                     summary: summary,
-                    assignedTo: assignedTo,
+                    assignedTo: assignedTo ? assignedTo : "",
                     workflow: workflow,
-                    project: project,
+                    project: project ? project : "",
                     tags: tags,
                     deadline: deadline,
                     description: description,
                     extrainfo: {
-                        priority: priority,
+                        //priority: priority,
                         sequence: sequence,
-                        customer: customer,
                         StartDate: StartDate,
                         EndDate: EndDate
                     },
@@ -157,6 +108,7 @@ define([
                     wait: true,
                     success: function (model) {
                         model = model.toJSON();
+                        self.hideDialog();
                         if (!model.project._id) {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
 
@@ -171,20 +123,39 @@ define([
             },
 
             render: function () {
-                var workflowNames = [];
-                this.workflowsDdCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('wName'));
+                var formString = this.template();
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "50%",
+                    height: 513,
+                    title: "Create Task",
+                    buttons:{
+                        save:{
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
                 });
-                var arrWorkflows = _.uniq(workflowNames);
-                this.$el.html(this.template({
-                    projectsDdCollection: this.projectsDdCollection, accountDdCollection: this.accountDdCollection, customersDdCollection: this.customersDdCollection,
-                    workflowsDdCollection: this.workflowsDdCollection, priorityCollection: this.priorityCollection, projectId: this.pId, workflowNames: arrWorkflows
-                }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsDdCollection.toJSON() }));
-                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
-                $("#ui-datepicker-div").addClass("createFormDatepicker");
+
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
+                $('#deadline').datepicker({ dateFormat: "d M, yy" });
+                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd");
+                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
+                common.populatePriority(App.ID.priorityDd, "/Priority");
+
+                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $("#ui-datepicker-div").addClass("createFormDatepicker");
+
+                this.delegateEvents(this.events);
                 return this;
             }
 

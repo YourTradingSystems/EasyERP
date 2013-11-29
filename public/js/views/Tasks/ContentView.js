@@ -9,10 +9,11 @@ define([
     'custom',
     'common',
     "GanttChart",
-    'views/Tasks/EditView'
+    'views/Tasks/EditView',
+    'views/Tasks/CreateView'
 ],
 
-function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart, EditView) {
+function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsCollection, ProjectsCollection, TasksThumbnailsItemView, TasksKanbanItemView, Custom, common, GanttChart, EditView, CreateView) {
     var TasksView = Backbone.View.extend({
         el: '#content-holder',
 
@@ -179,6 +180,11 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
                 }
             }).disableSelection();
             return this;
+        },
+
+        createItem: function(){
+            //create editView in dialog here
+            new CreateView();
         },
 
         editItem: function(){
