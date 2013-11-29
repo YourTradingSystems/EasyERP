@@ -14,7 +14,7 @@ define(function () {
 
         validate: function (attrs) {
             var errors = [];
-            if (attrs.summary.trim() == "") {
+            if (attrs.summary.trim() === "") {
                 errors.push(
                     {
                         name: "Summary",
@@ -23,9 +23,19 @@ define(function () {
                     }
                 );
             }
+            if ($.trim(attrs.project) === "") {
+                errors.push(
+                    {
+                        name: "Project",
+                        field: "project",
+                        msg: "Project should be selected"
+                    }
+                );
+            }
             if (errors.length > 0)
                 return errors;
         },
+        
         defaults: {
             summary: '',
             taskCount: 0,

@@ -20,15 +20,15 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
+//                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.companiesCollection = new CompaniesCollection();
-                this.companiesCollection.bind('reset', _.bind(this.render, this));
+   //             this.companiesCollection.bind('reset', _.bind(this.render, this));
                 this.customersCollection = new CustomersCollection();
-                this.customersCollection.bind('reset', _.bind(this.render, this));
+     //           this.customersCollection.bind('reset', _.bind(this.render, this));
                 this.employeesCollection = new EmployeesCollection();
-                this.employeesCollection.bind('reset', _.bind(this.render, this));
+       //         this.employeesCollection.bind('reset', _.bind(this.render, this));
                 this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
+         //       this.departmentsCollection.bind('reset', _.bind(this.render, this));
                 this.priorityCollection = new PriorityCollection();
                 this.priorityCollection.bind('reset', _.bind(this.render, this));
                 this.bind('reset', _.bind(this.render, this));
@@ -101,7 +101,7 @@ define([
                     name: $company.val(),
                     id: $company.data('id')
                 }
-                var idCustomer = $(this.el).find("#customer option:selected").val();
+                var idCustomer = $(this.el).find("#customerDd option:selected").val();
                 var address = {};
                 $("p").find(".address").each(function () {
                     var el = $(this);
@@ -130,10 +130,10 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
-                var workflow = this.$("#workflow option:selected").data('id');
+                var workflow = this.$("#workflowDd option:selected").data('id');
 
 
-                var priority = $("#priority").val();
+                var priority = $("#priorityDd").val();
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
@@ -178,20 +178,44 @@ define([
             },
 
             render: function () {
+				var self=this;
                 var workflowNames = [];
                 this.workflowsCollection.models.forEach(function (option) {
                     workflowNames.push(option.get('wName'));
                 });
                 workflowNames = _.uniq(workflowNames);
-                this.$el.html(this.template({
-                    companiesCollection: this.companiesCollection,
-                    customersCollection: this.customersCollection,
-                    employeesCollection: this.employeesCollection,
-                    departmentsCollection: this.departmentsCollection,
-                    priorityCollection: this.priorityCollection,
+
+                var formString = this.template({
                     workflowNames: workflowNames,
                     workflows: this.workflowsCollection.toJSON()
-                }));
+
+				});
+                this.$el = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:true,
+					dialogClass:"edit-dialog",
+					title: "Edit Company",
+					width:"80%",
+					height:690,
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						}]
+
+                });
+				common.populateCustomers(App.ID.customerDd, "/Customer");
+                common.populateDepartments(App.ID.salesTeam, "/Departments");
+                common.populateEmployeesDd(App.ID.salesPerson, "/Employees");
+                common.populatePriority(App.ID.priorityDd, "/Priority");
+                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+
+
                 return this;
             }
 

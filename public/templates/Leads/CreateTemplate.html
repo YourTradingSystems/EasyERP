@@ -13,7 +13,7 @@
                             <label for="company">Company Name</label>
                         </p>
                         <p>
-                            <label for="customer">Customer</label>
+                            <label for="customerDd">Customer</label>
                         </p>
                         <p>
                             <label>Address</label>
@@ -43,11 +43,7 @@
                             <input type="text" id="company" data-id=""/>
                         </p>
                         <p>
-                            <select id="customer">
-                                <option selected="selected" value="">Select...</option>
-                                <% customersCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                                <% }); %>
+                            <select id="customerDd">
                             </select>
                         </p>
                         <p>
@@ -68,18 +64,10 @@
                         <p></p>
                         <p>
                             <select id="salesPerson">
-                                <option selected="selected" value="">Select...</option>
-                                <% employeesCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('name').first %> <%= option.get('name').last %></option>
-                                <% }); %>
                             </select>
                         </p>
                         <p>
                             <select id="salesTeam">
-                                <option selected="selected" value="">Select...</option>
-                                <% departmentsCollection.each(function(option){ %>
-                                <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                                <% }); %>
                             </select>
                         </p>
                     </div>
@@ -109,13 +97,13 @@
 
                         </p>
                         <p>
-                            <label for="workflowNames">Workflow Name </label>
+                            <label for="workflowNamesDd">Workflow Name </label>
                         </p>
                         <p>
-                            <label for="workflow">Workflow</label>
+                            <label for="workflowDd">Workflow</label>
                         </p>
                         <p>
-                            <label for="priority">Priority</label>
+                            <label for="priorityDd">Priority</label>
                         </p>
                         <p>
                             <label for="name">Categories</label>
@@ -141,25 +129,16 @@
                             <input type="text" id="mobile" />
                         </p>
                         <p>
-                            <select id="workflowNames">
-                                <% _.each(workflowNames, function(item){ %>
-                                <option><%= item %></option>
-                                <%}); %>
+                            <select id="workflowNamesDd">
                             </select>
                         </p>
                         <p id="selectWorkflow">
-                            <select id="workflow">
-                                <% _.each(workflows, function(item){ %>
-                                    <option value="<%= item.status %>" data-id="<%=item._id%>"><%= item.name %></option>
-                                <%}); %>
+                            <select id="workflowDd">
                             </select>
                         </p>
                         <p>
-                            <select id="priority">
-                                <option selected="selected" value="">Select...</option>
-                                <% priorityCollection.each(function(option){ %>
-                                <option value="<%= option.get('priority') %>"><%= option.get('priority') %></option>
-                                <% }); %>
+                            <select id="priorityDd">
+
                             </select>
                         </p>
                     </div>

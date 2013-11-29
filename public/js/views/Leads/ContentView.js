@@ -5,9 +5,10 @@ define([
     'collections/Opportunities/OpportunitiesCollection',
     'collections/Workflows/WorkflowsCollection',
     'custom',
-    'views/Leads/EditView'
+    'views/Leads/EditView',
+    'views/Leads/CreateView',
 ],
-    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, EditView) {
+    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, EditView,CreateView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -31,6 +32,11 @@ define([
             openDialog: function () {
                 $("#dialog-form").dialog("open");
             },
+			createItem: function () {
+				new CreateView({ collection: this.collection });
+				
+			},
+
             gotoForm: function (e) {
                 App.ownContentType = true;
                 var id = $(e.target).closest("tr").data("id");

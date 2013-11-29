@@ -17,7 +17,8 @@ define([
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
-                "click #top-bar-editBtn": "editEvent"
+                "click #top-bar-editBtn": "editEvent",
+                
             },
 
             //changeContentViewType: function (e) {

@@ -24,6 +24,7 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 
 
 scheduler.backbone = function(events){
+    console.log('--------------------Scheduler Backbone-----------------------');
 	events.bind("reset", function(){
 		scheduler.clearAll();
 		scheduler.parse(events.toJSON(), "json");
@@ -44,33 +45,33 @@ scheduler.backbone = function(events){
 			scheduler.deleteEvent(model.id);
 	});
 	events.bind("add", function(model, changes){
-		if (!scheduler._events[model.id]){
+        if (!scheduler._events[model.id]){
 			var ev =  model.toJSON();
 			scheduler._init_event(ev); 
 			scheduler.addEvent(ev);
 		}
 	});
 
+    scheduler.attachEvent("onEventCreated", function(id){
+        var ev = new events.model(scheduler.getEvent(id));
+        scheduler._events[id] = ev.toJSON();
 
-	scheduler.attachEvent("onEventCreated", function(id){
-		var ev = new events.model(scheduler.getEvent(id));
-		scheduler._events[id] = ev.toJSON();
+        return true;
+    });
 
-		return true;
-	});
+    scheduler.attachEvent("onEventAdded", function(id){
+        if (!events.get(id))
+            events.create( new events.model(sanitize(scheduler.getEvent(id))) );
 
-	scheduler.attachEvent("onEventAdded", function(id){
-		if (!events.get(id))
-			events.create( new events.model(sanitize(scheduler.getEvent(id))) );
-		
-		return true;
-	});
-	scheduler.attachEvent("onEventChanged", function(id){
-		var ev = events.get(id);
-		var upd = sanitize(scheduler.getEvent(id));
-		ev.save(upd);
-		return true;
-	});
+        return true;
+    });
+
+    scheduler.attachEvent("onEventChanged", function(id){
+        var ev = events.get(id);
+        var upd = sanitize(scheduler.getEvent(id));
+        ev.save(upd);
+        return true;
+    });
 
     scheduler.attachEvent("onEventDeleted", function(id){
         var ev = scheduler.getEvents();
@@ -78,6 +79,7 @@ scheduler.backbone = function(events){
             events.get(id).destroy();
         return true;
     });
+
    }
 
 })();

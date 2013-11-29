@@ -719,6 +719,7 @@ app.put('/Events/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.event = req.body;
+    console.log(data);
     requestHandler.updateEvent(req, res, id, data);
 });
 

@@ -109,8 +109,8 @@ define([
                         isCustomer: this.$el.find("#isCustomer").is(":checked"),
                         isSupplier: this.$el.find("#isSupplier").is(":checked"),
                         active: this.$el.find("#active").is(":checked"),
-                        salesPerson: this.$el.find('#salesPerson option:selected').val(),
-                        salesTeam: this.$el.find("#salesTeam option:selected").val(),
+                        salesPerson: this.$el.find('#employeesDd option:selected').val()===""?null:this.$el.find('#employeesDd option:selected').val(),
+                        salesTeam: this.$el.find("#departmentDd option:selected").val()===""?null:this.$el.find("#departmentDd option:selected").val(),
                         reference: this.$el.find("#reference").val(),
                         language: this.$el.find("#language").val()
                     }
@@ -135,40 +135,6 @@ define([
 
             template: _.template(EditTemplate),
 
-            populateDropDown: function (type, selectId, url) {
-                var selectList = $(selectId);
-                var self = this;
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    debugger;
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "salesPerson":
-                                return self.salesPersonOption(item);
-                            case "salesTeam":
-                                return self.salesTeamOption(item);
-                        }
-                    });
-                    selectList.append(options);
-                });
-            },
-            salesPersonOption: function (item) {
-                if (this.currentModel.get("salesPurchases").salesPerson !== null) {
-                    return this.currentModel.get("salesPurchases").salesPerson._id === item._id ?
-                        $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
-                        $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
-                } else {
-                    return $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
-                }
-            },
-            salesTeamOption: function (item) {
-                if (this.currentModel.get("salesPurchases").salesTeam !== null) {
-                    return this.currentModel.get("salesPurchases").salesTeam._id === item._id ?
-                        $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                        $('<option/>').val(item._id).text(item.departmentName);
-                } else {
-                    return $('<option/>').val(item._id).text(item.departmentName);
-                }
-            },
             render: function () {
                 console.log(this.currentModel);
 
@@ -183,23 +149,21 @@ define([
                     width: "50%",
                     height: 513,
                     title: 'Edit Company',
-                    buttons: [{
-                        text: "Remove",
-                        click: function () { $(this).dialog().remove(); }
-                    },
+                    buttons: [
                         {
                             text: "Save",
                             click: function () { self.saveItem(); }
-                        }],
+                        },{
+                        text: "Cancel",
+                        click: function () { $(this).dialog().remove(); }
+                    }],
                     //closeOnEscape: false,
                     modal: true
                 });
                 console.log(this.currentModel.get("salesPurchases"));
-					$('#text').datepicker({ dateFormat: "d M, yy" });
-								 
-                this.populateDropDown("salesPerson", App.ID.salesPerson, "/getSalesPerson");
-                this.populateDropDown("salesTeam", App.ID.salesTeam, "/getSalesTeam");
-
+			 $('#text').datepicker({ dateFormat: "d M, yy" });
+			 common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());
+			 common.populateEmployeesDd(App.ID.employeesDd, "/Employees",this.currentModel.toJSON());
                 this.delegateEvents(this.events);
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

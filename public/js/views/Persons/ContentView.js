@@ -25,7 +25,7 @@ define([
 
         events: {
             "click .checkbox": "checked",
-            "click .person-checkbox": "personsSalesChecked",
+            "click .person-checkbox:not(.disabled)": "personsSalesChecked",
             "click .details": "toggle",
             "mouseover .social a": "socialActive",
             "mouseout .social a": "socialNotActive",
@@ -59,9 +59,13 @@ define([
             e.preventDefault();
 
             var parent = $(e.target).parent().parent();
-            $("#" + parent[0].id).removeClass('quickEdit');
-            $("#" + parent[0].id).text(this.text);
 
+            if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                $("#" + parent[0].id + " input").prop('disabled', true);
+            } else {
+                $("#" + parent[0].id).text(this.text);
+            }
+            $("#" + parent[0].id).removeClass('quickEdit');
             $('#editInput').remove();
             $('#cancelSpan').remove();
             $('#saveSpan').remove();
@@ -77,23 +81,37 @@ define([
             $('.quickEdit #editInput').remove();
             $('.quickEdit #cancelSpan').remove();
             $('.quickEdit #saveSpan').remove();
+            if (this.prevQuickEdit) {
+                if ($('#' + this.prevQuickEdit.id).hasClass('with-checkbox')) {
+                    $('#' + this.prevQuickEdit.id + ' input').prop('disabled', true);
+                    $('.quickEdit').removeClass('quickEdit');
+                } else {
             $('.quickEdit').text(this.text).removeClass('quickEdit');
+                }
+            }
+
 
             var parent = $(e.target).parent().parent();
             $("#" + parent[0].id).addClass('quickEdit');
             $('#editSpan').remove();
             this.text = $('#' + parent[0].id).text();
-            $("#" + parent[0].id).text('');   
-            if ($("#" + parent[0].id).hasClass('date')) {              
-                $("#" + parent[0].id).append('<input id="editInput1" type="text" class="left has-datepicker"/>');
+
+            if ($("#" + parent[0].id).hasClass('date')) {
+                $("#" + parent[0].id).text('');
+                $("#" + parent[0].id).append('<input id="editInput" type="text" class="left has-datepicker"/>');
+                           
               
                $('.has-datepicker').datepicker();
-            } else {
+            } else if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                $("#" + parent[0].id + " input").removeAttr('disabled');
+            }
+            else {
+                $("#" + parent[0].id).text('');
                 $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             }
 
             $('#editInput').val(this.text);
-
+            this.prevQuickEdit = parent[0];
             $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
             $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
         },
@@ -106,14 +124,28 @@ define([
             var currentModel = this.collection.getElement();
 
             if (objIndex.length > 1) {
+                if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                    obj = currentModel.get(objIndex[0]);
+                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
+                } else {
                 obj = currentModel.get(objIndex[0]);
                 obj[objIndex[1]] = $('#editInput').val();
+                }
             } else if (objIndex.length == 1) {
+                if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                    obj[objIndex[0]] = ($("#" + parent[0].id + " input").prop("checked"));
+                } else {
                 obj[objIndex[0]] = $('#editInput').val();
+            }
             }
 
             this.text = $('#editInput').val();
+            if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                $("#" + parent[0].id + " input").prop('disabled', true);
+            }
+            else {
             $("#" + parent[0].id).text(this.text);
+            }
             $("#" + parent[0].id).removeClass('quickEdit');
             $('#editInput').remove();
             $('#cancelSpan').remove();
@@ -390,12 +422,12 @@ define([
                                     model: currentModel
                                 }).render(true).el
                             );
-
+							*/
                             this.$el.find('.formLeftColumn').append(
                                 new noteView({
                                     model: currentModel
                                 }).render().el
-                            );*/
+                            );
 
                         }
                         console.log("=========================Persons -> form: " + (new Date() - start)/1000 + " ms");

@@ -15,12 +15,17 @@
                 "click ul.changeContentIndex a": 'changeItemIndex',
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
-                "click #top-bar-discardBtn": "discardEvent",
+                "click #top-bar-discardBtn": "discardEvent"
+,            	"click #top-bar-editBtn": "editEvent",
                 "click #top-bar-createBtn": "createEvent"
             },
 
             changeContentViewType: function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
+            },
+            editEvent: function(event){
+                event.preventDefault();
+                this.trigger('editEvent');
             },
 
             changeItemIndex: function (e) {

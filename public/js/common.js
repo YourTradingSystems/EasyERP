@@ -16,6 +16,16 @@
 
         }
 
+        var utcDateToLocaleFullDateTime = function (utcDateString) {
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:m:s TT", false) : null;
+            return utcDateString;
+        }
+
+        var utcDateToLocaleDateTime = function (utcDateString) {
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
+            return utcDateString;
+        }
+
         var ISODateToDate = function (ISODate) {
             var date = ISODate.split('T')[0];
             return date;
@@ -165,9 +175,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && (model.projectmanager || model.salesPerson)){
+                if (model && (model.projectmanager || model.salesPurchases.salesPerson || model.salesPerson)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
+                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
@@ -207,9 +217,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && (model.department || model.salesTeam)){
+                if (model && (model.department || model.salesPurchases.salesTeam || model.salesTeam)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
@@ -293,6 +303,9 @@
         }
 
         return {
+         utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
+        utcDateToLocaleDateTime:utcDateToLocaleDateTime,
+        utcDateToLocaleDate:utcDateToLocaleDate,
             populateProjectsDd:populateProjectsDd,
             populatePriority: populatePriority,
             populateDepartments: populateDepartments,

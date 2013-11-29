@@ -127,7 +127,7 @@
                     logged = 0;
                 }
 
-                var priority = $("#priority option:selected").val();
+                var priority = $("#priorityDd option:selected").val();
 
                 var data = {
                     type: $("#type option:selected").text(),
@@ -139,9 +139,8 @@
                     deadline: $.trim($("#deadline").val()),
                     description: $("#description").val(),
                     extrainfo: {
-                       // priority: priority,
+                        //priority: priority ? priority,
                         sequence: sequence,
-                       // customer: customer,
                         StartDate: $.trim($("#StartDate").val()),
                         EndDate: $.trim($("#EndDate").val())
                     },
@@ -214,8 +213,10 @@
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON());
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON());
+                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
                 this.delegateEvents(this.events);
-
+                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $("#ui-datepicker-div").addClass("createFormDatepicker");
                 return this;
             }
 
