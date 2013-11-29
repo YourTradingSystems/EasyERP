@@ -276,7 +276,29 @@ var Employee = function (logWriter, mongoose) {
                 response.send(res);
             }
         });
-    }; //end get
+    };
+
+    // Custom function for list
+    function getCustom(data, response) {
+        var res = {}
+        var description = "";
+        res['data'] = [];
+        var query = employee.find();
+        query.where('isEmployee', true);
+        query.populate('relatedUser department jobPosition manager coach');
+        query.sort({ 'name.first': 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Employee.find' + description);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
 
     function getForDd(response) {
         var res = {};
@@ -315,6 +337,20 @@ var Employee = function (logWriter, mongoose) {
             }
         });
     };//end getById
+
+    function getById(data, response) {
+        var query = employee.findById(data.id, function (err, res) { });
+        //query.populate('relatedUser department jobPosition workflow');
+        query.exec(function (err, findedEmployee) {
+            if (err) {
+                logWriter.log("Employees.js getById employee.find " + err);
+                response.send(500, { error: "Can't find Employee" });
+            } else {
+                response.send(findedEmployee);
+            }
+        });
+
+    };
 
     function update(_id, data, res) {
         try {
@@ -396,6 +432,8 @@ var Employee = function (logWriter, mongoose) {
 
         get: get,
 
+        getCustom: getCustom,
+
         getForDd: getForDd,
 
         update: update,
@@ -406,7 +444,9 @@ var Employee = function (logWriter, mongoose) {
         
         getFilterApplications: getFilterApplications,
 
-        employee: employee
+        employee: employee,
+
+        getById:getById
     };
 };
 

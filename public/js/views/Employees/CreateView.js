@@ -1,6 +1,6 @@
 define([
     "text!templates/Employees/CreateTemplate.html",
-    "models/EmployeeModel",
+    "models/EmployeesModel",
     "common",
     "custom"
 ],
