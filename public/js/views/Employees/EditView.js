@@ -74,7 +74,7 @@ define([
                 };
 
                 var workAddress = {};
-                $("p").find(".workAddress").each(function () {
+                $("dd").find(".workAddress").each(function () {
                     var el = $(this);
                     workAddress[el.attr("name")] = el.val();
                 });
@@ -107,7 +107,7 @@ define([
                 var otherId = $.trim($("#otherId").val());
 
                 var homeAddress = {};
-                $("p").find(".homeAddress").each(function () {
+                $("dd").find(".homeAddress").each(function () {
                     var el = $(this);
                     homeAddress[el.attr("name")] = el.val();
                 });
