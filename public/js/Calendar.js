@@ -161,7 +161,9 @@ function(UsersCollection){
 					}
 					}
 					if ($(".newTimeSelectContainer").index($(this).parents(".timeModal").parents(".newTimeSelectContainer"))){
-						if ($(".newTimeSelectContainer").eq(1).find(".text").text()<$(".newTimeSelectContainer").eq(0).find(".text").text()){
+					var f1 = parseInt($(".newTimeSelectContainer").eq(1).find(".text").text().split(":")[0])*60+parseInt($(".newTimeSelectContainer").eq(1).find(".text").text().split(":")[1])
+					var f0 = parseInt($(".newTimeSelectContainer").eq(0).find(".text").text().split(":")[0])*60+parseInt($(".newTimeSelectContainer").eq(0).find(".text").text().split(":")[1])
+						if (f1<f0){
 							alert("End Time<Start Time");
 						}
 						else
