@@ -6,9 +6,9 @@ define([
     'collections/Workflows/WorkflowsCollection',
     'custom',
     'views/Leads/EditView',
-    'views/Leads/CreateView',
+    'views/Leads/CreateView'
 ],
-    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, EditView,CreateView) {
+    function (ListTemplate, FormTemplate, LeadsCollection, OpportunitiesCollection, WorkflowsCollection, Custom, EditView, CreateView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -131,9 +131,9 @@ define([
                             if (!currentModel) {
                                 this.$el.html('<h2>No Application found</h2>');
                             } else {
-                                this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                                currentModel.off('change');
-                                currentModel.on('change', this.render, this);
+                                this.$el.html(_.template(FormTemplate, currentModel.toJSON() ));
+//                                currentModel.off('change');
+//                                currentModel.on('change', this.render, this);
                             }
                             $("#dialog-form").dialog({
                                 autoOpen: false,

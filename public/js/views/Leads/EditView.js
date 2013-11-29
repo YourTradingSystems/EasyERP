@@ -105,9 +105,9 @@ define([
                     address[el.attr("name")] = el.val();
                 });
 
-                var salesPersonId = $("#salesPersonDd option:selected").val();
+                var salesPersonId = $("#salesPerson option:selected").val();
                 salesPersonId = salesPersonId ? salesPersonId : null;
-                var salesTeamId = $("#salesTeamDd option:selected").val();
+                var salesTeamId = $("#salesTeam option:selected").val();
                 salesTeamId = salesTeamId ? salesTeamId : null;
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
