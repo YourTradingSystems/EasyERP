@@ -62,6 +62,8 @@ define([
 
             if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                 $("#" + parent[0].id + " input").prop('disabled', true);
+            } else if (parent[0].id == 'email') {
+                $("#" + parent[0].id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
             } else {
                 $("#" + parent[0].id).text(this.text);
             }
@@ -73,43 +75,40 @@ define([
             var currentModel = this.collection.getElement();
             Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
         },
-     
+
 
         editClick: function (e) {
             e.preventDefault();
-
             $('.quickEdit #editInput').remove();
             $('.quickEdit #cancelSpan').remove();
             $('.quickEdit #saveSpan').remove();
             if (this.prevQuickEdit) {
-                if ($('#' + this.prevQuickEdit.id).hasClass('with-checkbox')) {
-                    $('#' + this.prevQuickEdit.id + ' input').prop('disabled', true);
-                    $('.quickEdit').removeClass('quickEdit');
-                } else {
-            $('.quickEdit').text(this.text).removeClass('quickEdit');
+                if ($('#' + this.prevQuickEdit.id).hasClass('quickEdit')) {
+                    if ($('#' + this.prevQuickEdit.id).hasClass('with-checkbox')) {
+                        $('#' + this.prevQuickEdit.id + ' input').prop('disabled', true);
+                        $('.quickEdit').removeClass('quickEdit');
+                    } else if (this.prevQuickEdit.id == 'email') {
+                        $("#" + this.prevQuickEdit.id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
+                        $('.quickEdit').removeClass('quickEdit');
+                    } else {
+                        $('.quickEdit').text(this.text).removeClass('quickEdit');
+                    }
                 }
             }
-
-
             var parent = $(e.target).parent().parent();
             $("#" + parent[0].id).addClass('quickEdit');
             $('#editSpan').remove();
             this.text = $('#' + parent[0].id).text();
-
             if ($("#" + parent[0].id).hasClass('date')) {
                 $("#" + parent[0].id).text('');
                 $("#" + parent[0].id).append('<input id="editInput" type="text" class="left has-datepicker"/>');
-                           
-              
-               $('.has-datepicker').datepicker();
+                $('.has-datepicker').datepicker();
             } else if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                 $("#" + parent[0].id + " input").removeAttr('disabled');
-            }
-            else {
+            } else {
                 $("#" + parent[0].id).text('');
                 $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
             }
-
             $('#editInput').val(this.text);
             this.prevQuickEdit = parent[0];
             $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
@@ -128,23 +127,24 @@ define([
                     obj = currentModel.get(objIndex[0]);
                     obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
                 } else {
-                obj = currentModel.get(objIndex[0]);
-                obj[objIndex[1]] = $('#editInput').val();
+                    obj = currentModel.get(objIndex[0]);
+                    obj[objIndex[1]] = $('#editInput').val();
                 }
             } else if (objIndex.length == 1) {
                 if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                     obj[objIndex[0]] = ($("#" + parent[0].id + " input").prop("checked"));
                 } else {
-                obj[objIndex[0]] = $('#editInput').val();
-            }
+                    obj[objIndex[0]] = $('#editInput').val();
+                }
             }
 
             this.text = $('#editInput').val();
             if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                 $("#" + parent[0].id + " input").prop('disabled', true);
-            }
-            else {
-            $("#" + parent[0].id).text(this.text);
+            } else if (parent[0].id == 'email') {
+                $("#" + parent[0].id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
+            } else {
+                $("#" + parent[0].id).text(this.text);
             }
             $("#" + parent[0].id).removeClass('quickEdit');
             $('#editInput').remove();
@@ -386,7 +386,7 @@ define([
                     {
                         var start = new Date();
                         this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON() }));
-                        console.log("=========================Persons -> list: " + (new Date() - start)/1000 + " ms");
+                        console.log("=========================Persons -> list: " + (new Date() - start) / 1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
                             $(':checkbox').prop('checked', c);
@@ -404,7 +404,7 @@ define([
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);
-                        console.log("=========================Persons -> thumbnails: " + (new Date() - start)/1000 + " ms");
+                        console.log("=========================Persons -> thumbnails: " + (new Date() - start) / 1000 + " ms");
                         break;
 
                     }
@@ -430,11 +430,11 @@ define([
                             );
 
                         }
-                        console.log("=========================Persons -> form: " + (new Date() - start)/1000 + " ms");
+                        console.log("=========================Persons -> form: " + (new Date() - start) / 1000 + " ms");
                         break;
                     }
             }
-         
+
             return this;
         },
 
