@@ -21,7 +21,6 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new TaskModel();
-                //this.pId = options.pId;
                 this.render();
             },
 
@@ -123,6 +122,14 @@ define([
             },
 
             render: function () {
+                var projectID = (window.location.hash).split('/')[3];
+                model = projectID
+                    ? {
+                         project: {
+                              _id: projectID
+                         }
+                    }
+                    : null;
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
@@ -147,7 +154,7 @@ define([
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 $('#deadline').datepicker({ dateFormat: "d M, yy" });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd");
+                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model);
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
                 common.populatePriority(App.ID.priorityDd, "/Priority");

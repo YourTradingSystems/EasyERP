@@ -49,7 +49,9 @@ var App = App ||
         priority: "#priority",
 		employeesDd:"#employeesDd",
 		departmentManager: "#departmentManager",
-		parentDepartment: "#parentDepartment"
+		parentDepartment: "#parentDepartment",
+		visibilityDd: "#visibilityDd",
+		genres: "#genresDd"
     },
     URL: {
         customers: "/Customer",

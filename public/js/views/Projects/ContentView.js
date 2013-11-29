@@ -1,7 +1,6 @@
 define([
     'text!templates/Projects/list/ListTemplate.html',
     'text!templates/Projects/form/FormTemplate.html',
-    'collections/Workflows/WorkflowsCollection',
     'views/Projects/thumbnails/ThumbnailsItemView',
     'views/Projects/EditView',
     'custom',
@@ -9,14 +8,12 @@ define([
     'common',
     'views/Projects/CreateView'
 ],
-    function (ListTemplate, FormTemplate, WorkflowsCollection, ThumbnailsItemView, EditView, Custom, GanttChart, common, CreateView) {
+    function (ListTemplate, FormTemplate, ThumbnailsItemView, EditView, Custom, GanttChart, common, CreateView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Project' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
                 this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
+                this.render();
             },
 
             events: {

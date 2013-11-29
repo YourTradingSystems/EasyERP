@@ -1,10 +1,9 @@
 define([
     "text!templates/Projects/CreateTemplate.html",
-    "text!templates/Projects/selectTemplate.html",
     "models/ProjectsModel",
     "common"
 ],
-    function (CreateTemplate, selectTemplate, ProjectModel, common) {
+    function (CreateTemplate, ProjectModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",

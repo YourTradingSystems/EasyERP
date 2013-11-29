@@ -655,8 +655,9 @@ var Project = function (logWriter, mongoose) {
             data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
             data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         }
-        //if (data.project && data.project._id) {
-        if (data.project) {
+        if (data.project && data.project._id) {
+            data.project = data.project._id;
+        } else if (data.project) {
             var query = tasks.find({ project: data.project });
             query.sort({ taskCount: -1 });
             query.exec(function (error, _tasks) {

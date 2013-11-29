@@ -2,8 +2,8 @@
   <form method="post" action="" id="createEmployeeForm" class="form">
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="name">First Name :</label></dt><dd><input type="text" class="blueback" id="first" required /></dd>
-		<dt><label for="name">Last Name :</label></dt><dd><input type="text" class="blueback" id="last" required /></dd>
+		<dt><label for="first">First Name :</label></dt><dd><input type="text" class="blueback" id="first" required /></dd>
+		<dt><label for="last">Last Name :</label></dt><dd><input type="text" class="blueback" id="last" required /></dd>
 		<dt><label for="tags">Tags :</label></dt><dd><input type="text" class="blueback" id="tags" /></dd>
 	  </dl>
 	</div>
@@ -35,56 +35,41 @@
 		<dt><label for="phone">Work Phone :</label></dt><dd><input type="text" id="phone" class="blueback"/></dd>
 		<dt><label for="mobile">Work Mobile :</label></dt><dd><input type="text" id="mobile" class="blueback"/></dd>
 		<dt><label for="officeLocation">Office Location :</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" class="blueback"/></dd>
-		<dt><label for="relatedUser">Related User :</label></dt>
+		<dt><label for="relatedUsersDd">Related User :</label></dt>
 		<dd>
-		  <select id="relatedUser">
-            <option selected="selected" value="">Select...</option>
-            <% usersCollection.each(function(option){ %>
-            <option value="<%= option.get('_id') %>"><%= option.get('login')%></option>
-            <% }); %>
+		  <select id="relatedUsersDd">
+
           </select>
 		</dd>
-		<dt><label for="visibility">Visibility :</label></dt>
+		<dt><label for="visibilityDd">Visibility :</label></dt>
 		<dd>
-		  <select id="visibility">
+		  <select id="visibilityDd">
             <option selected="selected" value="">Select...</option>
           </select>
 		</dd>
-		<dt><label for="department">Department :</label></dt>
+		<dt><label for="departmentsDd">Department :</label></dt>
 		<dd>
-		  <select id="department">
-            <option selected="selected" value="">Select...</option>
-            <% departmentsCollection.each(function(option){ %>
-            <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-            <% }); %>
+		  <select id="departmentsDd">
+
           </select>
 		</dd>
-		<dt><label for="jobPosition">Job :</label></dt>
+		<dt><label for="jobPositionDd">Job :</label></dt>
 		<dd>
-		  <select id="jobPosition">
-            <option selected="selected" value="">Select...</option>
-            <% jobPositionsCollection.each(function(option){ %>
-            <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-            <% }); %>
+		  <select id="jobPositionDd">
+
           </select>
 		</dd>
-		<dt><label for="manager">Manager :</label></dt>
+		<dt><label for="projectManagerDD">Manager :</label></dt>
 		<dd>
-		  <select id="manager">
-            <option selected="selected" value="">Select...</option>
-            <% accountsDdCollection.each(function(option){ %>
-            <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-            <% }); %>
+		  <select id="projectManagerDD">
+
           </select>
 
 		</dd>
-		<dt><label for="coach">Coach :</label></dt>
+		<dt><label for="coachDd">Coach :</label></dt>
 		<dd>
-		  <select id="coach">
-            <option selected="selected" value="">Select...</option>
-                <% accountsDdCollection.each(function(option){ %>
-                <option value="<%= option.get('_id') %>"><%= option.get('name').first %>  <%= option.get('name').last %></option>
-                <% }); %>
+		  <select id="coachDd">
+
           </select>
 
 		</dd>
@@ -124,9 +109,9 @@
 		<div class="clearfix"></div>
 	  </div>
 	  <dl class="person-info">
-		<dt><label for="gender">Gender :</label></dt>
+		<dt><label for="genresDd">Gender :</label></dt>
 		<dd>
-		  <select id="gender">
+		  <select id="genresDd">
             <option selected="selected" value="">Select...</option>
           </select>
 		</dd>
@@ -166,10 +151,10 @@
 	  <h3 class="left"><legend>HR Settings</legend></h3>
 	  <div class="clearfix"></div>
 	</div>
-	<dl class="person-info">
-	  <div class="half-block left">
-		<dt><label for="active">Active :</label></dt><dd><input type="checkbox" name="active" id="active" /></dd>
-	</dl>
-	</div>
+      <dl class="person-info">
+          <div class="half-block left">
+              <dt><label for="active">Active :</label></dt><dd><input type="checkbox" name="active" id="active" /></dd>
+          </div>
+      </dl>
   </form>
 </div>

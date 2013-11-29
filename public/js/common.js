@@ -240,17 +240,9 @@
                 var options = [];
                 if (model && model.priority) {
                     options = $.map(response.data, function (item) {
-						if (model.priority._id==undefined){
-                        return model.priority == item._id ?
-                            $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.priority);
-							
-						}else{
                         return model.priority._id === item._id ?
                             $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.priority);
-
-						}
                     });
                 } else {
                     options = $.map(response.data, function (item) {
@@ -318,8 +310,50 @@
                 selectList.append(options);
             });
         }
+        var populateUsers = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39}, function (response) {
+                var options = [];
+                if (model && model.relatedUser) {
+                    options = $.map(response.data, function (item) {
+                        return model.relatedUser._id === item._id ?
+                            $('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.login);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.login);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
+        var populateJobPositions = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39}, function (response) {
+                var options = [];
+                if (model && model.jobPosition) {
+                    options = $.map(response.data, function (item) {
+                        return model.jobPosition._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
 
         return {
+            populateJobPositions:populateJobPositions,
+            populateUsers: populateUsers,
          utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
         utcDateToLocaleDateTime:utcDateToLocaleDateTime,
         utcDateToLocaleDate:utcDateToLocaleDate,
