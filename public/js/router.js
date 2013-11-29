@@ -22,9 +22,12 @@ define([
         },
 
         goToKanban: function (contentType, parrentContentId) {
-            var ContentViewUrl = "views/" + contentType + "/kanban/KanbanItemView",
+            var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + "kanbanCollection";
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                collection = new ContentCollection();
+            });
         },
 
         getList: function (contentType, viewType, itemIndex, hash) {
