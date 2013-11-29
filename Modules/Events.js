@@ -510,7 +510,8 @@ var Events = function (logWriter, mongoose) {
     };// end update
 
     function remove(_id, res) {
-        event.remove({ _id: _id }, function (err, result) {
+        var query = (_id.length === 24) ? {_id: _id} : {id:_id};
+        event.remove(query, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Events.js remove event.remove " + err);

@@ -98,10 +98,12 @@
         $("#top-bar-nextBtn").hide();
         $("#top-bar-discardBtn").hide();
         $('#top-bar-saveBtn').hide();
+        $('#formBtn').closest('li').hide();
         $("ul.changeContentIndex").hide();
         if(!actionType || actionType === "Content"){
             $("#top-bar-createBtn").show();
-            if(viewType == "form"){
+            if (viewType == "form") {
+                $('#formBtn').closest('li').show();
                 $("#top-bar-createBtn").hide();
                 $('#top-bar-editBtn').show();
                 $("ul.changeContentIndex").hide();

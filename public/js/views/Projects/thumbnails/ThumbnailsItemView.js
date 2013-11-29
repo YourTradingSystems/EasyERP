@@ -13,22 +13,11 @@ define([
 
             events: {
                 "click #tasksKanban,  #tasksList": "gotoTasks",
-                "click": "gotoEditForm"
+               
                 //"click #delete": "deleteEvent",
                 //"click .dropDown > a": "openDropDown",
                 //"click .colorPicker a": "pickColor",
                 //"click #edit": "gotoEditForm"
-            },
-
-            gotoEditForm: function (e) {
-				if ($(e.target).attr("class")=="tasksByProject"){
-					return;
-				}
-                e.preventDefault();
-                var id = this.$el.closest(".thumbnail").attr("id");
-                if ($(e.target).parent().attr("class") != "dropDown") {
-                    window.location.hash = "#home/action-Projects/Edit/" + id;
-                }
             },
 
             openDropDown: function (e) {

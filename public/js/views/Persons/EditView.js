@@ -10,13 +10,13 @@ define([
             contentType: "Persons",
             imageSrc: '',
             template: _.template(EditTemplate),
+            
             initialize: function (options) {
-                _.bindAll(this, "render");
-                this.personsCollection = options.collection;
-                this.currentModel = this.personsCollection.getElement();
+                _.bindAll(this, "render", "saveItem");
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
-
             },
+            
             events: {
                 "click #saveBtn" : "saveItem",
                 "click #cancelBtn" : "hideDialog"
