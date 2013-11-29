@@ -35,6 +35,7 @@ define(function () {
             if (errors.length > 0)
                 return errors;
         },
+        
         defaults: {
             summary: '',
             taskCount: 0,

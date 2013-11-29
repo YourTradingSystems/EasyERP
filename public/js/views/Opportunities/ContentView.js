@@ -102,26 +102,10 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, WorkflowsCollection, Op
                     }
                 case "form":
                     {
-                        //var itemIndex = Custom.getCurrentII() - 1;
-                        //if (itemIndex > this.collection.models.length - 1) {
-                        //    itemIndex = this.collection.models.length - 1;
-
-                        //    var urlParts = window.location.hash.split('/');
-                        //    if (urlParts[4]) {
-                        //        urlParts[4] = this.collection.models.length;
-                        //        window.location.hash = urlParts.join('/');
-                        //    }
-                        //    Custom.setCurrentII(this.collection.models.length);
-                        //}
-
-                        //if (itemIndex == -1) {
-                        //    this.$el.html();
-                        //} else {
                         var currentModel = this.collection.getElement();
                         if (!currentModel) {
                             this.$el.html('<h2>No Application found</h2>');
                         } else {
-                            currentModel.on('change', this.render, this);
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                         }
                         break;

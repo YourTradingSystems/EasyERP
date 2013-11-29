@@ -14,7 +14,7 @@
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d mmm, yyyy", false) : null;
             return utcDateString;
 
-        }   
+        }
 
         var utcDateToLocaleFullDateTime = function (utcDateString) {
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:m:s TT", false) : null;
@@ -175,9 +175,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && (model.projectmanager || model.salesPurchases.salesPerson)){
+                if (model && (model.projectmanager || model.salesPurchases.salesPerson || model.salesPerson)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id)) ?
+                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
@@ -217,9 +217,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if(model && (model.department || model.salesPurchases.salesTeam)){
+                if (model && (model.department || model.salesPurchases.salesTeam || model.salesTeam)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id)) ?
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
@@ -277,13 +277,12 @@
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
             var self = this;
-            //selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
                 if (model && model.workflow) {
                     options = $.map(response.data, function (item) {
                         return model.workflow._id === item._id ?
-                            $('<option/>').val(item.status).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
                 } else {
@@ -303,7 +302,7 @@
             });
         }
 
-    return {
+        return {
          utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
         utcDateToLocaleDateTime:utcDateToLocaleDateTime,
         utcDateToLocaleDate:utcDateToLocaleDate,
@@ -315,13 +314,13 @@
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
-        toObject: toObject,
+            toObject: toObject,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
-        ISODateToDate: ISODateToDate,
-        hexToRgb: hexToRgb,
-        deleteEvent: deleteEvent,
-        canvasDraw: canvasDraw,
+            ISODateToDate: ISODateToDate,
+            hexToRgb: hexToRgb,
+            deleteEvent: deleteEvent,
+            canvasDraw: canvasDraw,
             saveToLocalStorage: saveToLocalStorage,
             getFromLocalStorage: getFromLocalStorage
-    }
-});
+        }
+    });
