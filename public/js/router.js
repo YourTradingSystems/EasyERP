@@ -22,12 +22,6 @@ define([
 
         getList: function (contentType, viewType, itemIndex, hash) {
            if (this.mainView == null) this.main();
-            //if (hash) {
-            //    if (hash.length != 24) {
-            //        itemIndex = hash;
-            //        hash = null;
-            //    }
-            //}
             console.log('GetList: ' + contentType + " " + viewType + " " + itemIndex + " " + hash);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",

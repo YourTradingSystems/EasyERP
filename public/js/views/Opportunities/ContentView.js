@@ -32,7 +32,7 @@ function (ListTemplate, FormTemplate, WorkflowsTemplate, WorkflowsCollection, Op
 
         gotoForm: function (e) {
             App.ownContentType = true;
-            var id = $(e.target).closest("tr").data("id");
+            var id = $(e.target).closest("tr").attr("id");
             window.location.hash = "#home/content-Opportunities/form/" + id;
         },
 

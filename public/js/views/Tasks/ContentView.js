@@ -63,7 +63,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                 {
-                    //draw kanbas header with workflows
+                    //draw kanba header with workflows
                     var start = new Date();
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
