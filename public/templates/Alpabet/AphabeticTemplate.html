@@ -1,8 +1,5 @@
-<% if (alphabeticArray&&alphabeticArray.length>1){%>
-    <div class="startLetter">
-        <a href="javascript:;" class="letter">All</a>
-        <% alphabeticArray.forEach(function(letter, index){ %>
-        <a href="javascript:;" class="letter"><%=letter%></a>
-        <% }) %>
-    </div>
-<% } %>
+<div class="startLetter">
+  <% allAlphabeticArray.forEach(function(letter, index){ %>
+  <a href="javascript:;" class="letter<%=(letter==selectedLetter)?' current':''%><%=alphabeticArray.indexOf(letter)==-1?' empty':''%>"><%=letter%></a>
+  <% }) %>
+</div>

@@ -16,6 +16,8 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             this.collection = options.collection;
             this.originalCollection = options.collection;
             this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="All";
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
@@ -24,14 +26,13 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             "click .checkbox": "checked",
             "click #tabList a": "switchTab",
             "click td:not(:has('input[type='checkbox']'))": "gotoForm",
-            "click .letter": "alpabeticalRender"
+            "click .letter:not(.empty)": "alpabeticalRender"
         },
 		alpabeticalRender:function(e){
-			if ($(e.target).text()=="All"){
-				this.collection = this.originalCollection;
-			}else{
-				this.collection = this.originalCollection.filterByLetter($(e.target).text());
-			}
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+			this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			this.selectedLetter=$(e.target).text();
 			this.render();
 		},
         gotoForm: function (e) {
@@ -65,7 +66,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         this.$el.append(_.template(ListTemplate, {employeesCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
@@ -80,7 +81,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                         var holder = this.$el,
                             thumbnailsItemView;
 
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         _.each(models, function (model) {
                             var dateBirth = new Date(model.get("dateBirth"));
                             var today = new Date;

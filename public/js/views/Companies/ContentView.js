@@ -25,6 +25,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.collection = options.collection;
             this.originalCollection = options.collection;
             this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="All";
             //this.opportunitiesCollection = new OpportunitiesCollection();
             /*this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.eventsCollection = new EventsCollection();
@@ -53,14 +55,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             "click #editSpan": "editClick",
             "click #cancelSpan": "cancelClick",
             "click #saveSpan": "saveClick",
-            "click .letter": "alpabeticalRender"
+            "click .letter:not(.empty)": "alpabeticalRender"
         },
 		alpabeticalRender:function(e){
-			if ($(e.target).text()=="All"){
-				this.collection = this.originalCollection;
-			}else{
-				this.collection = this.originalCollection.filterByLetter($(e.target).text());
-			}
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+			this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			this.selectedLetter=$(e.target).text();
 			this.render();
 		},
 
@@ -366,7 +367,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         this.$el.append(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
                         console.log("=========================Companies -> list: " + (new Date() - start)/1000 + " ms");
                         $('#check_all').click(function () {
@@ -382,7 +383,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         this.$el.html('');
                         var holder = this.$el;
                         var thumbnailsItemView;
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         _.each(models, function (model) {
                             var address = model.get('address');
                             if (address.city && address.country && this.flag == true) {

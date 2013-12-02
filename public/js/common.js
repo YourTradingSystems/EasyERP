@@ -393,13 +393,26 @@
 		var buildAphabeticArray = function(collection){
             if(collection && collection.length > 0){
                 var filtered =  $.map(collection, function(item){
+					if ($.isNumeric(item.name.first[0].toUpperCase())){
+						return "0-9"
+					}
                      return item.name.first[0].toUpperCase();
                 });
+				filtered.push("All");
                 return _.sortBy(_.uniq(filtered),function(a){return a});
             }
             return [];
         }
+		var buildAllAphabeticArray = function(){
+			var associateArray = ["All","0-9"]
+			for (i = 65; i <= 90; i++) {
+				associateArray.push(String.fromCharCode(i).toUpperCase());
+			}
+			return associateArray;
+        }
+
         return {
+			buildAllAphabeticArray: buildAllAphabeticArray,
 			buildAphabeticArray: buildAphabeticArray,
             populateDegrees:populateDegrees,
             populateSourceApplicants:populateSourceApplicants,
