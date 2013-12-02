@@ -20,6 +20,8 @@ define([
             this.collection = options.collection;
             this.originalCollection = options.collection;
             this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="All";
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
@@ -42,14 +44,13 @@ define([
             "click #editSpan": "editClick",
             "click #cancelSpan": "cancelClick",
             "click #saveSpan": "saveClick",
-            "click .letter": "alpabeticalRender"
+            "click .letter:not(.empty)": "alpabeticalRender"
         },
 		alpabeticalRender:function(e){
-			if ($(e.target).text()=="All"){
-				this.collection = this.originalCollection;
-			}else{
-				this.collection = this.originalCollection.filterByLetter($(e.target).text());
-			}
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+			this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			this.selectedLetter=$(e.target).text();
 			this.render();
 		},
         quickEdit: function (e) {
@@ -394,7 +395,7 @@ define([
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         this.$el.append(_.template(ListTemplate, { personsCollection: this.collection.toJSON()}));
                         console.log("=========================Persons -> list: " + (new Date() - start) / 1000 + " ms");
                         $('#check_all').click(function () {
@@ -409,7 +410,7 @@ define([
                         this.$el.html('');
                         var holder = this.$el,
                             thumbnailsItemView;						
-                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         _.each(models, function (model) {
                             thumbnailsItemView = new ThumbnailsItemView({ model: model});
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);

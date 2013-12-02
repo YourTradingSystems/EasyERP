@@ -169,6 +169,27 @@
             });
         }
 
+        var populateProfilesDd = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.profile) {
+                    options = $.map(response.data, function (item) {
+                        return (model.profile.profile._id == item._id) ?
+                            $('<option/>').val(item._id).text(item.profileName).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.profileName);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.profileName);
+                    });
+                }
+                selectList.append(options);
+
+            });
+        }
+
         var populateEmployeesDd = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -393,13 +414,27 @@
 		var buildAphabeticArray = function(collection){
             if(collection && collection.length > 0){
                 var filtered =  $.map(collection, function(item){
+					if ($.isNumeric(item.name.first[0].toUpperCase())){
+						return "0-9"
+					}
                      return item.name.first[0].toUpperCase();
                 });
+				filtered.push("All");
                 return _.sortBy(_.uniq(filtered),function(a){return a});
             }
             return [];
         }
-        return {
+		var buildAllAphabeticArray = function(){
+			var associateArray = ["All","0-9"]
+			for (i = 65; i <= 90; i++) {
+				associateArray.push(String.fromCharCode(i).toUpperCase());
+			}
+			return associateArray;
+        }
+
+		return {
+		    populateProfilesDd: populateProfilesDd,
+			buildAllAphabeticArray: buildAllAphabeticArray,
 			buildAphabeticArray: buildAphabeticArray,
             populateDegrees:populateDegrees,
             populateSourceApplicants:populateSourceApplicants,

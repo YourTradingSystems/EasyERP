@@ -1,12 +1,12 @@
 define([
-    'text!templates/Users/list/UsersTemplate.html',
-    'text!templates/Users/form/UsersTemplate.html',
-    'collections/Users/UsersCollection',
-    'views/Users/list/UsersItemView',
+    'text!templates/Users/list/ListTemplate.html',
+    'text!templates/Users/form/FormTemplate.html',
+    'views/Users/EditView',
+    'views/Users/CreateView',
     'custom',
     'common'
 ],
-function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Custom, common) {
+function (ListTemplate, FormTemplate, EditView, CreateView, Custom, common) {
     var UsersView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -16,13 +16,28 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
             this.render();
         },
         events: {
-            "click .checkbox": "checked"
+            "click .checkbox": "checked",
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+        },
+        gotoForm: function (e) {
+            App.ownContentType = true;
+            var id = $(e.target).closest("tr").data("id");
+            window.location.hash = "#home/content-Users/form/" + id;
+        },
+        createItem: function () {
+            new CreateView();
+        },
+        editItem: function () {
+            //create editView in dialog here
+            new EditView({ collection: this.collection });
         },
         checked: function () {
-            if ($("input:checked").length > 0)
-                $("#top-bar-deleteBtn").show();
-            else
-                $("#top-bar-deleteBtn").hide();
+            if(this.collection.length > 0){
+                if ($("input:checked").length > 0)
+                    $("#top-bar-deleteBtn").show();
+                else
+                    $("#top-bar-deleteBtn").hide();
+            }
         },
         deleteItems: function () {
             var that = this,
@@ -60,23 +75,14 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
 
         },
         render: function () {
-            this.checked();
-            Custom.setCurrentCL(this.collection.models.length);
+            //this.checked();
+            //Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Users View');
             var viewType = Custom.getCurrentVT();
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(UserListTemplate));
-                        var table = this.$el.find('table > tbody');
-                        if (this.collection.length > 0) {
-                            this.collection.each(function (model) {
-                                table.append(new UsersItemView({ model: model }).render().el);
-                            });
-                        } else {
-                            this.$el.html('<h2>No users found</h2>');
-                        }
-
+                        this.$el.html(_.template(ListTemplate, { usersCollection: this.collection.toJSON()}));
 
                         $('#check_all').on('click', function () {
                             $(':checkbox').prop('checked', this.checked);
@@ -85,19 +91,12 @@ function (UserListTemplate, UserFormTemplate, UsersCollection, UsersItemView, Cu
                     }
                 case "form":
                     {
-                        var itemIndex = Custom.getCurrentII() - 1;
-                        if (itemIndex > this.collection.length - 1) {
-                            itemIndex = this.collection.length - 1;
-                            Custom.setCurrentII(this.collection.length);
-                        }
-
-                        if (itemIndex == -1) {
-                            this.$el.html("No users found");
+                        var currentModel = this.collection.getElement();
+                        if(!currentModel){
+                            this.$el.html("<h2>No users found.</h2>");
                         } else {
-                            var currentModel = this.collection.models[itemIndex];
-                            this.$el.html(_.template(UserFormTemplate, currentModel.toJSON()));
+                            this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                         }
-
                         break;
                     }
                 case "thumbnails":
