@@ -307,7 +307,6 @@ define([
 
                     success: function (data) {
                         var attachments = currentModel.get('attachments');
-                        var key = attachments.length;
                         var date = common.utcDateToLocaleDate(data.uploadDate);
                         attachments.push(data);
                         $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));

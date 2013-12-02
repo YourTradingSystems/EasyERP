@@ -245,7 +245,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                             	    success: function (model, response, options) {
                             	        var key = notes.length - 1;
                             	        var notes_data = response.notes;
-                            	        var date = response.notes[key].date;
+                            	        var date = common.utcDateToLocaleDate(response.notes[key].date);
                             	        var author = currentModel.get('name').first;
                             	        var id = response.notes[key]._id;
 
@@ -284,9 +284,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
                     success: function (data) {
                         var attachments = currentModel.get('attachments');
-                        var key = attachments.length;
+                        var date = common.utcDateToLocaleDate(data.uploadDate);
                         attachments.push(data);
-                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, key: key }));
+                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));
                         console.log('Attach file');
                         addFrmAttach[0].reset();
                     },
@@ -301,6 +301,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         },
 
         deleteAttach: function (e) {
+        	var id = e.target.id;
             var currentModel = this.collection.getElement();
             var attachments = currentModel.get('attachments');
             var new_attachments = _.filter(attachments, function (attach) {
@@ -419,13 +420,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     collection: this.personsCollection,
                                     model: currentModel
                                 }).render().el
-                            );
+                            );*/
 
                             this.$el.find('.formLeftColumn').append(
                                     new noteView({
                                         model: currentModel
                                     }).render().el
-                                ); console.log(currentModel);*/
+                                ); 
                         }
                         console.log("=========================Companies-> form: " + (new Date() - start)/1000 + " ms");
                         break;
