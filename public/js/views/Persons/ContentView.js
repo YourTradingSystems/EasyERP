@@ -24,9 +24,10 @@ define([
 
         buildAphabeticArray: function(collection){
             if(collection && collection.length > 0){
-                return $.map(collection, function(item){
+                var filtered =  $.map(collection, function(item){
                      return item.name.first[0];
                 });
+                return _.uniq(filtered);
             }
             return [];
         },
