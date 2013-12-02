@@ -14,14 +14,17 @@ define([
     'text!templates/Notes/AddAttachments.html',
     'views/Companies/CreateView',
     'views/Companies/EditView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate,CreateView,EditView) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate,CreateView,EditView, AphabeticTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Companies View');
             this.collection = options.collection;
+            this.originalCollection = options.collection;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
             //this.opportunitiesCollection = new OpportunitiesCollection();
             /*this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.eventsCollection = new EventsCollection();
@@ -31,6 +34,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.collection.bind('reset', _.bind(this.render, this));*/
             this.render();
         },
+
         flag: true,
         events: {
             "click .checkbox": "checked",
@@ -48,8 +52,18 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             "mouseleave .editable": "removeEdit",
             "click #editSpan": "editClick",
             "click #cancelSpan": "cancelClick",
-            "click #saveSpan": "saveClick"
+            "click #saveSpan": "saveClick",
+            "click .letter": "alpabeticalRender"
         },
+		alpabeticalRender:function(e){
+			if ($(e.target).text()=="All"){
+				this.collection = this.originalCollection;
+			}else{
+				this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			}
+			this.render();
+		},
+
         editItem: function () {
             //create editView in dialog here
             new EditView({ collection: this.collection });
@@ -231,7 +245,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                             	    success: function (model, response, options) {
                             	        var key = notes.length - 1;
                             	        var notes_data = response.notes;
-                            	        var date = response.notes[key].date;
+                            	        var date = common.utcDateToLocaleDate(response.notes[key].date);
                             	        var author = currentModel.get('name').first;
                             	        var id = response.notes[key]._id;
 
@@ -270,9 +284,9 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
 
                     success: function (data) {
                         var attachments = currentModel.get('attachments');
-                        var key = attachments.length;
+                        var date = common.utcDateToLocaleDate(data.uploadDate);
                         attachments.push(data);
-                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, key: key }));
+                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));
                         console.log('Attach file');
                         addFrmAttach[0].reset();
                     },
@@ -287,6 +301,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
         },
 
         deleteAttach: function (e) {
+        	var id = e.target.id;
             var currentModel = this.collection.getElement();
             var attachments = currentModel.get('attachments');
             var new_attachments = _.filter(attachments, function (attach) {
@@ -352,7 +367,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.append(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
                         console.log("=========================Companies -> list: " + (new Date() - start)/1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -367,6 +383,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         this.$el.html('');
                         var holder = this.$el;
                         var thumbnailsItemView;
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
                         _.each(models, function (model) {
                             var address = model.get('address');
                             if (address.city && address.country && this.flag == true) {
@@ -403,13 +420,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     collection: this.personsCollection,
                                     model: currentModel
                                 }).render().el
-                            );
+                            );*/
 
                             this.$el.find('.formLeftColumn').append(
                                     new noteView({
                                         model: currentModel
                                     }).render().el
-                                ); console.log(currentModel);*/
+                                ); 
                         }
                         console.log("=========================Companies-> form: " + (new Date() - start)/1000 + " ms");
                         break;

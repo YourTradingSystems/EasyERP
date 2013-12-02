@@ -1,7 +1,6 @@
 define([
     'text!templates/Persons/list/ListTemplate.html',
     'text!templates/Persons/form/FormTemplate.html',
-    'collections/Opportunities/OpportunitiesCollection',
     'views/Persons/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
     'custom',
@@ -10,17 +9,19 @@ define([
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
     'text!templates/Notes/AddAttachments.html',
-    'views/Persons/CreateView'
+    'views/Persons/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView) {
+], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView, AphabeticTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
+            this.originalCollection = options.collection;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.collection.bind('reset', _.bind(this.render, this));
             this.render();
-            /*this.opportunitiesCollection = new OpportunitiesCollection();
-            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));*/
         },
 
         events: {
@@ -40,9 +41,17 @@ define([
             "mouseleave .editable": "removeEdit",
             "click #editSpan": "editClick",
             "click #cancelSpan": "cancelClick",
-            "click #saveSpan": "saveClick"
+            "click #saveSpan": "saveClick",
+            "click .letter": "alpabeticalRender"
         },
-
+		alpabeticalRender:function(e){
+			if ($(e.target).text()=="All"){
+				this.collection = this.originalCollection;
+			}else{
+				this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			}
+			this.render();
+		},
         quickEdit: function (e) {
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
@@ -255,15 +264,15 @@ define([
                     currentModel.save({},
                             	{
                             	    headers: {
-                            	        mid: 39
+                            	        mid: 39,
+                            	        wait:true
                             	    },
                             	    success: function (model, response, options) {
                             	        var key = notes.length - 1;
                             	        var notes_data = response.notes;
-                            	        var date = response.notes[key].date;
+                            	        var date = common.utcDateToLocaleDate(response.notes[key].date);
                             	        var author = currentModel.get('name').first;
                             	        var id = response.notes[key]._id;
-
                             	        $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
 
                             	    }
@@ -298,9 +307,9 @@ define([
 
                     success: function (data) {
                         var attachments = currentModel.get('attachments');
-                        var key = attachments.length;
+                        var date = common.utcDateToLocaleDate(data.uploadDate);
                         attachments.push(data);
-                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, key: key }));
+                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));
                         console.log('Attach file');
                         addFrmAttach[0].reset();
                     },
@@ -316,6 +325,7 @@ define([
 
 
         deleteAttach: function (e) {
+        	var id = e.target.id;
             var currentModel = this.collection.getElement();
             var attachments = currentModel.get('attachments');
             var new_attachments = _.filter(attachments, function (attach) {
@@ -372,7 +382,6 @@ define([
             e.preventDefault();
             $(e.target).animate({
                 'background-position-y': '0px'
-
             }, 300, function () { });
         },
         render: function () {
@@ -385,7 +394,8 @@ define([
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON() }));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.append(_.template(ListTemplate, { personsCollection: this.collection.toJSON()}));
                         console.log("=========================Persons -> list: " + (new Date() - start) / 1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -398,9 +408,10 @@ define([
                         var start = new Date();
                         this.$el.html('');
                         var holder = this.$el,
-                            thumbnailsItemView;
+                            thumbnailsItemView;						
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
                         _.each(models, function (model) {
-                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                            thumbnailsItemView = new ThumbnailsItemView({ model: model});
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);
