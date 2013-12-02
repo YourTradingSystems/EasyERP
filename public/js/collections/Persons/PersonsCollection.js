@@ -24,7 +24,7 @@ define([
 
             filterByLetter: function(letter){
                 var filtered = this.filter(function(data){
-                    return data.get("name").first.startsWith(letter);
+                    return data.get("name").first.toUpperCase().startsWith(letter);
                 });
                 return new PersonsCollection(filtered);
             },

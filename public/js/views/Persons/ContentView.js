@@ -9,27 +9,19 @@ define([
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
     'text!templates/Notes/AddAttachments.html',
-    'views/Persons/CreateView'
+    'views/Persons/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 
-], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView) {
+], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView, AphabeticTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
-            this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
+            this.originalCollection = options.collection;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
-        },
-
-        buildAphabeticArray: function(collection){
-            if(collection && collection.length > 0){
-                var filtered =  $.map(collection, function(item){
-                     return item.name.first[0];
-                });
-                return _.uniq(filtered);
-            }
-            return [];
         },
 
         events: {
@@ -49,9 +41,17 @@ define([
             "mouseleave .editable": "removeEdit",
             "click #editSpan": "editClick",
             "click #cancelSpan": "cancelClick",
-            "click #saveSpan": "saveClick"
+            "click #saveSpan": "saveClick",
+            "click .letter": "alpabeticalRender"
         },
-
+		alpabeticalRender:function(e){
+			if ($(e.target).text()=="All"){
+				this.collection = this.originalCollection;
+			}else{
+				this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			}
+			this.render();
+		},
         quickEdit: function (e) {
             $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
         },
@@ -393,7 +393,8 @@ define([
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON(), alphabeticArray: this.alphabeticArray }));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.append(_.template(ListTemplate, { personsCollection: this.collection.toJSON()}));
                         console.log("=========================Persons -> list: " + (new Date() - start) / 1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -406,14 +407,10 @@ define([
                         var start = new Date();
                         this.$el.html('');
                         var holder = this.$el,
-                            thumbnailsItemView;
-						var Lithera = [];
+                            thumbnailsItemView;						
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
                         _.each(models, function (model) {
-                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
-							var fname =model.get("name").first[0];
-							if (Lithera.indexOf(fname)==-1){
-								Lithera.push(fname);
-							}
+                            thumbnailsItemView = new ThumbnailsItemView({ model: model});
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);

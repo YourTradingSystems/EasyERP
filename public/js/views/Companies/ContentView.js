@@ -14,14 +14,17 @@ define([
     'text!templates/Notes/AddAttachments.html',
     'views/Companies/CreateView',
     'views/Companies/EditView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 
 ],
-function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate,CreateView,EditView) {
+function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection, EventsCollection, ThumbnailsItemView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate,CreateView,EditView, AphabeticTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Companies View');
             this.collection = options.collection;
+            this.originalCollection = options.collection;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
             //this.opportunitiesCollection = new OpportunitiesCollection();
             /*this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.eventsCollection = new EventsCollection();
@@ -31,6 +34,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.collection.bind('reset', _.bind(this.render, this));*/
             this.render();
         },
+
         flag: true,
         events: {
             "click .checkbox": "checked",
@@ -48,8 +52,18 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             "mouseleave .editable": "removeEdit",
             "click #editSpan": "editClick",
             "click #cancelSpan": "cancelClick",
-            "click #saveSpan": "saveClick"
+            "click #saveSpan": "saveClick",
+            "click .letter": "alpabeticalRender"
         },
+		alpabeticalRender:function(e){
+			if ($(e.target).text()=="All"){
+				this.collection = this.originalCollection;
+			}else{
+				this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			}
+			this.render();
+		},
+
         editItem: function () {
             //create editView in dialog here
             new EditView({ collection: this.collection });
@@ -352,7 +366,8 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
+                        this.$el.append(_.template(ListTemplate, { companiesCollection: this.collection.toJSON() }));
                         console.log("=========================Companies -> list: " + (new Date() - start)/1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -367,6 +382,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         this.$el.html('');
                         var holder = this.$el;
                         var thumbnailsItemView;
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray}));
                         _.each(models, function (model) {
                             var address = model.get('address');
                             if (address.city && address.country && this.flag == true) {
