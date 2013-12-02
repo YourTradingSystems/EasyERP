@@ -538,7 +538,6 @@ var Project = function (logWriter, mongoose) {
         });
     };
 
-
     function createTask(data, res) {
         try {
             if (!data.summary || !data.project) {
