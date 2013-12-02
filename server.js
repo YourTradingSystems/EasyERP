@@ -309,6 +309,15 @@ app.get('/Tasks', function (req, res) {
     requestHandler.getTasks(req, res, data);
 });
 
+app.get('/Tasks/kanban', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.pId = req.param('pId');
+    data.page = req.param('page');
+    data.count = req.param('count');
+    requestHandler.getTasksByProjectId(req, res, data);
+});
+
 app.get('/Priority', function (req, res) {
     data = {};
     data.mid = req.param('mid');

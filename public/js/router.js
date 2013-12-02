@@ -17,16 +17,27 @@ define([
             "login": "login",
             "kanban/:contentType(/:parrentContentId)": "goToKanban",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
-            "home/action-:type/:action(/:curitem)(/:hash)": "makeAction",
             "*actions": "main"
         },
 
         goToKanban: function (contentType, parrentContentId) {
+            if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + "kanbanCollection";
+            
+            self = this;
+            
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = new ContentCollection();
+                collection = new ContentCollection(parrentContentId);
+                collection.bind('reset', _.bind(createViews, self));
+
+                function createViews() {
+                    var contentView = new ContentView({ collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+                    this.changeView(contentView);
+                    this.changeTopBarView(topBarView);
+                }
             });
         },
 
@@ -112,73 +123,6 @@ define([
                 }
             });
 
-        },
-
-        makeAction: function (contentType, action, itemIndex, hash) {
-            //if (/\s/.test(contentType)) {
-            //    var contentTypeArray = contentType.split(' ');
-            //    contentType = contentTypeArray.join('');
-            //}
-            //if (hash) {
-            //    if (hash.length != 24) {
-            //        itemIndex = hash;
-            //        hash = null;
-            //    }
-            //}
-            if (this.mainView == null) this.main();
-            var actionVariants = ["Create", "Edit", "View"];
-
-            if ($.inArray(action, actionVariants) == -1) {
-                action = "Create";
-            }
-            var ActionViewUrl = "views/" + contentType + "/" + action + "View",
-                TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection";
-
-            var self = this;
-
-            self.Custom = Custom;
-
-            require([ActionViewUrl, TopBarViewUrl, CollectionUrl], function (ActionView, TopBarView, ContentCollection) {
-                var contentCollection = new ContentCollection();
-                contentCollection.bind('reset', _.bind(createViews, self));
-                function createViews() {
-                    contentCollection.unbind('reset');
-                    //this.Custom.setCurrentCL(contentCollection.models.length);
-
-                    //if (itemIndex) 
-                    //    this.Custom.setCurrentII(itemIndex);
-                    if (itemIndex) contentCollection.setElement(itemIndex);
-
-                    //itemIndex = this.Custom.getCurrentII();
-
-                    var url = "#home/action-" + contentType + "/" + action;
-
-                    if (action === "Edit" && contentType != "Profiles") {
-                        url += "/" + itemIndex;
-                    }
-                    if (!hash && App.hash) {
-                        hash = App.hash;
-                    }
-                    if (hash && (action === "Create" || action === "View" || action === "Edit")) {
-                        url += "/" + hash;
-                    }
-
-                    Backbone.history.navigate(url, { replace: true});
-
-                    var topBarView = new TopBarView({ actionType: action, collection: contentCollection }),
-                        actionView = new ActionView({ collection: contentCollection, pId: hash });
-
-                    topBarView.bind('saveEvent', actionView.saveItem, actionView);
-                    if (contentType == "Profiles") {
-                        topBarView.bind('nextEvent', actionView.nextForm, actionView);
-                        topBarView.bind('deleteEvent', actionView.deleteItem, actionView);
-                    }
-
-                    this.changeView(actionView);
-                    this.changeTopBarView(topBarView);
-                }
-            }, self);
         },
 
         changeWrapperView: function (wrapperView) {
