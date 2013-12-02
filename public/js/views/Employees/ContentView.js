@@ -5,14 +5,19 @@ define([
     'custom',
     'common',
     'views/Employees/EditView',
-    'views/Employees/CreateView'
+    'views/Employees/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 
 ],
-function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTemplate) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             this.collection = options.collection;
+            this.originalCollection = options.collection;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="All";
             this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
@@ -20,8 +25,16 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
         events: {
             "click .checkbox": "checked",
             "click #tabList a": "switchTab",
-            "click td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click td:not(:has('input[type='checkbox']'))": "gotoForm",
+            "click .letter:not(.empty)": "alpabeticalRender"
         },
+		alpabeticalRender:function(e){
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+			this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			this.selectedLetter=$(e.target).text();
+			this.render();
+		},
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
@@ -53,7 +66,8 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             switch (viewType) {
                 case "list":
                     {
-                        this.$el.html(_.template(ListTemplate, {employeesCollection:this.collection.toJSON()}));
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
+                        this.$el.append(_.template(ListTemplate, {employeesCollection:this.collection.toJSON()}));
 
                         $('#check_all').click(function () {
                             var c = this.checked;
@@ -67,7 +81,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                         var holder = this.$el,
                             thumbnailsItemView;
 
-
+                        this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         _.each(models, function (model) {
                             var dateBirth = new Date(model.get("dateBirth"));
                             var today = new Date;

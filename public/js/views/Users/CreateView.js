@@ -1,42 +1,47 @@
 define([
-    "text!templates/Users/CreateUserTemplate.html",
-    "collections/Users/UsersCollection",
-    "collections/Companies/CompaniesCollection",
-    "collections/Profiles/ProfilesCollection",
+    "text!templates/Users/CreateTemplate.html",
     "models/UserModel",
-    "common"
+    "common" ,
+    "dataService"
 ],
-    function (CreateUserTemplate, UsersCollection, CompaniesCollection, ProfilesCollection, UserModel, common) {
+    function (CreateTemplate, UserModel, common, dataService) {
 
         var UsersCreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Users",
             actionType: null,
-            template: _.template(CreateUserTemplate),
-            contentType: "Users",
+            template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function () {
-                this.usersCollection = new UsersCollection();
-                this.usersCollection.bind('reset', _.bind(this.render, this));
-                this.profilesCollection = new ProfilesCollection();
-                this.profilesCollection.bind('reset', _.bind(this.render, this));
-                this.companiesCollection = new CompaniesCollection();
-                this.companiesCollection.bind('reset', _.bind(this.render, this));
+                _.bindAll(this, "saveItem");
                 this.model = new UserModel();
                 this.render();
             },
 
-            close: function () {
-                //this._modelBinder.unbind();
-            },
-
             events: {
-                "submit form": "submit"
+                "submit form": "submit",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display:"block"
+                }, 250);
 
-            saveItem: function (event) {
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
+            saveItem: function () {
                 var self = this;
-                //event.preventDefault();
                 var mid = 39;
 
                 this.model.save({
@@ -61,6 +66,7 @@ define([
                     },
                     wait: true,
                     success: function (model, responseText) {
+                        self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -71,14 +77,30 @@ define([
 
             },
             render: function () {
-                var userModel = new UserModel();
-                this.$el.html(this.template({
-                    model: this.model.toJSON(),
-                    usersCollection: this.usersCollection,
-                    companiesCollection: this.companiesCollection,
-                    profilesCollection: this.profilesCollection
-                }));
-                common.canvasDraw({ model: userModel.toJSON() }, this);
+                var formString = this.template();
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "50%",
+                    title: "Create User",
+                    buttons:{
+                        save:{
+                            text:"Save",
+                            class:"btn",
+                            click: self.saveItem
+                        },
+                        cancel:{
+                            text:"Cancel",
+                            class:"btn",
+                            click: function(){
+                                self.hideDialog();
+                            }
+                        }
+                    }
+                });
+                common.populateCompanies(App.ID.companiesDd, "/Companies");
+                common.populateProfilesDd(App.ID.profilesDd, "/Profiles");
+                common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }
         });

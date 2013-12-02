@@ -13,6 +13,7 @@ define([
             el: '#content-holder',
             initialize: function (options) {
                 this.collection = options.collection;
+                this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
 
@@ -125,10 +126,12 @@ define([
             },
 
             checked: function () {
-                if ($("input:checked").length > 0)
-                    $("#top-bar-deleteBtn").show();
-                else
-                    $("#top-bar-deleteBtn").hide();
+                if(this.collection.length> 0){
+                    if ($("input:checked").length > 0)
+                        $("#top-bar-deleteBtn").show();
+                    else
+                        $("#top-bar-deleteBtn").hide();
+                }
             },
 
             deleteItems: function () {

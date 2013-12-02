@@ -40,8 +40,6 @@ define([
 
             render: function () {
                 var viewType = Custom.getCurrentVT();
-                //var collectionLength = this.collection.length;
-                //var itemIndex = Custom.getCurrentII();
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
                 common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;

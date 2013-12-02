@@ -131,6 +131,15 @@ dl {
     background-image: -o-linear-gradient(top, @startcolor, @endcolor);
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
+.gradient2(@startcolor,@endcolor) {
+    background-color: @endcolor;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(@startcolor), to(@endcolor));
+    background-image: -webkit-linear-gradient(top, @startcolor, @endcolor);
+    background-image: -moz-linear-gradient(top, @startcolor, @endcolor);
+    background-image: -ms-linear-gradient(top, @startcolor, @endcolor);
+    background-image: -o-linear-gradient(top, @startcolor, @endcolor);
+    background-image: linear-gradient(to bottom, @startcolor, @endcolor);
+}
 
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15), @inset: '') {
     box-shadow: @arguments;
@@ -2070,7 +2079,7 @@ button {
 			text-align:center;
 			.ui-button{
 				&:first-child{
-					color:#36A9E1;
+					color:#36A9E1!important;
 					border: 1px solid #DDD;
 					.border-radius(0);
 					.ui-button-text{
@@ -2083,7 +2092,7 @@ button {
 					}
 				}
 				&:last-child{
-					color:#36A9E1;
+					color:#36A9E1!important;
 					border: 1px solid #DDD;
 					.border-radius(0);
 					.ui-button-text{
@@ -3234,4 +3243,33 @@ table#workflows {
 			}
         }
     }
+}
+.startLetter{
+	margin:0px;
+	padding:5px 0;
+	text-align:center;
+	border-bottom: 1px solid #D5D5D5;
+	.letter{
+		border: 1px solid #D5D5D5;
+		padding:5px 10px;
+		margin-left:-2px;
+		margin-right:-2px;
+		.gradient2(#FAFAFA,#EFEFEF);
+		&:hover{
+			background-image:none;
+			background-color:#eaeaea;
+			text-decoration:none;
+		}
+		&.current{
+			background-image:none;
+			background-color:#eaeaea;
+		}
+		&.empty{
+			color: #CCC;
+			cursor:default;
+			&:hover{
+				.gradient2(#FAFAFA,#EFEFEF);
+			}
+		}
+	}
 }

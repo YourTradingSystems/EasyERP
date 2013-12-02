@@ -538,7 +538,6 @@ var Project = function (logWriter, mongoose) {
         });
     };
 
-
     function createTask(data, res) {
         try {
             if (!data.summary || !data.project) {
@@ -776,34 +775,26 @@ var Project = function (logWriter, mongoose) {
         });
     };
 
-    function getTasksByProjectId(data, func) {
+    function getTasksByProjectId(data, response) {
         var res = {};
-        res['result'] = {};
-        res['result']['status'] = '2';
-        res['result']['description'] = 'An error was find';
         res['data'] = [];
-        var query = tasks.find({ project: data.id });
+        var query = (data.pId) ? tasks.find({ project: data.pId }) : tasks.find({});
+        query.populate('project', '_id projectShortDesc projectName')
+            .populate('assignedTo', '_id ')
+            .populate('extrainfo.customer')
+            .populate('workflow');
+        query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ summary: 1 });
-        query.exec(function (err, taskss) {
-            try {
-                if (err) {
-                    //func();
-                    console.log(err);
-                    logWriter.log("Project.js getTasksByProjectId tasks.find " + err);
-                    res['result']['description'] = err;
-                    func(res);
-                } else {
-                    if (taskss) {
-                        console.log(taskss);
-                        res['result']['status'] = '0';
-                        res['result']['description'] = 'returned Tasks is success';
-                        res['data'] = taskss;
-                        func(res);
-                    }
-                }
-            }
-            catch (Exception) {
-                logWriter.log("Project.js getTasksByProjectId tasks.find " + Exception);
+        query.exec(function (err, _tasks) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js getTasksByProjectId task.find " + err);
+                response.send(500, { error: "Can't find Tasks" });
+            } else {
+                //res['data'] = taskFormatDate(_tasks, 0);
+                res['data'] = _tasks;
+                //console.log(res['data']);
+                response.send(res);
             }
         });
     };

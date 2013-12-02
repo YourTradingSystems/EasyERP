@@ -53,7 +53,8 @@ var App = App ||
 		visibilityDd: "#visibilityDd",
 		genres: "#genresDd",
         degreesDd: "#degreesDd",
-        sourceDd: "#sourceDd"
+        sourceDd: "#sourceDd",
+        profilesDd: "#profilesDd"
     },
     URL: {
         customers: "/Customer",
