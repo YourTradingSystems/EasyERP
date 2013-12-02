@@ -134,8 +134,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: "50%",
-                    height: 513,
+                    width: 800,
                     title: "Create Employee",
                     buttons:{
                         save:{

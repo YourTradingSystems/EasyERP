@@ -1,17 +1,10 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
-    "text!templates/Tasks/selectTemplate.html",
-    /*"collections/Projects/ProjectsDdCollection",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Tasks/TasksCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Workflows/WorkflowsCollection",
-    "collections/Priority/TaskPriority",*/
     "models/TasksModel",
     "common",
     "custom"
 ],
-    function (CreateTemplate, selectTemplate, TaskModel, common, Custom) {
+    function (CreateTemplate, TaskModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -134,8 +127,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: "50%",
-                    height: 513,
+                    width: 800,
                     title: "Create Task",
                     buttons:{
                         save:{

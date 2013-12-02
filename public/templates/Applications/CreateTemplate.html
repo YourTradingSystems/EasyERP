@@ -1,13 +1,11 @@
-<div class="formHeader">
-    <button class="red" id="hire"><span>Hire & Create Employee</span></button>
-</div>
+
 <div class="form-holder">
     <form method="post" action="" id="createApplicationForm" class="form">
         <fieldset>
 		  <div class="half-block left">
 			<dl class="person-info">
 			  <dt><label for="subject">Subject :</label></dt><dd><input type="text" class="title-input blueback" id="subject" required /></dd>
-			  <dt><label for="name">Name :</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required /></dd>
+			  <dt><label for="first">Name :</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required /></dd>
 			  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required /></dd>
 			</dl>
 		  </div>
@@ -23,36 +21,35 @@
 			  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" /></dd>
 			  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" /></dd>
 			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" /></dd>
-			  <dt><label for="workflowNames">Workflow Names </label></dt>
+			  <dt><label for="workflowNamesDd">Workflow Names </label></dt>
 			  <dd>
-				<select id="workflowNames">
-                    <% _.each(workflowNames, function(item){ %>
-                    <option><%=item%></option>
-                    <%}); %>
+				<select id="workflowNamesDd">
+
                 </select>
 			  </dd>
-			  <dt><label for="workflow">Workflow</label></dt><dd id="selectWorkflow"></dd>
+			  <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"></dd>
+                <select id="workflowsDd"></select>
 			</dl>
 		  </div>
+            <p>
+                <label for="degreesDd">Degree </label>
+                <select id="degreesDd">
+
+                </select>
+            </p>
 		  <div class="half-block left">
 			<dl class="person-info">
-			  <dt><label for="relatedUser">Responsible </label></dt>
+			  <dt><label for="relatedUsersDd">Responsible </label></dt>
 			  <dd>
-			    <select id="relatedUser">
-                  <option selected="selected" value="">Select...</option>
-                  <% employeesCollection.each(function(option){ %>
-                  <option value="<%= option.get('_id') %>"><%= option.get('name').first%> <%= option.get('name').last%></option>
-                  <% }); %>
+			    <select id="relatedUsersDd">
+
                 </select>
 			  </dd>
 			  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" /></dd>
-			  <dt><label for="source">Source </label></dt>
+			  <dt><label for="sourceDd">Source </label></dt>
 			  <dd>
-			  <select id="source">
-                <option selected="selected" value="">Select...</option>
-                <% sourceOfApplicantsCollection.each(function(option){ %>
-                <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                <% }); %>
+			  <select id="sourceDd">
+
               </select>
 			  </dd>
 			  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" /></dd>
@@ -77,25 +74,15 @@
 			  <div class="clearfix"></div>
 			</div>
 			<dl class="person-info">
-			  <dt><label for="job">Applied Job </label></dt>
+			  <dt><label for="jobPositionDd">Applied Job </label></dt>
 			  <dd>
-				<select id="job">
-                  <option selected="selected" value="">Select...</option>
-                  <% jobPositionsCollection.each(function(option){ %>
-
-                  <option value="<%= option.get('_id') %>"><%= option.get('name')%></option>
-                  <% }); %>
+				<select id="jobPositionDd">
 
                 </select>
 			  </dd>
-			  <dt><label for="department">Department</label></dt>
+			  <dt><label for="departmentDd">Department</label></dt>
 			  <dd>
-			    <select id="department">
-                  <option selected="selected" value="">Select...</option>
-                  <% departmentsCollection.each(function(option){ %>
-
-                  <option value="<%= option.get('_id') %>"><%= option.get('departmentName')%></option>
-                  <% }); %>
+			    <select id="departmentDd">
 
                 </select>
 

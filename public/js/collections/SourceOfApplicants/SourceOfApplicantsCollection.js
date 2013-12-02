@@ -27,11 +27,6 @@ define([
             parse: true,
 
             parse: function (response) {
-                //console.log('parse Projects');
-                //$.each(response.data, function(index,val){
-                //    response.data[index]["id"] = response.data[index]["_id"];
-                //    delete response.data[index]["_id"];
-                //});
                 return response.data;
             },
 
