@@ -390,8 +390,17 @@
                 selectList.append(options);
             });
         }
-
+		var buildAphabeticArray = function(collection){
+            if(collection && collection.length > 0){
+                var filtered =  $.map(collection, function(item){
+                     return item.name.first[0].toUpperCase();
+                });
+                return _.sortBy(_.uniq(filtered),function(a){return a});
+            }
+            return [];
+        }
         return {
+			buildAphabeticArray: buildAphabeticArray,
             populateDegrees:populateDegrees,
             populateSourceApplicants:populateSourceApplicants,
             populateJobPositions:populateJobPositions,
