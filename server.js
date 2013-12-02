@@ -760,9 +760,13 @@ app.delete('/Calendars/:_id', function (req, res) {
 
 app.post('/GoogleCalSync', function (req, res) {
     data = {};
-    data.mid = req.param('mid');
-    data.calendars = req.body;
-    requestHandler.googleCalSync(req, res, data);
+    //data.mid = req.param('mid');
+    //data.calendars = req.body;
+    console.log('//////////////////////////////');
+    console.log(req.body);
+    //console.log(req.calendars);
+    console.log('//////////////////////////////');
+   // requestHandler.googleCalSync(req, res, data);
 });
 
 app.listen(8088);

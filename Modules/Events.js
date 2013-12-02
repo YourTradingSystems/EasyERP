@@ -308,6 +308,7 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
                 return;
             } else {
+                console.log(data);
                 data.forEach(function (cal) {
                     calendar.find({ id: cal.id }, function (err, result) {
                         if (err) {
