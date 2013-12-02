@@ -142,7 +142,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                     if(resp.error) console.log('Error occured: ' + resp.error);
                 }
                 if(counter == calendarIdList.length){
-                    dataService.postData("/GoogleCalSync", calendarsJSON, function(resp){
+                    dataService.postData("/GoogleCalSync", {mid:39, calendars:calendarsJSON}, function(resp){
                         console.log(resp);
                     });
                 }
