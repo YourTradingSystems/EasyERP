@@ -138,7 +138,10 @@
                 throw new Error('Failed to save security token to LocalStorage. It is not supported by browser.');
             }
         }
-
+        var deleteFromLocalStorage = function(key){
+            if(window.localStorage)
+                window.localStorage.removeItem(key);
+        }
         var saveToLocalStorage = function(key, value){
             if(window.localStorage){
                 window.localStorage.setItem(key,value);
@@ -433,6 +436,7 @@
         }
 
 		return {
+            deleteFromLocalStorage:deleteFromLocalStorage,
 		    populateProfilesDd: populateProfilesDd,
 			buildAllAphabeticArray: buildAllAphabeticArray,
 			buildAphabeticArray: buildAphabeticArray,
