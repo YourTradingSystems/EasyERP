@@ -16,13 +16,18 @@ define([
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
             	"click #top-bar-discardBtn": "discardEvent",
-                "click #top-bar-editBtn": "editEvent"
+                "click #top-bar-editBtn": "editEvent",
+                "click #top-bar-createBtn": "createEvent"
             },
             
             changeContentViewType:  function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
             },
-            
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
+            },
+
             changeItemIndex: function (e) {
                 var actionType = "Content";
                 Custom.changeItemIndex(e, actionType, this.contentType, this.collection);

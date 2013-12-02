@@ -22,7 +22,7 @@ define([
             },
             hideDialog: function () {
                 $('.edit-project-dialog').remove();
-                Backbone.history.navigate("home/content-"+this.contentType);
+                Backbone.history.navigate("home/content-" + 'Projects');
             },
 
             changeWorkflow: function (e) {

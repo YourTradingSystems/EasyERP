@@ -4,10 +4,11 @@ define([
     'views/Employees/thumbnails/ThumbnailsItemView',
     'custom',
     'common',
-    'views/Employees/EditView'
+    'views/Employees/EditView',
+    'views/Employees/CreateView'
 
 ],
-function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditView) {
+function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditView, CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -36,7 +37,9 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             var index = link.index($(e.target).addClass("selected"));
             this.$(".tab").hide().eq(index).show();
         },
-
+        createItem: function () {
+            new CreateView();
+        },
         editItem: function(){
             //create editView in dialog here
             new EditView({collection:this.collection});

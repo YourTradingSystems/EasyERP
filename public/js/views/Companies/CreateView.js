@@ -131,8 +131,7 @@ define([
                     resizable:true,
 					dialogClass:"create-dialog",
 					title: "Edit Company",
-					width:"80%",
-					height:690,
+					width:800,
                     buttons: [
                         {
                             text: "Create",

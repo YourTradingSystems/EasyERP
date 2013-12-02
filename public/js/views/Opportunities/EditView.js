@@ -104,15 +104,15 @@
                         };
                     }
 
-                    var customerId = this.$("#customer option:selected").val();
+                    var customerId = this.$("#customerDd option:selected").val();
                     customerId = customerId ? customerId : null;
 
                     var email = $.trim($("#email").val());
 
-                    var salesPersonId = this.$("#salesPerson option:selected").val();
+                    var salesPersonId = this.$("#salesPersonDd option:selected").val();
                     salesPersonId = salesPersonId ? salesPersonId : null;
 
-                    var salesTeamId = this.$("#salesTeam option:selected").val();
+                    var salesTeamId = this.$("#salesTeamDd option:selected").val();
                     salesTeamId = salesTeamId ? salesTeamId : null;
 
                     var nextActionSt = $.trim($("#nextActionDate").val());
@@ -230,6 +230,7 @@
                     }
                 });
                 $('#nextActionDate').datepicker();
+                $('#expectedClosing').datepicker();
                 var model = this.currentModel.toJSON();
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);

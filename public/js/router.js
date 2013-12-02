@@ -15,19 +15,23 @@ define([
         routes: {
             "home": "main",
             "login": "login",
+            "kanban/:contentType(/:parrentContentId)": "goToKanban",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "home/action-:type/:action(/:curitem)(/:hash)": "makeAction",
             "*actions": "main"
         },
 
+        goToKanban: function (contentType, parrentContentId) {
+            var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                CollectionUrl = "collections/" + contentType + "/" + "kanbanCollection";
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                collection = new ContentCollection();
+            });
+        },
+
         getList: function (contentType, viewType, itemIndex, hash) {
            if (this.mainView == null) this.main();
-            //if (hash) {
-            //    if (hash.length != 24) {
-            //        itemIndex = hash;
-            //        hash = null;
-            //    }
-            //}
             console.log('GetList: ' + contentType + " " + viewType + " " + itemIndex + " " + hash);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",
@@ -94,9 +98,10 @@ define([
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
-                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads" || contentType === "Opportunities" || contentType === "Companies")
+                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads" || contentType === "Opportunities" || contentType === "Companies" || contentType === "Applications") {
                         topBarView.bind('editEvent', contentView.editItem, contentView);
-                    topBarView.bind('createEvent', contentView.createItem, contentView);
+                        topBarView.bind('createEvent', contentView.createItem, contentView);
+                    }
                     if (contentType === "LeadsWorkflow")
                         topBarView.bind('createEvent', contentView.createItem, contentView);
 

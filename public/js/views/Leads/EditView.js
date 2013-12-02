@@ -36,25 +36,6 @@ define([
                 }
             },
 
-            selectCustomer: function (e) {
-                e.preventDefault();
-                var id = $(e.target).val();
-                var customer = this.customersCollection.get(id).toJSON();
-                if (customer.type == 'Person') {
-                    this.$el.find('#company').val(customer.company.name);
-                } else {
-                    this.$el.find('#company').val(customer.name);
-                }
-                this.$el.find('#email').val(customer.email);
-                this.$el.find('#phone').val(customer.phones.phone);
-                this.$el.find('#mobile').val(customer.phones.mobile);
-                this.$el.find('#street').val(customer.address.street);
-                this.$el.find('#city').val(customer.address.city);
-                this.$el.find('#state').val(customer.address.state);
-                this.$el.find('#zip').val(customer.address.zip);
-                this.$el.find('#country').val(customer.address.country);
-            },
-            
             hideDialog: function () {
                 $(".edit-leads-dialog").remove();
             },
@@ -105,9 +86,9 @@ define([
                     address[el.attr("name")] = el.val();
                 });
 
-                var salesPersonId = $("#salesPersonDd option:selected").val();
+                var salesPersonId = $("#salesPerson option:selected").val();
                 salesPersonId = salesPersonId ? salesPersonId : null;
-                var salesTeamId = $("#salesTeamDd option:selected").val();
+                var salesTeamId = $("#salesTeam option:selected").val();
                 salesTeamId = salesTeamId ? salesTeamId : null;
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
@@ -176,65 +157,6 @@ define([
                 });
             },
 
-            populateDropDown: function (type, selectId, url, val) {
-                var selectList = $(selectId);
-                var self = this;
-                selectList.append($("<option/>").val('').text('Select...'));
-                dataService.getData(url, { mid: 39 }, function (response) {
-                    var options = $.map(response.data, function (item) {
-                        switch (type) {
-                            case "customers":
-                                return self.customerOption(item);
-                            case "salesPersons":
-                                return self.salesPersonsOption(item);
-                            case "salesTeam":
-                                return self.salesTeamOption(item);
-                            case "priority":
-                                return self.priorityOption(item);
-                            case "workflows":
-                                return self.workflowOption(item);
-                            case "workflowNames":
-                                return self.workflowNameOption(item);
-
-                        }
-                    });
-                    selectList.append(options);
-
-                    if(typeof val!="undefined")
-                        selectList.val(val).trigger("change");
-                });
-            },
-            workflowNameOption: function (item) {
-                return this.currentModel.get("workflow") ?
-                    $('<option/>').text(item.wName).attr('selected', 'selected') :
-                    $('<option/>').text(item.wName);
-            },
-            workflowOption: function (item) {
-                return (item && this.currentModel.get("workflow") && this.currentModel.get("workflow") === item._Id) ?
-                    $('<option/>').val(item.status).text(item.name).attr('selected', 'selected').attr('data-id', item._id) :
-                    $('<option/>').val(item.status).text(item.name).attr('data-id', item._id);
-            },
-            customerOption: function (item) {
-                return (item && this.currentModel.get("customer") && this.currentModel.get("customer").id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name);
-            },
-            salesPersonsOption: function (item) {
-                return (item && this.currentModel.get("salesPerson") && this.currentModel.get("salesPerson").id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
-            },
-            salesTeamOption: function (item) {
-                return (item && this.currentModel.get("salesTeam") && this.currentModel.get("salesTeam")._id === item._id) ?
-                    $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.departmentName);
-            },
-            priorityOption: function (item) {
-                return this.currentModel.id === item._id ?
-                    $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
-                    $('<option/>').val(item._id).text(item.priority);
-            },
-
             render: function () {
                 var formString = this.template(this.currentModel.toJSON());
                 var self = this;
@@ -255,12 +177,11 @@ define([
                         }
                     }
                 });
-                this.populateDropDown("customers", App.ID.customerDd, App.URL.customers);
-                this.populateDropDown("salesPersons", App.ID.salesPersonDd, App.URL.salesPersons);
-                this.populateDropDown("salesTeam", App.ID.salesTeamDd, App.URL.salesTeam);
-                this.populateDropDown("priority", App.ID.priorityDd, App.URL.priorities);
-                this.populateDropDown("workflows", App.ID.workflowDd, App.URL.workflows);
-                this.populateDropDown("workflowNames", App.ID.workflowNamesDd, App.URL.workflows);
+				common.populateCustomers(App.ID.customerDd, "/Customer",this.currentModel.toJSON());
+                common.populateDepartments(App.ID.salesTeam, "/Departments",this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.salesPerson, "/Employees",this.currentModel.toJSON());
+                common.populatePriority(App.ID.priorityDd, "/Priority",this.currentModel.toJSON());
+                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",this.currentModel.toJSON());
                 this.delegateEvents(this.events);
 
                 return this;

@@ -14,11 +14,7 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Job Position' });
-                this.workflowsCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.render = _.after(2, this.render);
+                this.render();
             },
 
             events: {
@@ -60,7 +56,7 @@ define([
                     name: this.$("#workflow option:selected").text(),
                     status: this.$("#workflow option:selected").val(),
                 };*/
-                var workflow = this.$("#workflow option:selected").data("id");
+                var workflow = this.$("#workflowsDd option:selected").val();
                 //var departmentId = this.$("#department option:selected").val();
                 //var objDepartment = this.departmentsCollection.get(departmentId);
                 //var department = {};
@@ -68,7 +64,7 @@ define([
                 //    department.name = objDepartment.get('departmentName');
                 //    department.id = departmentId;
                 //}
-                var department = $("#department option:selected").val();
+                var department = this.$("#departmentDd option:selected").val();
                 //var department = common.toObject(departmentId, this.departmentsCollection);
 
                 console.log(department);
@@ -87,6 +83,7 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+						self.hideDialog();
                         Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -94,20 +91,36 @@ define([
                     }
                 });
             },
+            hideDialog: function () {
+                $(".create-dialog").remove();
+            },
 
             render: function () {
-                var workflowNames = [];
+				var self = this;
+                var formString = this.template({});
 
-                this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('wName'));
+                   this.$el = $(formString).dialog({
+                    autoOpen:true,
+                    resizable:true,
+					dialogClass:"create-dialog",
+					title: "Edit Job position",
+					width:"80%",
+					height:460,
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						}]
+
                 });
-   
-                workflowNames = _.uniq(workflowNames);
-                this.$el.html(this.template({
-                    departmentsCollection: this.departmentsCollection,
-                    workflowNames: workflowNames
-                }));
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.workflowsCollection.toJSON() }));
+				common.populateDepartments(App.ID.departmentDd, "/Departments");
+                common.populateWorkflows("Jobposition", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+
                 return this;
             }
 

@@ -2,25 +2,23 @@ define([
     'text!templates/Applications/list/ListTemplate.html',
     'text!templates/Applications/form/FormTemplate.html',
     'text!templates/Applications/kanban/WorkflowsTemplate.html',
-    'collections/Applications/ApplicationsCollection',
-    'collections/Workflows/WorkflowsCollection',
     'views/Applications/kanban/KanbanItemView',
     'custom',
-    'common'
+    'common',
+    'views/Applications/EditView',
+    'views/Applications/CreateView',
+    'collections/Workflows/WorkflowsCollection'
 ],
 
-function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate, ApplicationsCollection, WorkflowsCollection, KanbanItemView, Custom, common) {
+function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate, KanbanItemView, Custom, common, EditView, CreateView, WorkflowsCollection) {
     var ApplicationsView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Applications View');
-            var that = this;
-            this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
-            this.workflowsCollection.bind('reset', _.bind(this.render, this));          
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            
-
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
+            this.workflowsCollection.bind('reset', _.bind(this.render, this));
         },
 
         events: {
@@ -37,9 +35,18 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
             var id = $(e.target).closest("tr").data("id");
             window.location.hash = "#home/content-Applications/form/" + id;
         },
+
+        createItem: function () {
+            new CreateView();
+        },
+        editItem: function(){
+            //create editView in dialog here
+            new EditView({collection:this.collection});
+        },
+
         render: function () {
             var that = this;
-            //Custom.setCurrentCL(this.collection.models.length);
+
             var viewType = Custom.getCurrentVT();
             var mid = 39;
             var models = [];
@@ -94,21 +101,6 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                     }
                 case "form":
                     {
-                        //var itemIndex = Custom.getCurrentII() - 1;
-                        //if (itemIndex > this.collection.models.length - 1) {
-                        //    itemIndex = this.collection.models.length - 1;
-
-                        //    var urlParts = window.location.hash.split('/');
-                        //    if (urlParts[4]) {
-                        //        urlParts[4] = this.collection.models.length;
-                        //        window.location.hash = urlParts.join('/');
-                        //    }
-                        //    Custom.setCurrentII(this.collection.models.length);
-                        //}
-
-                        //if (itemIndex == -1) {
-                        //    this.$el.html();
-                        //} else {
                         var currentModel = this.collection.getElement();
                         if (!currentModel) {
                             this.$el.html('<h2>No Application found</h2>');
@@ -282,7 +274,7 @@ function (ApplicationsListTemplate, ApplicationsFormTemplate, WorkflowsTemplate,
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        model.on('change', this.render, this);
+
                         model.destroy({
                             headers: {
                                 mid: mid

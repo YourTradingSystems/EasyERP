@@ -26,12 +26,7 @@ define([
             },
 
             changeItemIndex: function (e) {
-                //var windowLocHash = window.location.hash.split('/')[3];
                 var actionType = "Content";
-                //var hash;
-                //if (typeof windowLocHash != "undefined" && windowLocHash.length == 24) {
-                //    hash = windowLocHash;
-                //}
                 Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
             },
 
@@ -46,8 +41,6 @@ define([
 
             render: function () {
                 var viewType = Custom.getCurrentVT();
-                //var collectionLength = this.collection.length;
-                //var itemIndex = Custom.getCurrentII();
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;

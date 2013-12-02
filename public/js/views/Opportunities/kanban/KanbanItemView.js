@@ -43,7 +43,7 @@ define([
             },
 
             gotoForm: function (e) {
-                var id = $(e.target).closest(".item").data("id");
+                var id = $(e.target).closest(".item").attr("id");
                 App.ownContentType = true;
                 window.location.hash = "home/content-Opportunities/form/" + id;
             },

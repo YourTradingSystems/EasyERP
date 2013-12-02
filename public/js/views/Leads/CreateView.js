@@ -19,58 +19,14 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Lead' });
-//                this.workflowsCollection.bind('reset', _.bind(this.render, this));
-                this.companiesCollection = new CompaniesCollection();
-   //             this.companiesCollection.bind('reset', _.bind(this.render, this));
-                this.customersCollection = new CustomersCollection();
-     //           this.customersCollection.bind('reset', _.bind(this.render, this));
-                this.employeesCollection = new EmployeesCollection();
-       //         this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-         //       this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.priorityCollection = new PriorityCollection();
-                this.priorityCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));
                 this.contentCollection = options.collection;
-                this.render = _.after(6, this.render);
+                this.render();
             },
 
             events: {
                 "click #tabList a": "switchTab",
                 "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows"
-            },
-
-            selectCustomer: function (e) {
-                e.preventDefault();
-                var customerId = $(e.target).val();
-                var customer = this.customersCollection.get(customerId).toJSON();
-                var $company = this.$el.find('#company');
-                if (customer.type == 'Person') {
-                    var _customerId = (customer.company) ? customer.company._id : '';
-                    $company.val(customer.company.name);
-                    $company.data('id', _customerId);
-                } else {
-                    $company.data('id', customerId);
-                    $company.val(customer.name);
-                }
-                this.$el.find('#email').val(customer.email);
-                this.$el.find('#phone').val(customer.phones.phone);
-                this.$el.find('#mobile').val(customer.phones.mobile);
-                this.$el.find('#street').val(customer.address.street);
-                this.$el.find('#city').val(customer.address.city);
-                this.$el.find('#state').val(customer.address.state);
-                this.$el.find('#zip').val(customer.address.zip);
-                this.$el.find('#country').val(customer.address.country);
-            },
-
-            getWorkflowValue: function (value) {
-                var workflows = [];
-                for (var i = 0; i < value.length; i++) {
-                    workflows.push({ name: value[i].name, status: value[i].status });
-                }
-                return workflows;
             },
 
             changeWorkflows: function () {
@@ -90,6 +46,7 @@ define([
             },
 
             saveItem: function () {
+				var self = this;
                 var $company = this.$("#company");
                 var mid = 39;
 
@@ -101,7 +58,7 @@ define([
                     name: $company.val(),
                     id: $company.data('id')
                 }
-                var idCustomer = $(this.el).find("#customerDd option:selected").val();
+                var idCustomer = this.$("#customerDd option:selected").val();
                 var address = {};
                 $("p").find(".address").each(function () {
                     var el = $(this);
@@ -130,7 +87,7 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
-                var workflow = this.$("#workflowDd option:selected").data('id');
+                var workflow = this.$("#workflowsDd option:selected").data('id');
 
 
                 var priority = $("#priorityDd").val();
@@ -167,6 +124,7 @@ define([
                             mid: mid
                         },
                         success: function (model) {
+							self.hideDialog();
                             Backbone.history.navigate("home/content-Leads", { trigger: true });
                         },
                         error: function (model, xhr, options) {
@@ -176,18 +134,12 @@ define([
 
 
             },
-
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
             render: function () {
 				var self=this;
-                var workflowNames = [];
-                this.workflowsCollection.models.forEach(function (option) {
-                    workflowNames.push(option.get('wName'));
-                });
-                workflowNames = _.uniq(workflowNames);
-
                 var formString = this.template({
-                    workflowNames: workflowNames,
-                    workflows: this.workflowsCollection.toJSON()
 
 				});
                 this.$el = $(formString).dialog({
@@ -205,7 +157,7 @@ define([
 
 						{
 							text: "Cancel",
-							click: function () { $(this).dialog().remove(); }
+							click: function () { self.hideDialog(); }
 						}]
 
                 });
@@ -214,7 +166,7 @@ define([
                 common.populateEmployeesDd(App.ID.salesPerson, "/Employees");
                 common.populatePriority(App.ID.priorityDd, "/Priority");
                 common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
-
+                this.delegateEvents(this.events);
 
                 return this;
             }

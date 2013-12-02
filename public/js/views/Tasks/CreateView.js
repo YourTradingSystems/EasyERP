@@ -1,17 +1,10 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
-    "text!templates/Tasks/selectTemplate.html",
-    /*"collections/Projects/ProjectsDdCollection",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Tasks/TasksCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Workflows/WorkflowsCollection",
-    "collections/Priority/TaskPriority",*/
     "models/TasksModel",
     "common",
     "custom"
 ],
-    function (CreateTemplate, selectTemplate, TaskModel, common, Custom) {
+    function (CreateTemplate, TaskModel, common, Custom) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -21,7 +14,6 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new TaskModel();
-                //this.pId = options.pId;
                 this.render();
             },
 
@@ -123,12 +115,19 @@ define([
             },
 
             render: function () {
+                var projectID = (window.location.hash).split('/')[3];
+                model = projectID
+                    ? {
+                         project: {
+                              _id: projectID
+                         }
+                    }
+                    : null;
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: "50%",
-                    height: 513,
+                    width: 800,
                     title: "Create Task",
                     buttons:{
                         save:{
@@ -147,7 +146,7 @@ define([
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 $('#deadline').datepicker({ dateFormat: "d M, yy" });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd");
+                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model);
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
                 common.populatePriority(App.ID.priorityDd, "/Priority");

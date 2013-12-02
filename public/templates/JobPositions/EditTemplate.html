@@ -13,23 +13,18 @@
               <option selected="selected" value="0">Select...</option>
             </select>
 		  </dd>
-		  <dt><label for="workflowNames">Workflow Names :</label></dt>
+		  <dt><label for="workflowNamesDd">Workflow Names :</label></dt>
 		  <dd>
-			<select id="workflowNames">
-              <option value="0">Select...</option>
-              <% _.each(workflowNames, function(item){ %>
-              <option <%=(item.id==model.workflow)?'selected="selected"':''%>><%= item.name %></option>
-              <% }); %>
+			<select id="workflowNamesDd">
             </select>
 		  </dd>
-		  <dt><label for="workflow">Workflow :</label></dt><dd id="selectWorkflow"></dd>
-		  <dt><label for="department">Department :</label></dt>
+		  <dt><label for="workflowsDd">Workflow :</label></dt><dd>
+            <select  id="workflowsDd">
+            </select>
+		  </dd>
+		  <dt><label for="departmentDd">Department :</label></dt>
 		  <dd>
-			<select id="department">
-              <option value="">Select...</option>
-              <% departmentsCollection.each(function(option){ %>
-              <option value="<%= option.get('_id') %>" <%=(model.department && option.get('_id')==model.department._id)? 'selected="selected"':''%>><%= option.get('departmentName')%></option>
-              <% }); %>
+			<select id="departmentDd">
             </select>
 		  </dd>
 		</dl>

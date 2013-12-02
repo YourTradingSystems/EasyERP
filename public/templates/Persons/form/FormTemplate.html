@@ -1,7 +1,7 @@
 <div class="form-holder">
     <div class="formLeftColumn">
         <form class="form notDialog" id="createEmployeeForm" data-id="<%=_id%>">
-            <div class="formTitle">
+            <div class="formTitle withMargin">
                 <h3 class="left">Details</h3>
                 <div class="btnHolder">
                     <div class="icon-img add left" title="Create Person"></div>
@@ -26,13 +26,11 @@
                 <div class="mainInfo">
                     <div class="half-block left">
                         <h3>
-                            <%=name.first%> <%=name.last%>
+                            <%=name.first%> <%=name.last%> <% if (company){%>at <a class="bold company" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
                         </h3>
                         <dl class="person-info">
                             <dt>Position :</dt>
                             <dd id="jobPosition" class="editable"><%=jobPosition%></dd>
-                            <dt>Company :</dt>
-                            <dd id="company" class="editable"><a class="bold company" data-id="<%=(company) ? company._id : ''%>" href="#"><%=(company) ? company.name.first : ''%></a></dd>
                             <dt>Birthday :</dt>
                             <dd id="dateBirth" class="editable date"><%=dateBirth%></dd>
                             <dt>Email</dt>

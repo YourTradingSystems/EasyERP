@@ -793,17 +793,21 @@ h3 {
 }
 .dl-auto(@max-width:110px){
     clear: both;
-
+	font-size:14px;
+	
     dt {
         width: 35%;
         max-width: @max-width;
         float: left;
         clear: both;
-        line-height: 20px;
+        line-height: 0px;
+		min-height:16px;
+		
     }
 
     dd {
-        line-height: 20px;
+        line-height: 0px;
+		min-height:16px;
         float: left;
         width: 65%;
 
@@ -819,7 +823,7 @@ h3 {
 	.dl-auto();
 }
 .job-info{
-	.dl-auto(200px);
+	.dl-auto(260px);
 }
 .app-info{
 	.dl-auto(150px);
@@ -1294,6 +1298,15 @@ h3 {
                 progress {
                     width: 100%;
                 }
+				progress {background-color:#F5F5F5}
+				progress::-webkit-progress-bar {  
+					background-color:#F5F5F5
+				/* style rules */  
+				}  
+				progress::-webkit-progress-value {  
+					background-color:#57B5E3
+				/* style rules */  
+				}  
 
                 &:first-of-type {
                     padding-left: 7px;
@@ -1350,6 +1363,9 @@ h3 {
     }
 
     .formTitle {
+		&.withMargin{
+			margin-bottom:10px;
+		}
         width: 100%;
         border-bottom: @thin-border @lightgrey;
 
@@ -2052,6 +2068,35 @@ button {
         .ui-dialog-buttonset {
 			float:none !important;
 			text-align:center;
+			.ui-button{
+				&:first-child{
+					color:#36A9E1;
+					border: 1px solid #DDD;
+					.border-radius(0);
+					.ui-button-text{
+						background-color:white;
+						&:hover{
+							background-color:#eee;
+							color: #2A6496;
+						}
+										
+					}
+				}
+				&:last-child{
+					color:#36A9E1;
+					border: 1px solid #DDD;
+					.border-radius(0);
+					.ui-button-text{
+						background-color: white;
+						&:hover{
+							background-color:#eee;
+							color: #2A6496;
+						}
+						
+					}
+
+				}
+			}
 		}
 	}
     &.edit-task-dialog {
@@ -2175,7 +2220,7 @@ button {
 
     dl {
         dt, dd {
-            line-height: 30px;
+            line-height: 0px;
         }
 
         dt {
@@ -2227,6 +2272,7 @@ button {
         }
     }
 }
+
 #createApplicationForm #otherInfo{
 	margin-top:10px;
 }

@@ -1,12 +1,7 @@
-﻿<div class="formHeader">
-    <button class="red" id="hire"><span>Hire & Create Employee</span></button>
-    <button class="red" id="refuse"><span>Refuse</span></button>
-    <ul class="breadcrumb">
-    </ul>
-</div>
+﻿
 <div class="form-holder">
 
-    <form method="post" action="" id="createApplicationForm" class="form" data-id="<%=model._id%>">
+    <form method="post" action="" id="createApplicationForm" class="form" data-id="<%=_id%>">
         <fieldset>
             <div class="avatar">
                 <input type="file" value="Edit" id="inputImg" accept="image/*">
@@ -14,106 +9,84 @@
             </div>
             <p>
                 <label for="subject">Subject </label>
-                <input type="text" class="title-input blueback" id="subject" value="<%=model.subject%>" required />
+                <input type="text" class="title-input blueback" id="subject" value="<%=subject%>" required />
             </p>
 
             <p>
-                <label for="name">First Name</label>
-                <input type="text" class="title-input name" id="first" value="<%=model.name.first%>" />
-                <label for="name">Last Name</label>
-                <input type="text" class="title-input name" id="last" value="<%=model.name.last%>" />
+                <label for="first">First Name</label>
+                <input type="text" class="title-input name" id="first" value="<%=name.first%>" />
+                <label for="last">Last Name</label>
+                <input type="text" class="title-input name" id="last" value="<%=name.last%>" />
             </p>
 
             <p>
                 <label for="wemail">Email </label>
-                <input type="email" id="wemail" value="<%=model.wemail%>"/>
+                <input type="email" id="wemail" value="<%=workEmail%>"/>
             </p>
 
             <p>
                 <label for="phone">Phone </label>
-                <input type="text" id="phone" value="<%=model.workPhones.phone%>"/>
+                <input type="text" id="phone" value="<%=workPhones.phone%>"/>
             </p>
 
             <p>
                 <label for="mobile">Mobile </label>
-                <input type="text" id="mobile" value="<%=model.workPhones.mobile%>"/>
+                <input type="text" id="mobile" value="<%=workPhones.mobile%>"/>
             </p>
             
             <p>
-                <label for="workflowNames">Workflow Names </label>
-                <select id="workflowNames">
-                    <option selected="selected" value="0">Select...</option>
-                    <% workflowsCollection.each(function(option){ %>
-                    <option value="<%= option.get('name') %>"<%=(option.get('name')==model.workflow.wName)?'selected="selected"':''%>><%= option.get('name') %></option>
-                    <% }); %>
+                <label for="workflowNamesDd">Workflow Names </label>
+                <select id="workflowNamesDd">
+
                 </select>
             </p> 
-            <p id="selectWorkflow">
+            <p id="workflowsDd">
                            
             </p>
 
             <p>
-                <label for="degree">Degree </label>
-                <select id="degree">
-                    <option selected="selected" value="0">Select...</option>
-                    <% degreesCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.degree.id)?'selected="selected"':''%>><%= option.get('name')%></option>
-                    <% }); %>
+                <label for="degreesDd">Degree </label>
+                <select id="degreesDd">
+
                 </select>
             </p>
 
             <p>
-                <label for="relatedUser">Responsible </label>
-                <select id="relatedUser">
-                    <option selected="selected" value="0">Select...</option>
-                    <% employeesCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.relatedUser.id)?'selected="selected"':''%>><%= option.get('name').first%> <%= option.get('name').last%></option>
-                    <% }); %>
+                <label for="relatedUsersDd">Responsible </label>
+                <select id="relatedUsersDd">
+
                 </select>
             </p>
 
             <p>
                 <label for="nextAction">Next Action </label>
-                <input type="text" id="nextAction" value="<%=model.nextAction%>"/>
+                <input type="text" id="nextAction" value="<%=nextAction%>"/>
             </p>
 
              <p>
-                <label for="source">Source </label>
-                <select id="source">
-                    <option selected="selected" value="0">Select...</option>
-                    <% sourceOfApplicantsCollection.each(function(option){ %>
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.source.id)?'selected="selected"':''%>><%= option.get('name')%></option>
-                    <% }); %>
+                <label for="sourceDd">Source </label>
+                <select id="sourceDd">
+                    <option>Select...</option>
                 </select>
             </p>
 
             <p>
                 <label for="referredBy">Referred By </label>
-                <input type="text" id="referredBy" value="<%=model.referredBy%>"/>
+                <input type="text" id="referredBy" value="<%=referredBy%>"/>
             </p>
 
             <h2>Job</h2>
             <p>
-                <label for="job">Applied Job </label>
-                <select id="job">
-                    <option selected="selected" value="0">Select...</option>
-                    <% jobPositionsCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.jobPosition.id)?'selected="selected"':''%>><%= option.get('name')%></option>
-                    <% }); %>
-               
+                <label for="jobPositionDd">Applied Job </label>
+                <select id="jobPositionDd">
+
                 </select>
             </p>
 
             <p>
-                <label for="department">Department</label>
-                <select id="department">
-                    <option selected="selected" value="0">Select...</option>
-                    <% departmentsCollection.each(function(option){ %>
-                   
-                    <option value="<%= option.get('_id') %>" <%=(option.get('_id')==model.department.id)?'selected="selected"':''%>><%= option.get('departmentName')%></option>
-                    <% }); %>
-               
+                <label for="departmentDd">Department</label>
+                <select id="departmentDd">
+
                 </select>
             </p>
 
@@ -121,22 +94,22 @@
 
             <p>
                 <label for="expectedSalary">Expected Salary </label>
-                <input type="text" id="expectedSalary" value="<%=model.expectedSalary%>"/>
+                <input type="text" id="expectedSalary" value="<%=expectedSalary%>"/>
             </p>
 
             <p>
                 <label for="proposedSalary">Proposed Salary </label>
-                <input type="text" id="proposedSalary" value="<%=model.proposedSalary%>"/>
+                <input type="text" id="proposedSalary" value="<%=proposedSalary%>"/>
             </p>
 
             <p>
                 <label for="tags">Tags </label>
-                <input type="text" id="tags" value="<%=model.tags%>"/>
+                <input type="text" id="tags" value="<%=tags%>"/>
             </p>
 
             <h2>Application Summary</h2>
             <p>
-                <textarea id="otherInfo"><%=model.otherInfo%></textarea>
+                <textarea id="otherInfo"><%=otherInfo%></textarea>
             </p>
         </fieldset>
     </form>

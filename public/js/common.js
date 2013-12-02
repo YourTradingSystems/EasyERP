@@ -175,9 +175,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.projectmanager || model.salesPurchases.salesPerson || model.salesPerson)) {
+                if (model && (model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id)) ?
+                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
@@ -217,9 +217,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.department || model.salesPurchases.salesTeam || model.salesTeam)) {
+                if (model && (model.department || (model.salesPurchases&&model.salesPurchases.salesTeam) || model.salesTeam||model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)) ?
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases&&model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id)||(model.parentDepartment && model.parentDepartment.id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
@@ -231,7 +231,7 @@
                 selectList.append(options);
 
             });
-        };
+        }
         var populatePriority = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -273,6 +273,26 @@
                 selectList.append(options);
             });
         }
+        var populateDegrees = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.degree) {
+                    options = $.map(response.data, function (item) {
+                        return (model.customer._id === item._id) ?
+                            $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
         var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model) {
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
@@ -280,11 +300,20 @@
             dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
                 var options = [];
                 if (model && model.workflow) {
+					if (model.workflow._id == undefined){
+                    options = $.map(response.data, function (item) {
+                        return model.workflow == item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+					}else{
                     options = $.map(response.data, function (item) {
                         return model.workflow._id === item._id ?
                             $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
+
+					}
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
@@ -301,11 +330,75 @@
                 selectList.append(options);
             });
         }
+        var populateUsers = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39}, function (response) {
+                var options = [];
+                if (model && model.relatedUser) {
+                    options = $.map(response.data, function (item) {
+                        return model.relatedUser._id === item._id ?
+                            $('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.login);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.login);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
+        var populateJobPositions = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39}, function (response) {
+                var options = [];
+                if (model && model.jobPosition) {
+                    options = $.map(response.data, function (item) {
+                        return model.jobPosition._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
+        var populateSourceApplicants = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39}, function (response) {
+                var options = [];
+                if (model && model.source) {
+                    options = $.map(response.data, function (item) {
+                        return model.source._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+            });
+        }
 
         return {
-         utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
-        utcDateToLocaleDateTime:utcDateToLocaleDateTime,
-        utcDateToLocaleDate:utcDateToLocaleDate,
+            populateDegrees:populateDegrees,
+            populateSourceApplicants:populateSourceApplicants,
+            populateJobPositions:populateJobPositions,
+            populateUsers: populateUsers,
+            utcDateToLocaleFullDateTime:utcDateToLocaleFullDateTime,
+            utcDateToLocaleDateTime:utcDateToLocaleDateTime,
+            utcDateToLocaleDate:utcDateToLocaleDate,
             populateProjectsDd:populateProjectsDd,
             populatePriority: populatePriority,
             populateDepartments: populateDepartments,

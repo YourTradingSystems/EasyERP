@@ -20,6 +20,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
         initialize: function (options) {
             this.renderView = _.after(2, this.render);
             this.collection = options.collection;
+            this.collection.bind('reset', _.bind(this.render, this));
             this.start = new Date();
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', _.bind(this.renderView, this));
@@ -63,7 +64,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                 {
-                    //draw kanbas header with workflows
+                    //draw kanba header with workflows
                     var start = new Date();
                     this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
 
@@ -305,7 +306,6 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
             switch (viewType) {
                 case "kanban":
                     {
-                        var start = new Date();
                         model = this.model;
                         var remaining = model.get("estimated") - model.get("logged");
                         this.$("#delete").closest(".task").fadeToggle(200, function () {
