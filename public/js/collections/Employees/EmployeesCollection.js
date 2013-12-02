@@ -22,7 +22,7 @@ define([
             },
             filterByLetter: function(letter){
                 var filtered = this.filter(function(data){
-                    return data.get("name").first.toUpperCase().startsWith(letter);
+                    return data.get("name").last.toUpperCase().startsWith(letter);
                 });
                 return new EmployeesCollection(filtered);
             },

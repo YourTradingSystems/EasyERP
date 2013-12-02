@@ -24,7 +24,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             console.log('Init Companies View');
             this.collection = options.collection;
             this.originalCollection = options.collection;
-            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
             this.allAlphabeticArray = common.buildAllAphabeticArray();
 			this.selectedLetter="All";
             //this.opportunitiesCollection = new OpportunitiesCollection();
@@ -35,6 +35,19 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.personsCollection.bind('reset', _.bind(this.render, this));
             this.collection.bind('reset', _.bind(this.render, this));*/
             this.render();
+        },
+		buildAphabeticArray:function(collection){
+            if(collection && collection.length > 0){
+                var filtered =  $.map(collection, function(item){
+					if ($.isNumeric(item.name.first[0].toUpperCase())){
+						return "0-9"
+					}
+                     return item.name.first[0].toUpperCase();
+                });
+				filtered.push("All");
+                return _.sortBy(_.uniq(filtered),function(a){return a});
+            }
+            return [];
         },
 
         flag: true,
