@@ -21,6 +21,14 @@ define([
                     error: this.fetchError
                 });
             },
+
+            filterByLetter: function(letter){
+                var filtered = this.filter(function(data){
+                    return data.get("name").first.startsWith(letter);
+                });
+                return new PersonsCollection(filtered);
+            },
+
             parse:true,
 
             parse: function (response) {

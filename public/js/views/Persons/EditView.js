@@ -12,12 +12,7 @@ define([
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render");
-                //this.renderView = _.after(2, this.render);
                 this.personsCollection = options.collection;
-                //this.companiesCollection = new CompaniesCollection();
-                //this.departmentsCollection = new DepartmentsCollection();
-                //this.departmentsCollection.bind('reset', _.bind(this.renderView, this));
-                //this.companiesCollection.bind('reset', _.bind(this.renderView, this));
                 this.currentModel = this.personsCollection.getElement();
                 this.render();
 
@@ -93,30 +88,6 @@ define([
                 });
             },
 
-            populateDropDown: function(type, selectId, url){
-                var selectList = $(selectId);
-                var self = this;
-                dataService.getData(url, {mid:39, id:"Task"}, function(response){
-                    var options = $.map(response.data, function(item){
-                        switch (type){
-                            case "project":
-                                return self.projectOption(item);
-                            case "company":
-                                return self.companyOption(item);
-                            case "priority":
-                                return self.priorityOption(item);
-                            case "workflow":
-                                return self.workflowOption(item);
-                        }
-                    });
-                    selectList.append(options);
-                });
-            },
-            companyOption: function(item){
-                return (this.currentModel.get('company') && this.currentModel.get('company')._id === item._id) ?
-                    $('<option/>').val(item._id).text(item.name.first).attr('selected','selected') :
-                    $('<option/>').val(item._id).text(item.name.first);
-            },
             render: function () {
                console.log('render persons dialog');
                 var formString = this.template({
@@ -128,8 +99,7 @@ define([
                     resizable:true,
 					dialogClass:"edit-person-dialog",
 					title: "Edit Person",
-					width:"80%",
-					height:690
+					width:"80%"
                 });
                 common.populateCompanies(App.ID.companiesDd, "/Companies",this.currentModel.toJSON());
                 common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());

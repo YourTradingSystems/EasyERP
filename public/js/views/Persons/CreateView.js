@@ -26,17 +26,8 @@ define([
                 var mid = 39;
 
                 var company = $('#companiesDd option:selected').val();
-                //var company = common.toObject(idCompany, this.companiesCollection);
-
                 var dateBirth = $.trim($("#dateBirth").val());
-                //var dateBirth = "";
-                //if (dateBirthSt) {
-                //    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
-                //}
-
                 var department = $("#departmentDd option:selected").val();
-                //var department = common.toObject(departmentId, this.departmentsCollection);
-
                 var data = {
                     name: {
                         first: $('#firstName').val(),
@@ -104,7 +95,6 @@ define([
 					dialogClass:"create-person-dialog",
 					title: "Edit Person",
 					width:"80%",
-					height:690,
                     buttons: [
                         {
                             text: "Create",
@@ -118,10 +108,7 @@ define([
 
                 });
                 var personModel = new PersonModel();
-/*                this.$el.html(this.template({
-                    companiesCollection: this.companiesCollection,
-                    departmentsCollection: this.departmentsCollection
-                }));*/
+
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 //common.contentHolderHeightFixer();
                 $('#dateBirth').datepicker({

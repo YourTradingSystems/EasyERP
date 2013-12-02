@@ -13,6 +13,7 @@ define([
             //dateFormat:"dd/mm/yy"
             firstDay: 1
         });
+        //add ability to clear console by calling -> console.API.clear();
         if (typeof console._commandLineAPI !== 'undefined') {
             console.API = console._commandLineAPI;
         } else if (typeof console._inspectorCommandLineAPI !== 'undefined') {
@@ -20,6 +21,13 @@ define([
         } else if (typeof console.clear !== 'undefined') {
             console.API = console;
         }
+        //add startsWith function to strings
+        if (typeof String.prototype.startsWith != 'function') {
+            String.prototype.startsWith = function (str){
+                return this.indexOf(str) == 0;
+            };
+        }
+
         $.extend($.ui.dialog.prototype.options, {
             modal:true,
             resizable: false,
