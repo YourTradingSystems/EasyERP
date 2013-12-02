@@ -50,9 +50,7 @@ define([
                                 return attachment;
                             });
                         }
-                        //return person.notes;
-                        //return person.attachments;
-                        return person;
+                         return person;
                     });
                 }
                 return response.data;
