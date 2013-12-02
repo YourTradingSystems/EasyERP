@@ -1,7 +1,6 @@
 define([
     'text!templates/Persons/list/ListTemplate.html',
     'text!templates/Persons/form/FormTemplate.html',
-    'collections/Opportunities/OpportunitiesCollection',
     'views/Persons/thumbnails/ThumbnailsItemView',
     'views/Opportunities/compactContent',
     'custom',
@@ -12,15 +11,24 @@ define([
     'text!templates/Notes/AddAttachments.html',
     'views/Persons/CreateView'
 
-], function (ListTemplate, FormTemplate, OpportunitiesCollection, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView) {
+], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
             console.log('Init Persons View');
             this.collection = options.collection;
+            this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
+            this.collection.bind('reset', _.bind(this.render, this));
             this.render();
-            /*this.opportunitiesCollection = new OpportunitiesCollection();
-            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));*/
+        },
+
+        buildAphabeticArray: function(collection){
+            if(collection && collection.length > 0){
+                return $.map(collection, function(item){
+                     return item.name.first[0];
+                });
+            }
+            return [];
         },
 
         events: {
@@ -372,7 +380,6 @@ define([
             e.preventDefault();
             $(e.target).animate({
                 'background-position-y': '0px'
-
             }, 300, function () { });
         },
         render: function () {
@@ -385,7 +392,7 @@ define([
                 case "list":
                     {
                         var start = new Date();
-                        this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON() }));
+                        this.$el.html(_.template(ListTemplate, { personsCollection: this.collection.toJSON(), alphabeticArray: this.alphabeticArray }));
                         console.log("=========================Persons -> list: " + (new Date() - start) / 1000 + " ms");
                         $('#check_all').click(function () {
                             var c = this.checked;
