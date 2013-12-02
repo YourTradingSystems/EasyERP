@@ -399,8 +399,13 @@ define([
                         this.$el.html('');
                         var holder = this.$el,
                             thumbnailsItemView;
+						var Lithera = [];
                         _.each(models, function (model) {
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
+							var fname =model.get("name").first[0];
+							if (Lithera.indexOf(fname)==-1){
+								Lithera.push(fname);
+							}
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         }, this);
