@@ -23,7 +23,7 @@
                 });
             },
 
-            nextPage: function () {
+            showMore: function () {
                 this.fetch({
                     data: {
                         mid: 19,

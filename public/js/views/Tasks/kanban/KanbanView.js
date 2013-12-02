@@ -41,6 +41,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView) {
                 column.find(".columnNameDiv h2").append(count);
                 column.find(".columnNameDiv").append(content);
             }, this);
+            this.$el.html.append('<input type="text"');
             return this;
         }
     });
