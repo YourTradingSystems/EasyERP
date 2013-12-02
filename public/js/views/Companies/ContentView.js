@@ -271,7 +271,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             var addInptAttach = $("#inputAttach")[0].files[0];
             addFrmAttach.submit(function (e) {
 
-                var formURL = addFrmAttach.attr("action");
+            	var formURL = "http://"+window.location.host+"/uploadFiles";
                 e.preventDefault();
                 addFrmAttach.ajaxSubmit({
                     url: formURL,

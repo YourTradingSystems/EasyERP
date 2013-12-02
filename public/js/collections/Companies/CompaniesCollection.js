@@ -50,8 +50,8 @@ define([
                                 return attachment;
                             });
                         }
-                        return company.notes;
-                        return company.attachments;
+                        //return company.notes;
+                        //return company.attachments;
                         return company;
                     });
                 }
