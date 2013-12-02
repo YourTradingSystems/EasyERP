@@ -95,6 +95,8 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                     var calendarList = resp;
                     if(calendarList.length > 0){
                         self.showSyncDialog(calendarList);
+                        //common.deleteFromLocalStorage('token');
+                        common.deleteFromLocalStorage('calendars');
                         common.saveToLocalStorage('calendars', JSON.stringify(calendarList));
                     }
                 });
@@ -145,11 +147,16 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                     dataService.postData("/GoogleCalSync", {mid:39, calendars:calendarsJSON}, function(resp){
                         console.log(resp);
                     });
+                    this.clearLocalStorage();
                 }
 
             });
             this.closeSyncDialog();
+        },
 
+        clearLocalStorage: function(){
+            common.deleteFromLocalStorage('calendars');
+            common.deleteFromLocalStorage('token');
         },
 
         saveCalendarsToDB: function(calendarArray){
