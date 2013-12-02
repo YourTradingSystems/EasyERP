@@ -169,6 +169,27 @@
             });
         }
 
+        var populateProfilesDd = function (selectId, url, model) {
+            var selectList = $(selectId);
+            var self = this;
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.profile) {
+                    options = $.map(response.data, function (item) {
+                        return (model.profile.profile._id == item._id) ?
+                            $('<option/>').val(item._id).text(item.profileName).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.profileName);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.profileName);
+                    });
+                }
+                selectList.append(options);
+
+            });
+        }
+
         var populateEmployeesDd = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -411,7 +432,8 @@
 			return associateArray;
         }
 
-        return {
+		return {
+		    populateProfilesDd: populateProfilesDd,
 			buildAllAphabeticArray: buildAllAphabeticArray,
 			buildAphabeticArray: buildAphabeticArray,
             populateDegrees:populateDegrees,

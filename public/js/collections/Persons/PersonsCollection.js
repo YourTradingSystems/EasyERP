@@ -39,14 +39,14 @@ define([
                         person.salesPurchases.date.updateDate = common.utcDateToLocaleDate(person.salesPurchases.date.updateDate);
                         if (person.notes) {
                             _.map(person.notes, function (note) {
-                                note.date = common.utcDateToLocaleFullDateTime(note.date);
+                            	note.date = common.utcDateToLocaleDate(note.date);
                                 return note;
                             });
                         }
                       
                         if (person.attachments) {
                             _.map(person.attachments, function (attachment) {
-                                attachment.uploadDate = common.utcDateToLocaleDateTime(attachment.uploadDate);
+                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
                                 return attachment;
                             });
                         }

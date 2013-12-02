@@ -298,28 +298,13 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
-
-    function getTasksByProjectId(res, data) {
+    function getTasksByProjectId(req, res, data) {
         console.log("Requst getTasksByProjectId is success");
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Allow Cross Site Origin", "*");
-        dbSession.checkHash(data, function (result) {
-            console.log('Sending response for checkHash')
-            console.log(result);
-            if (result.result.status == '0') {
-                project.getTasksByProjectId(data, function (result2) {
-                    console.log('Sending response for getTasksByProjectId');
-                    console.log(result2);
-                    res.send(result2);
-                });
-            } else {
-                result['result'] = {};
-                result['result']['status'] = '4';
-                result['result']['description'] = 'Bad hash';
-                result['data'] = [];
-                res.send(result);
-            }
-        });
+        if (req.session && req.session.loggedIn) {
+            project.getTasksByProjectId(data, res);
+        } else {
+            res.send(401);
+        }
     };
 
     function getTaskById(res, data) {

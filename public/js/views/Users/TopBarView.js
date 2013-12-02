@@ -16,12 +16,18 @@ define([
                 "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
-                "click #top-bar-createBtn" : "createEvent"
+                "click #top-bar-editBtn": "editEvent",
+                "click #top-bar-createBtn": "createEvent"
             },
 
-            changeContentViewType: Custom.changeContentViewType,
-            
-            changeItemIndex: Custom.changeItemIndex,
+            changeContentViewType: function (e) {
+                Custom.changeContentViewType(e, this.contentType, this.collection);
+            },
+
+            changeItemIndex: function (e) {
+                var actionType = "Content";
+                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
+            },
             
             initialize: function(options){
                 this.actionType = options.actionType;
@@ -37,7 +43,14 @@ define([
                 var answer = confirm("Realy DELETE items ?!");
                 if (answer == true) this.trigger('deleteEvent');
             },
-
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
+            },
+            editEvent: function (event) {
+                event.preventDefault();
+                this.trigger('editEvent');
+            },
             render: function(){
                 var viewType = Custom.getCurrentVT();
                 var collectionLength = this.collection.length;

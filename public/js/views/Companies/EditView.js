@@ -16,15 +16,10 @@ define([
             imageSrc: '',
 
             initialize: function (options) {
-                this.employeesCollection = new EmployeesCollection();
-                //this.employeesCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = new DepartmentsCollection();
-                //this.departmentsCollection.bind('reset', _.bind(this.render, this));
-                this.companiesCollection = options.collection;
-                this.currentModel = this.companiesCollection.getElement();
+                this.collection = options.collection;
+                this.currentModel = this.collection.getElement();
                 this.render();
             },
-
 
             events: {
                 "click #tabList a": "switchTab",
@@ -61,27 +56,6 @@ define([
                 if(event) event.preventDefault();
                 var self = this;
                 var mid = 39;
-
-
-                //var _salesPerson = common.toObject(salesPersonId, this.employeesCollection);
-                //var salesPerson = {};
-                //if (_salesPerson) {
-                //    salesPerson.id = _salesPerson._id;
-                //    salesPerson.name = _salesPerson.name.first + ' ' + _salesPerson.name.last;
-                //} else {
-                //    salesPerson = currentModel.defaults.salesPerson;
-                //}
-
-                //var _salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
-                //var salesTeam = {};
-                //if (_salesTeam) {
-                //    salesTeam.id = _salesTeam._id;
-                //    salesTeam.name = _salesTeam.departmentName;
-                //} else {
-                //    salesTeam = currentModel.defaults.salesTeam;
-                //}
-
-                //  var date = (dateSt) ? new Date(Date.parse(dateSt)) : "";
 
                 var data = {
                     name: {
@@ -146,8 +120,8 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "edit-companies-dialog",
-                    width: "50%",
-                    height: 513,
+                    width: "55%",
+                    //height: 513,
                     title: 'Edit Company',
                     buttons: [
                         {
@@ -160,16 +134,11 @@ define([
                     //closeOnEscape: false,
                     modal: true
                 });
-                console.log(this.currentModel.get("salesPurchases"));
-			 $('#text').datepicker({ dateFormat: "d M, yy" });
-			 common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());
-			 common.populateEmployeesDd(App.ID.employeesDd, "/Employees",this.currentModel.toJSON());
+			    $('#text').datepicker({ dateFormat: "d M, yy" });
+			    common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());
+			    common.populateEmployeesDd(App.ID.employeesDd, "/Employees",this.currentModel.toJSON());
                 this.delegateEvents(this.events);
-
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
-
-
-
                 this.delegateEvents(this.events);
                 return this;
             }

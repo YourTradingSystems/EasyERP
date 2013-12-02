@@ -122,7 +122,7 @@ define([
                     title: "Edit Project",
                     dialogClass: "edit-project-dialog",
                     width: "80%",
-                    height: 225,
+                    //height: 225,
                     buttons:{
                         save:{
                             text: "Save",

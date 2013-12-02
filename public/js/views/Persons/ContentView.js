@@ -265,15 +265,15 @@ define([
                     currentModel.save({},
                             	{
                             	    headers: {
-                            	        mid: 39
+                            	        mid: 39,
+                            	        wait:true
                             	    },
                             	    success: function (model, response, options) {
                             	        var key = notes.length - 1;
                             	        var notes_data = response.notes;
-                            	        var date = response.notes[key].date;
+                            	        var date = common.utcDateToLocaleDate(response.notes[key].date);
                             	        var author = currentModel.get('name').first;
                             	        var id = response.notes[key]._id;
-
                             	        $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
 
                             	    }
@@ -308,9 +308,9 @@ define([
 
                     success: function (data) {
                         var attachments = currentModel.get('attachments');
-                        var key = attachments.length;
+                        var date = common.utcDateToLocaleDate(data.uploadDate);
                         attachments.push(data);
-                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, key: key }));
+                        $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));
                         console.log('Attach file');
                         addFrmAttach[0].reset();
                     },
@@ -326,6 +326,7 @@ define([
 
 
         deleteAttach: function (e) {
+        	var id = e.target.id;
             var currentModel = this.collection.getElement();
             var attachments = currentModel.get('attachments');
             var new_attachments = _.filter(attachments, function (attach) {
