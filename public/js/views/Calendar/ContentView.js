@@ -117,7 +117,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
             var array = [];
             for(var i = 0; i < calendarsJSON.length; i++){
                 for(var j = 0; j < calendarIdList.length; j++){
-                    if(calendarsJSON[i].id == calendarIdList[i]){
+                    if(calendarsJSON[i].id == calendarIdList[j]){
                         array.push(calendarsJSON[i]);
                     }
                 }
@@ -131,6 +131,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                 return item.id;
             });
             var counter = 0;
+            var self = this;
             GoogleAuth.LoadCalendarEvents(calendarIdList, function(resp, calendarId){
                 counter++;
                 if(resp){
@@ -147,7 +148,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
                     dataService.postData("/GoogleCalSync", {mid:39, calendars:calendarsJSON}, function(resp){
                         console.log(resp);
                     });
-                    this.clearLocalStorage();
+                    self.clearLocalStorage();
                 }
 
             });
