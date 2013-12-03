@@ -138,7 +138,10 @@
                 throw new Error('Failed to save security token to LocalStorage. It is not supported by browser.');
             }
         }
-
+        var deleteFromLocalStorage = function(key){
+            if(window.localStorage)
+                window.localStorage.removeItem(key);
+        }
         var saveToLocalStorage = function(key, value){
             if(window.localStorage){
                 window.localStorage.setItem(key,value);
@@ -414,10 +417,10 @@
 		var buildAphabeticArray = function(collection){
             if(collection && collection.length > 0){
                 var filtered =  $.map(collection, function(item){
-					if ($.isNumeric(item.name.first[0].toUpperCase())){
+					if ($.isNumeric(item.name.last[0].toUpperCase())){
 						return "0-9"
 					}
-                     return item.name.first[0].toUpperCase();
+                     return item.name.last[0].toUpperCase();
                 });
 				filtered.push("All");
                 return _.sortBy(_.uniq(filtered),function(a){return a});
@@ -433,6 +436,7 @@
         }
 
 		return {
+            deleteFromLocalStorage:deleteFromLocalStorage,
 		    populateProfilesDd: populateProfilesDd,
 			buildAllAphabeticArray: buildAllAphabeticArray,
 			buildAphabeticArray: buildAphabeticArray,
