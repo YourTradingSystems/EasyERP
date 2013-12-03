@@ -309,12 +309,17 @@ app.get('/Tasks', function (req, res) {
     requestHandler.getTasks(req, res, data);
 });
 
-app.get('/Tasks/kanban', function (req, res) {
+app.get('/kanban/Tasks', function (req, res) {
     data = {};
-    data.mid = req.param('mid');
-    data.pId = req.param('pId');
-    data.page = req.param('page');
-    data.count = req.param('count');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(data);
+    //console.log(req.query);
+    //data.mid = req.param('mid');
+    //data.pId = req.param('pId');
+    //data.page = req.param('page');
+    //data.count = req.param('count');
     requestHandler.getTasksByProjectId(req, res, data);
 });
 

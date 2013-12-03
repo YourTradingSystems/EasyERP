@@ -84,6 +84,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                         this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         _.each(models, function (model) {
                             var dateBirth = new Date(model.get("dateBirth"));
+							var p=model.get("dateBirth")
                             var today = new Date;
                             var age = today.getFullYear() - dateBirth.getFullYear();
                             if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
@@ -99,9 +100,9 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                             }
                             if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
 
-                            if (dateBirth) {
+/*                            if (dateBirth) {
                                 model.set({ dateBirth: dateBirth.format("dd/mm/yyyy") }, { silent: true });
-                            }
+                            }*/
                             $(holder).append(thumbnailsItemView.render().el);
 
                         }, this);
@@ -176,7 +177,7 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
                 case "form":
                     {
                         model = this.collection.get($(".form-holder form").data("id"));
-                        model.on('change', this.render, this);
+//                        model.on('change', this.render, this);
                         model.destroy({
                             headers: {
                                 mid: mid

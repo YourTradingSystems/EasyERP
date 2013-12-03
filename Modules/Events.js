@@ -738,7 +738,7 @@ var Events = function (logWriter, mongoose) {
 
         remove: remove,
 
-        Events: Events,
+        event: event,
 
         createCalendar: createCalendar,
 

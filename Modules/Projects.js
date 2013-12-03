@@ -645,7 +645,6 @@ var Project = function (logWriter, mongoose) {
 
     function updateTask(_id, data, res) {
         delete data._id;
-        console.log(data);
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
@@ -656,7 +655,8 @@ var Project = function (logWriter, mongoose) {
         }
         if (data.project && data.project._id) {
             data.project = data.project._id;
-        } else if (data.project) {
+        }
+        if (data.project) {
             var query = tasks.find({ project: data.project });
             query.sort({ taskCount: -1 });
             query.exec(function (error, _tasks) {
@@ -778,9 +778,9 @@ var Project = function (logWriter, mongoose) {
     function getTasksByProjectId(data, response) {
         var res = {};
         res['data'] = [];
-        var query = (data.pId) ? tasks.find({ project: data.pId }) : tasks.find({});
+        var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : tasks.find({});
         query.populate('project', '_id projectShortDesc projectName')
-            .populate('assignedTo', '_id ')
+            .populate('assignedTo', '_id name imageSrc')
             .populate('extrainfo.customer')
             .populate('workflow');
         query.skip((data.page - 1) * data.count).limit(data.count);
@@ -793,7 +793,10 @@ var Project = function (logWriter, mongoose) {
             } else {
                 //res['data'] = taskFormatDate(_tasks, 0);
                 res['data'] = _tasks;
-                //console.log(res['data']);
+                console.log(res['data']);
+                console.log(data.page);
+                console.log(data.count);
+                console.log(data.parrentContentId);
                 response.send(res);
             }
         });
