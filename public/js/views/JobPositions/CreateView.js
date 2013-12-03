@@ -1,12 +1,11 @@
 define([
     "text!templates/JobPositions/CreateTemplate.html",
-    "text!templates/JobPositions/selectTemplate.html",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     "models/JobPositionModel",
     "common"
 ],
-    function (CreateTemplate, selectTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionModel, common) {
+    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -32,7 +31,7 @@ define([
             changeWorkflows: function () {
                 var name = this.$("#workflowNames option:selected").val();
                 var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
+                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             saveItem: function () {
