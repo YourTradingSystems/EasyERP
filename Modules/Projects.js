@@ -803,16 +803,16 @@ var Project = function (logWriter, mongoose) {
     };
 
     function getTaskById(data, response) {
-        var query = tasks.findById(data.modelId,function (err, res) {});
+        var query = tasks.findById(data.id, function (err, res) { });
         query.populate('project', '_id projectShortDesc projectName').
-              populate(' assignedTo', 'name imageSrc');
-        query.exec(function (err, tasks) {
+              populate(' assignedTo', '_id name imageSrc');
+        query.exec(function (err, task) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js getTasksByProjectId task.find " + err);
                 response.send(500, { error: "Can't find Tasks" });
             } else {
-                response.send(tasks);
+                response.send(task);
             }
         });
     };

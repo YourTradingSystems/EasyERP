@@ -16,14 +16,13 @@ define([
             "home": "main",
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
-            "kanban/:contentType(/:parrentContentId)": "goToKanban",
-            "form/:contentType/:modelId": "goToForm",
+            "easyErp/:contentType/form/:modelId": "goToForm",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "easyErp/:contentType": "getList",
             "*actions": "main"
         },
 
-        goToForm: function (contentType,modelId) {
+        goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
             var ContentFormModelUrl = "models/" + contentType + "Model",
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
@@ -32,7 +31,7 @@ define([
 
             require([ContentFormModelUrl, ContentFormViewUrl,TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {
                 var GetModel = new ContentFormModel();
-                GetModel.urlRoot =  'form/' + contentType;
+                GetModel.urlRoot = '/' + contentType + '/form';
                 GetModel.fetch({
                     data: {id: modelId},
                     success: function(model,response,options) {
@@ -42,7 +41,7 @@ define([
                         self.changeView(contentView);
                         self.changeTopBarView(topBarView);
                     },
-                    error: function() { alert('error')}
+                    error: function() { }
                 });
             });
         },
