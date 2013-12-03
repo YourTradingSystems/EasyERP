@@ -579,6 +579,7 @@ app.get('/Applications', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getApplications(req, res, data);
 });
+
 app.get('/Applications/:viewType', function (req, res) {
     data = {};
     for (var i in req.query) {
@@ -594,6 +595,7 @@ app.get('/Applications/:viewType', function (req, res) {
     }
 
 });
+
 app.post('/Applications', function (req, res) {
     console.log('-------------------/createEmployee-----------------------------');
     data = {};
@@ -709,6 +711,21 @@ app.post('/Opportunities', function (req, res) {
     requestHandler.createOpportunitie(req, res, data);
 });
 
+app.get('/Opportunities/:viewType', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(req.params);
+    viewType = req.params.viewType;
+    switch (viewType) {
+        case "kanban": requestHandler.getFilterOpportunities(req, res, data);
+            break;
+            //case "form": requestHandler.getApplicationById(req, res, data);
+            //    break;
+    }
+});
+
 app.get('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -763,7 +780,7 @@ app.delete('/Events/:_id', function (req, res) {
 app.post('/Calendars', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    data.event = req.body;
+    data.calendar = req.body;
     requestHandler.createCalendar(req, res, data);
 });
 
