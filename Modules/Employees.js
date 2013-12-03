@@ -370,6 +370,26 @@ var Employee = function (logWriter, mongoose) {
             }
         });
     };// end remove
+    
+    function getFilterApplications(data, response) {
+        var res = {};
+        res['data'] = [];
+        var query = employee.find();
+        query.where('isEmployee', false);
+        query.populate('relatedUser department jobPosition workflow');
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.sort({ 'name.first': 1 });
+        query.exec(function (err, applications) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Application.find' + err);
+                response.send(500, { error: "Can't find Application" });
+            } else {
+                res['data'] = applications;
+                response.send(res);
+            }
+        });
+    };
 
     return {
         create: create,
@@ -383,6 +403,8 @@ var Employee = function (logWriter, mongoose) {
         remove: remove,
 
         getApplications: getApplications,
+        
+        getFilterApplications: getFilterApplications,
 
         employee: employee
     };

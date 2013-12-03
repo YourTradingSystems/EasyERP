@@ -49,17 +49,21 @@ define([
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/" + "kanbanCollection";
+                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
             
             self = this;
             
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = new ContentCollection(parrentContentId);
+                collection = new ContentCollection({ page: 1, count: 10, parrentContentId: parrentContentId });
                 collection.bind('reset', _.bind(createViews, self));
-
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+                    
+                    topBarView.bind('createEvent', contentView.createItem, contentView);
+                    topBarView.bind('editEvent', contentView.editItem, contentView);
+                    
+                    collection.bind('add', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
                 }

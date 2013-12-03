@@ -821,7 +821,7 @@ h3 {
         width: 65%;
 
         &.with-checkbox {
-            margin-top: 15px !important;
+//            margin-top: 15px !important;
             
         }
     }
@@ -830,6 +830,9 @@ h3 {
 
 .person-info {
 	.dl-auto();
+}
+.project-info {
+	.dl-auto(150px);
 }
 .job-info{
 	.dl-auto(260px);
@@ -2665,7 +2668,9 @@ button {
             transition: box-shadow 1s ease;
             transition: border-color 1s ease;
             .border-radius(0px);
-
+			&.active{
+				.box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
+			}
             .inner {
                 padding: 5px;
             }
@@ -3078,8 +3083,9 @@ button {
     }
 
     .addNote {
+		margin-top:6px;
         background-color: #EDEFF4;
-        padding: 10px 12px 10px 10px;
+        padding: 5px 9px 10px 5px;
         margin-bottom: 5px;
 
         label {
@@ -3114,7 +3120,7 @@ button {
         textarea {
             width: 100%;
             height: 15px;
-            padding-left: 0;
+            padding-left: 3px;
             padding-right: 0;
             .border-radius(0);
 
@@ -3125,6 +3131,7 @@ button {
         }
 
         &.active {
+			padding:10px 14px 10px 10px;
             .buttons {
                 margin-top: 3px;
                 .dialog-buttons;
@@ -3250,26 +3257,45 @@ table#workflows {
 	text-align:center;
 	border-bottom: 1px solid #D5D5D5;
 	.letter{
-		border: 1px solid #D5D5D5;
 		padding:5px 10px;
-		margin-left:-2px;
-		margin-right:-2px;
-		.gradient2(#FAFAFA,#EFEFEF);
-		&:hover{
-			background-image:none;
-			background-color:#eaeaea;
-			text-decoration:none;
-		}
+
 		&.current{
-			background-image:none;
-			background-color:#eaeaea;
+			font-weight:bold;
 		}
 		&.empty{
 			color: #CCC;
 			cursor:default;
 			&:hover{
-				.gradient2(#FAFAFA,#EFEFEF);
+				text-decoration:none;
 			}
 		}
 	}
+}
+#showMoreDiv{
+	text-align:center;
+	padding:10px 0;
+	#showMore{
+		background-color: #FFF;
+		padding: .4em 5em;
+		color: #36A9E1;
+		.border-radius(0);
+		&:hover{
+			background-color: #EEE;
+			color: #2A6496;
+		}
+	}
+}
+#editSpan,#saveSpan,#cancelSpan{
+	font-size: 11px;
+	font-weight: normal;
+	line-height:15px;
+	margin:0;
+}
+#saveSpan,#cancelSpan{
+	line-height:20px;
+}
+.with-checkbox #editSpan,
+.with-checkbox #saveSpan,
+.with-checkbox #cancelSpan{
+	line-height:0px;
 }

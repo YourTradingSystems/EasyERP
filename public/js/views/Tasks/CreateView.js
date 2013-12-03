@@ -115,7 +115,7 @@ define([
             },
 
             render: function () {
-                var projectID = (window.location.hash).split('/')[3];
+                var projectID = (window.location.hash).split('/')[2];
                 model = projectID
                     ? {
                          project: {

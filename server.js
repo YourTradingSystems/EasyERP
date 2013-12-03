@@ -303,19 +303,26 @@ app.post('/Tasks', function (req, res) {
     requestHandler.createTask(req, res, data);
 });
 
-app.get('/Tasks', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getTasks(req, res, data);
-});
+//app.get('/Tasks', function (req, res) {
+//    data = {};
+//    data.mid = req.param('mid');
+//    requestHandler.getTasks(req, res, data);
+//});
 
-app.get('/Tasks/kanban', function (req, res) {
+app.get('/Tasks/:viewType', function (req, res) {
     data = {};
-    data.mid = req.param('mid');
-    data.pId = req.param('pId');
-    data.page = req.param('page');
-    data.count = req.param('count');
-    requestHandler.getTasksByProjectId(req, res, data);
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(req.params);
+    viewType = req.params.viewType;
+    switch (viewType) {
+        case "kanban": requestHandler.getTasksByProjectId(req, res, data);
+            break;
+        case "form": requestHandler.getTaskById(req, res, data);
+            break;
+    }
+
 });
 
 app.get('/Priority', function (req, res) {
@@ -578,7 +585,21 @@ app.get('/Applications', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getApplications(req, res, data);
 });
+app.get('/Applications/:viewType', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(req.params);
+    viewType = req.params.viewType;
+    switch (viewType) {
+        case "kanban": requestHandler.getFilterApplications(req, res, data);
+            break;
+        //case "form": requestHandler.getApplicationById(req, res, data);
+        //    break;
+    }
 
+});
 app.post('/Applications', function (req, res) {
     console.log('-------------------/createEmployee-----------------------------');
     data = {};
@@ -775,8 +796,8 @@ app.delete('/Calendars/:_id', function (req, res) {
 
 app.post('/GoogleCalSync', function (req, res) {
     data = {};
-    data.mid = req.param('mid');
-    data.calendars = req.body;
+    data.mid = req.body.mid;
+    data.calendars = req.body.calendars;
     requestHandler.googleCalSync(req, res, data);
 });
 
