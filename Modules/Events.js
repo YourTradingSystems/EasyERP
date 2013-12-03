@@ -83,10 +83,10 @@ var Events = function (logWriter, mongoose) {
                         _event.description = data.description;
                     }
                     if (data.start) {
-                        _event.start = data.start;
+                        _event.start_date = data.start;
                     }
                     if (data.end) {
-                        _event.end = data.end;
+                        _event.end_date = data.end;
                     }
                     if (data.status) {
                         _event.status = data.status;

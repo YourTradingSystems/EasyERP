@@ -16,10 +16,20 @@
         <img src="<%=imageSrc%>" />
     </div>
     <div class="info">
-        <h4 class="title"><%=name.first%> <%=name.last%> <%=(relatedUser) ? relatedUser.login : ''%></h4>        
+        <h4 class="title"><%=name.first%> <%=name.last%> <% if(relatedUser) { %>
+            <span>(<%= relatedUser.login %>)</span>
+            <% } else { %>
+            <span></span>
+            <% } %></h4>
         <p><%=(department) ? department.departmentName : ''%> / <%=(jobPosition) ? jobPosition.name : ''%></p>
-        <p><label>Age: </label><%=age%> (<%=dateBirth%>)</p>
-        <p><label>Tel: </label><%=workPhones.mobile%></p>    
+        <p><label>Age: </label><%=age%>
+            <% if(dateBirth) { %>
+            <span>(<%= dateBirth %>)</span>
+            <% } else { %>
+            <span></span>
+            <% } %>
+        </p>
+        <p><label>Tel: </label><%=workPhones.mobile%></p>
         <p><label>Skype: </label><%=skype%></p>
         <p><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></p>            
     </div>

@@ -83,26 +83,10 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
 
                         this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
                         _.each(models, function (model) {
-                            var dateBirth = new Date(model.get("dateBirth"));
-							var p=model.get("dateBirth")
-                            var today = new Date;
-                            var age = today.getFullYear() - dateBirth.getFullYear();
-                            if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
+                            var age = this.calculateAge(model.get("dateBirth"));
                             model.set({ age: age }, { silent: true });
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                            var relatedUser = model.get("relatedUser");
-                            var login = (relatedUser) ? relatedUser.login : '';
-                            if (login) {
-                                var _login = "(" + login + ")";
-                                relatedUser.login = _login;
-                                model.set({ relatedUser: relatedUser }, { silent: true });
-                            }
-                            if (today.getMonth() < dateBirth.getMonth() || (today.getMonth() == dateBirth.getMonth() && today.getDate() < dateBirth.getDate())) { age--; }
-
-/*                            if (dateBirth) {
-                                model.set({ dateBirth: dateBirth.format("dd/mm/yyyy") }, { silent: true });
-                            }*/
                             $(holder).append(thumbnailsItemView.render().el);
 
                         }, this);
@@ -128,6 +112,22 @@ function (ListTemplate, FormTemplate, ThumbnailsItemView, Custom, common, EditVi
             $(holder).append('<div class="clearfix"></div>');
             return this;
 
+        },
+
+        calculateAge: function(dateString){
+            if(!dateString) return "";
+            var today = new Date();
+            var birthDate = new Date(dateString);
+            if(typeof birthDate.getMonth !== 'function'){
+                console.log("Employees -> calculateAge: birthDate is not a correct Date value");
+                return "";
+            }
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0  && today.getDate() < birthDate.getDate())){
+                age--;
+            }
+            return age;
         },
 
         checked: function () {
