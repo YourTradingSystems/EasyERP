@@ -15,9 +15,35 @@ define([
         routes: {
             "home": "main",
             "login": "login",
-            "kanban/:contentType(/:parrentContentId)": "goToKanban",
+            "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
+            "easyErp/:contentType/form/:modelId": "goToForm",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
+            "easyErp/:contentType": "getList",
             "*actions": "main"
+        },
+
+        goToForm: function (contentType, modelId) {
+            if (this.mainView == null) this.main();
+            var ContentFormModelUrl = "models/" + contentType + "Model",
+                ContentFormViewUrl = "views/" + contentType + "/form/FormView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView";
+            var self = this;
+
+            require([ContentFormModelUrl, ContentFormViewUrl,TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {
+                var GetModel = new ContentFormModel();
+                GetModel.urlRoot = '/' + contentType + '/form';
+                GetModel.fetch({
+                    data: {id: modelId},
+                    success: function(model,response,options) {
+                        var topBarView = new TopBarView({ actionType: "Content"});
+                        var contentView = new ContentFormView({ model: model });
+                        contentView.render();
+                        self.changeView(contentView);
+                        self.changeTopBarView(topBarView);
+                    },
+                    error: function() { }
+                });
+            });
         },
 
         goToKanban: function (contentType, parrentContentId) {
@@ -41,6 +67,9 @@ define([
                     collection.bind('add', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
+                    var url = '#easyErp/' + contentType + '/kanban';
+                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

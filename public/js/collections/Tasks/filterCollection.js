@@ -6,7 +6,7 @@
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
             url: function () {
-                return "/kanban/Tasks";
+                return "/Tasks/kanban/";
             },
             page: 1,
             initialize: function (options) {
