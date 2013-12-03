@@ -314,19 +314,15 @@ app.get('/Tasks/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
+    console.log(req.params);
     viewType = req.params.viewType;
-    //console.log(req.query);
-    //data.mid = req.param('mid');
-    //data.pId = req.param('pId');
-    //data.page = req.param('page');
-    //data.count = req.param('count');
-    switch(viewType) {
+    switch (viewType) {
         case "kanban": requestHandler.getTasksByProjectId(req, res, data);
             break;
         case "form": requestHandler.getTaskById(req, res, data);
             break;
     }
-    
+
 });
 
 app.get('/Priority', function (req, res) {
@@ -583,7 +579,21 @@ app.get('/Applications', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getApplications(req, res, data);
 });
+app.get('/Applications/:viewType', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(req.params);
+    viewType = req.params.viewType;
+    switch (viewType) {
+        case "kanban": requestHandler.getFilterApplications(req, res, data);
+            break;
+        //case "form": requestHandler.getApplicationById(req, res, data);
+        //    break;
+    }
 
+});
 app.post('/Applications', function (req, res) {
     console.log('-------------------/createEmployee-----------------------------');
     data = {};

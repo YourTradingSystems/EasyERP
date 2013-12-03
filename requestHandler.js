@@ -586,6 +586,15 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getFilterApplications(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn) {
+            employee.getFilterApplications(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     //function updateApplication(res, id, data) {
     //    console.log("Requst updateEmployees is success");
     //    res.header("Access-Control-Allow-Origin", "*");
@@ -982,6 +991,7 @@ var requestHandler = function (fs, mongoose) {
         getSourcesOfApplicants: getSourcesOfApplicants,
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
+        getFilterApplications: getFilterApplications,
 
         createLead: createLead,
         getLeads: getLeads,
