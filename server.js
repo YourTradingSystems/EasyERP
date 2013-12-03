@@ -331,6 +331,12 @@ app.get('/Priority', function (req, res) {
     requestHandler.getTasksPriority(req, res, data);
 });
 
+app.get('/form/Tasks', function (req, res) {
+    data = {};
+    data.modelId = req.param('id');
+    console.log(data);
+    requestHandler.getTaskById(req, res, data);
+});
 
 app.put('/Tasks/:_id', function (req, res) {
     data = {};

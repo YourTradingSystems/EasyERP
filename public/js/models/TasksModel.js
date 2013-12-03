@@ -1,4 +1,7 @@
-define(function () {
+define([
+    'common'
+],
+    function (common) {
     var TaskModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function () {
@@ -10,6 +13,14 @@ define(function () {
                     alert(msg);
                 }
             });
+        },
+        parse: true,
+
+        parse: function(response){
+            response.extrainfo.StartDate = common.utcDateToLocaleDate(response.extrainfo.StartDate);
+            response.extrainfo.EndDate = common.utcDateToLocaleDate(response.extrainfo.EndDate);
+            response.deadline = common.utcDateToLocaleDate(response.deadline);
+            return response;
         },
 
         validate: function (attrs) {
