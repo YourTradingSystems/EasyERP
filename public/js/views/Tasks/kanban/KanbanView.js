@@ -10,7 +10,8 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         el: '#content-holder',
         events: {
             "click #showMore": "showMore",
-            "dblclick .task-header, .task-content": "gotoEditForm"
+            "dblclick .task-header, .task-content": "gotoEditForm",
+            "click .task-header, .task-content": "selectItem"
         },
         initialize: function (options) {
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
@@ -18,6 +19,11 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             this.collection = options.collection;
         },
         
+        selectItem: function (e) {
+			$(e.target).parents(".item").parent().find(".active").removeClass("active");
+			$(e.target).parents(".item").addClass("active");
+        },
+
         gotoEditForm: function (e) {
             e.preventDefault();
             var id = $(e.target).closest(".item").data("id");
