@@ -95,7 +95,7 @@ define([
             if (this.prevQuickEdit) {
                 if ($('#' + this.prevQuickEdit.id).hasClass('quickEdit')) {
                     if ($('#' + this.prevQuickEdit.id).hasClass('with-checkbox')) {
-                        $('#' + this.prevQuickEdit.id + ' input').prop('disabled', true);
+                        $('#' + this.prevQuickEdit.id + ' input').prop('disabled', true).prop('checked',($('#' + this.prevQuickEdit.id + ' input').prop('checked') ? 'checked' : ''));
                         $('.quickEdit').removeClass('quickEdit');
                     } else if (this.prevQuickEdit.id == 'email') {
                         $("#" + this.prevQuickEdit.id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
