@@ -20,8 +20,8 @@ var Events = function (logWriter, mongoose) {
             displayName: String,
             self: Boolean
         },
-        start: { datetime: Date },
-        end: { dateTime: Date },
+        start_date: Date,
+        end_date: Date,
         iCalUID: String,
         sequence: Number,
         //attendees: [],
@@ -247,13 +247,19 @@ var Events = function (logWriter, mongoose) {
             }
             if (data.start) {
                 if (data.start.dateTime) {
-                    _event.start.dateTime = data.start.dateTime;
+                    _event.start_date = data.start.dateTime;
                 }
-            }
+            }          
             if (data.end) {
                 if (data.end.dateTime) {
-                    _event.end.dateTime = data.end.dateTime;
+                    _event.end_date = data.end.dateTime;
                 }
+            }
+            if (data.start_date) {
+                _event.start_date = data.start.start_date;
+            }
+            if (data.end_date) {
+                _event.end_date = data.end_date;
             }
             if (data.iCalUID) {
                 _event.iCalUID = data.iCalUID;
