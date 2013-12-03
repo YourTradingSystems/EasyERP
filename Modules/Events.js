@@ -3,13 +3,31 @@ var Events = function (logWriter, mongoose) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
 
     var eventsSchema = mongoose.Schema({
-        _id: String,
         calendarId: { type: ObjectId, ref: 'Calendars', default: null },
+        id: { type: String, default: '' },
+        kind: String,
+        etag: String,
+        htmlLink: String,
+        created: Date,
+        updated: Date,
         summary: { type: String, default: '' },
+        creator: {
+            email: String,
+            displayName: String
+        },
+        organizer: {
+            email: String,
+            displayName: String,
+            self: Boolean
+        },
+        start: { datetime: Date },
+        end: { dateTime: Date },
+        iCalUID: String,
+        sequence: Number,
+        //attendees: [],
+        reminders: { useDefault: Boolean },
         description: { type: String, default: '' },
         eventType: { type: String, default: '' },
-        start_date: Date,
-        end_date: Date,
         color: { type: String, default: '' },
         textColor: { type: String, default: '' },
         assignTo: { type: String, default: '' },
@@ -19,13 +37,19 @@ var Events = function (logWriter, mongoose) {
 
     var calendarsSchema = mongoose.Schema({
         kind: String,
-        id: String,
         etag: String,
+        id: String,
         summary: { type: String, default: '' },
+        timeZone: { type: String, default: '' },
+        colorId: Number,
+        backgroundColor: String,
+        foregroundColor: String,
+        selected: Boolean,
+        accessRole: String,
         description: { type: String, default: '' },
-        events: [{ type: ObjectId, ref: 'Events' }],
-        location: { type: String, default: '' },
-        timeZone: { type: String, default: '' }
+        events: [{ type: ObjectId, ref: 'Events', default: null }],
+        location: { type: String, default: '' }
+
     }, { collection: 'Calendars' });
 
     var event = mongoose.model('Events', eventsSchema);
@@ -42,10 +66,7 @@ var Events = function (logWriter, mongoose) {
             }
             function savetoDb(data) {
                 try {
-                    console.log(data);
                     _event = new event();
-                    _event._id = data.id;
-
                     if (data.summary) {
                         _event.summary = data.summary;
                     }
@@ -61,11 +82,11 @@ var Events = function (logWriter, mongoose) {
                     if (data.description) {
                         _event.description = data.description;
                     }
-                    if (data.start_date) {
-                        _event.start_date = data.start_date;
+                    if (data.start) {
+                        _event.start = data.start;
                     }
-                    if (data.end_date) {
-                        _event.end_date = data.end_date;
+                    if (data.end) {
+                        _event.end = data.end;
                     }
                     if (data.status) {
                         _event.status = data.status;
@@ -117,28 +138,42 @@ var Events = function (logWriter, mongoose) {
             }
             function savetoDb(data) {
                 try {
-                    console.log(data);
                     _calendar = new calendar();
-                    if (data.id) {
-                        _calendar.id = data.id;
-                    }
-                    if (data.summary) {
-                        _calendar.summary = data.summary;
-                    }
-                    if (data.description) {
-                        _calendar.description = data.description;
-                    }
                     if (data.kind) {
                         _calendar.kind = data.kind;
                     }
                     if (data.etag) {
                         _calendar.etag = data.etag;
                     }
-                    if (data.location) {
-                        _calendar.location = data.location;
+                    if (data.id) {
+                        _calendar.id = data.id;
+                    }
+                    if (data.summary) {
+                        _calendar.summary = data.summary;
                     }
                     if (data.timeZone) {
                         _calendar.timeZone = data.timeZone;
+                    }
+                    if (data.colorId) {
+                        _calendar.colorId = data.colorId;
+                    }
+                    if (data.backgroundColor) {
+                        _calendar.backgroundColor = data.backgroundColor;
+                    }
+                    if (data.foregroundColor) {
+                        _calendar.foregroundColor = data.foregroundColor;
+                    }
+                    if (data.selected) {
+                        _calendar.selected = data.selected;
+                    }
+                    if (data.accessRole) {
+                        _calendar.accessRole = data.accessRole;
+                    }
+                    if (data.description) {
+                        _calendar.description = data.description;
+                    }
+                    if (data.location) {
+                        _calendar.location = data.location;
                     }
                     ///////////////////////////////////////////////////
                     _calendar.save(function (err, result) {
@@ -308,33 +343,26 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
                 return;
             } else {
-                console.log(data);
                 data.forEach(function (cal) {
                     calendar.find({ id: cal.id }, function (err, result) {
                         if (err) {
-
+                            console.log(err);
+                            logWriter.log("Events.js googleCalSync calendar.find " + err);
+                            res.send(500, { error: "Can't googleCalSync Events" });
                         }
-                        else if (result) {
+                        else if (result.length > 0) {
                             //Updating an Existing Calendar in DataBase
                             var curentCalendarId = result._id;
-                            calendar.update({ _id: result._id }, {
-                                kind: cal.kind,
-                                id: cal.id,
-                                etag: cal.etag,
-                                summary: cal.summary,
-                                description: cal.description,
-                                location: cal.location,
-                                timeZone: cal.timeZone
-                            }, function (err, result) {                               
+                            calendar.update({ _id: result._id }, cal, function (err, result) {
                                 try {
                                     if (err) {
                                         console.log(err);
                                         logWriter.log("Events.js googleCalSync calendar.update " + err);
                                         res.send(500, { error: "Can't update Calendar" });
-                                    } else {
-                                        res.send(200, { success: 'Calendar updated success' });
+                                    } else {                                       
                                         if (items) {
-                                            cal.items.forEach(function (ev) {
+                                            //Update Existing Calendar Events
+                                            cal.items.forEach(function (ev) {                                               
                                                 event.find({ id: ev.id }, function (err, result) {
                                                     if (err) {
                                                         console.log(err);
@@ -342,6 +370,7 @@ var Events = function (logWriter, mongoose) {
                                                         res.send(500, { error: "Can't find Event" });
                                                     }
                                                     else if (result) {
+                                                        // If Event exists update it 
                                                         event.update({ _id: result._id }, ev, function (err, result) {
                                                             try {
                                                                 if (err) {
@@ -357,7 +386,7 @@ var Events = function (logWriter, mongoose) {
                                                             }
                                                         });
                                                     } else {
-                                                        // CReate new Events
+                                                        // Create new Event
                                                         try {
                                                             if (!ev || !ev.id) {
                                                                 logWriter.log('Events.create Incorrect Incoming Data');
@@ -368,17 +397,70 @@ var Events = function (logWriter, mongoose) {
                                                             }
                                                             function savetoDb(data) {
                                                                 try {
-                                                                    console.log(data);
                                                                     _event = new event();
-                                                                    _event._id = data.id;
+                                                                    if (curentCalendarId) {
+                                                                        _event.calendarId = curentCalendarId;
+                                                                    }
+                                                                    if (data.id) {
+                                                                        _event.id = data.id;
+                                                                    }
+                                                                    if (data.etag) {
+                                                                        _event.etag = data.etag;
+                                                                    }
+                                                                    if (data.htmlLink) {
+                                                                        _event.htmlLink = data.htmlLink;
+                                                                    }
+                                                                    if (data.created) {
+                                                                        _event.created = data.created;
+                                                                    }
+                                                                    if (data.updated) {
+                                                                        _event.updated = data.updated;
+                                                                    }
                                                                     if (data.summary) {
                                                                         _event.summary = data.summary;
                                                                     }
-                                                                    if (data.calendarId) {
-                                                                        _event.calendarId = curentCalendarId;
+                                                                    if (data.creator) {
+                                                                        if (data.creator.email) {
+                                                                            _event.creator.email = data.creator.email
+                                                                        }
+                                                                        if (data.creator.displayName) {
+                                                                            _event.creator.displayName = data.creator.displayName
+                                                                        }
                                                                     }
-                                                                    if (data.calendarId) {
-                                                                        _event.calendarId = data.calendarId;
+                                                                    if (data.organizer) {
+                                                                        if (data.organizer.email) {
+                                                                            _event.organizer.email = data.organizer.email
+                                                                        }
+                                                                        if (data.organizer.displayName) {
+                                                                            _event.organizer.displayName = data.organizer.displayName;
+                                                                        }
+                                                                        if (data.organizer.self) {
+                                                                            _event.organizer.self = data.organizer.self;
+                                                                        }
+                                                                    }
+                                                                    if (data.start) {
+                                                                        if (data.start.dateTime) {
+                                                                            _event.start.dateTime = data.start.dateTime;
+                                                                        }
+                                                                    }
+                                                                    if (data.end) {
+                                                                        if (data.end.dateTime) {
+                                                                            _event.end.dateTime = data.end.dateTime;
+                                                                        }
+                                                                    }
+                                                                    if (data.iCalUID) {
+                                                                        _event.iCalUID = data.iCalUID;
+                                                                    }
+                                                                    if (data.sequence) {
+                                                                        _event.sequence = data.sequence;
+                                                                    }
+                                                                    //if (data.attendees) {
+                                                                    //    _event.attendees = data.attendees;
+                                                                    //}
+                                                                    if (data.reminders) {
+                                                                        if (data.reminders.useDefault) {
+                                                                            _event.reminders.useDefault = data.reminders.useDefault;
+                                                                        }
                                                                     }
                                                                     if (data.priority) {
                                                                         _event.priority = data.priority;
@@ -388,12 +470,6 @@ var Events = function (logWriter, mongoose) {
                                                                     }
                                                                     if (data.description) {
                                                                         _event.description = data.description;
-                                                                    }
-                                                                    if (data.start_date) {
-                                                                        _event.start_date = data.start_date;
-                                                                    }
-                                                                    if (data.end_date) {
-                                                                        _event.end_date = data.end_date;
                                                                     }
                                                                     if (data.status) {
                                                                         _event.status = data.status;
@@ -438,20 +514,18 @@ var Events = function (logWriter, mongoose) {
                                                             logWriter.log("Events.js  " + exception);
                                                             res.send(500, { error: 'Events.save  error' });
                                                         }
-                                                       
                                                     }
                                                 });
-                                                // event.update();
                                             });
                                         }
+                                        res.send(200, { success: 'Calendar updated success' });
                                     }
                                 }
                                 catch (exception) {
                                     logWriter.log("Events.js googleCalSync calendar.update " + exception);
                                 }
                             });
-                        }
-                        else {
+                        } else {            
                             //Creating a new Calendar in DataBase
                             try {
                                 if (!cal) {
@@ -462,8 +536,8 @@ var Events = function (logWriter, mongoose) {
                                     savetoDb(cal);
                                 }
                                 function savetoDb(data) {
+
                                     try {
-                                        console.log(data);
                                         _calendar = new calendar();
                                         if (data.id) {
                                             _calendar.id = data.id;
@@ -495,6 +569,7 @@ var Events = function (logWriter, mongoose) {
                                                 } else {
                                                     res.send(201, { success: 'A new сalendar was created successfully' });
                                                     if (data.items) {
+                                                        var i = 0;
                                                         data.items.forEach(function (ev) {
                                                             try {
                                                                 if (!ev || !ev.id) {
@@ -505,14 +580,72 @@ var Events = function (logWriter, mongoose) {
                                                                     savetoDb(ev);
                                                                 }
                                                                 function savetoDb(data) {
+
                                                                     try {
                                                                         _event = new event();
-                                                                        _event._id = data.id;
+                                                                        if (result._id) {
+                                                                            _event.calendarId = result._id;
+                                                                        }
+                                                                        if (data.id) {
+                                                                            _event.id = data.id;
+                                                                        }
+                                                                        if (data.etag) {
+                                                                            _event.etag = data.etag;
+                                                                        }
+                                                                        if (data.htmlLink) {
+                                                                            _event.htmlLink = data.htmlLink;
+                                                                        }
+                                                                        if (data.created) {
+                                                                            _event.created = data.created;
+                                                                        }
+                                                                        if (data.updated) {
+                                                                            _event.updated = data.updated;
+                                                                        }
                                                                         if (data.summary) {
                                                                             _event.summary = data.summary;
                                                                         }
-                                                                        if (data.calendarId) {
-                                                                            _event.calendarId = result._id;
+                                                                        if (data.creator) {
+                                                                            if (data.creator.email) {
+                                                                                _event.creator.email = data.creator.email
+                                                                            }
+                                                                            if (data.creator.displayName) {
+                                                                                _event.creator.displayName = data.creator.displayName
+                                                                            }
+                                                                        }
+                                                                        if (data.organizer) {
+                                                                            if (data.organizer.email) {
+                                                                                _event.organizer.email = data.organizer.email
+                                                                            }
+                                                                            if (data.organizer.displayName) {
+                                                                                _event.organizer.displayName = data.organizer.displayName;
+                                                                            }
+                                                                            if (data.organizer.self) {
+                                                                                _event.organizer.self = data.organizer.self;
+                                                                            }
+                                                                        }
+                                                                        if (data.start) {
+                                                                            if (data.start.dateTime) {
+                                                                                _event.start.dateTime = data.start.dateTime;
+                                                                            }
+                                                                        }
+                                                                        if (data.end) {
+                                                                            if (data.end.dateTime) {
+                                                                                _event.end.dateTime = data.end.dateTime;
+                                                                            }
+                                                                        }
+                                                                        if (data.iCalUID) {
+                                                                            _event.iCalUID = data.iCalUID;
+                                                                        }
+                                                                        if (data.sequence) {
+                                                                            _event.sequence = data.sequence;
+                                                                        }
+                                                                        //if (data.attendees) {
+                                                                        //    _event.attendees = data.attendees;
+                                                                        //}
+                                                                        if (data.reminders) {
+                                                                            if (data.reminders.useDefault) {
+                                                                                _event.reminders.useDefault = data.reminders.useDefault;
+                                                                            }
                                                                         }
                                                                         if (data.priority) {
                                                                             _event.priority = data.priority;
@@ -522,12 +655,6 @@ var Events = function (logWriter, mongoose) {
                                                                         }
                                                                         if (data.description) {
                                                                             _event.description = data.description;
-                                                                        }
-                                                                        if (data.start_date) {
-                                                                            _event.start_date = data.start_date;
-                                                                        }
-                                                                        if (data.end_date) {
-                                                                            _event.end_date = data.end_date;
                                                                         }
                                                                         if (data.status) {
                                                                             _event.status = data.status;
@@ -548,14 +675,14 @@ var Events = function (logWriter, mongoose) {
                                                                                     console.log(err);
                                                                                     logWriter.log("Events.js create savetoBd _event.save " + err);
                                                                                     res.send(500, { error: 'Events.save BD error' });
-                                                                                } else {
-                                                                                    res.send(201, { success: 'A new event was created successfully' });
-                                                                                    calendar.findById(result.calendarId, { $push: { event: result._id } }, function (err, success) {
+                                                                                } else {                                                                                  
+                                                                                    calendar.findByIdAndUpdate(result.calendarId, { $push: { events: result._id } }, function (err, success) {
                                                                                         if (err) {
                                                                                             console.log(err);
-                                                                                            res.send(500, { error: 'Event.save BD error' });
+                                                                                            res.send(500, { error: 'Event.save DB error' });
                                                                                         }
                                                                                     });
+                                                                                    res.send(201, { success: 'A new event was created successfully' });
                                                                                 }
                                                                             } catch (error) {
                                                                                 logWriter.log("Events.js create savetoBd _event.save " + error);
@@ -590,13 +717,10 @@ var Events = function (logWriter, mongoose) {
                                 logWriter.log("Events.js  " + exception);
                                 res.send(500, { error: 'Events.save  error' });
                             }
-
                         }
                     });
-                });
-                //savetoDb(data);
+                });               
             }
-
         } catch (exception) {
             console.log(exception);
             logWriter.log("Events.js  " + exception);
