@@ -1,11 +1,10 @@
 define([
     "text!templates/Leads/EditTemplate.html",
-    "text!templates/Leads/editSelectTemplate.html",
     "custom",
     'common',
     'dataService'
 ],
-    function (EditTemplate, editSelectTemplate, Custom, common, dataService) {
+    function (EditTemplate, Custom, common, dataService) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -59,7 +58,7 @@ define([
                     var currentModel = this.contentCollection.models[itemIndex].toJSON();
                     var name = this.$("#workflowNames option:selected").val();
                     var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
+                    //$("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
                 }
             },
 

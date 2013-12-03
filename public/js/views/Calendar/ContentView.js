@@ -1,5 +1,6 @@
 define([
     "text!templates/Calendar/CalendarTemplate.html",
+    "text!templates/Calendar/AddCalendarDialogTemplate.html",
     "text!templates/Calendar/SyncDialog.html",
     "Calendar",
     "collections/Events/EventsCollection",
@@ -10,14 +11,15 @@ define([
     "GoogleAuth",
     "dataService"
 ],
-function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCollection, common, EventModel, CalendarModel, GoogleAuth, dataService) {
+function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCollection, common, EventModel, CalendarModel, GoogleAuth, dataService) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         template: _.template(CalendarTemplate),
         syncDilalogTpl: _.template(SyncDialog),
+        createDlgTpl: _.template(AddCalendarDialogTemplate),
 
         initialize: function () {
-            _.bindAll(this, 'syncDlgSubmitBtnClickHandler', 'displayEventsOnCalendar');
+            _.bindAll(this, 'syncDlgSubmitBtnClickHandler', 'displayEventsOnCalendar', 'createNewCalendar');
             this.eventsCollection = new EventsCollection();
             this.calendarsCollection = new CalendarsCollection();
             this.eventsCollection.bind('reset', _.bind(this.curCalendarChange, this));
@@ -27,13 +29,64 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
 
         events: {
             "click #authBtn" : "authorize",
+            "click #addCalendarBtn" : "openCreateCalendarDlg",
             "change #calendarList" : "curCalendarChange"
+        },
+
+        hideDialog: function(){
+            $('#addCalendarDlg').remove();
+        },
+
+        createNewCalendar: function(data){
+            var self = this;
+            this.calendarsCollection.create({
+                summary: data,
+                description: "EasyERP calendar events",
+                events: []
+            },{
+                success:function(){
+                    self.calendarsCollection.fetch({
+                        success: function(){
+                            self.populateCalendarsList();
+                        }
+                    });
+                }
+            });
+        },
+
+        openCreateCalendarDlg: function(){
+            var self = this;
+            var formString =  this.createDlgTpl();
+            var dialog = $(formString).dialog({
+                title: "Create Calendar",
+                dialogClass: "edit-dialog",
+                buttons:{
+                    create:{
+                        text: "Create",
+                        click: function(){
+                            var calName = $('#calendarNameTxt').val();
+                            if(calName.length === 0){
+                                alert('Calendar name can not be empty!');
+                                return;
+                            }
+                            self.createNewCalendar(calName);
+                            self.hideDialog();
+                        }
+                    },
+                    cancel:{
+                        text: "Cancel",
+                        click:self.hideDialog
+                    }
+
+                }
+            });
         },
 
         curCalendarChange: function(){
             var curCalendarId = $('#calendarList option:selected').val();
             this.setCurrentCalendarId(curCalendarId);
             var filtered = this.eventsCollection.filterById([curCalendarId]);
+            console.log("Filtered Collection :" + filtered.length);
             this.displayEventsOnCalendar(filtered);
         },
 
@@ -45,11 +98,11 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
             if(this.calendarsCollection.length > 0){
                 var select = $('#calendarList');
                 var options = $.map(this.calendarsCollection.toJSON(), function(item){
-                    return item.summary == "EasyERP" ? $('<option/>').val(item._id).text(item.summary).attr('selected', 'selected') :
+                    return item.summary === "EasyERP" ? $('<option/>').val(item._id).text(item.summary).attr('selected', 'selected') :
                         $('<option/>').val(item._id).text(item.summary);
                 });
                 select.empty().append(options);
-                this.setCurrentCalendarId(options[0].val());
+                this.curCalendarChange();
                 return;
             }
         },
@@ -211,7 +264,7 @@ function (CalendarTemplate, SyncDialog, Calendar, EventsCollection, CalendarsCol
             console.log('Render Calendar');
             this.$el.html(this.template());
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);
-            //Calendar.initMiniCalendar("miniCalendar");
+            Calendar.initMiniCalendar("miniCalendar");
             return this;
         }
     });

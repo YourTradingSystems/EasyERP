@@ -57,69 +57,69 @@ var Events = function (logWriter, mongoose) {
 
     function create(data, res) {
         try {
-            if (!data || !data.id) {
+            if (!data) {
                 logWriter.log('Events.create Incorrect Incoming Data');
                 res.send(400, { error: 'Events.create Incorrect Incoming Data' });
                 return;
             } else {
-                savetoDb(data);
+                saveEventToDb(data);
             }
-            function savetoDb(data) {
-                try {
-                    _event = new event();
-                    if (data.summary) {
-                        _event.summary = data.summary;
-                    }
-                    if (data.calendarId) {
-                        _event.calendarId = data.calendarId;
-                    }
-                    if (data.priority) {
-                        _event.priority = data.priority;
-                    }
-                    if (data.assignTo) {
-                        _event.assignTo = data.assignTo;
-                    }
-                    if (data.description) {
-                        _event.description = data.description;
-                    }
-                    if (data.start) {
-                        _event.start = data.start;
-                    }
-                    if (data.end) {
-                        _event.end = data.end;
-                    }
-                    if (data.status) {
-                        _event.status = data.status;
-                    }
-                    if (data.eventType) {
-                        _event.eventType = data.eventType;
-                    }
-                    if (data.color) {
-                        _event.color = data.color;
-                    }
-                    if (data.textColor) {
-                        _event.textColor = data.textColor;
-                    }
-                    ///////////////////////////////////////////////////
-                    _event.save(function (err, result) {
-                        try {
-                            if (err) {
-                                console.log(err);
-                                logWriter.log("Events.js create savetoBd _event.save " + err);
-                                res.send(500, { error: 'Events.save BD error' });
-                            } else {
-                                res.send(201, { success: 'A new event was created successfully' });
-                            }
-                        } catch (error) {
-                            logWriter.log("Events.js create savetoBd _event.save " + error);
-                        }
-                    });
-                } catch (error) {
-                    console.log(error);
-                    logWriter.log("Events.js create savetoBd " + error);
-                    res.send(500, { error: 'Events.save  error' });
-                }
-            }
+            //function savetoDb(data) {
+            //    try {
+            //        _event = new event();
+            //        if (data.summary) {
+            //            _event.summary = data.summary;
+            //        }
+            //        if (data.calendarId) {
+            //            _event.calendarId = data.calendarId;
+            //        }
+            //        if (data.priority) {
+            //            _event.priority = data.priority;
+            //        }
+            //        if (data.assignTo) {
+            //            _event.assignTo = data.assignTo;
+            //        }
+            //        if (data.description) {
+            //            _event.description = data.description;
+            //        }
+            //        if (data.start) {
+            //            _event.start = data.start;
+            //        }
+            //        if (data.end) {
+            //            _event.end = data.end;
+            //        }
+            //        if (data.status) {
+            //            _event.status = data.status;
+            //        }
+            //        if (data.eventType) {
+            //            _event.eventType = data.eventType;
+            //        }
+            //        if (data.color) {
+            //            _event.color = data.color;
+            //        }
+            //        if (data.textColor) {
+            //            _event.textColor = data.textColor;
+            //        }
+            //        ///////////////////////////////////////////////////
+            //        _event.save(function (err, result) {
+            //            try {
+            //                if (err) {
+            //                    console.log(err);
+            //                    logWriter.log("Events.js create savetoBd _event.save " + err);
+            //                    res.send(500, { error: 'Events.save BD error' });
+            //                } else {
+            //                    res.send(201, { success: 'A new event was created successfully' });
+            //                }
+            //            } catch (error) {
+            //                logWriter.log("Events.js create savetoBd _event.save " + error);
+            //            }
+            //        });
+            //    } catch (error) {
+            //        console.log(error);
+            //        logWriter.log("Events.js create savetoBd " + error);
+            //        res.send(500, { error: 'Events.save  error' });
+            //    }
+            //}
         } catch (exception) {
             console.log(exception);
             logWriter.log("Events.js  " + exception);
@@ -134,74 +134,253 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
                 return;
             } else {
-                savetoDb(data);
+                saveCalendarToDb(data);
             }
-            function savetoDb(data) {
-                try {
-                    _calendar = new calendar();
-                    if (data.kind) {
-                        _calendar.kind = data.kind;
-                    }
-                    if (data.etag) {
-                        _calendar.etag = data.etag;
-                    }
-                    if (data.id) {
-                        _calendar.id = data.id;
-                    }
-                    if (data.summary) {
-                        _calendar.summary = data.summary;
-                    }
-                    if (data.timeZone) {
-                        _calendar.timeZone = data.timeZone;
-                    }
-                    if (data.colorId) {
-                        _calendar.colorId = data.colorId;
-                    }
-                    if (data.backgroundColor) {
-                        _calendar.backgroundColor = data.backgroundColor;
-                    }
-                    if (data.foregroundColor) {
-                        _calendar.foregroundColor = data.foregroundColor;
-                    }
-                    if (data.selected) {
-                        _calendar.selected = data.selected;
-                    }
-                    if (data.accessRole) {
-                        _calendar.accessRole = data.accessRole;
-                    }
-                    if (data.description) {
-                        _calendar.description = data.description;
-                    }
-                    if (data.location) {
-                        _calendar.location = data.location;
-                    }
-                    ///////////////////////////////////////////////////
-                    _calendar.save(function (err, result) {
-                        try {
-                            if (err) {
-                                console.log(err);
-                                logWriter.log("Events.js createCalendar savetoBd _calendar.save " + err);
-                                res.send(500, { error: 'calendar.save BD error' });
-                            } else {
-
-                                res.send(201, { success: 'A new Calendar was created successfully' });
-                            }
-                        } catch (error) {
-                            logWriter.log("Events.js createCalendar savetoBd _calendar.save " + error);
-                        }
-                    });
-                } catch (error) {
-                    console.log(error);
-                    logWriter.log("Events.js create savetoBd " + error);
-                    res.send(500, { error: 'Events.save  error' });
-                }
-            }
+            //function savetoDb(data) {
+            //    try {
+            //        _calendar = new calendar();
+            //        if (data.kind) {
+            //            _calendar.kind = data.kind;
+            //        }
+            //        if (data.etag) {
+            //            _calendar.etag = data.etag;
+            //        }
+            //        if (data.id) {
+            //            _calendar.id = data.id;
+            //        }
+            //        if (data.summary) {
+            //            _calendar.summary = data.summary;
+            //        }
+            //        if (data.timeZone) {
+            //            _calendar.timeZone = data.timeZone;
+            //        }
+            //        if (data.colorId) {
+            //            _calendar.colorId = data.colorId;
+            //        }
+            //        if (data.backgroundColor) {
+            //            _calendar.backgroundColor = data.backgroundColor;
+            //        }
+            //        if (data.foregroundColor) {
+            //            _calendar.foregroundColor = data.foregroundColor;
+            //        }
+            //        if (data.selected) {
+            //            _calendar.selected = data.selected;
+            //        }
+            //        if (data.accessRole) {
+            //            _calendar.accessRole = data.accessRole;
+            //        }
+            //        if (data.description) {
+            //            _calendar.description = data.description;
+            //        }
+            //        if (data.location) {
+            //            _calendar.location = data.location;
+            //        }
+            //        ///////////////////////////////////////////////////
+            //        _calendar.save(function (err, result) {
+            //            try {
+            //                if (err) {
+            //                    console.log(err);
+            //                    logWriter.log("Events.js createCalendar savetoBd _calendar.save " + err);
+            //                    res.send(500, { error: 'calendar.save BD error' });
+            //                } else {
+            //                    res.send(201, { success: 'A new Calendar was created successfully' });
+            //                }
+            //            } catch (error) {
+            //                logWriter.log("Events.js createCalendar savetoBd _calendar.save " + error);
+            //            }
+            //        });
+            //    } catch (error) {
+            //        console.log(error);
+            //        logWriter.log("Events.js create savetoBd " + error);
+            //        res.send(500, { error: 'Events.save  error' });
+            //    }
+            //}
         } catch (exception) {
             console.log(exception);
             logWriter.log("Events.js  " + exception);
             res.send(500, { error: 'Events.save  error' });
         }
     };//End createCalendar
+
+    function saveEventToDb(data) {
+        try {
+            _event = new event();
+            if (data.calendarId) {
+                _event.calendarId = data.calendarId;
+            }
+            if (data.id) {
+                _event.id = data.id;
+            }
+            if (data.etag) {
+                _event.etag = data.etag;
+            }
+            if (data.htmlLink) {
+                _event.htmlLink = data.htmlLink;
+            }
+            if (data.created) {
+                _event.created = data.created;
+            }
+            if (data.updated) {
+                _event.updated = data.updated;
+            }
+            if (data.summary) {
+                _event.summary = data.summary;
+            }
+            if (data.creator) {
+                if (data.creator.email) {
+                    _event.creator.email = data.creator.email
+                }
+                if (data.creator.displayName) {
+                    _event.creator.displayName = data.creator.displayName
+                }
+            }
+            if (data.organizer) {
+                if (data.organizer.email) {
+                    _event.organizer.email = data.organizer.email
+                }
+                if (data.organizer.displayName) {
+                    _event.organizer.displayName = data.organizer.displayName;
+                }
+                if (data.organizer.self) {
+                    _event.organizer.self = data.organizer.self;
+                }
+            }
+            if (data.start) {
+                if (data.start.dateTime) {
+                    _event.start.dateTime = data.start.dateTime;
+                }
+            }
+            if (data.end) {
+                if (data.end.dateTime) {
+                    _event.end.dateTime = data.end.dateTime;
+                }
+            }
+            if (data.iCalUID) {
+                _event.iCalUID = data.iCalUID;
+            }
+            if (data.sequence) {
+                _event.sequence = data.sequence;
+            }
+            //if (data.attendees) {
+            //    _event.attendees = data.attendees;
+            //}
+            if (data.reminders) {
+                if (data.reminders.useDefault) {
+                    _event.reminders.useDefault = data.reminders.useDefault;
+                }
+            }
+            if (data.priority) {
+                _event.priority = data.priority;
+            }
+            if (data.assignTo) {
+                _event.assignTo = data.assignTo;
+            }
+            if (data.description) {
+                _event.description = data.description;
+            }
+            if (data.status) {
+                _event.status = data.status;
+            }
+            if (data.eventType) {
+                _event.eventType = data.eventType;
+            }
+            if (data.color) {
+                _event.color = data.color;
+            }
+            if (data.textColor) {
+                _event.textColor = data.textColor;
+            }
+            ///////////////////////////////////////////////////
+            _event.save(function (err, result) {
+                try {
+                    if (err) {
+                        console.log(err);
+                        logWriter.log("Events.js create savetoBd _event.save " + err);
+                        res.send(500, { error: 'Events.save BD error' });
+                    } else {
+                        calendar.findByIdAndUpdate(data.calendarId, { $push: { events: result._id } }, function (err, success) {
+                            if (err) {
+                                console.log(err);
+                                res.send(500, { error: 'Event.save DB error' });
+                            }
+                        });
+                        res.send(201, { success: 'A new event was created successfully' });
+                    }
+                } catch (error) {
+                    logWriter.log("Events.js create savetoBd _event.save " + error);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            logWriter.log("Events.js create savetoBd " + error);
+            res.send(500, { error: 'Events.save  error' });
+        }
+    };//End Saving Event To Db
+
+    function saveCalendarToDb(data) {
+        try {
+            _calendar = new calendar();
+            if (data.id) {
+                _calendar.id = data.id;
+            }
+            if (data.summary) {
+                _calendar.summary = data.summary;
+            }
+            if (data.description) {
+                _calendar.description = data.description;
+            }
+            if (data.kind) {
+                _calendar.kind = data.kind;
+            }
+            if (data.etag) {
+                _calendar.etag = data.etag;
+            }
+            if (data.location) {
+                _calendar.location = data.location;
+            }
+            if (data.timeZone) {
+                _calendar.timeZone = data.timeZone;
+            }
+            _calendar.save(function (err, result) {
+                console.log(result);
+                try {
+                    if (err) {
+                        console.log(err);
+                        logWriter.log("Events.js googleCalSync savetoBd _calendar.save " + err);
+                        res.send(500, { error: 'calendar.save BD error' });
+                    } else {
+                        if (data.items) {
+                            var i = 0;
+                            data.items.forEach(function (ev) {
+                                try {
+                                    if (!ev || !ev.id) {
+                                        logWriter.log('Events.googleCalSync Incorrect Incoming Data');
+                                        res.send(400, { error: 'Events.create Incorrect Incoming Data' });
+                                        return;
+                                    } else {
+                                        ev.calendarId = result._id;
+                                        saveEventToDb(ev);
+                                    }
+
+                                } catch (exception) {
+                                    console.log(exception);
+                                    logWriter.log("Events.js  " + exception);
+                                    res.send(500, { error: 'Events.save  error' });
+                                }
+                            });
+                        }
+                        res.send(201, { success: 'A new сalendar was created successfully' });
+                    }
+                } catch (error) {
+                    logWriter.log("Events.js createCalendar savetoBd _calendar.save " + error);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            logWriter.log("Events.js create savetoBd " + error);
+            res.send(500, { error: 'Events.save  error' });
+        }
+    };//Saving Calendar to Db With Checking it's events
 
     function getCalendars(response) {
         var res = {}
@@ -359,10 +538,10 @@ var Events = function (logWriter, mongoose) {
                                         console.log(err);
                                         logWriter.log("Events.js googleCalSync calendar.update " + err);
                                         res.send(500, { error: "Can't update Calendar" });
-                                    } else {                                       
+                                    } else {
                                         if (items) {
                                             //Update Existing Calendar Events
-                                            cal.items.forEach(function (ev) {                                               
+                                            cal.items.forEach(function (ev) {
                                                 event.find({ id: ev.id }, function (err, result) {
                                                     if (err) {
                                                         console.log(err);
@@ -393,121 +572,8 @@ var Events = function (logWriter, mongoose) {
                                                                 res.send(400, { error: 'Events.create Incorrect Incoming Data' });
                                                                 return;
                                                             } else {
-                                                                savetoDb(ev);
-                                                            }
-                                                            function savetoDb(data) {
-                                                                try {
-                                                                    _event = new event();
-                                                                    if (curentCalendarId) {
-                                                                        _event.calendarId = curentCalendarId;
-                                                                    }
-                                                                    if (data.id) {
-                                                                        _event.id = data.id;
-                                                                    }
-                                                                    if (data.etag) {
-                                                                        _event.etag = data.etag;
-                                                                    }
-                                                                    if (data.htmlLink) {
-                                                                        _event.htmlLink = data.htmlLink;
-                                                                    }
-                                                                    if (data.created) {
-                                                                        _event.created = data.created;
-                                                                    }
-                                                                    if (data.updated) {
-                                                                        _event.updated = data.updated;
-                                                                    }
-                                                                    if (data.summary) {
-                                                                        _event.summary = data.summary;
-                                                                    }
-                                                                    if (data.creator) {
-                                                                        if (data.creator.email) {
-                                                                            _event.creator.email = data.creator.email
-                                                                        }
-                                                                        if (data.creator.displayName) {
-                                                                            _event.creator.displayName = data.creator.displayName
-                                                                        }
-                                                                    }
-                                                                    if (data.organizer) {
-                                                                        if (data.organizer.email) {
-                                                                            _event.organizer.email = data.organizer.email
-                                                                        }
-                                                                        if (data.organizer.displayName) {
-                                                                            _event.organizer.displayName = data.organizer.displayName;
-                                                                        }
-                                                                        if (data.organizer.self) {
-                                                                            _event.organizer.self = data.organizer.self;
-                                                                        }
-                                                                    }
-                                                                    if (data.start) {
-                                                                        if (data.start.dateTime) {
-                                                                            _event.start.dateTime = data.start.dateTime;
-                                                                        }
-                                                                    }
-                                                                    if (data.end) {
-                                                                        if (data.end.dateTime) {
-                                                                            _event.end.dateTime = data.end.dateTime;
-                                                                        }
-                                                                    }
-                                                                    if (data.iCalUID) {
-                                                                        _event.iCalUID = data.iCalUID;
-                                                                    }
-                                                                    if (data.sequence) {
-                                                                        _event.sequence = data.sequence;
-                                                                    }
-                                                                    //if (data.attendees) {
-                                                                    //    _event.attendees = data.attendees;
-                                                                    //}
-                                                                    if (data.reminders) {
-                                                                        if (data.reminders.useDefault) {
-                                                                            _event.reminders.useDefault = data.reminders.useDefault;
-                                                                        }
-                                                                    }
-                                                                    if (data.priority) {
-                                                                        _event.priority = data.priority;
-                                                                    }
-                                                                    if (data.assignTo) {
-                                                                        _event.assignTo = data.assignTo;
-                                                                    }
-                                                                    if (data.description) {
-                                                                        _event.description = data.description;
-                                                                    }
-                                                                    if (data.status) {
-                                                                        _event.status = data.status;
-                                                                    }
-                                                                    if (data.eventType) {
-                                                                        _event.eventType = data.eventType;
-                                                                    }
-                                                                    if (data.color) {
-                                                                        _event.color = data.color;
-                                                                    }
-                                                                    if (data.textColor) {
-                                                                        _event.textColor = data.textColor;
-                                                                    }
-                                                                    ///////////////////////////////////////////////////
-                                                                    _event.save(function (err, result) {
-                                                                        try {
-                                                                            if (err) {
-                                                                                console.log(err);
-                                                                                logWriter.log("Events.js create savetoBd _event.save " + err);
-                                                                                res.send(500, { error: 'Events.save BD error' });
-                                                                            } else {
-                                                                                res.send(201, { success: 'A new event was created successfully' });
-                                                                                calendar.findById(result.calendarId, { $push: { event: result._id } }, function (err, success) {
-                                                                                    if (err) {
-                                                                                        console.log(err);
-                                                                                        res.send(500, { error: 'Event.save BD error' });
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                        } catch (error) {
-                                                                            logWriter.log("Events.js create savetoBd _event.save " + error);
-                                                                        }
-                                                                    });
-                                                                } catch (error) {
-                                                                    console.log(error);
-                                                                    logWriter.log("Events.js create savetoBd " + error);
-                                                                    res.send(500, { error: 'Events.save  error' });
-                                                                }
+                                                                ev.calendarId = curentCalendarId;
+                                                                saveEventToDb(ev);
                                                             }
                                                         } catch (exception) {
                                                             console.log(exception);
@@ -525,7 +591,7 @@ var Events = function (logWriter, mongoose) {
                                     logWriter.log("Events.js googleCalSync calendar.update " + exception);
                                 }
                             });
-                        } else {            
+                        } else {
                             //Creating a new Calendar in DataBase
                             try {
                                 if (!cal) {
@@ -533,184 +599,7 @@ var Events = function (logWriter, mongoose) {
                                     res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
                                     return;
                                 } else {
-                                    savetoDb(cal);
-                                }
-                                function savetoDb(data) {
-
-                                    try {
-                                        _calendar = new calendar();
-                                        if (data.id) {
-                                            _calendar.id = data.id;
-                                        }
-                                        if (data.summary) {
-                                            _calendar.summary = data.summary;
-                                        }
-                                        if (data.description) {
-                                            _calendar.description = data.description;
-                                        }
-                                        if (data.kind) {
-                                            _calendar.kind = data.kind;
-                                        }
-                                        if (data.etag) {
-                                            _calendar.etag = data.etag;
-                                        }
-                                        if (data.location) {
-                                            _calendar.location = data.location;
-                                        }
-                                        if (data.timeZone) {
-                                            _calendar.timeZone = data.timeZone;
-                                        }
-                                        _calendar.save(function (err, result) {
-                                            try {
-                                                if (err) {
-                                                    console.log(err);
-                                                    logWriter.log("Events.js googleCalSync savetoBd _calendar.save " + err);
-                                                    res.send(500, { error: 'calendar.save BD error' });
-                                                } else {
-                                                    res.send(201, { success: 'A new сalendar was created successfully' });
-                                                    if (data.items) {
-                                                        var i = 0;
-                                                        data.items.forEach(function (ev) {
-                                                            try {
-                                                                if (!ev || !ev.id) {
-                                                                    logWriter.log('Events.googleCalSync Incorrect Incoming Data');
-                                                                    res.send(400, { error: 'Events.create Incorrect Incoming Data' });
-                                                                    return;
-                                                                } else {
-                                                                    savetoDb(ev);
-                                                                }
-                                                                function savetoDb(data) {
-
-                                                                    try {
-                                                                        _event = new event();
-                                                                        if (result._id) {
-                                                                            _event.calendarId = result._id;
-                                                                        }
-                                                                        if (data.id) {
-                                                                            _event.id = data.id;
-                                                                        }
-                                                                        if (data.etag) {
-                                                                            _event.etag = data.etag;
-                                                                        }
-                                                                        if (data.htmlLink) {
-                                                                            _event.htmlLink = data.htmlLink;
-                                                                        }
-                                                                        if (data.created) {
-                                                                            _event.created = data.created;
-                                                                        }
-                                                                        if (data.updated) {
-                                                                            _event.updated = data.updated;
-                                                                        }
-                                                                        if (data.summary) {
-                                                                            _event.summary = data.summary;
-                                                                        }
-                                                                        if (data.creator) {
-                                                                            if (data.creator.email) {
-                                                                                _event.creator.email = data.creator.email
-                                                                            }
-                                                                            if (data.creator.displayName) {
-                                                                                _event.creator.displayName = data.creator.displayName
-                                                                            }
-                                                                        }
-                                                                        if (data.organizer) {
-                                                                            if (data.organizer.email) {
-                                                                                _event.organizer.email = data.organizer.email
-                                                                            }
-                                                                            if (data.organizer.displayName) {
-                                                                                _event.organizer.displayName = data.organizer.displayName;
-                                                                            }
-                                                                            if (data.organizer.self) {
-                                                                                _event.organizer.self = data.organizer.self;
-                                                                            }
-                                                                        }
-                                                                        if (data.start) {
-                                                                            if (data.start.dateTime) {
-                                                                                _event.start.dateTime = data.start.dateTime;
-                                                                            }
-                                                                        }
-                                                                        if (data.end) {
-                                                                            if (data.end.dateTime) {
-                                                                                _event.end.dateTime = data.end.dateTime;
-                                                                            }
-                                                                        }
-                                                                        if (data.iCalUID) {
-                                                                            _event.iCalUID = data.iCalUID;
-                                                                        }
-                                                                        if (data.sequence) {
-                                                                            _event.sequence = data.sequence;
-                                                                        }
-                                                                        //if (data.attendees) {
-                                                                        //    _event.attendees = data.attendees;
-                                                                        //}
-                                                                        if (data.reminders) {
-                                                                            if (data.reminders.useDefault) {
-                                                                                _event.reminders.useDefault = data.reminders.useDefault;
-                                                                            }
-                                                                        }
-                                                                        if (data.priority) {
-                                                                            _event.priority = data.priority;
-                                                                        }
-                                                                        if (data.assignTo) {
-                                                                            _event.assignTo = data.assignTo;
-                                                                        }
-                                                                        if (data.description) {
-                                                                            _event.description = data.description;
-                                                                        }
-                                                                        if (data.status) {
-                                                                            _event.status = data.status;
-                                                                        }
-                                                                        if (data.eventType) {
-                                                                            _event.eventType = data.eventType;
-                                                                        }
-                                                                        if (data.color) {
-                                                                            _event.color = data.color;
-                                                                        }
-                                                                        if (data.textColor) {
-                                                                            _event.textColor = data.textColor;
-                                                                        }
-                                                                        ///////////////////////////////////////////////////
-                                                                        _event.save(function (err, result) {
-                                                                            try {
-                                                                                if (err) {
-                                                                                    console.log(err);
-                                                                                    logWriter.log("Events.js create savetoBd _event.save " + err);
-                                                                                    res.send(500, { error: 'Events.save BD error' });
-                                                                                } else {                                                                                  
-                                                                                    calendar.findByIdAndUpdate(result.calendarId, { $push: { events: result._id } }, function (err, success) {
-                                                                                        if (err) {
-                                                                                            console.log(err);
-                                                                                            res.send(500, { error: 'Event.save DB error' });
-                                                                                        }
-                                                                                    });
-                                                                                    res.send(201, { success: 'A new event was created successfully' });
-                                                                                }
-                                                                            } catch (error) {
-                                                                                logWriter.log("Events.js create savetoBd _event.save " + error);
-                                                                            }
-                                                                        });
-                                                                    } catch (error) {
-                                                                        console.log(error);
-                                                                        logWriter.log("Events.js create savetoBd " + error);
-                                                                        res.send(500, { error: 'Events.save  error' });
-                                                                    }
-                                                                }
-                                                            } catch (exception) {
-                                                                console.log(exception);
-                                                                logWriter.log("Events.js  " + exception);
-                                                                res.send(500, { error: 'Events.save  error' });
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            } catch (error) {
-                                                logWriter.log("Events.js createCalendar savetoBd _calendar.save " + error);
-                                            }
-                                        });
-                                    } catch (error) {
-                                        console.log(error);
-                                        logWriter.log("Events.js create savetoBd " + error);
-                                        res.send(500, { error: 'Events.save  error' });
-                                    }
+                                    saveCalendarToDb(cal);
                                 }
                             } catch (exception) {
                                 console.log(exception);
@@ -719,14 +608,14 @@ var Events = function (logWriter, mongoose) {
                             }
                         }
                     });
-                });               
+                });
             }
         } catch (exception) {
             console.log(exception);
             logWriter.log("Events.js  " + exception);
             res.send(500, { error: 'Events.save  error' });
         }
-    };
+    };//end googleCalSync
 
 
     return {

@@ -418,11 +418,13 @@
         }
 		var buildAphabeticArray = function(collection){
             if(collection && collection.length > 0){
-                var filtered =  $.map(collection, function(item){
+                var filtered = $.map(collection, function (item) {
+                    if (item.name.last[0]) { 
 					if ($.isNumeric(item.name.last[0].toUpperCase())){
 						return "0-9"
 					}
-                     return item.name.last[0].toUpperCase();
+					return item.name.last[0].toUpperCase();
+                    }
                 });
 				filtered.push("All");
                 return _.sortBy(_.uniq(filtered),function(a){return a});

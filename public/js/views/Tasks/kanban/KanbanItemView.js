@@ -5,9 +5,7 @@ define([
     function (KanbanItemTemplate, common) {
         var TasksItemView = Backbone.View.extend({
             className: "item",
-            /*id: function () {
-                return this.model.get("_id");
-            },*/
+
             colors:[
                 {dataColor: "#1ABC9C", className: "color_0"},
                 {dataColor: "#2ECC71", className: "color_1"},

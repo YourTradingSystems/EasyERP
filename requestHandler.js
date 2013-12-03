@@ -786,6 +786,15 @@ var requestHandler = function (fs, mongoose) {
         }
     }
 
+    function getFilterOpportunities(req, res, data) {
+        console.log("Requst getFilterOpportunities is success");
+        if (req.session && req.session.loggedIn) {
+            opportunities.getFilterOpportunities(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getOpportunities(req, res, data) {
         if (req.session && req.session.loggedIn) {
             opportunities.get(res);
@@ -987,6 +996,7 @@ var requestHandler = function (fs, mongoose) {
         removeLead: removeLead,
 
         createOpportunitie: createOpportunitie,
+        getFilterOpportunities: getFilterOpportunities,
         getOpportunities: getOpportunities,
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
