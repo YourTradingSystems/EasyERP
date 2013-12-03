@@ -2668,7 +2668,9 @@ button {
             transition: box-shadow 1s ease;
             transition: border-color 1s ease;
             .border-radius(0px);
-
+			&.active{
+				.box-shadow(0px, 0px,10px,rgba(50, 50, 50, 0.75));
+			}
             .inner {
                 padding: 5px;
             }
