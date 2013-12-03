@@ -309,7 +309,7 @@ app.get('/Tasks', function (req, res) {
     requestHandler.getTasks(req, res, data);
 });
 
-app.get('/Tasks/kanban', function (req, res) {
+app.get('/kanban/Tasks', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     data.pId = req.param('pId');
