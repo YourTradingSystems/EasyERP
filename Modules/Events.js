@@ -62,7 +62,7 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.create Incorrect Incoming Data' });
                 return;
             } else {
-                saveEventToDb(data);
+                saveEventToDb(data, res);
             }
             //function savetoDb(data) {
             //    try {
@@ -134,7 +134,7 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
                 return;
             } else {
-                saveCalendarToDb(data);
+                saveCalendarToDb(data, res);
             }
             //function savetoDb(data) {
             //    try {
@@ -202,7 +202,7 @@ var Events = function (logWriter, mongoose) {
         }
     };//End createCalendar
 
-    function saveEventToDb(data) {
+    function saveEventToDb(data, res) {
         try {
             _event = new event();
             if (data.calendarId) {
@@ -323,7 +323,7 @@ var Events = function (logWriter, mongoose) {
         }
     };//End Saving Event To Db
 
-    function saveCalendarToDb(data) {
+    function saveCalendarToDb(data, res) {
         try {
             _calendar = new calendar();
             if (data.id) {
@@ -365,7 +365,7 @@ var Events = function (logWriter, mongoose) {
                                         return;
                                     } else {
                                         ev.calendarId = result._id;
-                                        saveEventToDb(ev);
+                                        saveEventToDb(ev, res);
                                     }
 
                                 } catch (exception) {
@@ -605,7 +605,7 @@ var Events = function (logWriter, mongoose) {
                                     res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
                                     return;
                                 } else {
-                                    saveCalendarToDb(cal);
+                                    saveCalendarToDb(cal, res);
                                 }
                             } catch (exception) {
                                 console.log(exception);
