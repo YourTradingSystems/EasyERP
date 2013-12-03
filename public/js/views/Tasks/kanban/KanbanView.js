@@ -20,7 +20,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         },
         
         selectItem: function (e) {
-			$(e.target).parents(".item").parent().find(".active").removeClass("active");
+			$(e.target).parents(".item").parents("table").find(".active").removeClass("active");
 			$(e.target).parents(".item").addClass("active");
         },
 

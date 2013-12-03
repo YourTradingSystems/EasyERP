@@ -190,7 +190,7 @@ function (TasksListTemplate, TasksFormTemplate, WorkflowsTemplate, WorkflowsColl
 
         editItem: function(){
             //create editView in dialog here
-            new EditView({collection:this.collection});
+            new EditView({model:this.collection.getElement()});
         },
 
         switchTab: function (e) {

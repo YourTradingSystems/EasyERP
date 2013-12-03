@@ -800,12 +800,12 @@ h3 {
         }
     }
 }
-.dl-auto(@max-width:110px){
+.dl-auto(@max-width:110px,@with-dt:35%){
     clear: both;
 	font-size:14px;
 	
     dt {
-        width: 35%;
+        width: @with-dt;
         max-width: @max-width;
         float: left;
         clear: both;
@@ -818,7 +818,7 @@ h3 {
         line-height: 0px;
 		min-height:16px;
         float: left;
-        width: 65%;
+        width: 100%-@with-dt;
 
         &.with-checkbox {
 //            margin-top: 15px !important;
@@ -827,7 +827,13 @@ h3 {
     }
 
 }
-
+.summary-info{
+	.dl-auto(500px,20%);
+	input{
+		width:99% !important;
+		max-width:none !important;
+	}
+}
 .person-info {
 	.dl-auto();
 }
@@ -2076,7 +2082,13 @@ button {
     .ui-dialog-titlebar {
         display: none;
     }
+	.ui-widget-content a {
+		color: #36A9E1;
+	}
 	.ui-dialog-buttonpane {
+		padding-left:0;
+		padding-right:0;
+		margin:0 1em;
         .ui-dialog-buttonset {
 			float:none !important;
 			text-align:center;
@@ -2284,7 +2296,9 @@ button {
         }
     }
 }
-
+#createTaskForm input[type='text']{
+	width:95%;
+}
 #createApplicationForm #otherInfo{
 	margin-top:10px;
 }
@@ -2493,7 +2507,7 @@ button {
     }
 
     textarea {
-        height: 364px !important;
+        height: 334px !important;
     }
 }
 
@@ -3298,4 +3312,59 @@ table#workflows {
 .with-checkbox #saveSpan,
 .with-checkbox #cancelSpan{
 	line-height:0px;
+}
+.person-info-h3 {
+	width:170px;
+	.dl-auto(auto,50%);
+	clear:none;
+	dt,dd{
+		clear:none;
+		margin-top:0px !important;
+		a{
+			line-height:22px;
+		}
+	}
+	.newSelectList{
+		margin-left:-100px;
+	}
+}
+.newSelectList{
+	position:absolute;
+	border: solid 1px #898989;
+	background-color:white;
+	width:180px;
+	padding:3px 0;
+	.box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
+	li{
+		margin: 0;
+		padding: 3px 16px 5px;
+		cursor:pointer;
+		&.testing,
+		&.analysis{
+			background-color: #D9FFC8!important;
+		}
+		&.merge{
+			color: #C00!important;
+			background-color: #FFE3E3!important;
+		}
+		&.design{
+			color: #000!important;
+			background-color: #FFEA73!important;
+		}
+
+		&.cancelled{
+			color: #FFF!important;
+			background-color: #C00!important;
+		}
+		&.done{
+			color: #000!important;
+			background-color: #BEF624!important;
+		}
+		&:hover{
+			background-color: #EAF0F7!important;
+			border: 0!important;
+			color: #FF5A00!important;
+		}
+	}
+	
 }
