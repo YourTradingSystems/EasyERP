@@ -1,28 +1,33 @@
 ﻿define([
         'text!templates/Tasks/kanban/WorkflowsTemplate.html',
         'collections/Workflows/WorkflowsCollection',
-        'views/Tasks/kanban/KanbanItemView'
+        'views/Tasks/kanban/KanbanItemView',
+        'views/Tasks/EditView',
+        'views/Tasks/CreateView'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView) {
+function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView, CreateView) {
     var TaskKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
             "click #showMore": "showMore"
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', this.render, this);
             this.collection = options.collection;
         },
-        filterByWorkflow : function(models, id) {
+
+        filterByWorkflow: function (models, id) {
             return _.filter(models, function (data) {
                 return data.attributes["workflow"]._id == id;
             });
         },
-        showMore: function() {
+
+        showMore: function () {
             _.bind(this.collection.showMore, this.collection);
             this.collection.showMore();
         },
+
         showMoreContent: function (newModels) {
             var workflows = this.workflowsCollection.toJSON();
             $(".column").last().addClass("lastColumn");
@@ -42,6 +47,17 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView) {
                 column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + remaining);
             }, this);
         },
+
+        editItem: function () {
+            //create editView in dialog here
+            new EditView({ collection: this.collection });
+        },
+
+        createItem: function () {
+            //create editView in dialog here
+            new CreateView();
+        },
+
         render: function () {
             var workflows = this.workflowsCollection.toJSON();
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
@@ -104,5 +120,6 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView) {
             return this;
         }
     });
+
     return TaskKanbanView;
 });
