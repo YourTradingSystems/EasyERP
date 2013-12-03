@@ -772,7 +772,7 @@ app.put('/Events/:_id', function (req, res) {
 app.delete('/Events/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
+    //data.mid = req.headers.mid;
     requestHandler.removeEvent(req, res, id, data);
 });
 

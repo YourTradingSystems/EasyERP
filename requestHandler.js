@@ -841,8 +841,8 @@ var requestHandler = function (fs, mongoose) {
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
         if (req.session && req.session.loggedIn) {
-            console.log(id);
-            console.log(data);
+            //console.log(id);
+            //console.log(data);
             events.update(id, data.event, res);
         } else {
             res.send(401);

@@ -256,7 +256,7 @@ var Events = function (logWriter, mongoose) {
                 }
             }
             if (data.start_date) {
-                _event.start_date = data.start.start_date;
+                _event.start_date = data.start_date;
             }
             if (data.end_date) {
                 _event.end_date = data.end_date;
@@ -474,14 +474,17 @@ var Events = function (logWriter, mongoose) {
     }; //end get
 
     function update(_id, data, res) {
+        console.log('Excellent');
         try {
-            delete data._id;
-            event.findById(_id, function (err, result) {
+           // delete data._id;
+            event.find({ id: _id }, function (err, result) {
+                console.log(result);
                 if (err) {
 
                 }
-                else if (result) {
-                    event.update({ _id: _id }, data, function (err, result) {
+                else if (result.length > 0) {
+                  
+                    event.update({ id: _id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -495,7 +498,9 @@ var Events = function (logWriter, mongoose) {
                             logWriter.log("Events.js getEvents event.find " + exception);
                         }
                     });
-                } else if (!result) {
+                } else {
+                    console.log('**********************');
+                    console.log(data);
                     data.id = _id;
                     create(data, res);
                 }
