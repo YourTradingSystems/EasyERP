@@ -303,11 +303,11 @@ app.post('/Tasks', function (req, res) {
     requestHandler.createTask(req, res, data);
 });
 
-//app.get('/Tasks', function (req, res) {
-//    data = {};
-//    data.mid = req.param('mid');
-//    requestHandler.getTasks(req, res, data);
-//});
+app.get('/Tasks', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getTasks(req, res, data);
+});
 
 app.get('/Tasks/:viewType', function (req, res) {
     data = {};
@@ -330,7 +330,6 @@ app.get('/Priority', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getTasksPriority(req, res, data);
 });
-
 
 app.put('/Tasks/:_id', function (req, res) {
     data = {};

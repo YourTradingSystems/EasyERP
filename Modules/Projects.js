@@ -527,7 +527,7 @@ var Project = function (logWriter, mongoose) {
                 logWriter.log("Project.js removeTasksByPorjectID task.find " + err);
             } else {
                 for (var i in taskss) {
-                    tasks.remove({ _id: taskss[i]._id, }, function (errr, result) {
+                    tasks.remove({ _id: taskss[i]._id }, function (errr, result) {
                         if (errr) {
                             console.log(err);
                             logWriter.log("Project.js removeTasksByPorjectID tasks.remove " + err);
@@ -802,35 +802,20 @@ var Project = function (logWriter, mongoose) {
         });
     };
 
-    function getTaskById(data, func) {
-        var res = {};
-        res['result'] = {};
-        res['result']['status'] = '2';
-        res['result']['description'] = 'An error was find';
-        res['data'] = {};
-        tasks.findById(data.tid, function (err, taskss) {
-            try {
-                if (err) {
-                    //func();
-                    console.log(err);
-                    logWriter.log("Project.js getTaskById tasks.findById " + err);
-                    res['result']['description'] = err;
-                    func(res);
-                } else {
-                    if (taskss) {
-                        console.log(taskss);
-                        res['result']['status'] = '0';
-                        res['result']['description'] = 'returned Tasks is success';
-                        res['data'] = taskss;
-                        func(res);
-                    }
-                }
-            }
-            catch (Exception) {
-                logWriter.log("Project.js getTaskById tasks.findById " + Exception);
+    function getTaskById(data, response) {
+        var query = tasks.findById(data.id, function (err, res) { });
+        query.populate('project', '_id projectShortDesc projectName').
+              populate(' assignedTo', '_id name imageSrc');
+        query.exec(function (err, task) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js getTasksByProjectId task.find " + err);
+                response.send(500, { error: "Can't find Tasks" });
+            } else {
+                response.send(task);
             }
         });
-    }
+    };
 
     return {
         create: create,//End create

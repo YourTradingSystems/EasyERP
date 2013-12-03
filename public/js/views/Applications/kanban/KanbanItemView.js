@@ -10,18 +10,15 @@ define([
             },
 
             initialize: function () {
-                /*this.model.on('change', this.render, this);
-                this.collection = new ApplicationsCollection();
-                this.collection.bind('reset', _.bind(this.render, this));*/
-                this.render();
+                //this.render();
             },
 
             events: {
-                "click #delete": "deleteEvent",
+               /* "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
                 "click .application-content": "gotoForm",
-                "click #edit": "gotoEditForm"
+                "click #edit": "gotoEditForm"*/
             },
 
             template: _.template(KanbanItemTemplate),
@@ -29,7 +26,8 @@ define([
             gotoEditForm: function (e) {
                 e.preventDefault();
                 var itemIndex = $(e.target).closest(".item").data("index") + 1;
-                window.location.hash = "#home/action-Applications/Edit/" + itemIndex;
+                //var inder = this.data("index");
+                window.location.hash = "#home/action-Tasks/Edit/" + itemIndex;
             },
 
             gotoForm: function (e) {
