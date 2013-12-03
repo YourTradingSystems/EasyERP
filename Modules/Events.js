@@ -20,8 +20,8 @@ var Events = function (logWriter, mongoose) {
             displayName: String,
             self: Boolean
         },
-        start: { datetime: Date },
-        end: { dateTime: Date },
+        start_date: Date,
+        end_date: Date,
         iCalUID: String,
         sequence: Number,
         //attendees: [],
@@ -62,7 +62,7 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.create Incorrect Incoming Data' });
                 return;
             } else {
-                saveEventToDb(data);
+                saveEventToDb(data, res);
             }
             //function savetoDb(data) {
             //    try {
@@ -134,7 +134,7 @@ var Events = function (logWriter, mongoose) {
                 res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
                 return;
             } else {
-                saveCalendarToDb(data);
+                saveCalendarToDb(data, res);
             }
             //function savetoDb(data) {
             //    try {
@@ -202,7 +202,7 @@ var Events = function (logWriter, mongoose) {
         }
     };//End createCalendar
 
-    function saveEventToDb(data) {
+    function saveEventToDb(data, res) {
         try {
             _event = new event();
             if (data.calendarId) {
@@ -247,13 +247,19 @@ var Events = function (logWriter, mongoose) {
             }
             if (data.start) {
                 if (data.start.dateTime) {
-                    _event.start.dateTime = data.start.dateTime;
+                    _event.start_date = data.start.dateTime;
                 }
-            }
+            }          
             if (data.end) {
                 if (data.end.dateTime) {
-                    _event.end.dateTime = data.end.dateTime;
+                    _event.end_date = data.end.dateTime;
                 }
+            }
+            if (data.start_date) {
+                _event.start_date = data.start_date;
+            }
+            if (data.end_date) {
+                _event.end_date = data.end_date;
             }
             if (data.iCalUID) {
                 _event.iCalUID = data.iCalUID;
@@ -317,7 +323,7 @@ var Events = function (logWriter, mongoose) {
         }
     };//End Saving Event To Db
 
-    function saveCalendarToDb(data) {
+    function saveCalendarToDb(data, res) {
         try {
             _calendar = new calendar();
             if (data.id) {
@@ -359,7 +365,7 @@ var Events = function (logWriter, mongoose) {
                                         return;
                                     } else {
                                         ev.calendarId = result._id;
-                                        saveEventToDb(ev);
+                                        saveEventToDb(ev, res);
                                     }
 
                                 } catch (exception) {
@@ -468,14 +474,17 @@ var Events = function (logWriter, mongoose) {
     }; //end get
 
     function update(_id, data, res) {
+        console.log('Excellent');
         try {
-            delete data._id;
-            event.findById(_id, function (err, result) {
+           // delete data._id;
+            event.find({ id: _id }, function (err, result) {
+                console.log(result);
                 if (err) {
 
                 }
-                else if (result) {
-                    event.update({ _id: _id }, data, function (err, result) {
+                else if (result.length > 0) {
+                  
+                    event.update({ id: _id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -489,7 +498,9 @@ var Events = function (logWriter, mongoose) {
                             logWriter.log("Events.js getEvents event.find " + exception);
                         }
                     });
-                } else if (!result) {
+                } else {
+                    console.log('**********************');
+                    console.log(data);
                     data.id = _id;
                     create(data, res);
                 }
@@ -599,7 +610,7 @@ var Events = function (logWriter, mongoose) {
                                     res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
                                     return;
                                 } else {
-                                    saveCalendarToDb(cal);
+                                    saveCalendarToDb(cal, res);
                                 }
                             } catch (exception) {
                                 console.log(exception);
