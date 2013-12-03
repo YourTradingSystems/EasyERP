@@ -317,7 +317,7 @@
                 selectList.append(options);
             });
         }
-        var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model) {
+        var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model,callback) {
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
             var self = this;
@@ -352,6 +352,7 @@
                 });
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
+				if (callback)callback()
             });
         }
         var populateUsers = function (selectId, url, model) {

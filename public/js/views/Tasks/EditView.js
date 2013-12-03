@@ -24,7 +24,10 @@
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #Cancel span, #Done span": "changeWorkflow",
                 "change #workflowDd": "changeWorkflowValues",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect"
             },
             keydownHandler: function(e){
                 switch (e.which){
@@ -154,7 +157,7 @@
                     },
                     wait: true,
                     success: function (model) {
-                        $(".edit-task-dialog").remove();
+						self.hideDialog();
                         if (project == '0' || !project) {
                             Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
                         } else {
@@ -181,7 +184,40 @@
                      this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ));
                 },this);
             },
+			showNewSelect:function(e){
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li>"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				
+			},
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				return false;
+				
+			},
+			chooseOption:function(e){
+				var k = $(e.target).parent().find("li").index($(e.target));
+				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			},
 
+			styleSelect:function(id){
+				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				$(id).hide();
+			},
             render: function () {
                 var formString = this.template({
                     model: this.currentModel.toJSON()
@@ -189,7 +225,7 @@
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: 800,
+                    width: 600,
                     title: this.currentModel.toJSON().project.projectShortDesc,
                     buttons:{
                         save:{
@@ -209,7 +245,7 @@
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 $('#deadline').datepicker({ dateFormat: "d M, yy" });
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON());
-                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
+                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);});
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
                 this.delegateEvents(this.events);
