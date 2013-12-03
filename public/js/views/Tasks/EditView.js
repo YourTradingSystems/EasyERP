@@ -197,6 +197,7 @@
 				$(".newSelectList").remove();;
 			},
 			showNewSelect:function(e){
+				this.hideNewSelect();
 				var s="<ul class='newSelectList'>";
 				$(e.target).parent().find("select option").each(function(){
 					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
@@ -244,10 +245,11 @@
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 $('#deadline').datepicker({ dateFormat: "d M, yy" });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON());
-                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);});
-                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON());
-                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
+                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.projectDd);});
+                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.assignedToDd);});
+                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
+				this.styleSelect("#type");
                 this.delegateEvents(this.events);
                 $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");

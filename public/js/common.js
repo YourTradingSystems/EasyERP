@@ -150,7 +150,7 @@
             }
         }
 
-        var populateProjectsDd = function (selectId, url, model) {
+        var populateProjectsDd = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -168,6 +168,7 @@
                     });
                 }
                 selectList.append(options);
+				if (callback)callback();
 
             });
         }
@@ -193,7 +194,7 @@
             });
         }
 
-        var populateEmployeesDd = function (selectId, url, model) {
+        var populateEmployeesDd = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -211,7 +212,7 @@
                     });
                 }
                 selectList.append(options);
-
+				if (callback)callback();
             });
         }
         var populateCompanies = function (selectId, url, model) {
@@ -256,7 +257,7 @@
 
             });
         }
-        var populatePriority = function (selectId, url, model) {
+        var populatePriority = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -274,7 +275,7 @@
                     });
                 }
                 selectList.append(options);
-
+				if (callback)callback();
             });
         }
         var populateCustomers = function (selectId, url, model) {

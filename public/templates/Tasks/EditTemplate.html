@@ -9,8 +9,11 @@
     <div class="half-block left">
 
       <div class="formTitle">
-		<h3 class="">Extra Info<dl class="person-info right"><dt><label>Assigned to :</label></dt><dd><select id="assignedToDd"></select></dd><dl>
-		</h3>
+		<h3 class="left">Extra Info</h3>
+		<dl class="person-info-h3 right">
+		  <dt><label>Assigned to :</label></dt>
+		  <dd><select id="assignedToDd"></select></dd>
+		</dl>
 		<div class="clearfix"></div>
 	  </div>
 	</div>
@@ -31,23 +34,18 @@
 			<select id="projectDd">
 			</select>
 		  </dd>
-		        <dt><label for="workflowNamesDd">Workflow :</label></dt><dd>
-		        <select id="workflowNamesDd">
-		        </select>
+		  <dt><label for="workflowNamesDd">Workflow :</label></dt><dd>
+		    <select id="workflowNamesDd">
+		    </select>
 
-		    </dd>
-            <dt><label for="workflowsDd">State :</label></dt><dd>
+		  </dd>
+          <dt><label for="workflowsDd">State :</label></dt><dd>
             <select id="workflowsDd">
             </select>
 
 		  </dd>
 
-		  <dt><label>Assigned to :</label></dt><dd>
-			<select id="assignedToDd">
-			</select>
-		  </dd>
-            
-            <dt><label>Type :</label></dt><dd>
+          <dt><label>Type :</label></dt><dd>
 			<select id="type">
               <option value="0">Select...</option>
               <% ['Task', 'Bug', 'Feature'].forEach(function(option){ %>
@@ -56,7 +54,7 @@
 			</select>
 		  </dd>
 
-		    <dt><label for="deadline">Deadline :</label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
+		  <dt><label for="deadline">Deadline :</label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" required /></dd>
 
 		  <dt><label for="priorityDd">Priority :</label></dt><dd>
 		    <select id="priorityDd">
