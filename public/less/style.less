@@ -837,6 +837,9 @@ h3 {
 .person-info {
 	.dl-auto();
 }
+.opp-info {
+	.dl-auto(200px);
+}
 .project-info {
 	.dl-auto(150px);
 }
@@ -2219,7 +2222,8 @@ button {
 #createJobPositionForm,
 #applicationForm,
 #editJobPositionForm,
-#createApplicationForm{
+#createApplicationForm,
+#leadForm{
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2295,6 +2299,13 @@ button {
             border: 1px solid rgba(121, 187, 238, 0.75) !important;
         }
     }
+}
+#leadForm input[type='email'],
+#leadForm input[type='text']{
+	width:71%;
+}
+#leadForm textarea{
+	margin-top:10px;
 }
 #createTaskForm input[type='text']{
 	width:95%;
