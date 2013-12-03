@@ -27,11 +27,11 @@ define([
             },
 
             events: {
-                "click #delete": "deleteEvent",
-                "click .dropDown > a": "openDropDown",
-                "click .colorPicker a": "pickColor",
-                "click .task-content": "gotoForm",
-                "click #edit": "gotoEditForm"
+                //"click #delete": "deleteEvent",
+                //"click .dropDown > a": "openDropDown",
+                //"click .colorPicker a": "pickColor",
+                //"click .task-content": "gotoForm",
+                //"click #edit": "gotoEditForm",
             },
 
             template: _.template(KanbanItemTemplate),
@@ -86,7 +86,6 @@ define([
             },
 
             render: function () {
-                var index = this.model.collection.indexOf(this.model);
                 var todayString = new Date().format("yyyy-mm-dd");
                 if (this.model.get('deadline')) {
                     var deadlineString = this.model.get('deadline').split('T')[0];
@@ -97,8 +96,6 @@ define([
                     this.changeDeadlineColor();
                 }
                 this.changeColor(this.model.get('color'));
-                this.$el.attr("data-index", index);
-
                 this.$el.attr("data-id", this.model.get('_id'));
                 return this;
             }

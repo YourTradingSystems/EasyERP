@@ -778,9 +778,9 @@ var Project = function (logWriter, mongoose) {
     function getTasksByProjectId(data, response) {
         var res = {};
         res['data'] = [];
-        var query = (data.pId) ? tasks.find({ project: data.pId }) : tasks.find({});
+        var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : tasks.find({});
         query.populate('project', '_id projectShortDesc projectName')
-            .populate('assignedTo', '_id ')
+            .populate('assignedTo', '_id name imageSrc')
             .populate('extrainfo.customer')
             .populate('workflow');
         query.skip((data.page - 1) * data.count).limit(data.count);
@@ -796,6 +796,7 @@ var Project = function (logWriter, mongoose) {
                 console.log(res['data']);
                 console.log(data.page);
                 console.log(data.count);
+                console.log(data.parrentContentId);
                 response.send(res);
             }
         });
