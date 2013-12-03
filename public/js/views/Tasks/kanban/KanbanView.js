@@ -9,14 +9,22 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
     var TaskKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
-            "click #showMore": "showMore"
+            "click #showMore": "showMore",
+            "dblclick .task-header, .task-content": "gotoEditForm"
         },
         initialize: function (options) {
             this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
             this.workflowsCollection.bind('reset', this.render, this);
             this.collection = options.collection;
         },
-
+        
+        gotoEditForm: function (e) {
+            e.preventDefault();
+            var id = $(e.target).closest(".item").data("id");
+            var model = this.collection.getElement(id);
+            new EditView({ model: model });
+        },
+        
         filterByWorkflow: function (models, id) {
             return _.filter(models, function (data) {
                 return data.attributes["workflow"]._id == id;
