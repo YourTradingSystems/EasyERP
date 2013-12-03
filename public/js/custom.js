@@ -63,13 +63,13 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             id = windowLocHash;
         }
         var viewtype = $(event.target).attr('data-view-type'),
-            url = "#home/content-" + this.contentType + "/" + viewtype;
+            url = "#easyErp/" + this.contentType + "/" + viewtype;
 
         if (id) {
             if (viewtype != "list" && (viewtype != "thumbnails")) {
                 url += "/" + id;
             }
-            collection.setElement(id);
+            if (collection) collection.setElement(id);
         } else {
             var model = collection.getElement();
             if (viewtype == "form" && model) {

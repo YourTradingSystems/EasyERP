@@ -15,8 +15,9 @@ define([
         routes: {
             "home": "main",
             "login": "login",
-            "kanban/:contentType(/:parrentContentId)": "goToKanban",
+            "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
+            "easyErp/:contentType": "getList",
             "*actions": "main"
         },
 
@@ -41,6 +42,9 @@ define([
                     collection.bind('add', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
+                    var url = '#easyErp/' + contentType + '/kanban';
+                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
