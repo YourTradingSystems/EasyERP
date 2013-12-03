@@ -16,7 +16,7 @@
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
-                this.currentModel = (options.model) ? options.model : null;
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 

@@ -22,7 +22,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             e.preventDefault();
             var id = $(e.target).closest(".item").data("id");
             var model = this.collection.getElement(id);
-            new EditView({ model: model });
+            new EditView({ model: model, collection: this.collection });
         },
         
         filterByWorkflow: function (models, id) {
