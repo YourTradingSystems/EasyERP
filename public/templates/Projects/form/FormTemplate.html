@@ -8,11 +8,11 @@
       </div>
         <div class="inner">
             <div class="half-block left">
-			  <dl class="person-info">
-                <dt>Project Description</dt><dd>: <%=projectShortDesc%></dd>
-                <dt>Project Manager</dt><dd>: <%=(projectmanager) ? projectmanager.name.first + " " + projectmanager.name.last : ''%></dd>
-                <dt>Customer</dt><dd>: <%=(customer) ? customer.name.first + " " + customer.name.last : ''%></dd>
-                <dt>Privacy / Visibility</dt><dd>: <%=(privacy) ? privacy : ''%></dd>
+			  <dl class="project-info">
+                <dt>Project Description :</dt><dd><%=projectShortDesc%></dd>
+                <dt>Project Manager :</dt><dd><%=(projectmanager) ? projectmanager.name.first + " " + projectmanager.name.last : ''%></dd>
+                <dt>Customer :</dt><dd><%=(customer) ? customer.name.first + " " + customer.name.last : ''%></dd>
+                <dt>Privacy / Visibility :</dt><dd><%=(privacy) ? privacy : ''%></dd>
 			  </dl>
             </div>
             <div class="clearfix"></div>
