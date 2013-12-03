@@ -5,12 +5,14 @@
     function (TaskModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
-            url: function () {
-                return "/Tasks/kanban/";
-            },
+            url: "/Tasks/",
             page: 1,
             initialize: function (options) {
                 var that = this;
+                if (options && options.viewType) {
+                    this.url += options.viewType;
+                    delete options.viewType;
+                }
                 var filterObject = {};
                 for (var i in options) {
                     filterObject[i] = options[i];
