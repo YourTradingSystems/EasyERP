@@ -34,6 +34,10 @@ define([
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+                    
+                    topBarView.bind('createEvent', contentView.createItem, contentView);
+                    topBarView.bind('editEvent', contentView.editItem, contentView);
+                    
                     collection.bind('add', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
