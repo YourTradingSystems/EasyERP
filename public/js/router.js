@@ -17,15 +17,23 @@ define([
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "easyErp/:contentType/form/:modelId": "goToForm",
+            "easyErp/:contentType/list": "goToList",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "easyErp/:contentType": "getList",
             "*actions": "main"
         },
 
+        goToList: function (contentType) {
+            if (this.mainView == null) this.main();
+            var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+        },
+
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
-            var ContentFormModelUrl = "models/" + contentType + "Model",
-                ContentFormViewUrl = "views/" + contentType + "/form/FormView",
+            var ContentFormModelUrl = "collections/" + contentType + "Collection",
+                ContentFormViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
             var self = this;
 
