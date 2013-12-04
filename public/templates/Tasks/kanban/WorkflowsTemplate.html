@@ -4,7 +4,7 @@
             <tr>
                 <% workflowsCollection.forEach(function(workflow, index){ %>
                 <td class="column" data-index="<%=index%>" data-status="<%=workflow.status%>" data-name="<%=workflow.name%>" data-id="<%=workflow._id%>">
-                    <div class="columnNameDiv">
+                    <div class="columnNameDiv <%=workflow.name.toLowerCase()%>">
                         <h2 class="columnName"><%=workflow.name%></h2>
                     </div>
                 </td>

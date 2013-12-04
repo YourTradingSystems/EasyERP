@@ -1782,6 +1782,21 @@ input, textarea, select {
         position: relative;
         z-index: 2;
         .thumbnail-text;
+		&.status{
+			&.pending{
+				color: #EAE874;
+			}
+			&.inprogress{
+				color: #67C2EF;
+			}
+			&.done{
+				color: #BDEA74;
+			}
+			&.cancelled{
+				color: #FF5454;
+			}
+
+		}
     }
 
     a.tasksByProject {
@@ -2740,10 +2755,29 @@ button {
                 border-bottom: 2px solid #e88f04;
                 padding-bottom: 5px;
                 margin-bottom: 5px;
+				
             }
-
-
-
+			&.cancelled .remaining{
+					border-bottom: 2px solid #FF5454;
+			}
+			&.done .remaining{
+					border-bottom: 2px solid #BDEA74;
+			}
+			&.testing .remaining{
+					border-bottom: 2px solid #D9FFC8;
+			}
+			&.merge .remaining{
+					border-bottom: 2px solid #FFEA73;
+			}
+			&.development .remaining{
+					border-bottom: 2px solid #67C2EF;
+			}
+			&.specification .remaining{
+					border-bottom: 2px solid #EAE874;
+			}
+			&.analysis .remaining{
+					border-bottom: 2px solid #808080;
+			}
             &:hover .foldUnfold img, &.selected .foldUnfold img {
                 margin: -20px 6px 3px 0;
                 width: 13px;
