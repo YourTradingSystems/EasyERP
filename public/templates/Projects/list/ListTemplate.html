@@ -1,32 +1,14 @@
-    <table class="list">
-        <thead>
-            <tr>
-                <th><input type="checkbox" class="checkbox" id="check_all"/></th>
-                <th>#</th>
-                <th>Project Name</th>
-                <th>ProjectID</th>
-                <th>Project Manager</th>
-                <th>Contact</th>
-                <th>Estimated Time</th>
-                <th>Remaining Time</th>
-                <th>Progress</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% projectsCollection.forEach(function(project, index){ %>
-            <tr data-index="<%= index %>" data-id="<%=project._id%>">
-                <td><input type="checkbox" value="<%=project._id%>" class="checkbox" /></td>
-                <td><%= index + 1 %></td>
-                <td><%=project.projectName%></td>
-                <td><%=project.projectShortDesc%></td>
-                <td><%=(project.projectmanager) ? project.projectmanager.name.first + " " + project.projectmanager.name.last : ''%></td>
-                <td><%=(project.customer) ? project.customer.name.first + " " + project.customer.name.last : ''%></td>
-                <td><%=project.estimated%></td>
-                <td><%=project.remaining%></td>
-                <td><progress name="projectProgress" max="100" value="<%=project.progress%>" /></td>
-                <td><%=(project.workflow) ? project.workflow.name : ''%></td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
+   <% projectsCollection.forEach(function(project, index){ %>
+<tr data-index="<%= index %>" data-id="<%=project._id%>">
+    <td><input type="checkbox" value="<%=project._id%>" class="checkbox" /></td>
+    <td><%= index + startNumber + 1 %></td>
+    <td><%=project.projectName%></td>
+    <td><%=project.projectShortDesc%></td>
+    <td><%=(project.projectmanager) ? project.projectmanager.name.first + " " + project.projectmanager.name.last : ''%></td>
+    <td><%=(project.customer) ? project.customer.name.first + " " + project.customer.name.last : ''%></td>
+    <td><%=project.estimated%></td>
+    <td><%=project.remaining%></td>
+    <td><progress name="projectProgress" max="100" value="<%=project.progress%>" /></td>
+    <td><%=(project.workflow) ? project.workflow.name : ''%></td>
+</tr>
+  <% }) %>

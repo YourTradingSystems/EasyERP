@@ -225,11 +225,18 @@ app.post('/Persons', function (req, res) {
     requestHandler.createPerson(req, res, data);
 });
 
-app.get('/Persons', function (req, res) {
-    console.log('---------SERVER----getPersons-------------------------------');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersons(req, res, data);
+app.get('/Persons/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getPersonById(req, res, data);
+            break;
+        default: requestHandler.getPersons(req, res, data);
+            break;
+    }
 });
 
 app.put('/Persons/:_id', function (req, res) {
@@ -257,12 +264,12 @@ app.get('/Projects', function (req, res) {
     requestHandler.getProjects(req, res, data);
 });
 
-app.get('/Projects/:_id', function (req, res) {
+/*app.get('/Projects/:_id', function (req, res) {
     data = {};
     data.id = req.params._id;
     data.mid = req.param('mid');
     requestHandler.getProjectsById(req, res, data);
-});
+});*/
 
 app.get('/getProjectsForDd', function (req, res) {
     data = {};
@@ -294,6 +301,22 @@ app.delete('/Projects/:_id', function (req, res) {
     requestHandler.removeProject(req, res, id, data);
 });
 
+app.get('/Projects/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getProjectsById(req, res, data);
+            break;
+        default: requestHandler.getProjects(req, res, data);
+            break;
+    }
+
+});
+
+
 //--------------Tasks----------------------------------------------------------
 
 app.post('/Tasks', function (req, res) {
@@ -310,16 +333,15 @@ app.get('/Tasks', function (req, res) {
 });
 
 app.get('/Tasks/:viewType', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(req.params);
-    viewType = req.params.viewType;
+    var viewType = req.params.viewType;
     switch (viewType) {
-        case "kanban": requestHandler.getTasksByProjectId(req, res, data);
-            break;
         case "form": requestHandler.getTaskById(req, res, data);
+            break;
+        default: requestHandler.getTasksByProjectId(req, res, data);
             break;
     }
 
@@ -339,7 +361,7 @@ app.put('/Tasks/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
-app.delete('/Tasks/:_id', function (req, res) {
+app.delete('/Tasks/:contentType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -432,6 +454,21 @@ app.get('/ownCompanies', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getOwnCompanies(req, res, data);
+});
+
+app.get('/Companies/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getTaskById(req, res, data);
+            break;
+        default: requestHandler.getCompanies(req, res, data);
+            break;
+    }
+
 });
 
 app.put('/Companies/:_id', function (req, res) {

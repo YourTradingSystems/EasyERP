@@ -1,11 +1,11 @@
 ﻿define([
-    'models/TasksModel',
+    'models/PersonModel',
     'common'
 ],
     function (TaskModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
-            url: "/Tasks/",
+            url: "/Persons/",
             page: 1,
             initialize: function (options) {
                 var that = this;
@@ -21,7 +21,7 @@
                     data: filterObject,
                     reset: true,
                     success: function() {
-                        console.log("Tasks fetchSuccess");
+                        console.log("Persons fetchSuccess");
                         that.page += 1;
                     },
                     error: this.fetchError
@@ -59,11 +59,24 @@
             parse: true,
             parse: function (response) {
                 if (response.data) {
-                    _.map(response.data, function (task) {
-                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        task.deadline = common.utcDateToLocaleDate(task.deadline);
-                        return task;
+                    _.map(response.data, function (person) {
+                        person.dateBirth = common.utcDateToLocaleDate(person.dateBirth);
+                        person.salesPurchases.date.createDate = common.utcDateToLocaleDate(person.salesPurchases.date.createDate);
+                        person.salesPurchases.date.updateDate = common.utcDateToLocaleDate(person.salesPurchases.date.updateDate);
+                        if (person.notes) {
+                            _.map(person.notes, function (note) {
+                                note.date = common.utcDateToLocaleDate(note.date);
+                                return note;
+                            });
+                        }
+
+                        if (person.attachments) {
+                            _.map(person.attachments, function (attachment) {
+                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                                return attachment;
+                            });
+                        }
+                        return person;
                     });
                 }
                 return response.data;

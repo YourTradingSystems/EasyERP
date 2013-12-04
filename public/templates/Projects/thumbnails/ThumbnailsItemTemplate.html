@@ -59,11 +59,11 @@
 </div>
 <div class="bottom">
     <div class="half-block left">
-        <p class="inner"><span><%=(workflow) ? workflow.status : ''%></span></p>
+        <p class="inner"><span class="status <%=(workflow) ? workflow.status.toLowerCase().split(' ').join('') : ''%>"><%=(workflow) ? workflow.status : ''%></span></p>
     </div>
     <div class="half-block right">
         <p class="inner">
-            <a id="<%=_id%>" class="tasksByProject" href="#home/content-Tasks/kanban/<%= _id %>"><%=task.length%> Tasks</a>
+            <a id="<%=_id%>" class="tasksByProject" href="#easyErp/Tasks/kanban/<%= _id %>"><%=task.length%> Tasks</a>
         </p>
     </div>
 </div>

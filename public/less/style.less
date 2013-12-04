@@ -837,6 +837,9 @@ h3 {
 .person-info {
 	.dl-auto();
 }
+.opp-info {
+	.dl-auto(200px);
+}
 .project-info {
 	.dl-auto(150px);
 }
@@ -1779,6 +1782,21 @@ input, textarea, select {
         position: relative;
         z-index: 2;
         .thumbnail-text;
+		&.status{
+			&.pending{
+				color: #EAE874;
+			}
+			&.inprogress{
+				color: #67C2EF;
+			}
+			&.done{
+				color: #BDEA74;
+			}
+			&.cancelled{
+				color: #FF5454;
+			}
+
+		}
     }
 
     a.tasksByProject {
@@ -2219,7 +2237,8 @@ button {
 #createJobPositionForm,
 #applicationForm,
 #editJobPositionForm,
-#createApplicationForm{
+#createApplicationForm,
+#leadForm{
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2295,6 +2314,16 @@ button {
             border: 1px solid rgba(121, 187, 238, 0.75) !important;
         }
     }
+}
+#leadForm input[type='email'],
+#leadForm input[type='text']{
+	width:71%;
+}
+#leadForm dd.withCheckbox{
+	margin-top:0;
+}
+#leadForm textarea{
+	margin-top:10px;
 }
 #createTaskForm input[type='text']{
 	width:95%;
@@ -2730,10 +2759,29 @@ button {
                 border-bottom: 2px solid #e88f04;
                 padding-bottom: 5px;
                 margin-bottom: 5px;
+				
             }
-
-
-
+			&.cancelled .remaining{
+					border-bottom: 2px solid #FF5454;
+			}
+			&.done .remaining{
+					border-bottom: 2px solid #BDEA74;
+			}
+			&.testing .remaining{
+					border-bottom: 2px solid #D9FFC8;
+			}
+			&.merge .remaining{
+					border-bottom: 2px solid #FFEA73;
+			}
+			&.development .remaining{
+					border-bottom: 2px solid #67C2EF;
+			}
+			&.specification .remaining{
+					border-bottom: 2px solid #EAE874;
+			}
+			&.analysis .remaining{
+					border-bottom: 2px solid #808080;
+			}
             &:hover .foldUnfold img, &.selected .foldUnfold img {
                 margin: -20px 6px 3px 0;
                 width: 13px;

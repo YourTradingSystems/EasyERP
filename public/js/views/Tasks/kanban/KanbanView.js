@@ -31,12 +31,6 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             new EditView({ model: model, collection: this.collection });
         },
         
-        filterByWorkflow: function (models, id) {
-            return _.filter(models, function (data) {
-                return data.attributes["workflow"]._id == id;
-            });
-        },
-
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
             this.collection.showMore();
@@ -44,13 +38,14 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
 
         showMoreContent: function (newModels) {
             var workflows = this.workflowsCollection.toJSON();
+            this.collection.set(newModels.models);
             $(".column").last().addClass("lastColumn");
             _.each(workflows, function (workflow, i) {
                 var counter = 0,
                 remaining = 0;
                 var column = this.$(".column").eq(i);
                 var kanbanItemView;
-                var modelByWorkflows = this.filterByWorkflow(newModels.models, workflow._id);
+                var modelByWorkflows = newModels.filterByWorkflow(workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
                     kanbanItemView = new TasksKanbanItemView({ model: wfModel });
                     column.append(kanbanItemView.render().el);
@@ -75,14 +70,13 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         render: function () {
             var workflows = this.workflowsCollection.toJSON();
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
-            var models = this.collection.models;
             $(".column").last().addClass("lastColumn");
             _.each(workflows, function (workflow, i) {
                 var counter = 0,
                 remaining = 0;
                 var column = this.$(".column").eq(i);
                 var kanbanItemView;
-                var modelByWorkflows = this.filterByWorkflow(models, workflow._id);
+                var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
                     kanbanItemView = new TasksKanbanItemView({ model: wfModel });
                     column.append(kanbanItemView.render().el);
@@ -95,8 +89,8 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                 column.find(".columnNameDiv h2").append(count);
                 column.find(".columnNameDiv").append(content);
             }, this);
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             var that = this;
+            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",

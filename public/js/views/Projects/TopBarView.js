@@ -33,8 +33,11 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
+
+                if (options.collection) {
+                    this.collection = options.collection;
+                    this.collection.bind('reset', _.bind(this.render, this));
+                }
                 this.render();
             },
 

@@ -24,7 +24,7 @@
 
             render: function (options) {
                 if (options) {
-                    var company = this.model.get("company");
+                	var company = this.model.toJSON();
                 } else {
                     company = this.model.toJSON();
                 }

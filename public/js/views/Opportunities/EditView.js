@@ -137,7 +137,7 @@
                     var internalNotes = $.trim($("#internalNotes").val());
 
                     var address = {};
-                    $("p").find(".address").each(function () {
+                    $("dd").find(".address").each(function () {
                         var el = $(this);
                         address[el.attr("name")] = el.val();
                     });

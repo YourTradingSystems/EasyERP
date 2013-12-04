@@ -417,12 +417,13 @@ var Project = function (logWriter, mongoose) {
         });
     };
 
-    function get(response) {
+    function get(data, response) {
         var res = {};
         res['data'] = [];
         var query = project.find({});
         query.populate("projectmanager customer task").populate('workflow');
         query.sort({ projectName: 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, projects) {
             if (err) {
                 console.log(err);
@@ -452,22 +453,19 @@ var Project = function (logWriter, mongoose) {
             catch (Exception) {
                 console.log(Exception);
                 logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
-                //response.send(500, { error: "Can't find Projects" });
+                response.send(500, { error: "Can't find Projects" });
             }
         }
     };
 
-    function getById(_id, response) {
-        var res = {};
-        res['data'] = [];
-        var query = project.findById(_id);
+    function getById(data, response) {
+        var query = project.findById(data.id, function (err, res) { });
+        query.populate('projectmanager', 'name');
         query.exec(function (err, project) {
             if (err) {
-                console.log(err);
-                logWriter.log("Project.js getProjects project.find " + err);
-                response.send(500, { error: "Can't find JobPosition" });
+                logWriter.log("Project.js getProjectById project.find " + err);
+                response.send(500, { error: "Can't find Project" });
             } else {
-                console.log(project);
                 response.send(project);
             }
         });

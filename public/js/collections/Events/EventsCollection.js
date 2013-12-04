@@ -19,13 +19,13 @@ define([
             },
 
             filterById: function(idArray){
-                var events;
+                var events = [];
                 var self = this;
                 _.each(idArray, function(item){
                     var filtered = self.filter(function(data){
                         return data.get('calendarId')._id == item;
                     });
-                    events = filtered;
+                    events = events.concat(filtered);
                 });
                 return new Backbone.Collection(events);
             },
@@ -33,13 +33,13 @@ define([
             parse: true,
 
             parse: function (response) {
-                $.each(response.data, function(index){
+               /* $.each(response.data, function(index){
                     if(response.data[index].hasOwnProperty('_id')){
                         response.data[index]["id"] = response.data[index]["_id"];
                         //delete response.data[index]["_id"];
                     }
 
-                });
+                });*/
                 return response.data;
             },
             fetchSuccess:function(){
