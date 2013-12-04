@@ -53,12 +53,11 @@ define([
             });
 
 
-
         },
 
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
-            var ContentFormModelUrl = "model/" + contentType + "Model",
+            var ContentFormModelUrl = "models/" + contentType + "Model",
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
             var self = this;

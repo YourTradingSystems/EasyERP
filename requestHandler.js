@@ -243,9 +243,9 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function getProjectsById(req, res, data) {
-        console.log("Requst getProjects is success");
+        console.log(data);
         if (req.session && req.session.loggedIn) {
-            project.getById(data.id, res);
+            project.getById(data, res);
         } else {
             res.send(401);
         }

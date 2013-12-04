@@ -457,17 +457,14 @@ var Project = function (logWriter, mongoose) {
         }
     };
 
-    function getById(_id, response) {
-        var res = {};
-        res['data'] = [];
-        var query = project.findById(_id);
+    function getById(data, response) {
+        var query = project.findById(data.id, function (err, res) { });
+        query.populate('projectmanager', 'name');
         query.exec(function (err, project) {
             if (err) {
-                console.log(err);
-                logWriter.log("Project.js getProjects project.find " + err);
-                response.send(500, { error: "Can't find JobPosition" });
+                logWriter.log("Project.js getProjectById project.find " + err);
+                response.send(500, { error: "Can't find Project" });
             } else {
-                console.log(project);
                 response.send(project);
             }
         });
