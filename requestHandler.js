@@ -309,6 +309,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     function getTasksByProjectId(req, res, data) {
         console.log("Requst getTasksByProjectId is success");
         if (req.session && req.session.loggedIn) {
@@ -409,12 +410,14 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //---------------------Companies-------------------------------
+
     function getCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            customer.getCompanies(res);
+            customer.getCompanies(data, res);
         } else {
             res.send(401);
         }
@@ -851,9 +854,7 @@ var requestHandler = function (fs, mongoose) {
 
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
-        if (req.session && req.session.loggedIn) {
-            //console.log(id);
-            //console.log(data);
+        if (req.session && req.session.loggedIn) {            
             events.update(id, data.event, res);
         } else {
             res.send(401);

@@ -1,25 +1,12 @@
-    <table class="list">
-        <thead>
-            <tr>
-                <th><input type="checkbox" class="checkbox" id="check_all"/></th>
-                <th>N</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% companiesCollection.forEach(function(company, index){ %>
-            <tr data-index="<%=index + 1%>" data-id="<%=company._id%>">
-                <td><input type="checkbox" value="<%=company._id%>" class="checkbox" /></td>
-                <td><%=index + 1%></td>
-                <td><%=company.name.first%></td>
-                <td><%=company.email%></td>
-                <td>
-                    <span><%=company.phones.phone%></span>
-                    <span><%=company.phones.mobile%></span>
-                </td>
-            </tr>
-            <% }) %>
-        </tbody>
-    </table>
+<% companiesCollection.forEach(function(company, index){ %>
+<tr data-index="<%=index + 1%>" data-id="<%=company._id%>">
+    <td><input type="checkbox" value="<%=company._id%>" class="checkbox" /></td>
+    <td><%=index + 1%></td>
+    <td><%=company.name.first%></td>
+    <td><%=company.email%></td>
+    <td>
+        <span><%=company.phones.phone%></span>
+        <span><%=company.phones.mobile%></span>
+    </td>
+</tr>
+<% }) %>

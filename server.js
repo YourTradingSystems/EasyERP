@@ -456,6 +456,21 @@ app.get('/ownCompanies', function (req, res) {
     requestHandler.getOwnCompanies(req, res, data);
 });
 
+app.get('/Companies/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getTaskById(req, res, data);
+            break;
+        default: requestHandler.getCompanies(req, res, data);
+            break;
+    }
+
+});
+
 app.put('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
