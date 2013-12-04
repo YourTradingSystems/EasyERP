@@ -16,9 +16,10 @@
                         <img alt="" src="<%=imageSrc%>" />
                     </div>
                     <div class="social">
-                        <a class="facebook" href="#"></a>
-                        <a class="linkedin" href="#"></a>
-                        <a class="skype" href="#"></a>
+                        <% if (social.FB){%><a class="facebook" href="<%=social.FB%>"></a><%}%>
+                        <% if (social.LI){%><a class="linkedin" href="<%=social.LI%>"></a><%}%>
+                        <% if (skype){%><a class="skype" href="<%=skype%>"></a><%}%>
+
                         <div class="clearfix"></div>
                     </div>
 
@@ -70,13 +71,13 @@
                     <div class="half-block left">
                         <dl class="person-info">
                             <dt>Website: </dt>
-                            <dd id="website" class="editable"><%=website%></dd>
+                            <dd id="website" class="editable"<%=website%></dd>
                             <dt>Skype :</dt>
-                            <dd id="skype" class="editable"><%=skype%></dd>
+                            <dd id="skype" class="editable"<%=skype%></dd>
                             <dt>Fax :</dt>
-                            <dd id="phones_fax" class="editable"><%=phones.fax%></dd>
+                            <dd id="phones_fax" class="editable"<%=phones.fax%></dd>
                             <dt>Title :</dt>
-                            <dd id="title" class="editable"><%=title%></dd>
+                            <dd id="title" class="editable"<%=title%></dd>
                         </dl>
                     </div>
                     <div class="half-block left">

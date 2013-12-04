@@ -150,7 +150,7 @@
             }
         }
 
-        var populateProjectsDd = function (selectId, url, model) {
+        var populateProjectsDd = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -168,6 +168,7 @@
                     });
                 }
                 selectList.append(options);
+				if (callback)callback();
 
             });
         }
@@ -193,7 +194,7 @@
             });
         }
 
-        var populateEmployeesDd = function (selectId, url, model) {
+        var populateEmployeesDd = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -211,7 +212,7 @@
                     });
                 }
                 selectList.append(options);
-
+				if (callback)callback();
             });
         }
         var populateCompanies = function (selectId, url, model) {
@@ -256,7 +257,7 @@
 
             });
         }
-        var populatePriority = function (selectId, url, model) {
+        var populatePriority = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -274,7 +275,7 @@
                     });
                 }
                 selectList.append(options);
-
+				if (callback)callback();
             });
         }
         var populateCustomers = function (selectId, url, model) {
@@ -317,7 +318,7 @@
                 selectList.append(options);
             });
         }
-        var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model) {
+        var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model,callback) {
             var selectList = $(selectId);
             var workflowNamesDd = $(workflowNamesDd);
             var self = this;
@@ -352,6 +353,7 @@
                 });
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
+				if (callback)callback()
             });
         }
         var populateUsers = function (selectId, url, model) {
@@ -416,11 +418,13 @@
         }
 		var buildAphabeticArray = function(collection){
             if(collection && collection.length > 0){
-                var filtered =  $.map(collection, function(item){
+                var filtered = $.map(collection, function (item) {
+                    if (item.name.last[0]) { 
 					if ($.isNumeric(item.name.last[0].toUpperCase())){
 						return "0-9"
 					}
-                     return item.name.last[0].toUpperCase();
+					return item.name.last[0].toUpperCase();
+                    }
                 });
 				filtered.push("All");
                 return _.sortBy(_.uniq(filtered),function(a){return a});

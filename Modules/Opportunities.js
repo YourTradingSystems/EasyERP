@@ -387,6 +387,26 @@ var Opportunities = function (logWriter, mongoose, customer) {
         }
     };// end update
 
+    function getFilterOpportunities(data, response) {
+        var res = {};
+        res['data'] = [];
+        var query = opportunitie.find();
+        query.where('isOpportunitie', false);
+        query.populate('relatedUser department jobPosition workflow');
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.sort({ 'name.first': 1 });
+        query.exec(function (err, opportunities) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Opportunities.js get Opportunities.find' + err);
+                response.send(500, { error: "Can't find Opportunities" });
+            } else {
+                res['data'] = opportunities;
+                response.send(res);
+            }
+        });
+    };
+
     function remove(_id, res) {
         opportunitie.remove({ _id: _id }, function (err, result) {
             if (err) {
@@ -403,6 +423,8 @@ var Opportunities = function (logWriter, mongoose, customer) {
         create: create,
 
         get: get,
+
+        getFilterOpportunities: getFilterOpportunities,
 
         getLeads: getLeads,
 

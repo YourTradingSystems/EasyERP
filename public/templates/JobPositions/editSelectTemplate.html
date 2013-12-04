@@ -1,5 +1,0 @@
-﻿<select id="workflow">
-    <% _.each(workflows, function(option){ %>
-    <option value="<%= option.status %>" <%=(option._id==model.workflow)?'selected="selected"':''%> data-id="<%= option._id %>"><%= option.name %></option>
-    <%}); %>
-</select>

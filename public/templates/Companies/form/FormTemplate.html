@@ -16,8 +16,7 @@
 			<img alt="" src="<%=imageSrc%>" width="120" height="120" />
           </div>
 		  <div class="social">
-			<a class="facebook" href="#"></a>
-			<a class="linkedin" href="#" style="background-position-y: 0px;"></a>
+			<%if (social.FB){%><a class="facebook" href="<%=social.LI%>"></a><%}%>
 			<div class="clearfix"></div>
 		  </div>
 
