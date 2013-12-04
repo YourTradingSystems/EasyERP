@@ -179,6 +179,17 @@ var requestHandler = function (fs, mongoose) {
         // console.log("Requst getPersons is success");
     };
 
+    function getPersonById(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+            customer.getPersonById(data.id, res);
+        } else {
+            res.send(401);
+        }
+        // console.log("Requst getPersons is success");
+    };
+
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
         if (req.session && req.session.loggedIn) {
@@ -917,6 +928,7 @@ var requestHandler = function (fs, mongoose) {
 
         createPerson: createPerson,
         getPersons: getPersons,
+        getPersonById: getPersonById,
         updatePerson: updatePerson,
         removePerson: removePerson,
         // getPersonsForDd: getPersonsForDd,

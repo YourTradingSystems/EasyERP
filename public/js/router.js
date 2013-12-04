@@ -124,7 +124,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
-                    var topBarView = new TopBarView({ actionType: "Content"});
+                    var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);

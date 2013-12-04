@@ -1,10 +1,10 @@
 ﻿define([
-    'models/PersonModel',
+    'models/PersonsModel',
     'common'
 ],
-    function (TaskModel, common) {
+    function (PersonModel, common) {
         var TasksCollection = Backbone.Collection.extend({
-            model: TaskModel,
+            model: PersonModel,
             url: "/Persons/",
             page: 1,
             initialize: function (options) {
