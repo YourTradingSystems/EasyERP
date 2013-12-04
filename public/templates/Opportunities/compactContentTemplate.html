@@ -8,29 +8,59 @@
 <div id="opportunities" class="scroll">
     <ul class="compactList">
         <% _.each(collection, function(model, index){ %>
-        <% if (company && (model.company == company.name)) { %>
-        <li class="inner">
-            <div class="half-block left">
-                <p>
-                    <a id="<%=++index%>" href="#">
-                        <%=model.name%>
-                    </a>
-                </p>
-                <p>
-                    <%=model.expectedRevenue.currency%><%=model.expectedRevenue.value%>
-                </p>
-
-            </div>
-            <div class="half-block left">
-                <p>
-					<%=model.nextAction.date%>
-				</p>
-                <p>
-                    <%=model.workflow.name%>
-                </p>
-            </div>
-            <div class="clearfix"></div>          
-        </li>
+		
+		<% if (company && (company.type == 'Person')) { %>
+	        <% if (model.customer._id == company._id){ %>
+	        <li class="inner">
+	            <div class="half-block left">
+	                <p>
+	                    <a id="<%=++index%>" href="#">
+	                        <%=model.name%>
+	                    </a>
+	                </p>
+	                <p>
+	                    <%=model.expectedRevenue.currency%><%=model.expectedRevenue.value%>
+	                </p>
+	
+	            </div>
+	            <div class="half-block left">
+	                <p>
+						<%=model.nextAction.date%>
+					</p>
+	                <p>
+	                    <%=model.workflow.name%>
+	                </p>
+	            </div>
+	            <div class="clearfix"></div>          
+	        </li>
+	    	<% }%>   
+	    	<% }%>  
+	    	
+	    	<% if (company && (company.type == 'Company')) { %>
+	    	<% if (model.customer.company == company._id){ %>
+	        <li class="inner">
+	            <div class="half-block left">
+	                <p>
+	                    <a id="<%=++index%>" href="#">
+	                        <%=model.name%>
+	                    </a>
+	                </p>
+	                <p>
+	                    <%=model.expectedRevenue.currency%><%=model.expectedRevenue.value%>
+	                </p>
+	
+	            </div>
+	            <div class="half-block left">
+	                <p>
+						<%=model.nextAction.date%>
+					</p>
+	                <p>
+	                    <%=model.workflow.name%>
+	                </p>
+	            </div>
+	            <div class="clearfix"></div>          
+	        </li>
+	    	<% }%>   
         <% }%>
         <% });%>
     </ul>
