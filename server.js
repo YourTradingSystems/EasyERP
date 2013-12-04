@@ -317,9 +317,9 @@ app.get('/Tasks/:viewType', function (req, res) {
     console.log(req.params);
     viewType = req.params.viewType;
     switch (viewType) {
-        case "kanban": requestHandler.getTasksByProjectId(req, res, data);
-            break;
         case "form": requestHandler.getTaskById(req, res, data);
+            break;
+        default: requestHandler.getTasksByProjectId(req, res, data);
             break;
     }
 
