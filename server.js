@@ -239,7 +239,7 @@ app.get('/Persons/:viewType', function (req, res) {
     }
 });
 
-app.put('/Persons/:_id', function (req, res) {
+app.put('/Persons/:viewType/:_id', function (req, res) {
     console.log(req.body);
     data = {};
     var id = req.param('_id');

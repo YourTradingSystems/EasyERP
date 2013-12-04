@@ -59,7 +59,7 @@ define([
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
                     var id = this.$el.attr("id");
-                    window.location.hash = "#home/content-Persons/form/" + id;
+                    window.location.hash = "#easyErp/Persons/form/" + id;
                 }
             },
 

@@ -11,7 +11,7 @@ define([
     'text!templates/Notes/AddAttachments.html',
     'views/Persons/CreateView',
     'text!templates/Alpabet/AphabeticTemplate.html',
-    'collections/Opportunities/OpportunitiesCollection',
+    'collections/Opportunities/OpportunitiesCollection'
 
 ], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView, AphabeticTemplate,OpportunitiesCollection) {
     var ContentView = Backbone.View.extend({
@@ -49,6 +49,7 @@ define([
             "click #saveSpan": "saveClick",
             "click .letter:not(.empty)": "alpabeticalRender"
         },
+        
 		alpabeticalRender:function(e){
 			$(e.target).parent().find(".current").removeClass("current");
 			$(e.target).addClass("current");
