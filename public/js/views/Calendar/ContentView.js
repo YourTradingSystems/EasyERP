@@ -37,8 +37,14 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             $('#addCalendarDlg').remove();
         },
 
-        createNewCalendar: function(data){
+        createNewCalendar: function(data,link){
             var self = this;
+			$.get("/LoadResource?link="+link,function(data){
+				for(var i = 0; i < data.feed.entry.length; i++){
+					eventName += data.feed.entry[i].title.$t+"</br>";
+				}
+				$('body').append(eventName);
+			});
             this.calendarsCollection.create({
                 summary: data,
                 description: "EasyERP calendar events",
@@ -65,11 +71,12 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                         text: "Create",
                         click: function(){
                             var calName = $('#calendarNameTxt').val();
+                            var link = $('#fromPublicCalendar').val();
                             if(calName.length === 0){
                                 alert('Calendar name can not be empty!');
                                 return;
                             }
-                            self.createNewCalendar(calName);
+                            self.createNewCalendar(calName,link);
                             self.hideDialog();
                         }
                     },

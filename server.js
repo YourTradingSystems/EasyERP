@@ -810,7 +810,11 @@ app.post('/GoogleCalSync', function (req, res) {
     data.calendars = req.body.calendars;
     requestHandler.googleCalSync(req, res, data);
 });
-
+app.get('/LoadResource', function (req, res) {
+    data = {};
+	var link = req.param('link');
+    requestHandler.loadResource(req, res, link, data);
+});
 app.listen(8088);
 
 //console.log(app.routes);
