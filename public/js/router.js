@@ -35,21 +35,21 @@ define([
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50 });
 
-              //  collection.bind('reset', _.bind(createViews, self));
+                collection.bind('reset', _.bind(createViews, self));
 
-              /*  function createViews() {
+                function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
 
-                    collection.bind('add', contentView.showMoreContent, contentView);
+                    collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/list';
-                    Backbone.history.navigate(url, { replace: true });
-                }*/
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
+                }
             });
 
 
@@ -62,19 +62,19 @@ define([
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
             var self = this;
 
-            require([ContentFormModelUrl, ContentFormViewUrl,TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {
+            require([ContentFormModelUrl, ContentFormViewUrl, TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {
                 var GetModel = new ContentFormModel();
                 GetModel.urlRoot = '/' + contentType + '/form';
                 GetModel.fetch({
-                    data: {id: modelId},
-                    success: function(model,response,options) {
-                        var topBarView = new TopBarView({ actionType: "Content"});
+                    data: { id: modelId },
+                    success: function (model, response, options) {
+                        var topBarView = new TopBarView({ actionType: "Content" });
                         var contentView = new ContentFormView({ model: model });
                         contentView.render();
                         self.changeView(contentView);
                         self.changeTopBarView(topBarView);
                     },
-                    error: function() { }
+                    error: function () { }
                 });
             });
         },
@@ -84,19 +84,19 @@ define([
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
-            
+
             self = this;
-            
+
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
-                    
+
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
-                    
+
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
@@ -106,7 +106,7 @@ define([
                 }
             });
         },
-        
+
         goToThumbnails: function (contentType, parrentContentId) {
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView",
@@ -136,7 +136,7 @@ define([
         },
 
         getList: function (contentType, viewType, itemIndex, hash) {
-           if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main();
             console.log('GetList: ' + contentType + " " + viewType + " " + itemIndex + " " + hash);
 
             var ContentViewUrl = "views/" + contentType + "/ContentView",
@@ -158,7 +158,7 @@ define([
                 var contentCollection = new ContentCollection();
                 contentCollection.bind('reset', _.bind(createViews, self));
                 function createViews() {
-                    console.log("=========================Collection fetch time:" + (new Date() - start)/1000 + " ms");
+                    console.log("=========================Collection fetch time:" + (new Date() - start) / 1000 + " ms");
 
                     contentCollection.unbind('reset');
                     //this.Custom.setCurrentCL(contentCollection.models.length);
@@ -203,7 +203,7 @@ define([
                     var topBarView = new TopBarView({ actionType: "Content", collection: contentCollection });
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
-                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads" || contentType === "Opportunities" || contentType === "Companies" || contentType === "Applications"|| contentType === "Users") {
+                    if (contentType === "Projects" || contentType === "Tasks" || contentType === "Persons" || contentType === "Departments" || contentType === "JobPositions" || contentType === "Employees" || contentType === "Leads" || contentType === "Opportunities" || contentType === "Companies" || contentType === "Applications" || contentType === "Users") {
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                         topBarView.bind('createEvent', contentView.createItem, contentView);
                     }
