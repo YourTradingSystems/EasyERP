@@ -1,13 +1,13 @@
 ﻿define([
-   'views/Projects/thumbnails/ThumbnailsItemView',
+   'views/Persons/thumbnails/ThumbnailsItemView',
     'custom',
     'common',
-    'views/Projects/EditView',
-    'views/Projects/CreateView'
+    'views/Persons/EditView',
+    'views/Persons/CreateView'
 ],
 
-function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
-    var ProjectThumbnalView = Backbone.View.extend({
+function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
+    var PersonsThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
@@ -26,12 +26,12 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
                 var holder = this.$el;
                 var thumbnailsItemView;
                 _.each(this.collection.models, function (model) {
-                    thumbnailsItemView = new ProjectsThumbnailsItemView({ model: model });
+                    thumbnailsItemView = new ThumbnailsItemView({ model: model });
                     thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                     $(holder).append(thumbnailsItemView.render().el);
                 }, this);
             } else {
-                this.$el.html('<h2>No projects found</h2>');
+                this.$el.html('<h2>No persons found</h2>');
             }
             this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             return this;
@@ -46,7 +46,7 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
             var holder = this.$el.find('#showMoreDiv');
             var thumbnailsItemView;
             _.each(newModels.models, function (model) {
-                thumbnailsItemView = new ProjectsThumbnailsItemView({ model: model });
+                thumbnailsItemView = new ThumbnailsItemView({ model: model });
                 thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                 $(holder).prepend(thumbnailsItemView.render().el);
             }, this);
@@ -75,9 +75,8 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
                 });
                 $(this).remove();
             });
-
         }
     });
 
-    return ProjectThumbnalView;
+    return PersonsThumbnalView;
 });
