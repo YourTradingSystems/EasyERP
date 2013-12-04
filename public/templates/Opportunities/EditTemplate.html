@@ -1,183 +1,82 @@
 ﻿<div class="form-holder">
-    <form method="post" action="" id="leadForm" class="form" data-id="<%=model._id%>">
-        <fieldset>
-            <p>
-                <label for="name">Subject </label>
-                <input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required />
-            </p>
-            <p>
-                <label for="expectedRevenue">Expected Revenue</label>
-                <input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" />
-                <%=model.expectedRevenue.currency%>at
-                <input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" />%
-            </p>
-            <p>
-                <label for="customerDd">Customer</label>
-                <select id="customerDd"></select>
-            </p>
-            <p>
-                <label for="email">Email </label>
-                <input type="email" id="email" value="<%=model.email%>" />
-            </p>
-            <p>
-                <label for="phone">Phone </label>
-                <input type="text" id="phone" value="<%=model.phones.phone%>" />
-            </p>
+  <form method="post" action="" id="leadForm" class="form" data-id="<%=model._id%>">
+    <div class="inner">
+      <div class="half-block left">
+		<dl class="opp-info">
+		  <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required /></dd>
+		  <dt><label for="expectedRevenue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" /><%=model.expectedRevenue.currency%>at</dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" />%</dd>
+		  <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
+		  <dt><label for="email">Email </label></dt><dd><input type="email" id="email" value="<%=model.email%>" /></dd>
+		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" /></dd>
+		</dl>
+	  </div>
+      <div class="half-block left">
+		<dl class="opp-info">
+		  <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd><select id="workflowNamesDd"></select></dd>
+		  <dt><label for="workflowDd"> Workflows </label></dt><dd><select id="workflowDd"></select></dd>
+		  <dt><label for="salesPersonDd">Salesperson</label></dt><dd><select id="salesPersonDd"></select></dd>
+		  <dt><label for="salesTeamDd">Sales Team</label></dt><dd><select id="salesTeamDd"></select></dd>
+		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" /></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=model.nextAction.desc%>" /></dd>
+		  <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" /></dd>
+		  <dt><label for="priority">Priority </label></dt><dd><select id="priorityDd"></select></dd>
+		  <dt></dt><dd></dd>
+		  <dt></dt><dd></dd>
 
-            <p>
-                <label for="workflowNamesDd">Workflow Names </label>
-                <select id="workflowNamesDd"></select>
-            </p>
-            <p>
-                <label for="workflowDd"> Workflows </label>
-                <select id="workflowDd"></select>
+		</dl>
+	  </div>
+	  <div class="clearfix"></div>
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Lead</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="opp-info">
+		  <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=model.company%>" disabled /></dd>
+		  <dt><label for="address">Address</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" /></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" /></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" /></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" /></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" /></dd>
+		</dl>
+	  </div>
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Internal Notes</h3>
+		  <div class="clearfix"></div>
+		</div>
+        <textarea id="internalNotes"><%=model.internalNotes%></textarea>
+	  </div>
+	  <div class="clearfix"></div>
+      <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Mailings</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="opp-info">
+		  <dt><label>Opt-Out :</label></dt><dd><input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  /></dd>
+		  <dt><label for="contactName">Contact Name :</label></dt><dd><input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled /></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled /></dd>
+		  <dt><label for="func">Function :</label></dt><dd><input type="text" id="func" value="<%=model.func%>" /></dd>
+		  <dt><label for="mobile">Mobile :</label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" /></dd>
+		  <dt><label for="name">Fax :</label></dt><dd><input type="text" id="fax" value="<%=model.phones.fax%>" /></dd>
 
-            </p>
-            <p>
-                <label for="salesPersonDd">Salesperson</label>
-                <select id="salesPersonDd"></select>
-            </p>
-            <p>
-                <label for="salesTeamDd">Sales Team</label>
-                <select id="salesTeamDd"></select>
-            </p>
-            <p>
-                <label for="nextAction">Next Action </label>
-                <input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" />
-                <input type="text" id="nextActionDescription" value="<%=model.nextAction.desc%>" />
-            </p>
-            <p>
-                <label for="expectedClosing">Expected Closing </label>
-                <input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" />
-            </p>
-            <p>
-                <label for="priority">Priority </label>
-                <select id="priorityDd"></select>
-            </p>
-            <p>
-                <label for="categories">Categories</label>
-            </p>
+		</dl>
+	  </div>
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Misc</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="opp-info">
+		  <dt><label>Active :</label></dt><dd><input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  /></dd>
+		  <dt><label>Referred By :</label></dt><dd><input type="text" id="reffered" value="<%=model.reffered%>" /></dd>
 
-            <div id="tabs">
-                <div>
-                    <ul id="tabList" class="inner">
-                        <li>
-                            <a href="#" class="selected">Internal Notes</a>
-                        </li>
-                        <li>
-                            <a href="#">Lead</a>
-                        </li>
-                    </ul>
-                </div>
-                <br />
-                <div class="tab">
-                    <p>
-                        <label for="internalNotes">Internal Notes</label>
-                        <textarea id="internalNotes"><%=model.internalNotes%></textarea>
-                    </p>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="tab">
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label for="company">Company Name</label>
-                            </p>
-                            <p>
-                                <label for="address">Address</label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <h3>Mailings</h3>
-                            <p>
-                                <label>Opt-Out</label>
-                            </p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <input type="text" id="company" value="<%=model.company%>" disabled />
-                            </p>
-                            <p>
-                                <input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" />
-                                <input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" />
-                                <input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" />
-                                <input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" />
-                                <input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" />
-                            </p>
-                            <p></p>
-                            <p>
-                                <input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <div class="half-block left">
-                            <p>
-                                <label for="contactName">Contact Name</label>
-                            </p>
-                            <p>
-                                <label></label>
-                            </p>
-                            <p>
-                                <label for="func">Function</label>
-                            </p>
-                            <p>
-                                <label for="mobile">Mobile </label>
-                            </p>
-                            <p>
-                                <label for="name">Fax</label>
-                            </p>
-                            <p></p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled />
-                                <input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled />
-                            </p>
-                            <p>
-                                <input type="text" id="func" value="<%=model.func%>" />
-                            </p>
-                            <p>
-                                <input type="text" id="mobile" value="<%=model.phones.mobile%>" />
-                            </p>
-                            <p>
-                                <input type="text" id="fax" value="<%=model.phones.fax%>" />
-                            </p>
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <h3>Misc</h3>
-                        <div class="half-block left">
-                            <p>
-                                <label>Active</label>
-                            </p>
-                            <p>
-                                <label>Referred By</label>
-                            </p>
-                        </div>
-                        <div class="half-block left">
-                            <p>
-                                <input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  />
-                            </p>
-                            <p>
-                                <input type="text" id="reffered" value="<%=model.reffered%>" />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </fieldset>
-    </form>
+		</dl>
+	  </div>
+
+	</div>
+    <div class="clearfix"></div>
+  </form>
 </div>

@@ -10,9 +10,10 @@ define([
     'text!templates/Notes/AddNote.html',
     'text!templates/Notes/AddAttachments.html',
     'views/Persons/CreateView',
-    'text!templates/Alpabet/AphabeticTemplate.html'
+    'text!templates/Alpabet/AphabeticTemplate.html',
+    'collections/Opportunities/OpportunitiesCollection',
 
-], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView, AphabeticTemplate) {
+], function (ListTemplate, FormTemplate, ThumbnailsItemView, opportunitiesCompactContentView, Custom, common, EditView, noteView, addNoteTemplate, addAttachTemplate, CreateView, AphabeticTemplate,OpportunitiesCollection) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -23,6 +24,8 @@ define([
             this.allAlphabeticArray = common.buildAllAphabeticArray();
 			this.selectedLetter="All";
             this.collection.bind('reset', _.bind(this.render, this));
+            this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
             this.render();
         },
 
@@ -428,13 +431,13 @@ define([
                             this.$el.html('<h2>No persons found</h2>');
                         } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
-                            /*this.$el.find('.formRightColumn').append(
+                            this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     model: currentModel
                                 }).render(true).el
                             );
-							*/
+							
                             this.$el.find('.formLeftColumn').append(
                                 new noteView({
                                     model: currentModel

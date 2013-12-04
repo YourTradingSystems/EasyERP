@@ -27,13 +27,13 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
             this.allAlphabeticArray = common.buildAllAphabeticArray();
 			this.selectedLetter="All";
-            //this.opportunitiesCollection = new OpportunitiesCollection();
-            /*this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
-            this.eventsCollection = new EventsCollection();
-            this.eventsCollection.bind('reset', _.bind(this.render, this));
+            this.opportunitiesCollection = new OpportunitiesCollection();
+            this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+            /*this.eventsCollection = new EventsCollection();
+            this.eventsCollection.bind('reset', _.bind(this.render, this));*/
             this.personsCollection = new PersonsCollection();
             this.personsCollection.bind('reset', _.bind(this.render, this));
-            this.collection.bind('reset', _.bind(this.render, this));*/
+            this.collection.bind('reset', _.bind(this.render, this));
             this.render();
         },
 		buildAphabeticArray:function(collection){
@@ -424,7 +424,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                         } else {
                             this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 
-                            /*this.$el.find('.formRightColumn').append(
+                            this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
@@ -434,7 +434,7 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
                                     collection: this.personsCollection,
                                     model: currentModel
                                 }).render().el
-                            );*/
+                            );
 
                             this.$el.find('.formLeftColumn').append(
                                     new noteView({
