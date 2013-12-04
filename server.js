@@ -354,7 +354,7 @@ app.put('/Tasks/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
-app.delete('/Tasks/:_id', function (req, res) {
+app.delete('/Tasks/:contentType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

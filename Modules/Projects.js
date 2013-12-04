@@ -418,41 +418,41 @@ var Project = function (logWriter, mongoose) {
     };
 
     function get(data, response) {
-        var res = {};
-        res['data'] = [];
-        var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : project.find({});
-        query.populate('project', '_id projectShortDesc projectName');
-        query.populate('assignedTo', '_id name imageSrc');
-        query.populate('projectmanager', 'name');
-        query.populate('extrainfo.customer');
-        query.populate('workflow');
-        query.skip((data.page - 1) * data.count).limit(data.count);
-        query.sort({ summary: 1 });
-        query.exec(function (err, _projects) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js get project.find " + err);
-                response.send(500, { error: "Can't find Project" });
-            } else {
-                //res['data'] = taskFormatDate(_tasks, 0);
-                res['data'] = _projects;
-                console.log(res['data']);
-                console.log(data.page);
-                console.log(data.count);
-                console.log(data.parrentContentId);
-                response.send(res);
-            }
-        });
+    //    var res = {};
+    //    res['data'] = [];
+    //    var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : project.find({});
+    //    query.populate('project', '_id projectShortDesc projectName');
+    //    query.populate('assignedTo', '_id name imageSrc');
+    //    query.populate('projectmanager', 'name');
+    //    query.populate('extrainfo.customer');
+    //    query.populate('workflow');
+    //    query.skip((data.page - 1) * data.count).limit(data.count);
+    //    query.sort({ summary: 1 });
+    //    query.exec(function(err, _projects) {
+    //        if (err) {
+    //            console.log(err);
+    //            logWriter.log("Project.js get project.find " + err);
+    //            response.send(500, { error: "Can't find Project" });
+    //        } else {
+    //            //res['data'] = taskFormatDate(_tasks, 0);
+    //            res['data'] = _projects;
+    //            console.log(res['data']);
+    //            console.log(data.page);
+    //            console.log(data.count);
+    //            console.log(data.parrentContentId);
+    //            response.send(res);
+    //        }
+    //    });
+    //}
 
 
-
-        //========================
-        /*
+    //========================
         var res = {};
         res['data'] = [];
         var query = project.find({});
         query.populate("projectmanager customer task").populate('workflow');
         query.sort({ projectName: 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, projects) {
             if (err) {
                 console.log(err);
@@ -482,9 +482,9 @@ var Project = function (logWriter, mongoose) {
             catch (Exception) {
                 console.log(Exception);
                 logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
-                //response.send(500, { error: "Can't find Projects" });
+                response.send(500, { error: "Can't find Projects" });
             }
-        }*/
+        }
     };
 
     function getById(data, response) {

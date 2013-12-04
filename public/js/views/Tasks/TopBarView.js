@@ -38,16 +38,13 @@ define([
                     this.collection = options.collection;
                     this.collection.bind('reset', _.bind(this.render, this));
                 }
-
-
-
                 this.render();
             },
 
             render: function () {
                 var viewType = Custom.getCurrentVT();
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
-                Common.displayControlBtnsByActionType(this.actionType, viewType);
+                Common.displayControlBtnsByActionType('Content', 'form');
                 return this;
             },
 

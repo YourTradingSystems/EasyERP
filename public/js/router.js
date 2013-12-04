@@ -71,6 +71,10 @@ define([
                     success: function (model, response, options) {
                         var topBarView = new TopBarView({ actionType: "Content" });
                         var contentView = new ContentFormView({ model: model });
+                        
+                        topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
+                        topBarView.bind('editEvent', contentView.editItem, contentView);
+                        
                         contentView.render();
                         self.changeView(contentView);
                         self.changeTopBarView(topBarView);
