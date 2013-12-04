@@ -25,6 +25,7 @@ define([
         },
 
         goToList: function (contentType) {
+            debugger;
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",

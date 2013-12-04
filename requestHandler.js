@@ -236,7 +236,7 @@ var requestHandler = function (fs, mongoose) {
     function getProjects(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn) {
-            project.get(res);
+            project.get(data, res);
         } else {
             res.send(401);
         }

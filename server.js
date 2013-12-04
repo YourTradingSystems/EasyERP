@@ -299,16 +299,13 @@ app.get('/Projects/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(')))))))))))))data :');
-    console.log(data);
-    viewType = req.params.viewType;
-    requestHandler.getProjectsById(req, res, data);
-  /*  switch (viewType) {
+    var viewType = req.params.viewType;
+    switch (viewType) {
         case "form": requestHandler.getProjectsById(req, res, data);
             break;
-        default: requestHandler.getTasksByProjectId(req, res, data);
+        default: requestHandler.getProjects(req, res, data);
             break;
-    }*/
+    }
 
 });
 
