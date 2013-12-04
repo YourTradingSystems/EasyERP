@@ -65,7 +65,7 @@ define([
                 if ($(e.target).attr("id") == "tasksKanban") {
                     Backbone.history.navigate("#easyErp/Tasks/kanban/" + this.model.get("_id"), { trigger: true });
                 } else {
-                    Backbone.history.navigate("#easyErp/Tasks/list/" + this.model.get("_id"), { trigger: true });
+                    Backbone.history.navigate("#easyErp/Tasks/list", { trigger: true });
                 }
 				return false;
             },

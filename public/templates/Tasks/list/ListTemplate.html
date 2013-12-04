@@ -1,25 +1,8 @@
-<table class="list task-list">
-    <thead>
-        <tr>
-            <th>
-                <input type="checkbox" class="checkbox" id="check_all" /></th>
-            <th>#</th>
-            <th>Project</th>
-            <th>ProjectID</th>
-            <th>Task Summary</th>
-            <th>TaskID</th>           
-            <th>Assigned to</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Progress</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
+
         <% tasksCollection.forEach(function(task, index){ %>
         <tr data-index="<%= index %>" data-id="<%= task._id%>">
             <td><input type="checkbox" value="<%=task._id%>" class="checkbox" /></td>
-            <td><%= index + 1 %></td>
+            <td><%= index + startNumber + 1 %></td>
             <td><%=(task.project) ? task.project.projectName : ''%></td>
             <td><%=(task.project) ? task.project.projectShortDesc : ''%></td>
             <td><%=task.summary%></td>
@@ -31,5 +14,3 @@
             <td><%=(task.workflow) ? task.workflow.name : ''%></td>
         </tr>
         <% }) %>
-    </tbody>
-</table>
