@@ -25,15 +25,40 @@ define([
 
         goToList: function (contentType) {
             if (this.mainView == null) this.main();
-            var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
+            var ContentViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+                CollectionUrl = "collections/" + contentType + "/filterCollection";
+
+            var self = this;
+
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50 });
+
+              //  collection.bind('reset', _.bind(createViews, self));
+
+              /*  function createViews() {
+                    var contentView = new ContentView({ collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+
+                    topBarView.bind('createEvent', contentView.createItem, contentView);
+                    topBarView.bind('editEvent', contentView.editItem, contentView);
+
+                    collection.bind('add', contentView.showMoreContent, contentView);
+                    this.changeView(contentView);
+                    this.changeTopBarView(topBarView);
+                    var url = '#easyErp/' + contentType + '/list';
+                    Backbone.history.navigate(url, { replace: true });
+                }*/
+            });
+
+
+
         },
 
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
-            var ContentFormModelUrl = "collections/" + contentType + "Collection",
-                ContentFormViewUrl = "views/" + contentType + "/list/ListView",
+            var ContentFormModelUrl = "model/" + contentType + "Model",
+                ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
             var self = this;
 
