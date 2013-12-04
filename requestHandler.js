@@ -298,6 +298,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     function getTasksByProjectId(req, res, data) {
         console.log("Requst getTasksByProjectId is success");
         if (req.session && req.session.loggedIn) {
@@ -398,12 +399,14 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //---------------------Companies-------------------------------
+
     function getCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            customer.getCompanies(res);
+            customer.getCompanies(data, res);
         } else {
             res.send(401);
         }

@@ -1,20 +1,20 @@
 ﻿define([
-        'text!templates/Tasks/kanban/WorkflowsTemplate.html',
+        'text!templates/Companies/kanban/WorkflowsTemplate.html',
         'collections/Workflows/WorkflowsCollection',
-        'views/Tasks/kanban/KanbanItemView',
-        'views/Tasks/EditView',
-        'views/Tasks/CreateView'
+        'views/Companies/kanban/KanbanItemView',
+        'views/Companies/EditView',
+        'views/Companies/CreateView'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView, CreateView) {
-    var TaskKanbanView = Backbone.View.extend({
+function (WorkflowsTemplate, WorkflowsCollection, CompaniesKanbanItemView, EditView, CreateView) {
+    var CompanyKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
             "click #showMore": "showMore",
-            "dblclick .task-header, .task-content": "gotoEditForm",
-            "click .task-header, .task-content": "selectItem"
+            "dblclick .company-header, .company-content": "gotoEditForm",
+            "click .company-header, .company-content": "selectItem"
         },
         initialize: function (options) {
-            this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
+            this.workflowsCollection = new WorkflowsCollection({ id: 'Company' });
             this.workflowsCollection.bind('reset', this.render, this);
             this.collection = options.collection;
         },
@@ -47,7 +47,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                 var kanbanItemView;
                 var modelByWorkflows = newModels.filterByWorkflow(workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new TasksKanbanItemView({ model: wfModel });
+                    kanbanItemView = new CompaniesKanbanItemView({ model: wfModel });
                     column.append(kanbanItemView.render().el);
                     counter++;
                     remaining += wfModel.get("remaining");
@@ -78,7 +78,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                 var kanbanItemView;
                 var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new TasksKanbanItemView({ model: wfModel });
+                    kanbanItemView = new CompaniesKanbanItemView({ model: wfModel });
                     column.append(kanbanItemView.render().el);
                     counter++;
                     remaining += wfModel.get("remaining");
@@ -129,5 +129,5 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         }
     });
 
-    return TaskKanbanView;
+    return CompanyKanbanView;
 });

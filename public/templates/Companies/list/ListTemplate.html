@@ -1,13 +1,4 @@
     <table class="list">
-        <thead>
-            <tr>
-                <th><input type="checkbox" class="checkbox" id="check_all"/></th>
-                <th>N</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
         <tbody>
             <% companiesCollection.forEach(function(company, index){ %>
             <tr data-index="<%=index + 1%>" data-id="<%=company._id%>">

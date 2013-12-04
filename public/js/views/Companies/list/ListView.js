@@ -1,11 +1,11 @@
 define([
-    'text!templates/Tasks/list/ListHeader.html',
-    'views/Tasks/CreateView',
-    'views/Tasks/list/ListItemView'
+    'text!templates/Companies/list/ListHeader.html',
+    'views/Companies/CreateView',
+    'views/Companies/list/ListItemView'
 ],
 
-function (TasksListTemplate, CreateView, ListItemView) {
-    var TasksListView = Backbone.View.extend({
+function (CompaniesListTemplate, CreateView, ListItemView) {
+    var CompaniesListView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
@@ -23,8 +23,8 @@ function (TasksListTemplate, CreateView, ListItemView) {
 
         render: function () {
 
-            console.log('Tasks render');
-            this.$el.html(_.template(TasksListTemplate));
+            console.log('Companies render');
+            this.$el.html(_.template(CompaniesListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
                 var c = this.checked;
@@ -46,7 +46,7 @@ function (TasksListTemplate, CreateView, ListItemView) {
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
-            window.location.hash = "#easyErp/Tasks/form/" + id;
+            window.location.hash = "#easyErp/Companies/form/" + id;
         },
 
         createItem: function () {
@@ -81,5 +81,5 @@ function (TasksListTemplate, CreateView, ListItemView) {
 
     });
 
-    return TasksListView;
+    return CompaniesListView;
 });

@@ -12,7 +12,7 @@ define([
     'views/Companies/EditView'
 ],
 
-    function (TasksListTemplate, TasksFormTemplate, EditView) {
+    function (CompaniesListTemplate, CompaniesFormTemplate, EditView) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -21,7 +21,7 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                this.$el.html(_.template(TasksFormTemplate, formModel));
+                this.$el.html(_.template(CompaniesFormTemplate, formModel));
                 return this;
             },
             
@@ -38,7 +38,7 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/Tasks/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/Companies/list", { trigger: true });
                     }
                 });
 

@@ -1,9 +1,9 @@
 define([
-        "text!templates/Tasks/kanban/KanbanItemTemplate.html",
+        "text!templates/Companies/kanban/KanbanItemTemplate.html",
         "common"
 ],
     function (KanbanItemTemplate, common) {
-        var TasksItemView = Backbone.View.extend({
+        var CompaniesItemView = Backbone.View.extend({
             className: "item",
 
             colors:[
@@ -28,7 +28,7 @@ define([
                 //"click #delete": "deleteEvent",
                 //"click .dropDown > a": "openDropDown",
                 //"click .colorPicker a": "pickColor",
-                //"click .task-content": "gotoForm",
+                //"click .company-content": "gotoForm",
                 //"click #edit": "gotoEditForm",
             },
 
@@ -38,13 +38,13 @@ define([
                 e.preventDefault();
                 var itemIndex = $(e.target).closest(".item").data("index") + 1;
                 //var inder = this.data("index");
-                window.location.hash = "#home/action-Tasks/Edit/" + itemIndex;
+                window.location.hash = "#home/action-Companies/Edit/" + itemIndex;
             },
 
             gotoForm: function (e) {
                 var id = $(e.target).closest(".item").data("id");
                 App.ownContentType = true;
-                window.location.hash = "home/content-Tasks/form/" + id;
+                window.location.hash = "home/content-Companies/form/" + id;
             },
 
             deleteEvent: function (e) {
@@ -70,7 +70,7 @@ define([
             },
 
             changeColor: function (color) {
-                this.$(".colorPicker a").closest(".task-header").css('background-color', color).closest(".item").css('border-color', color);
+                this.$(".colorPicker a").closest(".company-header").css('background-color', color).closest(".item").css('border-color', color);
             },
 
             isLater: function (str1, str2) {
@@ -99,5 +99,5 @@ define([
             }
         });
 
-        return TasksItemView;
+        return CompaniesItemView;
     });

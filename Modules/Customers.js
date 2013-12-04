@@ -283,17 +283,17 @@
             });
         },
         
-        getCompanies: function (response) {
+        getCompanies: function (data, response) {
             var res = {};
             res['data'] = [];
             var query = customer.find({ type: 'Company' });
-            query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName');
+            query.populate('salesPurchases.salesPerson', '_id name');
+            query. populate('salesPurchases.salesTeam', '_id departmentName');
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
+                    logWriter.log("customer.js getCompanies customer.find " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
                     res['data'] = result;
