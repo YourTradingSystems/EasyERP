@@ -25,7 +25,6 @@ define([
         },
 
         goToList: function (contentType) {
-            debugger;
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -125,7 +124,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
-                    var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content"});
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
@@ -141,8 +140,7 @@ define([
         },
 
         getList: function (contentType) {
-            debugger 
-            Custom.getCurrentVT({ contentType: contentType });
+            if (contentType) Custom.getCurrentVT({ contentType: contentType });
         },
 
         changeWrapperView: function (wrapperView) {

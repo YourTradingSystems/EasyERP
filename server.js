@@ -225,11 +225,18 @@ app.post('/Persons', function (req, res) {
     requestHandler.createPerson(req, res, data);
 });
 
-app.get('/Persons', function (req, res) {
-    console.log('---------SERVER----getPersons-------------------------------');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersons(req, res, data);
+app.get('/Persons/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getPersonById(req, res, data);
+            break;
+        default: requestHandler.getPersons(req, res, data);
+            break;
+    }
 });
 
 app.put('/Persons/:_id', function (req, res) {
