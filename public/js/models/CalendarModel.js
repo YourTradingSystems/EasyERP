@@ -4,9 +4,7 @@ define(function () {
             initialize: function(){
 
             },
-            defaults:{
-               eventType: 'call'
-            },
+
             urlRoot: "/Calendars"
         });
 

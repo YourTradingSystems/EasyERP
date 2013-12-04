@@ -1,13 +1,12 @@
 define([
     "text!templates/JobPositions/EditTemplate.html",
-    "text!templates/JobPositions/editSelectTemplate.html",
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     "custom",
     'common'
 ],
-    function (EditTemplate, editSelectTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common) {
+    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -21,7 +20,7 @@ define([
             },
 
             events: {
-                "click .breadcrumb a": "changeWorkflow",
+                "click .breadcrumb a": "changeWorkflow"
             },
 
             /*changeWorkflow: function (e) {

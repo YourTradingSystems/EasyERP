@@ -16,6 +16,7 @@ define([
             "home": "main",
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
+            "easyErp/:contentType/thumbnails(/:parrentContentId)": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
             "easyErp/:contentType/list": "goToList",
             "home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
@@ -97,12 +98,40 @@ define([
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
                     
-                    collection.bind('add', contentView.showMoreContent, contentView);
+                    collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/kanban';
-                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
-                    Backbone.history.navigate(url, { replace: true });
+                    //var url = '#easyErp/' + contentType + '/kanban';
+                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    //Backbone.history.navigate(url, { replace: true });
+                }
+            });
+        },
+        
+        goToThumbnails: function (contentType, parrentContentId) {
+            if (this.mainView == null) this.main();
+            var ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+
+            self = this;
+
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                collection = new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId });
+                collection.bind('reset', _.bind(createViews, self));
+                function createViews() {
+                    var contentView = new ContentView({ collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+
+                    topBarView.bind('createEvent', contentView.createItem, contentView);
+                    topBarView.bind('editEvent', contentView.editItem, contentView);
+
+                    collection.bind('showmore', contentView.showMoreContent, contentView);
+                    this.changeView(contentView);
+                    this.changeTopBarView(topBarView);
+                    var url = '#easyErp/' + contentType + '/thumbnails';
+                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    //Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

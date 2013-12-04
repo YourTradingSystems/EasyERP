@@ -27,9 +27,14 @@
                     error: this.fetchError
                 });
             },
-
+            filterByWorkflow: function (id) {
+                return this.filter(function (data) {
+                    return data.get("workflow")._id == id;
+                });
+            },
             showMore: function (options) {
                 var that = this;
+                
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -40,11 +45,14 @@
                 filterObject['count'] = (filterObject.hasOwnProperty('count')) ? filterObject['count'] : 10;
                 this.fetch({
                     data: filterObject,
-                    success: function(models) {
+                    waite: true,
+                    success: function (models) {
                         that.page += 1;
-                        that.trigger('add', models);
+                        that.trigger('showmore', models);
                     },
-                    error: this.fetchError
+                    error: function() {
+                        alert('Some Error');
+                    }
                 });
             },
 
@@ -61,8 +69,7 @@
                 return response.data;
             },
 
-            fetchError: function (error) {
-            }
+            
         });
 
         return TasksCollection;

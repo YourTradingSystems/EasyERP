@@ -111,7 +111,7 @@ function(EmployeesCollection){
             {name:"summary", height:30, type:"textarea", map_to:"summary", defaultValue:"New Event"},
             {name:"description", height:70, type:"textarea", map_to:"description"},
             {name:"time", height:72, type:"calendar_time", map_to:"auto" },
-            {name:"assignTo", height: 30, type:"select", map_to: "assignTo", options: personsOptions},
+            {name:"assignTo", height: 30, type:"select", map_to: "assignedTo", options: personsOptions},
             {name:"status", height: 30, type:"select", map_to: "status", options: statusOptions},
             {name:"priority", height: 30, type:"select", map_to: "priority", options: priorityOptions}
         ];

@@ -32,7 +32,7 @@ define([
             changeWorkflows: function () {
                 var name = this.$("#workflowNames option:selected").val();
                 var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
+                //$("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
             switchTab: function (e) {

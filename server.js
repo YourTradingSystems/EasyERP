@@ -317,9 +317,9 @@ app.get('/Tasks/:viewType', function (req, res) {
     console.log(req.params);
     viewType = req.params.viewType;
     switch (viewType) {
-        case "kanban": requestHandler.getTasksByProjectId(req, res, data);
-            break;
         case "form": requestHandler.getTaskById(req, res, data);
+            break;
+        default: requestHandler.getTasksByProjectId(req, res, data);
             break;
     }
 
@@ -578,6 +578,7 @@ app.get('/Applications', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getApplications(req, res, data);
 });
+
 app.get('/Applications/:viewType', function (req, res) {
     data = {};
     for (var i in req.query) {
@@ -593,6 +594,7 @@ app.get('/Applications/:viewType', function (req, res) {
     }
 
 });
+
 app.post('/Applications', function (req, res) {
     console.log('-------------------/createEmployee-----------------------------');
     data = {};
@@ -708,6 +710,21 @@ app.post('/Opportunities', function (req, res) {
     requestHandler.createOpportunitie(req, res, data);
 });
 
+app.get('/Opportunities/:viewType', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    console.log(req.params);
+    viewType = req.params.viewType;
+    switch (viewType) {
+        case "kanban": requestHandler.getFilterOpportunities(req, res, data);
+            break;
+            //case "form": requestHandler.getApplicationById(req, res, data);
+            //    break;
+    }
+});
+
 app.get('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -755,14 +772,14 @@ app.put('/Events/:_id', function (req, res) {
 app.delete('/Events/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
+    //data.mid = req.headers.mid;
     requestHandler.removeEvent(req, res, id, data);
 });
 
 app.post('/Calendars', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    data.event = req.body;
+    data.calendar = req.body;
     requestHandler.createCalendar(req, res, data);
 });
 
