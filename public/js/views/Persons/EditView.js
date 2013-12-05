@@ -35,6 +35,14 @@ define([
                 if (dateBirthSt) {
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 }
+                var company = $('#companiesDd option:selected').val();
+                company = (company) ? company : null;
+                
+                var department = $("#department option:selected").val();
+                department = (department) ? department : null;
+
+                jobPosition = $('#jobPositionInput').val();
+                jobPosition = (jobPosition) ? jobPosition : null;
 
                 var data = {
                     imageSrc: this.imageSrc,
@@ -43,8 +51,8 @@ define([
                         last: $('#lastName').val()
                     },
                     dateBirth: dateBirth,
-                    department: $("#department option:selected").val(),
-                    company: $('#companiesDd option:selected').val(),
+                    department: department,
+                    company: company,
                     address: {
                         street: $('#addressInput').val(),
                         city: $('#cityInput').val(),
@@ -53,7 +61,7 @@ define([
                         country: $('#countryInput').val()
                     },
                     website: $('#websiteInput').val(),
-                    jobPosition: $('#jobPositionInput').val(),
+                    jobPosition: jobPosition,
                     skype: $('#skype').val(),
                     phones: {
                         phone: $('#phoneInput').val(),
@@ -76,7 +84,7 @@ define([
                     success: function (model) {
                         debugger;
                         $('.edit-person-dialog').remove();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/Persons", { trigger: true });
                     },
                     error: function (model, xhr, options) {
                         if (xhr && xhr.status === 401) {
