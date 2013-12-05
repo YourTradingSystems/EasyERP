@@ -1,6 +1,6 @@
 
     <% opportunitiesCollection.forEach(function(opportunity, index){ %>
-        <tr id="<%=opportunity._id%>">
+        <tr data-index="<%= index %>" data-id="<%=opportunity._id%>">
             <td><input type="checkbox" value="<%=opportunity._id%>" class="checkbox" /></td>
             <td><%=index + startNumber + 1 %></td>
             <td><%=opportunity.creationDate%></td>
