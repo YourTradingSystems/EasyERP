@@ -790,11 +790,10 @@ app.get('/Opportunities/:viewType', function (req, res) {
     }
     console.log(req.params);
     viewType = req.params.viewType;
-    switch (viewType) {
-        case "kanban": requestHandler.getFilterOpportunities(req, res, data);
-            break;
-            //case "form": requestHandler.getApplicationById(req, res, data);
-            //    break;
+    switch (viewType) {	
+    case "form": requestHandler.getOpportunityById(req, res, data);
+    	break;
+    default: requestHandler.getFilterOpportunities(req, res, data);
     }
 });
 

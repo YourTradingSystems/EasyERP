@@ -3417,7 +3417,7 @@ table#workflows {
 	}
 	
 }
-.dhx_wrap_section{
+.dhx_wrap_section,.dhx_section_time, .dhx_cal_larea{
 	overflow:visible !important;
 }
 .chosen-container{
@@ -3425,4 +3425,60 @@ table#workflows {
 }
 #newAssignedTo{
 	display:none;
+}
+.newTimeSelectContainer{
+	position:relative;
+	z-index:2000;
+    color: #36a9e1;
+	cursor:pointer;
+	margin-left:10px;
+	&:hover{
+		text-decoration:underline;
+	}
+}
+.timeModal{
+	z-index:2000;
+	position:absolute;
+	width:240px;
+	background-color:white;
+	border:1px solid silver;
+	margin-left:-105px;
+	color:black;
+	.hours{
+		div{
+			width:19px;
+			float:left;
+			text-align:center;
+			cursor:pointer;
+			line-height:20px;
+			border:1px solid #a0a0a0;
+			border-top:none;
+			border-left:none;
+			background-color:#f0f0f0;
+			&:hover{
+				background-color:#bfcddb;
+			}
+			&.active{
+				background-color:#3399ff;
+			}
+		}
+	}
+	.minute{
+		div{
+			width:40px;
+			float:left;
+			text-align:center;
+			cursor:pointer;
+			line-height:20px;
+			&:hover{
+				background-color:#bfcddb;
+
+			}
+			&.active{
+				background-color:#3399ff;
+			}
+
+		}
+	}
+
 }

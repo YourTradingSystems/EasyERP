@@ -9,7 +9,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
             currency: { type: String, default: '' }
         },
         creationDate: { type: Date, default: Date.now },
-        tempCompanyField: { type: String, default: '' },                    //Назва компанії у Ліда, до його конвертації у Оппорт
+        tempCompanyField: { type: String, default: '' },                    //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ? пїЅ ЛіпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         company: { type: ObjectId, ref: 'Customers', default: null },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         address: {
@@ -237,7 +237,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
             }
         });
     };
-    
+
     function getById(id, response) {
         var query = opportunitie.findById(id);
         query.populate('company customer salesPerson salesTeam workflow');
@@ -295,7 +295,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
         try {
             delete data._id;
             var createPersonCustomer = function (company) {
-                if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //кастомер Person
+                if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Person
                     var _person = {
                         name: data.contactName,
                         email: data.email,
@@ -329,7 +329,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
                             });
                         }
                     });
-                }                                              //кінець кастомер Person
+                }                                              //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Person
             };
 
             if (data.company && data.company._id) {
@@ -358,11 +358,11 @@ var Opportunities = function (logWriter, mongoose, customer) {
                     logWriter.log("Opportunities.js update opportunitie.update " + err);
                     res.send(500, { error: "Can't update Opportunities" });
                 } else {
-                    if (data.createCustomer) {                       //створити кастомера
+                    if (data.createCustomer) {                       //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                         console.log('************Cre Cust***********');
                         console.log(data.tempCompanyField);
                         console.log('*******************************');
-                        if (data.tempCompanyField) {                          //кастомер Компанія
+                        if (data.tempCompanyField) {                          //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                             var _company = {
                                 name: {
                                     first: data.tempCompanyField,
@@ -406,7 +406,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
                                 }
                             });
 
-                        } else {                                              //кінець кастомер Компанія
+                        } else {                                              //РєС–РЅРµС†СЊ РєР°СЃС‚РѕРјРµСЂ РљРѕРјРїР°РЅС–СЏ
                             createPersonCustomer({});
                         }
                     }
@@ -426,7 +426,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
         res['data'] = [];
         var query = opportunitie.find();
         query.where('isOpportunitie', true);
-        query.populate('relatedUser department jobPosition workflow');
+        query.populate('relatedUser customer department jobPosition workflow');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ 'name.first': 1 });
         query.exec(function (err, opportunities) {
@@ -472,4 +472,3 @@ var Opportunities = function (logWriter, mongoose, customer) {
     }
 };
 module.exports = Opportunities;
-
