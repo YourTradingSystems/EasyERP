@@ -237,11 +237,45 @@ var Opportunities = function (logWriter, mongoose, customer) {
             }
         });
     };
+    
+    function getById(id, response) {
+        var query = opportunitie.findById(id);
+        query.populate('company customer salesPerson salesTeam workflow');
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Opportunities.js get job.find' + err);
+                response.send(500, { error: "Can't find Opportunities" });
+            } else {
+                response.send(result);
+            }
+        });
+    };
 
     function getLeads(response) {
         var res = {};
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: false });
+        query.sort({ name: 1 });
+        query.populate('customer salesPerson salesTeam workflow');
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Leads.js get lead.find' + err);
+                response.send(500, { error: "Can't find Leads" });
+            } else {
+                res['data'] = result;
+                console.log(res);
+                response.send(res);
+            }
+        });
+    };
+    
+    function getLeadsCustom(data, response) {
+        var res = {};
+        res['data'] = [];
+        var query = opportunitie.find({ isOpportunitie: false });
+        query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ name: 1 });
         query.populate('customer salesPerson salesTeam workflow');
         query.exec(function (err, result) {
@@ -391,7 +425,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
         var res = {};
         res['data'] = [];
         var query = opportunitie.find();
-        query.where('isOpportunitie', false);
+        query.where('isOpportunitie', true);
         query.populate('relatedUser department jobPosition workflow');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ 'name.first': 1 });
@@ -424,9 +458,13 @@ var Opportunities = function (logWriter, mongoose, customer) {
 
         get: get,
 
+        getById: getById,
+
         getFilterOpportunities: getFilterOpportunities,
 
         getLeads: getLeads,
+
+        getLeadsCustom: getLeadsCustom,
 
         update: update,
 

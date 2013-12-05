@@ -1,28 +1,12 @@
-    <table class="list">
-        <thead>
-            <tr>
-                <th><input type="checkbox" class="checkbox" id="check_all"/></th>
-                <th>N</th>
-                <th>Creation Date</th>
-                <th>Subject</th>
-                <th>Contact Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Stage</th>
-            </tr>
-        </thead>
-        <tbody>
-        <% leadsCollection.forEach(function(lead, index){ %>
-            <tr data-id="<%=lead._id%>">
-                <td><input type="checkbox" value="<%=lead._id%>" class="checkbox"/></td>
-                <td><%=index+1%></td>
-                <td><%=lead.creationDate%></td>
-                <td><%=lead.name%></td>
-                <td><%=lead.contactName.first%> <%=lead.contactName.last%></td>
-                <td><%=lead.email%></td>
-                <td><%=lead.phones.phone%></td>
-                <td><%=(lead.workflow) ? lead.workflow.name : ''%></td>
-            </tr>
-        <% }) %>
-        </tbody>
-    </table>
+<% leadsCollection.forEach(function(lead, index){ %>
+<tr data-id="<%=lead._id%>">
+    <td><input type="checkbox" value="<%=lead._id%>" class="checkbox" /></td>
+    <td><%=index+1%></td>
+    <td><%=lead.creationDate%></td>
+    <td><%=lead.name%></td>
+    <td><%=lead.contactName.first%> <%=lead.contactName.last%></td>
+    <td><%=lead.email%></td>
+    <td><%=lead.phones.phone%></td>
+    <td><%=(lead.workflow) ? lead.workflow.name : ''%></td>
+</tr>
+<% }) %>
