@@ -178,6 +178,17 @@ var requestHandler = function (fs, mongoose) {
         }
         // console.log("Requst getPersons is success");
     };
+    
+    function getFilterPersons(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+            customer.getFilterPersons(data, res);
+        } else {
+            res.send(401);
+        }
+        // console.log("Requst getPersons is success");
+    };
 
     function getPersonById(req, res, data) {
         console.log("Requst getPersons is success");
@@ -417,7 +428,7 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            customer.getCompanies(data, res);
+            customer.getCompanies(res);
         } else {
             res.send(401);
         }
@@ -935,6 +946,7 @@ var requestHandler = function (fs, mongoose) {
         // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,
+        getFilterPersons: getFilterPersons,
 
         getProjects: getProjects,
         getProjectsById: getProjectsById,

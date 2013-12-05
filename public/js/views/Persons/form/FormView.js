@@ -367,6 +367,7 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
+                
                 this.$el.html(_.template(PersonFormTemplate, formModel));
                 this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
@@ -396,7 +397,7 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/Persons/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/Persons/thumbnails", { trigger: true });
                     }
                 });
 

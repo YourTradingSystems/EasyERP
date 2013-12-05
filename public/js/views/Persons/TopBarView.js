@@ -46,7 +46,7 @@ define([
                 var viewType = Custom.getCurrentVT();
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType}));
 
-                Common.displayControlBtnsByActionType(this.actionType, viewType);
+                Common.displayControlBtnsByActionType('Content', viewType);
                 return this;
             },
 

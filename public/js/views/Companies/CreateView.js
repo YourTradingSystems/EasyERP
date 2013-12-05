@@ -3,7 +3,7 @@ define([
     "collections/Companies/CompaniesCollection",
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
-    "models/CompanyModel",
+    "models/CompaniesModel",
     "common",
     "custom"
 ],
@@ -15,6 +15,8 @@ define([
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function (options) {
+                _.bindAll(this, "saveItem", "render");
+                this.model = new PersonModel();
                 this.render();
             },
 
@@ -113,7 +115,7 @@ define([
                         wait: true,
                         success: function (model) {
 							self.hideDialog();
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+							Backbone.history.navigate("easyErp/Companies/thumbnails", { trigger: true });
                         },
                         error: function () {
                             Backbone.history.navigate("home", { trigger: true });
