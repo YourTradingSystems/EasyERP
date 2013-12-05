@@ -43,66 +43,118 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             }
         },
 
-        hideDialog: function(){
-            $('#addCalendarDlg').remove();
-        },
+       hideDialog: function(){
+           $('#addCalendarDlg').remove();
+       },
 
-        createNewCalendar: function(data){
-            var self = this;
-            this.calendarsCollection.create({
-                summary: data.calName,
-                synchronize: data.sync,
-                description: "EasyERP calendar events",
-                events: []
-            },{
-                success:function(){
-                    self.calendarsCollection.fetch({
-                        success: function(){
-                            self.populateCalendarsList();
-                        }
-                    });
-                }
-            });
-        },
+       createNewCalendar: function(data){
+           var calendar ={};
+           var self = this;
+           if (data.link){
+               $.ajax({
+                   type: "GET",
+                   url: data.link,
+                   data: null,
+                   success: function(response){
+                       if(response.error){
+                           throw new Error(response.error.message);
+                       } else{
 
-        showCreateCalendarDlg: function(){
-            var self = this;
-            var formString =  this.createDlgTpl();
-            var dialog = $(formString).dialog({
-                title: "Create Calendar",
-                dialogClass: "edit-dialog",
-                width: 300,
-                buttons:{
-                    create:{
-                        text: "Create",
-                        click: function(){
-                            var calendarName = $('#calendarNameTxt').val();
-                            var synchronize = $('#synchronize').attr('checked');
-                            if(calendarName.length === 0){
-                                alert('Calendar name can not be empty!');
-                                return;
-                            }
-                            self.createNewCalendar({calName : calendarName, sync:synchronize});
-                            self.hideDialog();
-                        }
-                    },
-                    cancel:{
-                        text: "Cancel",
-                        click:self.hideDialog
-                    }
+                           calendar.summary = $(response).find(">title").text();
+                           calendar.id = $(response).find(">id").text().split("/")[6];
+                           calendar.description = $(response).find(">subtitle").text();
+                           var events = []
+                           $(response).find(">entry").each(function(){
+                               var item = {};
+                               item.title=$(this).find("title").text();
+                               item.summary=$(this).find("content").text().replace(/<br \/>/g," ").replace(/\n/g,"")
+                               item.description=$(this).find("content").text().replace(/<br \/>/g," ").replace(/\n/g,"")
+                               item.id=$(this).find("id").text().split("/")[6];
+                               item.start = {}
+                               item.start.dateTime=new Date().toISOString();
+                               item.end = {}
+                               item.end.dateTime = new Date().toISOString();
+                               events.push(item);
+                               
+                           });
+                           calendar.items=events;
+                           dataService.postData("/GoogleCalSync", {mid:39, calendars:[calendar]}, function(resp){
+                               self.calendarsCollection.fetch({
+                                   success: function(){
+                                       self.populateCalendarsList();
+                                   }
+                               });
+                           });
+                       }
 
-                }
-            });
-        },
+                   },
+                   error: function (error){
+                       throw new Error(error.message);
+                   },
+                   dataType: "jsonp"
+               });
+           }
+           else{
+               this.calendarsCollection.create({
+                   summary: data.calName,
+                   synchronize: data.sync,
+                   description: "EasyERP calendar events",
+                   events: []
+               },{
+                   success:function(){
+                       self.calendarsCollection.fetch({
+                           success: function(){
+                               self.populateCalendarsList();
+                           }
+                       });
+                   }
+               });}
+       },
+       createNewCalendarOnGoogle:function(){
+           
+       },
+       showCreateCalendarDlg: function(){
+           var self = this;
+           var formString =  this.createDlgTpl();
+           var dialog = $(formString).dialog({
+               title: "Create Calendar",
+               dialogClass: "edit-dialog",
+               width: 300,
+               buttons:{
+                   create:{
+                       text: "Create",
+                       click: function(){
+                           var calendarName = $('#calendarNameTxt').val();
+                           var synchronize = $('#synchronize').attr('checked');
+                           var link = $('#fromPublicCalendar').val();
+                           if(calendarName.length === 0){
+                                                         alert('Calendar name can not be empty!');
+                                                         return;
+                                                        }
+                           self.createNewCalendar({calName : calendarName, sync:synchronize,link:link});
+                           self.hideDialog();
+                       }
+                   },
+                   cancel:{
+                       text: "Cancel",
+                       click:self.hideDialog
+                   }
+               }
+           });
+       },
+        
 
-        curCalendarChange: function(){
-            var curCalendarId = $('select#calendarList').val();
-            var currentCalendarId = curCalendarId.length > 0 ? curCalendarId[0] : $('#calendarList option:selected').val();
-            this.setCurrentCalendarId(currentCalendarId);
-            var filtered = this.eventsCollection.filterById(curCalendarId);
-            this.displayEventsOnCalendar(filtered);
-        },
-
+       curCalendarChange: function(){
+           var curCalendarId = $('#calendarList').val();
+           if (!curCalendarId){
+               $('#calendarList option').eq(0).attr("selected","selected");
+               curCalendarId = $('#calendarList').val();
+           }
+           var currentCalendarId = curCalendarId.length > 0 ? curCalendarId[0] : $('#calendarList option:selected').val();
+           this.setCurrentCalendarId(currentCalendarId);
+           var filtered = this.eventsCollection.filterById(curCalendarId);
+           this.displayEventsOnCalendar(filtered);
+       },
         closeSyncDialog: function(){
             $('#syncDialog').remove();
         },
@@ -226,53 +278,6 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         clearLocalStorage: function(){
             common.deleteFromLocalStorage('calendars');
             common.deleteFromLocalStorage('token');
-        },
-
-        saveCalendarsToDB: function(calendarArray){
-            _.each(calendarArray, function(item){
-                var cal = new CalendarModel();
-                cal.save(item,{
-                    headers: { mid: 39 },
-                    success: function(){ console.log('saved calendar'); }
-                });
-            });
-            this.populateCalendarsList();
-        },
-        saveEventsToDB: function(eventsArray, calendarId){
-            var self = this;
-            if(eventsArray && eventsArray.length > 0){
-                this.mockFunc = _.after(eventsArray.length, function(){
-                    self.eventsCollection.fetch({
-                        data: $.param({
-                            mid: 39
-                        }),
-                        reset: true
-                    });
-                });
-                _.each(eventsArray, function(item){
-                    var event = new EventModel({
-                        summary: item.summary,
-                        id: item.id,
-                        status: item.status,
-                        description: item.description,
-                        start_date: item.start.dateTime,
-                        end_date: item.end.dateTime,
-                        calendarId: calendarId
-                    });
-                    event.save({},{
-                        headers: { mid: 39 },
-                        success: function(){
-                            console.log('saved events');
-                            self.mockFunc();
-                        }
-                    });
-                });
-            }
-            this.closeSyncDialog();
-        },
-
-        mockFunc: function(){
-            console.log('mock');
         },
 
         render: function () {

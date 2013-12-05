@@ -435,7 +435,7 @@ var Project = function (logWriter, mongoose) {
             }
         });
 
-        var findTasksById = function (_projects, count) {//���������� �������
+        var findTasksById = function (_projects, count) {
             try {
                 if (_projects.length > count) {
                     var _resultProgress = returnProgress(_projects[count].task);

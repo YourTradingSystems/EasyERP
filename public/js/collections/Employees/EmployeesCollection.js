@@ -1,5 +1,5 @@
 define([
-    'models/EmployeeModel'
+    'models/EmployeesModel'
 ],
     function (EmployeeModel) {
         var EmployeesCollection = Backbone.Collection.extend({

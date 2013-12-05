@@ -1,7 +1,7 @@
 define([
-    "collections/Employees/EmployeesCollection"
+    "collections/Users/UsersCollection"
 ],
-function(EmployeesCollection){
+function(UsersCollection){
     var saveEventId;
     var miniCalendar;
 
@@ -17,6 +17,7 @@ function(EmployeesCollection){
         console.log('--------------------Scheduler parse-----------------------');
         scheduler.clearAll();
         scheduler.parse(eventsCollection.toJSON(), "json");
+        //scheduler.backbone(eventsCollection);
     }
 
     var initMiniCalendar = function(miniCalendarDiv){
@@ -30,13 +31,15 @@ function(EmployeesCollection){
     }
 
     var applyTemplates = function(){
-        scheduler.locale.labels.section_assignTo = "Assign To";
+        scheduler.locale.labels.section_assignedTo = "Assigned To";
         scheduler.locale.labels.section_eventType = "Event type";
+        scheduler.locale.labels.section_eventCategory = "Event Category";
         scheduler.locale.labels.section_summary = "Subject";
         scheduler.locale.labels.section_description = "Description";
         scheduler.locale.labels.section_status = "Status";
         scheduler.locale.labels.section_text = "Text";
         scheduler.locale.labels.section_priority = "Priority";
+        scheduler.locale.labels.section_visibility = "Visibility";
         scheduler.config.xml_date = "%Y/%m/%d";
         scheduler.config.separate_short_events = true;
         scheduler.config.event_duration = 60;
@@ -87,10 +90,49 @@ function(EmployeesCollection){
                 return true;
             });
         }
+        if(!scheduler.checkEvent("onLightbox")){
+            scheduler.attachEvent('onLightbox', function(id){
+				$(".dhx_multi_select_assignedTo").hide();
+				var s="<select id='newAssignedTo' multiple>";
+				$(".dhx_multi_select_assignedTo label").each(function(){
+					s+="<option>"+$(this).text()+"</option>";
+				});
+				s+="</select>";
+				$(".dhx_multi_select_assignedTo").parent().append(s);
+				$("#newAssignedTo").chosen({width: "590px;"});
+				$('.chosen-results').on('click','li', function(e) {
+					var n = $('.chosen-results li').index($(this));
+					if ($(".dhx_multi_select_assignedTo label input").eq(n).attr("checked")=="checked"){
+						$(".dhx_multi_select_assignedTo label input").eq(n).removeAttr("checked")
+					}
+					else{
+						$(".dhx_multi_select_assignedTo label input").eq(n).attr("checked","checked")
+					}
+				});
+            });
+        }
+
     }
 
     var applyDefaults = function(personsOptions){
         var personsOptions =  personsOptions;
+        var eventCategoryOptions = [
+            {key:"meetings", label: "Meetings"},
+            {key:"business", label: "Business"},
+            {key:"birthdays", label: "Birthdays"},
+            {key:"incomes", label: "Incomes"},
+            {key:"orders", label: "Orders"},
+            {key:"calls", label: "Calls"},
+            {key:"ideas", label: "Ideas"},
+            {key:"favourites", label: "Favourites"},
+            {key:"clients", label: "Clients"},
+            {key:"private", label: "Private"},
+            {key:"answers", label: "Answers"},
+            {key:"vacations", label: "Vacations"},
+            {key:"holidays", label: "Holidays"},
+            {key:"projects", label: "Projects"},
+            {key:"anniversaries", label: "Anniversaries"}
+        ];
         var eventTypeOptions = [
             {key:"call", label: "Call"},
             {key:"todo", label: "To Do"},
@@ -98,6 +140,7 @@ function(EmployeesCollection){
         ];
         var statusOptions = [
             {key:"notStarted", label:"Not started"},
+            {key:"inProgress", label:"In Progress"},
             {key:"completed", label:"Completed"}
         ];
         var priorityOptions = [
@@ -105,15 +148,21 @@ function(EmployeesCollection){
             { key: "medium", label: "Medium"},
             { key: "high", label: "High"}
         ];
+        var visibilityOptions = [
+            { key: "public", label: "Public"},
+            { key: "private", label: "Private"}
+        ];
 
         scheduler.config.lightbox.sections = [
+            {name:"eventCategory", height:30, type:"select", map_to:"eventCategory", options:eventCategoryOptions},
             {name:"eventType", height:30, type:"select", map_to:"eventType", options:eventTypeOptions},
             {name:"summary", height:30, type:"textarea", map_to:"summary", defaultValue:"New Event"},
             {name:"description", height:70, type:"textarea", map_to:"description"},
             {name:"time", height:72, type:"calendar_time", map_to:"auto" },
-            {name:"assignTo", height: 30, type:"select", map_to: "assignedTo", options: personsOptions},
+            {name:"assignedTo", height: 50, type:"multiselect", map_to: "assignedTo", vertical:"true", options: personsOptions},
             {name:"status", height: 30, type:"select", map_to: "status", options: statusOptions},
-            {name:"priority", height: 30, type:"select", map_to: "priority", options: priorityOptions}
+            {name:"priority", height: 30, type:"select", map_to: "priority", options: priorityOptions},
+            {name:"visibility", height: 30, type:"select", map_to: "visibility", options: visibilityOptions}
         ];
     };
     var attachCalendarId = function(id){
@@ -143,16 +192,16 @@ function(EmployeesCollection){
     }
 
     var populatePersons = function(){
-        var collection = new EmployeesCollection();
+        var collection = new UsersCollection();
         if(collection.length == 0){
             collection.fetch({success: function(fetchedCollection){
                 var personsOptions = $.map(fetchedCollection.toJSON(), function(model, index){
                     return {
                         key: model._id,
-                        label: model.name.first + " " + model.name.last
+                        label: model.login
                     }
                 });
-                personsOptions.unshift({key:'nobody', label:"Nobody"});
+                //personsOptions.unshift({key:'nobody', label:"Nobody"});
                 applyDefaults(personsOptions);
 
             }});

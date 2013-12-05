@@ -5,12 +5,12 @@ define(function () {
         },
         defaults: {
             color: "",
-            assignedTo:"Nobody",
-            description:'',
-            eventType:"call"
+            assignedTo: "Nobody",
+            description: '',
+            eventType: "call"
         },
         urlRoot: "/Events"
     });
 
-    return EventModel;
+        return EventModel;
 });

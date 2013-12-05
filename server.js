@@ -578,6 +578,23 @@ app.get('/Employees', function (req, res) {
     requestHandler.getEmployees(req, res, data);
 });
 
+app.get('/Employees/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    console.log('______________>>');
+    console.log(viewType);
+    switch (viewType) {
+        case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
+            break;
+        default: requestHandler.getEmployeesCustom(req, res, data);
+            break;
+    }
+
+});
+
 app.post('/Employees', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -853,7 +870,6 @@ app.post('/GoogleCalSync', function (req, res) {
     data.calendars = req.body.calendars;
     requestHandler.googleCalSync(req, res, data);
 });
-
 app.listen(8088);
 
 //console.log(app.routes);

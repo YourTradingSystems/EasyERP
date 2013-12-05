@@ -524,13 +524,34 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    function getEmployees(req, res, data) {
+    function getEmployees(req, res) {
         console.log("Requst getEmployee is success");
         if (req.session && req.session.loggedIn) {
             employee.get(res);
         } else {
             res.send(401);
         }
+    };
+
+    // Custom function for list
+    function getEmployeesCustom(req, res, data) {
+        console.log("Requst getEmployeesCustom is success");
+        if (req.session && req.session.loggedIn) {
+            employee.getCustom(data, res);
+        } else {
+            res.send(401);
+        }
+    }
+    // Custom function for form
+    function getEmployeesByIdCustom(req, res, data) {
+        console.log('----------------}');
+        console.log(data);
+        if (req.session && req.session.loggedIn) {
+            employee.getById(data, res);
+        } else {
+            res.send(401);
+        }
+
     };
 
     function getEmployeesById(res, data) {
@@ -935,7 +956,6 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     //---------END------Events----------------------------------
-
     return {
 
         mongoose: mongoose,
@@ -998,6 +1018,8 @@ var requestHandler = function (fs, mongoose) {
 
         createEmployee: createEmployee,
         getEmployees: getEmployees,
+        getEmployeesCustom: getEmployeesCustom,
+        getEmployeesByIdCustom: getEmployeesByIdCustom,
         getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
@@ -1048,7 +1070,6 @@ var requestHandler = function (fs, mongoose) {
         removeCalendar: removeCalendar,
 
         googleCalSync: googleCalSync
-
     }
 }
 //---------EXPORTS----------------------------------------
