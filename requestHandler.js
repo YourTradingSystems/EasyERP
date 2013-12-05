@@ -832,6 +832,22 @@ var requestHandler = function (fs, mongoose) {
         }
     }
 
+    function getOpportunityById(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            opportunities.getById(data.id, res);
+        } else {
+            res.send(401);
+        }
+    }
+
+    function getLeadsCustom(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            opportunities.getLeadsCustom(data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function createLead(req, res, data) {
         if (req.session && req.session.loggedIn) {
             opportunities.create(data.lead, res);
@@ -1074,12 +1090,14 @@ var requestHandler = function (fs, mongoose) {
 
         createLead: createLead,
         getLeads: getLeads,
+        getLeadsCustom:getLeadsCustom,
         updateLead: updateLead,
         removeLead: removeLead,
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
         getOpportunities: getOpportunities,
+        getOpportunityById: getOpportunityById,
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
 

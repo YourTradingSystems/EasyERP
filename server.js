@@ -741,6 +741,19 @@ app.get('/Leads', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getLeads(req, res, data);
 });
+app.get('/Leads/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getOpportunityById(req, res, data);
+            break;
+        default: requestHandler.getLeadsCustom(req, res, data);
+            break;
+    }
+});
 app.post('/Leads', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -778,11 +791,10 @@ app.get('/Opportunities/:viewType', function (req, res) {
     }
     console.log(req.params);
     viewType = req.params.viewType;
-    switch (viewType) {
-        case "kanban": requestHandler.getFilterOpportunities(req, res, data);
-            break;
-            //case "form": requestHandler.getApplicationById(req, res, data);
-            //    break;
+    switch (viewType) {	
+    case "form": requestHandler.getOpportunityById(req, res, data);
+    	break;
+    default: requestHandler.getFilterOpportunities(req, res, data);
     }
 });
 

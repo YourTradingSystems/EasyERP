@@ -22,8 +22,8 @@ define([
 
             ],
 
-            initialize: function () {               
-                this.render();
+            initialize: function (options) {               
+                this.render(options);
             },
 
             events: {
@@ -74,11 +74,12 @@ define([
                 this.$(".colorPicker a").closest(".item").css('border-color', color);
             },
 
-            render: function () {
+            render: function (options) {
                 var index = this.model.collection.indexOf(this.model);
                 //this.$el.html(this.template(this.model.toJSON()));
                 //console.log(this.model);
-                this.$el.html(this.template({ model: this.model.toJSON(), colors: this.colors }));
+                var companyModel = (options && options.companies) ? options.companies : null;
+                this.$el.html(this.template({ model: this.model.toJSON(), colors: this.colors, companies:companyModel}));
                
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", index);

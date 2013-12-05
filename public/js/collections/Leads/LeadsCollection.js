@@ -1,5 +1,5 @@
 define([
-    'models/LeadModel',
+    'models/LeadsModel',
     'common'
 ],
     function (LeadModel, common) {
