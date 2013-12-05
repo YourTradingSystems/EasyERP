@@ -434,6 +434,16 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getCompanyById(req, res, data) {
+        console.log("Requst getCompanies is success");
+        if (req.session && req.session.loggedIn) {
+            //company.get(res);
+            customer.getCompanyById(data.id, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getOwnCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
@@ -984,6 +994,7 @@ var requestHandler = function (fs, mongoose) {
         getTasksPriority: getTasksPriority,
 
         getCompanies: getCompanies,
+        getCompanyById: getCompanyById,
         getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,
         createCompany: createCompany,

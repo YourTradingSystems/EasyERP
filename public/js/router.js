@@ -36,11 +36,11 @@ define([
                 var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50 });
 
                 collection.bind('reset', _.bind(createViews, self));
-
+                Custom.setCurrentVT('list');
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
-
+                    
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
 
@@ -87,9 +87,9 @@ define([
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-            CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
 
-            var self = this;
+            self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
@@ -124,7 +124,7 @@ define([
                 CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection";
             }
 
-            var self = this;
+            self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = (contentType !== 'Calendar') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId }) : new ContentCollection();
