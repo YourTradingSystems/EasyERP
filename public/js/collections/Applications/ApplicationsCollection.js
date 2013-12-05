@@ -1,5 +1,5 @@
 define([
-    'models/ApplicationModel'
+    'models/ApplicationsModel'
 ],
     function (ApplicationModel) {
         var ApplicationsCollection = Backbone.Collection.extend({

@@ -478,6 +478,7 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
     function createJobPosition(req, res, data) {
@@ -629,6 +630,27 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+
+    // Custom function for list (getApplications)
+    function getApplicationsCustom(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn) {
+            employee.getCustom(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getApplicationById(req, res, data) {
+        console.log("Requst getApplicationById is success");
+        if (req.session && req.session.loggedIn) {
+            employee.getById(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+
 
     function getFilterApplications(req, res, data) {
         console.log("Requst getApplications is success");
@@ -1029,6 +1051,7 @@ var requestHandler = function (fs, mongoose) {
 
         //createApplication: createApplication,
         getApplications: getApplications,
+        getApplicationsCustom: getApplicationsCustom,
         //removeApplication: removeApplication,
         //updateApplication: updateApplication,
 
@@ -1047,6 +1070,7 @@ var requestHandler = function (fs, mongoose) {
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
+        getApplicationById: getApplicationById,
 
         createLead: createLead,
         getLeads: getLeads,

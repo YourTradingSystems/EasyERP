@@ -1,20 +1,4 @@
-<table class="list">
-    <thead>
-        <tr>
-            <th>
-                <input type="checkbox" class="checkbox" id="check_all" /></th>
-            <th>N</th>
-            <th>Creation Date</th>
-            <th>Subject</th>
-            <th>Applicant's Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Applied Job</th>
-            <th>Stage</th>
-            <th>Responsible</th>
-        </tr>
-    </thead>
-    <tbody>
+
     <% applicationsCollection.forEach(function(application, index){ %>
         <tr data-index="<%= index + 1 %>" data-id="<%=application._id%>">
             <td><input type="checkbox" value="<%=application._id%>" class="checkbox" /></td>
@@ -29,5 +13,3 @@
             <td><%=(application.relatedUser) ? application.relatedUser.login : ''%></td>
         </tr>
     <% }) %>
-    </tbody>
-</table>
