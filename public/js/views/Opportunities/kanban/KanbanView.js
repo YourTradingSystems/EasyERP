@@ -82,8 +82,9 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 var kanbanItemView;
                 var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
-                	var comID = wfModel.get("customer").company;
-                	var companies = this.companiesCollection.get(comID).toJSON();
+                	
+                	var comID = (wfModel.get("customer")) ? wfModel.get("customer").company : null;
+                	var companies = (comID) ? this.companiesCollection.get(comID).toJSON() : null;
                     kanbanItemView = new KanbanItemView({ model: wfModel, companies: companies });
                     column.append(kanbanItemView.render().el);
                     counter++;
