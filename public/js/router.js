@@ -36,11 +36,11 @@ define([
                 var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50 });
 
                 collection.bind('reset', _.bind(createViews, self));
-
+                Custom.setCurrentVT('list');
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
-
+                    
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
 
@@ -61,7 +61,7 @@ define([
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
             var self = this;
-
+            Custom.setCurrentVT('form');
             require([ContentFormModelUrl, ContentFormViewUrl, TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {
                 var GetModel = new ContentFormModel();
                 GetModel.urlRoot = '/' + contentType + '/form';
@@ -90,14 +90,14 @@ define([
                 CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
 
             self = this;
-
+            Custom.setCurrentVT('kanban');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
-
+                    
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
 
@@ -125,14 +125,14 @@ define([
             }
 
             self = this;
-
+            Custom.setCurrentVT('thumbnails');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = (contentType !== 'Calendar') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
-
+                    
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
 

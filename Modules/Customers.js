@@ -316,6 +316,21 @@
                 }
             });
         },
+        
+        getCompanyById: function (id, response) {
+            console.log(id);
+            var query = customer.findById(id);
+            query.populate('department', '_id departmentName');
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("customer.js get customer.find " + err);
+                    response.send(500, { error: "Can't find customer" });
+                } else {
+                    response.send(result);
+                }
+            });
+        },
 
         getCompanies: function (response) {
             var res = {};

@@ -239,6 +239,12 @@ app.get('/Persons/:viewType', function (req, res) {
     }
 });
 
+app.get('/Persons', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getPersons(req, res, data);
+});
+
 app.put('/Persons/:viewType/:_id', function (req, res) {
     console.log(req.body);
     data = {};

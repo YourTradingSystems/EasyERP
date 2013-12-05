@@ -16,8 +16,8 @@ define([
             imageSrc: '',
 
             initialize: function (options) {
-                this.collection = options.collection;
-                this.currentModel = this.collection.getElement();
+                _.bindAll(this, "render", "saveItem");
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 
