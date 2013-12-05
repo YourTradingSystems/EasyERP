@@ -20,8 +20,13 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
 
+            if (options.collection) {
                 this.employeesCollection = options.collection;
                 this.currentModel = this.employeesCollection.getElement();
+            } else {
+                this.currentModel = options.model;
+            }
+
                 this.render();
             },
 
@@ -146,11 +151,12 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                         self.hideDialog();
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
+                        self.hideDialog();
                     }
                 });
             },
