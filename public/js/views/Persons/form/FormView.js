@@ -1,6 +1,6 @@
 define([
     'text!templates/Persons/form/FormTemplate.html',
-    'views/Tasks/EditView',
+    'views/Persons/EditView',
     'views/Opportunities/compactContent',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
