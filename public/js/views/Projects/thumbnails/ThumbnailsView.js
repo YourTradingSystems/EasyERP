@@ -16,7 +16,8 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         events: {
-            "click #showMore": "showMore"
+            "click #showMore": "showMore",
+            "click": "gotoEditForm"
         },
 
         render: function () {
@@ -35,6 +36,18 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
             }
             this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             return this;
+        },
+
+        gotoEditForm: function (e) {
+            if ($(e.target).attr("class") == "tasksByProject") {
+                return;
+            }
+            e.preventDefault();
+            var id = this.$el.closest(".thumbnail").attr("id");
+            if ($(e.target).parent().attr("class") != "dropDown") {
+                var model = this.collection.getElement(id);
+                new EditView({ model: model, collection: this.collection });
+            }
         },
 
         showMore: function () {
