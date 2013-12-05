@@ -15,8 +15,8 @@ define([
             imageSrc: '',
 
             initialize: function (options) {
-                this.personsCollection = options.collection;
-                this.bind('reset', _.bind(this.render, this));
+                _.bindAll(this, "saveItem", "render");
+                this.model = new PersonModel();
                 this.render();
             },
 
@@ -69,7 +69,7 @@ define([
                     wait: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/Persons/thumbnails", { trigger: true });
                     },
                     error: function (model, xhr, options) {
                         if (xhr && xhr.status === 401) {

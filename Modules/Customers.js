@@ -283,6 +283,25 @@
             });
         },
         
+        getFilterPersons: function (data, response) {
+            var res = {};
+            res['data'] = [];
+            var query = customer.find({ type: 'Person' });
+            query.populate('company', '_id name').
+                  populate('department', '_id departmentName');
+            query.sort({ "name.first": 1 });
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("customer.js get customer.find " + err);
+                    response.send(500, { error: "Can't find customer" });
+                } else {
+                    res['data'] = result;
+                    response.send(res);
+                }
+            });
+        },
+
         getPersonById: function (id, response) {
             var query = customer.findById(id);
             query.populate('company', '_id name').

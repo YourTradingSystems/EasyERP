@@ -1,13 +1,13 @@
 ﻿define([
-   'views/Persons/thumbnails/ThumbnailsItemView',
+   'views/Companies/thumbnails/ThumbnailsItemView',
     'custom',
     'common',
-    'views/Persons/EditView',
-    'views/Persons/CreateView'
+    'views/Companies/EditView',
+    'views/Companies/CreateView'
 ],
 
 function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
-    var PersonsThumbnalView = Backbone.View.extend({
+    var CompanyThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
@@ -20,7 +20,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         render: function () {
-            console.log('Person render');
+            console.log('Company render');
             this.$el.html('');
             if (this.collection.length > 0) {
                 var holder = this.$el;
@@ -31,7 +31,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
                     $(holder).append(thumbnailsItemView.render().el);
                 }, this);
             } else {
-                this.$el.html('<h2>No persons found</h2>');
+                this.$el.html('<h2>No Companies found</h2>');
             }
             this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             return this;
@@ -78,5 +78,5 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         }
     });
 
-    return PersonsThumbnalView;
+    return CompanyThumbnalView;
 });

@@ -234,7 +234,7 @@ app.get('/Persons/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getPersonById(req, res, data);
             break;
-        default: requestHandler.getPersons(req, res, data);
+        default: requestHandler.getFilterPersons(req, res, data);
             break;
     }
 });
@@ -249,7 +249,7 @@ app.put('/Persons/:viewType/:_id', function (req, res) {
     requestHandler.updatePerson(req, res, id, data, remove);
 });
 
-app.delete('/Persons/:_id', function (req, res) {
+app.delete('/Persons/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -463,7 +463,7 @@ app.get('/Companies/:viewType', function (req, res) {
     }
     var viewType = req.params.viewType;
     switch (viewType) {
-        case "form": requestHandler.getTaskById(req, res, data);
+        case "form": requestHandler.getCompanyById(req, res, data);
             break;
         default: requestHandler.getCompanies(req, res, data);
             break;

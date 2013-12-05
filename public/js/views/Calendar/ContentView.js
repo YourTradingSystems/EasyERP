@@ -228,53 +228,6 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             common.deleteFromLocalStorage('token');
         },
 
-        saveCalendarsToDB: function(calendarArray){
-            _.each(calendarArray, function(item){
-                var cal = new CalendarModel();
-                cal.save(item,{
-                    headers: { mid: 39 },
-                    success: function(){ console.log('saved calendar'); }
-                });
-            });
-            this.populateCalendarsList();
-        },
-        saveEventsToDB: function(eventsArray, calendarId){
-            var self = this;
-            if(eventsArray && eventsArray.length > 0){
-                this.mockFunc = _.after(eventsArray.length, function(){
-                    self.eventsCollection.fetch({
-                        data: $.param({
-                            mid: 39
-                        }),
-                        reset: true
-                    });
-                });
-                _.each(eventsArray, function(item){
-                    var event = new EventModel({
-                        summary: item.summary,
-                        id: item.id,
-                        status: item.status,
-                        description: item.description,
-                        start_date: item.start.dateTime,
-                        end_date: item.end.dateTime,
-                        calendarId: calendarId
-                    });
-                    event.save({},{
-                        headers: { mid: 39 },
-                        success: function(){
-                            console.log('saved events');
-                            self.mockFunc();
-                        }
-                    });
-                });
-            }
-            this.closeSyncDialog();
-        },
-
-        mockFunc: function(){
-            console.log('mock');
-        },
-
         render: function () {
             console.log('Render Calendar');
             this.$el.html(this.template());
