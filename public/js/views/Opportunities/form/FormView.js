@@ -1,10 +1,10 @@
 define([
-    'text!templates/Tasks/form/FormTemplate.html',
-    'views/Tasks/EditView'
+    'text!templates/Opportunities/form/FormTemplate.html',
+    'views/Opportunities/EditView'
 ],
 
-    function (TasksFormTemplate, EditView) {
-        var FormTasksView = Backbone.View.extend({
+    function (OpportunitiesFormTemplate, EditView) {
+        var FormOpportunitiesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 this.formModel = options.model;
@@ -12,7 +12,7 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                this.$el.html(_.template(TasksFormTemplate, formModel));
+                this.$el.html(_.template(OpportunitiesFormTemplate, formModel));
                 return this;
             },
             
@@ -29,12 +29,12 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/Tasks/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/Opportunities/list", { trigger: true });
                     }
                 });
 
             }
         });
 
-        return FormTasksView;
+        return FormOpportunitiesView;
     });

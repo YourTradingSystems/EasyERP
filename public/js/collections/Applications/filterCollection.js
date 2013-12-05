@@ -1,5 +1,5 @@
 ﻿define([
-    'models/ApplicationModel',
+    'models/ApplicationsModel',
     'common'
 ],
     function (ApplicationModel, common) {
