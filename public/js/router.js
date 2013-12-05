@@ -87,9 +87,9 @@ define([
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+            CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
 
-            self = this;
+            var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
@@ -124,7 +124,7 @@ define([
                 CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection";
             }
 
-            self = this;
+            var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 collection = (contentType !== 'Calendar') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId }) : new ContentCollection();
