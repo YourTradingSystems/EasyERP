@@ -113,14 +113,21 @@ define([
 
         goToThumbnails: function (contentType, parrentContentId) {
             if (this.mainView == null) this.main();
-            var ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView",
+            var ContentViewUrl,
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                CollectionUrl;
+            if (contentType !== 'Calendar') {
+                ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
                 CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+            } else {
+                ContentViewUrl = "views/" + contentType + '/ContentView';
+                CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection";
+            }
 
             self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId });
+                collection = (contentType !== 'Calendar') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
