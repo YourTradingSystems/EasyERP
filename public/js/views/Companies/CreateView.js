@@ -16,7 +16,7 @@ define([
             imageSrc: '',
             initialize: function (options) {
                 _.bindAll(this, "saveItem", "render");
-                this.model = new PersonModel();
+                this.model = new CompanyModel();
                 this.render();
             },
 

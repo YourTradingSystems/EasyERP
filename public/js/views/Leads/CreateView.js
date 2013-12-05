@@ -1,25 +1,18 @@
 define([
     "text!templates/Leads/CreateTemplate.html",
-    "collections/Leads/LeadsCollection",
-    "collections/Companies/CompaniesCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Employees/EmployeesCollection",
-    "collections/Departments/DepartmentsCollection",
-    "collections/Workflows/WorkflowsCollection",
-    "collections/Priority/TaskPriority",
-    "models/LeadModel",
+    "models/LeadsModel",
     "common"
 ],
-    function (CreateTemplate, LeadsCollection, CompaniesCollection, CustomersCollection, EmployeesCollection, DepartmentsCollection, WorkflowsCollection, PriorityCollection, LeadModel, common) {
+    function (CreateTemplate, LeadModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Leads",
             template: _.template(CreateTemplate),
 
-            initialize: function (options) {
-                _.bindAll(this, "saveItem");
-                this.contentCollection = options.collection;
+            initialize: function () {
+                _.bindAll(this, "saveItem", "render");
+                this.model = new LeadModel();
                 this.render();
             },
 
@@ -125,7 +118,7 @@ define([
                         },
                         success: function (model) {
 							self.hideDialog();
-                            Backbone.history.navigate("home/content-Leads", { trigger: true });
+                            Backbone.history.navigate("easyErp/Leads/list", { trigger: true });
                         },
                         error: function (model, xhr, options) {
                             Backbone.history.navigate("home", { trigger: true });
