@@ -2,7 +2,15 @@
 var http = require('http'),
     url = require('url'),
     fs = require("fs");
-
+var googleapis = require('googleapis'),
+    OAuth2Client = googleapis.OAuth2Client;
+var oauth2Client =
+    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088');
+var url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: 'http://www.google.com/calendar/feeds/'
+});
+console.log(url);
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
@@ -226,6 +234,7 @@ app.post('/Persons', function (req, res) {
 });
 
 app.get('/Persons/:viewType', function (req, res) {
+    console.log(req.session.cookie);
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
