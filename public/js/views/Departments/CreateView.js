@@ -2,7 +2,7 @@ define([
     "text!templates/Departments/CreateTemplate.html",
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
-    "models/DepartmentModel",
+    "models/DepartmentsModel",
     "common",
     "custom"
 ],

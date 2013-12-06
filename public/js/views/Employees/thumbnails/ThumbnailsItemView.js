@@ -61,10 +61,27 @@ define([
                     window.location.hash = "#home/content-Employees/form/" + id;
                 }
             },
+            calculateAge: function(dateString){
+                if(!dateString) return "";
+                var today = new Date();
+                var birthDate = new Date(dateString);
+                if(typeof birthDate.getMonth !== 'function'){
+                    console.log("Employees -> calculateAge: birthDate is not a correct Date value");
+                    return "";
+                }
+                var age = today.getFullYear() - birthDate.getFullYear();
+                var m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0  && today.getDate() < birthDate.getDate())){
+                    age--;
+                }
+                return age;
+            },
 
             template: _.template(ThumbnailsItemTemplate),
 
             render: function () {
+                var age = this.calculateAge(this.model.get("dateBirth"));
+                this.model.set({ age: age }, { silent: true });
                 
                 this.$el.attr("data-index", this.model.collection.indexOf(this.model));
                 this.$el.attr("id", this.model.get('_id'));

@@ -1,5 +1,5 @@
 define([
-    'models/OpportunityModel',
+    'models/OpportunitiesModel',
     'common'
 ],
     function (OpportunityModel, common) {

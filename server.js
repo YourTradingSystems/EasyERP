@@ -518,6 +518,22 @@ app.get('/JobPosition', function (req, res) {
     requestHandler.getJobPosition(req, res, data);
 });
 
+app.get('/JobPositions/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    console.log(data);
+    switch (viewType) {
+        case "form": requestHandler.getJobPositionById(req, res, data);
+            break;
+        default: requestHandler.getCustomJobPosition(req, res, data);
+            break;
+    }
+
+});
+
 app.get('/JobPosition/:_id', function (req, res) {
     data = {};
     data._id = req.params._id;
@@ -527,7 +543,7 @@ app.get('/JobPosition/:_id', function (req, res) {
     //requestHandler.getJobPosition(req, res, data);
 });
 
-app.put('/JobPosition/:_id', function (req, res) {
+app.put('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -535,7 +551,7 @@ app.put('/JobPosition/:_id', function (req, res) {
     requestHandler.updateJobPosition(req, res, id, data);
 });
 
-app.delete('/JobPosition/:_id', function (req, res) {
+app.delete('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -553,6 +569,21 @@ app.post('/Departments', function (req, res) {
     data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.createDepartment(req, res, data);
+});
+
+app.get('/Departments/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getDepartmentById(req, res, data);
+            break;
+        default: requestHandler.getDepartment(req, res, data);
+            break;
+    }
+
 });
 
 app.put('/Departments/:_id', function (req, res) {

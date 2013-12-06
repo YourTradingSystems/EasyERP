@@ -490,12 +490,31 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function getJobPosition(req, res, data) {
-
         if (req.session && req.session.loggedIn) {
             jobPosition.get(res);
         } else {
             res.send(401);
         }
+    };
+
+    function getCustomJobPosition(req, res, data) {
+        console.log("Requst getCustomJobPosition is success");
+        if (req.session && req.session.loggedIn) {
+            //company.get(res);
+            jobPosition.get(res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getJobPositionById(req, res, data) {
+        console.log("----------->Request getJobPositionById is success");
+        if (req.session && req.session.loggedIn) {
+            jobPosition.getJobPositionById(data.id, res);
+        } else {
+            res.send(401);
+        }
+
     };
 
     function updateJobPosition(req, res, id, data) {
@@ -725,6 +744,28 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+    
+    function getFilterDepartment(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+        	department.getFilterDepartment(data, res);
+        } else {
+            res.send(401);
+        }
+        console.log("Requst getPersons is success");
+    };
+
+    function getDepartmentById(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+        	department.getDepartmentById(data.id, res);
+        } else {
+            res.send(401);
+        }
+        //console.log("Requst getDepartmentById is success");
+    };
 
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
@@ -1053,8 +1094,10 @@ var requestHandler = function (fs, mongoose) {
         createJobPosition: createJobPosition,
         updateJobPosition: updateJobPosition,
         removeJobPosition: removeJobPosition,
+        getJobPositionById:getJobPositionById,
 
         createEmployee: createEmployee,
+        getCustomJobPosition:getCustomJobPosition,
         getEmployees: getEmployees,
         getEmployeesCustom: getEmployeesCustom,
         getEmployeesByIdCustom: getEmployeesByIdCustom,

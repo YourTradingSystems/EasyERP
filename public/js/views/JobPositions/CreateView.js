@@ -2,10 +2,10 @@ define([
     "text!templates/JobPositions/CreateTemplate.html",
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
-    "models/JobPositionModel",
+    "models/JobPositionsModel",
     "common"
 ],
-    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionModel, common) {
+    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionsModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -13,6 +13,8 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
+                _.bindAll(this, "saveItem", "render");
+                this.model = new JobPositionsModel();
                 this.render();
             },
 
@@ -39,36 +41,17 @@ define([
                 var self = this;
 
                 var mid = 39;
-
-                var jobPositionModel = new JobPositionModel();
-
                 var name = $.trim($("#name").val());
-
                 var expectedRecruitment = parseInt($.trim($("#expectedRecruitment").val()));
 
                 var description = $.trim($("#description").val());
 
                 var requirements = $.trim($("#requirements").val());
 
-                /*var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };*/
                 var workflow = this.$("#workflowsDd option:selected").val();
-                //var departmentId = this.$("#department option:selected").val();
-                //var objDepartment = this.departmentsCollection.get(departmentId);
-                //var department = {};
-                //if (objDepartment) {
-                //    department.name = objDepartment.get('departmentName');
-                //    department.id = departmentId;
-                //}
                 var department = this.$("#departmentDd option:selected").val();
-                //var department = common.toObject(departmentId, this.departmentsCollection);
 
-                console.log(department);
-
-                jobPositionModel.save({
+                this.model.save({
                     name: name,
                     expectedRecruitment: expectedRecruitment,
                     description: description,
@@ -83,7 +66,7 @@ define([
                     wait: true,
                     success: function (model) {
 						self.hideDialog();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/JobPositions", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });

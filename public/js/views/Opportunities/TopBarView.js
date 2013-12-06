@@ -24,6 +24,7 @@ define([
             changeContentViewType: function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
             },
+
             changeItemIndex: function (e) {
                 var actionType = "Content";
                 Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
@@ -33,22 +34,25 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
+                if (options.collection) {
+                    this.collection = options.collection;
+                    this.collection.bind('reset', _.bind(this.render, this));
+                }
                 this.render();
             },
 
             render: function () {
-
                 var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                Common.displayControlBtnsByActionType(this.actionType, viewType);
-
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
+                Common.displayControlBtnsByActionType('Content', viewType);
                 return this;
             },
-            
+
+            deleteEvent: function (event) {
+                event.preventDefault();
+                var answer = confirm("Realy DELETE items ?!");
+                if (answer == true) this.trigger('deleteEvent');
+            },
             editEvent: function (event) {
                 event.preventDefault();
                 this.trigger('editEvent');
@@ -57,11 +61,7 @@ define([
                 event.preventDefault();
                 this.trigger('createEvent');
             },
-            deleteEvent: function (event) {
-                event.preventDefault();
-                var answer = confirm("Realy DELETE items ?!");
-                if (answer == true) this.trigger('deleteEvent');
-            },
+
 
             saveEvent: function (event) {
                 event.preventDefault();
@@ -70,6 +70,7 @@ define([
 
             discardEvent: function (event) {
                 event.preventDefault();
+                $('#content-holder').html('');
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
             }
 

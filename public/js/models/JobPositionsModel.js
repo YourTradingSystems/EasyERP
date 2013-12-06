@@ -1,5 +1,5 @@
 ﻿define(function () {
-    var JobPositionModel = Backbone.Model.extend({
+    var JobPositionsModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
             this.on('invalid', function(model, errors){
@@ -53,5 +53,5 @@
         }
     });
 
-    return JobPositionModel;
+    return JobPositionsModel;
 });

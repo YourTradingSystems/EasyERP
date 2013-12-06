@@ -23,7 +23,8 @@ define([
                 var self = this;
                 _.each(idArray, function(item){
                     var filtered = self.filter(function(data){
-                        return data.get('calendarId')._id == item;
+                        return (data.get('calendarId')._id ? data.get('calendarId')._id == item : data.get('calendarId') == item);
+                        //return data.get('calendarId')._id == item;
                     });
                     events = events.concat(filtered);
                 });

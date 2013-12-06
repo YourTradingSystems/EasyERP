@@ -11,8 +11,8 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         el: '#content-holder',
         events: {
             "click #showMore": "showMore",
-            "dblclick .task-header, .task-content": "gotoEditForm",
-            "click .task-header, .task-content": "selectItem"
+            "dblclick .item": "gotoEditForm",
+            "click .item": "selectItem"
         },
         initialize: function (options) {
         	this.render = _.after(2, this.render);
@@ -30,7 +30,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
         gotoEditForm: function (e) {
             e.preventDefault();
-            var id = $(e.target).closest(".item").data("id");
+            var id = $(e.target).closest(".inner").data("id");
             var model = this.collection.getElement(id);
             new EditView({ model: model, collection: this.collection });
         },

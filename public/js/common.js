@@ -90,45 +90,45 @@
         };
 
         var displayControlBtnsByActionType = function(actionType, viewType) {
-            $("#saveDiscardHolder").hide();
-            $("#top-bar-createBtn").hide();
-            $("#top-bar-deleteBtn").hide();
-            $("#top-bar-editBtn").hide();
-            $("#top-bar-renameBtn").hide();
-            $("#top-bar-nextBtn").hide();
-            $("#top-bar-discardBtn").hide();
-            $('#top-bar-saveBtn').hide();
-            $('#formBtn').closest('li').hide();
-            $("ul.changeContentIndex").hide();
+        $("#saveDiscardHolder").hide();
+        $("#top-bar-createBtn").hide();
+        $("#top-bar-deleteBtn").hide();
+        $("#top-bar-editBtn").hide();
+        $("#top-bar-renameBtn").hide();
+        $("#top-bar-nextBtn").hide();
+        $("#top-bar-discardBtn").hide();
+        $('#top-bar-saveBtn').hide();
+        $('#formBtn').closest('li').hide();
+        $("ul.changeContentIndex").hide();
             if (!actionType || actionType === "Content") {
-                $("#top-bar-createBtn").show();
-                if (viewType == "form") {
-                    $('#formBtn').closest('li').show();
-                    $("#top-bar-createBtn").hide();
-                    $('#top-bar-editBtn').show();
-                    $("ul.changeContentIndex").hide();
-                    $('#top-bar-deleteBtn').show();
-                }
-                if (viewType == "thumbnails" || viewType == "list") {
-                    $('#top-bar-editBtn').hide();
-                }
-            } else if (actionType === "View") {
-                $('#top-bar-createBtn').show();
+            $("#top-bar-createBtn").show();
+            if (viewType == "form") {
+                $('#formBtn').closest('li').show();
+                $("#top-bar-createBtn").hide();
                 $('#top-bar-editBtn').show();
+                $("ul.changeContentIndex").hide();
                 $('#top-bar-deleteBtn').show();
-            } else if (actionType === "Edit") {
-                // $('#top-bar-saveBtn').show();
-                // $('#top-bar-discardBtn').show();
-                //$("#saveDiscardHolder").show();
-                $("#saveDiscardHolder").hide();
-                $("#top-bar-createBtn").show();
-            } else if (actionType === "Create") {
-                $('#top-bar-saveBtn').show();
-                $('#top-bar-nextBtn').show();
-                $('#top-bar-discardBtn').show();
-                $('#top-bar-saveBtn').show();
-                $("#saveDiscardHolder").show();
             }
+                if (viewType == "thumbnails" || viewType == "list") {
+                $('#top-bar-editBtn').hide();
+            }
+            } else if (actionType === "View") {
+            $('#top-bar-createBtn').show();
+            $('#top-bar-editBtn').show();
+            $('#top-bar-deleteBtn').show();
+            } else if (actionType === "Edit") {
+           // $('#top-bar-saveBtn').show();
+           // $('#top-bar-discardBtn').show();
+            //$("#saveDiscardHolder").show();
+            $("#saveDiscardHolder").hide();
+            $("#top-bar-createBtn").show();
+            } else if (actionType === "Create") {
+            $('#top-bar-saveBtn').show();
+            $('#top-bar-nextBtn').show();
+            $('#top-bar-discardBtn').show();
+            $('#top-bar-saveBtn').show();
+            $("#saveDiscardHolder").show();
+        }
         };
 
         var getFromLocalStorage = function(key) {
@@ -200,12 +200,34 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function(response) {
                 var options = [];
-                if (model && (model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson || model.departmentManager)) {
-                    options = $.map(response.data, function(item) {
-                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
+                if (model && ( model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
+                    options = $.map(response.data, function (item) {
+                        return ((model.manager && model.manager._id === item._id) || (model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+                        });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                     });
+                }
+                selectList.append(options);
+				if (callback)callback();
+            });
+        }
+
+        var populateCoachDd = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.coach ) {
+                    options = $.map(response.data, function (item) {
+                        return (model.coach && model.coach._id === item._id) ?
+                            $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+                        });
                 } else {
                     options = $.map(response.data, function(item) {
                         return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
@@ -231,8 +253,8 @@
                 } else {
                     options = $.map(response.data, function(item) {
                         return $('<option/>').val(item._id).text(item.name.first);
-                    });
-                }
+            });
+        }
                 selectList.append(options);
                 if (callback) callback();
             });
@@ -250,7 +272,7 @@
                         return model.company._id === item._id ?
                             $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first);
-                    });
+                        });
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.name.first);
@@ -272,7 +294,7 @@
                         return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id) || (model.parentDepartment && model.parentDepartment.id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
-                    });
+                        });
                 } else {
                     options = $.map(response.data, function(item) {
                         return $('<option/>').val(item._id).text(item.departmentName);
@@ -488,6 +510,7 @@
             populateWorkflows: populateWorkflows,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
+            populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
             toObject: toObject,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
