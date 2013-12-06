@@ -490,12 +490,31 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function getJobPosition(req, res, data) {
-
         if (req.session && req.session.loggedIn) {
             jobPosition.get(res);
         } else {
             res.send(401);
         }
+    };
+
+    function getCustomJobPosition(req, res, data) {
+        console.log("Requst getCustomJobPosition is success");
+        if (req.session && req.session.loggedIn) {
+            //company.get(res);
+            jobPosition.get(res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getJobPositionById(req, res, data) {
+        console.log("----------->Request getJobPositionById is success");
+        if (req.session && req.session.loggedIn) {
+            jobPosition.getJobPositionById(data.id, res);
+        } else {
+            res.send(401);
+        }
+
     };
 
     function updateJobPosition(req, res, id, data) {
@@ -1075,8 +1094,10 @@ var requestHandler = function (fs, mongoose) {
         createJobPosition: createJobPosition,
         updateJobPosition: updateJobPosition,
         removeJobPosition: removeJobPosition,
+        getJobPositionById:getJobPositionById,
 
         createEmployee: createEmployee,
+        getCustomJobPosition:getCustomJobPosition,
         getEmployees: getEmployees,
         getEmployeesCustom: getEmployeesCustom,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
