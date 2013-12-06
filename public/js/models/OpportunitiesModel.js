@@ -1,4 +1,7 @@
-﻿define(function () {
+﻿define([
+    'common'
+],
+function (common) {
     var OpportunityModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
@@ -10,6 +13,17 @@
                     alert(msg);
                 }
             });
+        },
+
+        parse: true,
+
+        parse: function (response) {
+	           if (response ) {
+	            	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
+	            	response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
+	            	response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
+	           }
+	           return response;
         },
 
         validate: function(attrs){

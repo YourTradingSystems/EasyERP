@@ -99,7 +99,17 @@ var JobPosition = function (logWriter, mongoose, employee) {
             res.send(500, { error: 'JobPosition.save  error' });
         }
     };//End create
-
+    function getJobPositionById(id,res){
+        job.findById(id, function(err, responce){
+            if(err){
+                console.log(err);
+                logWriter.log('JobPosition.js get job.find' + err);
+                res.send(500, { error: "Can't find JobPosition" });
+            }else{
+                res.send(responce);
+            }
+        });
+    }
     function get(response) {
         var res = {};
         res['data'] = [];
@@ -187,6 +197,8 @@ var JobPosition = function (logWriter, mongoose, employee) {
     };// end remove
 
     return {
+
+        getJobPositionById:getJobPositionById,
         create: create,
 
         get: get,

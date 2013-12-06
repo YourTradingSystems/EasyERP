@@ -14,15 +14,24 @@ define([
             template: _.template(EditTemplate),
 
             initialize: function (options) {
-				this.jobPositionsCollection = options.collection;
-                this.currentModel = this.jobPositionsCollection.getElement();
+                _.bindAll(this, "render", "saveItem");
+                this.currentModel = this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 
             events: {
-                "click .breadcrumb a": "changeWorkflow"
+                "click .breadcrumb a": "changeWorkflow",
+                'keydown': 'keydownHandler'
             },
-
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
+            },
             /*changeWorkflow: function (e) {
                 var mid = 39;
                 var breadcrumb = $(e.target).closest('li');
@@ -86,8 +95,8 @@ define([
                     expectedRecruitment: expectedRecruitment,
                     description: description,
                     requirements: requirements,
-                    department: department,
-                    workflow: workflow
+                    department: department || null,
+                    workflow: workflow || null
                 });
 
                 this.currentModel.save({}, {
@@ -96,8 +105,10 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-						self.hideDialog()
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        model = model.toJSON();
+                        self.hideDialog();
+                        Backbone.history.navigate("easyErp/JobPositions", { trigger: true });
+
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
@@ -112,8 +123,7 @@ define([
             render: function () {
 				var self = this;
                 var formString = this.template({
-                    model: this.currentModel.toJSON(),
-				
+                    model: this.currentModel.toJSON()
 				});
                 this.$el = $(formString).dialog({
                     autoOpen: true,
@@ -132,10 +142,7 @@ define([
 							text: "Cancel",
 							click: function () { $(this).dialog().remove(); }
 						}
-                    ],
-
-
-
+                    ]
                 });
 				common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON());
                 common.populateWorkflows("Jobposition", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());

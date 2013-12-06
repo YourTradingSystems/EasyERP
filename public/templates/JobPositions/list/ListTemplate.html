@@ -1,28 +1,13 @@
-    <table class="list">
-        <thead>
-            <tr>
-                <th><input type="checkbox" class="checkbox" id="check_all"/></th>
-                <th>N</th>
-                <th>Job Name</th>
-                <th>Department</th>
-                <th>Total Forecasted Employees</th>
-                <th>Current Number of Employees</th>
-                <th>Expected in Recruitment</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        <% jobPositionsCollection.forEach(function(jobPosition, index){ %>
-            <tr data-id="<%=jobPosition._id%>">
-                <td><input type="checkbox" value="<%=jobPosition._id%>" class="checkbox"/></td>
-                <td><%=index+1 %></td>
-                <td><%=jobPosition.name%></td>
-                <td><%= (jobPosition.department) ? jobPosition.department.departmentName : ''%> </td>
-                <td><%=jobPosition.totalForecastedEmployees%></td>
-                <td><%=jobPosition.numberOfEmployees%></td>
-                <td><%=jobPosition.expectedRecruitment%></td>
-                <td><%= jobPosition.workflow?jobPosition.workflow.name:''%></td>
-            </tr>
-        <% }) %>
-        </tbody>
-    </table>
+
+<% jobPositionsCollection.forEach(function(jobPosition, index){ %>
+<tr data-index="<%= index %>" data-id="<%=jobPosition._id%>">
+    <td><input type="checkbox" value="<%=jobPosition._id%>" class="checkbox"/></td>
+    <td><%=index + startNumber +1 %></td>
+    <td><%=jobPosition.name%></td>
+    <td><%= (jobPosition.department) ? jobPosition.department.departmentName : ''%> </td>
+    <td><%=jobPosition.totalForecastedEmployees%></td>
+    <td><%=jobPosition.numberOfEmployees%></td>
+    <td><%=jobPosition.expectedRecruitment%></td>
+    <td><%= jobPosition.workflow?jobPosition.workflow.name:''%></td>
+</tr>
+<% }) %>
