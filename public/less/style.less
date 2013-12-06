@@ -800,7 +800,7 @@ h3 {
         }
     }
 }
-.dl-auto(@max-width:110px,@with-dt:35%){
+.dl-auto(@max-width:120px,@with-dt:35%){
     clear: both;
 	font-size:14px;
 	
@@ -1473,13 +1473,13 @@ h3 {
         float: left;
         position: relative;
         width: 140px;
-        height: 140px;
-        .border-radius(3px);
+        height: 140px;      
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         border: none;
         margin-bottom: 10px;
+        margin-top:10px;
         overflow: hidden;
 
         canvas {
@@ -1498,17 +1498,16 @@ h3 {
             line-height: 18px;
             text-shadow: 1px 1px 1px #fff;
             text-align: center;
-            display: block;
+            display: block;           
             position: absolute;
             top: 0;
             left: 0;
             height: 0px;
             width: 100%;
             background: rgba(0,0,0, 0.7);
-            color: #fff;
-            content: 'upload';
-
+            color: #fff;          
             input {
+                 
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -1646,7 +1645,6 @@ h3 {
 input, textarea, select {
     padding: 2px 4px;
     border: 1px solid #cccccc;
-    .border-radius(3px);
     background: white;
 }
 
