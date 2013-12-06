@@ -27,11 +27,11 @@ define([
             },
 
             events: {
-                "click #delete": "deleteEvent",
+              /*"click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
                 "click .inner": "gotoForm",
-                "click #edit": "gotoEditForm"
+                "click #edit": "gotoEditForm"*/
             },
 
             template: _.template(KanbanItemTemplate),

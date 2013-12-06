@@ -1,19 +1,18 @@
 define([
-    'text!templates/Employees/form/FormTemplate.html',
-    'views/Employees/EditView'
+    'text!templates/JobPositions/form/FormTemplate.html',
+    'views/JobPositions/EditView'
 ],
 
-    function (EmployeesFormTemplate, EditView) {
-        var FormEmployeesView = Backbone.View.extend({
+    function (FormTemplate, EditView) {
+        var FormView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 this.formModel = options.model;
             },
 
             render: function () {
-                debugger;
                 var formModel = this.formModel.toJSON();
-                this.$el.html(_.template(EmployeesFormTemplate, formModel));
+                this.$el.html(_.template(FormTemplate, formModel));
                 return this;
             },
             
@@ -30,12 +29,12 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/Employees/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/JobPositions/list", { trigger: true });
                     }
                 });
 
             }
         });
 
-        return FormEmployeesView;
+        return FormView;
     });

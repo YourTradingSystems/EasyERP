@@ -64,7 +64,6 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                        if(response.error){
                            throw new Error(response.error.message);
                        } else{
-
                            calendar.summary = $(response).find(">title").text();
                            calendar.id = $(response).find(">id").text().split("/")[6];
                            calendar.description = $(response).find(">subtitle").text();

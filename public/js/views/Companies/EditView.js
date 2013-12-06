@@ -25,13 +25,31 @@ define([
                 "click #tabList a": "switchTab",
                 "click #contacts": "editContacts",
                 "click #saveBtn": "saveItem",
-                "click #cancelBtn": "hideDialog"
+                "click #cancelBtn": "hideDialog",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect",
             },
 
             hideDialog: function () {
                 $(".edit-companies-dialog").remove();
             },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -106,6 +124,30 @@ define([
                     }
                 });
             },
+            showNewSelect: function (e) {
+                var s = "<ul class='newSelectList'>";
+                $(e.target).parent().find("select option").each(function () {
+                    s += "<li>" + $(this).text() + "</li>";
+                });
+                s += "</ul>";
+                $(e.target).parent().append(s);
+                return false;
+            },
+
+            hideNewSelect: function (e) {
+                $(".newSelectList").remove();;
+            },
+            chooseOption: function (e) {
+                var k = $(e.target).parent().find("li").index($(e.target));
+                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+            },
+            styleSelect: function (id) {
+                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
+                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
+                $(id).hide();
+            },
 
             template: _.template(EditTemplate),
 
@@ -135,9 +177,10 @@ define([
                     modal: true
                 });
 			    $('#text').datepicker({ dateFormat: "d M, yy" });
-			    common.populateDepartments(App.ID.departmentDd, "/Departments",this.currentModel.toJSON());
-			    common.populateEmployeesDd(App.ID.employeesDd, "/Employees",this.currentModel.toJSON());
-                this.delegateEvents(this.events);
+			    common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
+			    common.populateEmployeesDd(App.ID.employeesDd, "/Employees", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.employeesDd); });
+			    this.styleSelect('#language');
+			    this.delegateEvents(this.events);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 this.delegateEvents(this.events);
                 return this;

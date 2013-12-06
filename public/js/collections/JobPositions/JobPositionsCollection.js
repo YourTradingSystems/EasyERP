@@ -1,9 +1,9 @@
 define([
-    'models/JobPositionModel'
+    'models/JobPositionsModel'
 ],
-    function (JobPositionModel) {
+    function (JobPositionsModel) {
         var JobPositionsCollection = Backbone.Collection.extend({
-            model: JobPositionModel,
+            model: JobPositionsModel,
             url: function () {
                 return "/JobPosition";
             },

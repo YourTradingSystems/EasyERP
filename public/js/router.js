@@ -25,6 +25,7 @@ define([
         },
 
         goToList: function (contentType) {
+            //console.API.clear();
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -43,6 +44,7 @@ define([
                     
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
+                    topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
@@ -57,6 +59,7 @@ define([
 
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
+            console.log(contentType + "Model");
             var ContentFormModelUrl = "models/" + contentType + "Model",
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
@@ -73,7 +76,7 @@ define([
                         
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                         topBarView.bind('editEvent', contentView.editItem, contentView);
-                        
+                        topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                         contentView.render();
                         self.changeView(contentView);
                         self.changeTopBarView(topBarView);
