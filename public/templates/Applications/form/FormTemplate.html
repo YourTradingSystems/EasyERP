@@ -7,9 +7,9 @@
   <form class="form" id="applicationForm" data-id="<%=_id%>">
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label for="tags">Subject :</label></dt><dd><%=subject%></dd>
-		<dt><label for="first">First Name :</label></dt><dd><%=name.first%></dd>
-		<dt><label for="last">Last Name :</label></dt><dd><%=name.last%></dd>
+		<dt>Subject :</dt><dd><%=subject%></dd>
+		<dt>First Name :</dt><dd><%=name.first%></dd>
+		<dt>Last Name :</dt><dd><%=name.last%></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
@@ -22,13 +22,13 @@
     </div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Email :</label></dt><dd><span><%=workEmail%></span></dd>
-		<dt><label>Phone :</label></dt><dd><span><%=workPhones.phone%></span></dd>
+		<dt>Email :</dt><dd><span><%=workEmail%></span></dd>
+		<dt>Phone :</dt><dd><span><%=workPhones.phone%></span></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Mobile :</label></dt><dd><span><%=workPhones.mobile%></span></dd>
+		<dt>Mobile :</dt><dd><span><%=workPhones.mobile%></span></dd>
 	  </dl>
 	</div>
 
@@ -40,13 +40,13 @@
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Applied Job :</label></dt><dd><span><%=(jobPosition) ? jobPosition.name : ''%></span></dd>
-		<dt><label>Department :</label></dt><dd><span><%=(department) ? department.departmentName : ''%></span></dd>
+		<dt>Applied Job :</dt><dd><%=(jobPosition) ? jobPosition.name : ''%></dd>
+		<dt>Department :</dt><dd><%=(department) ? department.departmentName : ''%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Tags :</label></dt><dd><span><%=tags%></span></dd>
+		<dt>Tags :</dt><dd><%=tags%></dd>
 	  </dl>
 	</div>	
 	<div class="clearfix">
@@ -57,14 +57,14 @@
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label><label>Responsible :</label></label></dt><dd><span><%=(relatedUser) ? relatedUser.login : ''%></span></dd>
-		<dt><label><label>Next Action :</label></label></dt><dd><span><%=nextAction%></span></dd>
+		<dt>Responsible :</dt><dd><%=(relatedUser) ? relatedUser.login : ''%></dd>
+		<dt>Next Action :</dt><dd><%=nextAction%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Source :</label></dt><dd><span><%=(source) ? source.name : ''%></span></dd>
-		<dt><label>Referred By :</label></dt><dd><span><%=referredBy%></span></dd>
+		<dt>Source :</dt><dd><%=(source) ? source.name : ''%></dd>
+		<dt>Referred By :</dt><dd><%=referredBy%></dd>
 	  </dl>
 	</div>	
 	<div class="clearfix">
@@ -75,12 +75,12 @@
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Expected Salary :</label></dt><dd><span><%=expectedSalary%></span></dd>
+		<dt>Expected Salary :</dt><dd><%=expectedSalary%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt><label>Proposed Salary :</label></dt><dd><span><%=proposedSalary%></span></dd>
+		<dt>Proposed Salary :</dt><dd><%=proposedSalary%></dd>
 	  </dl>
 	</div>	
 	<div class="clearfix">

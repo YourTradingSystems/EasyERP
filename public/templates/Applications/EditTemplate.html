@@ -1,115 +1,78 @@
-﻿
-<div class="form-holder">
+﻿<div class="form-holder">
+  <form method="post" action="" id="createApplicationForm" class="form" data-id="<%=_id%>">
+    <fieldset>
+	  <div class="half-block left">
+		<dl class="person-info">
+		  <dt><label for="subject">Subject </label></dt><dd><input type="text" class="title-input blueback" id="subject" value="<%=subject%>" required /></dd>
+		  <dt><label for="first">First Name</label></dt><dd><input type="text" class="title-input name" id="first" value="<%=name.first%>" /></dd>
+		  <dt><label for="last">Last Name</label></dt><dd><input type="text" class="title-input name" id="last" value="<%=name.last%>" /></dd>
+		</dl>
+	  </div>
+	  <div class="half-block left">
+        <div class="avatar">
+          <input type="file" value="Edit" id="inputImg" accept="image/*">
+          <canvas id="avatar" width="120" height="120"></canvas>
+        </div>
+	  </div>
+      <div class="clearfix"></div>
+	  <div class="half-block left">
+		<dl class="person-info">
+		  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" value="<%=workEmail%>"/></dd>
+		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=workPhones.phone%>"/></dd>
+		  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=workPhones.mobile%>"/></dd>
+		  <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd id="workflowsDd"><select id="workflowNamesDd"> </select></dd>
+		</dl>
+	  </div>
+	  <div class="half-block left">
+		<dl class="person-info">
+		  <dt><label for="degreesDd">Degree </label></dt><dd><select id="degreesDd"> </select></dd>
+		  <dt><label for="relatedUsersDd">Responsible </label></dt><dd><select id="relatedUsersDd"> </select></dd>
+		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" value="<%=nextAction%>"/></dd>
+		  <dt><label for="sourceDd">Source </label></dt><dd><select id="sourceDd"> </select></dd>
+		  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" value="<%=referredBy%>"/></dd>
+		</dl>
+	  </div>
+      <div class="clearfix"></div>
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Contract</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="person-info">
+		  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" value="<%=expectedSalary%>"/></dd>
+		  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" value="<%=proposedSalary%>"/></dd>
+		  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=tags%>"/></dd>
+		</dl>
+	  </div>
 
-    <form method="post" action="" id="createApplicationForm" class="form" data-id="<%=_id%>">
-        <fieldset>
-            <div class="avatar">
-                <input type="file" value="Edit" id="inputImg" accept="image/*">
-                <canvas id="avatar" width="120" height="120"></canvas>
-            </div>
-            <p>
-                <label for="subject">Subject </label>
-                <input type="text" class="title-input blueback" id="subject" value="<%=subject%>" required />
-            </p>
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Job</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="person-info">
+		  <dt><label for="jobPositionDd">Applied Job </label></dt>
+		  <dd>
+			<select id="jobPositionDd">
 
-            <p>
-                <label for="first">First Name</label>
-                <input type="text" class="title-input name" id="first" value="<%=name.first%>" />
-                <label for="last">Last Name</label>
-                <input type="text" class="title-input name" id="last" value="<%=name.last%>" />
-            </p>
+            </select>
+		  </dd>
+		  <dt><label for="departmentDd">Department</label></dt>
+		  <dd>
+			<select id="departmentDd">
 
-            <p>
-                <label for="wemail">Email </label>
-                <input type="email" id="wemail" value="<%=workEmail%>"/>
-            </p>
+            </select>
 
-            <p>
-                <label for="phone">Phone </label>
-                <input type="text" id="phone" value="<%=workPhones.phone%>"/>
-            </p>
-
-            <p>
-                <label for="mobile">Mobile </label>
-                <input type="text" id="mobile" value="<%=workPhones.mobile%>"/>
-            </p>
-            
-            <p>
-                <label for="workflowNamesDd">Workflow Names </label>
-                <select id="workflowNamesDd">
-
-                </select>
-            </p> 
-            <p id="workflowsDd">
-                           
-            </p>
-
-            <p>
-                <label for="degreesDd">Degree </label>
-                <select id="degreesDd">
-
-                </select>
-            </p>
-
-            <p>
-                <label for="relatedUsersDd">Responsible </label>
-                <select id="relatedUsersDd">
-
-                </select>
-            </p>
-
-            <p>
-                <label for="nextAction">Next Action </label>
-                <input type="text" id="nextAction" value="<%=nextAction%>"/>
-            </p>
-
-             <p>
-                <label for="sourceDd">Source </label>
-                <select id="sourceDd">
-                </select>
-            </p>
-
-            <p>
-                <label for="referredBy">Referred By </label>
-                <input type="text" id="referredBy" value="<%=referredBy%>"/>
-            </p>
-
-            <h2>Job</h2>
-            <p>
-                <label for="jobPositionDd">Applied Job </label>
-                <select id="jobPositionDd">
-
-                </select>
-            </p>
-
-            <p>
-                <label for="departmentDd">Department</label>
-                <select id="departmentDd">
-
-                </select>
-            </p>
-
-            <h2>Contract</h2>
-
-            <p>
-                <label for="expectedSalary">Expected Salary </label>
-                <input type="text" id="expectedSalary" value="<%=expectedSalary%>"/>
-            </p>
-
-            <p>
-                <label for="proposedSalary">Proposed Salary </label>
-                <input type="text" id="proposedSalary" value="<%=proposedSalary%>"/>
-            </p>
-
-            <p>
-                <label for="tags">Tags </label>
-                <input type="text" id="tags" value="<%=tags%>"/>
-            </p>
-
-            <h2>Application Summary</h2>
-            <p>
-                <textarea id="otherInfo"><%=otherInfo%></textarea>
-            </p>
-        </fieldset>
-    </form>
+		  </dd>
+		</dl>
+	  </div>
+      <div class="clearfix">
+      </div>
+	  <div class="formTitle">
+		<h3 class="left">Application Summary</h3>
+		<div class="clearfix"></div>
+	  </div>
+	  <textarea id="otherInfo"><%=otherInfo%></textarea>
+    </fieldset>
+  </form>
 </div>

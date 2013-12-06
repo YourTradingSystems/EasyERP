@@ -68,7 +68,40 @@ define(
                 dataType: "jsonp"
             });
         }
+		var sendEventsToGoogle = function(eventCollection, calendarId){
+            var token = getFromLocalStorage('token');
+			for(var item in eventCollection.toJSON()){
+				var event= {}
+				event.start={};
+				event.start.dateTime = item.start_date;
+				event.end={};
+				event.end.dateTime = item.end_date;
+				event.summary = item.summary;
+				event.description = item.description;
+				
 
+            $.ajax({
+                type: "POST",
+                url: calendar + "calendars/" +  calendarId + "/events?access_token=" + token,
+                data: event,
+                success: function(response){
+					if(response){
+						var i=1;
+					}
+						
+						
+                },
+                error: function (error, statusText,sdfdf){
+
+
+                },
+                dataType: "jsonp"
+            });
+				
+			}
+			
+			
+		}
         var getCalendarEvents = function(token, calendarId, callback){
 			console.log("Calendar Id: " + calendarId);
 
@@ -134,6 +167,7 @@ define(
 
         return {
             Authorize: authorize,
+			SendEventsToGoogle:sendEventsToGoogle,
             LoadCalendarEvents: loadEventsByOrder,
             getCalendarEvents:getCalendarEvents,
             GetCalendarsList:getCalendarsList,
