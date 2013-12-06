@@ -117,15 +117,15 @@ app.get('/getGoogleToken', function (req, res) {
                             }
                             var event = {
                                 "summary": "rrrrrrrrrr",
-                                'end': {
-                                    "dateTime": "2013-12-6T23:00:00.000-07:00"
-                                },
                                 'start': {
-                                    "dateTime": "2013-12-6T10:00:00.000-07:00"
+                                    "date": "2013-12-6"
+                                },
+                                'end': {
+                                    "date": "2013-12-6"
                                 }
-                
+                           
                             };
-                            client.calendar.events.insert({ calendarId: 'primary', resource: event })
+                            client.calendar.events.insert({ calendarId: calendars[1].id }, event)
                                 .withAuthClient(oauth2Client).execute(
                                 function (err, result) {
                                     if (result) {
