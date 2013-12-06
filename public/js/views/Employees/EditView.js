@@ -73,43 +73,20 @@ define([
             },
 
             saveItem: function () {
-                var name = {
-                    first: $.trim($("#first").val()),
-                    last: $.trim($("#last").val())
-                };
-
-                var workAddress = {};
-                $("dd").find(".workAddress").each(function () {
-                    var el = $(this);
-                    workAddress[el.attr("name")] = el.val();
-                });
-
-                var tags = $.trim($("#tags").val()).split(',');
-
-                var workEmail = $.trim($("#workEmail").val());
-                var skype = $.trim($("#skype").val());
-
-                var workPhones = {
-                    phone: $.trim($("#phone").val()),
-                    mobile: $.trim($("#mobile").val())
-                };
-
-                var officeLocation = $.trim($("#officeLocation").val());
-                var relatedUser = $("#relatedUsersDd option:selected").val();
+                var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
-                var department = $("#departmentsDd option:selected").val();
+
+                var department = this.$el.find("#departmentsDd option:selected").val();
                 department = department ? department : null;
-                var jobPosition = $("#jobPositionDd option:selected").val();
+
+                var jobPosition = this.$el.find("#jobPositionDd option:selected").val();
                 jobPosition = jobPosition ? jobPosition : null;
-                var manager = $("#projectManagerDD option:selected").val();
+
+                var manager = this.$el.find("#projectManagerDD option:selected").val();
                 manager = manager ? manager : null;
-                var coach = $("#coachDd option:selected").val();
+
+                var coach = this.$el.find("#coachDd option:selected").val();
                 coach = coach ? coach : null;
-                var identNo = parseInt($.trim($("#identNo").val()));
-
-                var passportNo = $.trim($("#passportNo").val());
-
-                var otherId = $.trim($("#otherId").val());
 
                 var homeAddress = {};
                 $("dd").find(".homeAddress").each(function () {
@@ -117,48 +94,64 @@ define([
                     homeAddress[el.attr("name")] = el.val();
                 });
 
-                var dateBirthSt = $.trim($("#dateBirth").val());
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                 var dateBirth = "";
                 if (dateBirthSt) {
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 }
 
-                var active = ($("#active").is(":checked")) ? true : false;
+                var active = (this.$el.find("#active").is(":checked")) ? true : false;
+
                 var self = this;
-                this.currentModel.save({
-                    name: name,
-                    imageSrc: this.imageSrc,
-                    tags: tags,
-                    workAddress: workAddress,
-                    workEmail: workEmail,
-                    skype: skype,
-                    workPhones: workPhones,
-                    officeLocation: officeLocation,
+
+                var data = {
+                    name: {
+                        first: $.trim(this.$el.find("#first").val()),
+                        last: $.trim(this.$el.find("#last").val())
+                    },
+                    workAddress: {
+                        street: this.$el.find('#street').val(),
+                        city: this.$el.find('#city').val(),
+                        state: this.$el.find('#state').val(),
+                        zip: this.$el.find('#zip').val(),
+                        country: this.$el.find('#country').val()
+                    },
+                    tags: $.trim(this.$el.find("#tags").val()).split(','),
+                    workEmail: $.trim(this.$el.find("#workEmail").val()),
+                    skype: $.trim(this.$el.find("#skype").val()),
+                    workPhones: {
+                        phone: $.trim(this.$el.find("#phone").val()),
+                        mobile: $.trim(this.$el.find("#mobile").val())
+                    },
+                    officeLocation: $.trim(this.$el.find("#officeLocation").val()),
                     relatedUser: relatedUser,
                     department: department,
                     jobPosition: jobPosition,
                     manager: manager,
                     coach: coach,
-                    identNo: identNo,
-                    passportNo: passportNo,
-                    otherId: otherId,
+                    identNo: parseInt($.trim(this.$el.find("#identNo").val())),
+                    passportNo: $.trim(this.$el.find("#passportNo").val()),
+                    otherId: $.trim(this.$el.find("#otherId").val()),
                     homeAddress: homeAddress,
                     dateBirth: dateBirth,
-                    active: active
-                }, {
-                    headers: {
-                        mid: 39
-                    },
-                    wait: true,
-                    success: function (model) {
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-                        self.hideDialog();
-                    },
-                    error: function () {
-                        Backbone.history.navigate("home", { trigger: true });
-                        self.hideDialog();
-                    }
+                    active: active,
+                    imageSrc: this.imageSrc
+                };
+                this.currentModel.save(data,{
+                        headers: {
+                            mid: 39
+                        },
+                        wait: true,
+                        success: function (model) {
+                            Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            self.hideDialog();
+                        },
+                        error: function () {
+                            Backbone.history.navigate("home", { trigger: true });
+                            self.hideDialog();
+                        }
                 });
+
             },
 
             render: function () {
@@ -190,7 +183,7 @@ define([
                 common.populateUsers(App.ID.relatedUsersDd, "/Users", this.currentModel.toJSON());
                 common.populateDepartments(App.ID.departmentsDd, "/Departments",this.currentModel.toJSON());
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
-                common.populateEmployeesDd(App.ID.coachDd, "/getPersonsForDd", this.currentModel.toJSON());
+                common.populateCoachDd(App.ID.coachDd, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#dateBirth').datepicker({

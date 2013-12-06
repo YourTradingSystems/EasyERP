@@ -203,9 +203,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
+                if (model && ( model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
+                        return ((model.manager && model.manager._id === item._id) || (model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
@@ -218,6 +218,29 @@
 				if (callback)callback();
             });
         }
+
+        var populateCoachDd = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.coach ) {
+                    options = $.map(response.data, function (item) {
+                        return (model.coach && model.coach._id === item._id) ?
+                            $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
+                    });
+                }
+                selectList.append(options);
+                if (callback)callback();
+            });
+        }
+
         var populateCompanies = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -461,6 +484,7 @@
             populateWorkflows: populateWorkflows,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
+            populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
             toObject: toObject,
             displayControlBtnsByActionType: displayControlBtnsByActionType,

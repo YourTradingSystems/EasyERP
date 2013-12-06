@@ -86,60 +86,47 @@
             },
 
             saveItem: function () {
+                debugger;
                 var self = this;
-
                 var mid = 39;
-                var subject = $("#subject").val();
-                var name = {
-                    first: $("#first").val(),
-                    last: $("#last").val()
-                };
-                var wemail = $.trim($("#wemail").val());
-                var phone = $.trim($("#phone").val());
-                var mobile = $.trim($("#mobile").val());
-                var wphones = {
-                    phone: phone,
-                    mobile: mobile
-                };
 
-                var degreeId = $("#degreesDd option:selected").val();
-
-                var relatedUserId = $("#relatedUsersDd option:selected").val() ? $("#relatedUsersDd option:selected").val() : null;
-
-                var nextActionSt = $.trim($("#nextAction").val());
+                var relatedUserId = this.$el.find("#relatedUsersDd option:selected").val() ? this.$el.find("#relatedUsersDd option:selected").val() : null;
+                var nextActionSt = $.trim(this.$el.find("#nextAction").val());
                 var nextAction = "";
                 if (nextActionSt) {
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
                 }
-                var sourceId = $("#sourceDd option:selected").val();
-                var referredBy = $.trim($("#referredBy").val());
-                var departmentId = $("#departmentDd option:selected").val();
-                var jobPositionId = $("#jobPositionDd option:selected").val() ? $("#jobPositionDd option:selected").val() : null;
-                var expectedSalary = $.trim($("#expectedSalary").val());
-                var proposedSalary = $.trim($("#proposedSalary").val());
-                var tags = $.trim($("#tags").val()).split(',');
-                var otherInfo = $("#otherInfo").val();
-                var workflow = $("#workflowsDd option:selected").data('id');
+                var jobPositionId = this.$el.find("#jobPositionDd option:selected").val() ? this.$el.find("#jobPositionDd option:selected").val() : null;
 
-                this.currentModel.save({
-                    subject: subject,
+                var data = {
+                    subject: this.$el.find("#subject").val(),
                     imageSrc: this.imageSrc,
-                    name: name,
-                    workEmail: wemail,
-                    wphones: wphones,
-                    degree: degreeId,
+                    name: {
+                        first: this.$el.find("#first").val(),
+                        last: this.$el.find("#last").val()
+                    },
+                    workEmail: $.trim(this.$el.find("#wemail").val()),
+                    workPhones: {
+                        phone: $.trim(this.$el.find("#phone").val()),
+                        mobile: $.trim(this.$el.find("#mobile").val())
+                    },
+                    degree: this.$el.find("#degreesDd option:selected").val(),
                     relatedUser: relatedUserId,
                     nextAction: nextAction,
-                    source: sourceId,
-                    referredBy: referredBy,
-                    department: departmentId,
+                    source: {
+                        id: this.$el.find("#sourceDd option:selected").val()
+                    },
+                    referredBy: $.trim(this.$el.find("#referredBy").val()),
+                    department: this.$el.find("#departmentDd option:selected").val() ? this.$el.find("#departmentDd option:selected").val() : null,
                     jobPosition: jobPositionId,
-                    expectedSalary: expectedSalary,
-                    proposedSalary: proposedSalary,
-                    tags: tags,
-                    otherInfo: otherInfo,
-                    workflow: workflow
-                }, {
+                    expectedSalary: $.trim(this.$el.find("#expectedSalary").val()),
+                    proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
+                    tags: $.trim(this.$el.find("#tags").val()).split(','),
+                    otherInfo: this.$el.find("#otherInfo").val(),
+                    workflow: this.$el.find("#workflowNamesDd option:selected").val() ? this.$el.find("#workflowNamesDd option:selected").val() : null
+                };
+
+                this.currentModel.save(data, {
                     headers: {
                         mid: mid
                     },

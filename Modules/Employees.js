@@ -340,7 +340,12 @@ var Employee = function (logWriter, mongoose) {
 
     function getById(data, response) {
         var query = employee.findById(data.id, function (err, res) { });
-        //query.populate('relatedUser department jobPosition workflow');
+        query.populate('manager','name _id');
+        query.populate('department','departmentName _id');
+        query.populate('coach','name _id');
+        query.populate('relatedUser','login _id');
+        query.populate('jobPosition','name _id');
+
         query.exec(function (err, findedEmployee) {
             if (err) {
                 logWriter.log("Employees.js getById employee.find " + err);
@@ -446,7 +451,7 @@ var Employee = function (logWriter, mongoose) {
 
         employee: employee,
 
-        getById:getById
+        getById: getById
     };
 };
 
