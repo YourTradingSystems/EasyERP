@@ -36,8 +36,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         },
 		syncCalendar:function(e){
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
-			window.location = "getGoogleToken"
-			
+		    window.location = "getGoogleToken";
 		},
         keydownHandler: function (e) {
             switch (e.which) {
