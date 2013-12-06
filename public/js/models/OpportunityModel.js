@@ -82,10 +82,7 @@
             active: true,
             optout: false,
             reffered: '',
-            workflow: {
-                name: 'New',
-                status: 'New'
-            }
+            workflow: ''
         },
 
         urlRoot: function () {
