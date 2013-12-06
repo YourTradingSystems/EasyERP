@@ -1,8 +1,8 @@
 ﻿define([
-    'models/DepartmentModel'
+    'models/DepartmentsModel'
 ],
     function (DepartmentModel) {
-        var DepartmentsCollection = Backbone.Collection.extend({
+        var departmentsCollection = Backbone.Collection.extend({
             model: DepartmentModel,
             url: function () {
                 return "/Departments";
@@ -40,5 +40,5 @@
 
         });
 
-        return DepartmentsCollection;
+        return departmentsCollection;
     });

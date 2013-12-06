@@ -555,6 +555,21 @@ app.post('/Departments', function (req, res) {
     requestHandler.createDepartment(req, res, data);
 });
 
+app.get('/Departments/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getDepartmentById(req, res, data);
+            break;
+        default: requestHandler.getDepartment(req, res, data);
+            break;
+    }
+
+});
+
 app.put('/Departments/:_id', function (req, res) {
     data = {};
     var id = req.body._id;

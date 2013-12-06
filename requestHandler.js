@@ -725,6 +725,28 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+    
+    function getFilterDepartment(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+        	department.getFilterDepartment(data, res);
+        } else {
+            res.send(401);
+        }
+        console.log("Requst getPersons is success");
+    };
+
+    function getDepartmentById(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+        	department.getDepartmentById(data.id, res);
+        } else {
+            res.send(401);
+        }
+        //console.log("Requst getDepartmentById is success");
+    };
 
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
