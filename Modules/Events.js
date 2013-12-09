@@ -1,6 +1,7 @@
 ﻿// JavaScript source code
 var Events = function (logWriter, mongoose, googleModule) {
-    var ObjectId = mongoose.Schema.Types.ObjectId;
+    var ObjectId = mongoose.Schema.Types.ObjectId,
+        request = require('request');
 
     var eventsSchema = mongoose.Schema({
         calendarId: { type: ObjectId, ref: 'Calendars', default: null },
@@ -637,9 +638,33 @@ var Events = function (logWriter, mongoose, googleModule) {
             res.send(500, { error: 'Events.save  error' });
         }
     };//end googleCalSync
+    
+    function getXML(res, link) {
+        link = link.replace("basic", "full") + "?alt=json";
+        request({ url: link, json: true }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var event = [];
+                for (var i in body.feed.entry) {
+
+                    var content = body.feed.entry[i].content.$t;
+                    var startDate = new Date(body.feed.entry[i].gd$when[0].startTime).toISOString();
+                    var endDate = new Date(body.feed.entry[i].gd$when[0].endTime).toISOString();
+                    var subject = body.feed.entry[i].author[0].name.$t
+                    event.push({ "id": body.feed.entry[i].id.$t.split("/")[6], "summary": body.feed.entry[i].title.$t, "description": content, start: { "dateTime": startDate }, end: { "dateTime": endDate }, "title": subject });
+                }
+                var calendar = { "id": body.feed.id.$t.split("/")[6], "summary": body.feed.title.$t, "description": body.feed.subtitle.$t, "summary": body.feed.title.$t, "link": link }
+                calendar.items = event;
+                data = [calendar]
+                googleCalSync(data, res)
+            }
+        });
+    }
 
 
     return {
+        
+        getXML: getXML,
+        
         create: create,
 
         get: get,

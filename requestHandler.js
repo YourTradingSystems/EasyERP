@@ -4,8 +4,9 @@ var requestHandler = function (fs, mongoose) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
-        events = require("./Modules/Events.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
+        google = require("./Modules/Google.js")(users),
+        events = require("./Modules/Events.js")(logWriter, mongoose, google),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
@@ -1034,8 +1035,15 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     function getXML(req, res, link, data) {
-		googleModule.getXML(res,link);
-	}
+		events.getXML(res,link);
+    }
+    
+    function getToken(req, res) {
+        google.getToken(req, res, function (token) {
+            console.log(token);
+            google.getGoogleCalendars(token, res);
+        });
+    }
     //---------END------Events----------------------------------
     return {
 
@@ -1157,7 +1165,9 @@ var requestHandler = function (fs, mongoose) {
         removeCalendar: removeCalendar,
 
         googleCalSync: googleCalSync,
-		getXML: getXML
+        getXML: getXML,
+        getToken: getToken
+        
     }
 }
 //---------EXPORTS----------------------------------------
