@@ -100,7 +100,6 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        debugger;
                         $('.edit-person-dialog').remove();
                         Backbone.history.navigate("easyErp/Persons", { trigger: true });
                     },
