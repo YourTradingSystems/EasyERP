@@ -30,14 +30,8 @@
 
         defaults: {
             departmentName: 'emptyDepartment',
-            parentDepartment: {
-                id: null,
-                name: null
-            },
-            departmentManager: {
-                id: null,
-                name: ''
-            }
+            parentDepartment:"", 
+            departmentManager: ""
         },
 
         urlRoot: function () {

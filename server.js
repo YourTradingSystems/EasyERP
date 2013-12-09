@@ -617,6 +617,7 @@ app.get('/Departments', function (req, res) {
     requestHandler.getDepartment(req, res, data);
 });
 
+
 app.post('/Departments', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -633,21 +634,21 @@ app.get('/Departments/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
             break;
-        default: requestHandler.getDepartment(req, res, data);
+        default: requestHandler.getCustomDepartment(req, res, data);
             break;
     }
 
 });
 
-app.put('/Departments/:_id', function (req, res) {
+app.put('/Departments/:viewType/:_id', function (req, res) {  
     data = {};
-    var id = req.body._id;
+    var id = req.param('_id');
     data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.updateDepartment(req, res, id, data);
 });
 
-app.delete('/Departments/:_id', function (req, res) {
+app.delete('/Departments/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

@@ -745,28 +745,6 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     
-    function getFilterDepartment(req, res, data) {
-        console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn) {
-            //persons.get(res);
-        	department.getFilterDepartment(data, res);
-        } else {
-            res.send(401);
-        }
-        console.log("Requst getPersons is success");
-    };
-
-    function getDepartmentById(req, res, data) {
-        console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn) {
-            //persons.get(res);
-        	department.getDepartmentById(data.id, res);
-        } else {
-            res.send(401);
-        }
-        //console.log("Requst getDepartmentById is success");
-    };
-
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
         if (req.session && req.session.loggedIn) {
@@ -792,6 +770,26 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+
+    function getCustomDepartment(req, res, data) {
+        console.log("Requst getDepartment is success");
+        if (req.session && req.session.loggedIn) {
+            //company.get(res);
+        	department.getCustomDepartment(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getDepartmentById(req, res, data) {
+        console.log("----------->Request getDepartmentById is success");
+        if (req.session && req.session.loggedIn) {
+        	department.getDepartmentById(data.id, res);
+        } else {
+            res.send(401);
+        }
+
+    };
     //---------END------Department----------------------------------
 
     function createDegree(req, res, data) {
@@ -1135,7 +1133,8 @@ var requestHandler = function (fs, mongoose) {
         createDepartment: createDepartment,
         updateDepartment: updateDepartment,
         removeDepartment: removeDepartment,
-
+        getDepartmentById:getDepartmentById,
+        getCustomDepartment:getCustomDepartment,
         createDegree: createDegree,
         getDegrees: getDegrees,
         updateDegree: updateDegree,

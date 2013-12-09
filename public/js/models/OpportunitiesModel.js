@@ -18,7 +18,7 @@ function (common) {
         parse: true,
 
         parse: function (response) {
-	           if (response ) {
+	           if (response && response.nextAction) {
 	            	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
 	            	response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
 	            	response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
