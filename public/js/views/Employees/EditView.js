@@ -155,6 +155,7 @@ define([
             },
 
             render: function () {
+                console.log(this.currentModel.toJSON());
                 if (this.currentModel.get('dateBirth')) {
                     this.currentModel.set({
                         dateBirth: this.currentModel.get('dateBirth').split('T')[0].replace(/-/g, '/')
