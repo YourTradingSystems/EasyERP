@@ -1044,6 +1044,9 @@ var requestHandler = function (fs, mongoose) {
         });
 	}
 
+    function googleCalendars(req, res) {
+        google.getGoogleCalendars(req.session.googleToken, res);
+    }
 
     //---------END------Events----------------------------------
     return {
@@ -1167,8 +1170,8 @@ var requestHandler = function (fs, mongoose) {
 
         googleCalSync: googleCalSync,
         getXML: getXML,
-        getToken: getToken
-        
+        getToken: getToken,
+        googleCalendars:googleCalendars
     }
 }
 //---------EXPORTS----------------------------------------
