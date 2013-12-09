@@ -91,12 +91,41 @@
                         }
                     });
             });
+    };
+    var getEventsByCalendarIds = function (iDs, callback) {
+        //oauth2Client.credentials = {
+        //    access_token: token
+        //};
+        var eventsArray = [];
+        googleapis
+            .discover('calendar', 'v3')
+            .execute(function (err, client) {
+                if (err) console.log(err);
+                client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+                    function (err, result) {
+                        if (result) {
+                            var calendars = [];
+                            for (var i in result.items) {
+                                calendars.push({
+                                    id: result.items[i].id,
+                                    summary: result.items[i].summary
+                                });
+                            }
+                            console.log(calendars);
+                            response.send(calendars);
+                        } else {
+                            console.log(err);
+                            response.send(500, err);
+                        }
+                    });
+            });
     }
     return {
         googleapis: googleapis,
         oauth2Client: oauth2Client,
         getGoogleCalendars:getGoogleCalendars,
-        getToken: getToken
+        getToken: getToken,
+        getEventsByCalendarIds: getEventsByCalendarIds
     }
 };
 module.exports = googleModule;
