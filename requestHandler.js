@@ -1042,7 +1042,9 @@ var requestHandler = function (fs, mongoose) {
         google.getToken(req, res, function (token) {
             res.redirect('#easyErp/Calendars');
         });
-    }
+	}
+
+
     //---------END------Events----------------------------------
     return {
 

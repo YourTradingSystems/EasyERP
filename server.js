@@ -980,6 +980,9 @@ app.post('/GoogleCalSync', function (req, res) {
     data.calendars = req.body.calendars;
     requestHandler.googleCalSync(req, res, data);
 });
+app.get('/GoogleCalendars', function (req, res) {
+    requestHandler.googleCalendars(req, res);
+});
 app.listen(8088);
 
 //console.log(app.routes);
