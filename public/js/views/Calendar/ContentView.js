@@ -36,7 +36,8 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         },
 		syncCalendar:function(e){
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
-		    window.location = "getGoogleToken";
+			window.open("/getGoogleToken","_blank");
+			
 		},
         keydownHandler: function (e) {
             switch (e.which) {
@@ -58,36 +59,34 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
            if (data.link){
                $.ajax({
                    type: "GET",
-                   url: data.link,
+                   url: "/getXML?link="+data.link,
                    data: null,
                    success: function(response){
                        if(response.error){
                            throw new Error(response.error.message);
                        } else{
-                           calendar.summary = $(response).find(">title").text();
-                           calendar.id = $(response).find(">id").text().split("/")[6];
-                           calendar.description = $(response).find(">subtitle").text();
+						   alert(response);
+                           calendar.summary = data.calName;
+                           calendar.id = response.id;
+                           calendar.description = response.description;
                            var events = []
-                           $(response).find(">entry").each(function(){
+						   for (var i in response.entry){
+							   var itm = response.entry[i]
                                var item = {};
-                               item.title=$(this).find("title").text();
-                               item.summary=$(this).find("content").text().replace(/<br \/>/g," ").replace(/\n/g,"")
-                               item.description=$(this).find("content").text().replace(/<br \/>/g," ").replace(/\n/g,"")
-                               item.id=$(this).find("id").text().split("/")[6];
+                               item.title=itm.title;
+                               item.summary=itm.title;
+                               item.description=itm.summary;
+                               item.id=itm.id
                                item.start = {}
-                               item.start.dateTime=new Date().toISOString();
+                               item.start.dateTime=new Date(itm.startDate.split(" ")[2],itm.startDate.split(" ")[1], itm.startDate.split(" ")[0],itm.startDate.split(" ")[3].split(":")[0],itm.startDate.split(" ")[3].split(":")[1]).toISOString();
                                item.end = {}
-                               item.end.dateTime = new Date().toISOString();
+                               item.end.dateTime = new Date(itm.endDate.split(" ")[2],itm.endDate.split(" ")[1], itm.endDate.split(" ")[0],itm.endDate.split(" ")[3].split(":")[0],itm.endDate.split(" ")[3].split(":")[1]).toISOString();
                                events.push(item);
                                
-                           });
+                           }
                            calendar.items=events;
                            dataService.postData("/GoogleCalSync", {mid:39, calendars:[calendar]}, function(resp){
-                               self.calendarsCollection.fetch({
-                                   success: function(){
-                                       self.populateCalendarsList();
-                                   }
-                               });
+							   self.render();
                            });
                        }
 
@@ -95,7 +94,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                    error: function (error){
                        throw new Error(error.message);
                    },
-                   dataType: "jsonp"
+                   dataType: "json"
                });
            }
            else{

@@ -29,7 +29,7 @@
             fax: { type: String, default: '' }
         },
         contacts: { type: Array, default: [] },
-        internalNotes: { type: String, default: '' },
+        internalNotes: { type: String, defaulgetFilterPersonst: '' },
         title: { type: String, default: '' },
         salesPurchases: {
             isCustomer: { type: Boolean, default: false },
