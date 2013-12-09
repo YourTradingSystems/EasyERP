@@ -558,7 +558,7 @@ var Events = function (logWriter, mongoose, googleModule) {
                                         res.send(500, { error: "Can't update Calendar" });
                                     } else {
 
-                                        if (items) {
+                                        if (result) {
                                             //Update Existing Calendar Events
                                             cal.items.forEach(function (ev) {
                                                 event.find({ id: ev.id }, function (err, result) {

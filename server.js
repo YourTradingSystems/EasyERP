@@ -977,7 +977,7 @@ app.delete('/Calendars/:_id', function (req, res) {
 app.post('/GoogleCalSync', function (req, res) {
     data = {};
     data.mid = req.body.mid;
-    data.calendars = req.body.calendars;
+    data.calendar = req.body.calendar;
     requestHandler.googleCalSync(req, res, data);
 });
 app.get('/GoogleCalendars', function (req, res) {
