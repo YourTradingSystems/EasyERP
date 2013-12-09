@@ -86,60 +86,49 @@ app.get('/account/authenticated', function (req, res, next) {
     }
 });
 app.get('/getGoogleToken', function (req, res) {
-    var query = req.query;
-    console.log(query);
-    if (!query.hasOwnProperty('code')) {
-        res.redirect(url);
-    } else {
-        oauth2Client.getToken(query.code, function (err, tokens) {
-            // contains an access_token and optionally a refresh_token.
-            // save them permanently.
-            oauth2Client.credentials = {
-                access_token: tokens.access_token
-            };
-            googleapis
-                .discover('calendar', 'v3')
-                .execute(function (err, client) {
-                    if (err) console.log(err);
-                    client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
-                        function (err, result) {
-                            if (result) {
-                                var calendars = [];
-                                for (var i in result.items) {
-                                    calendars.push({
-                                        id: result.items[i].id,
-                                        summary: result.items[i].summary
-                                    });
-                                }
-                                console.log(calendars);
-                            } else {
-                                console.log(err);
-                            }
-                            var event = {
-                                "summary": "rrrrrrrrrr",
-                                'start': {
-                                    "date": "2013-12-6"
-                                },
-                                'end': {
-                                    "date": "2013-12-6"
-                                }
-                           
-                            };
-                            client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-                                .withAuthClient(oauth2Client).execute(
-                                function (err, result) {
-                                    if (result) {
-                                        console.log(result);
-                                    } else {
-                                        console.log(err);
-                                    }
-                                    ;
-                                });
-                        });
-                    res.redirect('/#easyErp/Calendar');
-                });
-        });
-    }
+    requestHandler.getToken(req, res);
+            //googleapis
+            //    .discover('calendar', 'v3')
+            //    .execute(function (err, client) {
+            //        if (err) console.log(err);
+            //        client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+            //            function (err, result) {
+            //                if (result) {
+            //                    var calendars = [];
+            //                    for (var i in result.items) {
+            //                        calendars.push({
+            //                            id: result.items[i].id,
+            //                            summary: result.items[i].summary
+            //                        });
+            //                    }
+            //                    console.log(calendars);
+            //                } else {
+            //                    console.log(err);
+            //                }
+            //                var event = {
+            //                    "summary": "rrrrrrrrrr",
+            //                    'start': {
+            //                        "date": "2013-12-6"
+            //                    },
+            //                    'end': {
+            //                        "date": "2013-12-6"
+            //                    }
+
+            //                };
+            //                //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+            //                //    .withAuthClient(oauth2Client).execute(
+            //                //    function (err, result) {
+            //                //        if (result) {
+            //                //            console.log(result);
+            //                //        } else {
+            //                //            console.log(err);
+            //                //        }
+            //                //        ;
+            //                //    });
+            //            });
+            //        res.redirect('/#easyErp/Calendar');
+            //    });
+    
 });
 //---------------------Users--and Profiles------------------------------------------------
 
@@ -355,7 +344,7 @@ app.post('/Projects', function (req, res) {
     requestHandler.createProject(req, res, data);
 });
 
-app.put('/Projects/:_id', function (req, res) {
+app.put('/Projects/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -363,7 +352,7 @@ app.put('/Projects/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data);
 });
 
-app.delete('/Projects/:_id', function (req, res) {
+app.delete('/Projects/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;
@@ -423,7 +412,7 @@ app.get('/Priority', function (req, res) {
     requestHandler.getTasksPriority(req, res, data);
 });
 
-app.put('/Tasks/:_id', function (req, res) {
+app.put('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -973,11 +962,27 @@ app.delete('/Calendars/:_id', function (req, res) {
     requestHandler.removeCalendar(req, res, id, data);
 });
 
+app.get('/getXML', function (req, res) {
+    data = {};
+    var link = req.param('link');
+    data.mid = req.body.mid;
+    data.calendars = req.body.calendars;
+    requestHandler.getXML(req, res, link, data);
+});
+app.delete('/Calendars/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCalendar(req, res, id, data);
+});
 app.post('/GoogleCalSync', function (req, res) {
     data = {};
     data.mid = req.body.mid;
     data.calendars = req.body.calendars;
     requestHandler.googleCalSync(req, res, data);
+});
+app.get('/GoogleCalendars', function (req, res) {
+    requestHandler.googleCalendars(req, res);
 });
 app.listen(8088);
 

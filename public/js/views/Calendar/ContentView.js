@@ -34,9 +34,54 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             "change #calendarList" : "curCalendarChange",
             'keydown': 'keydownHandler'
         },
+
 		syncCalendar:function(e){
+			var self = this;
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
-		    window.location = "getGoogleToken";
+            var strWindowFeatures = "resizable=yes,width=800, height=600";
+            var winObject = window.open("/getGoogleToken", "Google Authorization", strWindowFeatures);
+            var pollTimer = window.setInterval(function(){
+                if(winObject.document.URL.indexOf("easyErp") != -1){
+                    var url = winObject.document.url;
+                    winObject.close();
+					clearInterval(pollTimer);
+					$.ajax({
+						type: "GET",
+						url: "/GoogleCalendars",
+						data: event,
+						success: function(response){
+							if(response){
+								var formString = self.syncDilalogTpl({calendarsCollection:response});
+								this.syncDialog = $(formString).dialog({
+									autoOpen:true,
+									resizable:false,
+									title: "Synchronize calendars",
+									buttons:{
+										submit: {
+											text:"Continue",
+											click: self.syncDlgSubmitBtnClickHandler
+										},
+										cancel: {
+											text: "Cancel",
+											click: self.closeSyncDialog
+										}
+									}
+								});
+
+							}
+							
+							
+						},
+						error: function (error, statusText,sdfdf){
+
+
+						},
+						dataType: "json"
+					});
+
+                }
+            }, 100);
+
 		},
         keydownHandler: function (e) {
             switch (e.which) {
@@ -58,44 +103,39 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
            if (data.link){
                $.ajax({
                    type: "GET",
-                   url: data.link,
+                   url: "/getXML?link="+data.link,
                    data: null,
                    success: function(response){
                        if(response.error){
                            throw new Error(response.error.message);
                        } else{
-                           calendar.summary = $(response).find(">title").text();
-                           calendar.id = $(response).find(">id").text().split("/")[6];
-                           calendar.description = $(response).find(">subtitle").text();
-                           var events = []
-                           $(response).find(">entry").each(function(){
-                               var item = {};
-                               item.title=$(this).find("title").text();
-                               item.summary=$(this).find("content").text().replace(/<br \/>/g," ").replace(/\n/g,"")
-                               item.description=$(this).find("content").text().replace(/<br \/>/g," ").replace(/\n/g,"")
-                               item.id=$(this).find("id").text().split("/")[6];
-                               item.start = {}
-                               item.start.dateTime=new Date().toISOString();
-                               item.end = {}
-                               item.end.dateTime = new Date().toISOString();
-                               events.push(item);
-                               
-                           });
-                           calendar.items=events;
-                           dataService.postData("/GoogleCalSync", {mid:39, calendars:[calendar]}, function(resp){
-                               self.calendarsCollection.fetch({
-                                   success: function(){
-                                       self.populateCalendarsList();
-                                   }
-                               });
-                           });
-                       }
+						   self.render();
+						   self.calendarsCollection.fetch({
+							   success: function(){
+								   self.populateCalendarsList();
+							   }
+						   });
+					   }
 
                    },
                    error: function (error){
-                       throw new Error(error.message);
+					   if (error.responseText =="OK"){
+						   self.eventsCollection.fetch({
+							   success: function(){
+								   self.render();
+								   self.calendarsCollection.fetch({
+									   success: function(){
+										   self.populateCalendarsList();
+									   }
+								   });
+
+							   }
+						   });
+
+						   
+					   }
                    },
-                   dataType: "jsonp"
+                   dataType: "json"
                });
            }
            else{
@@ -131,10 +171,10 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                            var calendarName = $('#calendarNameTxt').val();
                            var synchronize = $('#synchronize').attr('checked');
                            var link = $('#fromPublicCalendar').val();
-                           if(calendarName.length === 0){
-                                                         alert('Calendar name can not be empty!');
-                                                         return;
-                                                        }
+                           if(calendarName.length === 0&&link.length === 0){
+                               alert('Calendar name or link can not be empty!');
+                               return;
+                           }
                            self.createNewCalendar({calName : calendarName, sync:synchronize,link:link});
                            self.hideDialog();
                        }
@@ -145,6 +185,11 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                    }
                }
            });
+		   $("#addCalendarDlg").on("click",".changeType",function(){
+			   $(".swicher").hide();
+			   $(".swicher."+$(this).val()).show();
+			   
+		   })
        },
         
 
@@ -189,8 +234,31 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         },
 
         syncDlgSubmitBtnClickHandler:function(){
-            this.parseSelectedCalendars();
-            this.loadCalendarEvents();
+//            this.parseSelectedCalendars();
+  //          this.loadCalendarEvents();
+            var checkboxes = $('input:checkbox[name=calendarSelect]:checked');
+            if(checkboxes.length == 0){
+                alert('Please select calendars to synchronize');
+                return;
+            }
+            var calendarIdList = $.map(checkboxes,function(item){
+                return $(item).attr('data-id');
+            });
+			$.ajax({
+				type: "POST",
+				url: "/GoogleCalSync",
+				data: {calendar:calendarIdList},
+				success: function(response){
+					if(response){
+						
+					}
+				},
+				error:function(){
+					
+				}
+			});
+			this.closeSyncDialog();
+
         },
 
         showSyncDialog: function(calendars){

@@ -4,8 +4,9 @@ var requestHandler = function (fs, mongoose) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
-        events = require("./Modules/Events.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
+        google = require("./Modules/Google.js")(users),
+        events = require("./Modules/Events.js")(logWriter, mongoose, google),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
@@ -16,7 +17,6 @@ var requestHandler = function (fs, mongoose) {
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
-
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);
@@ -1032,6 +1032,20 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
+    function getXML(req, res, link, data) {
+		events.getXML(res,link);
+    }
+    
+    function getToken(req, res) {
+        google.getToken(req, res, function (token) {
+            res.redirect('#easyErp/Calendars');
+        });
+	}
+
+    function googleCalendars(req, res) {
+        google.getGoogleCalendars(req.session.googleToken, res);
+    }
+
     //---------END------Events----------------------------------
     return {
 
@@ -1153,7 +1167,10 @@ var requestHandler = function (fs, mongoose) {
         updateCalendar: updateCalendar,
         removeCalendar: removeCalendar,
 
-        googleCalSync: googleCalSync
+        googleCalSync: googleCalSync,
+        getXML: getXML,
+        getToken: getToken,
+        googleCalendars:googleCalendars
     }
 }
 //---------EXPORTS----------------------------------------

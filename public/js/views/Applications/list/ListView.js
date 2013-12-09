@@ -22,7 +22,7 @@ function (ApplicationsListTemplate, CreateView, ListItemView) {
         },
 
         render: function () {
-
+            console.log(this.collection);
             console.log('Applications list render');
             this.$el.html(_.template(ApplicationsListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
