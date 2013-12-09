@@ -94,6 +94,7 @@ app.get('/getGoogleToken', function (req, res) {
         oauth2Client.getToken(query.code, function (err, tokens) {
             // contains an access_token and optionally a refresh_token.
             // save them permanently.
+            console.log(tokens);
             oauth2Client.credentials = {
                 access_token: tokens.access_token
             };
