@@ -355,7 +355,7 @@ app.post('/Projects', function (req, res) {
     requestHandler.createProject(req, res, data);
 });
 
-app.put('/Projects/:_id', function (req, res) {
+app.put('/Projects/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -363,7 +363,7 @@ app.put('/Projects/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data);
 });
 
-app.delete('/Projects/:_id', function (req, res) {
+app.delete('/Projects/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;
@@ -423,7 +423,7 @@ app.get('/Priority', function (req, res) {
     requestHandler.getTasksPriority(req, res, data);
 });
 
-app.put('/Tasks/:_id', function (req, res) {
+app.put('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

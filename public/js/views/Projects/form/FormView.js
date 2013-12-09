@@ -7,20 +7,19 @@
  */
 
 define([
-    'text!templates/Projects/list/ListTemplate.html',
-    'text!templates/Projects/form/FormTemplate.html'
-
+    'text!templates/Projects/form/FormTemplate.html',
+    'views/Projects/EditView'
 ],
 
-    function (TasksListTemplate, TasksFormTemplate) {
-        var FormTasksView = Backbone.View.extend( {
+    function (ProjectsFormTemplate,EditView) {
+        var FormProjectsView = Backbone.View.extend( {
             el: '#content-holder',
             initialize: function(options) {
                 this.formModel = options.model;
             },
             render: function () {
                 var formModel = this.formModel.toJSON();
-                this.$el.html(_.template(TasksFormTemplate,formModel));
+                this.$el.html(_.template(ProjectsFormTemplate,formModel));
                 return this;
             },
             editItem: function () {
@@ -43,5 +42,5 @@ define([
             }
         });
 
-        return FormTasksView;
+        return FormProjectsView;
     });
