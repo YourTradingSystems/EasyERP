@@ -39,25 +39,26 @@
         }
     }
 
-    var getToken = function (req, res) {
-        if (req.sessions && req.sessions.loggedIn) {
-
-        }
-        var query = req.query;
-        console.log(query);
-        if (!query.hasOwnProperty('code')) {
-            res.redirect(url);
+    var getToken = function(req, res) {
+        if (checkSessionForToken(req)) {
+            return req.sessions.googleToken;
         } else {
-            oauth2Client.getToken(query.code, function (err, tokens) {
-                // contains an access_token and optionally a refresh_token.
-                // save them permanently.
-                oauth2Client.credentials = {
-                    access_token: tokens.access_token
-                };
-
-            });
+            var query = req.query;
+            console.log(query);
+            if (!query.hasOwnProperty('code')) {
+                res.redirect(url);
+            } else {
+                oauth2Client.getToken(query.code, function(err, tokens) {
+                    // contains an access_token and optionally a refresh_token.
+                    // save them permanently.
+                    if (req.sessions && req.sessions.loggedIn) {
+                        writeTokenToDb(req.sessions.uId, tokens.access_token);
+                        req.sessions.googleToken = tokens.access_token;
+                    }
+                });
+            }
         }
-    };
+    }
     return {
         getToken: getToken
     }
