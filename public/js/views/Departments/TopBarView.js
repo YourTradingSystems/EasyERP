@@ -16,33 +16,35 @@ define([
             	"click #top-bar-deleteBtn": "deleteEvent",
             	"click #top-bar-saveBtn": "saveEvent",
             	"click #top-bar-discardBtn": "discardEvent",
-				"click #top-bar-editBtn": "editEvent",
+                "click #top-bar-editBtn": "editEvent",
                 "click #top-bar-createBtn": "createEvent"
             },
             
-            changeContentViewType: function(e){
+            changeContentViewType:  function (e) {
                 Custom.changeContentViewType(e, this.contentType, this.collection);
-			},
-            
-            changeItemIndex:  function (e) {
-                var actionType = "Content";
-                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
             },
             createEvent: function (event) {
                 event.preventDefault();
                 this.trigger('createEvent');
             },
 
+            changeItemIndex: function (e) {
+                var actionType = "Content";
+                Custom.changeItemIndex(e, actionType, this.contentType, this.collection);
+            },
             editEvent: function (event) {
                 event.preventDefault();
                 this.trigger('editEvent');
             },
+
             initialize: function(options){
             	this.actionType = options.actionType;
             	if (this.actionType !== "Content")
             	    Custom.setCurrentVT("form");
-            	this.collection = options.collection;
-            	this.collection.bind('reset', _.bind(this.render, this));
+                if (options.collection) {
+                    this.collection = options.collection;
+                    this.collection.bind('reset', _.bind(this.render, this));
+                }
                 this.render();
             },
 
@@ -51,8 +53,9 @@ define([
                 //var collectionLength = this.collection.length;
                 //var itemIndex = Custom.getCurrentII();
             	
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
-                Common.displayControlBtnsByActionType(this.actionType, viewType);
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType}));
+                Common.displayControlBtnsByActionType('Content', viewType);
+
                 return this;
             },
             

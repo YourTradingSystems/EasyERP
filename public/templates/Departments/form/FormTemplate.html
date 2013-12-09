@@ -8,7 +8,7 @@
 	        </div>
         	<div class="half-block left">
 	        	<p><%=departmentName%></p>
-		        <p><%=parentDepartment.name%></p>
+		        <p><%= (parentDepartment) ? parentDepartment.departmentName : '' %></p>
 		        <p><%= (departmentManager) ? departmentManager.name.first + ' ' + departmentManager.name.last : ''%></p>
 			</div>
      	</div>

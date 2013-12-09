@@ -227,8 +227,8 @@
                         }
                     }
                 });
-                $('#nextActionDate').datepicker();
-                $('#expectedClosing').datepicker();
+                $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
+                $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
                 var model = this.currentModel.toJSON();
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);
