@@ -84,7 +84,7 @@
                                 });
                             }
                             console.log(calendars);
-                            response.send(calendars);
+                            response.send(200,JSON.stringify(calendars));
                         } else {
                             console.log(err);
                             response.send(500, err);

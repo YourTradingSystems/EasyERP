@@ -36,9 +36,52 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         },
 
 		syncCalendar:function(e){
+			var self = this;
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
-			window.open("/getGoogleToken","_blank");
-			
+            var strWindowFeatures = "resizable=yes,width=800, height=600";
+            var winObject = window.open("/getGoogleToken", "Google Authorization", strWindowFeatures);
+            var pollTimer = window.setInterval(function(){
+                if(winObject.document.URL.indexOf("easyErp") != -1){
+                    var url = winObject.document.url;
+                    winObject.close();
+					clearInterval(pollTimer);
+					$.ajax({
+						type: "GET",
+						url: "/GoogleCalendars",
+						data: event,
+						success: function(response){
+							if(response){
+								var formString = self.syncDilalogTpl({calendarsCollection:response});
+								this.syncDialog = $(formString).dialog({
+									autoOpen:true,
+									resizable:false,
+									title: "Synchronize calendars",
+									buttons:{
+										submit: {
+											text:"Continue",
+											click: self.syncDlgSubmitBtnClickHandler
+										},
+										cancel: {
+											text: "Cancel",
+											click: self.closeSyncDialog
+										}
+									}
+								});
+
+							}
+							
+							
+						},
+						error: function (error, statusText,sdfdf){
+
+
+						},
+						dataType: "json"
+					});
+
+                }
+            }, 100);
+
 		},
         keydownHandler: function (e) {
             switch (e.which) {
@@ -191,8 +234,32 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         },
 
         syncDlgSubmitBtnClickHandler:function(){
-            this.parseSelectedCalendars();
-            this.loadCalendarEvents();
+//            this.parseSelectedCalendars();
+  //          this.loadCalendarEvents();
+            var checkboxes = $('input:checkbox[name=calendarSelect]:checked');
+            if(checkboxes.length == 0){
+                alert('Please select calendars to synchronize');
+                return;
+            }
+            var calendarIdList = $.map(checkboxes,function(item){
+                return $(item).attr('data-id');
+            });
+			alert(calendarIdList);
+			$.ajax({
+				type: "POST",
+				url: "/GoogleCalSync",
+				data: {calendar:calendarIdList},
+				success: function(response){
+					if(response){
+						
+					}
+				},
+				error:function(){
+					
+				}
+			});
+
+
         },
 
         showSyncDialog: function(calendars){
