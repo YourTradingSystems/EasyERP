@@ -34,6 +34,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             "change #calendarList" : "curCalendarChange",
             'keydown': 'keydownHandler'
         },
+
 		syncCalendar:function(e){
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
 			window.open("/getGoogleToken","_blank");
@@ -65,34 +66,31 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                        if(response.error){
                            throw new Error(response.error.message);
                        } else{
-						   alert(response);
-                           calendar.summary = data.calName;
-                           calendar.id = response.id;
-                           calendar.description = response.description;
-                           var events = []
-						   for (var i in response.entry){
-							   var itm = response.entry[i]
-                               var item = {};
-                               item.title=itm.title;
-                               item.summary=itm.title;
-                               item.description=itm.summary;
-                               item.id=itm.id
-                               item.start = {}
-                               item.start.dateTime=new Date(itm.startDate.split(" ")[2],itm.startDate.split(" ")[1], itm.startDate.split(" ")[0],itm.startDate.split(" ")[3].split(":")[0],itm.startDate.split(" ")[3].split(":")[1]).toISOString();
-                               item.end = {}
-                               item.end.dateTime = new Date(itm.endDate.split(" ")[2],itm.endDate.split(" ")[1], itm.endDate.split(" ")[0],itm.endDate.split(" ")[3].split(":")[0],itm.endDate.split(" ")[3].split(":")[1]).toISOString();
-                               events.push(item);
-                               
-                           }
-                           calendar.items=events;
-                           dataService.postData("/GoogleCalSync", {mid:39, calendars:[calendar]}, function(resp){
-							   self.render();
-                           });
-                       }
+						   self.render();
+						   self.calendarsCollection.fetch({
+							   success: function(){
+								   self.populateCalendarsList();
+							   }
+						   });
+					   }
 
                    },
                    error: function (error){
-                       throw new Error(error.message);
+					   if (error.responseText =="OK"){
+						   self.eventsCollection.fetch({
+							   success: function(){
+								   self.render();
+								   self.calendarsCollection.fetch({
+									   success: function(){
+										   self.populateCalendarsList();
+									   }
+								   });
+
+							   }
+						   });
+
+						   
+					   }
                    },
                    dataType: "json"
                });
@@ -130,10 +128,10 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                            var calendarName = $('#calendarNameTxt').val();
                            var synchronize = $('#synchronize').attr('checked');
                            var link = $('#fromPublicCalendar').val();
-                           if(calendarName.length === 0){
-                                                         alert('Calendar name can not be empty!');
-                                                         return;
-                                                        }
+                           if(calendarName.length === 0&&link.length === 0){
+                               alert('Calendar name or link can not be empty!');
+                               return;
+                           }
                            self.createNewCalendar({calName : calendarName, sync:synchronize,link:link});
                            self.hideDialog();
                        }
@@ -144,6 +142,11 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                    }
                }
            });
+		   $("#addCalendarDlg").on("click",".changeType",function(){
+			   $(".swicher").hide();
+			   $(".swicher."+$(this).val()).show();
+			   
+		   })
        },
         
 
