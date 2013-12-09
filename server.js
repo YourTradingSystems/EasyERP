@@ -125,16 +125,16 @@ app.get('/getGoogleToken', function (req, res) {
                                 }
                            
                             };
-                            client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-                                .withAuthClient(oauth2Client).execute(
-                                function (err, result) {
-                                    if (result) {
-                                        console.log(result);
-                                    } else {
-                                        console.log(err);
-                                    }
-                                    ;
-                                });
+                            //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+                            //    .withAuthClient(oauth2Client).execute(
+                            //    function (err, result) {
+                            //        if (result) {
+                            //            console.log(result);
+                            //        } else {
+                            //            console.log(err);
+                            //        }
+                            //        ;
+                            //    });
                         });
                     res.redirect('/#easyErp/Calendar');
                 });
