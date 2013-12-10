@@ -1,5 +1,5 @@
 ﻿define([
-    'models/UserModel',
+    'models/UsersModel',
     'common'
 ],
     function (UserModel, common) {

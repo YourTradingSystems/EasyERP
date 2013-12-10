@@ -593,6 +593,9 @@ var Events = function (logWriter, mongoose, googleModule) {
             }
         });
     }
+	function sendToGoogleCalendar(req,res){
+		googleModule.sendEventsToGoogle(req,res,event);
+	}
 
 
     return {
@@ -617,7 +620,9 @@ var Events = function (logWriter, mongoose, googleModule) {
 
         removeCalendar: removeCalendar,
 
-        googleCalSync: googleCalSync
+        googleCalSync: googleCalSync,
+
+		sendToGoogleCalendar:sendToGoogleCalendar
     };
 };
 

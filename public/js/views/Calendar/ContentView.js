@@ -32,9 +32,32 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             "click #addCalendarBtn" : "showCreateCalendarDlg",
             "click #syncCalendarBtn" : "syncCalendar",
             "change #calendarList" : "curCalendarChange",
+            "click #sendToGoogle" : "sendToGoogle",
             'keydown': 'keydownHandler'
         },
+		sendToGoogle:function(e){
+           var curCalendarsId = $('#calendarList').val();
+			$.ajax({
+				type: "POST",
+				url: "/SendToGoogleCalendar",
+				data: {"calendarsId":curCalendarsId},
+				success: function(response){
+					if(response){
+						$("#sendToGoogle").hide();
+					}
+					
+					
+				},
+				error: function (error, statusText,sdfdf){
 
+
+				},
+				dataType: "json"
+			});
+
+			
+
+		},
 		syncCalendar:function(e){
 			var self = this;
 			//GoogleAuth.SendEventsToGoogle(this.eventsCollection, "slavik990@gmail.com");
@@ -234,6 +257,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         },
 
         syncDlgSubmitBtnClickHandler:function(){
+			var self =this;
 //            this.parseSelectedCalendars();
   //          this.loadCalendarEvents();
             var checkboxes = $('input:checkbox[name=calendarSelect]:checked');
@@ -250,7 +274,17 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 				data: {calendar:calendarIdList},
 				success: function(response){
 					if(response){
-						
+						   self.eventsCollection.fetch({
+							   success: function(){
+								   self.render();
+								   self.calendarsCollection.fetch({
+									   success: function(){
+										   self.populateCalendarsList();
+									   }
+								   });
+
+							   }
+						   });
 					}
 				},
 				error:function(){

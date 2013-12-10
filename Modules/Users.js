@@ -7,6 +7,10 @@ var Users = function (logWriter, mongoose, findCompany) {
         login: { type: String, default: '' },
         email: { type: String, default: '' },
         pass: { type: String, default: '' },
+        credentials: {
+			refresh_token:{type:String, default:''},
+			access_token:{type:String, default:''}
+		},
         profile: {
             company: {
                 id: { type: String, default: '' },
@@ -177,9 +181,41 @@ var Users = function (logWriter, mongoose, findCompany) {
                     //func();
                     console.log(err);
                     logWriter.log("Users.js get User.find " + err);
-                    response.send(500, { error: 'User get BD error' });
+                    response.send(500, { error: 'User get DB error' });
                 } else {
                     findCompany.findCompany(result, 0, response);
+                }
+            });
+        },
+
+        getUserById: function (id, response) {
+            console.log(id);
+            var query = User.findById(id);
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Users.js get User.find " + err);
+                    response.send(500, { error: 'User get DB error' });
+                } else {
+                    response.send(result);
+                }
+            });
+        },
+
+        getFilterUsers: function (data, response) {
+            var res = {};
+            res['data'] = [];
+            var query = User.find({}, { __v: 0, upass: 0 });
+
+            query.sort({ "login": 1 });
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Users.js getFilterUser.find " + err);
+                    response.send(500, { error: "User get DB error" });
+                } else {
+                    res['data'] = result;
+                    response.send(res);
                 }
             });
         },
