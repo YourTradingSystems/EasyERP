@@ -1,5 +1,5 @@
 ﻿define(function () {
-    var departmentModel = Backbone.Model.extend({
+    var DepartmentsModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
             this.on('invalid', function(model, errors){
@@ -39,5 +39,5 @@
         }
     });
 
-    return departmentModel;
+    return DepartmentsModel;
 });

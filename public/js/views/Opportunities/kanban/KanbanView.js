@@ -54,10 +54,10 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     kanbanItemView = new TasksKanbanItemView({ model: wfModel });
                     column.append(kanbanItemView.render().el);
                     counter++;
-                    remaining += wfModel.get("remaining");
+                    //remaining += wfModel.get("remaining");
                 }, this);
                 column.find(".counter").html(parseInt(column.find(".counter").html()) + counter);
-                column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + remaining);
+                //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + remaining);
             }, this);
         },
 
@@ -88,13 +88,13 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     kanbanItemView = new KanbanItemView({ model: wfModel, companies: companies });
                     column.append(kanbanItemView.render().el);
                     counter++;
-                    remaining += wfModel.get("remaining");
+                    //remaining += wfModel.get("remaining");
 
                 }, this);
                 var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
-                var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                /*var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";*/
                 column.find(".columnNameDiv h2").append(count);
-                column.find(".columnNameDiv").append(content);
+                //column.find(".columnNameDiv").append(content);
             }, this);
             var that = this;
             this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
@@ -113,7 +113,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     var model = that.collection.get(id);
                     if (model) {
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
+                        //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
                     }
 
                 },
@@ -129,7 +129,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                             //}
                         });
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
-                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
+                        //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
                     }
                 }
             }).disableSelection();
