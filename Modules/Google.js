@@ -26,16 +26,7 @@
                           .discover('calendar', 'v3')
                              .execute(function (err, client) {
                                  if (err) console.log(err);
-                                 //var eventItem = {
-                                 //    "summary": "rrrrrrrrrr",
-                                 //    'start': {
-                                 //        "date": "2013-12-6"
-                                 //    },
-                                 //    'end': {
-                                 //        "date": "2013-12-6"
-                                 //    }
-
-                                 //};
+                                 
                                  Events.forEach(function (_event) {
                                      var calendarId = _event.id;
                                      _event.items.forEach(function (item) {
