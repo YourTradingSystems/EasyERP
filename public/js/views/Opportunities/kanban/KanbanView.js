@@ -109,7 +109,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
-                    var id = ui.item.attr('data-id');
+                    var id = ui.item.context.id;
                     var model = that.collection.get(id);
                     if (model) {
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
@@ -118,7 +118,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
                 },
                 stop: function (event, ui) {
-                    var id = ui.item.attr('id');
+                	var id = ui.item.context.id;
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
