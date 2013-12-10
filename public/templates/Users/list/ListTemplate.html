@@ -1,25 +1,10 @@
-
-    <table class="list">
-        <thead>
-        <tr>
-            <th><input type="checkbox" class="checkbox" id="check_all"/></th>
-            <th>#</th>
-            <th>Login</th>
-            <th>Email</th>
-            <th>Profile Name</th>
-            <th>Company Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% usersCollection.forEach(function(user, index){ %>
-        <tr data-id="<%=user._id%>">
+    <% usersCollection.forEach(function(user, index){ %>
+        <tr data-index="<%= index %>" data-id="<%= user._id%>">
             <td><input type="checkbox" value="<%=user._id%>" class="checkbox" /></td>
-            <td><%=index + 1%></td>
+            <td><%= index + startNumber + 1 %></td>
             <td><%=user.login%></td>
             <td><%=user.email%></td>
             <td><%=user.profile.profile.name%></td>
             <td><%=user.profile.company.name%></td>
         </tr>
-        <% }) %>
-        </tbody>
-    </table>
+    <% }) %>

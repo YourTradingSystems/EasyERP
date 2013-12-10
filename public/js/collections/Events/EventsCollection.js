@@ -7,8 +7,9 @@ define([
 
             url: "/Events",
 
-            initialize: function () {
-                var mid = 39;
+            initialize: function (options) {
+                //if(options.fetch){
+                    var mid = 39;
                     this.fetch({
                         data: $.param({
                             mid: mid
@@ -16,6 +17,7 @@ define([
                         reset: true,
                         success: this.fetchSuccess
                     });
+                //}
             },
 
             filterById: function(idArray){
@@ -28,7 +30,7 @@ define([
                     });
                     events = events.concat(filtered);
                 });
-                return new Backbone.Collection(events);
+                return new EventsCollection(events, {fetch:false});
             },
 
             parse: true,

@@ -1,0 +1,97 @@
+<div class="form-holder">
+  <form method="post" action="" id="createEmployeeForm" class="form">
+	<div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="name">Company Name :</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" required /></dd>
+	  </dl>
+	</div>
+	<div class="half-block left">
+      <div class="avatar">
+        <input type="file" value="Edit" id="inputImg" accept="image/*">
+        <canvas id="avatar" width="120" height="120"></canvas>
+      </div>
+	</div>
+    <div class="clearfix"></div>
+	<div class="half-block left">
+	  <dl class="person-info">
+		<dt><label>Address :</label></dt><dd><input type="text" class="address blueback" name="street" id="street" placeholder="Street..." /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city" id="city" placeholder="City" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback"  name="state" id="state" placeholder="State" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" id="zip" placeholder="ZIP" /></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="country" id="country" placeholder="Country" /></dd>
+	  </dl>
+	</div>
+    <div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="website">Website :</label></dt><dd><input class="blueback" type="text" name="website" id="website" /></dd>
+		<dt><label for="phone">Phone :</label></dt><dd><input class="blueback" type="text" name="phone" id="phone" /></dd>
+		<dt><label for="mobile">Mobile :</label></dt><dd><input class="blueback" type="text" name="mobile" id="mobile" /></dd>
+		<dt><label for="fax">Fax :</label></dt><dd><input class="blueback" type="text" name="fax" id="fax" /></dd>
+		<dt><label for="email">Email :</label></dt><dd><input class="blueback" type="text" name="email" id="email" /></dd>
+	  </dl>
+    </div>
+    <div class="clearfix"></div>
+	<div class="formTitle">
+	  <h3 class="left">Contacts</h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="inner">
+	  <input type="button" value="Add" id="addContacts" />
+	  <div id="contacts">
+	  </div>
+	</div>
+	<div class="formTitle">
+	  <h3 class="left">Internal Notes</h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="inner">
+	  <textarea id="internalNotes" placeholder="Put an internal note..."></textarea>
+	</div>
+	<div class="formTitle">
+	  <h3 class="left">Sales &amp; Purchases</h3>
+	  <div class="clearfix"></div>
+	</div>
+	<div class="inner">
+	  <div class="half-block left">
+		<dl class="person-info">
+		  <dt><label for="employeesDd">Salesperson</label></dt>
+		  <dd>
+			<select id="employeesDd">
+			</select>
+
+		  </dd>
+		  <dt><label for="departmentDd">Sales Team</label></dt>
+		  <dd>
+			<select id="departmentDd">
+			</select>
+
+		  </dd>
+		  <dt><label for="reference">Reference</label></dt>
+		  <dd>
+			<input class="blueback" type="text" id="reference" />
+		  </dd>
+		  <dt><label for="language">Language</label></dt>
+		  <dd>
+			<select id="language">
+			  <option>English</option>
+			</select>
+		  </dd>
+		</dl>
+	  </div>
+	  <div class="half-block left">
+		<dl class="person-info">
+		  <dt><label for="date">Date</label></dt><dd><input class="blueback" type="text" id="date" /></dd>
+		  <dt><label for="isCustomer">Customer</label></dt><dd><input type="checkbox" id="isCustomer" /></dd>
+		  <dt><label for="isSupplier">Supplier </label></dt><dd><input type="checkbox" id="isSupplier" /></dd>
+		  <dt><label for="active">Active</label></dt><dd><input type="checkbox" id="active" checked="checked" /></dd>
+		</dl>
+	  </div>
+	  <div class="clearfix">
+	  </div>
+	</div>
+	<div class="formTitle">
+	  <h3 class="left">History</h3>
+	  <div class="clearfix"></div>
+	</div>
+  </form>
+</div>
