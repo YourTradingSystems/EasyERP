@@ -261,10 +261,10 @@ var Events = function (logWriter, mongoose, googleModule) {
                 }
             }
             if (data.start_date) {
-                _event.start['dateTime'] = data.start_date;
+                _event.start_date= data.start_date;
             }
             if (data.end_date) {
-                _event.end['dateTime'] = data.end_date;
+                _event.end_date = data.end_date;
             }
             if (data.iCalUID) {
                 _event.iCalUID = data.iCalUID;
@@ -593,8 +593,36 @@ var Events = function (logWriter, mongoose, googleModule) {
             }
         });
     }
+	checkEventAsGoogle=function(id){
+		event.findByIdAndUpdate(id, { isGoogle: true }, function(err,ev){
+			if (err){
+				console.log("event check as google ",err)
+			}
+			
+		})
+	}
 	function sendToGoogleCalendar(req,res){
-		googleModule.sendEventsToGoogle(req,res,event);
+	    var calendarsId = req.body.calendarsId;
+		var query = event.find({"isGoogle":false});
+		var calendars = []
+		calendarsId.forEach(function(id){
+			query.where({"calendarId":id}).exec(function(err,events){
+				if (err){
+                    console.log(err);
+                    logWriter.log("send to google " + err);
+					
+				}else{
+					calendar.findOne({"_id":id}).exec(function(err,result){
+						calendars.push({"id":result.id,"items":events});
+						if (calendars.length==calendarsId.length){
+							googleModule.sendEventsToGoogle(req,res, calendars,checkEventAsGoogle);
+							
+						}
+
+					});
+				}
+			});
+		})
 	}
 
 
