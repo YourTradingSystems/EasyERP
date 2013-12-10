@@ -224,6 +224,7 @@ var requestHandler = function (fs, mongoose) {
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
         if (req.session && req.session.loggedIn) {
+			data.person.uId = req.session.uId;
             customer.create(data.person, res);
         } else {
             res.send(401);
@@ -233,6 +234,10 @@ var requestHandler = function (fs, mongoose) {
     function updatePerson(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
             console.log('----------->>>>>>>>>>>>>>>update');
+			data.person.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             customer.update(id, remove, data.person, res);
         } else {
             res.send(401);
@@ -491,6 +496,7 @@ var requestHandler = function (fs, mongoose) {
     function createCompany(req, res, data) {
         console.log("Requst createCompany is success");
         if (req.session && req.session.loggedIn) {
+			data.company.uId=req.session.uId;
             customer.create(data.company, res);
         } else {
             res.send(401);
@@ -499,6 +505,11 @@ var requestHandler = function (fs, mongoose) {
 
     function updateCompany(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
+			var date = mongoose.Schema.Types.Date;
+			data.company.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             customer.update(id, remove, data.company, res);
         } else {
             res.send(401);
