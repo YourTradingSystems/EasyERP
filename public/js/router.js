@@ -44,6 +44,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
                 function createViews() {
+                    
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
                     
@@ -92,6 +93,7 @@ define([
         },
 
         goToKanban: function (contentType, parrentContentId) {
+            if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
@@ -102,6 +104,7 @@ define([
                 collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
+                    collection.unbind('reset');
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
                     
@@ -111,9 +114,11 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/kanban';
-                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = 'easyErp/' + contentType + '/kanban';
+                    if (parrentContentId) {
+                        url += '/' + parrentContentId;
+                    }
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

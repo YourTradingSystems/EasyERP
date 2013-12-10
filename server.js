@@ -461,6 +461,14 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
+app.put('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.task = req.body;
+    requestHandler.updateTask(req, res, id, data);
+});
+
 app.delete('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

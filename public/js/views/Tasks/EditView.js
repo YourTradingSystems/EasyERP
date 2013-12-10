@@ -94,7 +94,7 @@
                 var self = this;
 
                 var mid = 39;
-
+                var summary = $("#summary").val();
                 var project = $("#projectDd option:selected").val();
                 var assignedTo = $("#assignedToDd option:selected").val();
 
@@ -126,7 +126,7 @@
 
                 var data = {
                     type: $("#type option:selected").text(),
-                    summary: $("#summary").val(),
+                    summary: summary,
                     assignedTo: assignedTo ? assignedTo : null,
                     workflow: workflow ? workflow : null,
                     project: project ? project : null,
@@ -159,7 +159,7 @@
                             Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
                         }
                     },
-                    error: function () {
+                    error: function (model, xhr, options) {
                         Backbone.history.navigate("home", { trigger: true });
                     }
                 });

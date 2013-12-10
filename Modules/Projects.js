@@ -48,7 +48,15 @@ var Project = function (logWriter, mongoose) {
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
-        progress: { type: Number, default: 0 }
+        progress: { type: Number, default: 0 },
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
+        },
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date}
+        }
     }, { collection: 'Tasks' });
 
     var PrioritySchema = mongoose.Schema({
@@ -130,7 +138,8 @@ var Project = function (logWriter, mongoose) {
             return false;
         } else {
             try {
-                project.findById(task.project.id)
+                var id = (task.project._id) ? task.project._id : task.project;
+                project.findById(id)
                     //.where('info.EndDate')
                     //.lte(task.extrainfo.EndDate)
                     //.or([{ 'info.EndDate': { $lt: task.extrainfo.EndDate } },
@@ -600,6 +609,9 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.workflow) {
                         _task.workflow = data.workflow;
+                    }
+                    if (data.uId) {
+                        _task.createdBy.user = data.uId;
                     }
                     if (data.logged) {
                         _task.logged = data.logged;
