@@ -661,6 +661,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         });
     }
 	function sendToGoogleCalendar(req,res){
+	    var calendarsId = req.body.calendarsId;
 		googleModule.sendEventsToGoogle(req,res,event);
 	}
 
