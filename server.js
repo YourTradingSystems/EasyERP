@@ -1049,6 +1049,9 @@ app.post('/GoogleCalSync', function (req, res) {
 app.get('/GoogleCalendars', function (req, res) {
     requestHandler.googleCalendars(req, res);
 });
+app.post('/SendToGoogleCalendar', function (req, res) {
+    requestHandler.sendToGoogleCalendar(req, res);
+});
 app.listen(8088);
 
 //console.log(app.routes);

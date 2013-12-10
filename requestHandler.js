@@ -1059,6 +1059,9 @@ var requestHandler = function (fs, mongoose) {
     function googleCalendars(req, res) {
         google.getGoogleCalendars(req.session.credentials, res);
     }
+    function sendToGoogleCalendar(req, res) {
+        events.sendToGoogleCalendar(req, res);
+    }
 
     //---------END------Events----------------------------------
     return {
@@ -1185,7 +1188,8 @@ var requestHandler = function (fs, mongoose) {
         googleCalSync: googleCalSync,
         getXML: getXML,
         getToken: getToken,
-        googleCalendars:googleCalendars
+        googleCalendars:googleCalendars,
+		sendToGoogleCalendar:sendToGoogleCalendar
     }
 }
 //---------EXPORTS----------------------------------------

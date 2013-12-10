@@ -16,28 +16,82 @@
             }
         });
     };
-    var checkSessionForToken = function (req) {
+	var sendEventsToGoogle = function(req, res, Events){
+	    //console.log(checkSessionForToken(req));
+	    checkSessionForToken(req,function(err,response){
+	        if (response) {
+	            oauth2Client.credentials = response;
+	            var calendarsId = req.body.calendarsId;
+	            calendarsId.forEach(function (id) {
+	                var query = Events.find({ "calendarId": id });
+	                query.where({ "isGoogle": false });
+	                query.exec(function (err, event) {
+	                    var eventItem = {
+	                        "summary": event.summary,
+	                        'start': {
+	                            "dateTime": event.start_date
+	                        },
+	                        'end': {
+	                            "dateTime": event.end_date
+	                        }
+
+	                    };
+	                    //googleapis
+                        //    .discover('calendar', 'v3')
+                        //    .execute(function (err, client) {
+                        //        if (err) console.log(err);
+
+                        //        client.calendar.events.insert({ calendarId: id }, eventItem)
+                        //            .withAuthClient(oauth2Client).execute(
+                        //                function (err, result) {
+                        //                    if (result) {
+                        //                        console.log(result);
+                        //                    } else {
+                        //                        console.log(err);
+                        //                    }
+                        //                    ;
+                        //                });
+                        //    });
+	                });
+
+	            });
+	        } else {
+	            console.log(err);
+	        }
+	    });  
+
+	
+	}
+    var checkSessionForToken = function (req,callback) {
         console.log('Google Sessions');
         if (req.session && req.session.loggedIn) {
-            if (req.session.credentials) {
 
-                return true;
+            if (req.session.credentials) {
+                callback(null, req.session.credentials);
+				
             } else {
+
                 users.User.findById(req.session.uId, function (err, response) {
                     if (response) {
                         if (response.credentials) {
                             req.session.credentials = response.credentials;
-                            return true;
+							console.log(req.session.credentials);
+
+
+                            callback(null,response.credentials);
                         } else {
-                            return false;
+
+                            callback({"error":"error"},null);
                         }
                     } else {
                         console.log(err);
-                        return false;
+                        callback(err,null);
+						
                     }
                 });
             }
         }
+        
     };
 
     var getToken = function (req, res, callback) {
@@ -66,7 +120,6 @@
     };
 
     var getGoogleCalendars = function (credentials, response) {
-		console.log(credentials);
         oauth2Client.credentials = credentials;
 		
         googleapis
@@ -130,7 +183,8 @@
         oauth2Client: oauth2Client,
         getGoogleCalendars: getGoogleCalendars,
         getToken: getToken,
-        getEventsByCalendarIds: getEventsByCalendarIds
+        getEventsByCalendarIds: getEventsByCalendarIds,
+		sendEventsToGoogle:sendEventsToGoogle
     }
 };
 module.exports = googleModule;

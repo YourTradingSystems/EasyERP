@@ -38,28 +38,12 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 		sendToGoogle:function(e){
            var curCalendarsId = $('#calendarList').val();
 			$.ajax({
-				type: "GET",
-				url: "/GoogleCalendars",
-				data: event,
+				type: "POST",
+				url: "/SendToGoogleCalendar",
+				data: {"calendarsId":curCalendarsId},
 				success: function(response){
 					if(response){
-						var formString = self.syncDilalogTpl({calendarsCollection:response});
-						this.syncDialog = $(formString).dialog({
-							autoOpen:true,
-							resizable:false,
-							title: "Synchronize calendars",
-							buttons:{
-								submit: {
-									text:"Continue",
-									click: self.syncDlgSubmitBtnClickHandler
-								},
-								cancel: {
-									text: "Cancel",
-									click: self.closeSyncDialog
-								}
-							}
-						});
-
+						$("#sendToGoogle").hide();
 					}
 					
 					
