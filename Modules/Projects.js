@@ -757,7 +757,7 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = tasks.find({});
-        query.populate('project assignedTo extrainfo.customer workflow');
+        query.populate('project assignedTo extrainfo.customer workflow createdBy.user editedBy.user');
         query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
             if (err) {
@@ -794,7 +794,7 @@ var Project = function (logWriter, mongoose) {
         var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : tasks.find({});
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')
-            .populate('extrainfo.customer')
+            .populate('extrainfo.customer createdBy.user editedBy.user')
             .populate('workflow');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ summary: 1 });
@@ -818,7 +818,8 @@ var Project = function (logWriter, mongoose) {
     function getTaskById(data, response) {
         var query = tasks.findById(data.id, function (err, res) { });
         query.populate('project', '_id projectShortDesc projectName').
-              populate(' assignedTo', '_id name imageSrc');
+            populate(' assignedTo', '_id name imageSrc').
+            populate('createdBy.user editedBy.user');
         query.exec(function (err, task) {
             if (err) {
                 console.log(err);
