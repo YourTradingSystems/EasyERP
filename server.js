@@ -734,7 +734,7 @@ app.delete('/Departments/:viewType/:_id', function (req, res) {
     requestHandler.removeDepartment(req, res, id, data);
 });
 
-app.delete('/Departments//:_id', function (req, res) {
+app.delete('/Departments/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -782,6 +782,14 @@ app.put('/Employees/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Employees/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.employee = req.body;
+    requestHandler.removeEmployees(req, res, id, data);
+});
+
+app.delete('/Employees/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
