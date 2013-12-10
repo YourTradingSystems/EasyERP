@@ -141,7 +141,7 @@ define([
                 var self = this;
                 console.log('render persons dialog');
                 var formString = this.template({
-                    model: this.currentModel.toJSON(),
+                    model: this.currentModel.toJSON()
                 });
                 this.$el = $(formString).dialog({
                     autoOpen: true,
@@ -162,6 +162,7 @@ define([
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
 
                 $('#dateBirth').datepicker({
+                    dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',
