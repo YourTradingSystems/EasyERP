@@ -53,13 +53,14 @@
                 oauth2Client.getToken(query.code, function (err, tokens) {
                     // contains an access_token and optionally a refresh_token.
                     // save them permanently.
-                    if (req.session && req.session.loggedIn) {
+                    console.log(tokens);
+                    //if (req.session && req.session.loggedIn) {
 
-                        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                        writeTokenToDb(req.session.uId, tokens.access_token);
-                        req.session.googleToken = tokens.access_token;
-                        if (callback) callback(tokens.access_token);
-                    }
+                    //    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                    //    writeTokenToDb(req.session.uId, tokens.access_token);
+                    //    req.session.googleToken = tokens.access_token;
+                    //    if (callback) callback(tokens.access_token);
+                    //}
                 });
             }
         }
