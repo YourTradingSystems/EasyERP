@@ -378,6 +378,13 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.updateProject(req, res, id, data);
 });
+app.put('/Projects/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.project = req.body;
+    requestHandler.updateProject(req, res, id, data);
+});
 
 app.delete('/Projects/:viewType/:_id', function (req, res) {
     data = {};
