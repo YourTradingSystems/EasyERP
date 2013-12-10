@@ -24,20 +24,33 @@
                 oauth2Client.credentials = response;
                 googleapis
                           .discover('calendar', 'v3')
-                          .discover('calendar', 'v3')
                              .execute(function (err, client) {
                                  if (err) console.log(err);
+                                 //var eventItem = {
+                                 //    "summary": "rrrrrrrrrr",
+                                 //    'start': {
+                                 //        "date": "2013-12-6"
+                                 //    },
+                                 //    'end': {
+                                 //        "date": "2013-12-6"
+                                 //    }
 
-                                 client.calendar.events.insert({ calendarId: id }, eventItem)
-                                     .withAuthClient(oauth2Client).execute(
-                                         function (err, result) {
-                                             if (result) {
-                                                 console.log(result);
-                                             } else {
-                                                 console.log(err);
-                                             }
-                                             ;
-                                         });
+                                 //};
+                                 Events.forEach(function (_event) {
+                                     var calendarId = _event.id;
+                                     _event.items.forEach(function (item) {
+                                         client.calendar.events.insert({ calendarId: calendarId }, item)
+                                                .withAuthClient(oauth2Client).execute(
+                                                    function (err, result) {
+                                                        if (result) {
+                                                            console.log(result);
+                                                        } else {
+                                                            console.log(err);
+                                                        };
+                                                    });
+                                     });
+                                 });
+
                              });
 
             } else {
@@ -51,14 +64,16 @@
         console.log('Google Sessions');
         if (req.session && req.session.loggedIn) {
 
-            if (req.session.credentials) {
+            if (req.session.credentials && req.session.credentials.access_token && req.session.credentials.refresh_token) {
+                console.log(req.session.credentials);
                 callback(null, req.session.credentials);
 
             } else {
 
                 users.User.findById(req.session.uId, function (err, response) {
                     if (response) {
-                        if (response.credentials) {
+                        console.log(response);
+                        if (response.credentials && req.session.credentials.access_token && req.session.credentials.refresh_token) {
                             req.session.credentials = response.credentials;
                             console.log(req.session.credentials);
 
@@ -80,28 +95,31 @@
     };
 
     var getToken = function (req, res, callback) {
-        if (checkSessionForToken(req)) {
-            callback(req.session.credentials);
-        } else {
-            var query = req.query;
-            console.log(query);
-            if (!query.hasOwnProperty('code')) {
-                res.redirect(url);
+        checkSessionForToken(req, function (err, resp) {
+            if (resp) {
+                callback(resp);
             } else {
-                console.log('>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-                oauth2Client.getToken(query.code, function (err, tokens) {
-                    // contains an access_token and optionally a refresh_token.
-                    // save them permanently.
-                    if (req.session && req.session.loggedIn) {
+                var query = req.query;
+                console.log(query);
+                if (!query.hasOwnProperty('code')) {
+                    res.redirect(url);
+                } else {
+                    console.log('>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                    oauth2Client.getToken(query.code, function (err, tokens) {
+                        // contains an access_token and optionally a refresh_token.
+                        // save them permanently.
+                        if (req.session && req.session.loggedIn) {
 
-                        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                        writeTokenToDb(req.session.uId, tokens);
-                        req.session.credentials = tokens;
-                        if (callback) callback(tokens.access_token);
-                    }
-                });
+                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                            writeTokenToDb(req.session.uId, tokens);
+                            req.session.credentials = tokens;
+                            if (callback) callback(tokens.access_token);
+                        }
+                    });
+                }
             }
-        }
+        });
+
     };
 
     var getGoogleCalendars = function (credentials, response) {
