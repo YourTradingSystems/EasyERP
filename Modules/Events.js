@@ -23,6 +23,8 @@ var Events = function (logWriter, mongoose, googleModule) {
         },
         start_date: Date,
         end_date: Date,
+        start: {},
+        end: {},
         iCalUID: String,
         sequence: Number,
         //attendees: [],
@@ -34,7 +36,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         assignTo: { type: String, default: '' },
         status: { type: String, default: '' },
         priority: { type: String, default: '' },
-        isGoogle: {type: Boolean, default: false}
+        isGoogle: { type: Boolean, default: false }
     }, { collection: 'Events' });
 
     var calendarsSchema = mongoose.Schema({
@@ -49,7 +51,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         selected: Boolean,
         accessRole: String,
         description: { type: String, default: '' },
-        link : { type: String, default: '' },
+        link: { type: String, default: '' },
         events: { type: [ObjectId], ref: 'Events', default: null },
         location: { type: String, default: '' }
 
@@ -250,19 +252,19 @@ var Events = function (logWriter, mongoose, googleModule) {
             }
             if (data.start) {
                 if (data.start.dateTime) {
-                    _event.start_date = data.start.dateTime;
+                    _event.start = data.start;
                 }
-            }          
+            }
             if (data.end) {
                 if (data.end.dateTime) {
-                    _event.end_date = data.end.dateTime;
+                    _event.end = data.end;
                 }
             }
             if (data.start_date) {
-                _event.start_date = data.start_date;
+                _event.start['dateTime'] = data.start_date;
             }
             if (data.end_date) {
-                _event.end_date = data.end_date;
+                _event.end['dateTime'] = data.end_date;
             }
             if (data.iCalUID) {
                 _event.iCalUID = data.iCalUID;
@@ -347,7 +349,7 @@ var Events = function (logWriter, mongoose, googleModule) {
             if (data.location) {
                 _calendar.location = data.location;
             }
-			console.log(data.link);
+            console.log(data.link);
             if (data.link) {
                 _calendar.link = data.link;
             }
@@ -474,7 +476,11 @@ var Events = function (logWriter, mongoose, googleModule) {
                 logWriter.log('Events.js get Events.find' + description);
                 response.send(500, { error: "Can't find Events" });
             } else {
-                res['data'] = result;
+                res['data'] = result.map(function (event) {
+                    event['start_date'] = (event.start && event.start.dateTime) ? event.start.dateTime : null;
+                    event['end_date'] = (event.end && event.end.dateTime) ? event.end.dateTime : null;
+                    return event;
+                });
                 response.send(res);
             }
         });
@@ -489,7 +495,7 @@ var Events = function (logWriter, mongoose, googleModule) {
 
                 }
                 else if (result.length > 0) {
-                  
+
                     event.update({ id: id }, data, function (err, result) {
                         try {
                             if (err) {
@@ -504,7 +510,7 @@ var Events = function (logWriter, mongoose, googleModule) {
                             logWriter.log("Events.js getEvents event.find " + exception);
                         }
                     });
-                } else {                   
+                } else {
                     data.id = id;
                     create(data, res);
                 }
@@ -519,7 +525,7 @@ var Events = function (logWriter, mongoose, googleModule) {
     };// end update
 
     function remove(_id, res) {
-        var query = (_id.length === 24) ? {_id: _id} : {id:_id};
+        var query = (_id.length === 24) ? { _id: _id } : { id: _id };
         event.remove(query, function (err, result) {
             if (err) {
                 console.log(err);
@@ -532,114 +538,41 @@ var Events = function (logWriter, mongoose, googleModule) {
     };// end remove
 
     function googleCalSync(data, res) {
-		
-        try {
-            if (!data) {
-                logWriter.log('Events.googleCalSync Incorrect Incoming Data');
-                res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
-                return;
-            } else {
-                data.forEach(function (cal) {
-                    calendar.find({ id: cal.id }, function (err, result) {
 
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Events.js googleCalSync calendar.find " + err);
-                            res.send(500, { error: "Can't googleCalSync Events" });
-                        }
-                        else if (result.length > 0) {
-
-                            //Updating an Existing Calendar in DataBase
-                            var curentCalendarId = result._id;
-                            calendar.update({ _id: result._id }, cal, function (err, result) {
-                                try {
-                                    if (err) {
-                                        console.log(err);
-                                        logWriter.log("Events.js googleCalSync calendar.update " + err);
-                                        res.send(500, { error: "Can't update Calendar" });
-                                    } else {
-
-                                        if (result) {
-                                            //Update Existing Calendar Events
-                                            cal.items.forEach(function (ev) {
-                                                event.find({ id: ev.id }, function (err, result) {
-                                                    if (err) {
-                                                        console.log(err);
-                                                        logWriter.log("Events.js googleCalSync event.find " + err);
-                                                        res.send(500, { error: "Can't find Event" });
-                                                    }
-                                                    else if (result) {
-                                                        // If Event exists update it 
-                                                        event.update({ _id: result._id }, ev, function (err, result) {
-                                                            try {
-                                                                if (err) {
-                                                                    console.log(err);
-                                                                    logWriter.log("Events.js googleCalSync events.update " + err);
-                                                                    res.send(500, { error: "Can't googleCalSync Events" });
-                                                                } else {
-                                                                    res.send(200, { success: 'Events updated success' });
-                                                                }
-                                                            }
-                                                            catch (exception) {
-                                                                logWriter.log("Events.js getEvents event.find " + exception);
-                                                            }
-                                                        });
-                                                    } else {
-                                                        // Create new Event
-                                                        try {
-															console.log(ev);
-                                                            if (!ev || !ev.id) {
-                                                                logWriter.log('Events.create Incorrect Incoming Data');
-                                                                res.send(400, { error: 'Events.create Incorrect Incoming Data' });
-                                                                return;
-                                                            } else {
-                                                                ev.calendarId = curentCalendarId;
-                                                                saveEventToDb(ev);
-                                                            }
-                                                        } catch (exception) {
-                                                            console.log(exception);
-                                                            logWriter.log("Events.js  " + exception);
-                                                            res.send(500, { error: 'Events.save  error' });
-                                                        }
-                                                    }
-                                                });
-                                            });
-                                        }
-                                        res.send(200, { success: 'Calendar updated success' });
-                                    }
-                                }
-                                catch (exception) {
-                                    logWriter.log("Events.js googleCalSync calendar.update " + exception);
+        if (!data) {
+            logWriter.log('Events.googleCalSync Incorrect Incoming Data');
+            res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
+            return;
+        } else {
+            data.forEach(function (cal) {
+                var query = calendar.findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
+                query.exec(function (err, googleCalendar) {
+                    if (googleCalendar) {
+                        var curentCalendarId = googleCalendar._id;
+                        cal.items.forEach(function (ev) {
+                            ev.calendarId = curentCalendarId;
+                            ev.isGoogle = true;
+                            var eventQuery = event.findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
+                            eventQuery.exec(function (err, googleEvent) {
+                                if (googleEvent) {
+                                    console.log(googleEvent);
+                                } else {
+                                    console.log(err);
+                                    logWriter.log("Events.js googleCalSync calendar.update " + err);
+                                    res.send(500, { error: "Can't update Events" });
                                 }
                             });
-                        } else {
-                            //Creating a new Calendar in DataBase
-                            try {
-
-                                if (!cal) {
-                                    logWriter.log('Events.googleCalSync Incorrect Incoming Data');
-                                    res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
-                                    return;
-                                } else {
-                                    saveCalendarToDb(cal, res);
-                                    res.send(200);
-                                }
-                            } catch (exception) {
-                                console.log(exception);
-                                logWriter.log("Events.js  " + exception);
-                                res.send(500, { error: 'Events.save  error' });
-                            }
-                        }
-                    });
+                        });
+                    } else {
+                        console.log(err);
+                        logWriter.log("Events.js googleCalSync calendar.update " + err);
+                        res.send(500, { error: "Can't update Calendar" });
+                    }
                 });
-            }
-        } catch (exception) {
-            console.log(exception);
-            logWriter.log("Events.js  " + exception);
-            res.send(500, { error: 'Events.save  error' });
+            });
         }
     };//end googleCalSync
-    
+
     function getXML(res, link) {
         link = link.replace("basic", "full") + "?alt=json";
         request({ url: link, json: true }, function (error, response, body) {
@@ -663,9 +596,9 @@ var Events = function (logWriter, mongoose, googleModule) {
 
 
     return {
-        
+
         getXML: getXML,
-        
+
         create: create,
 
         get: get,
