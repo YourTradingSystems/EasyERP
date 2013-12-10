@@ -46,7 +46,7 @@ function (ListHeader, CreateView, ListItemView) {
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
-            window.location.hash = "#easyErp/Tasks/form/" + id;
+            window.location.hash = "#easyErp/Users/form/" + id;
         },
 
         createItem: function () {

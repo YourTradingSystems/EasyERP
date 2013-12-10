@@ -1,15 +1,8 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "common",
-    "custom",
-    "dataService",
-    "collections/Projects/ProjectsCollection",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Priority/TaskPriority",
-    "collections/Workflows/WorkflowsCollection"
+    "common"
 ],
-    function (EditTemplate, common, Custom, dataService, ProjectsCollection, AccountsDdCollection, CustomersDdCollection, PriorityCollection, WorkflowsCollection) {
+    function (EditTemplate, common) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
