@@ -5,26 +5,26 @@
             <h2><%=age%></h2>
         </div>
     </div>
-    <div class="info">
+    <div class="info" data-id="<%=model._id%>">
         <div class="top-wrapper">
             <div class="top">
-                <a><%=model.name.first%> <%=model.name.last%></a>
+                <a data-id="<%=model._id%>"><%=model.name.first%> <%=model.name.last%></a>
             </div>
             <img class="ava" alt="" width="100" src="<%=model.imageSrc%>" />
             <div class=" text">
                 <div class="half-block left">
                     <dl class="person-info">
                         <dt>Department:</dt>
-                        <dd><%=model.department.name%></dd>
+                        <dd><%=model.department.departmentName%></dd>
                         <dt>Job Positon:</dt>
-                        <dd><%= model.jobPosition.name%></dd>
+                        <dd><%= (model.jobPosition) ? model.jobPosition.name : ''%></dd>
                         <dt>Phone:</dt>
                         <dd> <%=model.workPhones.mobile%></dd>
                     </dl>
                 </div>
             </div>
             <br />
-            <a href="#" class="readMore">
+            <a href="#" class="readMore" data-id="<%=model._id%>">
                 Read more <i></i>
             </a>
         </div>
