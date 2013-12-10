@@ -658,6 +658,7 @@ var Project = function (logWriter, mongoose) {
 
     function updateTask(_id, data, res) {
         delete data._id;
+        data.createdBy.user = (data.createdBy.user && data.createdBy.user._id) ? data.createdBy.user._id : ((data.createdBy && data.createdBy.user) ? data.createdBy.user : null);
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
