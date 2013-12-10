@@ -1,17 +1,17 @@
 define([
     "text!templates/Profiles/CreateProfileTemplate.html",
-    "models/ProfileModel",
+    "models/ProfilesModel",
     "text!templates/Profiles/ModulesAccessListTemplate.html",
     "common"
 ],
-    function (CreateProfileTemplate, ProfileModel,  ModulesAccessTemplate, common) {
+    function (CreateProfileTemplate, ProfilesModel,  ModulesAccessTemplate, common) {
         var CreateView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
             template: _.template(CreateProfileTemplate),
             initialize: function (options) {
-                this.model = new ProfileModel();
-                this.profilesCollection = options.collection;
+                this.model = new ProfilesModel();
+                //this.profilesCollection = options.collection;
                 this.render();
             },
             events:{
@@ -41,7 +41,7 @@ define([
                     throw new Error("No profile found after filter: ModulesTableView -> filterCollection");
             },
             nextForm: function(){
-                this.model = new ProfileModel();
+                this.model = new ProfilesModel();
                 this.model.set({
                    profileName: $('#profileName').val(),
                    profileDescription: $('#profileDescription').val()
@@ -88,7 +88,7 @@ define([
                     jsonModel.profileAccess[i].access[1] = writeAccess[i];
                     jsonModel.profileAccess[i].access[2] = deleteAccess[i];
                 }
-                var model = new ProfileModel(jsonModel);
+                var model = new ProfilesModel(jsonModel);
                 model.save({},
                     {
                         headers: {

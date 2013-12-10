@@ -27,10 +27,15 @@ define([
         goToList: function (contentType) {
             console.API.clear();
             if (this.mainView == null) this.main();
-            var ContentViewUrl = "views/" + contentType + "/list/ListView",
-                TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/filterCollection";
-
+            if (contentType !== 'Birthdays') {
+	            var ContentViewUrl = "views/" + contentType + "/list/ListView",
+	                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+	                CollectionUrl = "collections/" + contentType + "/filterCollection";
+            } else {
+            	var ContentViewUrl = "views/" + contentType + "/list/ListView",
+            		TopBarViewUrl = "views/" + contentType + "/TopBarView",
+            		CollectionUrl = "collections/Employees/EmployeesCollection";
+            }
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {

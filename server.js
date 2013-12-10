@@ -386,7 +386,7 @@ app.delete('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.removeProject(req, res, id, data);
 });
-app.delete('/Projects/:viewType/:_id', function (req, res) {
+app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;
