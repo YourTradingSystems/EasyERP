@@ -476,7 +476,12 @@ app.delete('/Tasks/:viewType/:_id', function (req, res) {
     requestHandler.removeTask(req, res, id, data);
 });
 
-
+app.delete('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
 //------------------Workflows---------------------------------------------------
 
 app.get('/relatedStatus', function (req, res) {
