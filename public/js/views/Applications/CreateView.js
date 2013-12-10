@@ -121,7 +121,7 @@ define([
                     wait: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });

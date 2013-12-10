@@ -9,10 +9,9 @@
                 return "/ownCompanies";
             },
 
-            initialize: function () {
+            initialize: function (options) {
                 console.log("Companies Collection Init");
                 var mid = 39;
-
                 this.fetch({
                     data: $.param({
                         mid: mid
@@ -42,8 +41,6 @@
             fetchError: function (error) {
 
             }
-
-
         });
 
         return CompaniesCollection;

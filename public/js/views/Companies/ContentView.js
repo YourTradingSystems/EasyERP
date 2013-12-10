@@ -274,8 +274,6 @@ function (ListTemplate, FormTemplate, OpportunitiesCollection, PersonsCollection
             }
         },
 
-
-
         addAttach: function (event) {
             event.preventDefault();
             var currentModel = this.collection.getElement();
