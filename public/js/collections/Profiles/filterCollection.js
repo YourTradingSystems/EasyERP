@@ -1,9 +1,9 @@
 define([
-     "models/ProfileModel"
+     "models/ProfilesModel"
 ],
-    function (ProfileModel) {
+    function (ProfilesModel) {
         var ProfilesCollection = Backbone.Collection.extend({
-            model: ProfileModel,
+            model: ProfilesModel,
             url: function () {
                 return "/Profiles";
             },

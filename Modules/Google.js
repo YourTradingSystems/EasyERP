@@ -9,40 +9,79 @@
         scope: 'http://www.google.com/calendar/feeds/'
     });
 
-    var writeTokenToDb = function (uId, token) {
-        users.User.update(uId, { $set: { googleToken: token } }, function (err, response) {
+    var writeTokenToDb = function (uId, tokens) {
+        users.User.update({ _id: uId }, { $set: { "credentials.refresh_token": tokens.refresh_token, "credentials.access_token": tokens.access_token } }, function (err, response) {
             if (err) {
                 console.log(err);
             }
         });
     };
-    var checkSessionForToken = function (req) {
+    var sendEventsToGoogle = function (req, res, Events) {
+        //console.log(checkSessionForToken(req));
+        checkSessionForToken(req, function (err, response) {
+            if (response) {
+                console.log(response);
+                oauth2Client.credentials = response;
+                googleapis
+                          .discover('calendar', 'v3')
+                          .discover('calendar', 'v3')
+                             .execute(function (err, client) {
+                                 if (err) console.log(err);
+
+                                 client.calendar.events.insert({ calendarId: id }, eventItem)
+                                     .withAuthClient(oauth2Client).execute(
+                                         function (err, result) {
+                                             if (result) {
+                                                 console.log(result);
+                                             } else {
+                                                 console.log(err);
+                                             }
+                                             ;
+                                         });
+                             });
+
+            } else {
+                console.log(err);
+            }
+        });
+
+
+    }
+    var checkSessionForToken = function (req, callback) {
         console.log('Google Sessions');
         if (req.session && req.session.loggedIn) {
-            if (req.session.googleToken) {
 
-                return true;
+            if (req.session.credentials) {
+                callback(null, req.session.credentials);
+
             } else {
+
                 users.User.findById(req.session.uId, function (err, response) {
                     if (response) {
-                        if (response.googleToken) {
-                            req.session.googleToken = response.googleToken;
-                            return true;
+                        if (response.credentials) {
+                            req.session.credentials = response.credentials;
+                            console.log(req.session.credentials);
+
+
+                            callback(null, response.credentials);
                         } else {
-                            return false;
+
+                            callback({ "error": "error" }, null);
                         }
                     } else {
                         console.log(err);
-                        return false;
+                        callback(err, null);
+
                     }
                 });
             }
         }
+
     };
 
     var getToken = function (req, res, callback) {
         if (checkSessionForToken(req)) {
-            callback(req.session.googleToken);
+            callback(req.session.credentials);
         } else {
             var query = req.query;
             console.log(query);
@@ -56,8 +95,8 @@
                     if (req.session && req.session.loggedIn) {
 
                         console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                        writeTokenToDb(req.session.uId, tokens.access_token);
-                        req.session.googleToken = tokens.access_token;
+                        writeTokenToDb(req.session.uId, tokens);
+                        req.session.credentials = tokens;
                         if (callback) callback(tokens.access_token);
                     }
                 });
@@ -65,10 +104,9 @@
         }
     };
 
-    var getGoogleCalendars = function (token, response) {
-        oauth2Client.credentials = {
-            access_token: token
-        };
+    var getGoogleCalendars = function (credentials, response) {
+        oauth2Client.credentials = credentials;
+
         googleapis
             .discover('calendar', 'v3')
             .execute(function (err, client) {
@@ -92,10 +130,8 @@
                     });
             });
     };
-    var getEventsByCalendarIds = function (token, iDs, callback) {
-        oauth2Client.credentials = {
-            access_token: token
-        };
+    var getEventsByCalendarIds = function (credentials, iDs, callback) {
+        oauth2Client.credentials = credentials;
         var calendars = [];
         googleapis
             .discover('calendar', 'v3')
@@ -132,7 +168,8 @@
         oauth2Client: oauth2Client,
         getGoogleCalendars: getGoogleCalendars,
         getToken: getToken,
-        getEventsByCalendarIds: getEventsByCalendarIds
+        getEventsByCalendarIds: getEventsByCalendarIds,
+        sendEventsToGoogle: sendEventsToGoogle
     }
 };
 module.exports = googleModule;

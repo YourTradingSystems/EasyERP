@@ -71,6 +71,26 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getFilterUsers(req, res, data) {
+        console.log("Requst getUsers is success");
+        if (req.session && req.session.loggedIn) {
+            users.getFilterUsers(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getUserById(req, res, data) {
+        console.log("Request getUser is success");
+        if (req.session && req.session.loggedIn) {
+            //persons.get(res);
+            users.getUserById(data.id, res);
+        } else {
+            res.send(401);
+        }
+        // console.log("Requst getPersons is success");
+    };
+
     function updateUser(req, res, id, data) {
         console.log("Requst createUser is success");
         if (req.session && req.session.loggedIn) {
@@ -445,7 +465,7 @@ var requestHandler = function (fs, mongoose) {
     };
 
     function getOwnCompanies(req, res, data) {
-        console.log("Requst getCompanies is success");
+        console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn) {
             customer.getOwnCompanies(res);
         } else {
@@ -1028,7 +1048,7 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst googleCalSync is success");
         if (req.session && req.session.loggedIn) {
             console.log(data);
-            google.getEventsByCalendarIds(req.session.googleToken, data.calendar, function (eventsArray) {
+            google.getEventsByCalendarIds(req.session.credentials, data.calendar, function (eventsArray) {
                 events.googleCalSync(eventsArray, res);
             });
         } else {
@@ -1046,7 +1066,10 @@ var requestHandler = function (fs, mongoose) {
 	}
 
     function googleCalendars(req, res) {
-        google.getGoogleCalendars(req.session.googleToken, res);
+        google.getGoogleCalendars(req.session.credentials, res);
+    }
+    function sendToGoogleCalendar(req, res) {
+        events.sendToGoogleCalendar(req, res);
     }
 
     //---------END------Events----------------------------------
@@ -1059,6 +1082,8 @@ var requestHandler = function (fs, mongoose) {
         login: login,
         createUser: createUser,
         getUsers: getUsers,
+        getUserById:getUserById,
+        getFilterUsers:getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
 
@@ -1173,7 +1198,8 @@ var requestHandler = function (fs, mongoose) {
         googleCalSync: googleCalSync,
         getXML: getXML,
         getToken: getToken,
-        googleCalendars:googleCalendars
+        googleCalendars:googleCalendars,
+		sendToGoogleCalendar:sendToGoogleCalendar
     }
 }
 //---------EXPORTS----------------------------------------

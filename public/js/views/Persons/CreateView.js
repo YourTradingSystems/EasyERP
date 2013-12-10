@@ -69,7 +69,7 @@ define([
                     wait: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("easyErp/Persons/thumbnails", { trigger: true });
+                        Backbone.history.navigate("easyErp/Persons", { trigger: true });
                     },
                     error: function (model, xhr, options) {
                         if (xhr && xhr.status === 401) {
