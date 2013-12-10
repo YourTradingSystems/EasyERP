@@ -1,5 +1,5 @@
 define( function () {
-    var ProfileModel = Backbone.Model.extend({
+    var ProfilesModel = Backbone.Model.extend({
         idAttribute:"_id",
 
         initialize: function(){
@@ -32,5 +32,5 @@ define( function () {
         }
     });
 
-    return ProfileModel;
+    return ProfilesModel;
 });
