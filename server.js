@@ -386,7 +386,6 @@ app.delete('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.removeProject(req, res, id, data);
 });
-
 app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
@@ -626,6 +625,8 @@ app.delete('/Tasks/:contentType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeTask(req, res, id, data);
 });
+
+
 
 app.post('/JobPosition', function (req, res) {
     data = {};

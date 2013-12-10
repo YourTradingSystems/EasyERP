@@ -14,9 +14,10 @@
             },
 
             gotoForm: function (e) {
+            	e.preventDefault();
                 App.ownContentType = true;
-                var itemIndex = $(e.target).closest("div").data("index") + 1;
-                window.location.hash = "#home/content-Employees/form/" + itemIndex;
+                var id = $(e.target).closest("a").data("id");
+                window.location.hash = "#easyErp/Employees/form/" + id;
             },
 
             getAge: function (birthday) {

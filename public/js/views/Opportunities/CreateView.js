@@ -167,7 +167,7 @@ define([
                     },
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("home/content-Opportunities", { trigger: true });
+                        Backbone.history.navigate("easyErp/Opportunities/", { trigger: true });
                     },
                     error: function (model, xhr, options) {
                         Backbone.history.navigate("home", { trigger: true });
