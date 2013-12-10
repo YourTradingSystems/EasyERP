@@ -172,6 +172,12 @@ app.post('/Users', function (req, res) {
     requestHandler.createUser(req, res, data);
 });
 
+app.get('/Users', function (req, res) {
+    console.log('---------------------getUsers-------------');
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getUsers(req, res, data);
+});
 
 app.get('/Users/:viewType', function (req, res) {
     console.log('---------------------getUsers-------------');
@@ -183,7 +189,7 @@ app.get('/Users/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getUserById(req, res, data);
             break;
-        default: requestHandler.getFilterUsers(req, res, data);
+        default: requestHandler.getUsers(req, res, data);
             break;
     }
 });
