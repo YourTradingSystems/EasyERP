@@ -194,7 +194,7 @@ app.get('/Users/:viewType', function (req, res) {
     }
 });
 
-app.put('/Users/:_id', function (req, res) {
+app.put('/Users/:viewType/:_id', function (req, res) {
     console.log(req.body);
     data = {};
     var id = req.param('_id');
@@ -205,6 +205,13 @@ app.put('/Users/:_id', function (req, res) {
 });
 
 app.delete('/Users/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    console.log(data);
+    requestHandler.removeUser(req, res, id);
+});
+app.delete('/Users/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

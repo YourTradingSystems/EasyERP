@@ -1,10 +1,9 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
     "models/TasksModel",
-    "common",
-    "custom"
+    "common"
 ],
-    function (CreateTemplate, TaskModel, common, Custom) {
+    function (CreateTemplate, TaskModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",

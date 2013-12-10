@@ -71,6 +71,15 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getFilterUsers(req, res, data) {
+        console.log("Requst getUsers is success");
+        if (req.session && req.session.loggedIn) {
+            users.getFilterUsers(data, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getUserById(req, res, data) {
         console.log("Request getUser is success");
         if (req.session && req.session.loggedIn) {
@@ -1074,6 +1083,7 @@ var requestHandler = function (fs, mongoose) {
         createUser: createUser,
         getUsers: getUsers,
         getUserById:getUserById,
+        getFilterUsers:getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
 
