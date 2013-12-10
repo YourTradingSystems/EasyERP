@@ -386,7 +386,7 @@ app.delete('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.removeProject(req, res, id, data);
 });
-app.delete('/Projects/:viewType/:_id', function (req, res) {
+app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;
@@ -933,6 +933,12 @@ app.delete('/Leads/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
 });
+app.delete('/Leads/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeLead(req, res, id, data);
+});
 //---------------------Opportunities---------------------
 app.post('/Opportunities', function (req, res) {
     data = {};
@@ -970,6 +976,12 @@ app.put('/Opportunities/:_id', function (req, res) {
 });
 
 app.delete('/Opportunities/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeOpportunitie(req, res, id, data);
+});
+app.delete('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
