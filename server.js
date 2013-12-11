@@ -1023,6 +1023,7 @@ app.get('/Events', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     data.idArray = req.param('idArray');
+    console.log(data);
     requestHandler.getEvents(req, res, data);
 });
 
