@@ -35,7 +35,6 @@ define([
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
                 "click #saveSpan": "saveClick"
-
             },
 
             quickEdit: function (e) {
@@ -67,8 +66,8 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
 
-                var currentModel = this.collection.getElement();
-                Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                var currentModel = this.model;
+                Backbone.history.navigate("#esyErp/Persons/form/" + currentModel.id, { trigger: true });
             },
 
 
@@ -115,7 +114,7 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
+                var currentModel = this.model;
 
                 if (objIndex.length > 1) {
                     if ($("#" + parent[0].id).hasClass('with-checkbox')) {
@@ -152,7 +151,7 @@ define([
                         mid: 39
                     },
                     success: function () {
-                        Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                        Backbone.history.navigate("#easyErp/Persons/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },

@@ -80,16 +80,14 @@ define([
             
             cancelClick: function (e) {
                 e.preventDefault();
-
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $("#" + parent[0].id).text(this.text);
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                var currentModel = this.collection.getElement();
-
-                Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                var currentModel = this.model;
+                Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
             },
 
             editClick: function (e) {
@@ -107,7 +105,6 @@ define([
                 $("#" + parent[0].id).text('');
                 $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
                 $('#editInput').val(this.text);
-
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
@@ -118,14 +115,12 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
+                var currentModel = this.model;
                 if (objIndex.length > 1) {
                     obj = currentModel.get(objIndex[0]);
                     obj[objIndex[1]] = $('#editInput').val();
-                    console.log(obj);
                 } else if (objIndex.length == 1) {
                     obj[objIndex[0]] = $('#editInput').val();
-                    console.log(obj);
                 }
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
@@ -140,9 +135,7 @@ define([
                         mid: 39
                     },
                     success: function () {
-
-
-                        Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                        Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
@@ -224,9 +217,6 @@ define([
                                            $('#getNoteKey').attr("value", '');
                                        }
                                    });
-
-
-
                     } else {
 
                         note_obj.note = val;
@@ -244,7 +234,6 @@ define([
                                             var date = common.utcDateToLocaleDate(response.notes[key].date);
                                             var author = currentModel.get('name').first;
                                             var id = response.notes[key]._id;
-
                                             $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
 
                                         }
