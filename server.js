@@ -1022,6 +1022,7 @@ app.post('/Events', function (req, res) {
 app.get('/Events', function (req, res) {
     data = {};
     data.mid = req.param('mid');
+    data.idArray = req.param('idArray');
     requestHandler.getEvents(req, res, data);
 });
 

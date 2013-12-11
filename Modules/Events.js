@@ -409,28 +409,42 @@ var Events = function (logWriter, mongoose, googleModule) {
         });
     };// end removeCalendar
 
-    function get(response) {
-        var res = {}
-        var description = "";
+    function get(idArr, response) {
+        var res = {};
+        var count = 1;
         res['data'] = [];
-        var query = event.find();
-        query.populate('calendarId');
-        query.sort({ summary: 1 });
-        query.exec(function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log('Events.js get Events.find' + description);
-                response.send(500, { error: "Can't find Events" });
-            } else {
-                res['data'] = result.map(function (event) {
-                    if(event.start && event.start.dateTime) event['start_date'] =  event.start.dateTime;
-                    if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
-                    if (event.start && event.start.date) event['start_date'] = event.start.date;
-                    if (event.end && event.end.date) event['end_date'] = event.end.date;
-                    return event;
-                });
-                response.send(res);
-            }
+        //var query = event.find();
+        //query.populate('calendarId');
+        //query.sort({ summary: 1 });
+        //query.exec(function (err, result) {
+        //    if (err) {
+        //        console.log(err);
+        //        logWriter.log('Events.js get Events.find' + description);
+        //        response.send(500, { error: "Can't find Events" });
+        //    } else {
+        //        res['data'] = result.map(function (event) {
+        //            if(event.start && event.start.dateTime) event['start_date'] =  event.start.dateTime;
+        //            if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
+        //            if (event.start && event.start.date) event['start_date'] = event.start.date;
+        //            if (event.end && event.end.date) event['end_date'] = event.end.date;
+        //            return event;
+        //        });
+        //        response.send(res);
+        //    }
+        //});
+        idArr.forEach(function(id) {
+            var query = calendar.find();
+            query.populate('events');
+            query.sort({ summary: 1 });
+            query.exec(function (err, result) {
+                if (result) {
+                    res['data'] = res['data'].concat(result.events);
+                    if (count == idArr.length) {
+                        response.send(res);
+                    }
+                    count++;
+                }
+            });
         });
     }; //end get
 
