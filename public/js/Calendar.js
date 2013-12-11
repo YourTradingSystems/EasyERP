@@ -95,7 +95,7 @@ function(UsersCollection){
             scheduler.attachEvent('onLightBox', function(id){ 
 				//chooce calendar
 				var curCalendarId = $('#calendarList').val();
-				if (curCalendarId&&curCalendarId.length>1){
+				if (curCalendarId&&curCalendarId.length>1&&!$("#chooseCalendarDiv").length){
 					var curCalendarText = [];
 					for (var i;i<curCalendarId.length;i++){
 						curCalendarText.push($('#calendarList option[value="'+curCalendarId+'"]').text())
