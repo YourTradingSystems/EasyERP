@@ -52,7 +52,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         accessRole: String,
         description: { type: String, default: '' },
         link: { type: String, default: '' },
-        events: { type: [ObjectId], ref: 'Events', default: null },
+        events: [{ type: ObjectId, ref: 'Events', default: null }],
         location: { type: String, default: '' }
 
     }, { collection: 'Calendars' });
@@ -409,29 +409,53 @@ var Events = function (logWriter, mongoose, googleModule) {
         });
     };// end removeCalendar
 
-    function get(response) {
-        var res = {}
-        var description = "";
+    function get(idArr, response) {
+        var res = {};
+        var count = 1;
         res['data'] = [];
-        var query = event.find();
-        query.populate('calendarId');
-        query.sort({ summary: 1 });
-        query.exec(function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log('Events.js get Events.find' + description);
-                response.send(500, { error: "Can't find Events" });
-            } else {
-                res['data'] = result.map(function (event) {
-                    if(event.start && event.start.dateTime) event['start_date'] =  event.start.dateTime;
-                    if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
-                    if (event.start && event.start.date) event['start_date'] = event.start.date;
-                    if (event.end && event.end.date) event['end_date'] = event.end.date;
-                    return event;
+        if (!idArr || idArr.length == 0) {
+            var query = event.find();
+            query.populate('calendarId');
+            query.sort({ summary: 1 });
+            query.exec(function(err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log('Events.js get Events.find' + description);
+                    response.send(500, { error: "Can't find Events" });
+                } else {
+                    res['data'] = result.map(function(event) {
+                        if (event.start && event.start.dateTime) event['start_date'] = event.start.dateTime;
+                        if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
+                        if (event.start && event.start.date) event['start_date'] = event.start.date;
+                        if (event.end && event.end.date) event['end_date'] = event.end.date;
+                        return event;
+                    });
+                    response.send(res);
+                }
+            });
+        } else {
+            idArr.forEach(function(id) {
+                var query = calendar.findById(id);
+                query.populate('events');
+                query.exec(function(err, result) {
+                    if (result) {
+                        res['data'] = res['data'].concat(result.events);
+                        if (count == idArr.length) {
+                            resToSend = res['data'].map(function(event) {
+                                if (event.start && event.start.dateTime) event['start_date'] = event.start.dateTime;
+                                if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
+                                if (event.start && event.start.date) event['start_date'] = event.start.date;
+                                if (event.end && event.end.date) event['end_date'] = event.end.date;
+                                return event;
+                            });
+                            console.log(resToSend);
+                            response.send(resToSend);
+                        }
+                        count++;
+                    }
                 });
-                response.send(res);
-            }
-        });
+            });
+        }
     }; //end get
 
     function update(id, data, res) {
@@ -492,12 +516,16 @@ var Events = function (logWriter, mongoose, googleModule) {
             res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
             return;
         } else {
+			var countCal = 0;
             data.forEach(function (cal) {
+				countCal++;
                 var query = calendar.findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
                 query.exec(function (err, googleCalendar) {
                     if (googleCalendar) {
                         var curentCalendarId = googleCalendar._id;
+						var countEv = 0;
                         cal.items.forEach(function (ev) {
+							countEv++;
                             ev.calendarId = curentCalendarId;
                             ev.isGoogle = true;
                             var eventQuery = event.findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
@@ -509,6 +537,9 @@ var Events = function (logWriter, mongoose, googleModule) {
                                             logWriter.log("Events.js googleCalSync calendar.update " + error);
                                             res.send(500, { error: "Can't update Events" });
                                         } else {
+											if(countCal==data.length&&countEv==cal.items.length){
+												res.send(200);
+											}
                                             console.log('>>>>>>>>>SetToupdateGoogleCallendar<<<<<<<<<<<<<');
                                             console.log(upRes);
                                         }
@@ -560,7 +591,7 @@ var Events = function (logWriter, mongoose, googleModule) {
 
         })
     }
-    
+
     function sendToGoogleCalendar(req, res) {
         var calendarsId = req.body.calendarsId;
         var query = event.find({ "isGoogle": false });
