@@ -414,6 +414,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         var count = 1;
         res['data'] = [];
         if (!idArr || idArr.length == 0) {
+            console.log('>>>>>>ArrIdNull<<<<<<<<<<<<');
             var query = event.find();
             query.populate('calendarId');
             query.sort({ summary: 1 });
@@ -423,14 +424,17 @@ var Events = function (logWriter, mongoose, googleModule) {
                     logWriter.log('Events.js get Events.find' + description);
                     response.send(500, { error: "Can't find Events" });
                 } else {
-                    res['data'] = result.map(function(event) {
-                        if (event.start && event.start.dateTime) event['start_date'] = event.start.dateTime;
-                        if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
-                        if (event.start && event.start.date) event['start_date'] = event.start.date;
-                        if (event.end && event.end.date) event['end_date'] = event.end.date;
-                        return event;
-                    });
+                    //res['data'] = result.map(function(event) {
+                    //    if (event.start && event.start.dateTime) event['start_date'] = new Date(event.start.dateTime);
+                    //    if (event.end && event.end.dateTime) event['end_date'] = new Date(event.end.dateTime);
+                    //    if (event.start && event.start.date) event['start_date'] = new Date(event.start.date);
+                    //    if (event.end && event.end.date) event['end_date'] = new Date(event.end.date);
+                    //    return event;
+                    //});
+                    res['data'] = result;
+                    console.log(res);
                     response.send(res);
+                    console.log('----------Non ----  Filtered Collection of Events-----------------');
                 }
             });
         } else {
@@ -441,15 +445,16 @@ var Events = function (logWriter, mongoose, googleModule) {
                     if (result) {
                         res['data'] = res['data'].concat(result.events);
                         if (count == idArr.length) {
-                            resToSend = res['data'].map(function(event) {
-                                if (event.start && event.start.dateTime) event['start_date'] = event.start.dateTime;
-                                if (event.end && event.end.dateTime) event['end_date'] = event.end.dateTime;
-                                if (event.start && event.start.date) event['start_date'] = event.start.date;
-                                if (event.end && event.end.date) event['end_date'] = event.end.date;
-                                return event;
-                            });
-                            console.log(resToSend);
-                            response.send(resToSend);
+                            //resToSend = res['data'].map(function(event) {
+                            //    if (event.start && event.start.dateTime) event['start_date'] = new Date(event.start.dateTime);
+                            //    if (event.end && event.end.dateTime) event['end_date'] = new Date(event.end.dateTime);
+                            //    if (event.start && event.start.date) event['start_date'] = new Date(event.start.date);
+                            //    if (event.end && event.end.date) event['end_date'] = new Date(event.end.date);
+                            //    return event;
+                            //});
+                            console.log(res);
+                            response.send(res);
+                            console.log('----------Filtered Collection of Events-----------------');
                         }
                         count++;
                     }
@@ -528,6 +533,10 @@ var Events = function (logWriter, mongoose, googleModule) {
 							countEv++;
                             ev.calendarId = curentCalendarId;
                             ev.isGoogle = true;
+                            if (ev.start && ev.start.dateTime) ev['start_date'] = ev.start.dateTime;
+                            if (ev.end && ev.end.dateTime) ev['end_date'] = ev.end.dateTime;
+                            if (ev.start && ev.start.date) ev['start_date'] = ev.start.date;
+                            if (ev.end && ev.end.date) ev['end_date'] = ev.end.date;
                             var eventQuery = event.findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
                             eventQuery.exec(function (err, googleEvent) {
                                 if (googleEvent) {

@@ -44,8 +44,11 @@ define([
                 Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
             },
             editEvent: function(){
-                var id = this.getIdFromHash(window.location.hash);
-                Backbone.history.navigate("#home/action-Profiles/Edit/" + id, { trigger: true });
+                event.preventDefault();
+                this.trigger('editEvent');
+
+                /*var id = this.getIdFromHash(window.location.hash);
+                Backbone.history.navigate("#home/action-Profiles/Edit/" + id, { trigger: true });*/
             },
             getIdFromHash: function(hash){
                 var hashItems = hash.split('/');

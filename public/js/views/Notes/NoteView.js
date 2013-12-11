@@ -11,6 +11,7 @@ define([
 
 ], function (NoteTemplate, Custom) {
     var NoteView = Backbone.View.extend({
+
         initialize: function() {
         },
         events: {
@@ -19,7 +20,26 @@ define([
             "click #addNote" : "saveNote",
             "click .addTitle" : "showTitle",
             "click .editNote" : "editNote",
+            "change #inputAttach": "fileAttachHandler"
         },
+
+        fileAttachHandler: function(event){
+            var files = event.target.files;
+            if(files.length === 0){
+                alert('No files to attach');
+                return;
+            }
+            var file = files[0];
+            if(!this.fileSizeIsAcceptable(file)){
+                alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                return;
+            }
+        },
+        fileSizeIsAcceptable: function(file){
+            if(!file){return false;}
+            return file.size < App.File.MAXSIZE;
+        },
+
 		editNote : function(e){
 			$(".title-wrapper").show();
 			$("#noteArea").attr("placeholder","").parents(".addNote").addClass("active");

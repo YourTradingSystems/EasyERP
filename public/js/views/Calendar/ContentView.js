@@ -20,7 +20,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
         initialize: function () {
             _.bindAll(this, 'syncDlgSubmitBtnClickHandler', 'displayEventsOnCalendar', 'createNewCalendar');
-            this.eventsCollection = new EventsCollection();
+            this.eventsCollection = new EventsCollection({ idArray: ['52a866f518e8955b08b6e611'] });
             this.calendarsCollection = new CalendarsCollection();
             //this.eventsCollection.bind('reset', _.bind(this.curCalendarChange, this));
             this.calendarsCollection.bind('reset', _.bind(this.populateCalendarsList, this));
@@ -224,6 +224,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
            var currentCalendarId = curCalendarId.length > 0 ? curCalendarId[0] : $('#calendarList option:selected').val();
            this.setCurrentCalendarId(currentCalendarId);
            var filtered = this.eventsCollection.filterById(curCalendarId);
+           //var filtered = this.eventsCollection;
            this.displayEventsOnCalendar(filtered);
        },
         closeSyncDialog: function(){
