@@ -252,6 +252,8 @@ app.delete('/Profiles/:_id', function (req, res) {
     console.log(data);
     requestHandler.removeProfile(req, res, id);
 });
+
+
 //-----------------END----Users--and Profiles-----------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -855,7 +857,16 @@ app.post('/Applications', function (req, res) {
     requestHandler.createEmployee(req, res, data);
 });
 
-app.put('/Applications/:viewType/:_id', function (req, res) {
+app.put('/Applications/:_id', function (req, res) {
+    console.log('-----SERVER put Applications---------------');
+    var data = {};
+    var id = req.body._id;
+    data.mid = req.headers.mid;
+    data.employee = req.body;
+    requestHandler.updateEmployees(req, res, id, data);
+});
+
+app.put('/Applications/:_id', function (req, res) {
     console.log('-----SERVER put Applications---------------');
     var data = {};
     var id = req.body._id;
@@ -865,6 +876,13 @@ app.put('/Applications/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Applications/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeEmployees(req, res, id, data);
+});
+
+app.delete('/Applications/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

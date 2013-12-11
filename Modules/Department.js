@@ -3,7 +3,16 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
         parentDepartment: { type: ObjectId, ref: 'Department', default:null },
-        departmentManager: { type: ObjectId, ref: 'Employees', default:null }
+        departmentManager: { type: ObjectId, ref: 'Employees', default:null },
+		createdBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date, default: Date.now}
+		},
+		editedBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date}
+		}
+
     }, { collection: 'Department' });
 
     var department = mongoose.model('Department', DepartmentSchema);
@@ -36,6 +45,9 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
                     _department = new department();
                     if (data.departmentName) {
                         _department.departmentName = data.departmentName;
+                    }
+                    if (data.uId) {
+                        _department.createdBy.user=data.uId;
                     }
                     /*if (data.parentDepartment) {
                         if (data.parentDepartment._id) {
@@ -193,6 +205,7 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            delete data.createdBy;
             department.update({ _id: _id }, data, function (err, result) {
                 if (err) {
                     console.log(err);

@@ -19,23 +19,65 @@ define([
             "easyErp/:contentType/thumbnails(/:parrentContentId)": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
             "easyErp/:contentType/list": "goToList",
+            "easyErp/Profiles": "goToProfiles",
             //"home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "easyErp/:contentType": "getList",
             "*actions": "main"
         },
 
-        goToList: function (contentType) {
-            console.API.clear();
+        goToProfiles: function(){
             if (this.mainView == null) this.main();
-            if (contentType !== 'Birthdays') {
-	            var ContentViewUrl = "views/" + contentType + "/list/ListView",
-	                TopBarViewUrl = "views/" + contentType + "/TopBarView",
-	                CollectionUrl = "collections/" + contentType + "/filterCollection";
-            } else {
-            	var ContentViewUrl = "views/" + contentType + "/list/ListView",
-            		TopBarViewUrl = "views/" + contentType + "/TopBarView",
-            		CollectionUrl = "collections/Employees/EmployeesCollection";
+
+            var ContentViewUrl = "views/Profiles/ContentView",
+                TopBarViewUrl = "views/Profiles/TopBarView",
+                CollectionUrl = "collections/Profiles/ProfilesCollection";
+
+            var self = this;
+
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                var collection = new ContentCollection();
+
+                collection.bind('reset', _.bind(createViews, self));
+                Custom.setCurrentVT('list');
+                function createViews() {
+
+                    var contentView = new ContentView({ collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content"});
+
+                    topBarView.bind('createEvent', contentView.createItem, contentView);
+                    topBarView.bind('editEvent', contentView.editProfileDetails, contentView);
+                    topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
+                    topBarView.bind('saveEvent', contentView.saveProfile, contentView);
+
+                    this.changeView(contentView);
+                    this.changeTopBarView(topBarView);
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
+                }
+            });
+        },
+
+        buildCollectionRoute: function(contentType){
+            if(!contentType){
+                throw new Error("Error building collection route. ContentType is undefined");
+                return;
             }
+            switch (contentType){
+                case 'Birthdays':
+                    return "collections/Employees/EmployeesCollection";
+                default:
+                    return "collections/" + contentType + "/filterCollection";
+            }
+        },
+
+        goToList: function (contentType) {
+            // console.API.clear();
+            if (this.mainView == null) this.main();
+
+            var ContentViewUrl = "views/" + contentType + "/list/ListView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+                CollectionUrl = this.buildCollectionRoute(contentType);
+
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
@@ -59,13 +101,11 @@ define([
                     //Backbone.history.navigate(url, { replace: true });
                 }
             });
-
-
         },
 
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
-            console.log(contentType + "Model");
+            //console.log(contentType + "Model");
             var ContentFormModelUrl = "models/" + contentType + "Model",
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
@@ -124,7 +164,7 @@ define([
         },
 
         goToThumbnails: function (contentType, parrentContentId) {
-            console.API.clear();
+            //console.API.clear();
             if (this.mainView == null) this.main();
             var ContentViewUrl,
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
