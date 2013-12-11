@@ -273,8 +273,12 @@ define([
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
+                if(!addInptAttach){
+                    alert('No files to attach');
+                    return;
+                }
                 if(!this.fileSizeIsAcceptable(addInptAttach)){
-                    alert('File you are trying to attach is too big. MaxFileSize:' + App.File.MAXSIZE);
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
                 addFrmAttach.submit(function (e) {

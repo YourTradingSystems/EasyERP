@@ -26,11 +26,12 @@ define([
         fileAttachHandler: function(event){
             var files = event.target.files;
             if(files.length === 0){
+                alert('No files to attach');
                 return;
             }
             var file = files[0];
             if(!this.fileSizeIsAcceptable(file)){
-                alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MAXSIZE);
+                alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                 return;
             }
         },
