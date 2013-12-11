@@ -3,12 +3,12 @@
     <div class="inner">
       <div class="half-block left">
 		<dl class="opp-info">
-		  <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required /></dd>
-		  <dt><label for="expectedRevenue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" /><%=model.expectedRevenue.currency%>at</dd>
-		  <dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" />%</dd>
+		  <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="64"/></dd>
+		  <dt><label for="expectedRevenue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" maxlength="64"/><%=model.expectedRevenue.currency%>at</dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" maxlength="64"/>%</dd>
 		  <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
-		  <dt><label for="email">Email </label></dt><dd><input type="email" id="email" value="<%=model.email%>" /></dd>
-		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" /></dd>
+		  <dt><label for="email">Email </label></dt><dd><input type="email" id="email" value="<%=model.email%>" maxlength="64"/></dd>
+		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" maxlength="64"/></dd>
 		</dl>
 	  </div>
       <div class="half-block left">
@@ -17,9 +17,9 @@
 		  <dt><label for="workflowDd"> Workflows </label></dt><dd><select id="workflowDd"></select></dd>
 		  <dt><label for="salesPersonDd">Salesperson</label></dt><dd><select id="salesPersonDd"></select></dd>
 		  <dt><label for="salesTeamDd">Sales Team</label></dt><dd><select id="salesTeamDd"></select></dd>
-		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" /></dd>
+		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" maxlength="64"/></dd>
 		  <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=model.nextAction.desc%>" /></dd>
-		  <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" /></dd>
+		  <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" maxlength="64"/></dd>
 		  <dt><label for="priority">Priority </label></dt><dd><select id="priorityDd"></select></dd>
 		  <dt></dt><dd></dd>
 		  <dt></dt><dd></dd>
@@ -33,12 +33,12 @@
 		  <div class="clearfix"></div>
 		</div>
 		<dl class="opp-info">
-		  <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=model.company%>" disabled /></dd>
-		  <dt><label for="address">Address</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" /></dd>
-		  <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" /></dd>
-		  <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" /></dd>
-		  <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" /></dd>
-		  <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" /></dd>
+		  <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=model.company%>" disabled maxlength="64"/></dd>
+		  <dt><label for="address">Address</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" maxlength="64"/></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" maxlength="64"/></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" maxlength="64"/></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" maxlength="64"/></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" maxlength="64"/></dd>
 		</dl>
 	  </div>
 	  <div class="half-block left withPaddingLeft">
@@ -56,11 +56,11 @@
 		</div>
 		<dl class="opp-info">
 		  <dt><label>Opt-Out :</label></dt><dd><input type="checkbox" id="optout" <%= (model.optout)? 'checked="checked"':''%>  /></dd>
-		  <dt><label for="contactName">Contact Name :</label></dt><dd><input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled /></dd>
-		  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled /></dd>
-		  <dt><label for="func">Function :</label></dt><dd><input type="text" id="func" value="<%=model.func%>" /></dd>
-		  <dt><label for="mobile">Mobile :</label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" /></dd>
-		  <dt><label for="name">Fax :</label></dt><dd><input type="text" id="fax" value="<%=model.phones.fax%>" /></dd>
+		  <dt><label for="contactName">Contact Name :</label></dt><dd><input type="text" class="name" id="first" value="<%=model.contactName.first%>" disabled maxlength="64"/></dd>
+		  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" value="<%=model.contactName.last%>" disabled maxlength="64"/></dd>
+		  <dt><label for="func">Function :</label></dt><dd><input type="text" id="func" value="<%=model.func%>" maxlength="64"/></dd>
+		  <dt><label for="mobile">Mobile :</label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" maxlength="64"/></dd>
+		  <dt><label for="name">Fax :</label></dt><dd><input type="text" id="fax" value="<%=model.phones.fax%>" maxlength="64"/></dd>
 
 		</dl>
 	  </div>
@@ -71,7 +71,7 @@
 		</div>
 		<dl class="opp-info">
 		  <dt><label>Active :</label></dt><dd><input type="checkbox" id="active" <%= (model.active)? 'checked="checked"':''%>  /></dd>
-		  <dt><label>Referred By :</label></dt><dd><input type="text" id="reffered" value="<%=model.reffered%>" /></dd>
+		  <dt><label>Referred By :</label></dt><dd><input type="text" id="reffered" value="<%=model.reffered%>" maxlength="64"/></dd>
 
 		</dl>
 	  </div>

@@ -2,7 +2,7 @@
   <form method="post" action="" id="createEmployeeForm" class="form">
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="name">Company Name :</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" required /></dd>
+		<dt><label for="name">Company Name :</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" required maxlength="64"/></dd>
 	  </dl>
 	</div>
 	<div class="half-block left">
@@ -14,20 +14,20 @@
     <div class="clearfix"></div>
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label>Address :</label></dt><dd><input type="text" class="address blueback" name="street" id="street" placeholder="Street..." /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city" id="city" placeholder="City" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback"  name="state" id="state" placeholder="State" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" id="zip" placeholder="ZIP" /></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="country" id="country" placeholder="Country" /></dd>
+		<dt><label>Address :</label></dt><dd><input type="text" class="address blueback" name="street" id="street" placeholder="Street..." maxlength="64"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city" id="city" placeholder="City" maxlength="64"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback"  name="state" id="state" placeholder="State" maxlength="64"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" id="zip" placeholder="ZIP" maxlength="64"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="country" id="country" placeholder="Country" maxlength="64"/></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="website">Website :</label></dt><dd><input class="blueback" type="text" name="website" id="website" /></dd>
-		<dt><label for="phone">Phone :</label></dt><dd><input class="blueback" type="text" name="phone" id="phone" /></dd>
-		<dt><label for="mobile">Mobile :</label></dt><dd><input class="blueback" type="text" name="mobile" id="mobile" /></dd>
-		<dt><label for="fax">Fax :</label></dt><dd><input class="blueback" type="text" name="fax" id="fax" /></dd>
-		<dt><label for="email">Email :</label></dt><dd><input class="blueback" type="text" name="email" id="email" /></dd>
+		<dt><label for="website">Website :</label></dt><dd><input class="blueback" type="text" name="website" id="website" maxlength="64"/></dd>
+		<dt><label for="phone">Phone :</label></dt><dd><input class="blueback" type="text" name="phone" id="phone" maxlength="64"/></dd>
+		<dt><label for="mobile">Mobile :</label></dt><dd><input class="blueback" type="text" name="mobile" id="mobile" maxlength="64"/></dd>
+		<dt><label for="fax">Fax :</label></dt><dd><input class="blueback" type="text" name="fax" id="fax" maxlength="64"/></dd>
+		<dt><label for="email">Email :</label></dt><dd><input class="blueback" type="text" name="email" id="email" maxlength="64"/></dd>
 	  </dl>
     </div>
     <div class="clearfix"></div>
@@ -68,7 +68,7 @@
 		  </dd>
 		  <dt><label for="reference">Reference</label></dt>
 		  <dd>
-			<input class="blueback" type="text" id="reference" />
+			<input class="blueback" type="text" id="reference" maxlength="64"/>
 		  </dd>
 		  <dt><label for="language">Language</label></dt>
 		  <dd>
