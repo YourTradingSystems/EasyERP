@@ -104,7 +104,7 @@ define([
                             Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
                         }
                     },
                     error: function (model, xhr, options) {
