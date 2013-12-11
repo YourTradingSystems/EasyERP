@@ -926,6 +926,7 @@ var requestHandler = function (fs, mongoose) {
 
     function createLead(req, res, data) {
         if (req.session && req.session.loggedIn) {
+            data.lead.uId = req.session.uId;
             opportunities.create(data.lead, res);
         } else {
             res.send(401);
@@ -933,7 +934,12 @@ var requestHandler = function (fs, mongoose) {
     }
 
     function updateLead(req, res, id, data) {
+        var date = Date.now();
         if (req.session && req.session.loggedIn) {
+            data.lead['editedBy'] = {
+                user: req.session.uId,
+                date: date
+            };
             opportunities.update(id, data.lead, res);
         } else {
             res.send(401);
@@ -950,6 +956,7 @@ var requestHandler = function (fs, mongoose) {
     //-------------------Opportunities---------------------------
     function createOpportunitie(req, res, data) {
         if (req.session && req.session.loggedIn) {
+            data.opportunitie.uId = req.session.uId;
             opportunities.create(data.opportunitie, res);
         } else {
             res.send(401);
@@ -974,7 +981,12 @@ var requestHandler = function (fs, mongoose) {
     }
 
     function updateOpportunitie(req, res, id, data) {
+        var date = Date.now();
         if (req.session && req.session.loggedIn) {
+            data.opportunitie['editedBy'] = {
+                user: req.session.uId,
+                date: date
+            };
             opportunities.update(id, data.opportunitie, res);
         } else {
             res.send(401);
