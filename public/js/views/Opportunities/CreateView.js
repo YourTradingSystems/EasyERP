@@ -170,7 +170,7 @@ define([
                         Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                     },
                     error: function (model, xhr, options) {
-                        Backbone.history.navigate("home", { trigger: true });
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
             },

@@ -152,15 +152,15 @@
                     success: function (model) {
                         model = model.toJSON();
                         self.hideDialog();
-                        if (!model.project._id) {
+                        if (!model.project) {
                             Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
                         }
                     },
                     error: function (model, xhr, options) {
-                        Backbone.history.navigate("home", { trigger: true });
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
 
