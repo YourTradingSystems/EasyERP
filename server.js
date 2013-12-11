@@ -866,7 +866,7 @@ app.put('/Applications/:_id', function (req, res) {
     requestHandler.updateEmployees(req, res, id, data);
 });
 
-app.put('/Applications/:_id', function (req, res) {
+app.put('/Applications/:viewType/:_id', function (req, res) {
     console.log('-----SERVER put Applications---------------');
     var data = {};
     var id = req.body._id;
