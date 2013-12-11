@@ -16,7 +16,7 @@
     <img src="<%=imageSrc%>" />
 </div>
     <div class="info">
-        <p><%=name.first%> <%=name.last%></p>
+        <p><%=(name.first.length>18)?(name.first.substring(0,18)+"..."):name.first%> <%=(name.last.length>18)?(name.last.substring(0,18)+"..."):name.last%></p>
         <p><%=(company) ? company.name.first : ''%></p>
         <p><%=email%></p>
     </div>
