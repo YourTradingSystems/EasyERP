@@ -5,7 +5,7 @@
             <div class="inner">
                 <p>
                     <label for="name">Subject</label>
-                    <input type="text" class="title-input blueback" id="name" value="<%=name%>" required />
+                    <input type="text" class="title-input blueback" id="name" value="<%=name%>" required maxlength="64"/>
                 </p>
                 <div class="half-block left">
                     <div class="half-block left">                        
@@ -34,23 +34,23 @@
                     </div>
                     <div class="half-block left">                       
                         <p>
-                            <input type="text" id="company" value="<%= tempCompanyField %>" />
+                            <input type="text" id="company" value="<%= tempCompanyField %>" maxlength="64" />
                         </p>
                         <p>
                             <select id="customerDd"> </select>
                         </p>
-                        <p><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" /></p>
+                        <p><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" maxlength="64"/></p>
                         <p>
-                            <input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" />
+                            <input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" maxlength="64"/>
                         </p>
                         <p>
-                            <input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" />
+                            <input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" maxlength="64"/>
                         </p>
                         <p>
-                            <input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" />
+                            <input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" maxlength="64"/>
                         </p>
                         <p>
-                            <input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" />
+                            <input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" maxlength="64"/>
                         </p>
                         <p></p>
                         <p>
@@ -94,12 +94,12 @@
                         </p>
                     </div>
                     <div class="half-block left">
-                        <p><input type="text" class="name" id="first" value="<%=(contactName) ? contactName.first : ''%>" /></p>
-                        <p><input type="text" class="name" id="last" value="<%=(contactName) ? contactName.last : ''%>" /></p>
-                        <p><input type="text" id="email" value="<%=email%>" /></p>
-                        <p><input type="text" id="func" value="<%=func%>" /></p>
-                        <p><input type="text" id="phone" value="<%=phones.phone%>" /></p>
-                        <p><input type="text" id="mobile" value="<%=phones.mobile%>" /></p>
+                        <p><input type="text" class="name" id="first" value="<%=(contactName) ? contactName.first : ''%>" maxlength="64"/></p>
+                        <p><input type="text" class="name" id="last" value="<%=(contactName) ? contactName.last : ''%>" maxlength="64"/></p>
+                        <p><input type="text" id="email" value="<%=email%>" maxlength="64"/></p>
+                        <p><input type="text" id="func" value="<%=func%>" maxlength="64"/></p>
+                        <p><input type="text" id="phone" value="<%=phones.phone%>" maxlength="64"/></p>
+                        <p><input type="text" id="mobile" value="<%=phones.mobile%>" maxlength="64"/></p>
                         <p>
                             <select id="workflowNamesDd">  </select>
                         </p>                      

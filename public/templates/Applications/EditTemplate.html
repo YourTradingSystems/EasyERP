@@ -3,9 +3,9 @@
     <fieldset>
 	  <div class="half-block left">
 		<dl class="person-info">
-		  <dt><label for="subject">Subject </label></dt><dd><input type="text" class="title-input blueback" id="subject" value="<%=subject%>" required /></dd>
-		  <dt><label for="first">First Name</label></dt><dd><input type="text" class="title-input name" id="first" value="<%=name.first%>" /></dd>
-		  <dt><label for="last">Last Name</label></dt><dd><input type="text" class="title-input name" id="last" value="<%=name.last%>" /></dd>
+		  <dt><label for="subject">Subject </label></dt><dd><input type="text" class="title-input blueback" id="subject" value="<%=subject%>" required maxlength="64"/></dd>
+		  <dt><label for="first">First Name</label></dt><dd><input type="text" class="title-input name" id="first" value="<%=name.first%>" maxlength="64"/></dd>
+		  <dt><label for="last">Last Name</label></dt><dd><input type="text" class="title-input name" id="last" value="<%=name.last%>" maxlength="64"/></dd>
 		</dl>
 	  </div>
 	  <div class="half-block left">
@@ -17,9 +17,9 @@
       <div class="clearfix"></div>
 	  <div class="half-block left">
 		<dl class="person-info">
-		  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" value="<%=workEmail%>"/></dd>
-		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=workPhones.phone%>"/></dd>
-		  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=workPhones.mobile%>"/></dd>
+		  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" value="<%=workEmail%>" maxlength="64"/></dd>
+		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=workPhones.phone%>" maxlength="64"/></dd>
+		  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=workPhones.mobile%>" maxlength="64"/></dd>
 		  <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd><select id="workflowNamesDd"> </select></dd>
           <dt><label for="workflowsDd">Workflow :</label></dt><dd> <select  id="workflowsDd"></select>
         </dd>
@@ -29,9 +29,9 @@
 		<dl class="person-info">
 		  <dt><label for="degreesDd">Degree </label></dt><dd><select id="degreesDd"> </select></dd>
 		  <dt><label for="relatedUsersDd">Responsible </label></dt><dd><select id="relatedUsersDd"> </select></dd>
-		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" value="<%=nextAction%>"/></dd>
+		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" value="<%=nextAction%>" maxlength="64"/></dd>
 		  <dt><label for="sourceDd">Source </label></dt><dd><select id="sourceDd"> </select></dd>
-		  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" value="<%=referredBy%>"/></dd>
+		  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" value="<%=referredBy%>" maxlength="64"/></dd>
 		</dl>
 	  </div>
       <div class="clearfix"></div>
@@ -41,9 +41,9 @@
 		  <div class="clearfix"></div>
 		</div>
 		<dl class="person-info">
-		  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" value="<%=expectedSalary%>"/></dd>
-		  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" value="<%=proposedSalary%>"/></dd>
-		  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=tags%>"/></dd>
+		  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" value="<%=expectedSalary%>" maxlength="64"/></dd>
+		  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" value="<%=proposedSalary%>" maxlength="64"/></dd>
+		  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=tags%>" maxlength="64"/></dd>
 		</dl>
 	  </div>
 
