@@ -18,7 +18,18 @@ define([
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
-                "change #workflowDd": "changeWorkflowValues"
+                "change #workflowDd": "changeWorkflowValues",
+                'keydown': 'keydownHandler'
+            },
+
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
             },
 
             hideDialog: function () {

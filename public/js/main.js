@@ -65,7 +65,9 @@ var App = App ||
         priorities: "/Priority",
         workflows: "/Workflows?id=Lead"
     },
-
+    File:{
+        MAXSIZE: 3000
+    },
     requestedURL: null,
     Calendar:{
         currentCalendarId:""
