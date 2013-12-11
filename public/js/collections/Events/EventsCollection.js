@@ -13,7 +13,7 @@ define([
                     this.fetch({
                         data: {
                             mid: mid,
-							idArray: options?options.idArray:null
+							idArray: options ? options.idArray : null
 							
                         },
                         reset: true,
