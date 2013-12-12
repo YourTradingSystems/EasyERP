@@ -79,7 +79,7 @@ define([
                 var workflow = $("#workflowsDd option:selected").data("id");
                 var estimated = $("#estimated").val();
                 var logged = $("#logged").val();
-                var idPriority = $("#priorityDd option:selected").val();
+                var priority = $("#priorityDd option:selected").val();
                 //var priority = common.toObject(idPriority, this.priorityCollection);
 
                 var type = this.$("#type option:selected").text();
@@ -94,7 +94,7 @@ define([
                     deadline: deadline,
                     description: description,
                     extrainfo: {
-                        //priority: priority,
+                    	priority: priority,
                         sequence: sequence,
                         StartDate: StartDate
                     },
@@ -157,7 +157,7 @@ define([
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model);
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
-                common.populatePriority(App.ID.priorityDd, "/Priority");
+                common.populatePriority(App.ID.priorityDd, "/Priority", model);
 
                 $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");

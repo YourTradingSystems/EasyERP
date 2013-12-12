@@ -613,7 +613,7 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.extrainfo) {
                         if (data.extrainfo.priority) {
-                            _task.extrainfo.priority = data.extrainfo.priority.priority;
+                            _task.extrainfo.priority = data.extrainfo.priority;
                         }
                         if (data.extrainfo.sequence) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
