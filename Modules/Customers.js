@@ -39,10 +39,6 @@
             active: { type: Boolean, default: true },
             reference: { type: String, default: '' },
             language: { type: String, default: 'English' },
-            date: {
-                createDate: { type: Date, default: Date.now },
-                updateDate: { type: Date, default: Date.now }
-            },
             receiveMessages: { type: Number, default: 0 }
         },
         relatedUser: { type: ObjectId, ref: 'Users', default: null },
@@ -212,9 +208,6 @@
                             if (data.salesPurchases.reference) {
                                 _customer.salesPurchases.reference = data.salesPurchases.reference;
                             }
-                            //if (data.salesPurchases.date) {
-                            //    _customer.salesPurchases.date = data.salesPurchases.date;
-                            //}
                             if (data.salesPurchases.receiveMessages) {
                                 _customer.salesPurchases.receiveMessages = data.usalesPurchases.receiveMessages;
                             }

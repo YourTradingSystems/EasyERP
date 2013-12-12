@@ -727,6 +727,13 @@ app.delete('/JobPositions/:viewType/:_id', function (req, res) {
     requestHandler.removeJobPosition(req, res, id, data);
 });
 
+app.delete('/JobPositions/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeJobPosition(req, res, id, data);
+});
+
 app.get('/Departments', function (req, res) {
     data = {};
     data.mid = req.param('mid');

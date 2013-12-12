@@ -10,8 +10,8 @@
 		<dt>Subject :</dt><dd><%=subject%></dd>
 		<dt>First Name :</dt><dd><%=name.first%></dd>
 		<dt>Last Name :</dt><dd><%=name.last%></dd>
-        <dt><label>Created By :</label></dt><dd><span><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></span></dd>
-        <dt><label>Edited By :</label></dt><dd><span><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></span></dd>
+        <dt>Created By :</dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
+        <dt>Edited By :</dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
@@ -60,7 +60,7 @@
     <div class="half-block left">
 	  <dl class="app-info">
 		<dt>Responsible :</dt><dd><%=(relatedUser) ? relatedUser.login : ''%></dd>
-		<dt>Next Action :</dt><dd><%=nextAction%></dd>
+		<dt>Next Action :</dt><dd><%=(nextAction) ? nextAction : ''%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
