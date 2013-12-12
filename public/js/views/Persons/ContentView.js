@@ -228,8 +228,8 @@ define([
         },
 
         addNote: function (e) {
-            var val = $('#noteArea').val();
-            var title = $('#noteTitleArea').val();
+            var val = $($('#noteArea').val()).text();
+            var title = $($('#noteTitleArea').val()).text();
             if (val || title) {
                 var currentModel = this.collection.getElement();
                 var notes = currentModel.get('notes');
@@ -252,8 +252,9 @@ define([
                                        mid: 39
                                    },
                                    success: function (model, response, options) {
-                                       $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                       $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
+									   $('#noteBody').prepend("<div id='arr_key_str'><div class='noteText'></div><div class='noteTitle'></div></div>");
+                                       $('#' + arr_key_str).find('.noteText')[0].text(val);
+                                       $('#' + arr_key_str).find('.noteTitle')[0].text(title);
                                        $('#getNoteKey').attr("value", '');
                                    }
                                });
