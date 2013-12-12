@@ -87,9 +87,7 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                var currentModel = this.collection.getElement();
-
-                Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                //Backbone.history.navigate("#home/content-Companies/form/" + this.formModel.id, { trigger: true });
             },
 
             editClick: function (e) {
@@ -118,14 +116,11 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
                 if (objIndex.length > 1) {
-                    obj = currentModel.get(objIndex[0]);
+                    obj = this.formModel.get(objIndex[0]);
                     obj[objIndex[1]] = $('#editInput').val();
-                    console.log(obj);
                 } else if (objIndex.length == 1) {
                     obj[objIndex[0]] = $('#editInput').val();
-                    console.log(obj);
                 }
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
@@ -133,16 +128,14 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                currentModel.set(obj);
+                this.formModel.set(obj);
 
-                currentModel.save({}, {
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
                     success: function () {
-
-
-                        Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                        //Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },

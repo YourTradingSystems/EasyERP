@@ -2,8 +2,9 @@
 define([
   'views/main/MainView',
   'views/login/LoginView',
-  'custom'
-], function (MainView, LoginView, Custom) {
+  'custom',
+    'common'
+], function (MainView, LoginView, Custom, Common) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -117,6 +118,9 @@ define([
                 GetModel.fetch({
                     data: { id: modelId },
                     success: function (model, response, options) {
+                        model.get('createdBy').date = Common.utcDateToLocaleDateTime(model.get('createdBy').date);
+                        if(model.has('editedBy'))
+                            model.get('editedBy').date = Common.utcDateToLocaleDateTime(model.get('editedBy').date);
                         var topBarView = new TopBarView({ actionType: "Content" });
                         var contentView = new ContentFormView({ model: model });
                         

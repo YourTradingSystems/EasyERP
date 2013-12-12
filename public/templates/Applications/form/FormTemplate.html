@@ -10,6 +10,8 @@
 		<dt>Subject :</dt><dd><%=subject%></dd>
 		<dt>First Name :</dt><dd><%=name.first%></dd>
 		<dt>Last Name :</dt><dd><%=name.last%></dd>
+        <dt><label>Created By :</label></dt><dd><span><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></span></dd>
+        <dt><label>Edited By :</label></dt><dd><span><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></span></dd>
 	  </dl>
 	</div>
     <div class="half-block left">

@@ -11,5 +11,7 @@
             <td><%=(application.jobPosition) ? application.jobPosition.name : ''%></td>
             <td><%=(application.workflow) ? application.workflow.name : ''%></td>
             <td><%=(application.relatedUser) ? application.relatedUser.login : ''%></td>
+            <td><%=(application.createdBy.user) ? application.createdBy.date + " (" + application.createdBy.user.login + ")" : ''%></td>
+            <td><%=(application.editedBy.user) ? application.editedBy.date + " (" + application.editedBy.user.login + ")" : ''%></td>
         </tr>
     <% }) %>

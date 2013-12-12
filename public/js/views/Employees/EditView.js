@@ -129,7 +129,7 @@ define([
                     jobPosition: jobPosition,
                     manager: manager,
                     coach: coach,
-                    identNo: parseInt($.trim(this.$el.find("#identNo").val())),
+                    identNo: parseInt($("#identNo").val()),
                     passportNo: $.trim(this.$el.find("#passportNo").val()),
                     otherId: $.trim(this.$el.find("#otherId").val()),
                     homeAddress: homeAddress,

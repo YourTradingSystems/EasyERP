@@ -156,7 +156,7 @@
                     var phones = {
                         phone: phone,
                         mobile: mobile,
-                        fax: fax,
+                        fax: fax
                     };
 
                     var workflow = this.$("#workflowDd option:selected").val();
