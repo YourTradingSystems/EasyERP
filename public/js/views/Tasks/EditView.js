@@ -94,7 +94,7 @@
                 var self = this;
 
                 var mid = 39;
-
+                var summary = $("#summary").val();
                 var project = $("#projectDd option:selected").val();
                 var assignedTo = $("#assignedToDd option:selected").val();
 
@@ -126,7 +126,7 @@
 
                 var data = {
                     type: $("#type option:selected").text(),
-                    summary: $("#summary").val(),
+                    summary: summary,
                     assignedTo: assignedTo ? assignedTo : null,
                     workflow: workflow ? workflow : null,
                     project: project ? project : null,
@@ -136,8 +136,7 @@
                     extrainfo: {
                         //priority: priority ? priority,
                         sequence: sequence,
-                        StartDate: $.trim($("#StartDate").val()),
-                        EndDate: $.trim($("#EndDate").val())
+                        StartDate: $.trim($("#StartDate").val())
                     },
                     estimated: estimated,
                     logged: logged
@@ -152,15 +151,15 @@
                     success: function (model) {
                         model = model.toJSON();
                         self.hideDialog();
-                        if (!model.project._id) {
+                        if (!model.project) {
                             Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
                         }
                     },
-                    error: function () {
-                        Backbone.history.navigate("home", { trigger: true });
+                    error: function (model, xhr, options) {
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
 

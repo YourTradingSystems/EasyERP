@@ -12,6 +12,7 @@ define([
     function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, common) {
         var PersonTasksView = Backbone.View.extend({
             el: '#content-holder',
+
             initialize: function (options) {
                 this.formModel = options.model;
                 this.opportunitiesCollection = new OpportunitiesCollection();
@@ -115,14 +116,12 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
-
                 if (objIndex.length > 1) {
                     if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                        obj = currentModel.get(objIndex[0]);
+                        obj = this.formModel.get(objIndex[0]);
                         obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
                     } else {
-                        obj = currentModel.get(objIndex[0]);
+                        obj = this.formModel.get(objIndex[0]);
                         obj[objIndex[1]] = $('#editInput').val();
                     }
                 } else if (objIndex.length == 1) {
@@ -146,13 +145,13 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
 
-                currentModel.set(obj);
-                currentModel.save({}, {
+                this.formModel.set(obj);
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
                     success: function () {
-                        Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                        //Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
@@ -204,8 +203,8 @@ define([
             },
 
             addNote: function (e) {
-                var val = $('#noteArea').val();
-                var title = $('#noteTitleArea').val();
+                var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
                 if (val || title) {
                     var currentModel = this.formModel;
                     var notes = currentModel.get('notes');
@@ -228,8 +227,8 @@ define([
                                            mid: 39
                                        },
                                        success: function (model, response, options) {
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
                                            $('#getNoteKey').attr("value", '');
                                        }
                                    });
@@ -272,8 +271,15 @@ define([
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
+                if(!addInptAttach){
+                    alert('No files to attach');
+                    return;
+                }
+                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                    return;
+                }
                 addFrmAttach.submit(function (e) {
-
                     var formURL = "http://" + window.location.host + "/uploadFiles";
                     e.preventDefault();
                     addFrmAttach.ajaxSubmit({
@@ -303,6 +309,10 @@ define([
                 addFrmAttach.off('submit');
             },
 
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
 
             deleteAttach: function (e) {
                 var id = e.target.id;

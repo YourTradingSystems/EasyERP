@@ -58,14 +58,13 @@
 
             parse: true,
             parse: function (response) {
-                /*if (response.data) {
+                if (response.data) {
                     _.map(response.data, function (jopPosition) {
-                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        task.deadline = common.utcDateToLocaleDate(task.deadline);
-                        return task;
+                        jopPosition.createdBy.date = common.utcDateToLocaleDateTime(jopPosition.createdBy.date);
+                        jopPosition.editedBy.date = common.utcDateToLocaleDateTime(jopPosition.editedBy.date);
+                        return jopPosition;
                     });
-                }*/
+                }
                 return response.data;
             }
 

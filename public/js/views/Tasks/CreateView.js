@@ -19,7 +19,18 @@ define([
             events: {
                 "click #tabList a": "switchTab",
                 "click #deadline": "showDatePicker",
-                "change #workflowNames": "changeWorkflows"
+                "change #workflowNames": "changeWorkflows",
+                'keydown': 'keydownHandler'
+            },
+
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
             },
 
             getWorkflowValue: function (value) {
@@ -65,11 +76,10 @@ define([
                 var description = $("#description").val();
                 var sequence = $.trim($("#sequence").val());
                 var StartDate = $.trim($("#StartDate").val());
-                var EndDate = $.trim($("#EndDate").val());
                 var workflow = $("#workflowsDd option:selected").data("id");
                 var estimated = $("#estimated").val();
                 var logged = $("#logged").val();
-                var idPriority = $("#priorityDd option:selected").val();
+                var priority = $("#priorityDd option:selected").val();
                 //var priority = common.toObject(idPriority, this.priorityCollection);
 
                 var type = this.$("#type option:selected").text();
@@ -84,10 +94,9 @@ define([
                     deadline: deadline,
                     description: description,
                     extrainfo: {
-                        //priority: priority,
+                    	priority: priority,
                         sequence: sequence,
-                        StartDate: StartDate,
-                        EndDate: EndDate
+                        StartDate: StartDate
                     },
                     estimated: estimated,
                     logged: logged
@@ -100,11 +109,11 @@ define([
                     success: function (model) {
                         model = model.toJSON();
                         self.hideDialog();
-                        if (!model.project._id) {
+                        if (!model.project) {
                             Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
                         }
                     },
                     error: function (model, xhr, options) {
@@ -117,9 +126,9 @@ define([
                 var projectID = (window.location.hash).split('/')[3];
                 model = projectID
                     ? {
-                         project: {
-                              _id: projectID
-                         }
+                        project: {
+                            _id: projectID
+                        }
                     }
                     : null;
                 var formString = this.template();
@@ -128,13 +137,13 @@ define([
                     dialogClass: "edit-dialog",
                     width: 800,
                     title: "Create Task",
-                    buttons:{
-                        save:{
+                    buttons: {
+                        save: {
                             text: "Save",
                             class: "btn",
                             click: self.saveItem
                         },
-                        cancel:{
+                        cancel: {
                             text: "Cancel",
                             class: "btn",
                             click: self.hideDialog
@@ -148,7 +157,7 @@ define([
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model);
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
-                common.populatePriority(App.ID.priorityDd, "/Priority");
+                common.populatePriority(App.ID.priorityDd, "/Priority", model);
 
                 $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");

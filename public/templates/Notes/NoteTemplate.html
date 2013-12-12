@@ -3,11 +3,11 @@
   <div class="addNote">
 	<div>
       <label>Note Content:</label>
-      <textarea id="noteArea" placeholder="Add a Note..."></textarea>
+      <textarea id="noteArea" placeholder="Add a Note..." maxlength="500"></textarea>
 	  <a class="addTitle" href="javascript:;">Add a title</a>
       <div class="title-wrapper">
 		<label>Note Title:</label>
-		<input type="text" id="noteTitleArea" value="">
+		<input type="text" id="noteTitleArea" value="" maxlength="64">
 	  </div>
       <div class="buttons">
 		<input type="submit" id="addNote" class="btn" value="Save">
@@ -24,8 +24,8 @@
        notes.reverse();
        _.each(notes, function(val,key){ %>
     <div id="<%=val['_id'] %>" class="noteContainer">
-      <div class="noteTitle"><%=val['title']  %></div>
-      <div class="noteText"><%=val['note'] %></div>
+      <div class="noteTitle"><%=val['title'].replace(/</g,"&#60;").replace(/>/g,"&#62;")  %></div>
+      <div class="noteText"><%=val['note'].replace(/</g,"&#60;").replace(/>/g,"&#62;") %></div>
       <div>
 		<a class="name" href="javascript:;"><%=name.first %></a><span class="date"><%=val['date'] %></span>
         <div class="right">

@@ -63,13 +63,13 @@
                          opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
                          opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
                          opportunity.nextAction.date = common.utcDateToLocaleDate(opportunity.nextAction.date);
+                         opportunity.createdBy.date = common.utcDateToLocaleDateTime(opportunity.createdBy.date);
+                         opportunity.editedBy.date = common.utcDateToLocaleDateTime(opportunity.editedBy.date);
                          return opportunity;
                      });
                  }
                 return response.data;
-            },
-
-            
+            }
         });
 
         return OpportunitiesCollection;

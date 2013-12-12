@@ -12,8 +12,11 @@ var http = require('http'),
 //});
 
 var mongoose = require('mongoose');
+
+
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
+
 var express = require('express');
 var requestHandler = require("./requestHandler.js")(fs, mongoose);
 
@@ -252,6 +255,8 @@ app.delete('/Profiles/:_id', function (req, res) {
     console.log(data);
     requestHandler.removeProfile(req, res, id);
 });
+
+
 //-----------------END----Users--and Profiles-----------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -468,6 +473,14 @@ app.put('/Tasks/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
+app.put('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.task = req.body;
+    requestHandler.updateTask(req, res, id, data);
+});
+
 app.delete('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -481,7 +494,12 @@ app.delete('/Tasks/:_id', function (req, res) {
     requestHandler.removeTask(req, res, id, data);
 });
 
-
+app.delete('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
 //------------------Workflows---------------------------------------------------
 
 app.get('/relatedStatus', function (req, res) {
@@ -616,6 +634,25 @@ app.put('/Companies/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
+app.put('/Companies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.company = req.body;
+    var remove = req.headers.remove;
+    console.log("---------------UpdateCompany-------------------");
+    //console.log(data.company.salesPurchases.salesPerson);
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
+        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
+    }
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
+        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
+    }
+    //console.log(data.company.salesPurchases.salesPerson);
+    //console.log(data.company.address);
+    requestHandler.updateCompany(req, res, id, data, remove);
+});
+
 app.delete('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -703,6 +740,13 @@ app.delete('/JobPositions/:viewType/:_id', function (req, res) {
     requestHandler.removeJobPosition(req, res, id, data);
 });
 
+app.delete('/JobPositions/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeJobPosition(req, res, id, data);
+});
+
 app.get('/Departments', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -741,6 +785,13 @@ app.put('/Departments/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Departments/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeDepartment(req, res, id, data);
+});
+
+app.delete('/Departments/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -795,6 +846,14 @@ app.delete('/Employees/:viewType/:_id', function (req, res) {
     requestHandler.removeEmployees(req, res, id, data);
 });
 
+app.delete('/Employees/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.employee = req.body;
+    requestHandler.removeEmployees(req, res, id, data);
+});
+
 app.get('/getSalesPerson', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -840,6 +899,15 @@ app.post('/Applications', function (req, res) {
     requestHandler.createEmployee(req, res, data);
 });
 
+app.put('/Applications/:_id', function (req, res) {
+    console.log('-----SERVER put Applications---------------');
+    var data = {};
+    var id = req.body._id;
+    data.mid = req.headers.mid;
+    data.employee = req.body;
+    requestHandler.updateEmployees(req, res, id, data);
+});
+
 app.put('/Applications/:viewType/:_id', function (req, res) {
     console.log('-----SERVER put Applications---------------');
     var data = {};
@@ -850,6 +918,13 @@ app.put('/Applications/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Applications/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeEmployees(req, res, id, data);
+});
+
+app.delete('/Applications/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -947,6 +1022,15 @@ app.put('/Leads/:_id', function (req, res) {
     requestHandler.updateLead(req, res, id, data);
 });
 
+app.put('/Leads/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.lead = req.body;
+    console.log(data);
+    requestHandler.updateLead(req, res, id, data);
+});
+
 app.delete('/Leads/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -989,6 +1073,14 @@ app.put('/Opportunities/:_id', function (req, res) {
     requestHandler.updateOpportunitie(req, res, id, data);
 });
 
+app.put('/Opportunities/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.opportunitie = req.body;
+    requestHandler.updateOpportunitie(req, res, id, data);
+});
+
 app.delete('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -1007,6 +1099,8 @@ app.post('/Events', function (req, res) {
 app.get('/Events', function (req, res) {
     data = {};
     data.mid = req.param('mid');
+    data.idArray = req.param('idArray');
+    console.log(data);
     requestHandler.getEvents(req, res, data);
 });
 

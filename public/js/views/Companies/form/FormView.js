@@ -16,6 +16,7 @@ define([
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
+                _.bindAll(this, 'render');
                 this.formModel = options.model;
                 this.render = _.after(2, this.render);
                 this.opportunitiesCollection = new OpportunitiesCollection();
@@ -44,7 +45,7 @@ define([
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-                this.$el.find('.formRightColumn').append(
+                /*this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
@@ -60,7 +61,7 @@ define([
                         new noteView({
                             model: this.formModel
                         }).render().el
-                    );
+                    );*/
                 return this;
             },
             
@@ -87,9 +88,7 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                var currentModel = this.collection.getElement();
-
-                Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                //Backbone.history.navigate("#home/content-Companies/form/" + this.formModel.id, { trigger: true });
             },
 
             editClick: function (e) {
@@ -118,14 +117,11 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
                 if (objIndex.length > 1) {
-                    obj = currentModel.get(objIndex[0]);
+                    obj = this.formModel.get(objIndex[0]);
                     obj[objIndex[1]] = $('#editInput').val();
-                    console.log(obj);
                 } else if (objIndex.length == 1) {
                     obj[objIndex[0]] = $('#editInput').val();
-                    console.log(obj);
                 }
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
@@ -133,16 +129,14 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                currentModel.set(obj);
+                this.formModel.set(obj);
 
-                currentModel.save({}, {
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
                     success: function () {
-
-
-                        Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                        //Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
@@ -159,8 +153,7 @@ define([
                 var type = id.substr(0, k);
                 var id_int = id.substr(k + 1);
 
-
-                var currentModel = this.collection.getElement();
+                var currentModel = this.formModel;
                 var notes = currentModel.get('notes');
 
                 switch (type) {
@@ -195,10 +188,10 @@ define([
             },
 
             addNote: function (e) {
-                var val = $('#noteArea').val();
-                var title = $('#noteTitleArea').val();
+                var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
                 if (val || title) {
-                    var currentModel = this.collection.getElement();
+                    var currentModel = this.formModel;
                     var notes = currentModel.get('notes');
                     var arr_key_str = $('#getNoteKey').attr("value");
                     var note_obj = {
@@ -219,8 +212,8 @@ define([
                                            mid: 39
                                        },
                                        success: function (model, response, options) {
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
                                            $('#getNoteKey').attr("value", '');
                                        }
                                    });

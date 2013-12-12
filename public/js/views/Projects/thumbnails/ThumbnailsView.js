@@ -17,7 +17,7 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
 
         events: {
             "click #showMore": "showMore",
-            "click": "gotoEditForm"
+            "click .thumbnail": "gotoEditForm"
         },
 
         render: function () {
@@ -43,7 +43,7 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
                 return;
             }
             e.preventDefault();
-            var id = this.$el.closest(".thumbnail").attr("id");
+            var id = $(e.target).attr("id");
             if ($(e.target).parent().attr("class") != "dropDown") {
                 var model = this.collection.getElement(id);
                 new EditView({ model: model, collection: this.collection });

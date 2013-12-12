@@ -224,6 +224,7 @@ var requestHandler = function (fs, mongoose) {
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
         if (req.session && req.session.loggedIn) {
+			data.person.uId = req.session.uId;
             customer.create(data.person, res);
         } else {
             res.send(401);
@@ -233,6 +234,10 @@ var requestHandler = function (fs, mongoose) {
     function updatePerson(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
             console.log('----------->>>>>>>>>>>>>>>update');
+			data.person.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             customer.update(id, remove, data.person, res);
         } else {
             res.send(401);
@@ -269,6 +274,7 @@ var requestHandler = function (fs, mongoose) {
     function createProject(req, res, data) {
         console.log("Requst createProject is success");
         if (req.session && req.session.loggedIn) {
+			data.project.uId = req.session.uId;
             project.create(data.project, res);
         } else {
             res.send(401);
@@ -305,6 +311,10 @@ var requestHandler = function (fs, mongoose) {
     function updateProject(req, res, id, data) {
         console.log("Requst updateProject is success");
         if (req.session && req.session.loggedIn) {
+			data.project.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             project.update(id, data.project, res);
         } else {
             res.send(401);
@@ -326,6 +336,7 @@ var requestHandler = function (fs, mongoose) {
     function createTask(req, res, data) {
         console.log("Requst createTask is success");
         if (req.session && req.session.loggedIn) {
+            data.task.uId = req.session.uId;
             project.createTask(data.task, res);
         } else {
             res.send(401);
@@ -372,7 +383,12 @@ var requestHandler = function (fs, mongoose) {
 
     function updateTask(req, res, id, data) {
         console.log("Requst updateTask is success");
+        var date = Date.now();
         if (req.session && req.session.loggedIn) {
+            data.task['editedBy'] = {
+                user: req.session.uId,
+                date: date
+            };
             project.updateTask(id, data.task, res);
         } else {
             res.send(401);
@@ -485,6 +501,7 @@ var requestHandler = function (fs, mongoose) {
     function createCompany(req, res, data) {
         console.log("Requst createCompany is success");
         if (req.session && req.session.loggedIn) {
+			data.company.uId=req.session.uId;
             customer.create(data.company, res);
         } else {
             res.send(401);
@@ -493,6 +510,11 @@ var requestHandler = function (fs, mongoose) {
 
     function updateCompany(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
+			var date = mongoose.Schema.Types.Date;
+			data.company.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             customer.update(id, remove, data.company, res);
         } else {
             res.send(401);
@@ -502,7 +524,9 @@ var requestHandler = function (fs, mongoose) {
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
     function createJobPosition(req, res, data) {
-        if (req.session && req.session.loggedIn) {
+
+        if (req.session && req.session.loggedIn) {			
+			data.jobPosition.uId = req.session.uId;
             jobPosition.create(data.jobPosition, res);
         } else {
             res.send(401);
@@ -539,6 +563,10 @@ var requestHandler = function (fs, mongoose) {
 
     function updateJobPosition(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
+			data.jobPosition.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
             jobPosition.update(id, data.jobPosition, res);
         } else {
             res.send(401);
@@ -558,6 +586,7 @@ var requestHandler = function (fs, mongoose) {
     function createEmployee(req, res, data) {
         console.log("Requst createEmployee is success");
         if (req.session && req.session.loggedIn) {
+			data.employee.uId = req.session.uId;
             employee.create(data.employee, res);
         } else {
             res.send(401);
@@ -620,6 +649,11 @@ var requestHandler = function (fs, mongoose) {
     function updateEmployees(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn) {
+			data.employee.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
+
             employee.update(id, data.employee, res);
         } else {
             res.send(401);
@@ -751,6 +785,7 @@ var requestHandler = function (fs, mongoose) {
     function createDepartment(req, res, data) {
         console.log("Requst createDepartment is success");
         if (req.session && req.session.loggedIn) {
+			data.department.uId = req.session.uId;
             department.create(data.department, res);
         } else {
             res.send(401);
@@ -768,6 +803,11 @@ var requestHandler = function (fs, mongoose) {
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
         if (req.session && req.session.loggedIn) {
+			data.department.editedBy={
+				user:req.session.uId,
+				date:new Date().toISOString()
+			}
+
             department.update(id, data.department, res);
         } else {
             res.send(401);
@@ -909,6 +949,7 @@ var requestHandler = function (fs, mongoose) {
 
     function createLead(req, res, data) {
         if (req.session && req.session.loggedIn) {
+            data.lead.uId = req.session.uId;
             opportunities.create(data.lead, res);
         } else {
             res.send(401);
@@ -916,7 +957,12 @@ var requestHandler = function (fs, mongoose) {
     }
 
     function updateLead(req, res, id, data) {
+        var date = Date.now();
         if (req.session && req.session.loggedIn) {
+            data.lead['editedBy'] = {
+                user: req.session.uId,
+                date: date
+            };
             opportunities.update(id, data.lead, res);
         } else {
             res.send(401);
@@ -933,6 +979,7 @@ var requestHandler = function (fs, mongoose) {
     //-------------------Opportunities---------------------------
     function createOpportunitie(req, res, data) {
         if (req.session && req.session.loggedIn) {
+            data.opportunitie.uId = req.session.uId;
             opportunities.create(data.opportunitie, res);
         } else {
             res.send(401);
@@ -957,7 +1004,12 @@ var requestHandler = function (fs, mongoose) {
     }
 
     function updateOpportunitie(req, res, id, data) {
+        var date = Date.now();
         if (req.session && req.session.loggedIn) {
+            data.opportunitie['editedBy'] = {
+                user: req.session.uId,
+                date: date
+            };
             opportunities.update(id, data.opportunitie, res);
         } else {
             res.send(401);
@@ -985,7 +1037,7 @@ var requestHandler = function (fs, mongoose) {
     function getEvents(req, res, data) {
         console.log("Requst getEvents is success");
         if (req.session && req.session.loggedIn) {
-            events.get(res);
+            events.get(data.idArray, res);
         } else {
             res.send(401);
         }

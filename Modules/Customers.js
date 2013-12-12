@@ -39,10 +39,6 @@
             active: { type: Boolean, default: true },
             reference: { type: String, default: '' },
             language: { type: String, default: 'English' },
-            date: {
-                createDate: { type: Date, default: Date.now },
-                updateDate: { type: Date, default: Date.now }
-            },
             receiveMessages: { type: Number, default: 0 }
         },
         relatedUser: { type: ObjectId, ref: 'Users', default: null },
@@ -53,7 +49,15 @@
         },
         notes: { type: Array, default: [] },
         attachments: { type: Array, default: [] },
-        history: { type: Array, default: [] }
+        history: { type: Array, default: [] },
+		createdBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date, default: Date.now}
+		},
+		editedBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date}
+		}
     }, { collection: 'Customers' });
 
     var customer = mongoose.model('Customers', customerSchema);
@@ -99,6 +103,11 @@
                 function savetoBd(data) {
                     try {
                         _customer = new customer();
+                        if (data.uId) {
+						
+                            _customer.createdBy.user=data.uId;
+                        }
+
                         if (data.type) {
                             _customer.type = data.type;
                         }
@@ -199,9 +208,6 @@
                             if (data.salesPurchases.reference) {
                                 _customer.salesPurchases.reference = data.salesPurchases.reference;
                             }
-                            //if (data.salesPurchases.date) {
-                            //    _customer.salesPurchases.date = data.salesPurchases.date;
-                            //}
                             if (data.salesPurchases.receiveMessages) {
                                 _customer.salesPurchases.receiveMessages = data.usalesPurchases.receiveMessages;
                             }
@@ -269,7 +275,10 @@
             res['data'] = [];
             var query = customer.find({ type: 'Person' });
             query.populate('company', '_id name').
-                  populate('department', '_id departmentName');
+                  populate('department', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -288,7 +297,10 @@
             res['data'] = [];
             var query = customer.find({ type: 'Person' });
             query.populate('company', '_id name').
-                  populate('department', '_id departmentName');
+                  populate('department', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -305,7 +317,10 @@
         getPersonById: function (id, response) {
             var query = customer.findById(id);
             query.populate('company', '_id name').
-                  populate('department', '_id departmentName');
+                  populate('department', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -320,7 +335,10 @@
         getCompanyById: function (id, response) {
             console.log(id);
             var query = customer.findById(id);
-            query.populate('department', '_id departmentName');
+            query.populate('department', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -337,7 +355,10 @@
             res['data'] = [];
             var query = customer.find({ type: 'Company' });
             query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName');
+                  populate('salesPurchases.salesTeam', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -356,7 +377,9 @@
             res['data'] = [];
             var query = customer.find({$and:[{ type: 'Company' }, {isOwn: true}]});
             query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName');
+                  populate('salesPurchases.salesTeam', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -389,8 +412,8 @@
 
         update: function (_id, remove, data, res) {
             try {
-                console.log(data);
                 delete data._id;
+                delete data.createdBy;
                 if (data.notes && data.notes.length != 0 && !remove) {
                     var obj = data.notes[data.notes.length - 1];
                     obj._id = mongoose.Types.ObjectId();

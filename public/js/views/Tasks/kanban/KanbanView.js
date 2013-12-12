@@ -177,7 +177,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                     var model = that.collection.get(id);
                     if (model) {
                         column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
+                        column.find(".remaining span").html(parseFloat(column.find(".remaining span").html()) - (model.get("remaining")));
                     }
 
                 },
@@ -194,7 +194,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                             //}
                         });
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
-                        column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
+                        column.find(".remaining span").html(parseFloat(column.find(".remaining span").html()) + (model.get("remaining")));
                     }
                 }
             }).disableSelection();

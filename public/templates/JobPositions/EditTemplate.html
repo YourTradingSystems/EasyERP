@@ -3,9 +3,9 @@
     <fieldset>
 	  <div class="half-block left">
 		<dl class="job-create-info">
-		  <dt><label for="name">Job Name :</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" value="<%=model.name%>" required /></dd>
+		  <dt><label for="name">Job Name :</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" value="<%=model.name%>" required maxlength="64"/></dd>
 		  <dt><label for="currentNumberEmployees">Current Number of Employees :</label></dt><dd><%= model.numberOfEmployees %></dd>
-		  <dt><label for="expectedRecruitment">Expected in Recruitment :</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" value="<%=model.expectedRecruitment%>" /></dd>
+		  <dt><label for="expectedRecruitment">Expected in Recruitment :</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" value="<%=model.expectedRecruitment%>" maxlength="64"/></dd>
 		  <dt><label for="totalForecastedEmployees">Total Forecasted Employees :</label></dt><dd>2</dd>
 		  <dt><label for="interviewForm">Interview Form :</label></dt>
 		  <dd>

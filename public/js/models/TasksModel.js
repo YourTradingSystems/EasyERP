@@ -59,7 +59,7 @@ define([
             tags: [],
             description: '',
             extrainfo: {
-                priority: 'Medium',
+            	priority: 'P3',
                 duration: null,
                 sequence: 0,
                 customer:'',

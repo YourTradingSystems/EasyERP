@@ -5,6 +5,8 @@
 		<dt><label>First Name :</label></dt><dd><%=name.first%></dd>
 		<dt><label>Last Name :</label></dt><dd><%=name.last%></dd>
 		<dt><label>Tags :</label></dt><dd><span><%=tags%></span></dd>
+        <dt><label>Created By :</label></dt><dd><span><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></span></dd>
+		<dt><label>Edited By :</label></dt><dd><span><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></span></dd>
 	  </dl>
 	</div>
 	<div class="half-block left">
@@ -108,7 +110,7 @@
 		</div>
 
 		<dl class="person-info">
-		  <dt><label>Date Of Birth :</label></dt><dd><span><%=(dateBirth) ? dateBirth.split('T')[0].replace(/-/g, '/') : dateBirth%></span></dd>
+		  <dt><label>Date Of Birth :</label></dt><dd><span><%=(dateBirth) ? dateBirth : "" %></span></dd>
 		</dl>		  
 
 	</div>

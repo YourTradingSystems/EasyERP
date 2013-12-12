@@ -3,9 +3,9 @@
         <fieldset>
 		  <div class="half-block left">
 			<dl class="person-info">
-			  <dt><label for="subject">Subject :</label></dt><dd><input type="text" class="title-input blueback" id="subject" required /></dd>
-			  <dt><label for="first">Name :</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required /></dd>
-			  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required /></dd>
+			  <dt><label for="subject">Subject :</label></dt><dd><input type="text" class="title-input blueback" id="subject" required maxlength="64"/></dd>
+			  <dt><label for="first">Name :</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required maxlength="64"/></dd>
+			  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required maxlength="64"/></dd>
 			</dl>
 		  </div>
 		  <div class="half-block left">
@@ -17,9 +17,9 @@
           <div class="clearfix"></div>
 		  <div class="half-block left">
 			<dl class="person-info">
-			  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" /></dd>
-			  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" /></dd>
-			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" /></dd>
+			  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" maxlength="64"/></dd>
+			  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="64"/></dd>
+			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" maxlength="64"/></dd>
 			  <dt><label for="workflowNamesDd">Workflow Names </label></dt>
 			  <dd>
 				<select id="workflowNamesDd">
@@ -39,14 +39,14 @@
 
                 </select>
 			  </dd>
-			  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" /></dd>
+			  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="64"/></dd>
 			  <dt><label for="sourceDd">Source </label></dt>
 			  <dd>
 			  <select id="sourceDd">
 
               </select>
 			  </dd>
-			  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" /></dd>
+			  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" maxlength="64"/></dd>
 			</dl>
 		  </div>
           <div class="clearfix"></div>
@@ -56,8 +56,8 @@
 			  <div class="clearfix"></div>
 			</div>
 			<dl class="person-info">
-			  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" placeholder="0.00" /></dd>
-			  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" placeholder="0.00" /></dd>
+			  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" placeholder="0.00" maxlength="64"/></dd>
+			  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" placeholder="0.00" maxlength="64"/></dd>
 			  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
 			</dl>
 		  </div>

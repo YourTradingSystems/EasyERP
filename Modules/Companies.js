@@ -57,7 +57,7 @@ var Company = function (logWriter, mongoose, employeeModel, event) {
             fb: { type: String, default: '' },
             li: { type: String, default: '' }
         },
-        history: { type: Array, default: [] }
+        history: { type: Array, default: [] }		
     }, { collection: 'Companies' });
 
     var company = mongoose.model('Companies', CompanySchema);
