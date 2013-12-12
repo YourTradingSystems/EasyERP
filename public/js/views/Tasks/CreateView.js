@@ -76,7 +76,6 @@ define([
                 var description = $("#description").val();
                 var sequence = $.trim($("#sequence").val());
                 var StartDate = $.trim($("#StartDate").val());
-                var EndDate = $.trim($("#EndDate").val());
                 var workflow = $("#workflowsDd option:selected").data("id");
                 var estimated = $("#estimated").val();
                 var logged = $("#logged").val();
@@ -97,8 +96,7 @@ define([
                     extrainfo: {
                         //priority: priority,
                         sequence: sequence,
-                        StartDate: StartDate,
-                        EndDate: EndDate
+                        StartDate: StartDate
                     },
                     estimated: estimated,
                     logged: logged
