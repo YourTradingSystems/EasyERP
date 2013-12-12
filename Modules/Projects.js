@@ -43,7 +43,7 @@ var Project = function (logWriter, mongoose) {
         tags: [String],
         description: String,
         extrainfo: {
-            priority: { type: String, default: 'Medium' },
+            priority: { type: String, default: 'P3' },
             sequence: { type: Number, default: 0 },
             customer: { type: ObjectId, ref: 'Customers', default: null },
             StartDate: { type: Date, default: Date.now },
