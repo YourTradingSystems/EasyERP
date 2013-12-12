@@ -1,15 +1,8 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "common",
-    "custom",
-    "dataService",
-    "collections/Projects/ProjectsCollection",
-    "collections/Customers/AccountsDdCollection",
-    "collections/Customers/CustomersCollection",
-    "collections/Priority/TaskPriority",
-    "collections/Workflows/WorkflowsCollection"
+    "common"
 ],
-    function (EditTemplate, common, Custom, dataService, ProjectsCollection, AccountsDdCollection, CustomersDdCollection, PriorityCollection, WorkflowsCollection) {
+    function (EditTemplate, common) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
@@ -101,7 +94,7 @@
                 var self = this;
 
                 var mid = 39;
-
+                var summary = $("#summary").val();
                 var project = $("#projectDd option:selected").val();
                 var assignedTo = $("#assignedToDd option:selected").val();
 
@@ -133,7 +126,7 @@
 
                 var data = {
                     type: $("#type option:selected").text(),
-                    summary: $("#summary").val(),
+                    summary: summary,
                     assignedTo: assignedTo ? assignedTo : null,
                     workflow: workflow ? workflow : null,
                     project: project ? project : null,
@@ -159,15 +152,15 @@
                     success: function (model) {
                         model = model.toJSON();
                         self.hideDialog();
-                        if (!model.project._id) {
+                        if (!model.project) {
                             Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
                         }
                     },
-                    error: function () {
-                        Backbone.history.navigate("home", { trigger: true });
+                    error: function (model, xhr, options) {
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
 

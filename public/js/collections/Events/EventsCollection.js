@@ -7,19 +7,23 @@ define([
 
             url: "/Events",
 
-            initialize: function () {
-                var mid = 39;
+            initialize: function (options) {
+                //if(options.fetch){
+                    var mid = 39;
                     this.fetch({
-                        data: $.param({
-                            mid: mid
-                        }),
+                        data: {
+                            mid: mid,
+							idArray: options?options.idArray:null
+							
+                        },
                         reset: true,
                         success: this.fetchSuccess
                     });
+                //}
             },
 
             filterById: function(idArray){
-                var events = [];
+/*                var events = [];
                 var self = this;
                 _.each(idArray, function(item){
                     var filtered = self.filter(function(data){
@@ -27,8 +31,8 @@ define([
                         //return data.get('calendarId')._id == item;
                     });
                     events = events.concat(filtered);
-                });
-                return new Backbone.Collection(events);
+                });*/
+                return new EventsCollection({fetch:false,idArray:idArray});
             },
 
             parse: true,

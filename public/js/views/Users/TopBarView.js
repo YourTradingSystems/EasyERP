@@ -33,8 +33,10 @@ define([
                 this.actionType = options.actionType;
                 if (this.actionType !== "Content")
                     Custom.setCurrentVT("form");
-                this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
+                if (options.collection) {
+                    this.collection = options.collection;
+                    this.collection.bind('reset', _.bind(this.render, this));
+                }
                 this.render();
             },
 
@@ -53,10 +55,8 @@ define([
             },
             render: function(){
                 var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
-                this.$el.html(this.template({ viewType: viewType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                Common.displayControlBtnsByActionType(this.actionType, viewType);
+                this.$el.html(this.template({ viewType: viewType, contentType:this.contentType}));
+                Common.displayControlBtnsByActionType('Content', viewType);
                 return this;
             },
 

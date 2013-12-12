@@ -2,11 +2,8 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
-        parentDepartment: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
-        departmentManager: { type: ObjectId, ref: 'Employees', default:null },
+        parentDepartment: { type: ObjectId, ref: 'Department', default:null },
+        departmentManager: { type: ObjectId, ref: 'Employees', default:null }
     }, { collection: 'Department' });
 
     var department = mongoose.model('Department', DepartmentSchema);
@@ -40,15 +37,17 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
                     if (data.departmentName) {
                         _department.departmentName = data.departmentName;
                     }
-                    if (data.parentDepartment) {
+                    /*if (data.parentDepartment) {
                         if (data.parentDepartment._id) {
                             _department.parentDepartment.id = data.parentDepartment._id;
                         }
                         if (data.parentDepartment.departmentName) {
-                            _department.parentDepartment.name = data.parentDepartment.departmentName;
+                            _department.parentDepartment = data.parentDepartment.departmentName;
                         }
+                    }*/
+                    if (data.parentDepartment) {
+                        _department.parentDepartment = data.parentDepartment;
                     }
-
                     if (data.departmentManager) {
                         _department.departmentManager = data.departmentManager;
                         //}
@@ -80,6 +79,21 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         }
     };
 
+    function getDepartmentById(id,res){
+    	var query = department.findById(id);
+    	query.populate('departmentManager parentDepartment');
+    	//query.skip((data.page - 1) * data.count).limit(data.count);
+    	query.exec(function(err, responce){
+            if(err){
+                console.log(err);
+                logWriter.log('JobPosition.js get job.find' + err);
+                res.send(500, { error: "Can't find JobPosition" });
+            }else{
+                res.send(responce);
+            }
+        });
+    }
+    
     function getForDd(response) {
         var res = {};
         res['result'] = {};
@@ -107,11 +121,13 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         });
     };
 
+    
+    
     function get(response) {
         var res = {};
         res['data'] = [];
         var query = department.find({});
-        query.populate('departmentManager');
+        query.populate('departmentManager parentDepartment');
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
             if (err) {
@@ -152,6 +168,28 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         });
     };
 
+    function getCustomDepartment(data, response) {
+        var res = {};
+        res['data'] = [];
+        var query = department.find({});
+        query.populate('departmentManager parentDepartment');
+        query.sort({ departmentName: 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.exec(function (err, departments) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Department.js getDepartments Department.find " + err);
+                response.send(500, { error: "Can't find Department" });
+            } else {
+
+                res['data'] = departments;
+                response.send(res);
+            }
+        });
+    };
+
+    
+    
     function update(_id, data, res) {
         try {
             delete data._id;
@@ -179,19 +217,21 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
                 logWriter.log("Department.js remove department.remove " + err);
                 res.send(500, { error: "Can't remove Department" });
             } else {
-                res.send(200, { success: 'JobPosition removed' });
+                res.send(200, { success: 'Department removed' });
             }
         });
     };
 
 
     return {
-
+    	   	
         create: create,
-
+        getDepartmentById:getDepartmentById,
+        
         getForDd: getForDd,
 
         get: get,
+        getCustomDepartment:getCustomDepartment,
 
         update: update,
 

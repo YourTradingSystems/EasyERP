@@ -7,7 +7,7 @@
 	  <a class="addTitle" href="javascript:;">Add a title</a>
       <div class="title-wrapper">
 		<label>Note Title:</label>
-		<input type="text" id="noteTitleArea" value="">
+		<input type="text" id="noteTitleArea" value="" maxlength="64">
 	  </div>
       <div class="buttons">
 		<input type="submit" id="addNote" class="btn" value="Save">
@@ -56,10 +56,14 @@
        </ul>
 	</div>
 
-  	<form enctype="multipart/form-data" id="addAttachments" action="" method="POST">
-  		<input type="file" id="inputAttach" name="attachfile">
-  		<input type="button" value="Attach" id="attachSubmit">
+    <form enctype="multipart/form-data" id="addAttachments" action="" method="POST">
+        <div class="input-file">
+            Browse
+            <input type="file" value="Choose File" id="inputAttach" name="attachfile">
+        </div>
+
+            <input type="button" value="Attach" id="attachSubmit">
   		
-	</form>
+    </form>
 	
 </div>

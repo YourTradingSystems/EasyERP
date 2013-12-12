@@ -192,11 +192,11 @@
                         headers: {
                             mid: mid
                         },
-                        success: function (model) {
+                        success: function () {
                             self.hideDialog();
-                            Backbone.history.navigate("home/content-" + 'Opportunities', { trigger: true });
+                            Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                         },
-                        error: function (model, xhr, options) {
+                        error: function () {
                             self.hideDialog();
                             Backbone.history.navigate("home", { trigger: true });
                         }
@@ -227,8 +227,8 @@
                         }
                     }
                 });
-                $('#nextActionDate').datepicker();
-                $('#expectedClosing').datepicker();
+                $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
+                $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
                 var model = this.currentModel.toJSON();
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);

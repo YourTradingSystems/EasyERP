@@ -33,7 +33,15 @@ define(function () {
                     }
                 );
             }
-
+            if ($.trim(attrs.position).length > 15) {
+                errors.push(
+                    {
+                        name: "Person",
+                        field: "position",
+                        msg: "Person position can not be more than 15 chars"
+                    }
+                );
+            }
             if(errors.length > 0)
                 return errors;
         },

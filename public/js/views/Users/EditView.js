@@ -13,8 +13,7 @@
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
-                this.collection = options.collection;
-                this.currentModel = this.collection.getElement();
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
             hideDialog: function () {
@@ -45,9 +44,9 @@
                         mid: mid
                     },
                     wait: true,
-                    success: function (model, responseText) {
+                    success: function () {
                         self.hideDialog();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
@@ -64,7 +63,7 @@
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-
+                    width: 600,
                     title: "Edit User",
                     buttons:{
                         save:{

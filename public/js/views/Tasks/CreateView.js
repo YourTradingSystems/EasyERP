@@ -1,10 +1,9 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
     "models/TasksModel",
-    "common",
-    "custom"
+    "common"
 ],
-    function (CreateTemplate, TaskModel, common, Custom) {
+    function (CreateTemplate, TaskModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -101,11 +100,11 @@ define([
                     success: function (model) {
                         model = model.toJSON();
                         self.hideDialog();
-                        if (!model.project._id) {
+                        if (!model.project) {
                             Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project._id, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
                         }
                     },
                     error: function (model, xhr, options) {
@@ -118,9 +117,9 @@ define([
                 var projectID = (window.location.hash).split('/')[3];
                 model = projectID
                     ? {
-                         project: {
-                              _id: projectID
-                         }
+                        project: {
+                            _id: projectID
+                        }
                     }
                     : null;
                 var formString = this.template();
@@ -129,13 +128,13 @@ define([
                     dialogClass: "edit-dialog",
                     width: 800,
                     title: "Create Task",
-                    buttons:{
-                        save:{
+                    buttons: {
+                        save: {
                             text: "Save",
                             class: "btn",
                             click: self.saveItem
                         },
-                        cancel:{
+                        cancel: {
                             text: "Cancel",
                             class: "btn",
                             click: self.hideDialog

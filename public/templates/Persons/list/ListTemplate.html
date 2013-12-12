@@ -9,5 +9,7 @@
     <td><%=person.address.country%></td>
     <td><%=person.address.country%></td>
 
+    <td><%=person.createdBy.date + ' (' + person.createdBy.user.login + ')'%></td>
+    <td><%=(person.editedBy.user) ? person.editedBy.date + ' (' + person.editedBy.user.login + ')' : ''%></td>
 </tr>
 <% }) %>

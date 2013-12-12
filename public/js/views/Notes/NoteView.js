@@ -53,7 +53,7 @@ define([
 
         template: _.template(NoteTemplate),
 
-        render: function() {
+        render: function () {
             this.$el.html(this.template(this.model.toJSON()));
             this.delegateEvents(this.events);
             return this;

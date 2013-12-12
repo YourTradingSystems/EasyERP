@@ -1,20 +1,18 @@
 define([
     "text!templates/Users/CreateTemplate.html",
-    "models/UserModel",
-    "common" ,
-    "dataService"
+    "models/UsersModel",
+    "common"
 ],
-    function (CreateTemplate, UserModel, common, dataService) {
+    function (CreateTemplate, UsersModel, common) {
 
         var UsersCreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Users",
-            actionType: null,
             template: _.template(CreateTemplate),
             imageSrc: '',
             initialize: function () {
                 _.bindAll(this, "saveItem");
-                this.model = new UserModel();
+                this.model = new UsersModel();
                 this.render();
             },
 
@@ -65,9 +63,9 @@ define([
                         mid: mid
                     },
                     wait: true,
-                    success: function (model, responseText) {
+                    success: function () {
                         self.hideDialog();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });

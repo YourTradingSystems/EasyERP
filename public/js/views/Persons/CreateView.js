@@ -19,8 +19,28 @@ define([
                 this.model = new PersonModel();
                 this.render();
             },
+            
+            events: {
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
+            },
+            
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
 
+            },
+            
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -69,7 +89,7 @@ define([
                     wait: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("easyErp/Persons/thumbnails", { trigger: true });
+                        Backbone.history.navigate("easyErp/Persons", { trigger: true });
                     },
                     error: function (model, xhr, options) {
                         if (xhr && xhr.status === 401) {

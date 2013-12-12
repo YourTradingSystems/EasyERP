@@ -2,14 +2,14 @@
 var http = require('http'),
     url = require('url'),
     fs = require("fs");
-var googleapis = require('googleapis'),
-    OAuth2Client = googleapis.OAuth2Client;
-var oauth2Client =
-    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
-var url = oauth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: 'http://www.google.com/calendar/feeds/'
-});
+//var googleapis = require('googleapis'),
+//    OAuth2Client = googleapis.OAuth2Client;
+//var oauth2Client =
+//    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
+//var url = oauth2Client.generateAuthUrl({
+//    access_type: 'offline',
+//    scope: 'http://www.google.com/calendar/feeds/'
+//});
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/CRM');
@@ -86,61 +86,50 @@ app.get('/account/authenticated', function (req, res, next) {
     }
 });
 app.get('/getGoogleToken', function (req, res) {
-    var query = req.query;
-    console.log(query);
-    if (!query.hasOwnProperty('code')) {
-        res.redirect(url);
-    } else {
-        oauth2Client.getToken(query.code, function (err, tokens) {
-            // contains an access_token and optionally a refresh_token.
-            // save them permanently.
-            oauth2Client.credentials = {
-                access_token: tokens.access_token
-            };
-            googleapis
-                .discover('calendar', 'v3')
-                .execute(function (err, client) {
-                    if (err) console.log(err);
-                    client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
-                        function (err, result) {
-                            if (result) {
-                                var calendars = [];
-                                for (var i in result.items) {
-                                    calendars.push({
-                                        id: result.items[i].id,
-                                        summary: result.items[i].summary
-                                    });
-                                }
-                                console.log(calendars);
-                            } else {
-                                console.log(err);
-                            }
-                            var event = {
-                                "summary": "rrrrrrrrrr",
-                                'start': {
-                                    "date": "2013-12-6"
-                                },
-                                'end': {
-                                    "date": "2013-12-6"
-                                }
-
-                            };
-                            client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-                                .withAuthClient(oauth2Client).execute(
-                                function (err, result) {
-                                    if (result) {
-                                        console.log(result);
-                                    } else {
-                                        console.log(err);
-                                    }
-                                    ;
+    requestHandler.getToken(req, res);
+            //googleapis
+            //    .discover('calendar', 'v3')
+            //    .execute(function (err, client) {
+            //        if (err) console.log(err);
+            //        client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+            //            function (err, result) {
+            //                if (result) {
+            //                    var calendars = [];
+            //                    for (var i in result.items) {
+            //                        calendars.push({
+            //                            id: result.items[i].id,
+            //                            summary: result.items[i].summary
+            //                        });
+            //                    }
+            //                    console.log(calendars);
+            //                } else {
+            //                    console.log(err);
+            //                }
+            //                var event = {
+            //                    "summary": "rrrrrrrrrr",
+            //                    'start': {
+            //                        "date": "2013-12-6"
+            //                    },
+            //                    'end': {
+            //                        "date": "2013-12-6"
+            //                    }
+                           
+            //                };
+            //                //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+            //                //    .withAuthClient(oauth2Client).execute(
+            //                //    function (err, result) {
+            //                //        if (result) {
+            //                //            console.log(result);
+            //                //        } else {
+            //                //            console.log(err);
+            //                //        }
+            //                //        ;
+            //                //    });
+            //            });
+            //        res.redirect('/#easyErp/Calendar');
+            //    });
+    
                                 });
-                        });
-                    res.redirect('/#easyErp/Calendar');
-                });
-        });
-    }
-});
 //---------------------Users--and Profiles------------------------------------------------
 
 app.get('/getModules', function (req, res) {
@@ -186,12 +175,26 @@ app.post('/Users', function (req, res) {
 app.get('/Users', function (req, res) {
     console.log('---------------------getUsers-------------');
     data = {};
-    //data.ownUser = true;
     data.mid = req.param('mid');
     requestHandler.getUsers(req, res, data);
 });
 
-app.put('/Users/:_id', function (req, res) {
+app.get('/Users/:viewType', function (req, res) {
+    console.log('---------------------getUsers-------------');
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getUserById(req, res, data);
+            break;
+        default: requestHandler.getUsers(req, res, data);
+            break;
+    }
+});
+
+app.put('/Users/:viewType/:_id', function (req, res) {
     console.log(req.body);
     data = {};
     var id = req.param('_id');
@@ -202,6 +205,13 @@ app.put('/Users/:_id', function (req, res) {
 });
 
 app.delete('/Users/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    console.log(data);
+    requestHandler.removeUser(req, res, id);
+});
+app.delete('/Users/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -325,6 +335,12 @@ app.delete('/Persons/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
 });
+app.delete('/Persons/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removePerson(req, res, id);
+});
 
 //---------------------------Projects--------------------------------------------------------
 
@@ -355,6 +371,13 @@ app.post('/Projects', function (req, res) {
     requestHandler.createProject(req, res, data);
 });
 
+app.put('/Projects/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.project = req.body;
+    requestHandler.updateProject(req, res, id, data);
+});
 app.put('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -363,6 +386,13 @@ app.put('/Projects/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data);
 });
 
+app.delete('/Projects/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.params._id;
+    data.mid = req.headers.mid;
+    data.project = req.body;
+    requestHandler.removeProject(req, res, id, data);
+});
 app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
@@ -423,6 +453,14 @@ app.get('/Priority', function (req, res) {
     requestHandler.getTasksPriority(req, res, data);
 });
 
+app.put('/Tasks/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.task = req.body;
+    requestHandler.updateTask(req, res, id, data);
+});
+
 app.put('/Tasks/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -431,14 +469,19 @@ app.put('/Tasks/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data);
 });
 
-app.delete('/Tasks/:contentType/:_id', function (req, res) {
+app.delete('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeTask(req, res, id, data);
 });
 
-
+app.delete('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
 //------------------Workflows---------------------------------------------------
 
 app.get('/relatedStatus', function (req, res) {
@@ -538,7 +581,20 @@ app.get('/Companies/:viewType', function (req, res) {
         default: requestHandler.getCompanies(req, res, data);
             break;
     }
+});
 
+app.get('/ownCompanies/:viewType', function (req, res) {
+    var data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    var viewType = req.params.viewType;
+    switch (viewType) {
+        case "form": requestHandler.getCompanyById(req, res, data);
+            break;
+        default: requestHandler.getOwnCompanies(req, res, data);
+            break;
+    }
 });
 
 app.put('/Companies/:viewType/:_id', function (req, res) {
@@ -559,12 +615,37 @@ app.put('/Companies/:viewType/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
+app.delete('/Companies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCompany(req, res, id, data);
+});
 app.delete('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeCompany(req, res, id, data);
 });
+
+app.delete('/ownCompanies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCompany(req, res, id, data);
+});
+
+
+//-----------------------------End Companies--------------------------------------------------
+
+app.delete('/Tasks/:contentType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
+
+
 
 app.post('/JobPosition', function (req, res) {
     data = {};
@@ -627,6 +708,7 @@ app.get('/Departments', function (req, res) {
     requestHandler.getDepartment(req, res, data);
 });
 
+
 app.post('/Departments', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -643,18 +725,25 @@ app.get('/Departments/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
             break;
-        default: requestHandler.getDepartment(req, res, data);
+        default: requestHandler.getCustomDepartment(req, res, data);
             break;
     }
 
 });
 
-app.put('/Departments/:_id', function (req, res) {
+app.put('/Departments/:viewType/:_id', function (req, res) {  
     data = {};
-    var id = req.body._id;
+    var id = req.param('_id');
     data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.updateDepartment(req, res, id, data);
+});
+
+app.delete('/Departments/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeDepartment(req, res, id, data);
 });
 
 app.delete('/Departments/:_id', function (req, res) {
@@ -705,6 +794,14 @@ app.put('/Employees/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Employees/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.employee = req.body;
+    requestHandler.removeEmployees(req, res, id, data);
+});
+
+app.delete('/Employees/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -924,6 +1021,8 @@ app.post('/Events', function (req, res) {
 app.get('/Events', function (req, res) {
     data = {};
     data.mid = req.param('mid');
+    data.idArray = req.param('idArray');
+    console.log(data);
     requestHandler.getEvents(req, res, data);
 });
 
@@ -971,11 +1070,30 @@ app.delete('/Calendars/:_id', function (req, res) {
     requestHandler.removeCalendar(req, res, id, data);
 });
 
+app.get('/getXML', function (req, res) {
+    data = {};
+    var link = req.param('link');
+    data.mid = req.body.mid;
+    data.calendars = req.body.calendars;
+    requestHandler.getXML(req, res, link, data);
+});
+app.delete('/Calendars/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCalendar(req, res, id, data);
+});
 app.post('/GoogleCalSync', function (req, res) {
     data = {};
     data.mid = req.body.mid;
-    data.calendars = req.body.calendars;
+    data.calendar = req.body.calendar;
     requestHandler.googleCalSync(req, res, data);
+});
+app.get('/GoogleCalendars', function (req, res) {
+    requestHandler.googleCalendars(req, res);
+});
+app.post('/SendToGoogleCalendar', function (req, res) {
+    requestHandler.sendToGoogleCalendar(req, res);
 });
 app.listen(8088);
 

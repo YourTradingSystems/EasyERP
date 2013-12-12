@@ -15,7 +15,8 @@ define([
             	"click #top-bar-saveBtn": "saveEvent",
             	"click #top-bar-nextBtn": "nextEvent",
             	"click #top-bar-discardBtn": "discardEvent",
-                "click #top-bar-editBtn" : "editEvent"
+                "click #top-bar-editBtn" : "editEvent",
+                "click #top-bar-createBtn" : "createEvent"
             },
 
             saveEvent: function(event)
@@ -34,6 +35,10 @@ define([
                     this.trigger('deleteEvent');
             },
 
+            createEvent: function(event){
+                event.preventDefault();
+                this.trigger('createEvent');
+            },
             discardEvent: function()
             {
                 Backbone.history.navigate("home/content-"+this.contentType, {trigger:true});
@@ -54,10 +59,6 @@ define([
             render: function(){
                 this.$el.html(this.template({contentType: this.contentType}));
                 Common.displayControlBtnsByActionType(this.actionType);
-
-
-
-
 
                 return this;
             }

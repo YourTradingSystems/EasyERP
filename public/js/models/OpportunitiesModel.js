@@ -18,7 +18,7 @@ function (common) {
         parse: true,
 
         parse: function (response) {
-	           if (response ) {
+	           if (response && response.nextAction) {
 	            	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
 	            	response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
 	            	response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
@@ -32,9 +32,18 @@ function (common) {
             if($.trim(attrs.name) == ""){
                 errors.push(
                     {
-                        name:"Opportunities",
-                        field:"subject",
-                        msg:"Opportunities subject can not be empty"
+                        name: "Opportunities",
+                        field: "subject",
+                        msg: "Opportunity subject can not be empty"
+                    }
+                );
+            }
+            if(isNaN(parseFloat(attrs.expectedRevenue.value))){
+                errors.push(
+                    {
+                        name: "Opportunities",
+                        field: "subject",
+                        msg: "Expected Revenue value must be a number"
                     }
                 );
             }
@@ -46,8 +55,8 @@ function (common) {
             isOpportunitie: true,
             name: '',
             expectedRevenue: {
-                value: '',
-                currency: '',
+                value: 0.0,
+                currency: $,
                 progress: ''
             },
             company: {

@@ -366,7 +366,6 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                
                 this.$el.html(_.template(PersonFormTemplate, formModel));
                 this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({

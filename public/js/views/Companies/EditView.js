@@ -70,7 +70,6 @@ define([
                 this.$(".tab").hide().eq(index).show();
             },
             saveItem: function (event) {
-                debugger;
                 if(event) event.preventDefault();
                 var self = this;
                 var mid = 39;

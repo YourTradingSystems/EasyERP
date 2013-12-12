@@ -67,10 +67,7 @@
                 phone: ''
             },
 
-            relatedUser: {
-                id: '',
-                login: ''
-            },
+            relatedUser: null,
             department: {
                 id: '',
                 name: ''

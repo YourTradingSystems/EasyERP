@@ -25,12 +25,17 @@ define([
         },
 
         goToList: function (contentType) {
-            //console.API.clear();
+            console.API.clear();
             if (this.mainView == null) this.main();
-            var ContentViewUrl = "views/" + contentType + "/list/ListView",
-                TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/filterCollection";
-
+            if (contentType !== 'Birthdays') {
+	            var ContentViewUrl = "views/" + contentType + "/list/ListView",
+	                TopBarViewUrl = "views/" + contentType + "/TopBarView",
+	                CollectionUrl = "collections/" + contentType + "/filterCollection";
+            } else {
+            	var ContentViewUrl = "views/" + contentType + "/list/ListView",
+            		TopBarViewUrl = "views/" + contentType + "/TopBarView",
+            		CollectionUrl = "collections/Employees/EmployeesCollection";
+            }
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
@@ -39,6 +44,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
                 function createViews() {
+                    
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
                     
@@ -95,9 +101,10 @@ define([
             self = this;
             Custom.setCurrentVT('kanban');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
+                var  collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
+                    collection.unbind('reset');
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
                     
@@ -107,19 +114,22 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/kanban';
-                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = 'easyErp/' + contentType + '/kanban';
+                    if (parrentContentId) {
+                        url += '/' + parrentContentId;
+                    }
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
 
         goToThumbnails: function (contentType, parrentContentId) {
+            console.API.clear();
             if (this.mainView == null) this.main();
             var ContentViewUrl,
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl;
-            if (contentType !== 'Calendar') {
+            if (contentType !== 'Calendar'&& contentType !== 'Workflows' ) {
                 ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
                 CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
             } else {
@@ -130,7 +140,7 @@ define([
             self = this;
             Custom.setCurrentVT('thumbnails');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = (contentType !== 'Calendar') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId }) : new ContentCollection();
+                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 20, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
@@ -138,6 +148,7 @@ define([
                     
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
+                    topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);

@@ -12,12 +12,9 @@ define([
             contentType: "Departments",
             template: _.template(EditTemplate),
             initialize: function (options) {
-                this.accountDdCollection = new AccountsDdCollection();
-//                this.accountDdCollection.bind('reset', _.bind(this.render, this));
-                this.departmentsCollection = options.collection;
-                this.currentModel = this.departmentsCollection.getElement();
-                this.departmentsCollection.bind('reset', _.bind(this.render, this));
-
+                _.bindAll(this, "render", "saveItem");
+                this.departmentsCollection = new DepartmentsCollection();
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
 
@@ -26,16 +23,11 @@ define([
                 var self = this;
                 var mid = 39;
                 var departmentName = $.trim($("#departmentName").val());
-
-                var departmentId = this.$("#parentDepartment option:selected").val();
-                var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
-                var parentDepartment = {};
-                if (_parentDepartment) {
-                    parentDepartment.name = _parentDepartment.departmentName;
-                    parentDepartment.id = _parentDepartment._id;
-                } else {
-                    parentDepartment = this.currentModel.defaults.parentDepartment;
-                }
+                
+                var parentDepartment = this.$("#parentDepartment option:selected").val();
+				if (parentDepartment==""){
+					parentDepartment = null;
+				}
 
                 var departmentManager = this.$("#departmentManager option:selected").val();
 				if (departmentManager==""){
@@ -63,7 +55,7 @@ define([
                     wait: true,
                     success: function (model) {
 						self.hideDialog();
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("#easyErp/Departments", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
