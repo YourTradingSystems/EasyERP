@@ -12,8 +12,8 @@
             <td><%=task.extrainfo.EndDate%></td>
             <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
             <td><%=(task.workflow) ? task.workflow.name : ''%></td>
-            <td><%=task.createdBy.date + ' (' + task.createdBy.user.login + ')'%></td>
-            <td><%=(task.editedBy.user) ? task.editedBy.date + ' (' + task.editedBy.user.login + ')' : ''%></td>
+            <td><%=(task.createdBy.user) ? task.createdBy.date + " (" + task.createdBy.user.login + ")" : ''%></td>
+            <td><%=(task.editedBy.user) ? task.editedBy.date + " (" + task.editedBy.user.login + ")" : ''%></td>
 
         </tr>
         <% }) %>

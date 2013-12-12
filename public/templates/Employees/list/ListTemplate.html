@@ -10,6 +10,9 @@
             <td><%=(employee.department) ? employee.department.departmentName : ''%></td>
             <td><%=(employee.jobPosition) ? employee.jobPosition.name : ''%></td>
             <td><%=(employee.manager) ? employee.manager.name.first + " " + employee.manager.name.last : ''%></td>
+            <td><%=(employee.createdBy.user) ? employee.createdBy.date + " (" + employee.createdBy.user.login + ")" : "" %></td>
+            <td><%=(employee.editedBy.user) ? employee.editedBy.date + " (" + employee.editedBy.user.login + ")" : "" %></td>
+
         </tr>
     <% }) %>
 

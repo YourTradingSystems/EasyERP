@@ -1053,6 +1053,14 @@ app.put('/Opportunities/:_id', function (req, res) {
     requestHandler.updateOpportunitie(req, res, id, data);
 });
 
+app.put('/Opportunities/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.opportunitie = req.body;
+    requestHandler.updateOpportunitie(req, res, id, data);
+});
+
 app.delete('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
