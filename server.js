@@ -12,8 +12,11 @@ var http = require('http'),
 //});
 
 var mongoose = require('mongoose');
+
+
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
+
 var express = require('express');
 var requestHandler = require("./requestHandler.js")(fs, mongoose);
 
@@ -600,6 +603,25 @@ app.get('/ownCompanies/:viewType', function (req, res) {
 });
 
 app.put('/Companies/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.company = req.body;
+    var remove = req.headers.remove;
+    console.log("---------------UpdateCompany-------------------");
+    //console.log(data.company.salesPurchases.salesPerson);
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
+        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
+    }
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
+        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
+    }
+    //console.log(data.company.salesPurchases.salesPerson);
+    //console.log(data.company.address);
+    requestHandler.updateCompany(req, res, id, data, remove);
+});
+
+app.put('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

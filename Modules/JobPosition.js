@@ -126,7 +126,9 @@ var JobPosition = function (logWriter, mongoose, employee) {
         var res = {};
         res['data'] = [];
         var query = job.find({});
-        query.populate('department');
+        query.populate('department').
+			populate('createdBy.user').
+            populate('editedBy.user');
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
