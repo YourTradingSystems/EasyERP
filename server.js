@@ -465,6 +465,13 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     data.task = req.body;
     requestHandler.updateTask(req, res, id, data);
 });
+app.put('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.task = req.body;
+    requestHandler.updateTask(req, res, id, data);
+});
 
 app.put('/Tasks/:_id', function (req, res) {
     data = {};
@@ -475,6 +482,12 @@ app.put('/Tasks/:_id', function (req, res) {
 });
 
 app.delete('/Tasks/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeTask(req, res, id, data);
+});
+app.delete('/Tasks/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
