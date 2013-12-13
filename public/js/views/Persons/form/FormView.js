@@ -35,8 +35,7 @@ define([
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
-                "click #saveSpan": "saveClick"
-
+                "click #saveSpan": "saveClick",
             },
 
             quickEdit: function (e) {
@@ -352,7 +351,7 @@ define([
             gotoCompanyForm: function (e) {
                 e.preventDefault();
                 var id = $(e.target).closest("a").attr("data-id");
-                window.location.hash = "#home/content-Companies/form/" + id;
+                window.location.hash = "#easyErp/Companies/form/" + id;
             },
             toggle: function () {
                 this.$('#details').animate({

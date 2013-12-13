@@ -45,7 +45,7 @@ define([
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-                /*this.$el.find('.formRightColumn').append(
+                this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
@@ -61,7 +61,7 @@ define([
                         new noteView({
                             model: this.formModel
                         }).render().el
-                    );*/
+                    );
                 return this;
             },
             

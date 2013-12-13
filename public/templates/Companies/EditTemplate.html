@@ -94,7 +94,7 @@
             </div>
             <div class="half-block left">
                 <dl class="person-info">
-                    <dt><label for="date">Date :</label></dt><dd><input class="blueback" type="text" id="text" value="<%=model.salesPurchases.date.createDate%>" /></dd>
+                    <dt><label for="date">Date :</label></dt><dd><input class="blueback" type="text" id="text" value="<%=(model.salesPurchases.date.createDate) ? model.salesPurchases.date.createDate : ''%>" /></dd>
                     <dt><label for="isCustomer">Customer :</label></dt><dd><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></dd>
                     <dt><label for="isSupplier">Supplier :</label></dt><dd><input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></dd>
                     <dt><label for="active">Active :</label></dt><dd><input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> /></dd>

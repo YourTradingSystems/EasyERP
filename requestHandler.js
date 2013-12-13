@@ -520,6 +520,17 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+    
+
+    function getFilterCompanies(req, res, data) {
+        console.log("Requst getFilterCompanies is success");
+        if (req.session && req.session.loggedIn) {
+            //company.get(res);
+        	customer.getFilterCompanies(data, res);
+        } else {
+            res.send(401);
+        }
+    };
 
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
@@ -1170,6 +1181,7 @@ var requestHandler = function (fs, mongoose) {
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
+        getFilterCompanies:getFilterCompanies,
 
         getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,

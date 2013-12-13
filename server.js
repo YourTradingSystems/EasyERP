@@ -583,7 +583,7 @@ app.get('/Companies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        default: requestHandler.getCompanies(req, res, data);
+        default: requestHandler.getFilterCompanies(req, res, data);
             break;
     }
 });
