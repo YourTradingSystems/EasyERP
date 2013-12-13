@@ -35,8 +35,7 @@ define([
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
-                "click #saveSpan": "saveClick"
-
+                "click #saveSpan": "saveClick",
             },
 
             quickEdit: function (e) {
@@ -116,14 +115,12 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
-
                 if (objIndex.length > 1) {
                     if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                        obj = currentModel.get(objIndex[0]);
+                        obj = this.formModel.get(objIndex[0]);
                         obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
                     } else {
-                        obj = currentModel.get(objIndex[0]);
+                        obj = this.formModel.get(objIndex[0]);
                         obj[objIndex[1]] = $('#editInput').val();
                     }
                 } else if (objIndex.length == 1) {
@@ -147,13 +144,13 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
 
-                currentModel.set(obj);
-                currentModel.save({}, {
+                this.formModel.set(obj);
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
                     success: function () {
-                        Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
+                        //Backbone.history.navigate("#home/content-Persons/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
@@ -354,7 +351,7 @@ define([
             gotoCompanyForm: function (e) {
                 e.preventDefault();
                 var id = $(e.target).closest("a").attr("data-id");
-                window.location.hash = "#home/content-Companies/form/" + id;
+                window.location.hash = "#easyErp/Companies/form/" + id;
             },
             toggle: function () {
                 this.$('#details').animate({

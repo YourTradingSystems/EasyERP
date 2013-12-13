@@ -58,7 +58,7 @@ define([
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
                     var id = this.$el.attr("id");
-                    Backbone.history.navigate("easyErp/Companies/form/" + id, {trigger:true});
+                    Backbone.history.navigate("easyErp/ownCompanies/form/" + id, {trigger:true});
                 }
             },
 

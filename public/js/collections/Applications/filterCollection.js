@@ -51,6 +51,8 @@
                 if (response.data) {
                     _.map(response.data, function (application) {
                     	application.creationDate = common.utcDateToLocaleDate(application.creationDate);
+                        application.createdBy.date = common.utcDateToLocaleDateTime(application.createdBy.date);
+                        application.editedBy.date = common.utcDateToLocaleDateTime(application.editedBy.date);
                         return application;
                     });
                 }

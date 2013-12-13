@@ -505,6 +505,7 @@ var Project = function (logWriter, mongoose) {
         try {
             delete data._id;
             delete data.createdBy;
+            delete data.task;
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
@@ -613,7 +614,7 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.extrainfo) {
                         if (data.extrainfo.priority) {
-                            _task.extrainfo.priority = data.extrainfo.priority.priority;
+                            _task.extrainfo.priority = data.extrainfo.priority;
                         }
                         if (data.extrainfo.sequence) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
@@ -677,7 +678,7 @@ var Project = function (logWriter, mongoose) {
 
     function updateTask(_id, data, res) {
         delete data._id;
-        data.createdBy.user = (data.createdBy.user && data.createdBy.user._id) ? data.createdBy.user._id : ((data.createdBy && data.createdBy.user) ? data.createdBy.user : null);
+        delete data.createdBy;
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {

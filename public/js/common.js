@@ -22,6 +22,7 @@
         }
 
         var utcDateToLocaleDateTime = function (utcDateString) {
+            if(!utcDateString) return null;
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
             return utcDateString;
         }
@@ -311,15 +312,15 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function(response) {
                 var options = [];
-                if (model && model.priority) {
+                if (model && ((model.extrainfo && model.extrainfo.priority) || model.priority)) {
                     options = $.map(response.data, function(item) {
-                        return model.priority._id === item._id ?
-                            $('<option/>').val(item._id).text(item.priority).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.priority);
+                        return ((model.extrainfo && model.extrainfo.priority) || model.priority) === item.priority ?
+                            $('<option/>').val(item.priority).text(item.priority).attr('selected', 'selected') :
+                            $('<option/>').val(item.priority).text(item.priority);
                     });
                 } else {
                     options = $.map(response.data, function(item) {
-                        return $('<option/>').val(item._id).text(item.priority);
+                        return $('<option/>').val(item.priority).text(item.priority);
                     });
                 }
                 selectList.append(options);

@@ -49,7 +49,7 @@
         },
 
         urlRoot: function () {
-            return "/JobPosition";
+            return "/JobPositions";
         }
     });
 

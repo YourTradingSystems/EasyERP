@@ -6,7 +6,8 @@
     function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
-            contentType: "Companies",
+            contentType: "ownCompanies",
+            contentHeader: "Companies",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
 
@@ -50,7 +51,7 @@
 
             render: function () {
                 var viewType = Custom.getCurrentVT();
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType }));
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, contentHeader:this.contentHeader }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);
                 return this;
             },

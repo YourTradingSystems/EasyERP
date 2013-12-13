@@ -35,8 +35,6 @@ define([
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (company) {
-                        company.salesPurchases.date.createDate = common.utcDateToLocaleDate(company.salesPurchases.date.createDate);
-                        company.salesPurchases.date.updateDate = common.utcDateToLocaleDate(company.salesPurchases.date.updateDate);
                         if (company.notes) {
                             _.map(company.notes, function (note) {
                             	note.date = common.utcDateToLocaleDate(note.date);

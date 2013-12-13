@@ -27,7 +27,7 @@
                 <div class="mainInfo">
                     <div class="half-block left">
                         <h3>
-                            <%=name.first%> <%=name.last%> <% if (company){%>at <a class="bold company" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
+                            <span title='<%=name.first%>'><span title='<%=name.last%>'></span><%=name.first%> <%=name.last%> <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
                         </h3>
                         <dl class="person-info">
                             <dt>Position :</dt>
@@ -40,6 +40,10 @@
                             <dd id="phones_mobile" class="editable"><%=phones.mobile%></dd>
                             <dt>Phone :</dt>
                             <dd id="phones_phone" class="editable"><%=phones.phone%></dd>
+                            <dt>Created By :</dt>
+                            <dd><%=createdBy.user ?  createdBy.user.login + "<br/> (" + createdBy.date +  ")" : " "%></dd>
+                            <dt>Edited By :</dt>
+                            <dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
                         </dl>
                     </div>
                     <div class="half-block left">
