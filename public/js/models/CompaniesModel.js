@@ -1,4 +1,4 @@
-﻿define(function () {
+﻿define(["Validation"],function (Validation) {
     var CompanyModel = Backbone.Model.extend({
         idAttribute: "_id",
 		initialize: function(){
@@ -18,13 +18,56 @@
             if($.trim(attrs.name.first) == ""){
                 errors.push(
                     {
-                        name:"Company",
-                        field:"name",
-                        msg:"Company name can not be empty"
+                        name: "Company",
+                        field: "name",
+                        msg: "Company name can not be empty"
                     }
                 );
             }
-        
+            if(attrs.name.first.length > 0){
+                if(!Validation.validName(attrs.name.first)){
+                    errors.push(
+                        {
+                            name: "Company",
+                            field: "name",
+                            msg: "Company name should contain only letters"
+                        }
+                    );
+                }
+            }
+            if(attrs.phones.phone.length > 0){
+                if(!Validation.validPhone(attrs.phones.phone)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "phone",
+                            msg: "Phone should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.phones.fax.length > 0){
+                if(!Validation.validPhone(attrs.phones.fax)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "fax",
+                            msg: "Fax should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.phones.mobile.length > 0){
+                if(!Validation.validPhone(attrs.phones.mobile)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "mobile",
+                            msg: "Mobile phone should contain only numbers"
+                        }
+                    );
+                }
+            }
             if(errors.length > 0)
                 return errors;
         },
