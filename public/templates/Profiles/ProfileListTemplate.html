@@ -1,10 +1,9 @@
 <div class="inner-holder">
     <div class="workflow-list-wrapper left">
-        <ul class="workflow-list profile-list">
-            <% profilesCollection.each(function(profile,index){ %>
+        <ul id="profilesList" class="workflow-list profile-list">
+            <% profilesCollection.forEach(function(profile,index){ %>
             <li>
-                <a href="#home/action-<%=contentType%>/View/<%= profile.get('_id')%> " data-id="<%= profile.get('_id')%>"><%= profile.get('profileName') %> Profile</a>
-                <!--<td><%= profile.get('profileDescription') %> </td>-->
+                <a href="#" data-id="<%= profile._id%>"><%= profile.profileName %> Profile</a>
             </li>
             <% }) %>
         </ul>

@@ -12,6 +12,7 @@ define([
     function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, common) {
         var PersonTasksView = Backbone.View.extend({
             el: '#content-holder',
+
             initialize: function (options) {
                 this.formModel = options.model;
                 this.opportunitiesCollection = new OpportunitiesCollection();
@@ -67,7 +68,7 @@ define([
                 $('#saveSpan').remove();
 
                 var currentModel = this.model;
-                Backbone.history.navigate("#esyErp/Persons/form/" + currentModel.id, { trigger: true });
+                Backbone.history.navigate("#easyErp/Persons/form/" + currentModel.id, { trigger: true });
             },
 
 
@@ -95,13 +96,13 @@ define([
                 this.text = $('#' + parent[0].id).text();
                 if ($("#" + parent[0].id).hasClass('date')) {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" type="text" class="left has-datepicker"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left has-datepicker"/>');
                     $('.has-datepicker').datepicker();
                 } else if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left"/>');
                 }
                 $('#editInput').val(this.text);
                 this.prevQuickEdit = parent[0];
@@ -271,8 +272,15 @@ define([
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
+                if(!addInptAttach){
+                    alert('No files to attach');
+                    return;
+                }
+                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                    return;
+                }
                 addFrmAttach.submit(function (e) {
-
                     var formURL = "http://" + window.location.host + "/uploadFiles";
                     e.preventDefault();
                     addFrmAttach.ajaxSubmit({
@@ -302,6 +310,10 @@ define([
                 addFrmAttach.off('submit');
             },
 
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
 
             deleteAttach: function (e) {
                 var id = e.target.id;

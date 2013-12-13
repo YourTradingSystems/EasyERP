@@ -23,7 +23,15 @@ var Project = function (logWriter, mongoose) {
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
-        progress: { type: Number, default: 0 }
+        progress: { type: Number, default: 0 },
+		createdBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date, default: Date.now}
+		},
+		editedBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date}
+		}
     }, { collection: 'Project' });
 
     var TasksSchema = mongoose.Schema({
@@ -347,6 +355,10 @@ var Project = function (logWriter, mongoose) {
                     if (data.projectShortDesc) {
                         _project.projectShortDesc = data.projectShortDesc;
                     }
+                    if (data.uId) {
+                        _project.createdBy.user=data.uId;
+                    }
+
                     if (data.task) {
                         _project.task = data.task;
                     }
@@ -486,6 +498,7 @@ var Project = function (logWriter, mongoose) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            delete data.createdBy;
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);

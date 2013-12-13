@@ -1,4 +1,7 @@
-﻿define(function () {
+﻿define([
+    'common'
+],
+function (common) {
     var ApplicationModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
@@ -11,6 +14,15 @@
                 }
             });
         },
+        
+        parse: true,
+        parse: function (response) {
+            if (response) {
+            	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
+            }
+            return response;
+        },
+        
         validate: function(attrs){
             var errors = [];
             if($.trim(attrs.subject) == ""){

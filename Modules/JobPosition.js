@@ -12,7 +12,16 @@ var JobPosition = function (logWriter, mongoose, employee) {
         requirements: String,
         workflow: { type: ObjectId, ref: 'workflows', default: null },
         numberOfEmployees: { type: Number, default: 0 },
-        totalForecastedEmployees: { type: Number, default: 0 }
+        totalForecastedEmployees: { type: Number, default: 0 },
+		createdBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date, default: Date.now}
+		},
+		editedBy:{
+			user:{type:ObjectId, ref: 'Users', default:null},
+			date:{type:Date}
+		}
+
     }, { collection: 'JobPosition' });
 
     var job = mongoose.model('JobPosition', jobPositionSchema);
@@ -43,6 +52,9 @@ var JobPosition = function (logWriter, mongoose, employee) {
             function savetoDb(data) {
                 try {
                     _job = new job();
+                    if (data.uId) {
+                        _job.createdBy.user=data.uId;
+                    }
                     if (data.name) {
                         _job.name = data.name;
                     }
@@ -152,6 +164,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
     function update(_id, data, res) {
         try {
             delete data._id;
+            delete data.createdBy;
             console.log(data);
             if (data.workflow.status === 'New') {
                 data.expectedRecruitment = 0;

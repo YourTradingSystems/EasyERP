@@ -24,6 +24,7 @@ define(function () {
                     }
                 );
             }
+            
             if($.trim(attrs.name.last) == ""){
                 errors.push(
                     {
@@ -33,15 +34,38 @@ define(function () {
                     }
                 );
             }
-            if ($.trim(attrs.position).length > 15) {
+            
+            if ($.trim(attrs.jobPosition).length > 20) {
                 errors.push(
                     {
                         name: "Person",
-                        field: "position",
-                        msg: "Person position can not be more than 15 chars"
+                        field: "jobPosition",
+                        msg: "Person position can not be more than 20 chars"
                     }
                 );
             }
+          
+            if (new Date($.trim(attrs.dateBirth)) > new Date(Date.now())) {
+                errors.push(
+                    {
+                        name: "Person",
+                        field: "dateBirth",
+                        msg: "Person birthday can not be more than current date"
+                    }
+                );
+            }
+     
+          
+            if ($.trim(attrs.phones.mobile).length > 20) {
+                errors.push(
+                    {
+                        name: "Person",
+                        field: "mobile",
+                        msg: "Person mobile can not be more than 20 chars"
+                    }
+                );
+            }
+            
             if(errors.length > 0)
                 return errors;
         },

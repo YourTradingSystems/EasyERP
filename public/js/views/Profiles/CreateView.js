@@ -10,16 +10,29 @@ define([
             contentType: "Profiles",
             template: _.template(CreateProfileTemplate),
             initialize: function (options) {
+                _.bindAll(this, "saveItem", "render");
                 this.model = new ProfilesModel();
-                //this.profilesCollection = options.collection;
+                this.profilesCollection = options.collection;
                 this.render();
             },
             events:{
                 "click #top-bar-nextBtn": "nextForm",
                 'click .viewAll': 'toggleView',
                 'click .writeAll': 'toggleWrite',
-                'click .deleteAll': 'toggleDelete'
+                'click .deleteAll': 'toggleDelete',
+                'keydown': 'keydownHandler'
             },
+
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
+            },
+
             toggleView: function(){
                 var checked = $('.viewAll')[0].checked;
                 var checkboxes = $('.read');
@@ -40,35 +53,49 @@ define([
                 if(!this.profile)
                     throw new Error("No profile found after filter: ModulesTableView -> filterCollection");
             },
-            nextForm: function(){
-                this.model = new ProfilesModel();
+            saveItem: function(){
                 this.model.set({
-                   profileName: $('#profileName').val(),
-                   profileDescription: $('#profileDescription').val()
+                    profileName: $('#profileName').val(),
+                    profileDescription: $('#profileDescription').val()
                 }, {validate:true});
                 if(!this.model.isValid())
                     return;
-
-                var stringModel = JSON.stringify(this.model.toJSON());
-                window.localStorage.setItem('tempModel', stringModel);
+                /*var stringModel = JSON.stringify(this.model.toJSON());
+                window.localStorage.setItem('tempModel', stringModel);*/
 
                 var choice = $('input[name=group]:checked').val();
                 switch(choice){
                     case "new":
-                        this.selectedProfile = this.profilesCollection.findWhere({profileName : "No Access"});
+                        this.selectedProfile = this.profilesCollection.get('52384955d6c355e9fd7116ef');
                         break;
                     case "base":
                         var profileId = $('#profilesDd option:selected').val();
                         this.selectedProfile = this.profilesCollection.get(profileId);
                         break;
                 }
-
-                $('#top-bar-nextBtn').hide();
-                $('#top-bar-saveBtn').show();
-                this.$el.html(_.template(ModulesAccessTemplate, {profile: this.selectedProfile.toJSON()} ));
-
+                var self = this;
+                this.model.set({
+                    profileAccess: this.selectedProfile.get('profileAccess')
+                });
+                this.model.save({},{
+                    headers:{
+                        mid:39
+                    },
+                    wait:true,
+                    success:function(){
+                        self.hideDialog();
+                        Backbone.history.navigate("easyErp/Profiles", { trigger: true });
+                        self.profilesCollection.trigger('reset');
+                    },
+                    error: function(){
+                        Backbone.history.navigate("easyErp", { trigger: true });
+                    }
+                })
             },
-            saveItem: function () {
+
+
+
+            /*saveItem: function () {
                 var self = this;
                 var jsonModel = JSON.parse(window.localStorage.getItem('tempModel'));
                 window.localStorage.removeItem('tempModel');
@@ -106,8 +133,10 @@ define([
                             }
                         }
                     });
+            },*/
+            hideDialog: function () {
+                $(".edit-dialog").remove();
             },
-
             getProfilesForDropDown: function(){
                 var arr = this.profilesCollection.toJSON().map(function(item){
                     return {
@@ -118,7 +147,36 @@ define([
                 return arr;
             },
             render: function () {
-                this.$el.html(this.template({ profilesCollection: this.getProfilesForDropDown() }));
+                var formString = this.template({profilesCollection:this.getProfilesForDropDown()});
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: 800,
+                    title: "Create Profile",
+                    buttons: {
+                       /* next: {
+                            text: "Next",
+                            class: "btn",
+                            id: "nextBtn",
+                            click: self.nextForm
+                        },*/
+                        save: {
+                            text: "Save",
+                            id: "saveBtn",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+
+                    }
+                });
+                //$('#saveBtn').hide();
+                this.delegateEvents(this.events);
+                //this.$el.html(this.template({ profilesCollection: this.getProfilesForDropDown() }));
                 return this;
             }
         });

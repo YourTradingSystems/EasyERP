@@ -18,9 +18,19 @@ define([
 
             events: {
                 "submit form": "formSubmitHandler",
-                "change #workflowNames": "changeWorkflows"
+                "change #workflowNames": "changeWorkflows",
+                'keydown': 'keydownHandler'
             },
 
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
+            },
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
