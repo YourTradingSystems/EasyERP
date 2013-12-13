@@ -192,7 +192,7 @@ app.get('/Users/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getUserById(req, res, data);
             break;
-        default: requestHandler.getUsers(req, res, data);
+        default: requestHandler.getFilterUsers(req, res, data);
             break;
     }
 });

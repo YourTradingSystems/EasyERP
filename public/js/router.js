@@ -143,9 +143,7 @@ define([
                     dateBirth: Common.utcDateToLocaleDate(model.get('dateBirth'))
                 });
             if(model.has('nextAction'))
-                model.set({
-                    nextAction: Common.utcDateToLocaleDate(model.get('nextAction'))
-                });
+                	model.get('nextAction').date = Common.utcDateToLocaleDate(model.get('nextAction').date)
         },
 
         goToKanban: function (contentType, parrentContentId) {

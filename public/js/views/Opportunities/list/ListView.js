@@ -24,6 +24,7 @@ function (OpportunitiesListTemplate, CreateView, ListItemView) {
         render: function () {
 
             console.log('Opportunities render');
+            $('.ui-dialog ').remove();
             this.$el.html(_.template(OpportunitiesListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {

@@ -207,7 +207,7 @@ var Users = function (logWriter, mongoose, findCompany) {
             res['data'] = [];
             var query = User.find({}, { __v: 0, upass: 0 });
 
-            query.sort({ "login": 1 });
+            query.skip((data.page-1)*data.count).limit(data.count);
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);

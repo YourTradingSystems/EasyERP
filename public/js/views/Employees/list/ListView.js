@@ -24,6 +24,7 @@ function (EmployeesListTemplate, CreateView, ListItemView) {
         render: function () {
 
             console.log('Employees render');
+            $('.ui-dialog ').remove();
             this.$el.html(_.template(EmployeesListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {

@@ -2,7 +2,7 @@
         <% tasksCollection.forEach(function(task, index){ %>
         <tr data-index="<%= index %>" data-id="<%= task._id%>">
             <td><input type="checkbox" value="<%=task._id%>" class="checkbox" /></td>
-            <td><%= index + startNumber + 1 %></td>
+            <td><%= index + 1 %></td>
             <td><%=(task.project) ? task.project.projectName : ''%></td>
             <td><%=(task.project) ? task.project.projectShortDesc : ''%></td>
             <td><%=task.summary%></td>

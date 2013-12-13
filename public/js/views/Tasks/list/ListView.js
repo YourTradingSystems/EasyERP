@@ -24,6 +24,7 @@ function (TasksListTemplate, CreateView, ListItemView) {
         render: function () {
 
             console.log('Tasks render');
+            $('.ui-dialog ').remove();
             this.$el.html(_.template(TasksListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {

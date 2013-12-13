@@ -23,6 +23,7 @@ function (ApplicationsListTemplate, CreateView, ListItemView) {
 
         render: function () {
             console.log('Applications list render');
+            $('.ui-dialog ').remove();
             this.$el.html(_.template(ApplicationsListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
