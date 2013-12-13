@@ -1,14 +1,16 @@
 var Profile = function (logWriter, mongoose) {
 
     var ProfileSchema = mongoose.Schema({
+        _id: Number,
         profileName: { type: String, default: 'emptyProfile' },
         profileDescription: { type: String, default: 'No description' },
         profileAccess: [{
-            module: {
-                mid: { type: Number, default: '' },
-                mname: { type: String, default: '' }
-            },
-            access: { type: [Boolean], default: [false, false, false] }
+            module: { type: Number, ref: "modules" },
+            access: {
+                read: { type: Boolean, default: false },
+                editWrite: { type: Boolean, default: false },
+                del: { type: Boolean, default: false }
+            }
         }]
 
     }, { collection: 'Profile' });
@@ -93,7 +95,8 @@ var Profile = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = profile.find({});
-        query.sort({profileName: 1 });
+        query.sort({profileName: 1 }).
+        populate('profileAccess.module');
         query.exec(function (err, result) {
             if (err || result.length == 0) {
                 if (err) {
