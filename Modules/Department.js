@@ -93,7 +93,10 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
 
     function getDepartmentById(id,res){
     	var query = department.findById(id);
-    	query.populate('departmentManager parentDepartment');
+    	query.populate('departmentManager parentDepartment').
+			populate('createdBy.user').
+            populate('editedBy.user');
+
     	//query.skip((data.page - 1) * data.count).limit(data.count);
     	query.exec(function(err, responce){
             if(err){
@@ -139,7 +142,10 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         var res = {};
         res['data'] = [];
         var query = department.find({});
-        query.populate('departmentManager parentDepartment');
+        query.populate('departmentManager parentDepartment').
+			populate('createdBy.user').
+            populate('editedBy.user');
+
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
             if (err) {
@@ -184,7 +190,10 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         var res = {};
         res['data'] = [];
         var query = department.find({});
-        query.populate('departmentManager parentDepartment');
+        query.populate('departmentManager parentDepartment').
+			populate('createdBy.user').
+            populate('editedBy.user');
+
         query.sort({ departmentName: 1 });
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, departments) {

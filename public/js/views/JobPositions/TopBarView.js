@@ -7,6 +7,7 @@ define([
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "JobPositions",
+            contentHeader:"Job Positions",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
             
@@ -53,7 +54,7 @@ define([
                 //var collectionLength = this.collection.length;
                 //var itemIndex = Custom.getCurrentII();
             	
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType}));
+                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType,contentHeader:this.contentHeader}));
                 Common.displayControlBtnsByActionType('Content', viewType);
 
                 return this;

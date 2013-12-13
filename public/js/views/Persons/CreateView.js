@@ -136,7 +136,7 @@ define([
                     changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',
-                    maxDate: '-1d'
+                    maxDate: '-18y'
                 });
                 common.populateCompanies(App.ID.companiesDd, "/Companies");
                 common.populateDepartments(App.ID.departmentDd, "/Departments");

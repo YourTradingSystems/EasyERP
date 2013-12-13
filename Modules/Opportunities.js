@@ -236,7 +236,10 @@ var Opportunities = function (logWriter, mongoose, customer) {
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: true });
         query.sort({ name: 1 });
-        query.populate('company customer salesPerson salesTeam workflow');
+        query.populate('company customer salesPerson salesTeam workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -251,7 +254,10 @@ var Opportunities = function (logWriter, mongoose, customer) {
 
     function getById(id, response) {
         var query = opportunitie.findById(id);
-        query.populate('company customer salesPerson salesTeam workflow');
+        query.populate('company customer salesPerson salesTeam workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -268,7 +274,10 @@ var Opportunities = function (logWriter, mongoose, customer) {
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: false });
         query.sort({ name: 1 });
-        query.populate('customer salesPerson salesTeam workflow');
+        query.populate('customer salesPerson salesTeam workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -288,7 +297,10 @@ var Opportunities = function (logWriter, mongoose, customer) {
         var query = opportunitie.find({ isOpportunitie: false });
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ name: 1 });
-        query.populate('customer salesPerson salesTeam workflow');
+        query.populate('customer salesPerson salesTeam workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -440,7 +452,10 @@ var Opportunities = function (logWriter, mongoose, customer) {
         res['data'] = [];
         var query = opportunitie.find();
         query.where('isOpportunitie', true);
-        query.populate('relatedUser customer department jobPosition workflow');
+        query.populate('relatedUser customer department jobPosition workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ 'name.first': 1 });
         query.exec(function (err, opportunities) {

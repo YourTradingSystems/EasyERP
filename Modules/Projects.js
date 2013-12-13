@@ -43,7 +43,7 @@ var Project = function (logWriter, mongoose) {
         tags: [String],
         description: String,
         extrainfo: {
-            priority: { type: String, default: 'Medium' },
+            priority: { type: String, default: 'P3' },
             sequence: { type: Number, default: 0 },
             customer: { type: ObjectId, ref: 'Customers', default: null },
             StartDate: { type: Date, default: Date.now },
@@ -442,7 +442,10 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = project.find({});
-        query.populate("projectmanager customer task").populate('workflow');
+        query.populate("projectmanager customer task").populate('workflow').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
         query.sort({ projectName: 1 });
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, projects) {
@@ -483,7 +486,10 @@ var Project = function (logWriter, mongoose) {
         var query = project.findById(data.id, function (err, res) { });
         query.populate('projectmanager', 'name _id');
         query.populate('customer', 'name _id');
-        query.populate('workflow');
+        query.populate('workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
 
         query.exec(function (err, project) {
             if (err) {
@@ -499,6 +505,7 @@ var Project = function (logWriter, mongoose) {
         try {
             delete data._id;
             delete data.createdBy;
+            delete data.task;
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
@@ -607,7 +614,7 @@ var Project = function (logWriter, mongoose) {
                     }
                     if (data.extrainfo) {
                         if (data.extrainfo.priority) {
-                            _task.extrainfo.priority = data.extrainfo.priority.priority;
+                            _task.extrainfo.priority = data.extrainfo.priority;
                         }
                         if (data.extrainfo.sequence) {
                             _task.extrainfo.sequence = data.extrainfo.sequence;
@@ -671,7 +678,7 @@ var Project = function (logWriter, mongoose) {
 
     function updateTask(_id, data, res) {
         delete data._id;
-        data.createdBy.user = (data.createdBy.user && data.createdBy.user._id) ? data.createdBy.user._id : ((data.createdBy && data.createdBy.user) ? data.createdBy.user : null);
+        delete data.createdBy;
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
@@ -771,7 +778,10 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = tasks.find({});
-        query.populate('project assignedTo extrainfo.customer workflow createdBy.user editedBy.user');
+        query.populate('project assignedTo extrainfo.customer workflow createdBy.user editedBy.user').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
             if (err) {
@@ -809,7 +819,10 @@ var Project = function (logWriter, mongoose) {
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')
             .populate('extrainfo.customer createdBy.user editedBy.user')
-            .populate('workflow');
+            .populate('workflow').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
@@ -833,7 +846,10 @@ var Project = function (logWriter, mongoose) {
         var query = tasks.findById(data.id, function (err, res) { });
         query.populate('project', '_id projectShortDesc projectName').
             populate(' assignedTo', '_id name imageSrc').
-            populate('createdBy.user editedBy.user');
+            populate('createdBy.user editedBy.user').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
         query.exec(function (err, task) {
             if (err) {
                 console.log(err);

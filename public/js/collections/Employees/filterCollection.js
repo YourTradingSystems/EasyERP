@@ -60,9 +60,8 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (employee) {
-                        //employee.extrainfo.StartDate = common.utcDateToLocaleDate(employee.extrainfo.StartDate);
-                       // employee.extrainfo.EndDate = common.utcDateToLocaleDate(employee.extrainfo.EndDate);
-                      //  employee.deadline = common.utcDateToLocaleDate(employee.deadline);
+                        employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
+                        employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
                         return employee;
                     });
                 }

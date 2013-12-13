@@ -60,11 +60,8 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (company) {
-                        //company.createdBy.date = common.utcDateToLocaleDateTime(company.createdBy.date);
-                        //company.editedBy.date = company.editedBy.date ? common.utcDateToLocaleDateTime(company.editedBy.date) :  null;
-
-                        company.salesPurchases.date.createDate = common.utcDateToLocaleDate(company.salesPurchases.date.createDate);
-                        company.salesPurchases.date.updateDate = common.utcDateToLocaleDate(company.salesPurchases.date.updateDate);
+                        company.createdBy.date = common.utcDateToLocaleDateTime(company.createdBy.date);
+                        company.editedBy.date = company.editedBy.date ? common.utcDateToLocaleDateTime(company.editedBy.date) :  null;
                         return company;
                     });
                 }

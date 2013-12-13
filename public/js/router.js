@@ -2,8 +2,9 @@
 define([
   'views/main/MainView',
   'views/login/LoginView',
-  'custom'
-], function (MainView, LoginView, Custom) {
+  'custom',
+    'common'
+], function (MainView, LoginView, Custom, Common) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -106,9 +107,15 @@ define([
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
             //console.log(contentType + "Model");
+            if(contentType !== 'ownCompanies') {
             var ContentFormModelUrl = "models/" + contentType + "Model",
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
+            }else{
+                var ContentFormModelUrl = "models/CompaniesModel",
+                ContentFormViewUrl = "views/" + contentType + "/form/FormView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView";
+            }
             var self = this;
             Custom.setCurrentVT('form');
             require([ContentFormModelUrl, ContentFormViewUrl, TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {
@@ -117,9 +124,9 @@ define([
                 GetModel.fetch({
                     data: { id: modelId },
                     success: function (model, response, options) {
+                        self.convertModelDates(model);
                         var topBarView = new TopBarView({ actionType: "Content" });
                         var contentView = new ContentFormView({ model: model });
-                        
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
@@ -132,11 +139,26 @@ define([
             });
         },
 
+        convertModelDates: function(model){
+            if(model.has('createdBy'))
+                model.get('createdBy').date = Common.utcDateToLocaleDateTime(model.get('createdBy').date);
+            if(model.has('editedBy'))
+                model.get('editedBy').date = Common.utcDateToLocaleDateTime(model.get('editedBy').date);
+            if(model.has('dateBirth'))
+                model.set({
+                    dateBirth: Common.utcDateToLocaleDate(model.get('dateBirth'))
+                });
+            if(model.has('nextAction'))
+                model.set({
+                    nextAction: Common.utcDateToLocaleDate(model.get('nextAction').date)
+                });
+        },
+
         goToKanban: function (contentType, parrentContentId) {
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+                CollectionUrl = this.buildCollectionRoute(contentType);
 
             self = this;
             Custom.setCurrentVT('kanban');
@@ -171,7 +193,7 @@ define([
                 CollectionUrl;
             if (contentType !== 'Calendar'&& contentType !== 'Workflows' ) {
                 ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
-                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+                CollectionUrl = this.buildCollectionRoute(contentType);
             } else {
                 ContentViewUrl = "views/" + contentType + '/ContentView';
                 CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection";

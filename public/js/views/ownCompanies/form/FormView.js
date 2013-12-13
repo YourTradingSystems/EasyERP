@@ -140,9 +140,7 @@ define([
                         mid: 39
                     },
                     success: function () {
-
-
-                        Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                        //Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
@@ -357,7 +355,7 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/Companies/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/ownCompanies/list", { trigger: true });
                     }
                 });
 

@@ -92,9 +92,6 @@ define([
 
                 var language = $("#language").val();
 
-                var dateSt = $.trim($("#date").val());
-                var date = (dateSt) ? new Date(Date.parse(dateSt)) : "";
-
                 var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
 
                 var isSupplier = ($("#isSupplier").is(":checked")) ? true : false;
@@ -120,8 +117,7 @@ define([
                         salesPerson: salesPerson,
                         salesTeam: salesTeam,
                         reference: reference,
-                        language: language,
-                        date: date
+                        language: language
                     }
                 },
                     {

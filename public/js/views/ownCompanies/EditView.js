@@ -115,11 +115,11 @@ define([
                     wait: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("easyErp/ownCompanies/thumbnails", { trigger: true });
+                        Backbone.history.navigate("easyErp/ownCompanies", { trigger: true });
                     },
                     error: function () {
                         $(".edit-companies-dialog").remove();
-                        Backbone.history.navigate("home", { trigger: true });
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
             },

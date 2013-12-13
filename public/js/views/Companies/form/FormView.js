@@ -16,6 +16,7 @@ define([
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
+                _.bindAll(this, 'render');
                 this.formModel = options.model;
                 this.render = _.after(2, this.render);
                 this.opportunitiesCollection = new OpportunitiesCollection();
@@ -117,7 +118,7 @@ define([
                 var obj = {};
                 var currentModel = this.model;
                 if (objIndex.length > 1) {
-                    obj = currentModel.get(objIndex[0]);
+                    obj = this.formModel.get(objIndex[0]);
                     obj[objIndex[1]] = $('#editInput').val();
                 } else if (objIndex.length == 1) {
                     obj[objIndex[0]] = $('#editInput').val();
@@ -128,9 +129,9 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                currentModel.set(obj);
+                this.formModel.set(obj);
 
-                currentModel.save({}, {
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
@@ -152,8 +153,7 @@ define([
                 var type = id.substr(0, k);
                 var id_int = id.substr(k + 1);
 
-
-                var currentModel = this.collection.getElement();
+                var currentModel = this.formModel;
                 var notes = currentModel.get('notes');
 
                 switch (type) {
@@ -188,10 +188,10 @@ define([
             },
 
             addNote: function (e) {
-                var val = $('#noteArea').val();
-                var title = $('#noteTitleArea').val();
+                var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
                 if (val || title) {
-                    var currentModel = this.collection.getElement();
+                    var currentModel = this.formModel;
                     var notes = currentModel.get('notes');
                     var arr_key_str = $('#getNoteKey').attr("value");
                     var note_obj = {
@@ -212,8 +212,8 @@ define([
                                            mid: 39
                                        },
                                        success: function (model, response, options) {
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
                                            $('#getNoteKey').attr("value", '');
                                        }
                                    });

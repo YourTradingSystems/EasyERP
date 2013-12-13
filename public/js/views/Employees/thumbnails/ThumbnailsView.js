@@ -21,6 +21,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView) {
 
         render: function () {
             console.log('Employee render');
+            $('.ui-dialog ').remove();
             this.$el.html('');
             if (this.collection.length > 0) {
                 var holder = this.$el;
