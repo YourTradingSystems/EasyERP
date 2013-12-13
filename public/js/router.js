@@ -149,14 +149,16 @@ define([
                     dateBirth: Common.utcDateToLocaleDate(model.get('dateBirth'))
                 });
             if(model.has('nextAction'))
-                	model.get('nextAction').date = Common.utcDateToLocaleDate(model.get('nextAction').date)
+                model.set({
+                    nextAction: Common.utcDateToLocaleDate(model.get('nextAction').date)
+                });
         },
 
         goToKanban: function (contentType, parrentContentId) {
             if (this.mainView == null) this.main();
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+                CollectionUrl = this.buildCollectionRoute(contentType);
 
             self = this;
             Custom.setCurrentVT('kanban');
@@ -191,7 +193,7 @@ define([
                 CollectionUrl;
             if (contentType !== 'Calendar'&& contentType !== 'Workflows' ) {
                 ContentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
-                CollectionUrl = "collections/" + contentType + "/" + "filterCollection";
+                CollectionUrl = this.buildCollectionRoute(contentType);
             } else {
                 ContentViewUrl = "views/" + contentType + '/ContentView';
                 CollectionUrl = "collections/" + contentType + "/" + contentType + "Collection";

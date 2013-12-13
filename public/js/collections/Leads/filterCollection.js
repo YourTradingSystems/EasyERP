@@ -56,7 +56,8 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (lead) {
-                        lead.creationDate = common.utcDateToLocaleDate(lead.creationDate);
+                        lead.createdBy.date = common.utcDateToLocaleDateTime(lead.createdBy.date);
+                        lead.editedBy.date = common.utcDateToLocaleDateTime(lead.editedBy.date);
                         return lead;
                     });
                 }

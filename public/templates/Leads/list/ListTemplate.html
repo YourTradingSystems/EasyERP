@@ -2,11 +2,12 @@
 <tr data-id="<%=lead._id%>">
     <td><input type="checkbox" value="<%=lead._id%>" class="checkbox" /></td>
     <td><%=index+1%></td>
-    <td><%=lead.creationDate%></td>
     <td><%=lead.name%></td>
     <td><%=lead.contactName.first%> <%=lead.contactName.last%></td>
     <td><%=lead.email%></td>
     <td><%=lead.phones.phone%></td>
     <td><%=(lead.workflow) ? lead.workflow.name : ''%></td>
+    <td><%=(lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
+    <td><%=(lead.editedBy.user) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
 </tr>
 <% }) %>

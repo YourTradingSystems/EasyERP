@@ -22,6 +22,7 @@
         }
 
         var utcDateToLocaleDateTime = function (utcDateString) {
+            if(!utcDateString) return null;
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
             return utcDateString;
         }
@@ -311,9 +312,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function(response) {
                 var options = [];
-                if (model && model.extrainfo.priority) {
+                if (model && ((model.extrainfo && model.extrainfo.priority) || model.priority)) {
                     options = $.map(response.data, function(item) {
-                        return model.extrainfo.priority === item.priority ?
+                        return ((model.extrainfo && model.extrainfo.priority) || model.priority) === item.priority ?
                             $('<option/>').val(item.priority).text(item.priority).attr('selected', 'selected') :
                             $('<option/>').val(item.priority).text(item.priority);
                     });

@@ -44,12 +44,12 @@
                     <p></p>
                     <p>
                         <label>Salesperson</label>
-                        
                     </p>
                     <p>
                         <label>Sales Team</label>
-                       
                     </p>
+                    <p><label>Created By</label></p>
+                    <p><label>Edited By</label></p>
                 </div>
                 <div class="half-block left">
                     <p>
@@ -76,6 +76,8 @@
                     <p></p>
                     <p><span><%=(salesPerson) ? salesPerson.name.first + ' ' +  salesPerson.name.last : ''%></span></p>
                     <p><span><%=(salesTeam) ? salesTeam.departmentName : ''%></span></p>
+                    <p><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></p>
+                    <p><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></p>
                 </div>
             </div>
             <div class="half-block left">

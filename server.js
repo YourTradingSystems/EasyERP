@@ -730,7 +730,7 @@ app.delete('/Tasks/:contentType/:_id', function (req, res) {
 
 
 
-app.post('/JobPosition', function (req, res) {
+app.post('/JobPositions', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
     data.jobPosition = req.body;
@@ -810,7 +810,7 @@ app.get('/Departments/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
-    }
+    }                                             3
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
