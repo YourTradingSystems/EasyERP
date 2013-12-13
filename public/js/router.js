@@ -107,9 +107,15 @@ define([
         goToForm: function (contentType, modelId) {
             if (this.mainView == null) this.main();
             //console.log(contentType + "Model");
+            if(contentType !== 'ownCompanies') {
             var ContentFormModelUrl = "models/" + contentType + "Model",
                 ContentFormViewUrl = "views/" + contentType + "/form/FormView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView";
+            }else{
+                var ContentFormModelUrl = "models/CompaniesModel",
+                ContentFormViewUrl = "views/" + contentType + "/form/FormView",
+                TopBarViewUrl = "views/" + contentType + "/TopBarView";
+            }
             var self = this;
             Custom.setCurrentVT('form');
             require([ContentFormModelUrl, ContentFormViewUrl, TopBarViewUrl], function (ContentFormModel, ContentFormView, TopBarView) {

@@ -673,6 +673,51 @@ app.delete('/ownCompanies/:viewType/:_id', function (req, res) {
     requestHandler.removeCompany(req, res, id, data);
 });
 
+app.delete('/ownCompanies/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeCompany(req, res, id, data);
+});
+
+app.put('/ownCompanies/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.company = req.body;
+    var remove = req.headers.remove;
+    console.log("---------------UpdateCompany-------------------");
+    //console.log(data.company.salesPurchases.salesPerson);
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
+        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
+    }
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
+        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
+    }
+    //console.log(data.company.salesPurchases.salesPerson);
+    //console.log(data.company.address);
+    requestHandler.updateCompany(req, res, id, data, remove);
+});
+
+app.put('/ownCompanies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.company = req.body;
+    var remove = req.headers.remove;
+    console.log("---------------UpdateCompany-------------------");
+    //console.log(data.company.salesPurchases.salesPerson);
+    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
+        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
+    }
+    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
+        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
+    }
+    //console.log(data.company.salesPurchases.salesPerson);
+    //console.log(data.company.address);
+    requestHandler.updateCompany(req, res, id, data, remove);
+});
+
 
 //-----------------------------End Companies--------------------------------------------------
 

@@ -483,7 +483,7 @@ var requestHandler = function (fs, mongoose) {
     function getOwnCompanies(req, res, data) {
         console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn) {
-            customer.getOwnCompanies(res);
+            customer.getOwnCompanies(data, res);
         } else {
             res.send(401);
         }

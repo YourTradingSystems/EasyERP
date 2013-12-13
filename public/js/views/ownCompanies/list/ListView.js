@@ -1,7 +1,7 @@
 define([
-    'text!templates/Companies/list/ListHeader.html',
-    'views/Companies/CreateView',
-    'views/Companies/list/ListItemView'
+    'text!templates/ownCompanies/list/ListHeader.html',
+    'views/ownCompanies/CreateView',
+    'views/ownCompanies/list/ListItemView'
 ],
 
 function (CompaniesListTemplate, CreateView, ListItemView) {

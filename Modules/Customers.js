@@ -395,7 +395,7 @@
             });
         },
         
-        getOwnCompanies: function (response) {
+        getOwnCompanies: function (data, response) {
             var res = {};
             res['data'] = [];
             var query = customer.find({$and:[{ type: 'Company' }, {isOwn: true}]});
@@ -403,7 +403,7 @@
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
                   populate('editedBy.user');
-            query.sort({ "name.first": 1 });
+            query.skip((data.page-1)*data.count).limit(data.count);
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
