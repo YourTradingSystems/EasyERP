@@ -805,7 +805,7 @@ h3 {
 .dl-auto(@max-width: 120px,@with-dt: 35%) {
     clear: both;
     font-size: 14px;
-	
+
     dt {
         width: @with-dt;
         max-width: @max-width;
@@ -822,42 +822,42 @@ h3 {
         width: 100%-@with-dt;
 
         &.with-checkbox {
-//            margin-top: 15px !important;
+            //            margin-top: 15px !important;
         }
     }
 }
 
 .summary-info {
-	.dl-auto(500px,20%);
+    .dl-auto(500px,20%);
 
     input {
         width: 99% !important;
         max-width: none !important;
-	}
+    }
 }
 
 .person-info {
-	.dl-auto();
+    .dl-auto();
 }
 
 .opp-info {
-	.dl-auto(200px);
+    .dl-auto(200px);
 }
 
 .project-info {
-	.dl-auto(150px);
+    .dl-auto(150px);
 }
 
 .job-info {
-	.dl-auto(260px);
+    .dl-auto(260px);
 }
 
 .app-info {
-	.dl-auto(150px);
+    .dl-auto(150px);
 }
 
 .job-create-info {
-	.dl-auto(220px);
+    .dl-auto(220px);
 }
 
 .company-info {
@@ -918,7 +918,7 @@ h3 {
 
 .person-checkbox {
     margin-left: 3px;
-    position: relative;  
+    position: relative;
     padding-left: 25px;
     background-image: url("@{imagesfolder}/login-sprite.png");
     background-repeat: no-repeat;
@@ -1319,6 +1319,10 @@ h3 {
                 // white-space: pre-line;
                 line-height: 18px;
                 font-size: 11px;
+                text-align: center;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
 
                 &:nth-child(2) {
                     text-align: right;
@@ -1332,15 +1336,15 @@ h3 {
                     background-color: #F5F5F5;
                 }
 
-				progress::-webkit-progress-bar {  
+                    progress::-webkit-progress-bar {
                         background-color: #F5F5F5;
-				/* style rules */  
-				}  
+                        /* style rules */
+                    }
 
-				progress::-webkit-progress-value {  
+                    progress::-webkit-progress-value {
                         background-color: #57B5E3;
-				/* style rules */  
-				}  
+                        /* style rules */
+                    }
 
                 &:first-of-type {
                     padding-left: 7px;
@@ -1392,6 +1396,9 @@ h3 {
             p {
                 line-height: 20px !important;
                 min-height: 20px !important;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }
@@ -1399,7 +1406,7 @@ h3 {
     .formTitle {
         &.withMargin {
             margin-bottom: 10px;
-		}
+        }
 
         width: 100%;
         border-bottom: @thin-border @lightgrey;
@@ -1418,11 +1425,32 @@ h3 {
             white-space: nowrap;
             text-overflow: ellipsis;
             padding: 4px;
+
+            span {
+                width: inherit;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
         }
     }
 
     h3 {
         margin-bottom: 10px;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        span {
+            padding:0;
+            width: 50%;
+            display: block;
+            float: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     }
 
     .mainInfo {
@@ -1487,7 +1515,7 @@ h3 {
         float: left;
         position: relative;
         width: 140px;
-        height: 140px;      
+        height: 140px;
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -1512,15 +1540,15 @@ h3 {
             line-height: 18px;
             text-shadow: 1px 1px 1px #fff;
             text-align: center;
-            display: block;           
+            display: block;
             position: absolute;
             top: 0;
             left: 0;
             height: 0px;
             width: 100%;
             background: rgba(0,0,0, 0.7);
-            color: #fff;          
-                 
+            color: #fff;
+
             input {
                 position: absolute;
                 top: 0;
@@ -1797,21 +1825,21 @@ input, textarea, select {
 
         &.status {
             &.pending {
-				color: #EAE874;
-			}
+                color: #EAE874;
+            }
 
             &.inprogress {
-				color: #67C2EF;
-			}
+                color: #67C2EF;
+            }
 
             &.done {
-				color: #BDEA74;
-			}
+                color: #BDEA74;
+            }
 
             &.cancelled {
-				color: #FF5454;
-			}
-		}
+                color: #FF5454;
+            }
+        }
     }
 
     a.tasksByProject {
@@ -2115,14 +2143,16 @@ button {
     .ui-dialog-titlebar {
         display: none;
     }
-	.ui-dialog-content {
-		overflow:visible !important;
-	}
-	.ui-widget-content a {
-		color: #36A9E1;
-	}
 
-	.ui-dialog-buttonpane {
+    .ui-dialog-content {
+        overflow: visible !important;
+    }
+
+    .ui-widget-content a {
+        color: #36A9E1;
+    }
+
+    .ui-dialog-buttonpane {
         padding-left: 0;
         padding-right: 0;
         margin: 0 1em;
@@ -2134,36 +2164,36 @@ button {
             .ui-button {
                 &:first-child {
                     color: #36A9E1 !important;
-					border: 1px solid #DDD;
-					.border-radius(0);
+                    border: 1px solid #DDD;
+                    .border-radius(0);
 
                     .ui-button-text {
                         background-color: white;
 
                         &:hover {
                             background-color: #eee;
-							color: #2A6496;
-						}
-					}
-				}
+                            color: #2A6496;
+                        }
+                    }
+                }
 
                 &:last-child {
                     color: #36A9E1 !important;
-					border: 1px solid #DDD;
-					.border-radius(0);
+                    border: 1px solid #DDD;
+                    .border-radius(0);
 
                     .ui-button-text {
-						background-color: white;
+                        background-color: white;
 
                         &:hover {
                             background-color: #eee;
-							color: #2A6496;
-						}
-					}
-				}
-			}
-		}
-	}
+                            color: #2A6496;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     &.edit-task-dialog {
         .ui-dialog-titlebar {
@@ -2288,6 +2318,9 @@ button {
     dl {
         dt, dd {
             line-height: 0px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         dt {
@@ -2341,31 +2374,31 @@ button {
     }
 }
 
-#leadForm input[type='email'],
+    #leadForm input[type='email'],
     #leadForm input[type='text'] {
         width: 71%;
-}
+    }
 
     #leadForm dd.withCheckbox {
         margin-top: 0;
-}
+    }
 
     #leadForm textarea {
         margin-top: 10px;
-}
+    }
 
     #createTaskForm input[type='text'] {
         width: 95%;
-}
+    }
 
     #createApplicationForm #otherInfo {
         margin-top: 10px;
-}
+    }
 
-#createJobPositionForm #description,
+    #createJobPositionForm #description,
     #editJobPositionForm #description {
         margin-top: 0;
-}
+    }
 
 #createProjectForm {
     dl {
@@ -2390,19 +2423,19 @@ button {
     }
 }
 
-#createEmployeeForm.notDialog {
-    dl {
-        dt, dd {
-            line-height: 17px;
+    #createEmployeeForm.notDialog {
+        dl {
+            dt, dd {
+                line-height: 17px;
+            }
         }
     }
-}
 
 #createEmployeeForm,
 #employeeForm {
     .person-info dt {
         max-width: 150px;
-	}
+    }
 }
 
 #createFormDiv > #createProjectForm {
@@ -2748,8 +2781,8 @@ button {
             .border-radius(0px);
 
             &.active {
-				.box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
-			}
+                .box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
+            }
 
             .inner {
                 padding: 5px;
@@ -2798,32 +2831,32 @@ button {
             }
 
             &.cancelled .remaining {
-					border-bottom: 2px solid #FF5454;
-			}
+                border-bottom: 2px solid #FF5454;
+            }
 
             &.done .remaining {
-					border-bottom: 2px solid #BDEA74;
-			}
+                border-bottom: 2px solid #BDEA74;
+            }
 
             &.testing .remaining {
-					border-bottom: 2px solid #D9FFC8;
-			}
+                border-bottom: 2px solid #D9FFC8;
+            }
 
             &.merge .remaining {
-					border-bottom: 2px solid #FFEA73;
-			}
+                border-bottom: 2px solid #FFEA73;
+            }
 
             &.development .remaining {
-					border-bottom: 2px solid #67C2EF;
-			}
+                border-bottom: 2px solid #67C2EF;
+            }
 
             &.specification .remaining {
-					border-bottom: 2px solid #EAE874;
-			}
+                border-bottom: 2px solid #EAE874;
+            }
 
             &.analysis .remaining {
-					border-bottom: 2px solid #808080;
-			}
+                border-bottom: 2px solid #808080;
+            }
 
             &:hover .foldUnfold img, &.selected .foldUnfold img {
                 margin: -20px 6px 3px 0;
@@ -3229,7 +3262,7 @@ button {
             padding-left: 3px;
             padding-right: 0;
             .border-radius(0);
-            max-width:555px;
+            max-width: 555px;
 
             &:focus {
                 .box-shadow(0,0,5px,rgba(82,168,236,0.5));
@@ -3301,8 +3334,9 @@ button {
                 line-height: 17px;
                 font-weight: bold;
             }
+
             .noteText {
-				word-break: break-word;
+                word-break: break-word;
             }
 
             .right {
@@ -3343,7 +3377,7 @@ table#workflows {
                 display: none;
             }
         }
-		
+
         &:hover {
             a.edit:not(.hidden) {
                 display: inline;
@@ -3359,7 +3393,7 @@ table#workflows {
 
             &.edit-status {
                 width: 20%;
-			}
+            }
         }
     }
 }
@@ -3368,24 +3402,24 @@ table#workflows {
     margin: 0px;
     padding: 5px 0;
     text-align: center;
-	border-bottom: 1px solid #D5D5D5;
+    border-bottom: 1px solid #D5D5D5;
 
     .letter {
         padding: 5px 10px;
 
         &.current {
             font-weight: bold;
-		}
+        }
 
         &.empty {
-			color: #CCC;
+            color: #CCC;
             cursor: default;
 
             &:hover {
                 text-decoration: none;
-			}
-		}
-	}
+            }
+        }
+    }
 }
 
 #showMoreDiv {
@@ -3394,21 +3428,21 @@ table#workflows {
     clear: both;
 
     #showMore {
-		background-color: #FFF;
-		padding: .4em 5em;
-		color: #36A9E1;
-		.border-radius(0);
+        background-color: #FFF;
+        padding: .4em 5em;
+        color: #36A9E1;
+        .border-radius(0);
 
         &:hover {
-			background-color: #EEE;
-			color: #2A6496;
-		}
-	}
+            background-color: #EEE;
+            color: #2A6496;
+        }
+    }
 }
 
 #editSpan, #saveSpan, #cancelSpan {
-	font-size: 11px;
-	font-weight: normal;
+    font-size: 11px;
+    font-weight: normal;
     line-height: 15px;
     margin: 0;
 }
@@ -3425,7 +3459,7 @@ table#workflows {
 
 .person-info-h3 {
     width: 170px;
-	.dl-auto(auto,50%);
+    .dl-auto(auto,50%);
     clear: none;
 
     dt, dd {
@@ -3434,27 +3468,27 @@ table#workflows {
 
         a {
             line-height: 22px;
-		}
-	}
+        }
+    }
 
     .newSelectList {
         margin-left: -100px;
-	}
+    }
 }
 
 .newSelectList {
     position: absolute;
-	border: solid 1px #898989;
+    border: solid 1px #898989;
     background-color: white;
     padding: 3px 0;
-	.box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
+    .box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
 
     li {
-		margin: 0;
-		padding: 3px 16px 5px;
+        margin: 0;
+        padding: 3px 16px 5px;
         cursor: pointer;
 
-		&.testing,
+        &.testing,
         &.analysis {
             background-color: #D9FFC8 !important;
         }
@@ -3462,31 +3496,31 @@ table#workflows {
         &.merge {
             color: #C00 !important;
             background-color: #FFE3E3 !important;
-		}
+        }
 
         &.design {
             color: #000 !important;
             background-color: #FFEA73 !important;
-		}
+        }
 
         &.cancelled {
             color: #FFF !important;
             background-color: #C00 !important;
-		}
+        }
 
         &.done {
             color: #000 !important;
             background-color: #BEF624 !important;
-		}
+        }
 
         &:hover {
             background-color: #EAF0F7 !important;
             border: 0 !important;
             color: #FF5A00 !important;
-		}
-		}
-	}
-	
+        }
+    }
+}
+
 .dhx_wrap_section, .dhx_section_time, .dhx_cal_larea {
     overflow: visible !important;
 }
@@ -3509,7 +3543,7 @@ table#workflows {
     &:hover {
         text-decoration: underline;
     }
-	}
+}
 
 .timeModal {
     z-index: 2000;
@@ -3534,13 +3568,13 @@ table#workflows {
 
             &:hover {
                 background-color: #bfcddb;
-}
+            }
 
             &.active {
                 background-color: #3399ff;
-			}
-			}
-		}
+            }
+        }
+    }
 
     .minute {
         div {
@@ -3552,20 +3586,20 @@ table#workflows {
 
             &:hover {
                 background-color: #bfcddb;
-	}
+            }
 
             &.active {
                 background-color: #3399ff;
-			}
-			}
-		}
-	}
+            }
+        }
+    }
+}
 
 #addCalendarDlg {
     .fromXml {
         display: none;
+    }
 }
-	}
 
 .overflovHidden {
     overflow: hidden;
@@ -3587,7 +3621,7 @@ table#workflows {
     input {
         position: absolute;
         top: 0;
-        left:-200px;
+        left: -200px;
         opacity: 0;
         font-size: 20px;
         cursor: pointer;
@@ -3596,73 +3630,81 @@ table#workflows {
         border: none;
     }
 }
-.calendarList{
-	width:200px;
-	float:left;
-	border:1px solid silver;
-	margin-left:10px;
-	li{
-		position:relative;
-		cursor:pointer;
-		width:174px;
-		padding-left:26px;
-		line-height:24px;
-		.option{
-			display:none;
-		    background-image: url("@{imagesfolder}/check.png");	
-			background-position:50% 50%;
-			background-repeat:no-repeat;
-			width:12px;
-			height:12px;
-			position:absolute;
-			right:5px;
-			top:5px;
-			background-color:white;
-			border:1px solid black;
-			&:hover{
-				background-color: #EEE;
-			}
-		}
-		.optionsDialog{
-			display:none;
-			position:absolute;
-			z-index:100;
-			border:1px solid black;
-			width:185px;
-			background-color:white;
-			padding-left:5px;
-		}
-		.check{	
-			position:absolute;
-			left:5px;
-			top:5px;
-			background-color:white;
-			border:1px solid black;			
-			width:12px;
-			height:12px;
 
+.calendarList {
+    width: 200px;
+    float: left;
+    border: 1px solid silver;
+    margin-left: 10px;
 
-		}
-		&:hover{
-			background-color: #EEE;
-			.option{
-				display:block;
-			}
-		}
-		&.checked{
-			.check{	
-				background-color:black;
-			}
-		}
-		&.showDialog{
-			background-color: #EEE;
-			.optionsDialog, .option{
-				display:block;
-			}
-		}
+    li {
+        position: relative;
+        cursor: pointer;
+        width: 174px;
+        padding-left: 26px;
+        line-height: 24px;
 
-		.text{
+        .option {
+            display: none;
+            background-image: url("@{imagesfolder}/check.png");
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: white;
+            border: 1px solid black;
 
-		}
-	}
+            &:hover {
+                background-color: #EEE;
+            }
+        }
+
+        .optionsDialog {
+            display: none;
+            position: absolute;
+            z-index: 100;
+            border: 1px solid black;
+            width: 185px;
+            background-color: white;
+            padding-left: 5px;
+        }
+
+        .check {
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            background-color: white;
+            border: 1px solid black;
+            width: 12px;
+            height: 12px;
+        }
+
+        &:hover {
+            background-color: #EEE;
+
+            .option {
+                display: block;
+            }
+        }
+
+        &.checked {
+            .check {
+                background-color: black;
+            }
+        }
+
+        &.showDialog {
+            background-color: #EEE;
+
+            .optionsDialog, .option {
+                display: block;
+            }
+        }
+
+        .text {
+        }
+    }
 }
