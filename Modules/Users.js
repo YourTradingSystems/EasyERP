@@ -146,22 +146,7 @@ var Users = function (app, logWriter, mongoose, findCompany) {
                         _user.isUser = data.isUser;
                     }
                     if (data.profile) {
-                        if (data.profile.company) {
-                            if (data.profile.company._id) {
-                                _user.profile.company.id = data.profile.company._id;
-                            }
-                            if (data.profile.company.name) {
-                                _user.profile.company.name = data.profile.company.name;
-                            }
-                        }
-                        if (data.profile.profile) {
-                            if (data.profile.profile._id) {
-                                _user.profile.profile.id = data.profile.profile._id;
-                            }
-                            if (data.profile.profile.name) {
-                                _user.profile.profile.name = data.profile.profile.name;
-                            }
-                        }
+                        _user.profile = data.profile;
                     }
                     if (data.login) {
                         _user.login = data.login;
