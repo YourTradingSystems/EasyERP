@@ -6,9 +6,9 @@
 	</div>
     <div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="first">First Name :</label></dt><dd><input type="text" class="blueback" id="first" value="<%=name.first%>" required maxlength="64"/></dd>
-		<dt><label for="last">Last Name :</label></dt><dd><input type="text" class="blueback" id="last" value="<%=name.last%>" required maxlength="64"/></dd>
-		<dt><label for="tags">Tags :</label></dt><dd><input type="text" id="tags" value="<%=tags%>" maxlength="64"/></dd>
+		<dt><label for="first">First Name :</label></dt><dd><input type="text" class="blueback" id="first" value="<%=name.first%>" required maxlength="32"/></dd>
+		<dt><label for="last">Last Name :</label></dt><dd><input type="text" class="blueback" id="last" value="<%=name.last%>" required maxlength="32"/></dd>
+		<dt><label for="tags">Tags :</label></dt><dd><input type="text" id="tags" value="<%=tags%>" maxlength="32"/></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
@@ -26,21 +26,21 @@
 	</div>
     <div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="street">Street</label></dt><dd><input type="text" class="workAddress" id="street" name="street" value="<%=workAddress.street%>" maxlength="64"/></dd>
-		<dt><label for="city">City</label></dt><dd><input type="text" class="workAddress" id="city" name="city" value="<%=workAddress.city%>" maxlength="64"/></dd>
-		<dt><label for="state">State</label></dt><dd><input type="text" class="workAddress" id="state" name="state" value="<%=workAddress.state%>" maxlength="64"/></dd>
-		<dt><label for="zip">Zip</label></dt><dd><input type="text" class="workAddress" id="zip" name="zip" value="<%=workAddress.zip%>" maxlength="64"/></dd>
-		<dt><label for="country">Country</label></dt><dd><input type="text" class="workAddress" id="country" name="country" value="<%=workAddress.country%>" maxlength="64" /></dd>
-		<dt><label for="workEmail">Work Email</label></dt><dd><input type="text"  id="workEmail" value="<%=workEmail%>" required maxlength="64"/></dd>
-		<dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" value="<%=skype%>" maxlength="64"/></dd>
-		<dt><label for="phone">Work Phone</label></dt><dd><input type="text" name="phone" id="phone" value="<%=workPhones.phone%>" required maxlength="64"/></dd>
+		<dt><label for="street">Street</label></dt><dd><input type="text" class="workAddress" id="street" name="street" value="<%=workAddress.street%>" maxlength="32"/></dd>
+		<dt><label for="city">City</label></dt><dd><input type="text" class="workAddress" id="city" name="city" value="<%=workAddress.city%>" maxlength="32"/></dd>
+		<dt><label for="state">State</label></dt><dd><input type="text" class="workAddress" id="state" name="state" value="<%=workAddress.state%>" maxlength="32"/></dd>
+		<dt><label for="zip">Zip</label></dt><dd><input type="text" class="workAddress" id="zip" name="zip" value="<%=workAddress.zip%>" maxlength="32"/></dd>
+		<dt><label for="country">Country</label></dt><dd><input type="text" class="workAddress" id="country" name="country" value="<%=workAddress.country%>" maxlength="32" /></dd>
+		<dt><label for="workEmail">Work Email</label></dt><dd><input type="text"  id="workEmail" value="<%=workEmail%>" required maxlength="32"/></dd>
+		<dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" value="<%=skype%>" maxlength="32"/></dd>
+		<dt><label for="phone">Work Phone</label></dt><dd><input type="text" name="phone" id="phone" value="<%=workPhones.phone%>" required maxlength="32"/></dd>
 
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="mobile">Work Mobile</label></dt><dd><input type="text" name="mobile" id="mobile" value="<%=workPhones.mobile%>" required maxlength="64"/></dd>
-		<dt><label for="officeLocation">Office Location</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" value="<%=officeLocation%>" required maxlength="64"/></dd>
+		<dt><label for="mobile">Work Mobile</label></dt><dd><input type="text" name="mobile" id="mobile" value="<%=workPhones.mobile%>" required maxlength="32"/></dd>
+		<dt><label for="officeLocation">Office Location</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" value="<%=officeLocation%>" required maxlength="32"/></dd>
 		<dt><label for="relatedUsersDd">Related User</label></dt><dd>         
           <select id="relatedUsersDd">
 
@@ -88,8 +88,8 @@
             <option selected="selected" value="0">Select...</option>
           </select>
 		</dd>
-		<dt><label for="identNo">Identification No</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=identNo%>" required maxlength="64"/></dd>
-		<dt><label for="passportNo">Passport No</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=passportNo%>" required maxlength="64"/></dd>
+		<dt><label for="identNo">Identification No</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=identNo%>" required maxlength="32"/></dd>
+		<dt><label for="passportNo">Passport No</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=passportNo%>" required maxlength="32"/></dd>
 		<dt><label for="bankAccountNo">Bank Account No</label></dt>
 		<dd>
 		  <select id="bankAccountNo">
@@ -97,7 +97,7 @@
           </select>
 
 		</dd>
-		<dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=otherId%>" required maxlength="64"/></dd>
+		<dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=otherId%>" required maxlength="32"/></dd>
 	  </dl>
 	</div>
     <div class="half-block left withPaddingLeft">
@@ -108,10 +108,10 @@
 	  
 	  <dl class="person-info">
 		<dt>Home Address</dt><dd>&nbsp;</dd>
-		<dt><label>Street</label></dt><dd><input type="text" class="homeAddress" name="street" value="<%=homeAddress.street%>" maxlength="64"/></dd>
-		<dt><label>State</label></dt><dd><input type="text" class="homeAddress" name="state" value="<%=homeAddress.state%>" maxlength="64"/></dd>
-		<dt><label>Zip</label></dt><dd><input type="text" class="homeAddress" name="zip" value="<%=homeAddress.zip%>" maxlength="64"/></dd>
-		<dt><label>Country</label></dt><dd><input type="text" class="homeAddress" name="country" value="<%=homeAddress.country%>" maxlength="64"/></dd>
+		<dt><label>Street</label></dt><dd><input type="text" class="homeAddress" name="street" value="<%=homeAddress.street%>" maxlength="32"/></dd>
+		<dt><label>State</label></dt><dd><input type="text" class="homeAddress" name="state" value="<%=homeAddress.state%>" maxlength="32"/></dd>
+		<dt><label>Zip</label></dt><dd><input type="text" class="homeAddress" name="zip" value="<%=homeAddress.zip%>" maxlength="32"/></dd>
+		<dt><label>Country</label></dt><dd><input type="text" class="homeAddress" name="country" value="<%=homeAddress.country%>" maxlength="32"/></dd>
 	  </dl>
 	</div>
     <div class="clearfix">
@@ -144,7 +144,7 @@
 	  </div>
 	  
 	  <dl class="person-info">
-		<dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=dateBirth%>" required maxlength="64"/></dd>
+		<dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=dateBirth%>" required maxlength="32"/></dd>
 	  </dl>
 	</div>	
     <div class="clearfix">
