@@ -181,7 +181,7 @@
                 var options = [];
                 if (model && model.profile) {
                     options = $.map(response.data, function(item) {
-                        return (model.profile.profile._id == item._id) ?
+                        return (model.profile._id == item._id) ?
                             $('<option/>').val(item._id).text(item.profileName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.profileName);
                     });

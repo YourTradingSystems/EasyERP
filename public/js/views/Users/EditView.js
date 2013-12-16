@@ -71,6 +71,7 @@
                         }
                     }
                 });
+				var p=this.currentModel.toJSON()
                 common.populateProfilesDd(App.ID.profilesDd, "/Profiles", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
