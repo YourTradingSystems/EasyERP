@@ -2,7 +2,7 @@
 <tr data-id="<%=person._id%>">
     <td><input type="checkbox" value="<%=person._id%>" class="checkbox" /></td>
     <td><%=index+1%></td>
-    <td><%=person.name.first%></td>
+    <td><%=person.name.first.substr(0,15)%></td>
     <td><%=person.name.last%></td>
     <td><%=person.email%></td>
     <td><%=person.phones.phone%></td>

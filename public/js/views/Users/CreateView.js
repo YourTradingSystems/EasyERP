@@ -41,22 +41,12 @@ define([
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-
                 this.model.save({
                     imageSrc: this.imageSrc,
                     email: $('#email').val(),
                     login: $('#login').val(),
                     pass: $('#password').val(),
-                    profile: {
-                        company: {
-                            id: $('#companiesDd option:selected').val(),
-                            name: $('#companiesDd option:selected').text()
-                        },
-                        profile: {
-                            id: $('#profilesDd option:selected').val(),
-                            name: $('#profilesDd option:selected').text()
-                        }
-                    }
+                    profile: $('#profilesDd option:selected').val()
                 },
                 {
                     headers: {
@@ -96,7 +86,6 @@ define([
                         }
                     }
                 });
-                common.populateCompanies(App.ID.companiesDd, "/Companies");
                 common.populateProfilesDd(App.ID.profilesDd, "/Profiles");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;

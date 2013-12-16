@@ -57,22 +57,7 @@ var Users = function (logWriter, mongoose, findCompany) {
                         _user.isUser = data.isUser;
                     }
                     if (data.profile) {
-                        if (data.profile.company) {
-                            if (data.profile.company._id) {
-                                _user.profile.company.id = data.profile.company._id;
-                            }
-                            if (data.profile.company.name) {
-                                _user.profile.company.name = data.profile.company.name;
-                            }
-                        }
-                        if (data.profile.profile) {
-                            if (data.profile.profile._id) {
-                                _user.profile.profile.id = data.profile.profile._id;
-                            }
-                            if (data.profile.profile.name) {
-                                _user.profile.profile.name = data.profile.profile.name;
-                            }
-                        }
+                        _user.profile = data.profile;
                     }
                     if (data.login) {
                         _user.login = data.login;
@@ -181,6 +166,7 @@ var Users = function (logWriter, mongoose, findCompany) {
     function getUserById(id, response) {
         console.log(id);
         var query = User.findById(id);
+        query.populate('profile');
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -196,7 +182,7 @@ var Users = function (logWriter, mongoose, findCompany) {
         var res = {};
         res['data'] = [];
         var query = User.find({}, { __v: 0, upass: 0 });
-
+        query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
             if (err) {
