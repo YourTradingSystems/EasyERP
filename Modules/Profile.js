@@ -69,7 +69,7 @@ var Profile = function (app, logWriter, mongoose) {
                 res.send(400, { error: 'Profile.create Incorrect Incoming Data' });
                 return;
             } else {
-                console.log(data);
+//                console.log(data);
                 profile.find({ profileName: data.profileName }, function (error, doc) {
                     try {
                         if (error) {
@@ -92,7 +92,7 @@ var Profile = function (app, logWriter, mongoose) {
             }
             function saveProfileToDb(data) {
                 try {
-                    _profile = new profile();
+					_profile = new profile({ _id: Date.parse(new Date()) });
                     if (data.profileName) {
                         _profile.profileName = data.profileName;
                     }
@@ -100,8 +100,13 @@ var Profile = function (app, logWriter, mongoose) {
                         _profile.profileDescription = data.profileDescription;
                     }
                     if (data.profileAccess) {
-                        _profile.profileAccess = data.profileAccess;
+                        _profile.profileAccess = data.profileAccess.map(function(item){
+							item.module=item.module._id;
+							console.log(item);
+							return item;
+						});
                     }
+					console.log(_profile);
                     _profile.save(function (err, result) {
                         try {
                             if (err) {
@@ -122,7 +127,7 @@ var Profile = function (app, logWriter, mongoose) {
                     });
                 }
                 catch (error) {
-                    console.log(error);
+					console.log(error);
                     logWriter.log("Profile.js saveProfileToDb " + error);
                     res.send(500, { error: 'Profile.create find error' });
                 }

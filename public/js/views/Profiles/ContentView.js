@@ -27,7 +27,6 @@ define([
                 $('#top-bar-saveBtn').show();
                 $("#modulesAccessTable").hide();
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
-
                 this.profile = this.profilesCollection.get(selectedProfileId);
                 $("#modulesAccessTable").find("tbody").empty();
                 var pr = this.profile.toJSON().profileAccess;
@@ -35,9 +34,9 @@ define([
                     var c1 = "";
                     var c2 = "";
                     var c3 = "";
-                    if (pr[i].access[0]){c1='checked="checked"'}
-                    if (pr[i].access[1]){c2='checked="checked"'}
-                    if (pr[i].access[2]){c3='checked="checked"'}
+                    if (pr[i].access.read){c1='checked="checked"'}
+                    if (pr[i].access.editWrite){c2='checked="checked"'}
+                    if (pr[i].access.del){c3='checked="checked"'}
                     $("#modulesAccessTable").find("tbody").append('<tr><td class="mname">'+pr[i].module.mname+'</td><td><input type="checkbox" class="read" '+c1+'/></td><td><input type="checkbox" class="write" '+c2+'/></td><td><input type="checkbox" class="delete" '+c3+'/></td></tr>')
                 }
                 $("#modulesAccessTable").show();
@@ -83,6 +82,55 @@ define([
             },
 
             saveProfile: function(){
+				var self = this;
+                var selectedProfileId = $('#profilesList > li.active > a').data('id');
+                var profile = this.profilesCollection.get(selectedProfileId);
+                var jsonProfile = profile.toJSON();
+                var tableContent = $('#modulesAccessTable tbody');
+                var readAccess = tableContent.find('input.read:checkbox').map(function(){
+                    return this.checked;
+                }).get();
+                var writeAccess = tableContent.find('input.write:checkbox').map(function(){
+                    return this.checked;
+                }).get();
+                var deleteAccess = tableContent.find('input.delete:checkbox').map(function(){
+                    return this.checked;
+                }).get();
+                for(var i= 0, len = readAccess.length; i < len; i++){
+                    jsonProfile.profileAccess[i].access.read = readAccess[i];
+                    jsonProfile.profileAccess[i].access.editWrite = writeAccess[i];
+                    jsonProfile.profileAccess[i].access.del = deleteAccess[i];
+                }
+
+                profile.save(jsonProfile,
+                    {
+                        headers: {
+                            mid: 39
+                        },
+                        wait: true,
+                        success: function () {
+                            $('#top-bar-saveBtn').hide();
+                            var tableRows = $('#modulesAccessTable tbody tr');
+                            for (var i= 0, len = tableRows.length; i<len; i++){
+                                $(tableRows[i]).find('.read').prop('disabled', true);
+                                $(tableRows[i]).find('.write').prop('disabled', true);
+                                $(tableRows[i]).find('.delete').prop('disabled', true);
+                            }
+                            $("#modulesAccessTable").show();
+							
+                        },
+                        error: function (model, xhr, options) {
+                            if (xhr && xhr.status === 401) {
+                                Backbone.history.navigate("login", { trigger: true });
+                            } else {
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        }
+                    });
+            },
+
+/*            saveProfile: function(){
+
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
                 var profile = this.profilesCollection.get(selectedProfileId);
                 var jsonProfile = profile.toJSON();
@@ -128,54 +176,7 @@ define([
                         }
                     });
             },
-
-            saveProfile: function(){
-                var selectedProfileId = $('#profilesList > li.active > a').data('id');
-                var profile = this.profilesCollection.get(selectedProfileId);
-                var jsonProfile = profile.toJSON();
-                var tableContent = $('#modulesAccessTable tbody');
-                var readAccess = tableContent.find('input.read:checkbox').map(function(){
-                    return this.checked;
-                }).get();
-                var writeAccess = tableContent.find('input.write:checkbox').map(function(){
-                    return this.checked;
-                }).get();
-                var deleteAccess = tableContent.find('input.delete:checkbox').map(function(){
-                    return this.checked;
-                }).get();
-                for(var i= 0, len = readAccess.length; i < len; i++){
-                    jsonProfile.profileAccess[i].access[0] = readAccess[i];
-                    jsonProfile.profileAccess[i].access[1] = writeAccess[i];
-                    jsonProfile.profileAccess[i].access[2] = deleteAccess[i];
-                }
-
-                profile.save(jsonProfile,
-                    {
-                        headers: {
-                            mid: 39
-                        },
-                        wait: true,
-                        success: function () {
-                            $('#top-bar-saveBtn').hide();
-                            var tableRows = $('#modulesAccessTable tbody tr');
-                            for (var i= 0, len = tableRows.length; i<len; i++){
-                                $(tableRows[i]).find('.read').prop('disabled', true);
-                                $(tableRows[i]).find('.write').prop('disabled', true);
-                                $(tableRows[i]).find('.delete').prop('disabled', true);
-
-                            }
-                            $("#modulesAccessTable").show();
-                        },
-                        error: function (model, xhr, options) {
-                            if (xhr && xhr.status === 401) {
-                                Backbone.history.navigate("login", { trigger: true });
-                            } else {
-                                Backbone.history.navigate("home", { trigger: true });
-                            }
-                        }
-                    });
-            },
-
+*/
             deleteItems: function () {
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
                 if(!selectedProfileId){
