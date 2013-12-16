@@ -1322,6 +1322,10 @@ h3 {
                 // white-space: pre-line;
                 line-height: 18px;
                 font-size: 11px;
+                text-align: center;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
 
                 &:nth-child(2) {
                     text-align: right;
@@ -1395,6 +1399,9 @@ h3 {
             p {
                 line-height: 20px !important;
                 min-height: 20px !important;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }
@@ -1421,11 +1428,32 @@ h3 {
             white-space: nowrap;
             text-overflow: ellipsis;
             padding: 4px;
+
+            span {
+                width: inherit;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
         }
+    }
     }
 
     h3 {
         margin-bottom: 10px;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        span {
+            padding:0;
+            width: 50%;
+            display: block;
+            float: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+    }
     }
 
     .mainInfo {
@@ -2118,9 +2146,11 @@ button {
     .ui-dialog-titlebar {
         display: none;
     }
+
 	.ui-dialog-content {
-		overflow:visible !important;
+        overflow: visible !important;
 	}
+
 	.ui-widget-content a {
 		color: #36A9E1;
 	}
@@ -2293,6 +2323,9 @@ button {
     dl {
         dt, dd {
             line-height: 0px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 			a{
 				line-height:0px;
 			}
@@ -2351,7 +2384,7 @@ button {
 #createProfileForm{
 	input[type='text'] {
         width: 100%;
-	}
+}
 	select{
         width: 100%;
 	}
@@ -3245,7 +3278,7 @@ button {
             padding-left: 3px;
             padding-right: 0;
             .border-radius(0);
-            max-width:555px;
+            max-width: 555px;
 
             &:focus {
                 .box-shadow(0,0,5px,rgba(82,168,236,0.5));
@@ -3317,6 +3350,7 @@ button {
                 line-height: 17px;
                 font-weight: bold;
             }
+
             .noteText {
 				word-break: break-word;
             }
@@ -3603,7 +3637,7 @@ table#workflows {
     input {
         position: absolute;
         top: 0;
-        left:-200px;
+        left: -200px;
         opacity: 0;
         font-size: 20px;
         cursor: pointer;
@@ -3612,68 +3646,77 @@ table#workflows {
         border: none;
     }
 }
-.calendarList{
-	width:200px;
-	float:left;
-	border:1px solid silver;
-	margin-left:10px;
-	li{
-		position:relative;
-		cursor:pointer;
-		width:174px;
-		padding-left:26px;
-		line-height:24px;
-		.option{
-			display:none;
+
+.calendarList {
+    width: 200px;
+    float: left;
+    border: 1px solid silver;
+    margin-left: 10px;
+
+    li {
+        position: relative;
+        cursor: pointer;
+        width: 174px;
+        padding-left: 26px;
+        line-height: 24px;
+
+        .option {
+            display: none;
 		    background-image: url("@{imagesfolder}/check.png");	
-			background-position:50% 50%;
-			background-repeat:no-repeat;
-			width:12px;
-			height:12px;
-			position:absolute;
-			right:5px;
-			top:5px;
-			background-color:white;
-			border:1px solid black;
-			&:hover{
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: white;
+            border: 1px solid black;
+
+            &:hover {
 				background-color: #EEE;
 			}
 		}
-		.optionsDialog{
-			display:none;
-			position:absolute;
-			z-index:100;
-			border:1px solid black;
-			width:185px;
-			background-color:white;
-			padding-left:5px;
-		}
-		.check{	
-			position:absolute;
-			left:5px;
-			top:5px;
-			background-color:white;
-			border:1px solid black;			
-			width:12px;
-			height:12px;
 
+        .optionsDialog {
+            display: none;
+            position: absolute;
+            z-index: 100;
+            border: 1px solid black;
+            width: 185px;
+            background-color: white;
+            padding-left: 5px;
+        }
 
+        .check {
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            background-color: white;
+            border: 1px solid black;
+            width: 12px;
+            height: 12px;
 		}
-		&:hover{
+
+        &:hover {
 			background-color: #EEE;
-			.option{
-				display:block;
+
+            .option {
+                display: block;
 			}
 		}
-		&.checked{
-			.check{	
-				background-color:black;
+
+        &.checked {
+            .check {
+                background-color: black;
 			}
 		}
-		&.showDialog{
+
+        &.showDialog {
 			background-color: #EEE;
-			.optionsDialog, .option{
-				display:block;
+
+            .optionsDialog, .option {
+                display: block;
 			}
 		}
 
