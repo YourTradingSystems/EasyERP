@@ -66,7 +66,7 @@ define([
                 var choice = $('input[name=group]:checked').val();
                 switch(choice){
                     case "new":
-                        this.selectedProfile = this.profilesCollection.get('2');
+                        this.selectedProfile = this.profilesCollection.get('1387181747000');
                         break;
                     case "base":
                         var profileId = $('#profilesDd option:selected').val();
@@ -85,13 +85,17 @@ define([
 						mid:39
 					},
 					wait:true,
-					success:function(){
+					success:function(models, response, options){
 						self.hideDialog();
 						Backbone.history.navigate("easyErp/Profiles", { trigger: true });
 						self.profilesCollection.set(self.model,{reset:true});
 					},
-					error: function(){
-						Backbone.history.navigate("easyErp", { trigger: true });
+					error: function (model, xhr, options) {
+					    if (xhr && xhr.status === 401) {
+					        Backbone.history.navigate("login", { trigger: true });
+					    } else {
+					        Backbone.history.navigate("home", { trigger: true });
+					    }
 					}
 				});
 

@@ -11,16 +11,7 @@ var Users = function (app, logWriter, mongoose, findCompany) {
             refresh_token: { type: String, default: '' },
             access_token: { type: String, default: '' }
         },
-        profile: {
-            company: {
-                id: { type: String, default: '' },
-                name: { type: String, default: '' }
-            },
-            profile: {
-                id: { type: String, default: '' },
-                name: { type: String, default: '' }
-            }
-        }
+        profile: { type: Number, ref: "Profile" }
     }, { collection: 'Users' });
 
     var User = mongoose.model('Users', userSchema);
@@ -262,6 +253,7 @@ var Users = function (app, logWriter, mongoose, findCompany) {
         var res = {};
         res['data'] = [];
         var query = User.find({}, { __v: 0, upass: 0 });
+        query.populate('profile');
         query.sort({ login: 1 });
         query.exec(function (err, result) {
             if (err) {
