@@ -90,7 +90,14 @@ var requestHandler = function (fs, mongoose) {
     //---------------------Profile--------------------------------
     function createProfile(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            profile.createProfile(data.profile, res);
+            access.getEditWritAccess(req.session.uId, 51, function(access) {
+				if (access){
+					profile.createProfile(data.profile, res);
+				}else{
+				    res.send(403);
+				}
+			})
+
         } else {
             res.send(401);
         }
@@ -100,7 +107,7 @@ var requestHandler = function (fs, mongoose) {
         try {
             console.log("Requst getProfile is success");
             if (req.session && req.session.loggedIn) {
-                access.getReadAccess(req.session.uId, 39, function(access) {
+                access.getReadAccess(req.session.uId, 51, function(access) {
                     console.log(access);
                     if (access) {
                         profile.getProfile(res);
@@ -121,7 +128,13 @@ var requestHandler = function (fs, mongoose) {
     function updateProfile(req, res, id, data) {
         console.log("Requst updateProfile is success");
         if (req.session && req.session.loggedIn) {
-            profile.updateProfile(id, data.profile, res);
+            access.getEditWritAccess(req.session.uId, 51, function(access) {
+				if (access){
+					profile.updateProfile(id, data.profile, res);
+				}else{
+				    res.send(403);
+				}
+			})
         } else {
             res.send(401);
         }
@@ -130,7 +143,14 @@ var requestHandler = function (fs, mongoose) {
     function removeProfile(req, res, id) {
         console.log("Requst removePerson is success");
         if (req.session && req.session.loggedIn) {
-            profile.removeProfile(id, res);
+            access.getDeleteAccess(req.session.uId, 51, function(access) {
+				if (access){
+					profile.removeProfile(id, res);
+				}else{
+				    res.send(403);
+				}
+			});
+
         } else {
             res.send(401);
         }
