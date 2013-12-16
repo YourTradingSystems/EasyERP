@@ -114,7 +114,7 @@ var requestHandler = function (fs, mongoose) {
             }
         }
         catch (Exception) {
-            errorLog("requestHandler.js  " + Exception);
+            console.log("requestHandler.js  " + Exception);
         }
     };
 
