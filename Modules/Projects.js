@@ -1,5 +1,6 @@
 var Project = function (logWriter, mongoose) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var newObjectId = mongoose.Types.ObjectId;
     var ProjectSchema = mongoose.Schema({
         projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
@@ -815,16 +816,22 @@ var Project = function (logWriter, mongoose) {
     function getTasksByProjectId(data, response) {
         var res = {};
         res['data'] = [];
-        var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : tasks.find({});
+        res['showMore'] = [];
+        res['taskCount'] = [];
+        var taskCount = [];
+        var showMore = false;
+        var remaining;
+        /*   var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : tasks.find({});
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')
             .populate('extrainfo.customer createdBy.user editedBy.user')
-            .populate('workflow').
-            populate('createdBy.user').
-            populate('editedBy.user');
+            .populate('workflow')
+            .populate('createdBy.user')
+            .populate('editedBy.user');
 
-        query.skip((data.page - 1) * data.count).limit(data.count);
-        query.sort({ summary: 1 });
+
+      //  query.skip((data.page - 1) * data.count+1).limit(data.count);
+       // query.sort({ summary: 1 });
         query.exec(function (err, _tasks) {
             if (err) {
                 console.log(err);
@@ -832,14 +839,70 @@ var Project = function (logWriter, mongoose) {
                 response.send(500, { error: "Can't find Tasks" });
             } else {
                 //res['data'] = taskFormatDate(_tasks, 0);
-                res['data'] = _tasks;
+                console.log('______________________populate ok_____________________');
+                console.log(_tasks);
+               // res['data'] = _tasks;
                 console.log(res['data']);
-                console.log(data.page);
-                console.log(data.count);
-                console.log(data.parrentContentId);
+               // console.log(data.page);
+                //console.log(data.count);
+               // console.log(data.parrentContentId);
                 response.send(res);
             }
         });
+         */
+        var queryAggregate = (data.parrentContentId) ?
+            tasks.aggregate({ $match: { project : newObjectId(data.parrentContentId) } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"}}}) :
+            tasks.aggregate({ $group: {_id: "$workflow",taskId:{$push:"$_id"}}});
+        queryAggregate.exec(
+          //  { $group:{_id:"$workflow",taskId:{$push:"$_id"}}},
+            function (err,responseT) {
+                if (!err) {
+
+                    var responseTasks =[];
+                    var columnValue = data.count;
+                    var page = data.page;
+
+                    responseT.forEach(function(value){
+                        value.taskId.forEach(function(idTask,taskIndex){
+                            if (((page-1)*columnValue <= taskIndex) && (taskIndex < (page-1)*columnValue + columnValue )) {
+                                responseTasks.push(idTask);
+                            }
+                        });
+                        var myObj = {
+                            id: value._id,
+                            namberOfTasks: value.taskId.length
+                        };
+                        taskCount.push(myObj);
+                        if (value.taskId.length > ((page-1)*columnValue + columnValue)) {
+                            showMore = true;
+                        }
+                    });
+                    tasks.find()
+                    .where('_id').in(responseTasks)
+                    .populate('project', '_id projectShortDesc projectName')
+                    .populate('assignedTo', '_id name imageSrc')
+                    .populate('extrainfo.customer createdBy.user editedBy.user')
+                    .populate('workflow')
+                    .populate('createdBy.user')
+                    .populate('editedBy.user')
+                    .exec(function (err, resalt) {
+                        if (!err) {
+
+                            res['showMore'] = showMore;
+                            res['taskCount'] = taskCount;
+                            res['data'] = resalt;
+                            response.send(res);
+                        } else {
+                            logWriter.log("Project.js getTasksByProjectId task.find " + err);
+                            response.send(500, { error: "Can't find Tasks" });
+                        }
+                    })
+                } else {
+                    logWriter.log("Project.js getTasksByProjectId task.find " + err);
+                    response.send(500, { error: "Can't group Tasks" });
+                }
+            });
+
     };
 
     function getTaskById(data, response) {

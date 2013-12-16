@@ -157,7 +157,7 @@ define([
             self = this;
             Custom.setCurrentVT('kanban');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var  collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
+                var  collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 5, parrentContentId: parrentContentId });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
