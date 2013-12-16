@@ -10,7 +10,7 @@ define([
             
             events: {
                 'click #loginPanel': 'showSelect',
-                'click #logout': 'logout'
+                'click': 'hideProp',
             },
             
             initialize: function() {
@@ -18,7 +18,13 @@ define([
                 this.collection = new MenuItemsCollection();
                 this.collection.bind('reset', this.createMenuViews, this);
             },
-
+			hideProp:function(e){
+				if ($(e.target).closest("#loginPanel").length==0){
+					var select = this.$el.find('#loginSelect');
+					select.hide();
+					select.prop('hidden', true);
+				}
+			},
             createMenuViews: function() {
                 this.leftMenu = new LeftMenuView({ collection: this.collection });
                 this.topMenu = new TopMenuView({ collection: this.collection.getRootElements(), leftMenu: this.leftMenu });
@@ -26,7 +32,6 @@ define([
                 this.topMenu.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
             },
             showSelect: function(e) {
-                e.preventDefault();
                 var select = this.$el.find('#loginSelect');
                 if (select.prop('hidden')) {
                     select.show();
@@ -35,14 +40,6 @@ define([
                     select.hide();
                     select.prop('hidden', true);
                 }
-                
-            },
-            logout: function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '/logout',
-                    method:'GET'
-                });
             },
             render: function() {
                 console.log('Render Main View');

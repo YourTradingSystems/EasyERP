@@ -50,8 +50,8 @@ define([
                 var department = $("#departmentDd option:selected").val();
                 var data = {
                     name: {
-                        first: $('#firstName').val(),
-                        last: $('#lastName').val()
+                        first: this.$el.find('#firstName').val(),
+                        last: this.$el.find('#lastName').val()
                     },
                     imageSrc: this.imageSrc,
                     dateBirth: dateBirth,
