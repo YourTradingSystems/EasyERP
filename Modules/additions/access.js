@@ -2,7 +2,7 @@
     var getReadAccess = function (uId, mid, callback) {
         users.findById(uId, function(err, user) {
             if (user) {
-                profile.profile.aggregate(
+                profile.aggregate(
                 {
                     $project: {
                         profileAccess: 1
@@ -28,6 +28,7 @@
                         console.log(err);
                     } else {
                         console.log(result);
+                        callback(result[0].profileAccess.access.read);
                     }
                 }
             );

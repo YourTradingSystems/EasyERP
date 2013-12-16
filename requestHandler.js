@@ -1,4 +1,4 @@
-var requestHandler = function (fs, mongoose, app) {
+var requestHandler = function (fs, mongoose) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         users = require("./Modules/Users.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
@@ -9,7 +9,7 @@ var requestHandler = function (fs, mongoose, app) {
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
-        jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose),
+        jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
         department = require("./Modules/Department.js")(logWriter, mongoose, employee.employee),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
@@ -100,6 +100,9 @@ var requestHandler = function (fs, mongoose, app) {
         try {
             console.log("Requst getProfile is success");
             if (req.session && req.session.loggedIn) {
+                access.getReadAccess(req.session.uId, 39, function(access) {
+                    console.log(access);
+                });
                 profile.getProfile(res);
             } else {
                 res.send(401);
