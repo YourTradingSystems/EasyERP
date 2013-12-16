@@ -20,17 +20,21 @@
                 this.fetch({
                     data: filterObject,
                     reset: true,
-                    success: function() {
+                    success: function () {
                         console.log("Users fetchSuccess");
                         that.page += 1;
                     },
-                    error: this.fetchError
+                    error: function (models, xhr, optiond) {
+                        if ((xhr.status === 401) || (xhr.status === 403)) {
+                            window.location = 'logout';
+                        }
+                    }
                 });
             },
 
             showMore: function (options) {
                 var that = this;
-                
+
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -46,7 +50,7 @@
                         that.page += 1;
                         that.trigger('showmore', models);
                     },
-                    error: function() {
+                    error: function () {
                         alert('Some Error');
                     }
                 });
@@ -57,7 +61,7 @@
                 return response.data;
             }
 
-            
+
         });
 
         return UsersCollection;

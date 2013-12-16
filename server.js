@@ -189,7 +189,7 @@ app.get('/Users', function (req, res) {
 });
 
 app.get('/Users/:viewType', function (req, res) {
-    console.log('---------------------getUsers-------------');
+    console.log('-----------Filter-----getUsers-------------');
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -198,7 +198,7 @@ app.get('/Users/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getUserById(req, res, data);
             break;
-        default: requestHandler.getUsers(req, res, data);
+        default: requestHandler.getFilterUsers(req, res, data);
             break;
     }
 });

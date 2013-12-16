@@ -31,7 +31,7 @@ var requestHandler = function (fs, mongoose) {
     function createUser(req, res, data) {
         console.log("Requst createUser is success");
         if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 51, function(access) {
+            access.getEditWritAccess(req.session.uId, 7, function(access) {
                 if (access) {
                     users.createUser(data.user, res);
                 } else {
@@ -55,7 +55,7 @@ var requestHandler = function (fs, mongoose) {
     function getFilterUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 51, function(access) {
+            access.getReadAccess(req.session.uId, 3, function(access) {
                 console.log(access);
                 if (access) {
                     users.getFilterUsers(data, res);
@@ -71,7 +71,7 @@ var requestHandler = function (fs, mongoose) {
     function getUserById(req, res, data) {
         console.log("Request getUser is success");
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 51, function (access) {
+            access.getReadAccess(req.session.uId, 7, function (access) {
                 console.log(access);
                 if (access) {
                     users.getUserById(data.id, res);
@@ -88,7 +88,7 @@ var requestHandler = function (fs, mongoose) {
     function updateUser(req, res, id, data) {
         console.log("Requst createUser is success");
         if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 51, function (access) {
+            access.getEditWritAccess(req.session.uId, 7, function (access) {
                 if (access) {
                     users.updateUser(id, data.user, res);
                 } else {
@@ -103,7 +103,7 @@ var requestHandler = function (fs, mongoose) {
     function removeUser(req, res, id) {
         console.log("Requst removeUser is success");
         if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 51, function (access) {
+            access.getDeleteAccess(req.session.uId, 7, function (access) {
                 if (access) {
                     users.removeUser(id, res);
                 } else {
