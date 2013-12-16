@@ -13,11 +13,12 @@ define([
             },
 
             events: {
-                "click": "gotoForm",
+                "click .gotoForm": "gotoForm",
                 "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
-                "click #edit": "gotoEditForm"
+                "click #edit": "gotoEditForm",
+                "click .company": "gotoCompanyForm"
             },
 
             gotoEditForm: function (e) {
@@ -56,11 +57,17 @@ define([
             },
 
             gotoForm: function (e) {
+            	 e.preventDefault();
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
                     var id = this.$el.attr("id");
                     window.location.hash = "#easyErp/Persons/form/" + id;
                 }
+            },
+            gotoCompanyForm: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest("a").attr("data-id");
+                window.location.hash = "#easyErp/Companies/form/" + id;
             },
 
             template: _.template(ThumbnailsItemTemplate),
