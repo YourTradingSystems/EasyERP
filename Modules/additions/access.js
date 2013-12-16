@@ -40,8 +40,8 @@
     
     return {
         getReadAccess: getReadAccess,
-        getEditWritAccess: getEditWritAccess,
-        getDeleteAccess: getDeleteAccess
+        //getEditWritAccess: getEditWritAccess,
+        //getDeleteAccess: getDeleteAccess
     }
 };
 module.exports = access;

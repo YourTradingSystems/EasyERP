@@ -1,5 +1,5 @@
-var Profile = function (app, logWriter, mongoose) {
-
+var Profile = function (logWriter, mongoose) {
+    
     var ProfileSchema = mongoose.Schema({
         _id: Number,
         profileName: { type: String, default: 'emptyProfile' },
@@ -16,50 +16,6 @@ var Profile = function (app, logWriter, mongoose) {
     }, { collection: 'Profile' });
 
     var profile = mongoose.model('Profile', ProfileSchema);
-
-    app.post('/Profiles', function (req, res) {
-        var data = {};
-        data.mid = req.headers.mid;
-        if (req.session && req.session.loggedIn) {
-            createProfile(req.body, res);
-        } else {
-            res.send(401);
-        }
-    });
-
-    app.get('/Profiles', function (req, res) {
-        console.log('---------SERVER----getProfiles-------------------------------');
-        data = {};
-        data.mid = req.param('mid');
-        if (req.session && req.session.loggedIn) {
-            getProfile(res);
-        } else {
-            res.send(401);
-        }
-    });
-
-    app.put('/Profiles/:_id', function (req, res) {
-        console.log(req.body);
-        data = {};
-        var id = req.param('_id');
-        data.mid = req.headers.mid;
-        if (req.session && req.session.loggedIn) {
-            updateProfile(id, req.body, res);
-        } else {
-            res.send(401);
-        }
-    });
-
-    app.delete('/Profiles/:_id', function (req, res) {
-        data = {};
-        var id = req.param('_id');
-        data.mid = req.headers.mid;
-        if (req.session && req.session.loggedIn) {
-            removeProfile(id, res);
-        } else {
-            res.send(401);
-        }
-    });
 
     function createProfile(data, res) {
         try {

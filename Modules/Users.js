@@ -1,5 +1,5 @@
 // JavaScript source code
-var Users = function (app, logWriter, mongoose, findCompany) {
+var Users = function (logWriter, mongoose, findCompany) {
     var crypto = require('crypto');
 
     var userSchema = mongoose.Schema({
@@ -15,95 +15,6 @@ var Users = function (app, logWriter, mongoose, findCompany) {
     }, { collection: 'Users' });
 
     var User = mongoose.model('Users', userSchema);
-    
-    //------------------Route for Server----------------------------------------------//
-    app.post('/login', function (req, res, next) {
-        console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
-        data = {};
-        data = req.body;
-        console.log(data);
-        login(req, data, res);
-    });
-
-    app.post('/Users', function (req, res) {
-        console.log(req.body);
-        data = {};
-        data.mid = req.headers.mid;
-        var user = req.body;
-        if (req.session && req.session.loggedIn) {
-            createUser(user, res);
-        } else {
-            res.send(401);
-        }
-    });
-
-    app.get('/Users', function (req, res) {
-        console.log('---------------------getUsers-------------');
-        data = {};
-        data.mid = req.param('mid');
-        if (req.session && req.session.loggedIn) {
-            getUsers(res);
-        } else {
-            res.send(401);
-        }
-    });
-
-    app.get('/Users/:viewType', function (req, res) {
-        console.log('---------------------getUsers-------------');
-        var data = {};
-        for (var i in req.query) {
-            data[i] = req.query[i];
-        }
-        var viewType = req.params.viewType;
-        if (req.session && req.session.loggedIn) {
-            switch (viewType) {
-                case "form": getUserById(data.id, res);
-                    break;
-                default: getFilterUsers(data, res);
-                    break;
-            }
-        } else {
-            res.send(401);
-        }
-        
-    });
-
-    app.put('/Users/:viewType/:_id', function (req, res) {
-        console.log(req.body);
-        var data = {};
-        var id = req.param('_id');
-        //data._id = req.params('_id');
-        data.mid = req.headers.mid;
-        var user = req.body;
-        if (req.session && req.session.loggedIn) {
-            updateUser(id, user, res);
-        } else {
-            res.send(401);
-        }
-    });
-
-    app.delete('/Users/:_id', function (req, res) {
-        data = {};
-        var id = req.param('_id');
-        data.mid = req.headers.mid;
-        if (req.session && req.session.loggedIn) {
-            removeUser(id, res);
-        } else {
-            res.send(401);
-        }
-    });
-    
-    app.delete('/Users/:viewType/:_id', function (req, res) {
-        data = {};
-        var id = req.param('_id');
-        data.mid = req.headers.mid;
-        if (req.session && req.session.loggedIn) {
-            removeUser(id, res);
-        } else {
-            res.send(401);
-        }
-    });
-    //------------------END Route for Server----------------------------------------------//
 
     function createUser(data, result) {
         try {
