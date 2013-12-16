@@ -20,7 +20,7 @@
             gotoPersonsForm: function (e) {
                 e.preventDefault();
                 var itemIndex = $(e.target).closest("a").attr("id");
-                window.location.hash = "#home/content-Persons/form/" + itemIndex;
+                window.location.hash = "#easyErp/Persons/form/" + itemIndex;
             },
 
             render: function () {

@@ -1092,6 +1092,11 @@ app.get('/GoogleCalendars', function (req, res) {
 app.post('/SendToGoogleCalendar', function (req, res) {
     requestHandler.sendToGoogleCalendar(req, res);
 });
+app.get('/ChangeSyncCalendar', function (req, res) {
+    var id = req.param('id');
+    var isSync = req.param('isSync');
+    requestHandler.changeSyncCalendar(id, isSync, res, req);
+});
 app.listen(8088);
 
 //console.log(app.routes);

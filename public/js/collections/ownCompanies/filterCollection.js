@@ -60,7 +60,8 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (company) {
-
+                        company.createdBy.date = common.utcDateToLocaleDateTime(company.createdBy.date);
+                        company.editedBy.date = company.editedBy.date ? common.utcDateToLocaleDateTime(company.editedBy.date) :  null;
                         return company;
                     });
                 }

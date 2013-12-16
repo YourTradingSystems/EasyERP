@@ -912,7 +912,7 @@ var requestHandler = function (fs, mongoose, app) {
     function createEvent(req, res, data) {
         console.log("Requst createEvent is success");
         if (req.session && req.session.loggedIn) {
-            events.create(data.event, res);
+            events.create(data.event, res ,req);
         } else {
             res.send(401);
         }
@@ -930,7 +930,7 @@ var requestHandler = function (fs, mongoose, app) {
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
         if (req.session && req.session.loggedIn) {            
-            events.update(id, data.event, res);
+            events.update(id, data.event, res,req);
         } else {
             res.send(401);
         }
@@ -939,7 +939,7 @@ var requestHandler = function (fs, mongoose, app) {
     function removeEvent(req, res, id, data) {
         console.log("Requst removeEvents is success");
         if (req.session && req.session.loggedIn) {
-            events.remove(id, res);
+            events.remove(id, res, req);
         } else {
             res.send(401);
         }
@@ -1007,6 +1007,10 @@ var requestHandler = function (fs, mongoose, app) {
     function sendToGoogleCalendar(req, res) {
         events.sendToGoogleCalendar(req, res);
     }
+	function changeSyncCalendar(id, isSync, res, req){
+        events.changeSyncCalendar(id, isSync, res, req);
+
+	}
 
     //---------END------Events----------------------------------
     return {
@@ -1122,7 +1126,8 @@ var requestHandler = function (fs, mongoose, app) {
         getXML: getXML,
         getToken: getToken,
         googleCalendars:googleCalendars,
-		sendToGoogleCalendar:sendToGoogleCalendar
+		sendToGoogleCalendar:sendToGoogleCalendar,
+		changeSyncCalendar:changeSyncCalendar
     }
 }
 //---------EXPORTS----------------------------------------

@@ -13,14 +13,14 @@
         </ul>
     </div>
     <div class="avatar">
-        <img src="<%=imageSrc%>" />
+        <a href="#" class="title gotoForm"><img src="<%=imageSrc%>" /></a>
     </div>
     <div class="info">
-        <h4 class="title"><%=name.first%> <%=name.last%> <% if(relatedUser) { %>
+        <a href="#" class="title gotoForm"><%=name.first%> <%=name.last%> <% if(relatedUser) { %>
             <span>(<%= relatedUser.login %>)</span>
             <% } else { %>
             <span></span>
-            <% } %></h4>
+            <% } %></a>
         <p><%=(department) ? department.departmentName : ''%> / <%=(jobPosition) ? jobPosition.name : ''%></p>
         <p><label>Age: </label><%=age%>
             <% if(dateBirth) { %>

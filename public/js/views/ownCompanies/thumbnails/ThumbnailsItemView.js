@@ -13,7 +13,7 @@ define([
             },
 
             events: {
-                "click": "gotoForm",
+                "click .gotoForm": "gotoForm",
                 "click #delete": "deleteEvent",
                 "click .dropDown > a": "openDropDown",
                 "click .colorPicker a": "pickColor",
@@ -55,6 +55,7 @@ define([
             },
 
             gotoForm: function (e) {
+            	 e.preventDefault();
                 App.ownContentType = true;
                 if ($(e.target).closest("div").attr("class") != "dropDown") {
                     var id = this.$el.attr("id");

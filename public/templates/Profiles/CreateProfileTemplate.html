@@ -1,30 +1,21 @@
-    <div class="form-holder">
-        <form method="post" action="" id="createProfileForm" class="form">
-            <fielset>
-                <div class="inner">
-                    <p>
-                        <label for="profileName">Profile Name: </label>
-                        <input type="text" id="profileName" required maxlength="64"/>
-                        <label for="profileDescription">Description: </label>
-                        <input type="text" id="profileDescription" maxlength="64"/>
-                    </p>
-                    <p>
-                        <label for="baseProfile">
-                            <input type="radio" name="group" value="base" checked id="baseProfile"/>Use base profile and edit privileges</label>
-                            <label>Base Profile:
-                                <select id="profilesDd">
-                                    <% profilesCollection.forEach(function(option){ %>
-                                        <option value="<%= option.id %>"><%= option.name %> profile</option>
-                                    <% }) %>
-                                </select>
-                            </label>     <br/><br/>
-                            <br/>
-
-
-                        <label for="newProfile">
-                            <input type="radio" name="group" value="new" id="newProfile"/>Create new profile from scratch</label>
-                    </p>
-                </div>
-            </fielset>
-        </form>
-    </div>
+<div class="form-holder">
+  <form method="post" action="" id="createProfileForm" class="form">
+    <fielset>
+		<dl class="profile-create">
+		  <dt><label for="profileName">Profile Name: </label></dt><dd><input type="text" id="profileName" required maxlength="64"/></dd>
+		  <dt><label for="profileDescription">Description: </label></dt><dd><input type="text" id="profileDescription" maxlength="64"/></dd>
+		  <dt><label for="baseProfile">Use base profile and edit privileges</label></dt><dd><input type="radio" name="group" value="base" checked id="baseProfile"/></dd>
+		  <dt><label>Base Profile:</label></dt>
+		  <dd>
+			<select id="profilesDd">
+              <% profilesCollection.forEach(function(option){ %>
+              <option value="<%= option.id %>"><%= option.name %> profile</option>
+              <% }) %>
+            </select>
+		  </dd>
+		  <dt><label for="newProfile">Create new profile from scratch</label></dt><dd><input type="radio" name="group" value="new" id="newProfile"/></dd>
+		</dl>
+        <div class="clearfix"></div>
+	</fielset>
+  </form>
+</div>

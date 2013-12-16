@@ -31,12 +31,52 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
             "click #authBtn" : "syncCalendar",
             "click #addCalendarBtn" : "showCreateCalendarDlg",
             "click #syncCalendarBtn" : "syncCalendar",
-            "change #calendarList" : "curCalendarChange",
+            "click .calendarList li" : "chooseCalendar",
+            "click .calendarList li .option" : "showCalendarOptions",
+            "click .calendarList li .optionsDialog input" : "checkboxSyncClick",
             "click #sendToGoogle" : "sendToGoogle",
-            'keydown': 'keydownHandler'
+            'keydown': 'keydownHandler',
+			"click":"hideAllDialog"
         },
+		checkboxSyncClick:function(e){
+			var isSync=true;
+			if ($(e.target).attr("checked")){
+				isSync=false;
+			}
+
+
+			$.ajax({
+				type: "GET",
+				url: "/ChangeSyncCalendar?id="+$(e.target).closest("li").attr("data-id")+"&isSync="+isSync,
+				data: null,
+				success: function(response){
+					if(response){
+					}
+				},
+				error:function(error, statusText){
+					
+				}
+			});
+		},
+		hideAllDialog:function(e){
+			if ($(e.target).parents(".optionsDialog").length==0){
+			$(".showDialog").removeClass("showDialog");}
+		},
+		showCalendarOptions:function(e){
+			$(e.target).parents("li").addClass("showDialog");
+			return false;
+		},
+		chooseCalendar:function(e){
+			if ($(e.target).parents(".optionsDialog").length==0){
+				$(e.target).closest("li").toggleClass("checked");}
+			this.curCalendarChange();
+		},
 		sendToGoogle:function(e){
-           var curCalendarsId = $('#calendarList').val();
+			var curCalendarId = [];
+			$('.calendarList').find("li.checked").each(function(){
+				curCalendarId.push($(this).attr("data-id"));
+			});
+
 			$.ajax({
 				type: "POST",
 				url: "/SendToGoogleCalendar",
@@ -95,7 +135,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 							
 							
 						},
-						error: function (error, statusText,sdfdf){
+						error: function (error, statusText){
 							
 						},
 						dataType: "json"
@@ -163,11 +203,11 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
            else{
                this.calendarsCollection.create({
                    summary: data.calName,
-                   synchronize: data.sync,
+                   isSync: data.sync,
                    description: "EasyERP calendar events",
                    events: []
                },{
-                   success:function(){
+                   success:function(err,resp){
                        self.calendarsCollection.fetch({
                            success: function(){
                                self.populateCalendarsList();
@@ -191,7 +231,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
                        text: "Create",
                        click: function(){
                            var calendarName = $('#calendarNameTxt').val();
-                           var synchronize = $('#synchronize').attr('checked');
+                           var synchronize = $('#synchronize').is(':checked');
                            var link = $('#fromPublicCalendar').val();
                            if(calendarName.length === 0&&link.length === 0){
                                alert('Calendar name or link can not be empty!');
@@ -216,14 +256,19 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         
 
        curCalendarChange: function(){
-           var curCalendarId = $('#calendarList').val();
-           if (!curCalendarId){
-               $('#calendarList option').eq(0).attr("selected","selected");
-               curCalendarId = $('#calendarList').val();
-           }
-           var currentCalendarId = curCalendarId.length > 0 ? curCalendarId[0] : $('#calendarList option:selected').val();
+           var curCalendarId = [];
+			   $('.calendarList').find("li.checked").each(function(){
+				   curCalendarId.push($(this).attr("data-id"));
+			   });
+           var currentCalendarId = curCalendarId.length > 0 ? curCalendarId[0] :$('.calendarList').find("li").eq(0).attr("data-id");
            this.setCurrentCalendarId(currentCalendarId);
-           var filtered = this.eventsCollection.filterById(curCalendarId, this.displayEventsOnCalendar);
+		   if (curCalendarId.length==0){
+			   $('.calendarList').find("li").each(function(){
+				   curCalendarId.push($(this).attr("data-id"));
+			   });
+
+		   }
+		   var filtered = this.eventsCollection.filterById(curCalendarId, this.displayEventsOnCalendar);
            //var filtered = this.eventsCollection;
            //this.displayEventsOnCalendar(filtered);
        },
@@ -233,12 +278,12 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
         populateCalendarsList: function(){
             if(this.calendarsCollection.length > 0){
-                var select = $('#calendarList');
-                var options = $.map(this.calendarsCollection.toJSON(), function(item){
-                    return item.summary === "EasyERP" ? $('<option/>').val(item._id).text(item.summary).attr('sync', false).attr('selected', 'selected') :
-                        $('<option/>').val(item._id).text(item.summary);
+                var newSelect = $('.calendarList');
+                var newOptions = $.map(this.calendarsCollection.toJSON(), function(item){
+                    return $('<li/>').attr("data-id",item._id).html('<span class="check"></span><span class="text">'+item.summary+'</span><span class="option"></span><div class="optionsDialog"><input type="checkbox" name="checkme" '+((item.isSync)?"checked='checked'":"")+'/>Is calendar sync</div>')
                 });
-                select.empty().append(options);
+                newSelect.empty().append(newOptions);
+				$('.calendarList').find("li").eq(0).addClass("checked");
                 this.curCalendarChange();
                 //var currentCalendarId = $('select#calendarList').val().length > 0 ? $('select#calendarList').val()[0] : $('#calendarList option:selected').val();
                 //this.setCurrentCalendarId(currentCalendarId);
@@ -288,7 +333,6 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 					}
 				},
 				error:function(error, statusText){
-					alert("sdfsdfsf");
 					
 				}
 			});
@@ -389,6 +433,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
         render: function () {
             console.log('Render Calendar');
+			this.$el.empty();
             this.$el.html(this.template());
 
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);
