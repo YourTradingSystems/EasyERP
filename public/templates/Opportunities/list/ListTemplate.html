@@ -12,8 +12,8 @@
             <td><%=opportunity.expectedRevenue.value%></td>
             <td><%=opportunity.expectedRevenue.progress%>%</td>
             <td><%=(opportunity.salesPerson && opportunity.salesPerson.name) ? opportunity.salesPerson.name.first + ' ' + opportunity.salesPerson.name.last : ''%></td>
-            <td><%=(opportunity.createdBy.user) ? opportunity.createdBy.date + " (" + opportunity.createdBy.user.login + ")" : ''%></td>
-            <td><%=(opportunity.editedBy.user) ? opportunity.editedBy.date + " (" + opportunity.editedBy.user.login + ")" : ''%></td>
+            <td><%=(opportunity.createdBy.user) ? opportunity.createdBy.user.login + " (" + opportunity.createdBy.date +  ")" : ''%></td>
+            <td><%=(opportunity.editedBy.user) ? opportunity.editedBy.user.login + " (" + opportunity.editedBy.date + ")" : ''%></td>
         </tr>
     <% }) %>
 
