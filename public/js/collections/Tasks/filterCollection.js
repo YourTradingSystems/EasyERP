@@ -9,52 +9,49 @@
             url: "/Tasks/",
             page: 1,
             count: 13,
-            columnLimit: 13,
 
             initialize: function (options) {
-                this.columnLimit = options.count;
+                this.count = options.count;
                 this.page = options.page;
-                this.workflowsCollection = new WorkflowsCollection({ id: 'Task' });
-                this.workflowsCollection.bind('reset', this.fetchModels, this);
 
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     delete options.viewType;
                 }
 
-                this.filterObject = {};
+                var filterObject = {};
                 for (var i in options) {
-                    this.filterObject[i] = options[i];
+                    filterObject[i] = options[i];
                 }
+
+                var that = this;
+                this.fetch({
+                    data: filterObject,
+                    reset: true,
+                    success: function(models, response) {
+                        console.log("Tasks fetchSuccess");
+                        that.page += 1;
+                        that.showMoreButton = response.showMore;
+                        that.taskCount = response.taskCount;
+                    },
+                    error: this.fetchError
+                });
+
+
+
+
             },
             filterByWorkflow: function (id) {
                 return this.filter(function (data) {
                     return data.get("workflow")._id == id;
                 });
             },
-            fetchModels: function () {
-                debugger;
-                this.count = this.workflowsCollection.length * this.columnLimit;
-                this.filterObject['count'] = this.count+1;
-                var localFilterObject = this.filterObject;
-                var that = this;
-                this.fetch({
-                    data: localFilterObject,
-                    reset: true,
-                    success: function(models) {
-                        console.log("Tasks fetchSuccess");
-                        that.page += 1;
-                    },
-                    error: this.fetchError
-                });
 
-            },
             showMore: function () {
-                debugger;
                 var that = this;
                 var filterObject = {};
                 filterObject['page'] = this.page;
-                filterObject['count'] = this.count+1;
+                filterObject['count'] = this.count;
                 var NewCollection = Backbone.Collection.extend({
                     model: TaskModel,
                     url: that.url,
@@ -63,8 +60,8 @@
                         return response.data;
                     },
                     page: that.page,
-                    filterByWorkflow: function (id) {
 
+                    filterByWorkflow: function (id) {
                         return this.filter(function (data) {
                             return data.get("workflow")._id == id;
                         });
@@ -76,6 +73,8 @@
                     data: filterObject,
                     waite: true,
                     success: function (models, response) {
+                        that.showMoreButton = response.showMore;
+                        that.taskCount = response.taskCount;
                         that.page += 1;
                         that.trigger('showmore', models);
                     },
