@@ -97,9 +97,9 @@ define([
                     return this.checked;
                 }).get();
                 for(var i= 0, len = readAccess.length; i < len; i++){
-                    jsonProfile.profileAccess[i].access[0] = readAccess[i];
-                    jsonProfile.profileAccess[i].access[1] = writeAccess[i];
-                    jsonProfile.profileAccess[i].access[2] = deleteAccess[i];
+                    jsonProfile.profileAccess[i].read = readAccess[i];
+                    jsonProfile.profileAccess[i].editWrite = writeAccess[i];
+                    jsonProfile.profileAccess[i].del = deleteAccess[i];
                 }
 
                 profile.save(jsonProfile,
@@ -129,52 +129,52 @@ define([
                     });
             },
 
-            saveProfile: function(){
-                var selectedProfileId = $('#profilesList > li.active > a').data('id');
-                var profile = this.profilesCollection.get(selectedProfileId);
-                var jsonProfile = profile.toJSON();
-                var tableContent = $('#modulesAccessTable tbody');
-                var readAccess = tableContent.find('input.read:checkbox').map(function(){
-                    return this.checked;
-                }).get();
-                var writeAccess = tableContent.find('input.write:checkbox').map(function(){
-                    return this.checked;
-                }).get();
-                var deleteAccess = tableContent.find('input.delete:checkbox').map(function(){
-                    return this.checked;
-                }).get();
-                for(var i= 0, len = readAccess.length; i < len; i++){
-                    jsonProfile.profileAccess[i].access[0] = readAccess[i];
-                    jsonProfile.profileAccess[i].access[1] = writeAccess[i];
-                    jsonProfile.profileAccess[i].access[2] = deleteAccess[i];
-                }
+            //saveProfile: function(){
+            //    var selectedProfileId = $('#profilesList > li.active > a').data('id');
+            //    var profile = this.profilesCollection.get(selectedProfileId);
+            //    var jsonProfile = profile.toJSON();
+            //    var tableContent = $('#modulesAccessTable tbody');
+            //    var readAccess = tableContent.find('input.read:checkbox').map(function(){
+            //        return this.checked;
+            //    }).get();
+            //    var writeAccess = tableContent.find('input.write:checkbox').map(function(){
+            //        return this.checked;
+            //    }).get();
+            //    var deleteAccess = tableContent.find('input.delete:checkbox').map(function(){
+            //        return this.checked;
+            //    }).get();
+            //    for(var i= 0, len = readAccess.length; i < len; i++){
+            //        jsonProfile.profileAccess[i].access[0] = readAccess[i];
+            //        jsonProfile.profileAccess[i].access[1] = writeAccess[i];
+            //        jsonProfile.profileAccess[i].access[2] = deleteAccess[i];
+            //    }
 
-                profile.save(jsonProfile,
-                    {
-                        headers: {
-                            mid: 39
-                        },
-                        wait: true,
-                        success: function () {
-                            $('#top-bar-saveBtn').hide();
-                            var tableRows = $('#modulesAccessTable tbody tr');
-                            for (var i= 0, len = tableRows.length; i<len; i++){
-                                $(tableRows[i]).find('.read').prop('disabled', true);
-                                $(tableRows[i]).find('.write').prop('disabled', true);
-                                $(tableRows[i]).find('.delete').prop('disabled', true);
+            //    profile.save(jsonProfile,
+            //        {
+            //            headers: {
+            //                mid: 39
+            //            },
+            //            wait: true,
+            //            success: function () {
+            //                $('#top-bar-saveBtn').hide();
+            //                var tableRows = $('#modulesAccessTable tbody tr');
+            //                for (var i= 0, len = tableRows.length; i<len; i++){
+            //                    $(tableRows[i]).find('.read').prop('disabled', true);
+            //                    $(tableRows[i]).find('.write').prop('disabled', true);
+            //                    $(tableRows[i]).find('.delete').prop('disabled', true);
 
-                            }
-                            $("#modulesAccessTable").show();
-                        },
-                        error: function (model, xhr, options) {
-                            if (xhr && xhr.status === 401) {
-                                Backbone.history.navigate("login", { trigger: true });
-                            } else {
-                                Backbone.history.navigate("home", { trigger: true });
-                            }
-                        }
-                    });
-            },
+            //                }
+            //                $("#modulesAccessTable").show();
+            //            },
+            //            error: function (model, xhr, options) {
+            //                if (xhr && xhr.status === 401) {
+            //                    Backbone.history.navigate("login", { trigger: true });
+            //                } else {
+            //                    Backbone.history.navigate("home", { trigger: true });
+            //                }
+            //            }
+            //        });
+            //},
 
             deleteItems: function () {
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');

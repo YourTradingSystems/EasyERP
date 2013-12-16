@@ -92,7 +92,7 @@ var Profile = function (app, logWriter, mongoose) {
             }
             function saveProfileToDb(data) {
                 try {
-                    _profile = new profile();
+                    _profile = new profile({ _id: Date.parse(new Date()) });
                     if (data.profileName) {
                         _profile.profileName = data.profileName;
                     }
