@@ -506,6 +506,7 @@ var Project = function (logWriter, mongoose) {
             delete data._id;
             delete data.createdBy;
             delete data.task;
+            console.log(data);
             project.update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
