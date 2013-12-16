@@ -88,7 +88,7 @@ define([
 					success:function(models, response, options){
 						self.hideDialog();
 						Backbone.history.navigate("easyErp/Profiles", { trigger: true });
-						self.profilesCollection.set(self.model,{reset:true});
+						self.profilesCollection.set(models, { remove: false });
 					},
 					error: function (model, xhr, options) {
 					    if (xhr && xhr.status === 401) {

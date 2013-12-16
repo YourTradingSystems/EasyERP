@@ -11,7 +11,7 @@ define([
             actionType:"Content",
             initialize: function (options) {
                 this.profilesCollection = options.collection;
-                this.profilesCollection.bind('reset', _.bind(this.render, this));
+                this.profilesCollection.bind('add', _.bind(this.render, this));
                 this.render();
             },
             events:{
