@@ -44,7 +44,7 @@ var Module = function (logWriter, mongoose, users, profile) {
                 },
                 {
                     $match: {
-                        _id: 1
+                        _id: 1387181674000
                     }
                 },
                 {
@@ -62,6 +62,7 @@ var Module = function (logWriter, mongoose, users, profile) {
                     if (err) {
                         console.log(err);
                     } else {
+                        console.log(result);
                         _module.find().
                             where('_id').in(result).
                             where({ visible: true }).

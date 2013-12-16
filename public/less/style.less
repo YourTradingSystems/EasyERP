@@ -805,7 +805,7 @@ h3 {
 .dl-auto(@max-width: 120px,@with-dt: 35%) {
     clear: both;
     font-size: 14px;
-
+	
     dt {
         width: @with-dt;
         max-width: @max-width;
@@ -822,42 +822,45 @@ h3 {
         width: 100%-@with-dt;
 
         &.with-checkbox {
-            //            margin-top: 15px !important;
+//            margin-top: 15px !important;
         }
     }
 }
 
 .summary-info {
-    .dl-auto(500px,20%);
+	.dl-auto(500px,20%);
 
     input {
         width: 99% !important;
         max-width: none !important;
-    }
+	}
 }
 
 .person-info {
-    .dl-auto();
+	.dl-auto();
 }
 
 .opp-info {
-    .dl-auto(200px);
+	.dl-auto(200px);
 }
 
 .project-info {
-    .dl-auto(150px);
+	.dl-auto(150px);
 }
 
 .job-info {
-    .dl-auto(260px);
+	.dl-auto(260px);
 }
 
 .app-info {
-    .dl-auto(150px);
+	.dl-auto(150px);
 }
 
 .job-create-info {
-    .dl-auto(220px);
+	.dl-auto(220px);
+}
+.profile-create {
+	.dl-auto(250px,50%);
 }
 
 .company-info {
@@ -918,7 +921,7 @@ h3 {
 
 .person-checkbox {
     margin-left: 3px;
-    position: relative;
+    position: relative;  
     padding-left: 25px;
     background-image: url("@{imagesfolder}/login-sprite.png");
     background-repeat: no-repeat;
@@ -1336,15 +1339,15 @@ h3 {
                     background-color: #F5F5F5;
                 }
 
-                    progress::-webkit-progress-bar {
+				progress::-webkit-progress-bar {  
                         background-color: #F5F5F5;
-                        /* style rules */
-                    }
+				/* style rules */  
+				}  
 
-                    progress::-webkit-progress-value {
+				progress::-webkit-progress-value {  
                         background-color: #57B5E3;
-                        /* style rules */
-                    }
+				/* style rules */  
+				}  
 
                 &:first-of-type {
                     padding-left: 7px;
@@ -1406,7 +1409,7 @@ h3 {
     .formTitle {
         &.withMargin {
             margin-bottom: 10px;
-        }
+		}
 
         width: 100%;
         border-bottom: @thin-border @lightgrey;
@@ -1431,8 +1434,8 @@ h3 {
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
-            }
         }
+    }
     }
 
     h3 {
@@ -1450,7 +1453,7 @@ h3 {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-        }
+    }
     }
 
     .mainInfo {
@@ -1515,7 +1518,7 @@ h3 {
         float: left;
         position: relative;
         width: 140px;
-        height: 140px;
+        height: 140px;      
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -1540,15 +1543,15 @@ h3 {
             line-height: 18px;
             text-shadow: 1px 1px 1px #fff;
             text-align: center;
-            display: block;
+            display: block;           
             position: absolute;
             top: 0;
             left: 0;
             height: 0px;
             width: 100%;
             background: rgba(0,0,0, 0.7);
-            color: #fff;
-
+            color: #fff;          
+                 
             input {
                 position: absolute;
                 top: 0;
@@ -1615,7 +1618,7 @@ h3 {
     }
 
     span {
-        padding: 3px 8px;
+        padding: 3px 8px 3px 0;
     }
 
     label {
@@ -1825,21 +1828,21 @@ input, textarea, select {
 
         &.status {
             &.pending {
-                color: #EAE874;
-            }
+				color: #EAE874;
+			}
 
             &.inprogress {
-                color: #67C2EF;
-            }
+				color: #67C2EF;
+			}
 
             &.done {
-                color: #BDEA74;
-            }
+				color: #BDEA74;
+			}
 
             &.cancelled {
-                color: #FF5454;
-            }
-        }
+				color: #FF5454;
+			}
+		}
     }
 
     a.tasksByProject {
@@ -1884,7 +1887,7 @@ input, textarea, select {
     display: block;
     position: relative;
     float: left;
-    width: 230px;
+    width: 260px;
     margin-left: 7px;
     margin-top: 7px;
     border: @thin-border transparent;
@@ -1898,7 +1901,7 @@ input, textarea, select {
     }
 
     .title {
-        color: #7c7bad !important;
+        color: #36A9E1 !important;
         font-size: 13px;
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
@@ -1968,7 +1971,7 @@ input, textarea, select {
     background: transparent !important;
 
     .title {
-        color: #7c7bad !important;
+        color: #36A9E1 !important;
         font-size: 13px;
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
@@ -2144,15 +2147,15 @@ button {
         display: none;
     }
 
-    .ui-dialog-content {
+	.ui-dialog-content {
         overflow: visible !important;
-    }
+	}
 
-    .ui-widget-content a {
-        color: #36A9E1;
-    }
+	.ui-widget-content a {
+		color: #36A9E1;
+	}
 
-    .ui-dialog-buttonpane {
+	.ui-dialog-buttonpane {
         padding-left: 0;
         padding-right: 0;
         margin: 0 1em;
@@ -2164,36 +2167,36 @@ button {
             .ui-button {
                 &:first-child {
                     color: #36A9E1 !important;
-                    border: 1px solid #DDD;
-                    .border-radius(0);
+					border: 1px solid #DDD;
+					.border-radius(0);
 
                     .ui-button-text {
                         background-color: white;
 
                         &:hover {
                             background-color: #eee;
-                            color: #2A6496;
-                        }
-                    }
-                }
+							color: #2A6496;
+						}
+					}
+				}
 
                 &:last-child {
                     color: #36A9E1 !important;
-                    border: 1px solid #DDD;
-                    .border-radius(0);
+					border: 1px solid #DDD;
+					.border-radius(0);
 
                     .ui-button-text {
-                        background-color: white;
+						background-color: white;
 
                         &:hover {
                             background-color: #eee;
-                            color: #2A6496;
-                        }
-                    }
-                }
-            }
-        }
-    }
+							color: #2A6496;
+						}
+					}
+				}
+			}
+		}
+	}
 
     &.edit-task-dialog {
         .ui-dialog-titlebar {
@@ -2292,6 +2295,7 @@ button {
 #applicationForm,
 #editJobPositionForm,
 #createApplicationForm,
+#createProfileForm,
 #leadForm {
     border: none;
     margin: 0 auto;
@@ -2321,6 +2325,9 @@ button {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+			a{
+				line-height:0px;
+			}
         }
 
         dt {
@@ -2373,32 +2380,40 @@ button {
         }
     }
 }
+#createProfileForm{
+	input[type='text'] {
+        width: 100%;
+}
+	select{
+        width: 100%;
+	}
 
-    #leadForm input[type='email'],
+}
+#leadForm input[type='email'],
     #leadForm input[type='text'] {
         width: 71%;
-    }
+}
 
     #leadForm dd.withCheckbox {
         margin-top: 0;
-    }
+}
 
     #leadForm textarea {
         margin-top: 10px;
-    }
+}
 
     #createTaskForm input[type='text'] {
         width: 95%;
-    }
+}
 
     #createApplicationForm #otherInfo {
         margin-top: 10px;
-    }
+}
 
-    #createJobPositionForm #description,
+#createJobPositionForm #description,
     #editJobPositionForm #description {
         margin-top: 0;
-    }
+}
 
 #createProjectForm {
     dl {
@@ -2423,19 +2438,19 @@ button {
     }
 }
 
-    #createEmployeeForm.notDialog {
-        dl {
-            dt, dd {
-                line-height: 17px;
-            }
+#createEmployeeForm.notDialog {
+    dl {
+        dt, dd {
+            line-height: 17px;
         }
     }
+}
 
 #createEmployeeForm,
 #employeeForm {
     .person-info dt {
         max-width: 150px;
-    }
+	}
 }
 
 #createFormDiv > #createProjectForm {
@@ -2781,8 +2796,8 @@ button {
             .border-radius(0px);
 
             &.active {
-                .box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
-            }
+				.box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
+			}
 
             .inner {
                 padding: 5px;
@@ -2831,32 +2846,32 @@ button {
             }
 
             &.cancelled .remaining {
-                border-bottom: 2px solid #FF5454;
-            }
+					border-bottom: 2px solid #FF5454;
+			}
 
             &.done .remaining {
-                border-bottom: 2px solid #BDEA74;
-            }
+					border-bottom: 2px solid #BDEA74;
+			}
 
             &.testing .remaining {
-                border-bottom: 2px solid #D9FFC8;
-            }
+					border-bottom: 2px solid #D9FFC8;
+			}
 
             &.merge .remaining {
-                border-bottom: 2px solid #FFEA73;
-            }
+					border-bottom: 2px solid #FFEA73;
+			}
 
             &.development .remaining {
-                border-bottom: 2px solid #67C2EF;
-            }
+					border-bottom: 2px solid #67C2EF;
+			}
 
             &.specification .remaining {
-                border-bottom: 2px solid #EAE874;
-            }
+					border-bottom: 2px solid #EAE874;
+			}
 
             &.analysis .remaining {
-                border-bottom: 2px solid #808080;
-            }
+					border-bottom: 2px solid #808080;
+			}
 
             &:hover .foldUnfold img, &.selected .foldUnfold img {
                 margin: -20px 6px 3px 0;
@@ -3336,7 +3351,7 @@ button {
             }
 
             .noteText {
-                word-break: break-word;
+				word-break: break-word;
             }
 
             .right {
@@ -3377,7 +3392,7 @@ table#workflows {
                 display: none;
             }
         }
-
+		
         &:hover {
             a.edit:not(.hidden) {
                 display: inline;
@@ -3393,7 +3408,7 @@ table#workflows {
 
             &.edit-status {
                 width: 20%;
-            }
+			}
         }
     }
 }
@@ -3402,24 +3417,24 @@ table#workflows {
     margin: 0px;
     padding: 5px 0;
     text-align: center;
-    border-bottom: 1px solid #D5D5D5;
+	border-bottom: 1px solid #D5D5D5;
 
     .letter {
         padding: 5px 10px;
 
         &.current {
             font-weight: bold;
-        }
+		}
 
         &.empty {
-            color: #CCC;
+			color: #CCC;
             cursor: default;
 
             &:hover {
                 text-decoration: none;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 #showMoreDiv {
@@ -3428,21 +3443,21 @@ table#workflows {
     clear: both;
 
     #showMore {
-        background-color: #FFF;
-        padding: .4em 5em;
-        color: #36A9E1;
-        .border-radius(0);
+		background-color: #FFF;
+		padding: .4em 5em;
+		color: #36A9E1;
+		.border-radius(0);
 
         &:hover {
-            background-color: #EEE;
-            color: #2A6496;
-        }
-    }
+			background-color: #EEE;
+			color: #2A6496;
+		}
+	}
 }
 
 #editSpan, #saveSpan, #cancelSpan {
-    font-size: 11px;
-    font-weight: normal;
+	font-size: 11px;
+	font-weight: normal;
     line-height: 15px;
     margin: 0;
 }
@@ -3459,7 +3474,7 @@ table#workflows {
 
 .person-info-h3 {
     width: 170px;
-    .dl-auto(auto,50%);
+	.dl-auto(auto,50%);
     clear: none;
 
     dt, dd {
@@ -3468,27 +3483,27 @@ table#workflows {
 
         a {
             line-height: 22px;
-        }
-    }
+		}
+	}
 
     .newSelectList {
         margin-left: -100px;
-    }
+	}
 }
 
 .newSelectList {
     position: absolute;
-    border: solid 1px #898989;
+	border: solid 1px #898989;
     background-color: white;
     padding: 3px 0;
-    .box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
+	.box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
 
     li {
-        margin: 0;
-        padding: 3px 16px 5px;
+		margin: 0;
+		padding: 3px 16px 5px;
         cursor: pointer;
 
-        &.testing,
+		&.testing,
         &.analysis {
             background-color: #D9FFC8 !important;
         }
@@ -3496,31 +3511,31 @@ table#workflows {
         &.merge {
             color: #C00 !important;
             background-color: #FFE3E3 !important;
-        }
+		}
 
         &.design {
             color: #000 !important;
             background-color: #FFEA73 !important;
-        }
+		}
 
         &.cancelled {
             color: #FFF !important;
             background-color: #C00 !important;
-        }
+		}
 
         &.done {
             color: #000 !important;
             background-color: #BEF624 !important;
-        }
+		}
 
         &:hover {
             background-color: #EAF0F7 !important;
             border: 0 !important;
             color: #FF5A00 !important;
-        }
-    }
-}
-
+		}
+		}
+	}
+	
 .dhx_wrap_section, .dhx_section_time, .dhx_cal_larea {
     overflow: visible !important;
 }
@@ -3543,7 +3558,7 @@ table#workflows {
     &:hover {
         text-decoration: underline;
     }
-}
+	}
 
 .timeModal {
     z-index: 2000;
@@ -3568,13 +3583,13 @@ table#workflows {
 
             &:hover {
                 background-color: #bfcddb;
-            }
+}
 
             &.active {
                 background-color: #3399ff;
-            }
-        }
-    }
+			}
+			}
+		}
 
     .minute {
         div {
@@ -3586,20 +3601,20 @@ table#workflows {
 
             &:hover {
                 background-color: #bfcddb;
-            }
+	}
 
             &.active {
                 background-color: #3399ff;
-            }
-        }
-    }
-}
+			}
+			}
+		}
+	}
 
 #addCalendarDlg {
     .fromXml {
         display: none;
-    }
 }
+	}
 
 .overflovHidden {
     overflow: hidden;
@@ -3646,7 +3661,7 @@ table#workflows {
 
         .option {
             display: none;
-            background-image: url("@{imagesfolder}/check.png");
+		    background-image: url("@{imagesfolder}/check.png");	
             background-position: 50% 50%;
             background-repeat: no-repeat;
             width: 12px;
@@ -3658,9 +3673,9 @@ table#workflows {
             border: 1px solid black;
 
             &:hover {
-                background-color: #EEE;
-            }
-        }
+				background-color: #EEE;
+			}
+		}
 
         .optionsDialog {
             display: none;
@@ -3680,31 +3695,46 @@ table#workflows {
             border: 1px solid black;
             width: 12px;
             height: 12px;
-        }
+		}
 
         &:hover {
-            background-color: #EEE;
+			background-color: #EEE;
 
             .option {
                 display: block;
-            }
-        }
+			}
+		}
 
         &.checked {
             .check {
                 background-color: black;
-            }
-        }
+			}
+		}
 
         &.showDialog {
-            background-color: #EEE;
+			background-color: #EEE;
 
             .optionsDialog, .option {
                 display: block;
-            }
-        }
+			}
+		}
 
-        .text {
-        }
-    }
+		.text{
+
+		}
+	}
+}
+#loginSelect{
+	position:relative;
+	z-index:2000;
+	border:1px solid silver;
+	background-color:white;
+	li{
+		padding:5px;
+
+		a{				
+			text-shadow:none;
+		}
+		
+	}
 }

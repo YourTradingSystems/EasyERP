@@ -2,11 +2,11 @@
   <form class="form" id="employeeForm" data-id="<%=_id%>">
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label>First Name :</label></dt><dd><%=name.first%></dd>
-		<dt><label>Last Name :</label></dt><dd><%=name.last%></dd>
-		<dt><label>Tags :</label></dt><dd><span><%=tags%></span></dd>
-        <dt><label>Created By :</label></dt><dd><span><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></span></dd>
-		<dt><label>Edited By :</label></dt><dd><span><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></span></dd>
+		<dt>First Name :</dt><dd><%=name.first%></dd>
+		<dt>Last Name :</dt><dd><%=name.last%></dd>
+		<dt>Tags :</dt><dd><span><%=tags%></span></dd>
+        <dt>Created By :</dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
+		<dt>Edited By :</dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
 	  </dl>
 	</div>
 	<div class="half-block left">
@@ -22,39 +22,39 @@
 	</div>
 	<div class="half-block left withPaddingLeft">
 	  <dl class="person-info">
-		<dt><label>Work Address :</label></dt>
+		<dt>Work Address :</dt>
 		<% if(workAddress.street){%>
-		<dd><span><%=workAddress.street%></span></dd>
+		<dd><%=workAddress.street%></dd>
 		<dt>&nbsp;</dt>
 		<%}%>
 		<% if(workAddress.city){%>
-		<dd><span><%=workAddress.city%></span></dd>
+		<dd><%=workAddress.city%></dd>
 		<dt>&nbsp;</dt>
 		<%}%>
 		<% if(workAddress.state){%>
-		<dd><span><%=workAddress.state%></span></dd>
+		<dd><%=workAddress.state%></dd>
 		<dt>&nbsp;</dt>
 		<%}%>
 		<% if(workAddress.zip){%>
-		<dd><span><%=workAddress.zip%></span></dd>
+		<dd><%=workAddress.zip%></dd>
 		<dt>&nbsp;</dt>
 		<%}%>
-		<dd><span><%=workAddress.country%></span></dd>
-		<dt><label>Related User :</label></dt><dd><span><%=(relatedUser) ? relatedUser.login : ''%></span></dd>
-		<dt><label>Visibility :</label></dt><dd><span><%=visibility%></span></dd>
+		<dd><%=workAddress.country%></dd>
+		<dt>Related User :</dt><dd><%=(relatedUser) ? relatedUser.login : ''%></dd>
+		<dt>Visibility :</dt><dd><%=visibility%></dd>
 	  </dl>
 	</div>
 	<div class="half-block left withPaddingLeft">
 	  <dl class="person-info">
-		<dt><label>Work Email :</label></dt><dd><span><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></span></dd>
-		<dt><label>Skype :</label></dt><dd><span><%=skype%></span></dd>
-		<dt><label>Work Phone :</label></dt><dd><span><%=workPhones.phone%></span></dd>
-		<dt><label>Work Mobile :</label></dt><dd><span><%=workPhones.mobile%></span></dd>
-		<dt><label>Office Location :</label></dt><dd><span><%=officeLocation%></span></dd>
-		<dt><label>Department :</label></dt><dd><span><%=(department) ? department.departmentName : ''%></span></dd>
-		<dt><label>Job :</label></dt><dd><span><%=(jobPosition) ? jobPosition.name : ''%></span></dd>
-		<dt><label>Manager :</label></dt><dd><span><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></span></dd>
-		<dt><label>Coach :</label></dt><dd><span><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></span></dd>
+		<dt>Work Email :</dt><dd><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></dd>
+		<dt>Skype :</dt><dd><%=skype%></dd>
+		<dt>Work Phone :</dt><dd><%=workPhones.phone%></dd>
+		<dt>Work Mobile :</dt><dd><%=workPhones.mobile%></dd>
+		<dt>Office Location :</dt><dd><%=officeLocation%></dd>
+		<dt>Department :</dt><dd><%=(department) ? department.departmentName : ''%></dd>
+		<dt>Job :</dt><dd><%=(jobPosition) ? jobPosition.name : ''%></dd>
+		<dt>Manager :</dt><dd><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></dd>
+		<dt>Coach :</dt><dd><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></dd>
 	  </dl>
 	</div>
 
@@ -69,11 +69,11 @@
 	  </div>
 
 	  <dl class="person-info">
-		<dt><label>Natinality :</label></dt><dd><span><%=nationality%></span></dd>
-		<dt><label>Identification № :</label></dt><dd><span><%=identNo%></span></dd>
-		<dt><label>Passport № :</label></dt><dd><span><%=passportNo%></span></dd>
-		<dt><label>Bank Account Number :</label></dt><dd><span><%=bankAccountNo%></span></dd>
-		<dt><label>Other Id :</label></dt><dd><span><%=otherId%></span></dd>
+		<dt>Natinality :</dt><dd><%=nationality%></dd>
+		<dt>Identification № :</dt><dd><%=identNo%></dd>
+		<dt>Passport № :</dt><dd><%=passportNo%></dd>
+		<dt>Bank Account Number :</dt><dd><%=bankAccountNo%></dd>
+		<dt>Other Id :</dt><dd><%=otherId%></dd>
 	  </dl>
       <div class="clearfix"></div>
 	</div>
@@ -84,11 +84,11 @@
 	  </div>
 
 	  <dl class="person-info">
-		<dt><label>Home Address :</label></dt><dd> <span><%=homeAddress.street%></span></dd>
-		<dt>&nbsp;</dt><dd><span><%=homeAddress.city%></span></dd>
-		<dt>&nbsp;</dt><dd><span><%=homeAddress.state%></span></dd>
-		<dt>&nbsp;</dt><dd><span><%=homeAddress.zip%></span></dd>
-		<dt>&nbsp;</dt><dd><span><%=homeAddress.country%></span></dd>
+		<dt>Home Address :</dt><dd><%=homeAddress.street%></dd>
+		<dt>&nbsp;</dt><dd><%=homeAddress.city%></dd>
+		<dt>&nbsp;</dt><dd><%=homeAddress.state%></dd>
+		<dt>&nbsp;</dt><dd><%=homeAddress.zip%></dd>
+		<dt>&nbsp;</dt><dd><%=homeAddress.country%></dd>
 	  </dl>
       <div class="clearfix"></div>
     </div>
@@ -99,8 +99,8 @@
 		<div class="clearfix"></div>
 	  </div>
 	  <dl class="person-info">
-		<dt><label>Gender :</label></dt><dd>&nbsp;</dd>
-		<dt><label>Marital Status :</label></dt><dd>&nbsp;</dd>
+		<dt>Gender :</dt><dd>&nbsp;</dd>
+		<dt>Marital Status :</dt><dd>&nbsp;</dd>
 	  </dl>
 	</div>
 	<div class="half-block left withPaddingLeft">
@@ -110,7 +110,7 @@
 		</div>
 
 		<dl class="person-info">
-		  <dt><label>Date Of Birth :</label></dt><dd><span><%=(dateBirth) ? dateBirth : "" %></span></dd>
+		  <dt>Date Of Birth :</dt><dd><%=(dateBirth) ? dateBirth : "" %></dd>
 		</dl>		  
 
 	</div>
@@ -126,7 +126,7 @@
 		  <div class="clearfix"></div>
 		</div>
 		<dl class="person-info">
-		  <dt><label>Active :</label></dt><dd><input type="checkbox" <%=(active)? "checked='checked'":''%> name="active" id="active" disabled /></dd>
+		  <dt>Active :</dt><dd><input type="checkbox" <%=(active)? "checked='checked'":''%> name="active" id="active" disabled /></dd>
 		</dl>	  
 		
 	  </div>
