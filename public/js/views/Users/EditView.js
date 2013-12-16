@@ -16,7 +16,7 @@
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
-            hideDialog: function () {
+            hideDialog: function () {3
                 $(".edit-dialog").remove();
             },
             saveItem: function () {
@@ -27,16 +27,7 @@
                     imageSrc: this.imageSrc,
                     email: $('#email').val(),
                     login: $('#login').val(),
-                    profile: {
-                        company: {
-                            id: $('#companiesDd option:selected').val(),
-                            name: $('#companiesDd option:selected').text()
-                        },
-                        profile: {
-                            id: $('#profilesDd option:selected').val(),
-                            name: $('#profilesDd option:selected').text()
-                        }
-                    }
+                    profile: $('#profilesDd option:selected').val()
                 };
 
                 this.currentModel.save(data, {
@@ -80,8 +71,7 @@
                         }
                     }
                 });
-                common.populateCompanies(App.ID.companiesDd, "/Companies");
-                common.populateProfilesDd(App.ID.profilesDd, "/Profiles");
+                common.populateProfilesDd(App.ID.profilesDd, "/Profiles", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }
