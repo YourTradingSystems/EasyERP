@@ -25,15 +25,19 @@ var requestHandler = function (fs, mongoose) {
     };
     function login(req, res, data) {
         console.log("Requst LOGIN is success");
-        users.login(req, data, function (result) {
-            res.send(result);
-        });
+        users.login(req, data, res);
     };
 
     function createUser(req, res, data) {
         console.log("Requst createUser is success");
         if (req.session && req.session.loggedIn) {
-            users.createUser(data.user, res);
+            access.getEditWritAccess(req.session.uId, 51, function(access) {
+                if (access) {
+                    users.createUser(data.user, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -51,7 +55,14 @@ var requestHandler = function (fs, mongoose) {
     function getFilterUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn) {
-            users.getFilterUsers(data, res);
+            access.getReadAccess(req.session.uId, 51, function(access) {
+                console.log(access);
+                if (access) {
+                    users.getFilterUsers(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -60,8 +71,14 @@ var requestHandler = function (fs, mongoose) {
     function getUserById(req, res, data) {
         console.log("Request getUser is success");
         if (req.session && req.session.loggedIn) {
-            //persons.get(res);
-            users.getUserById(data.id, res);
+            access.getReadAccess(req.session.uId, 51, function (access) {
+                console.log(access);
+                if (access) {
+                    users.getUserById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -71,7 +88,13 @@ var requestHandler = function (fs, mongoose) {
     function updateUser(req, res, id, data) {
         console.log("Requst createUser is success");
         if (req.session && req.session.loggedIn) {
-            users.updateUser(id, data.user, res);
+            access.getEditWritAccess(req.session.uId, 51, function (access) {
+                if (access) {
+                    users.updateUser(id, data.user, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -80,7 +103,13 @@ var requestHandler = function (fs, mongoose) {
     function removeUser(req, res, id) {
         console.log("Requst removeUser is success");
         if (req.session && req.session.loggedIn) {
-            users.removeUser(id, res);
+            access.getDeleteAccess(req.session.uId, 51, function (access) {
+                if (access) {
+                    users.removeUser(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -90,13 +119,13 @@ var requestHandler = function (fs, mongoose) {
     //---------------------Profile--------------------------------
     function createProfile(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 51, function(access) {
-				if (access){
-					profile.createProfile(data.profile, res);
-				}else{
-				    res.send(403);
-				}
-			})
+            access.getEditWritAccess(req.session.uId, 51, function (access) {
+                if (access) {
+                    profile.createProfile(data.profile, res);
+                } else {
+                    res.send(403);
+                }
+            })
 
         } else {
             res.send(401);
@@ -107,7 +136,7 @@ var requestHandler = function (fs, mongoose) {
         try {
             console.log("Requst getProfile is success");
             if (req.session && req.session.loggedIn) {
-                access.getReadAccess(req.session.uId, 51, function(access) {
+                access.getReadAccess(req.session.uId, 51, function (access) {
                     console.log(access);
                     if (access) {
                         profile.getProfile(res);
@@ -115,7 +144,7 @@ var requestHandler = function (fs, mongoose) {
                         res.send(403);
                     }
                 });
-                
+
             } else {
                 res.send(401);
             }
@@ -128,13 +157,13 @@ var requestHandler = function (fs, mongoose) {
     function updateProfile(req, res, id, data) {
         console.log("Requst updateProfile is success");
         if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 51, function(access) {
-				if (access){
-					profile.updateProfile(id, data.profile, res);
-				}else{
-				    res.send(403);
-				}
-			})
+            access.getEditWritAccess(req.session.uId, 51, function (access) {
+                if (access) {
+                    profile.updateProfile(id, data.profile, res);
+                } else {
+                    res.send(403);
+                }
+            })
         } else {
             res.send(401);
         }
@@ -143,13 +172,13 @@ var requestHandler = function (fs, mongoose) {
     function removeProfile(req, res, id) {
         console.log("Requst removePerson is success");
         if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 51, function(access) {
-				if (access){
-					profile.removeProfile(id, res);
-				}else{
-				    res.send(403);
-				}
-			});
+            access.getDeleteAccess(req.session.uId, 51, function (access) {
+                if (access) {
+                    profile.removeProfile(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
 
         } else {
             res.send(401);
@@ -202,7 +231,7 @@ var requestHandler = function (fs, mongoose) {
         }
         // console.log("Requst getPersons is success");
     };
-    
+
     function getFilterPersons(req, res, data) {
         console.log("Requst getPersons is success");
         if (req.session && req.session.loggedIn) {
@@ -238,9 +267,9 @@ var requestHandler = function (fs, mongoose) {
     function updatePerson(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
             console.log('----------->>>>>>>>>>>>>>>update');
-            data.person.editedBy={
-                user:req.session.uId,
-                date:new Date().toISOString()
+            data.person.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
             }
             customer.update(id, remove, data.person, res);
         } else {
@@ -315,9 +344,9 @@ var requestHandler = function (fs, mongoose) {
     function updateProject(req, res, id, data) {
         console.log("Requst updateProject is success");
         if (req.session && req.session.loggedIn) {
-            data.project.editedBy={
-                user:req.session.uId,
-                date:new Date().toISOString()
+            data.project.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
             }
             project.update(id, data.project, res);
         } else {
@@ -505,7 +534,7 @@ var requestHandler = function (fs, mongoose) {
     function createCompany(req, res, data) {
         console.log("Requst createCompany is success");
         if (req.session && req.session.loggedIn) {
-            data.company.uId=req.session.uId;
+            data.company.uId = req.session.uId;
             customer.create(data.company, res);
         } else {
             res.send(401);
@@ -515,16 +544,16 @@ var requestHandler = function (fs, mongoose) {
     function updateCompany(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
             var date = mongoose.Schema.Types.Date;
-            data.company.editedBy={
-                user:req.session.uId,
-                date:new Date().toISOString()
+            data.company.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
             }
             customer.update(id, remove, data.company, res);
         } else {
             res.send(401);
         }
     };
-    
+
 
     function getFilterCompanies(req, res, data) {
         console.log("Requst getFilterCompanies is success");
@@ -540,7 +569,7 @@ var requestHandler = function (fs, mongoose) {
     //---------------------JobPosition--------------------------------
     function createJobPosition(req, res, data) {
 
-        if (req.session && req.session.loggedIn) {			
+        if (req.session && req.session.loggedIn) {
             data.jobPosition.uId = req.session.uId;
             jobPosition.create(data.jobPosition, res);
         } else {
@@ -578,9 +607,9 @@ var requestHandler = function (fs, mongoose) {
 
     function updateJobPosition(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            data.jobPosition.editedBy={
-                user:req.session.uId,
-                date:new Date().toISOString()
+            data.jobPosition.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
             }
             jobPosition.update(id, data.jobPosition, res);
         } else {
@@ -664,9 +693,9 @@ var requestHandler = function (fs, mongoose) {
     function updateEmployees(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn) {
-            data.employee.editedBy={
-                user:req.session.uId,
-                date:new Date().toISOString()
+            data.employee.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
             }
 
             employee.update(id, data.employee, res);
@@ -814,13 +843,13 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     }
-    
+
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
         if (req.session && req.session.loggedIn) {
-            data.department.editedBy={
-                user:req.session.uId,
-                date:new Date().toISOString()
+            data.department.editedBy = {
+                user: req.session.uId,
+                date: new Date().toISOString()
             }
 
             department.update(id, data.department, res);
@@ -1043,7 +1072,7 @@ var requestHandler = function (fs, mongoose) {
     function createEvent(req, res, data) {
         console.log("Requst createEvent is success");
         if (req.session && req.session.loggedIn) {
-            events.create(data.event, res ,req);
+            events.create(data.event, res, req);
         } else {
             res.send(401);
         }
@@ -1060,8 +1089,8 @@ var requestHandler = function (fs, mongoose) {
 
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
-        if (req.session && req.session.loggedIn) {            
-            events.update(id, data.event, res,req);
+        if (req.session && req.session.loggedIn) {
+            events.update(id, data.event, res, req);
         } else {
             res.send(401);
         }
@@ -1123,9 +1152,9 @@ var requestHandler = function (fs, mongoose) {
         }
     }
     function getXML(req, res, link, data) {
-        events.getXML(res,link);
+        events.getXML(res, link);
     }
-    
+
     function getToken(req, res) {
         google.getToken(req, res, function (token) {
             res.redirect('#easyErp/Calendars');
@@ -1138,7 +1167,7 @@ var requestHandler = function (fs, mongoose) {
     function sendToGoogleCalendar(req, res) {
         events.sendToGoogleCalendar(req, res);
     }
-    function changeSyncCalendar(id, isSync, res, req){
+    function changeSyncCalendar(id, isSync, res, req) {
         events.changeSyncCalendar(id, isSync, res, req);
 
     }
@@ -1148,7 +1177,7 @@ var requestHandler = function (fs, mongoose) {
 
         mongoose: mongoose,
         getModules: getModules,
-        
+
         login: login,
         createUser: createUser,
         getUsers: getUsers,
@@ -1156,12 +1185,12 @@ var requestHandler = function (fs, mongoose) {
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
-        
+
         getProfile: getProfile,
         createProfile: createProfile,
         updateProfile: updateProfile,
         removeProfile: removeProfile,
-        
+
         createPerson: createPerson,
         getPersons: getPersons,
         getPersonById: getPersonById,
@@ -1193,7 +1222,7 @@ var requestHandler = function (fs, mongoose) {
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
-        getFilterCompanies:getFilterCompanies,
+        getFilterCompanies: getFilterCompanies,
 
         getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,
@@ -1205,10 +1234,10 @@ var requestHandler = function (fs, mongoose) {
         createJobPosition: createJobPosition,
         updateJobPosition: updateJobPosition,
         removeJobPosition: removeJobPosition,
-        getJobPositionById:getJobPositionById,
+        getJobPositionById: getJobPositionById,
 
         createEmployee: createEmployee,
-        getCustomJobPosition:getCustomJobPosition,
+        getCustomJobPosition: getCustomJobPosition,
         getEmployees: getEmployees,
         getEmployeesCustom: getEmployeesCustom,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
@@ -1229,8 +1258,8 @@ var requestHandler = function (fs, mongoose) {
         createDepartment: createDepartment,
         updateDepartment: updateDepartment,
         removeDepartment: removeDepartment,
-        getDepartmentById:getDepartmentById,
-        getCustomDepartment:getCustomDepartment,
+        getDepartmentById: getDepartmentById,
+        getCustomDepartment: getCustomDepartment,
         createDegree: createDegree,
         getDegrees: getDegrees,
         updateDegree: updateDegree,
@@ -1245,7 +1274,7 @@ var requestHandler = function (fs, mongoose) {
 
         createLead: createLead,
         getLeads: getLeads,
-        getLeadsCustom:getLeadsCustom,
+        getLeadsCustom: getLeadsCustom,
         updateLead: updateLead,
         removeLead: removeLead,
 
@@ -1269,9 +1298,9 @@ var requestHandler = function (fs, mongoose) {
         googleCalSync: googleCalSync,
         getXML: getXML,
         getToken: getToken,
-        googleCalendars:googleCalendars,
-        sendToGoogleCalendar:sendToGoogleCalendar,
-        changeSyncCalendar:changeSyncCalendar
+        googleCalendars: googleCalendars,
+        sendToGoogleCalendar: sendToGoogleCalendar,
+        changeSyncCalendar: changeSyncCalendar
     }
 }
 //---------EXPORTS----------------------------------------
