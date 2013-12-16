@@ -270,6 +270,7 @@ var Users = function (app, logWriter, mongoose, findCompany) {
     function getUserById(id, response) {
         console.log(id);
         var query = User.findById(id);
+        query.populate('profile');
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -285,7 +286,7 @@ var Users = function (app, logWriter, mongoose, findCompany) {
         var res = {};
         res['data'] = [];
         var query = User.find({}, { __v: 0, upass: 0 });
-
+        query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
             if (err) {
