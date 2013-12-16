@@ -2115,7 +2115,9 @@ button {
     .ui-dialog-titlebar {
         display: none;
     }
-
+	.ui-dialog-content {
+		overflow:visible !important;
+	}
 	.ui-widget-content a {
 		color: #36A9E1;
 	}
@@ -3444,7 +3446,6 @@ table#workflows {
     position: absolute;
 	border: solid 1px #898989;
     background-color: white;
-    width: 180px;
     padding: 3px 0;
 	.box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
 
@@ -3597,27 +3598,71 @@ table#workflows {
 }
 .calendarList{
 	width:200px;
-	overflow:hidden;
 	float:left;
+	border:1px solid silver;
+	margin-left:10px;
 	li{
 		position:relative;
 		cursor:pointer;
-		width:200px;
-		line-height:30px;
-		&:hover{
-			background-color: rgba(0, 0, 0, 0.2);
+		width:174px;
+		padding-left:26px;
+		line-height:24px;
+		.option{
+			display:none;
+		    background-image: url("@{imagesfolder}/check.png");	
+			background-position:50% 50%;
+			background-repeat:no-repeat;
+			width:12px;
+			height:12px;
+			position:absolute;
+			right:5px;
+			top:5px;
+			background-color:white;
+			border:1px solid black;
+			&:hover{
+				background-color: #EEE;
+			}
 		}
-		.text{
+		.optionsDialog{
+			display:none;
+			position:absolute;
+			z-index:100;
+			border:1px solid black;
+			width:185px;
+			background-color:white;
+			padding-left:5px;
+		}
+		.check{	
+			position:absolute;
+			left:5px;
+			top:5px;
+			background-color:white;
+			border:1px solid black;			
+			width:12px;
+			height:12px;
+
 
 		}
-		.check{
-		    background-image: url("@{imagesfolder}/check.png");	
-			width:13px;
-			height:13px;
-			
-			position:absolute;
-			right:10px;
-			top:10px;
+		&:hover{
+			background-color: #EEE;
+			.option{
+				display:block;
+			}
+		}
+		&.checked{
+			.check{	
+				background-color:black;
+			}
+		}
+		&.showDialog{
+			background-color: #EEE;
+			.optionsDialog, .option{
+				display:block;
+			}
+		}
+
+		.text{
+
 		}
 	}
 }

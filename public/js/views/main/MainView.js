@@ -7,7 +7,12 @@ define([
 
         var MainView = Backbone.View.extend({
             el: '#wrapper',
-
+            
+            events: {
+                'click #loginPanel': 'showSelect',
+                'click #logout': 'logout'
+            },
+            
             initialize: function() {
                 this.render();
                 this.collection = new MenuItemsCollection();
@@ -20,7 +25,25 @@ define([
                 this.topMenu.bind('changeSelection', this.leftMenu.setCurrentSection, { leftMenu: this.leftMenu });
                 this.topMenu.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
             },
-
+            showSelect: function(e) {
+                e.preventDefault();
+                var select = this.$el.find('#loginSelect');
+                if (select.prop('hidden')) {
+                    select.show();
+                    select.prop('hidden', false);
+                } else {
+                    select.hide();
+                    select.prop('hidden', true);
+                }
+                
+            },
+            logout: function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/logout',
+                    method:'GET'
+                });
+            },
             render: function() {
                 console.log('Render Main View');
                 this.$el.html(MainTemplate);

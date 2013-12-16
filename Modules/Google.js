@@ -3,7 +3,7 @@
     var googleapis = require('googleapis'),
     OAuth2Client = googleapis.OAuth2Client;
     var oauth2Client =
-        new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
+        new OAuth2Client('715169150848-5od09abvrnpu8krhesd0kqtic2o68g0u.apps.googleusercontent.com', 'iXKWzOb_Z2BFBLLlkUm2nupv', 'http://localhost:8088/getGoogleToken');
     var url = oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: 'http://www.google.com/calendar/feeds/'
@@ -16,44 +16,107 @@
             }
         });
     };
-    var sendEventsToGoogle = function (req,res, calendars,checkAsGoogle) {
+	var updateEvent = function(req,event,checkAsGoogle,calId){
         checkSessionForToken(req, function (err, response) {
             if (response) {
                 oauth2Client.credentials = response;
                 googleapis
-                          .discover('calendar', 'v3')
-                             .execute(function (err, client) {
-                                 if (err) console.log(err);
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+
+						var item = {
+							"summary": event.summary,
+							'start': {
+								"dateTime": event.start_date
+							},
+							'end': {
+								"dateTime": event.end_date
+							}
+						}
+						console.log(item);
+						client.calendar.events.update({ calendarId: calId,eventId:event.googleId }, item)
+							.withAuthClient(oauth2Client).execute(
+								function (err, result) {
+									if (result) {
+										checkAsGoogle(event._id,result.id);
+										console.log(event);
+									} else {
+										console.log(err);
+									};
+								});
+					})
+			}
+		})
+	}
+    var sendEventsToGoogle = function (req,res, calendars,checkAsGoogle) {
+
+        checkSessionForToken(req, function (err, response) {
+
+            if (response) {
+
+
+                oauth2Client.credentials = response;
+                googleapis
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+
                         calendars.forEach(function (_event) {
-                                     var calendarId = _event.id;
-                                     _event.items.forEach(function (item) {
+                            var calendarId = _event.id;
+
+                            _event.items.forEach(function (item) {
 								var event = {
-                                    "summary": item.summary,
-                                    'start': {
-                                        "dateTime": item.start_date
-                                    },
-                                    'end': {
-                                        "dateTime": item.end_date
-                                    }
+									"summary": item.summary,
+									'start': {
+										"dateTime": item.start_date
+									},
+									'end': {
+										"dateTime": item.end_date
+									}
 								}
-                                client.calendar.events.insert({ calendarId: calendarId }, event)
-                                                .withAuthClient(oauth2Client).execute(
-                                                    function (err, result) {
-                                                        if (result) {
-												checkAsGoogle(item._id);
-                                                            console.log(result);
-                                                        } else {
-                                                            console.log(err);
-                                                        };
-                                                    });
-                                     });
-                                 });
-                             });
+								console.log("new"+item.googleId);
+								if (!item.isGoogle)
+									client.calendar.events.insert({ calendarId: calendarId }, event)
+										.withAuthClient(oauth2Client).execute(
+											function (err, result) {
+												if (result) {
+													checkAsGoogle(item._id,result.id);
+													console.log(result);
+												} else {
+													console.log(err);
+												};
+											});
+
+                            });
+                        });
+                    });
             } else {
                 console.log(err);
             }
         });
     }
+	var createNewGoogleCalendar = function(req,cal,callback){
+        checkSessionForToken(req, function (err, response) {
+            if (response) {
+                oauth2Client.credentials = response;
+                googleapis
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+						client.calendar.calendars.insert({ summary: cal.summary })
+                            .withAuthClient(oauth2Client).execute(
+                                function (err, result) {
+                                    if (result) {
+										callback(result.id);
+                                    } else {
+                                        console.log(err);
+                                    };
+                                });
+
+					});
+			}
+
+		});
+		
+	}
     var checkSessionForToken = function (req, callback) {
         console.log('Google Sessions');
         if (req.session && req.session.loggedIn) {
@@ -72,7 +135,7 @@
                             callback(null, response.credentials);
                         } else {
 
-                            callback({ "error": "error" }, null);
+                            callback({ "error": req.session.credentials }, null);
                         }
                     } else {
                         console.log(err);
@@ -155,6 +218,7 @@
                                     if (events) {
                                         //console.log(result);
                                         result.items = events.items;
+										result.isSync = true;
                                         calendars.push(result);
                                         if (calendars.length == iDs.length) {
                                             console.log(calendars);
@@ -172,13 +236,40 @@
                 });
             });
     }
+	var removeEvent= function(event,req){
+		checkSessionForToken(req, function (err, response) {
+            if (response) {
+				console.log(event);
+                oauth2Client.credentials = response;
+                googleapis
+                    .discover('calendar', 'v3')
+                    .execute(function (err, client) {
+						client.calendar.events.delete({ calendarId: event.calendarId.id, eventId:event.googleId})
+                            .withAuthClient(oauth2Client).execute(
+                                function (err, result) {
+                                    if (result) {
+										console.log("google delete success");
+                                    } else {
+                                        console.log(err);
+                                    };
+                                });
+
+					});
+			}
+
+		});
+
+	}
     return {
         googleapis: googleapis,
         oauth2Client: oauth2Client,
         getGoogleCalendars: getGoogleCalendars,
         getToken: getToken,
         getEventsByCalendarIds: getEventsByCalendarIds,
-        sendEventsToGoogle: sendEventsToGoogle
+        sendEventsToGoogle: sendEventsToGoogle,
+		createNewGoogleCalendar:createNewGoogleCalendar,
+		updateEvent:updateEvent,
+		removeEvent:removeEvent
     }
 };
 module.exports = googleModule;

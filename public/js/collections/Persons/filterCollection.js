@@ -20,11 +20,13 @@
                 this.fetch({
                     data: filterObject,
                     reset: true,
-                    success: function() {
+                    success: function () {
                         console.log("Persons fetchSuccess");
                         that.page += 1;
                     },
-                    error: this.fetchError
+                    error: function (models, xhr, options) {
+                        if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
+                    }
                 });
             },
             filterByWorkflow: function (id) {
@@ -34,7 +36,7 @@
             },
             showMore: function (options) {
                 var that = this;
-                
+
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
@@ -50,7 +52,7 @@
                         that.page += 1;
                         that.trigger('showmore', models);
                     },
-                    error: function() {
+                    error: function () {
                         alert('Some Error');
                     }
                 });
@@ -61,7 +63,7 @@
                 if (response.data) {
                     _.map(response.data, function (person) {
                         person.createdBy.date = common.utcDateToLocaleDateTime(person.createdBy.date);
-                        person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.editedBy.date) :  null;
+                        person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.editedBy.date) : null;
                         person.dateBirth = common.utcDateToLocaleDate(person.dateBirth);
                         if (person.notes) {
                             _.map(person.notes, function (note) {
@@ -82,7 +84,7 @@
                 return response.data;
             },
 
-            
+
         });
 
         return TasksCollection;
