@@ -414,8 +414,16 @@ var requestHandler = function (fs, mongoose) {
     function getRelatedStatus(req, res, data) {
         console.log("Requst getRelatedStatus is success");
         if (req.session && req.session.loggedIn) {
-            workflow.getRelatedStatus(res);
-        } else {
+            access.getReadAccess(req.session.uId, 51, function(access) {
+                console.log(access);
+                if (access) {
+					workflow.getRelatedStatus(res);
+
+                } else {
+                    res.send(403);
+                }
+			});
+			} else {
             res.send(401);
         }
     };
@@ -426,7 +434,13 @@ var requestHandler = function (fs, mongoose) {
             console.log('>>>>>>>>>>>');
             console.log(data);
             console.log('<<<<<<<<<<<');
-            workflow.get(data, res);
+            access.getReadAccess(req.session.uId, 44, function(access) {
+                if (access) {
+					workflow.get(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -447,7 +461,14 @@ var requestHandler = function (fs, mongoose) {
     function createWorkflow(req, res, data) {
         console.log("Requst createWorkflow is success");
         if (req.session && req.session.loggedIn) {
-            workflow.create(data, res);
+            access.getEditWritAccess(req.session.uId, 44, function(access) {
+                if (access) {
+					workflow.create(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -456,7 +477,14 @@ var requestHandler = function (fs, mongoose) {
     function updateWorkflow(req, res, _id, data) {
         console.log("Requst updateWorkflow is success");
         if (req.session && req.session.loggedIn) {
-            workflow.update(_id, data, res);
+            access.getEditWritAccess(req.session.uId, 44, function(access) {
+                if (access) {
+					workflow.update(_id, data, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
