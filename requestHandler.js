@@ -102,8 +102,13 @@ var requestHandler = function (fs, mongoose) {
             if (req.session && req.session.loggedIn) {
                 access.getReadAccess(req.session.uId, 39, function(access) {
                     console.log(access);
+                    if (access) {
+                        profile.getProfile(res);
+                    } else {
+                        res.send(403);
+                    }
                 });
-                profile.getProfile(res);
+                
             } else {
                 res.send(401);
             }
