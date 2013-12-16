@@ -1,22 +1,23 @@
-var requestHandler = function (fs, mongoose) {
+var requestHandler = function (fs, mongoose, app) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         event = require("./Modules/additions/eventHandler.js")().event,
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         company = require("./Modules/Companies.js")(logWriter, mongoose, employee.employee, event),
         findCompany = require("./Modules/additions/findCompany.js")(company.Company),
-        users = require("./Modules/Users.js")(logWriter, mongoose, findCompany),
+        users = require("./Modules/Users.js")(app, logWriter, mongoose, findCompany),
         google = require("./Modules/Google.js")(users),
         events = require("./Modules/Events.js")(logWriter, mongoose, google),
         project = require("./Modules/Projects.js")(logWriter, mongoose),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
-        profile = require("./Modules/Profile.js")(logWriter, mongoose),
+        profile = require("./Modules/Profile.js")(app, logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
         department = require("./Modules/Department.js")(logWriter, mongoose, employee.employee, event),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
+
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
             modules.get(req.session.uId, res);
@@ -24,134 +25,6 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
-
-    //function getNewModules(res, data) {
-    //    console.log("Requst getModules is success");
-    //    res.header("Access-Control-Allow-Origin", "*");
-    //    res.header("Allow Cross Site Origin", "*");
-    //    //console.log(req.session && req.session.loggedIn);
-    //    if (req.session && req.session.loggedIn) {
-    //        modules.getNewModules(data, function (result1) {
-    //            console.log('Sending response for getModules');
-    //            //console.log(JSON.stringify(result));
-    //            res.send(result1);
-    //        });
-    //    } else {
-    //        result['result'] = {};
-    //        result['result']['status'] = '4';
-    //        result['result']['description'] = 'Bad hash';
-    //        result['data'] = [];
-    //        res.send(result);
-    //    }
-    //};
-
-    //---------------Users--------------------------------
-    function login(req, res, data) {
-        console.log("Requst LOGIN is success");
-        users.login(req, data, function (result) {
-            res.send(result);
-        });
-    };
-
-    function createUser(req, res, data) {
-        console.log("Requst createUser is success");
-        if (req.session && req.session.loggedIn) {
-            users.create(data.user, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getUsers(req, res, data) {
-        console.log("Requst getUsers is success");
-        if (req.session && req.session.loggedIn) {
-            users.get(res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getFilterUsers(req, res, data) {
-        console.log("Requst getUsers is success");
-        if (req.session && req.session.loggedIn) {
-            users.getFilterUsers(data, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getUserById(req, res, data) {
-        console.log("Request getUser is success");
-        if (req.session && req.session.loggedIn) {
-            //persons.get(res);
-            users.getUserById(data.id, res);
-        } else {
-            res.send(401);
-        }
-        // console.log("Requst getPersons is success");
-    };
-
-    function updateUser(req, res, id, data) {
-        console.log("Requst createUser is success");
-        if (req.session && req.session.loggedIn) {
-            users.update(id, data.user, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function removeUser(req, res, id) {
-        console.log("Requst removeUser is success");
-        if (req.session && req.session.loggedIn) {
-            users.remove(id, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    //---------END------Users--------------------------------
-    //---------------------Profile--------------------------------
-    function createProfile(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            profile.create(data.profile, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getProfile(req, res) {
-        try {
-            console.log("Requst getProfile is success");
-            if (req.session && req.session.loggedIn) {
-                profile.get(res);
-            } else {
-                res.send(401);
-            }
-        }
-        catch (Exception) {
-            errorLog("requestHandler.js  " + Exception);
-        }
-    };
-
-    function updateProfile(req, res, id, data) {
-        console.log("Requst updateProfile is success");
-        if (req.session && req.session.loggedIn) {
-            profile.update(id, data.profile, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function removeProfile(req, res, id) {
-        console.log("Requst removePerson is success");
-        if (req.session && req.session.loggedIn) {
-            profile.remove(id, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    //---------END------Profile-----------------------------------
 
     //---------------Persons--------------------------------
     function getPersonsForDd(req, res, data) {
@@ -1140,16 +1013,7 @@ var requestHandler = function (fs, mongoose) {
 
         mongoose: mongoose,
         getModules: getModules,
-        //getNewModules: getNewModules,
-
-        login: login,
-        createUser: createUser,
-        getUsers: getUsers,
-        getUserById:getUserById,
-        getFilterUsers:getFilterUsers,
-        updateUser: updateUser,
-        removeUser: removeUser,
-
+       
         createPerson: createPerson,
         getPersons: getPersons,
         getPersonById: getPersonById,
@@ -1188,11 +1052,6 @@ var requestHandler = function (fs, mongoose) {
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
-
-        getProfile: getProfile,
-        createProfile: createProfile,
-        updateProfile: updateProfile,
-        removeProfile: removeProfile,
 
         getJobPosition: getJobPosition,
         createJobPosition: createJobPosition,

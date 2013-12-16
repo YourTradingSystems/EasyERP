@@ -18,8 +18,6 @@ mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
 
 var express = require('express');
-var requestHandler = require("./requestHandler.js")(fs, mongoose);
-
 var app = express();
 
 var MemoryStore = require('connect-mongo')(express);
@@ -75,6 +73,8 @@ app.configure(function () {
         console.log("Connection to CRM_DB is success");
     });
 });
+
+var requestHandler = require("./requestHandler.js")(fs, mongoose, app);
 
 app.get('/', function (req, res) {
     res.sendfile('index.html');
@@ -158,104 +158,13 @@ app.post('/uploadFiles', function (req, res, next) {
     });
 });
 
-
-app.post('/login', function (req, res, next) {
-    console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
-    data = {};
-    data = req.body;
-    console.log(data);
-    requestHandler.login(req, res, data);
-});
-
-app.post('/Users', function (req, res) {
-    console.log(req.body);
-    data = {};
-    data.mid = req.headers.mid;
-    data.user = req.body;
-    requestHandler.createUser(req, res, data);
-});
-
-app.get('/Users', function (req, res) {
-    console.log('---------------------getUsers-------------');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getUsers(req, res, data);
-});
-
-app.get('/Users/:viewType', function (req, res) {
-    console.log('---------------------getUsers-------------');
-    var data = {};
-    for (var i in req.query) {
-        data[i] = req.query[i];
+app.get('/logout', function (req, res, next) {
+    console.log('>>>>>>>>>>>logut<<<<<<<<<<<<<<');
+    if (req.session) {
+        req.session.destroy(function () { });
     }
-    var viewType = req.params.viewType;
-    switch (viewType) {
-        case "form": requestHandler.getUserById(req, res, data);
-            break;
-        default: requestHandler.getFilterUsers(req, res, data);
-            break;
-    }
+    res.redirect('/#login');
 });
-
-app.put('/Users/:viewType/:_id', function (req, res) {
-    console.log(req.body);
-    data = {};
-    var id = req.param('_id');
-    //data._id = req.params('_id');
-    data.mid = req.headers.mid;
-    data.user = req.body;
-    requestHandler.updateUser(req, res, id, data);
-});
-
-app.delete('/Users/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    console.log(data);
-    requestHandler.removeUser(req, res, id);
-});
-app.delete('/Users/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    console.log(data);
-    requestHandler.removeUser(req, res, id);
-});
-
-app.post('/Profiles', function (req, res) {
-    data = {};
-    data.mid = req.headers.mid;
-    data.profile = req.body;
-    requestHandler.createProfile(req, res, data);
-});
-
-app.get('/Profiles', function (req, res) {
-    console.log('---------SERVER----getProfiles-------------------------------');
-    data = {};
-    data.mid = req.param('mid');
-    console.log(data);
-    console.log('--------END SERVER-----getProfiles-------------------------------');
-    requestHandler.getProfile(req, res);
-});
-
-app.put('/Profiles/:_id', function (req, res) {
-    console.log(req.body);
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.profile = req.body;
-    console.log(data);
-    requestHandler.updateProfile(req, res, id, data);
-});
-
-app.delete('/Profiles/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    console.log(data);
-    requestHandler.removeProfile(req, res, id);
-});
-
 
 //-----------------END----Users--and Profiles-----------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////
