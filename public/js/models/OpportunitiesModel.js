@@ -1,7 +1,8 @@
 ﻿define([
-    'common'
+    'common',
+    'Validation'
 ],
-function (common) {
+function (common, Validation) {
     var OpportunityModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
@@ -29,6 +30,39 @@ function (common) {
         validate: function(attrs){
             var errors = [];
 
+            if($.trim(attrs.nextAction.date).length > 0){
+                if(!Validation.validDate(attrs.nextAction.date)){
+                    errors.push(
+                        {
+                            name: "Opportunities",
+                            field: "nextAction",
+                            msg: "Next action date is not a valid date"
+                        }
+                    );
+                } else{
+                    if(new Date(attrs.nextAction.date) > new Date(attrs.expectedClosing)){
+                        errors.push(
+                            {
+                                name: "Opportunities",
+                                field: "expectedClosing",
+                                msg: "Next action date can not be greater than expected closing date"
+                            }
+                        );
+                    }
+                }
+            }
+            if($.trim(attrs.expectedClosing).length > 0){
+                if(!Validation.validDate(attrs.expectedClosing)){
+                    errors.push(
+                        {
+                            name: "Opportunities",
+                            field: "expectedClosing",
+                            msg: "Expected closing date is not a valid date"
+                        }
+                    );
+                }
+            }
+
             if($.trim(attrs.name) == ""){
                 errors.push(
                     {
@@ -38,12 +72,12 @@ function (common) {
                     }
                 );
             }
-            if(isNaN(parseFloat(attrs.expectedRevenue.value))){
+            if(!Validation.validMoneyAmount(attrs.expectedRevenue.value)){
                 errors.push(
                     {
                         name: "Opportunities",
-                        field: "subject",
-                        msg: "Expected Revenue value must be a number"
+                        field: "expectedRevenue",
+                        msg: "Expected revenue can contain only numbers dot separated with max 2 digits after dot"
                     }
                 );
             }

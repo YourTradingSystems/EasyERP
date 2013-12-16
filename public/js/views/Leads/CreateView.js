@@ -43,7 +43,7 @@ define([
                 var $company = this.$("#company");
                 var mid = 39;
 
-                var model = new LeadModel();
+                
 
                 var name = $.trim($("#name").val());
 
@@ -93,7 +93,7 @@ define([
 
                 var reffered = $.trim($("#reffered").val());
 
-                model.save({
+                this.model.save({
                     name: name,
                     company: company,
                     customer: idCustomer,
@@ -116,12 +116,13 @@ define([
                         headers: {
                             mid: mid
                         },
+                        
                         success: function (model) {
 							self.hideDialog();
-                            Backbone.history.navigate("easyErp/Leads/list", { trigger: true });
+                            Backbone.history.navigate("easyErp/Leads", { trigger: true });
                         },
                         error: function (model, xhr, options) {
-                            Backbone.history.navigate("home", { trigger: true });
+                            Backbone.history.navigate("easyErp", { trigger: true });
                         }
                     });
 

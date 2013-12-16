@@ -21,7 +21,9 @@ define([
             },
 
             events: {
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
 
             switchTab: function (e) {
@@ -32,6 +34,20 @@ define([
                 }
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
+            },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
+
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
             },
             hideDialog: function () {
                 $(".create-dialog").remove();
@@ -76,9 +92,6 @@ define([
 
                 var language = $("#language").val();
 
-                var dateSt = $.trim($("#date").val());
-                var date = (dateSt) ? new Date(Date.parse(dateSt)) : "";
-
                 var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
 
                 var isSupplier = ($("#isSupplier").is(":checked")) ? true : false;
@@ -104,8 +117,7 @@ define([
                         salesPerson: salesPerson,
                         salesTeam: salesTeam,
                         reference: reference,
-                        language: language,
-                        date: date
+                        language: language
                     }
                 },
                     {

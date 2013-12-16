@@ -15,7 +15,12 @@ define([
                         mid: mid
                     }),
                     reset: true,
-                    success: this.fetchSuccess
+                    success: this.fetchSuccess,
+                    error: function(models, xhr, options) {
+                        if ((xhr.status === 401) || (xhr.status === 403)) {
+                            Backbone.history.navigate('#login');
+                        }
+                    }
                 });
             },
             parse: true,

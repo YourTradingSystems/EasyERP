@@ -19,7 +19,7 @@
             gotoOpportunitieForm: function (e) {
                 e.preventDefault();
                 var itemIndex = $(e.target).closest("a").attr("id");
-                window.location.hash = "#home/content-Opportunities/form/" + itemIndex;
+                window.location.hash = "#easyErp/Opportunities/form/" + itemIndex;
             },
 
             render: function (options) {

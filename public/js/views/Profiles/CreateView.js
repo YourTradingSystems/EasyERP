@@ -66,31 +66,39 @@ define([
                 var choice = $('input[name=group]:checked').val();
                 switch(choice){
                     case "new":
-                        this.selectedProfile = this.profilesCollection.get('52384955d6c355e9fd7116ef');
+                        this.selectedProfile = this.profilesCollection.get('1387181747000');
                         break;
                     case "base":
                         var profileId = $('#profilesDd option:selected').val();
                         this.selectedProfile = this.profilesCollection.get(profileId);
+
+
+
                         break;
                 }
                 var self = this;
-                this.model.set({
-                    profileAccess: this.selectedProfile.get('profileAccess')
-                });
-                this.model.save({},{
-                    headers:{
-                        mid:39
-                    },
-                    wait:true,
-                    success:function(){
-                        self.hideDialog();
-                        Backbone.history.navigate("easyErp/Profiles", { trigger: true });
-                        self.profilesCollection.trigger('reset');
-                    },
-                    error: function(){
-                        Backbone.history.navigate("easyErp", { trigger: true });
-                    }
-                })
+				this.model.set({
+					profileAccess: this.selectedProfile.get('profileAccess')
+				});
+				this.model.save({},{
+					headers:{
+						mid:39
+					},
+					wait:true,
+					success:function(models, response, options){
+						self.hideDialog();
+						Backbone.history.navigate("easyErp/Profiles", { trigger: true });
+						self.profilesCollection.set(models, { remove: false });
+					},
+					error: function (model, xhr, options) {
+					    if (xhr && xhr.status === 401) {
+					        Backbone.history.navigate("login", { trigger: true });
+					    } else {
+					        Backbone.history.navigate("home", { trigger: true });
+					    }
+					}
+				});
+
             },
 
 
@@ -151,7 +159,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: 800,
+                    width: 600,
                     title: "Create Profile",
                     buttons: {
                        /* next: {

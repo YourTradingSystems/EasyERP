@@ -15,20 +15,20 @@
             <div class="half-block left">
                 <dl class="person-info">
                     <dt><label for="firstName">First Name :</label></dt>
-                    <dd><input type="text" name="firstName" id="firstName" value="<%= model.name.first %>" required maxlength="64"/></dd>
+                    <dd><input type="text" name="firstName" id="firstName" value="<%= model.name.first %>"  required maxlength="32"/></dd>
                     <dt><label for="lastName">Last Name :</label></dt>
-                    <dd><input type="text" name="lastName" id="lastName" value="<%= model.name.last %>" required maxlength="64"/></dd>
+                    <dd><input type="text" name="lastName" id="lastName" value="<%= model.name.last %>" required maxlength="32"/></dd>
                     <dt><label for="jobPositionInput">Job Position :</label></dt>
-                    <dd><input type="text" id="jobPositionInput" value="<%= model.jobPosition%>" placeholder="e.g. Sales Manager" maxlength="64"/></dd>
+                    <dd><input type="text" id="jobPositionInput" value="<%= model.jobPosition%>" placeholder="e.g. Sales Manager" maxlength="32"/></dd>
 
                     <dt><label for="dateBirth">Date Of Birth :</label></dt>
                     <dd><input class="blueback" type="text" id="dateBirth" value="<%= model.dateBirth%>" /></dd>
                     <dt><label for="emailInput">Email :</label></dt>
-                    <dd><input type="text" id="emailInput" value="<%= model.email%>" maxlength="64"/></dd>
+                    <dd><input type="text" id="emailInput" value="<%= model.email%>" maxlength="32"/></dd>
                     <dt><label for="mobileInput">Mobile :</label></dt>
-                    <dd><input type="text" id="mobileInput" value="<%= model.phones.mobile%>" maxlength="64"/></dd>
+                    <dd><input type="text" id="mobileInput" value="<%= model.phones.mobile%>" maxlength="32"/></dd>
                     <dt><label for="phoneInput">Phone :</label></dt>
-                    <dd><input type="text" id="phoneInput" value="<%= model.phones.phone%>" maxlength="64"/></dd>
+                    <dd><input type="text" id="phoneInput" value="<%= model.phones.phone%>" maxlength="32"/></dd>
                 
                     <dt><label for="companiesDd">Company :</label></dt>
                     <dd>
@@ -48,15 +48,15 @@
                 </div>
                 <dl class="person-info">
                     <dt><label for="addressInput">Street :</label></dt>
-                    <dd><input type="text" id="addressInput" value="<%= model.address.street%>" placeholder="Street..." maxlength="64"/></dd>
+                    <dd><input type="text" id="addressInput" value="<%= model.address.street%>" placeholder="Street..." maxlength="32"/></dd>
                     <dt><label for="cityInput">City :</label></dt>
-                    <dd><input type="text" id="cityInput" value="<%= model.address.city%>" placeholder="City" maxlength="64"/></dd>
+                    <dd><input type="text" id="cityInput" value="<%= model.address.city%>" placeholder="City" maxlength="32"/></dd>
                     <dt><label for="countryInput">Country :</label></dt>
-                    <dd><input type="text" id="countryInput" value="<%= model.address.country%>" placeholder="Country" maxlength="64"/></dd>
+                    <dd><input type="text" id="countryInput" value="<%= model.address.country%>" placeholder="Country" maxlength="32"/></dd>
                     <dt><label for="stateInput">State :</label></dt>
-                    <dd><input type="text" id="stateInput" value="<%= model.address.state%>" placeholder="State" maxlength="64"/></dd>
+                    <dd><input type="text" id="stateInput" value="<%= model.address.state%>" placeholder="State" maxlength="32"/></dd>
                     <dt><label for="zipInput">Zip :</label></dt>
-                    <dd><input type="text" id="zipInput" value="<%= model.address.zip%>" placeholder="Zip" maxlength="64"/></dd>
+                    <dd><input type="text" id="zipInput" value="<%= model.address.zip%>" placeholder="Zip" maxlength="32"/></dd>
                 </dl>
             </div>
             <div class="clearfix"></div>
@@ -69,15 +69,15 @@
             <div class="half-block left">
                 <dl class="person-info">
                     <dt><label for="websiteInput">Website :</label></dt>
-                    <dd><input type="text" id="websiteInput" value="<%= model.website%>" placeholder="e.g. www.site.com" maxlength="64"/></dd>
+                    <dd><input type="text" id="websiteInput" value="<%= model.website%>" placeholder="e.g. www.site.com" maxlength="32"/></dd>
                     <dt><label for="skype">Skype :</label></dt>
-                    <dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="64"/></dd>
+                    <dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="32"/></dd>
                     <dt><label for="departmentDd">Department :</label></dt>
                     <dd>
                         <select id="departmentDd"></select>
                     </dd>
                     <dt><label for="faxInput">Fax: </label></dt>
-                    <dd><input type="text" id="faxInput" value="<%= model.phones.fax%>" maxlength="64"/></dd>
+                    <dd><input type="text" id="faxInput" value="<%= model.phones.fax%>" maxlength="32"/></dd>
                     <dt><label for="titleDd">Title :</label></dt>
                     <dd>
                         <select id="titleDd">

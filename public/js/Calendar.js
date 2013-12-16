@@ -94,14 +94,14 @@ function(UsersCollection){
         if(!scheduler.checkEvent("onLightBox")){
             scheduler.attachEvent('onLightBox', function(id){ 
 				//chooce calendar
-				var curCalendarId = $('#calendarList').val();
+				var curCalendarId = [];
+				$('.calendarList').find("li.checked").each(function(){
+					curCalendarId.push($(this).attr("data-id"));
+				});
 				if (curCalendarId&&curCalendarId.length>1&&!$("#chooseCalendarDiv").length){
 					var curCalendarText = [];
-					for (var i;i<curCalendarId.length;i++){
-						curCalendarText.push($('#calendarList option[value="'+curCalendarId+'"]').text())
-						
-					}
-					$('#calendarList option:selected').each(function(){
+
+					$('.calendarList .checked .text').each(function(){
 						curCalendarText.push($(this).text());
 					});
 					var s = "";

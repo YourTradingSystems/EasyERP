@@ -2,7 +2,7 @@
 <% jobPositionsCollection.forEach(function(jobPosition, index){ %>
 <tr data-index="<%= index %>" data-id="<%=jobPosition._id%>">
     <td><input type="checkbox" value="<%=jobPosition._id%>" class="checkbox"/></td>
-    <td><%=index + startNumber +1 %></td>
+    <td><%=index +1 %></td>
     <td><%=jobPosition.name%></td>
     <td><%= (jobPosition.department) ? jobPosition.department.departmentName : ''%> </td>
     <td><%=jobPosition.totalForecastedEmployees%></td>

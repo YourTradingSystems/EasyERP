@@ -1,21 +1,23 @@
 var Profile = function (logWriter, mongoose) {
-
+    
     var ProfileSchema = mongoose.Schema({
+        _id: Number,
         profileName: { type: String, default: 'emptyProfile' },
         profileDescription: { type: String, default: 'No description' },
         profileAccess: [{
-            module: {
-                mid: { type: Number, default: '' },
-                mname: { type: String, default: '' }
-            },
-            access: { type: [Boolean], default: [false, false, false] }
+            module: { type: Number, ref: "modules" },
+            access: {
+                read: { type: Boolean, default: false },
+                editWrite: { type: Boolean, default: false },
+                del: { type: Boolean, default: false }
+            }
         }]
 
     }, { collection: 'Profile' });
 
     var profile = mongoose.model('Profile', ProfileSchema);
 
-    function create(data, res) {
+    function createProfile(data, res) {
         try {
             console.log('createProfile');
             if (!data.profileName) {
@@ -23,7 +25,7 @@ var Profile = function (logWriter, mongoose) {
                 res.send(400, { error: 'Profile.create Incorrect Incoming Data' });
                 return;
             } else {
-                console.log(data);
+//                console.log(data);
                 profile.find({ profileName: data.profileName }, function (error, doc) {
                     try {
                         if (error) {
@@ -46,7 +48,7 @@ var Profile = function (logWriter, mongoose) {
             }
             function saveProfileToDb(data) {
                 try {
-                    _profile = new profile();
+					_profile = new profile({ _id: Date.parse(new Date()) });
                     if (data.profileName) {
                         _profile.profileName = data.profileName;
                     }
@@ -54,8 +56,13 @@ var Profile = function (logWriter, mongoose) {
                         _profile.profileDescription = data.profileDescription;
                     }
                     if (data.profileAccess) {
-                        _profile.profileAccess = data.profileAccess;
+                        _profile.profileAccess = data.profileAccess.map(function(item){
+							item.module=item.module._id;
+							console.log(item);
+							return item;
+						});
                     }
+					console.log(_profile);
                     _profile.save(function (err, result) {
                         try {
                             if (err) {
@@ -89,11 +96,12 @@ var Profile = function (logWriter, mongoose) {
         }
     };
 
-    function get(response) {
+    function getProfile(response) {
         var res = {};
         res['data'] = [];
         var query = profile.find({});
-        query.sort({profileName: 1 });
+        query.sort({profileName: 1 }).
+        populate('profileAccess.module');
         query.exec(function (err, result) {
             if (err || result.length == 0) {
                 if (err) {
@@ -108,7 +116,7 @@ var Profile = function (logWriter, mongoose) {
         });
     };
 
-    function update(_id, data, res) {
+    function updateProfile(_id, data, res) {
         try {
             delete data._id;
             profile.update({ _id: _id }, data, function (err, result) {
@@ -130,7 +138,7 @@ var Profile = function (logWriter, mongoose) {
         }
     };
 
-    function remove(_id, res) {
+    function removeProfile(_id, res) {
         profile.remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
@@ -143,13 +151,14 @@ var Profile = function (logWriter, mongoose) {
     };
 
     return {
-        create: create,
         
-        get: get,
+        createProfile: createProfile,
         
-        update: update,
+        getProfile: getProfile,
         
-        remove: remove,
+        updateProfile: updateProfile,
+        
+        removeProfile: removeProfile,
         
         profile: profile
     };

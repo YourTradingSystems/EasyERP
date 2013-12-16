@@ -22,6 +22,7 @@
         }
 
         var utcDateToLocaleDateTime = function (utcDateString) {
+            if(!utcDateString) return null;
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
             return utcDateString;
         }
@@ -180,7 +181,7 @@
                 var options = [];
                 if (model && model.profile) {
                     options = $.map(response.data, function(item) {
-                        return (model.profile.profile._id == item._id) ?
+                        return (model.profile._id == item._id) ?
                             $('<option/>').val(item._id).text(item.profileName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.profileName);
                     });
@@ -202,7 +203,7 @@
                 var options = [];
                 if (model && ( model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.manager && model.manager._id === item._id) || (model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson && model.salesPerson._id === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
+                        return ((model.manager && model.manager._id === item._id) || (model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
@@ -291,7 +292,7 @@
                 var options = [];
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function(item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam && model.salesTeam._id === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.departmentName);
                         });
@@ -311,9 +312,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function(response) {
                 var options = [];
-                if (model && model.extrainfo.priority) {
+                if (model && ((model.extrainfo && model.extrainfo.priority) || model.priority)) {
                     options = $.map(response.data, function(item) {
-                        return model.extrainfo.priority === item.priority ?
+                        return ((model.extrainfo && model.extrainfo.priority) || model.priority) === item.priority ?
                             $('<option/>').val(item.priority).text(item.priority).attr('selected', 'selected') :
                             $('<option/>').val(item.priority).text(item.priority);
                     });

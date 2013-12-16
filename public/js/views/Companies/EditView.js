@@ -129,6 +129,7 @@ define([
                     s += "<li>" + $(this).text() + "</li>";
                 });
                 s += "</ul>";
+                $(".newSelectList").remove();;
                 $(e.target).parent().append(s);
                 return false;
             },
@@ -151,8 +152,6 @@ define([
             template: _.template(EditTemplate),
 
             render: function () {
-                console.log(this.currentModel);
-
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });

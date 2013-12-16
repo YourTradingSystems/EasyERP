@@ -48,45 +48,45 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var dateBirthSt = $.trim($("#dateBirth").val());
-                var dateBirth = "";
-                if (dateBirthSt) {
+                var dateBirthSt = this.$el.find("#dateBirth").val();
+                var dateBirth = this.$el.find("#dateBirth").val();
+                /*if (dateBirthSt) {
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
-                }
+                }*/
                 var company = $('#companiesDd option:selected').val();
                 company = (company) ? company : null;
 
                 var department = $("#department option:selected").val();
                 department = (department) ? department : null;
 
-                jobPosition = $('#jobPositionInput').val();
+                var jobPosition = this.$el.find('#jobPositionInput').val();
                 jobPosition = (jobPosition) ? jobPosition : null;
 
                 var data = {
                     imageSrc: this.imageSrc,
                     name: {
-                        first: $('#firstName').val(),
-                        last: $('#lastName').val()
+                        first: this.$el.find('#firstName').val(),
+                        last: this.$el.find('#lastName').val()
                     },
                     dateBirth: dateBirth,
                     department: department,
                     company: company,
                     address: {
-                        street: $('#addressInput').val(),
-                        city: $('#cityInput').val(),
-                        state: $('#stateInput').val(),
-                        zip: $('#zipInput').val(),
-                        country: $('#countryInput').val()
+                        street: this.$el.find('#addressInput').val(),
+                        city: this.$el.find('#cityInput').val(),
+                        state: this.$el.find('#stateInput').val(),
+                        zip: this.$el.find('#zipInput').val(),
+                        country: this.$el.find('#countryInput').val()
                     },
-                    website: $('#websiteInput').val(),
+                    website: this.$el.find('#websiteInput').val(),
                     jobPosition: jobPosition,
-                    skype: $('#skype').val(),
+                    skype: this.$el.find('#skype').val(),
                     phones: {
-                        phone: $('#phoneInput').val(),
-                        mobile: $('#mobileInput').val(),
-                        fax: $('#faxInput').val()
+                        phone: this.$el.find('#phoneInput').val(),
+                        mobile: this.$el.find('#mobileInput').val(),
+                        fax: this.$el.find('#faxInput').val()
                     },
-                    email: $('#emailInput').val(),
+                    email: this.$el.find('#emailInput').val(),
                     salesPurchases: {
                         isCustomer: $('#isCustomerInput').is(':checked'),
                         isSupplier: $('#isSupplierInput').is(':checked'),
@@ -119,6 +119,7 @@ define([
                     s += "<li>" + $(this).text() + "</li>";
                 });
                 s += "</ul>";
+                $(".newSelectList").remove();;
                 $(e.target).parent().append(s);
                 return false;
             },
@@ -150,6 +151,13 @@ define([
                     title: "Edit Person",
                     width: "80%"
                 });
+                $('#dateBirth').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-18y'
+                });
                 common.populateCompanies(App.ID.companiesDd, "/Companies", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
                 common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
                 this.styleSelect(App.ID.titleDd);
@@ -161,13 +169,7 @@ define([
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
 
-                $('#dateBirth').datepicker({
-                    dateFormat: "d M, yy",
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: '-100y:c+nn',
-                    maxDate: '-1d'
-                });
+
                 return this;
             }
 
