@@ -13,6 +13,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         initialize: function (options) {
             this.collection = options.collection;
             this.render();
+
         },
 
         events: {
@@ -20,21 +21,30 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         render: function () {
+            arrayOfPersons = [];
+            var namberOfpersons = this.collection.namberToShow;
         	$('.ui-dialog ').remove();
             console.log('Person render');
             this.$el.html('');
             if (this.collection.length > 0) {
                 var holder = this.$el;
                 var thumbnailsItemView;
-                _.each(this.collection.models, function (model) {
-                    thumbnailsItemView = new ThumbnailsItemView({ model: model });
-                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    $(holder).append(thumbnailsItemView.render().el);
+                _.each(this.collection.models, function (model,index) {
+                        if(index < namberOfpersons){
+                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                            thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                            $(holder).append(thumbnailsItemView.render().el);
+                        } else {
+                            arrayOfPersons.push(model);
+                        }
                 }, this);
             } else {
                 this.$el.html('<h2>No persons found</h2>');
             }
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+
+            if (arrayOfPersons.length > 0) {
+                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            }
             return this;
         },
 
@@ -44,13 +54,37 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
+            var holder = $('#showMoreDiv');
             var thumbnailsItemView;
+            var counter =0;
+            var namberOfPersons = this.collection.namberToShow;
+
+            if (arrayOfPersons.length > 0) {
+                for (var i=0; i<arrayOfPersons.length; i++) {
+                    if (counter < namberOfPersons ) {
+                        counter++;
+                        thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfPersons[i]});
+                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                        holder.before(thumbnailsItemView.render().el);
+                        arrayOfPersons.splice(i,1);
+                        i--;
+                    }
+                }
+
+            }
             _.each(newModels.models, function (model) {
-                thumbnailsItemView = new ThumbnailsItemView({ model: model });
-                thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                $(holder).prepend(thumbnailsItemView.render().el);
+                if (counter < namberOfPersons) {
+                    thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                    holder.before(thumbnailsItemView.render().el);
+                } else {
+                    arrayOfPersons.push(model);
+                }
             }, this);
+
+            if (arrayOfPersons.length == 0) {
+                this.$el.find('#showMoreDiv').hide();
+            }
         },
 
         createItem: function () {

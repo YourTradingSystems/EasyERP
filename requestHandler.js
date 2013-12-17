@@ -775,7 +775,7 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.get(res);
+                    jobPosition.getCustom(res);
                 } else {
                     res.send(403);
                 }

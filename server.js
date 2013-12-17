@@ -345,6 +345,7 @@ app.delete('/Persons/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
 });
+
 app.delete('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
