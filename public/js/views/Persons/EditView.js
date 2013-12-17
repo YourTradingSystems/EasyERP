@@ -48,45 +48,42 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var dateBirthSt = this.$el.find("#dateBirth").val();
+                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                 var dateBirth = this.$el.find("#dateBirth").val();
-                /*if (dateBirthSt) {
-                    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
-                }*/
                 var company = $('#companiesDd option:selected').val();
                 company = (company) ? company : null;
 
                 var department = $("#department option:selected").val();
                 department = (department) ? department : null;
 
-                var jobPosition = this.$el.find('#jobPositionInput').val();
+                var jobPosition = $.trim(this.$el.find('#jobPositionInput').val());
                 jobPosition = (jobPosition) ? jobPosition : null;
 
                 var data = {
                     imageSrc: this.imageSrc,
                     name: {
-                        first: this.$el.find('#firstName').val(),
-                        last: this.$el.find('#lastName').val()
+                        first: $.trim(this.$el.find('#firstName').val()),
+                        last: $.trim(this.$el.find('#lastName').val())
                     },
                     dateBirth: dateBirth,
                     department: department,
                     company: company,
                     address: {
-                        street: this.$el.find('#addressInput').val(),
-                        city: this.$el.find('#cityInput').val(),
-                        state: this.$el.find('#stateInput').val(),
-                        zip: this.$el.find('#zipInput').val(),
-                        country: this.$el.find('#countryInput').val()
+                        street: $.trim(this.$el.find('#addressInput').val()),
+                        city: $.trim(this.$el.find('#cityInput').val()),
+                        state: $.trim(this.$el.find('#stateInput').val()),
+                        zip: $.trim(this.$el.find('#zipInput').val()),
+                        country: $.trim(this.$el.find('#countryInput').val())
                     },
-                    website: this.$el.find('#websiteInput').val(),
+                    website: $.trim(this.$el.find('#websiteInput').val()),
                     jobPosition: jobPosition,
-                    skype: this.$el.find('#skype').val(),
+                    skype: $.trim(this.$el.find('#skype').val()),
                     phones: {
-                        phone: this.$el.find('#phoneInput').val(),
-                        mobile: this.$el.find('#mobileInput').val(),
-                        fax: this.$el.find('#faxInput').val()
+                        phone: $.trim(this.$el.find('#phoneInput').val()),
+                        mobile: $.trim(this.$el.find('#mobileInput').val()),
+                        fax: $.trim(this.$el.find('#faxInput').val())
                     },
-                    email: this.$el.find('#emailInput').val(),
+                    email: $.trim(this.$el.find('#emailInput').val()),
                     salesPurchases: {
                         isCustomer: $('#isCustomerInput').is(':checked'),
                         isSupplier: $('#isSupplierInput').is(':checked'),

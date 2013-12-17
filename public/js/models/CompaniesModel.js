@@ -15,7 +15,7 @@
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.name.first) == ""){
+            if(attrs.name.first === ""){
                 errors.push(
                     {
                         name: "Company",
@@ -68,7 +68,7 @@
                     );
                 }
             }
-            if($.trim(attrs.address.street).length > 0){
+            if(attrs.address.street.length > 0){
                 if(!Validation.validStreet(attrs.address.street)){
                     errors.push(
                         {
@@ -79,7 +79,7 @@
                     );
                 }
             }
-            if($.trim(attrs.address.city).length > 0){
+            if(attrs.address.city.length > 0){
                 if(!Validation.validStreet(attrs.address.city)){
                     errors.push(
                         {
@@ -90,7 +90,7 @@
                     );
                 }
             }
-            if($.trim(attrs.address.state).length > 0){
+            if(attrs.address.state.length > 0){
                 if(!Validation.validStreet(attrs.address.state)){
                     errors.push(
                         {
@@ -101,7 +101,7 @@
                     );
                 }
             }
-            if($.trim(attrs.address.zip).length > 0){
+            if(attrs.address.zip.length > 0){
                 if(!Validation.validNumber(attrs.address.zip)){
                     errors.push(
                         {
@@ -112,7 +112,7 @@
                     );
                 }
             }
-            if($.trim(attrs.address.country).length > 0){
+            if(attrs.address.country.length > 0){
                 if(!Validation.validStreet(attrs.address.country)){
                     errors.push(
                         {

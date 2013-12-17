@@ -16,7 +16,7 @@ define(["Validation"],function (Validation) {
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.name.first) === ""){
+            if(attrs.name.first === ""){
                 errors.push(
                     {
                         name: "Person",
@@ -25,7 +25,7 @@ define(["Validation"],function (Validation) {
                     }
                 );
             }
-            if($.trim(attrs.name.last) === ""){
+            if(attrs.name.last === ""){
                 errors.push(
                     {
                         name: "Person",
@@ -35,7 +35,7 @@ define(["Validation"],function (Validation) {
                 );
             }
 
-            if($.trim(attrs.name.last).length > 0){
+            if(attrs.name.last.length > 0){
                 if(!Validation.validName(attrs.name.last)){
                     errors.push(
                         {
@@ -46,7 +46,7 @@ define(["Validation"],function (Validation) {
                     );
                 }
             }
-            if($.trim(attrs.name.first).length > 0){
+            if(attrs.name.first.length > 0){
                 if(!Validation.validName(attrs.name.first)){
                     errors.push(
                         {
@@ -57,7 +57,7 @@ define(["Validation"],function (Validation) {
                     );
                 }
             }
-            if($.trim(attrs.dateBirth).length > 0){
+            if(attrs.dateBirth.length > 0){
                 if(!Validation.validDate(attrs.dateBirth)){
                     errors.push(
                         {
@@ -102,7 +102,7 @@ define(["Validation"],function (Validation) {
                 }
             }
 
-            if($.trim(attrs.address.street).length > 0){
+            if(attrs.address.street.length > 0){
                 if(!Validation.validStreet(attrs.address.street)){
                     errors.push(
                         {
@@ -113,7 +113,7 @@ define(["Validation"],function (Validation) {
                     );
                 }
             }
-            if($.trim(attrs.address.city).length > 0){
+            if(attrs.address.city.length > 0){
                 if(!Validation.validStreet(attrs.address.city)){
                     errors.push(
                         {

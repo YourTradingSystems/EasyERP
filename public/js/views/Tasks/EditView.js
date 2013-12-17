@@ -94,7 +94,7 @@
                 var self = this;
 
                 var mid = 39;
-                var summary = $("#summary").val();
+                var summary = $.trim(this.$el.find("#summary").val());
                 var project = $("#projectDd option:selected").val();
                 var assignedTo = $("#assignedToDd option:selected").val();
 
@@ -103,24 +103,17 @@
                     tags = null;
                 }
 
-                var sequence = parseInt($.trim($("#sequence").val()));
+                var sequence = $.trim(this.$el.find("#sequence").val());
                 if (!sequence) {
                     sequence = null;
                 }
-
-                var customer = $("#customerDd option:selected").val();
                 var workflow = $("#workflowsDd option:selected").val();
-
-
-                var estimated = $("#estimated").val();
+                var estimated = $.trim(this.$el.find("#estimated").val());
                 if ($.trim(estimated) == "") {
                     estimated = 0;
                 }
 
-                var logged = $("#logged").val();
-                if ($.trim(logged) == "") {
-                    logged = 0;
-                }
+                var logged = $.trim(this.$el.find("#logged").val());
 
                 var priority = $("#priorityDd option:selected").val();
 
@@ -129,14 +122,14 @@
                     summary: summary,
                     assignedTo: assignedTo ? assignedTo : null,
                     workflow: workflow ? workflow : null,
-                    project: project ? project : null,
+                    project: project,
                     tags: tags,
-                    deadline: $.trim($("#deadline").val()),
-                    description: $("#description").val(),
+                    deadline: $.trim(this.$el.find("#deadline").val()),
+                    description: $.trim(this.$el.find("#description").val()),
                     extrainfo: {
-                        //priority: priority ? priority,
+                        priority: priority,
                         sequence: sequence,
-                        StartDate: $.trim($("#StartDate").val())
+                        StartDate: $.trim(this.$el.find("#StartDate").val())
                     },
                     estimated: estimated,
                     logged: logged

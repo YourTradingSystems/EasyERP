@@ -15,7 +15,7 @@ define( function () {
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.profileName) == ""){
+            if(attrs.profileName === ""){
                 errors.push(
                     {
                         name:"Profile name",

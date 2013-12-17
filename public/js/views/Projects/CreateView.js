@@ -53,10 +53,11 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var customer = $("#customerDd option:selected").val();
-                var projectmanager = $("#projectManagerDD option:selected").val();
-                var workflow = $("#workflowsDd option:selected").data("id");
-                var $userNodes = $("#usereditDd option:selected"), users = [];
+                var customer = this.$el.find("#customerDd option:selected").val();
+                var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
+                var workflow = this.$el.find("#workflowsDd option:selected").data("id");
+                var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
+                console.log(workflow);
                 $userNodes.each(function (key, val) {
                     users.push({
                         id: val.value,
@@ -65,8 +66,8 @@ define([
                 });
 
                 this.model.save({
-                    projectName: $("#projectName").val(),
-                    projectShortDesc: $("#projectShortDesc").val(),
+                    projectName: $.trim(this.$el.find("#projectName").val()),
+                    projectShortDesc: $.trim(this.$el.find("#projectShortDesc").val()),
                     customer: customer ? customer : "",
                     projectmanager: projectmanager ? projectmanager : "",
                     workflow: workflow ? workflow : "",

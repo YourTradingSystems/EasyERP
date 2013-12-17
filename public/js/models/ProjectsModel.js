@@ -16,7 +16,7 @@ define(function () {
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.projectName) == ""){
+            if(attrs.projectName === ""){
                 errors.push(
                     {
                         name:"Project",
@@ -25,7 +25,7 @@ define(function () {
                     }
                 );
             }
-            if($.trim(attrs.projectShortDesc) == ""){
+            if(attrs.projectShortDesc === ""){
                 errors.push(
                     {
                         name: "Project",
@@ -34,6 +34,7 @@ define(function () {
                     }
                 );
             }
+
             if(errors.length > 0)
                 return errors;
         },

@@ -55,8 +55,8 @@ define([
             },
             saveItem: function(){
                 this.model.set({
-                    profileName: $('#profileName').val(),
-                    profileDescription: $('#profileDescription').val()
+                    profileName: $.trim(this.$el.find('#profileName').val()),
+                    profileDescription: $.trim(this.$el.find('#profileDescription').val())
                 }, {validate:true});
                 if(!this.model.isValid())
                     return;
@@ -71,9 +71,6 @@ define([
                     case "base":
                         var profileId = $('#profilesDd option:selected').val();
                         this.selectedProfile = this.profilesCollection.get(profileId);
-
-
-
                         break;
                 }
                 var self = this;

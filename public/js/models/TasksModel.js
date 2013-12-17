@@ -1,7 +1,8 @@
 define([
-    'common'
+    'common',
+    'Validation'
 ],
-    function (common) {
+    function (common, Validation) {
     var TaskModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function () {
@@ -36,7 +37,18 @@ define([
                     }
                 );
             }
-            if ($.trim(attrs.project) === "") {
+            if(attrs.summary.length > 0){
+                if(!Validation.validName(attrs.summary)){
+                    errors.push(
+                        {
+                            name: "Task",
+                            field: "summary",
+                            msg: "Summary " + Validation.errorMessages['nameError']
+                        }
+                    );
+                }
+            }
+            if (attrs.project === "") {
                 errors.push(
                     {
                         name: "Project",
@@ -44,6 +56,38 @@ define([
                         msg: "Project should be selected"
                     }
                 );
+            }
+            if(attrs.deadline.length > 0){
+                if(!Validation.validDate(attrs.deadline)){
+                    errors.push(
+                        {
+                            name: "Tasks",
+                            field: "deadline",
+                            msg: "Deadline date is not a valid date"
+                        }
+                    );
+                } else{
+                    if(new Date(attrs.deadline) < new Date(attrs.extrainfo.StartDate)){
+                        errors.push(
+                            {
+                                name: "Tasks",
+                                field: "deadline",
+                                msg: "Task start date can not be greater than deadline date"
+                            }
+                        );
+                    }
+                }
+            }
+            if(attrs.extrainfo.StartDate.length > 0){
+                if(!Validation.validDate(attrs.extrainfo.StartDate)){
+                    errors.push(
+                        {
+                            name: "Tasks",
+                            field: "deadline",
+                            msg: "Start date is not a valid date"
+                        }
+                    );
+                }
             }
             if (errors.length > 0)
                 return errors;
