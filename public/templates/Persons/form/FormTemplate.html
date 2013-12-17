@@ -25,44 +25,46 @@
 
                 </div>
                 <div class="mainInfo">
-                    <div class="half-block left">
-                        <h3>
-                            <span title='<%=name.first%>'><%=name.first%></span><span title='<%=name.last%>'><%=name.last%></span>  <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
+                 <h3>
+                            <span title='<%=name.first%> <%=name.last%>'><%=name.first%> <%=name.last%></span> 
+                            <span><% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%></span>
                         </h3>
+                    <div class="half-block left">
+                       
                         <dl class="person-info">
                             <dt>Position :</dt>
-                            <dd id="jobPosition" class="editable"><%=jobPosition%></dd>
+                            <dd id="jobPosition" class="editable" title="<%=jobPosition%>"><%=jobPosition%></dd>
                             <dt>Birthday :</dt>
                             <dd id="dateBirth" class="editable date"><%=dateBirth%></dd>
                             <dt>Email</dt>
-                            <dd id="email" class="editable"><a href="mailto:<%=email%>"><%=email%></a></dd>
+                            <dd id="email" class="editable"><a href="mailto:<%=email%>" title="<%=email%>"><%=email%></a></dd>
                             <dt>Mobile :</dt>
-                            <dd id="phones_mobile" class="editable"><%=phones.mobile%></dd>
+                            <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
                             <dt>Phone :</dt>
-                            <dd id="phones_phone" class="editable"><%=phones.phone%></dd>
+                            <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
                             <dt>Created By :</dt>
-                            <dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
+                            <dd title='<%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%>'><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
                             <dt>Edited By :</dt>
-                            <dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
+                            <dd title='<%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%>'><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
                         </dl>
                     </div>
                     <div class="half-block left">
                         <h3></h3>
                         <dl class="person-info">
                             <dt>Street :</dt>
-                            <dd id="address_street" class="editable"> <%=address.street%></dd>
+                            <dd id="address_street" class="editable" title="<%=address.street%>"> <%=address.street%></dd>
 
                             <dt>City :</dt>
-                            <dd id="address_city" class="editable"><%=address.city%></dd>
+                            <dd id="address_city" class="editable" title="<%=address.city%>"><%=address.city%></dd>
 
                             <dt>State :</dt>
-                            <dd id="address_state" class="editable"><%=address.state%></dd>
+                            <dd id="address_state" class="editable" title="<%=address.state%>"><%=address.state%></dd>
 
                             <dt>Zip :</dt>
-                            <dd id="address_zip" class="editable"> <%=address.zip%></dd>
+                            <dd id="address_zip" class="editable" title="<%=address.zip%>"><%=address.zip%></dd>
 
                             <dt>Country :</dt>
-                            <dd id="address_country" class="editable"><%=address.country%></dd>
+                            <dd id="address_country" class="editable" title="<%=address.country%>"><%=address.country%></dd>
                         </dl>
                     </div>
                     <div class="clearfix"></div>
@@ -75,13 +77,13 @@
                     <div class="half-block left">
                         <dl class="person-info">
                             <dt>Website: </dt>
-                            <dd id="website" class="editable"<%=website%></dd>
+                            <dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
                             <dt>Skype :</dt>
-                            <dd id="skype" class="editable"<%=skype%></dd>
+                            <dd id="skype" class="editable" title="<%=website%>"><%=skype%></dd>
                             <dt>Fax :</dt>
-                            <dd id="phones_fax" class="editable"<%=phones.fax%></dd>
+                            <dd id="phones_fax" class="editable" title="<%=phones.fax%>"><%=phones.fax%></dd>
                             <dt>Title :</dt>
-                            <dd id="title" class="editable"<%=title%></dd>
+                            <dd id="title" class="editable" title="<%=title%>"><%=title%></dd>
                         </dl>
                     </div>
                     <div class="half-block left">

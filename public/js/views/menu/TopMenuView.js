@@ -20,7 +20,7 @@ define([
 
             events: {
                 "click": "clickItem",
-                "mouseover > li": "mouseOver"
+//                "click > li": "mouseOver"
             },
 
             clickItem: function (event) {

@@ -6,9 +6,9 @@
 	</div>
     <div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="first">First Name :</label></dt><dd><input type="text" class="blueback" id="first" value="<%=name.first%>" required maxlength="32"/></dd>
-		<dt><label for="last">Last Name :</label></dt><dd><input type="text" class="blueback" id="last" value="<%=name.last%>" required maxlength="32"/></dd>
-		<dt><label for="tags">Tags :</label></dt><dd><input type="text" id="tags" value="<%=tags%>" maxlength="32"/></dd>
+		<dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" value="<%=name.first%>" required maxlength="32"/></dd>
+		<dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" value="<%=name.last%>" required maxlength="32"/></dd>
+		<dt><label for="tags">Tags</label></dt><dd><input type="text" id="tags" value="<%=tags%>" maxlength="32"/></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
@@ -88,9 +88,9 @@
             <option selected="selected" value="0">Select...</option>
           </select>
 		</dd>
-		<dt><label for="identNo">Identification No</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=identNo%>" required maxlength="32"/></dd>
-		<dt><label for="passportNo">Passport No</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=passportNo%>" required maxlength="32"/></dd>
-		<dt><label for="bankAccountNo">Bank Account No</label></dt>
+		<dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=identNo%>" required maxlength="32"/></dd>
+		<dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=passportNo%>" required maxlength="32"/></dd>
+		<dt><label for="bankAccountNo">Bank Account №</label></dt>
 		<dd>
 		  <select id="bankAccountNo">
             <option selected="selected" value="0">Select...</option>
@@ -158,6 +158,6 @@
 		<dt><label for="active">Active</label></dt><dd><input type="checkbox" <%= (active)? "checked='checked'" : ''%> name="active" id="active" /></dd>
 	  </dl>
 	</div>
-
+ <div class="clearfix"></div>
   </form>
 </div>

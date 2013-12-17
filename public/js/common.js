@@ -70,6 +70,7 @@
             var context = (_context) ? _context : this;
             var canvas = context.$('#avatar')[0];
             var inputFile = context.$('#inputImg');
+            inputFile.prop('accept', "image/*");
             var that = context;
             inputFile.on('change', function () {
                 var file = inputFile[0].files[0];

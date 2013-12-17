@@ -62,7 +62,7 @@ var requestHandler = function (fs, mongoose) {
     function getFilterUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 3, function (access) {
+            access.getReadAccess(req.session.uId, 7, function (access) {
                 console.log(access);
                 if (access) {
                     users.getFilterUsers(data, res);
@@ -775,7 +775,7 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.get(res);
+                    jobPosition.getCustom(res);
                 } else {
                     res.send(403);
                 }
@@ -1278,7 +1278,7 @@ var requestHandler = function (fs, mongoose) {
 
     function getLeads(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 30, function (access) {
+            access.getReadAccess(req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.getLeads(res);
                 } else {
@@ -1292,7 +1292,7 @@ var requestHandler = function (fs, mongoose) {
 
     function getLeadsById(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 30, function (access) {
+            access.getReadAccess(req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.getById(data.id, res);
                 } else {
@@ -1306,7 +1306,7 @@ var requestHandler = function (fs, mongoose) {
 
     function getLeadsCustom(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 30, function (access) {
+            access.getReadAccess(req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.getLeadsCustom(data, res);
                 } else {
@@ -1321,7 +1321,7 @@ var requestHandler = function (fs, mongoose) {
     function createLead(req, res, data) {
         if (req.session && req.session.loggedIn) {
             data.lead.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 30, function (access) {
+            access.getEditWritAccess(req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.create(data.lead, res);
                 } else {
@@ -1341,7 +1341,7 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: date
             };
-            access.getEditWritAccess(req.session.uId, 30, function (access) {
+            access.getEditWritAccess(req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.update(id, data.lead, res);
                 } else {
@@ -1356,7 +1356,7 @@ var requestHandler = function (fs, mongoose) {
 
     function removeLead(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 30, function (access) {
+            access.getDeleteAccess(req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.remove(id, res);
                 } else {
