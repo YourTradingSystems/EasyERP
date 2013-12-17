@@ -587,6 +587,7 @@ var Project = function (logWriter, mongoose) {
                         res.send(500, { error: 'Task find error' });
                     } else {
                         var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+                        console.log(n);
                         saveTaskToBd(data, n);
                     }
                 });
@@ -594,7 +595,7 @@ var Project = function (logWriter, mongoose) {
             function saveTaskToBd(data, n) {
                 try {
                     console.log(data);
-                    _task = new tasks();
+                    _task = new tasks({taskCount: n});
                     _task.summary = data.summary;
                     if (data.project) {
                         _task.project = data.project;
