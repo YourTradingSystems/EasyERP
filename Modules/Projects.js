@@ -852,8 +852,8 @@ var Project = function (logWriter, mongoose) {
         });
          */
         var queryAggregate = (data.parrentContentId) ?
-            tasks.aggregate({ $match: { project : newObjectId(data.parrentContentId) } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"}}}) :
-            tasks.aggregate({ $group: {_id: "$workflow",taskId:{$push:"$_id"}}});
+            tasks.aggregate({ $match: { project : newObjectId(data.parrentContentId) } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"},remaining: { $min: "$remaining"}}}) :
+            tasks.aggregate({ $group: {_id: "$workflow",taskId:{$push:"$_id"},remaining: { $min: "$remaining"}}});
         queryAggregate.exec(
           //  { $group:{_id:"$workflow",taskId:{$push:"$_id"}}},
             function (err,responseT) {
@@ -871,7 +871,8 @@ var Project = function (logWriter, mongoose) {
                         });
                         var myObj = {
                             id: value._id,
-                            namberOfTasks: value.taskId.length
+                            namberOfTasks: value.taskId.length,
+                            remainingOfTasks: value.remaining
                         };
                         taskCount.push(myObj);
                         if (value.taskId.length > ((page-1)*columnValue + columnValue)) {

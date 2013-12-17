@@ -78,12 +78,15 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
             var TaskCount;
+            var TaskRemaining;
 
             _.each(workflows, function (workflow, i) {
                 TaskCount = 0
+                TaskRemaining = 0;
                 _.each(this.collection.taskCount, function(wfId){
                     if (wfId.id == workflow._id) {
-                            TaskCount = wfId.namberOfTasks
+                            TaskCount = wfId.namberOfTasks;
+                            TaskRemaining = wfId.remainingOfTasks;
                     }
                 });
                 var column = this.$(".column").eq(i);
@@ -95,7 +98,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                         column.append(kanbanItemView.render().el);
                 }, this);
                 var count = " <span>(<span class='counter'>" + TaskCount + "</span>)</span>";
-                var content = "<p class='remaining'>Remaining time: <span>" + 0 + "</span></p>";
+                var content = "<p class='remaining'>Remaining time: <span>" + TaskRemaining + "</span></p>";
                 column.find(".columnNameDiv h2").append(count);
                 column.find(".columnNameDiv").append(content);
             }, this);
