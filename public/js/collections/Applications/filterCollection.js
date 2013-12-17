@@ -5,12 +5,20 @@
     function (ApplicationModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: ApplicationModel,
-            url: function () {
-                return "/Applications/kanban/";
-            },
+            url: "/Applications/",
             page: 1,
+            count: 13,
+
             initialize: function (options) {
+                this.count = options.count;
+                this.page = options.page;
                 var that = this;
+
+                if (options && options.viewType) {
+                    this.url += options.viewType;
+                    delete options.viewType;
+                }
+
                 var filterObject = {};
                 for (var i in options) {
                     filterObject[i] = options[i];
@@ -18,31 +26,57 @@
                 this.fetch({
                     data: filterObject,
                     reset: true,
-                    success: function() {
+                    success: function(model,response) {
                         console.log("Application fetchSuccess");
                         that.page += 1;
+                        that.showMoreButton = response.showMore;
+                        that.optionsArray = response.options;
                     },
                     error: this.fetchError
+
+                });
+            },
+
+            filterByWorkflow: function (id) {
+                return this.filter(function (data) {
+                    return data.get("workflow")._id == id;
                 });
             },
 
             showMore: function (options) {
                 var that = this;
                 var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
-                filterObject['page'] = (filterObject.hasOwnProperty('page')) ? filterObject['page'] : this.page;
-                filterObject['count'] = (filterObject.hasOwnProperty('count')) ? filterObject['count'] : 10;
-                this.fetch({
-                    data: filterObject,
-                    success: function(models) {
-                        that.page += 1;
-                        that.trigger('add', models);
+                filterObject['page'] = this.page;
+                filterObject['count'] = this.count;
+                var NewCollection = Backbone.Collection.extend({
+                    model: ApplicationModel,
+                    url: that.url,
+                    parse: true,
+                    parse: function(response) {
+                        return response.data;
                     },
-                    error: this.fetchError
+                    page: that.page,
+
+                    filterByWorkflow: function (id) {
+                        return this.filter(function (data) {
+                            return data.get("workflow")._id == id;
+                        });
+                    }
+                });
+                var newCollection = new NewCollection();
+
+                newCollection.fetch({
+                    data: filterObject,
+                    waite: true,
+                    success: function (models, response) {
+                        that.showMoreButton = response.showMore;
+                        that.optionsArray = response.options;
+                        that.page += 1;
+                        that.trigger('showmore', models);
+                    },
+                    error: function() {
+                        alert('Some Error');
+                    }
                 });
             },
 

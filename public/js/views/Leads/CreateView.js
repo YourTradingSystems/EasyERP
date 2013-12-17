@@ -42,10 +42,7 @@ define([
 				var self = this;
                 var $company = this.$("#company");
                 var mid = 39;
-
-                
-
-                var name = $.trim($("#name").val());
+                var name = $.trim(this.$el.find("#name").val());
 
                 var company = {
                     name: $company.val(),
@@ -55,26 +52,26 @@ define([
                 var address = {};
                 $("dd").find(".address").each(function () {
                     var el = $(this);
-                    address[el.attr("name")] = el.val();
+                    address[el.attr("name")] = $.trim(el.val());
                 });
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
 
                 var salesTeamId = this.$("#salesTeam option:selected").val();
 
-                var first = $.trim($("#first").val());
-                var last = $.trim($("#last").val());
+                var first = $.trim(this.$el.find("#first").val());
+                var last = $.trim(this.$el.find("#last").val());
                 var contactName = {
                     first: first,
                     last: last
                 };
 
-                var email = $.trim($("#email").val());
-                var func = $.trim($("#func").val());
+                var email = $.trim(this.$el.find("#email").val());
+                var func = $.trim(this.$el.find("#func").val());
 
-                var phone = $.trim($("#phone").val());
-                var mobile = $.trim($("#mobile").val());
-                var fax = $.trim($("#fax").val());
+                var phone = $.trim(this.$el.find("#phone").val());
+                var mobile = $.trim(this.$el.find("#mobile").val());
+                var fax = $.trim(this.$el.find("#fax").val());
                 var phones = {
                     phone: phone,
                     mobile: mobile,
@@ -82,16 +79,15 @@ define([
                 };
                 var workflow = this.$("#workflowsDd option:selected").data('id');
 
-
                 var priority = $("#priorityDd").val();
 
-                var internalNotes = $.trim($("#internalNotes").val());
+                var internalNotes = $.trim(this.$el.find("#internalNotes").val());
 
-                var active = ($("#active").is(":checked")) ? true : false;
+                var active = (this.$el.find("#active").is(":checked")) ? true : false;
 
-                var optout = ($("#optout").is(":checked")) ? true : false;
+                var optout = (this.$el.find("#optout").is(":checked")) ? true : false;
 
-                var reffered = $.trim($("#reffered").val());
+                var reffered = $.trim(this.$el.find("#reffered").val());
 
                 this.model.save({
                     name: name,

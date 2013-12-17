@@ -64,9 +64,9 @@
 		  <dt><label for="StartDate">Start Date :</label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%= model.extrainfo.StartDate %>" required /></dd>
 
 		  <dt><label for="logged">Logged :</label></dt><dd>
-			<input class="blueback" type="text" name="loged" id="logged" value="<%=model.logged%>" maxlength="32"/>
+			<input class="blueback" type="number" min="0" max="1000" name="logged" id="logged" value="<%=model.logged%>"/>
 		  </dd>
-		  <dt><label for="estimated">Estimeted :</label></dt><dd><input class="blueback" type="text" name="estimated" id="estimated" value="<%=model.estimated%>" maxlength="32"/></dd>
+		  <dt><label for="estimated">Estimeted :</label></dt><dd><input class="blueback" type="number" min="0" max="1000" name="estimated" id="estimated" value="<%=model.estimated%>"/></dd>
 		</dl>	  
 
       </div>

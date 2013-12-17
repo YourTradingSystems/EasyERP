@@ -1,9 +1,8 @@
 ﻿define([
     'models/TasksModel',
-    'common',
-    'collections/Workflows/WorkflowsCollection',
+    'common'
 ],
-    function (TaskModel, common, WorkflowsCollection) {
+    function (TaskModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
             url: "/Tasks/",
@@ -13,6 +12,7 @@
             initialize: function (options) {
                 this.count = options.count;
                 this.page = options.page;
+                var that = this;
 
                 if (options && options.viewType) {
                     this.url += options.viewType;
@@ -24,7 +24,6 @@
                     filterObject[i] = options[i];
                 }
 
-                var that = this;
                 this.fetch({
                     data: filterObject,
                     reset: true,
@@ -32,15 +31,12 @@
                         console.log("Tasks fetchSuccess");
                         that.page += 1;
                         that.showMoreButton = response.showMore;
-                        that.taskCount = response.taskCount;
+                        that.optionsArray = response.options;
                     },
                     error: this.fetchError
                 });
-
-
-
-
             },
+
             filterByWorkflow: function (id) {
                 return this.filter(function (data) {
                     return data.get("workflow")._id == id;
@@ -74,7 +70,7 @@
                     waite: true,
                     success: function (models, response) {
                         that.showMoreButton = response.showMore;
-                        that.taskCount = response.taskCount;
+                        that.optionsArray = response.options;
                         that.page += 1;
                         that.trigger('showmore', models);
                     },

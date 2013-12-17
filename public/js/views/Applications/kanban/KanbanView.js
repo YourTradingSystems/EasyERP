@@ -5,7 +5,7 @@
         'views/Applications/EditView',
         'views/Applications/CreateView'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView) {
+function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, EditView, CreateView) {
     var ApplicationKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -31,11 +31,11 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             new EditView({ model: model, collection: this.collection });
         },
         
-        filterByWorkflow: function (models, id) {
+       /* filterByWorkflow: function (models, id) {
             return _.filter(models, function (data) {
                 return data.attributes["workflow"]._id == id;
             });
-        },
+        },*/
 
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
@@ -43,7 +43,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         },
 
         showMoreContent: function (newModels) {
-            var workflows = this.workflowsCollection.toJSON();
+            /*var workflows = this.workflowsCollection.toJSON();
             $(".column").last().addClass("lastColumn");
             _.each(workflows, function (workflow, i) {
                 var counter = 0,
@@ -52,14 +52,38 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 var kanbanItemView;
                 var modelByWorkflows = this.filterByWorkflow(newModels.models, workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new KanbanItemView({ model: wfModel });
+                    kanbanItemView = new ApplicationKanbanItemView({ model: wfModel });
                     column.append(kanbanItemView.render().el);
                     counter++;
                     remaining += wfModel.get("remaining");
                 }, this);
                 column.find(".counter").html(parseInt(column.find(".counter").html()) + counter);
                 column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + remaining);
+            }, this);*/
+            var workflows = this.workflowsCollection.toJSON();
+
+            $(".column").last().addClass("lastColumn");
+            _.each(workflows, function (workflow, i) {
+                var column = this.$(".column").eq(i);
+                var kanbanItemView;
+                var modelByWorkflows = newModels.filterByWorkflow(workflow._id);
+                _.each(modelByWorkflows, function (wfModel) {
+                    kanbanItemView = new ApplicationKanbanItemView({ model: wfModel });
+                    var model_id = wfModel.get('_id');
+                    if (this.collection.get(model_id) === undefined) {
+                        column.append(kanbanItemView.render().el);
+                    } else {
+                        $( "#"+ wfModel.get('_id')).hide();
+                        column.append(kanbanItemView.render().el);
+                    }
+                    column.append(kanbanItemView.render().el);
+                }, this);
             }, this);
+            this.collection.add(newModels.models);
+
+            if (!this.collection.showMoreButton) {
+                $('#showMoreDiv').hide();
+            }
         },
 
         editItem: function () {
@@ -73,30 +97,37 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         },
 
         render: function () {
+
             var workflows = this.workflowsCollection.toJSON();
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
-            var models = this.collection.models;
             $(".column").last().addClass("lastColumn");
+            var ApplicationCount;
+
             _.each(workflows, function (workflow, i) {
-                var counter = 0,
-                remaining = 0;
+                ApplicationCount = 0
+                ApplicationRemaining = 0;
+                _.each(this.collection.optionsArray, function(wfId){
+                    if (wfId.id == workflow._id) {
+                        ApplicationCount = wfId.namberOfApplications;
+                    }
+                });
                 var column = this.$(".column").eq(i);
                 var kanbanItemView;
-                var modelByWorkflows = this.filterByWorkflow(models, workflow._id);
-                _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new KanbanItemView({ model: wfModel });
-                    column.append(kanbanItemView.render().el);
-                    counter++;
-                    remaining += wfModel.get("remaining");
+                var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
 
+                _.each(modelByWorkflows, function (wfModel) {
+                    kanbanItemView = new ApplicationKanbanItemView({ model: wfModel });
+                    column.append(kanbanItemView.render().el);
                 }, this);
-                var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
-                //var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";
+                var count = " <span>(<span class='counter'>" + ApplicationCount + "</span>)</span>";
                 column.find(".columnNameDiv h2").append(count);
-                //column.find(".columnNameDiv").append(content);
             }, this);
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             var that = this;
+
+            if (this.collection.showMoreButton) {
+                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            }
+
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",

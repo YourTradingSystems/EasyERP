@@ -70,6 +70,7 @@
             var context = (_context) ? _context : this;
             var canvas = context.$('#avatar')[0];
             var inputFile = context.$('#inputImg');
+            inputFile.prop('accept', "image/*");
             var that = context;
             inputFile.on('change', function () {
                 var file = inputFile[0].files[0];
@@ -203,7 +204,12 @@
                 var options = [];
                 if (model && ( model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson||model.departmentManager)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.manager && model.manager._id === item._id) || (model.projectmanager && model.projectmanager._id === item._id) || (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) || (model.salesPerson === item._id) || (model.departmentManager && model.departmentManager._id === item._id)) ?
+                        return ((model.manager && model.manager._id === item._id) ||
+                                (model.projectmanager && model.projectmanager._id === item._id) ||
+                                (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) ||
+                                (model.salesPerson._id === item._id) ||
+                                (model.salesTeam._id === item._id) ||
+                                (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
                         });
