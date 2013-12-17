@@ -18,7 +18,14 @@ var requestHandler = function (fs, mongoose) {
 
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
-            modules.get(req.session.uId, res);
+            users.User.findById(req.session.uId, function(err, _user) {
+                if (_user) {
+                    modules.get(_user.profile, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
