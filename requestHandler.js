@@ -198,11 +198,6 @@ var requestHandler = function (fs, mongoose) {
         try {
             console.log("Requst getPersonsForDd is success");
             if (req.session && req.session.loggedIn) {
-                //persons.getForDd(function (result2) {
-                //    console.log('Sending response for getPersonsForDd');
-                //    console.log(result2);
-                //    res.send(result2);
-                //});
                 employee.getForDd(res);
             } else {
                 res.send(401);
@@ -242,8 +237,15 @@ var requestHandler = function (fs, mongoose) {
     function getFilterPersons(req, res, data) {
         console.log("Requst getPersons is success");
         if (req.session && req.session.loggedIn) {
-            //persons.get(res);
-            customer.getFilterPersons(data, res);
+            access.getReadAccess(req.session.uId, 49, function (access) {
+                console.log(access);
+                if (access) {
+                    customer.getFilterPersons(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -253,8 +255,14 @@ var requestHandler = function (fs, mongoose) {
     function getPersonById(req, res, data) {
         console.log("Requst getPersons is success");
         if (req.session && req.session.loggedIn) {
-            //persons.get(res);
-            customer.getPersonById(data.id, res);
+            access.getReadAccess(req.session.uId, 49, function (access) {
+                console.log(access);
+                if (access) {
+                    customer.getPersonById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -264,8 +272,15 @@ var requestHandler = function (fs, mongoose) {
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
         if (req.session && req.session.loggedIn) {
-            data.person.uId = req.session.uId;
-            customer.create(data.person, res);
+            access.getEditWritAccess(req.session.uId, 49, function (access) {
+                if (access) {
+                    data.person.uId = req.session.uId;
+                    customer.create(data.person, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
         } else {
             res.send(401);
         }
@@ -273,12 +288,17 @@ var requestHandler = function (fs, mongoose) {
 
     function updatePerson(req, res, id, data, remove) {
         if (req.session && req.session.loggedIn) {
-            console.log('----------->>>>>>>>>>>>>>>update');
-            data.person.editedBy = {
-                user: req.session.uId,
-                date: new Date().toISOString()
-            }
-            customer.update(id, remove, data.person, res);
+            access.getEditWritAccess(req.session.uId, 49, function (access) {
+                if (access) {
+                    data.person.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    }
+                    customer.update(id, remove, data.person, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -286,12 +306,19 @@ var requestHandler = function (fs, mongoose) {
     function uploadFile(req, res, id, file) {
         console.log("File Uploading to Persons");
         if (req.session && req.session.loggedIn) {
-            customer.customer.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
-                if (err) {
-                    res.send(401);
-                }
-                else {
-                    res.send(200, file);
+            access.getEditWritAccess(req.session.uId, 49, function (access) {
+                if (access) {
+                    customer.customer.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                        if (err) {
+                            res.send(401);
+                        }
+                        else {
+                            res.send(200, file);
+                        }
+                    });
+                    customer.update(id, remove, data.person, res);
+                } else {
+                    res.send(403);
                 }
             });
         } else {
@@ -302,7 +329,13 @@ var requestHandler = function (fs, mongoose) {
     function removePerson(req, res, id) {
         console.log("Requst removePerson is success");
         if (req.session && req.session.loggedIn) {
-            customer.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 49, function (access) {
+                if (access) {
+                    customer.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -314,8 +347,14 @@ var requestHandler = function (fs, mongoose) {
     function createProject(req, res, data) {
         console.log("Requst createProject is success");
         if (req.session && req.session.loggedIn) {
-            data.project.uId = req.session.uId;
-            project.create(data.project, res);
+            access.getEditWritAccess(req.session.uId, 39, function (access) {
+                if (access) {
+                    data.project.uId = req.session.uId;
+                    project.create(data.project, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -324,7 +363,13 @@ var requestHandler = function (fs, mongoose) {
     function getProjects(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn) {
-            project.get(data, res);
+            access.getReadAccess(req.session.uId, 39, function (access) {
+                if (access) {
+                    project.get(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -333,7 +378,13 @@ var requestHandler = function (fs, mongoose) {
     function getProjectsById(req, res, data) {
         console.log(data);
         if (req.session && req.session.loggedIn) {
-            project.getById(data, res);
+            access.getReadAccess(req.session.uId, 39, function (access) {
+                if (access) {
+                    project.getById(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -351,11 +402,17 @@ var requestHandler = function (fs, mongoose) {
     function updateProject(req, res, id, data) {
         console.log("Requst updateProject is success");
         if (req.session && req.session.loggedIn) {
-            data.project.editedBy = {
-                user: req.session.uId,
-                date: new Date().toISOString()
-            }
-            project.update(id, data.project, res);
+            access.getEditWritAccess(req.session.uId, 39, function (access) {
+                if (access) {
+                    data.project.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    }
+                    project.update(id, data.project, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -364,7 +421,13 @@ var requestHandler = function (fs, mongoose) {
     function removeProject(req, res, id, data) {
         console.log("Requst removeProject is success");
         if (req.session && req.session.loggedIn) {
-            project.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 39, function (access) {
+                if (access) {
+                    project.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -376,8 +439,14 @@ var requestHandler = function (fs, mongoose) {
     function createTask(req, res, data) {
         console.log("Requst createTask is success");
         if (req.session && req.session.loggedIn) {
-            data.task.uId = req.session.uId;
-            project.createTask(data.task, res);
+            access.getEditWritAccess(req.session.uId, 40, function (access) {
+                if (access) {
+                    data.task.uId = req.session.uId;
+                    project.createTask(data.task, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -395,7 +464,14 @@ var requestHandler = function (fs, mongoose) {
     function getTasksByProjectId(req, res, data) {
         console.log("Requst getTasksByProjectId is success");
         if (req.session && req.session.loggedIn) {
-            project.getTasksByProjectId(data, res);
+            access.getReadAccess(req.session.uId, 40, function (access) {
+                if (access) {
+                    project.getTasksByProjectId(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -405,7 +481,14 @@ var requestHandler = function (fs, mongoose) {
 
         console.log("----------->Requst getTasksByProjectId is success");
         if (req.session && req.session.loggedIn) {
-            project.getTaskById(data, res);
+            access.getReadAccess(req.session.uId, 40, function (access) {
+                if (access) {
+                    project.getTaskById(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -415,7 +498,14 @@ var requestHandler = function (fs, mongoose) {
     function removeTask(req, res, id, data) {
         console.log("Requst removeTask is success");
         if (req.session && req.session.loggedIn) {
-            project.removeTask(id, res);
+            access.getDeleteAccess(req.session.uId, 40, function (access) {
+                if (access) {
+                    project.removeTask(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -425,11 +515,17 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst updateTask is success");
         var date = Date.now();
         if (req.session && req.session.loggedIn) {
-            data.task['editedBy'] = {
-                user: req.session.uId,
-                date: date
-            };
-            project.updateTask(id, data.task, res);
+            access.getEditWritAccess(req.session.uId, 40, function (access) {
+                if (access) {
+                    data.task['editedBy'] = {
+                        user: req.session.uId,
+                        date: date
+                    };
+                    project.updateTask(id, data.task, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -637,8 +733,15 @@ var requestHandler = function (fs, mongoose) {
     function createEmployee(req, res, data) {
         console.log("Requst createEmployee is success");
         if (req.session && req.session.loggedIn) {
-            data.employee.uId = req.session.uId;
-            employee.create(data.employee, res);
+            access.getEditWritAccess(req.session.uId, 42, function(access) {
+                if (access) {
+                    data.employee.uId = req.session.uId;
+                    employee.create(data.employee, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
         } else {
             res.send(401);
         }
@@ -657,7 +760,15 @@ var requestHandler = function (fs, mongoose) {
     function getEmployeesCustom(req, res, data) {
         console.log("Requst getEmployeesCustom is success");
         if (req.session && req.session.loggedIn) {
-            employee.getCustom(data, res);
+            access.getReadAccess(req.session.uId, 42, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getCustom(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+           
         } else {
             res.send(401);
         }
@@ -667,7 +778,15 @@ var requestHandler = function (fs, mongoose) {
         console.log('----------------}');
         console.log(data);
         if (req.session && req.session.loggedIn) {
-            employee.getById(data, res);
+            access.getReadAccess(req.session.uId, 42, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getById(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -700,12 +819,19 @@ var requestHandler = function (fs, mongoose) {
     function updateEmployees(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn) {
-            data.employee.editedBy = {
-                user: req.session.uId,
-                date: new Date().toISOString()
-            }
+            access.getEditWritAccess(req.session.uId, 42, function (access) {
+                if (access) {
+                    data.employee.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    }
 
-            employee.update(id, data.employee, res);
+                    employee.update(id, data.employee, res);
+                } else {
+                    res.send(403);
+                }
+            })
+            
         } else {
             res.send(401);
         }
@@ -714,7 +840,14 @@ var requestHandler = function (fs, mongoose) {
     function removeEmployees(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn) {
-            employee.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 42, function (access) {
+                if (access) {
+                    employee.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -759,7 +892,15 @@ var requestHandler = function (fs, mongoose) {
     function getApplicationsCustom(req, res, data) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn) {
-            employee.getCustom(data, res);
+            access.getReadAccess(req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getCustom(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -768,7 +909,15 @@ var requestHandler = function (fs, mongoose) {
     function getApplicationById(req, res, data) {
         console.log("Requst getApplicationById is success");
         if (req.session && req.session.loggedIn) {
-            employee.getById(data, res);
+            access.getReadAccess(req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getById(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
@@ -779,7 +928,15 @@ var requestHandler = function (fs, mongoose) {
     function getFilterApplications(req, res, data) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn) {
-            employee.getFilterApplications(data, res);
+            access.getReadAccess(req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getFilterApplications(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+            
         } else {
             res.send(401);
         }
