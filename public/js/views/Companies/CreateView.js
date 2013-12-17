@@ -60,7 +60,7 @@ define([
                 var companyModel = new CompanyModel();
 
                 var name = {
-                    first: $("#name").val(),
+                    first: $.trim($("#name").val()),
                     last:''
                 };
 
@@ -70,15 +70,15 @@ define([
                     address[el.attr("name")] = el.val();
                 });
 
-                var email = $("#email").val();
+                var email = $.trim($("#email").val());
 
-                var phone = $("#phone").val();
+                var phone = $.trim($("#phone").val());
 
-                var mobile = $("#mobile").val();
+                var mobile = $.trim($("#mobile").val());
 
-                var fax = $("#fax").val();
+                var fax = $.trim($("#fax").val());
 
-                var website = $("#website").val();
+                var website = $.trim($("#website").val());
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
@@ -88,9 +88,9 @@ define([
                 var salesTeam = this.$("#departmentDd option:selected").val();
                 //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
-                var reference = $("#reference").val();
+                var reference = $.trim($("#reference").val());
 
-                var language = $("#language").val();
+                var language = $.trim($("#language").val());
 
                 var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
 

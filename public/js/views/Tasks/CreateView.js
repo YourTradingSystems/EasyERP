@@ -68,17 +68,17 @@ define([
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-                var summary = $("#summary").val();
+                var summary = $.trim(this.$el.find("#summary").val());
                 var project = $("#projectDd option:selected").val();
                 var assignedTo = $("#assignedToDd option:selected").val();
-                var deadline = $.trim($("#deadline").val());
-                var tags = $.trim($("#tags").val()).split(',');
-                var description = $("#description").val();
-                var sequence = $.trim($("#sequence").val());
-                var StartDate = $.trim($("#StartDate").val());
-                var workflow = $("#workflowsDd option:selected").data("id");
-                var estimated = $("#estimated").val();
-                var logged = $("#logged").val();
+                var deadline = $.trim(this.$el.find("#deadline").val());
+                var tags = $.trim(this.$el.find("#tags").val()).split(',');
+                var description = $.trim(this.$el.find("#description").val());
+                var sequence = $.trim(this.$el.find("#sequence").val());
+                var StartDate = $.trim(this.$el.find("#StartDate").val());
+                var workflow = this.$el.find("#workflowsDd option:selected").data("id");
+                var estimated = $.trim(this.$el.find("#estimated").val());
+                var logged = $.trim(this.$el.find("#logged").val());
                 var priority = $("#priorityDd option:selected").val();
                 //var priority = common.toObject(idPriority, this.priorityCollection);
 

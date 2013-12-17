@@ -72,42 +72,42 @@ define([
             saveItem: function () {
                 var mid = 39;
 
-                var name = $.trim($("#name").val());
+                var name = $.trim(this.$el.find("#name").val());
 
-                var company = $("#company").val();
+                var company = $.trim(this.$el.find("#company").val());
 
                 var idCustomer = $("#customerDd option:selected").val();
                 idCustomer = idCustomer ? idCustomer : null;
                 var address = {};
                 $("p").find(".address").each(function () {
                     var el = $(this);
-                    address[el.attr("name")] = el.val();
+                    address[el.attr("name")] = $.trim(el.val());
                 });
 
-                var salesPersonId = $("#salesPerson option:selected").val();
+                var salesPersonId = this.$("#salesPerson option:selected").val();
                 salesPersonId = salesPersonId ? salesPersonId : null;
-                var salesTeamId = $("#salesTeam option:selected").val();
+                var salesTeamId = this.$("#salesTeam option:selected").val();
                 salesTeamId = salesTeamId ? salesTeamId : null;
-                var first = $.trim($("#first").val());
-                var last = $.trim($("#last").val());
+                var first = $.trim(this.$el.find("#first").val());
+                var last = $.trim(this.$el.find("#last").val());
                 var contactName = {
                     first: first,
                     last: last
                 };
 
-                var email = $.trim($("#email").val());
-                var func = $.trim($("#func").val());
+                var email = $.trim(this.$el.find("#email").val());
+                var func = $.trim(this.$el.find("#func").val());
 
-                var phone = $.trim($("#phone").val());
-                var mobile = $.trim($("#mobile").val());
-                var fax = $.trim($("#fax").val());
+                var phone = $.trim(this.$el.find("#phone").val());
+                var mobile = $.trim(this.$el.find("#mobile").val());
+                var fax = $.trim(this.$el.find("#fax").val());
                 var phones = {
                     phone: phone,
                     mobile: mobile,
                     fax: fax
                 };
 
-                var workflow = $("#workflowDd option:selected").data('id');
+                var workflow = this.$("#workflowsDd option:selected").data('id')
                 workflow = workflow ? workflow : null;
                 var priority = $("#priorityDd option:selected").val();
 

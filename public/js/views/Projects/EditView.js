@@ -68,12 +68,12 @@ define([
                 var self = this;
 
                 var mid = 39;
-                var projectName = $("#projectName").val();
-                var projectShortDesc = $("#projectShortDesc").val();
+                var projectName = $.trim(this.$el.find("#projectName").val());
+                var projectShortDesc = $.trim(this.$el.find("#projectShortDesc").val());
                 var customer = this.$el.find("#customerDd option:selected").val();
                 var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
-                var workflow = this.$el.find("#workflowsDd option:selected").data('id');
-
+                var workflow = this.$el.find("#workflowsDd option:selected").data("id");
+                console.log(workflow);
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
                     users.push({

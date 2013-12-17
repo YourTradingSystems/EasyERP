@@ -39,7 +39,6 @@
             if (res.error) {
                 console.log(res.error);
             } else {
-                console.log(res.result);
                 callback(res.result[0].profileAccess.access.read);
             }
         });
@@ -49,7 +48,6 @@
             if (res.error) {
                 console.log(res.error);
             } else {
-                console.log(res.result);
                 callback(res.result[0].profileAccess.access.editWrite);
             }
         });
@@ -60,7 +58,6 @@
             if (res.error) {
                 console.log(res.error);
             } else {
-                console.log(res.result);
                 callback(res.result[0].profileAccess.access.del);
             }
         });

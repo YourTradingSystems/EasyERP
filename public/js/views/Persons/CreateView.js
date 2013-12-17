@@ -50,29 +50,29 @@ define([
                 var department = $("#departmentDd option:selected").val();
                 var data = {
                     name: {
-                        first: this.$el.find('#firstName').val(),
-                        last: this.$el.find('#lastName').val()
+                        first: $.trim(this.$el.find('#firstName').val()),
+                        last: $.trim(this.$el.find('#lastName').val())
                     },
                     imageSrc: this.imageSrc,
                     dateBirth: dateBirth,
                     company: company,
                     department: department,
                     address: {
-                        street: $('#addressInput').val(),
-                        city: $('#cityInput').val(),
-                        state: $('#stateInput').val(),
-                        zip: $('#zipInput').val(),
-                        country: $('#countryInput').val()
+                        street: $.trim($('#addressInput').val()),
+                        city: $.trim($('#cityInput').val()),
+                        state: $.trim($('#stateInput').val()),
+                        zip: $.trim($('#zipInput').val()),
+                        country: $.trim($('#countryInput').val())
                     },
-                    website: $('#websiteInput').val(),
-                    jobPosition: $('#jobPositionInput').val(),
-                    skype: $('#skype').val(),
+                    website: $.trim($('#websiteInput').val()),
+                    jobPosition: $.trim($('#jobPositionInput').val()),
+                    skype: $.trim($('#skype').val()),
                     phones: {
-                        phone: $('#phoneInput').val(),
-                        mobile: $('#mobileInput').val(),
-                        fax: $('#faxInput').val()
+                        phone: $.trim($('#phoneInput').val()),
+                        mobile: $.trim($('#mobileInput').val()),
+                        fax: $.trim($('#faxInput').val())
                     },
-                    email: $('#emailInput').val(),
+                    email: $.trim($('#emailInput').val()),
                     salesPurchases: {
                         isCustomer: $('#isCustomerInput').is(':checked'),
                         isSupplier: $('#isSupplierInput').is(':checked'),
