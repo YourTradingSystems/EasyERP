@@ -238,7 +238,12 @@
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
 				this.styleSelect("#type");
                 this.delegateEvents(this.events);
-                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $('#deadline').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");
                 return this;
             }

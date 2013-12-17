@@ -21,30 +21,18 @@ define(["Validation"],function (Validation) {
                     {
                         name: "Person",
                         field: "firstName",
-                        msg: "First name can not be empty or contain whitespaces"
+                        msg: "First " + Validation.errorMessages['minLengthMsg']
                     }
                 );
             }
-            if(attrs.name.last === ""){
+            if(attrs.name.last === "" || !Validation.withMinLength(attrs.name.last)){
                 errors.push(
                     {
                         name: "Person",
                         field: "lastName",
-                        msg: "Last name can not be empty or contain whitespaces"
+                        msg: "Last " + Validation.errorMessages['minLengthMsg']
                     }
                 );
-            }
-
-            if(attrs.name.last.length > 0){
-                if(!Validation.validName(attrs.name.last)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "lastName",
-                            msg: "Last name should contain only letters"
-                        }
-                    );
-                }
             }
             if(attrs.name.first.length > 0){
                 if(!Validation.validName(attrs.name.first)){
@@ -52,11 +40,23 @@ define(["Validation"],function (Validation) {
                         {
                             name: "Person",
                             field: "firstName",
-                            msg: "First name should contain only letters"
+                            msg: "First " + Validation.errorMessages['nameError']
                         }
                     );
                 }
             }
+            if(attrs.name.last.length > 0){
+                if(!Validation.validName(attrs.name.last)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "lastName",
+                            msg: "Last " + Validation.errorMessages['nameError']
+                        }
+                    );
+                }
+            }
+
             if(attrs.dateBirth){
                 if(!Validation.validDate(attrs.dateBirth)){
                     errors.push(
@@ -101,7 +101,39 @@ define(["Validation"],function (Validation) {
                     );
                 }
             }
-
+            if(attrs.address.state.length > 0){
+                if(!Validation.validStreet(attrs.address.state)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "state",
+                            msg: "State field should contain only letters"
+                        }
+                    );
+                }
+            }
+            if(attrs.address.zip.length > 0){
+                if(!Validation.validNumber(attrs.address.zip)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "zip",
+                            msg: "Zip field should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.address.country.length > 0){
+                if(!Validation.validStreet(attrs.address.country)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "country",
+                            msg: "Country field should contain only letters"
+                        }
+                    );
+                }
+            }
             if(attrs.address.street.length > 0){
                 if(!Validation.validStreet(attrs.address.street)){
                     errors.push(

@@ -159,7 +159,12 @@ define([
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
                 common.populatePriority(App.ID.priorityDd, "/Priority", model);
 
-                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $('#deadline').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");
 
                 this.delegateEvents(this.events);

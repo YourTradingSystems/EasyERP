@@ -1,7 +1,7 @@
 ﻿define([
-    'common'
+    'common', 'Validation'
 ],
-function (common) {
+function (common, Validation) {
     var ApplicationModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
@@ -22,37 +22,37 @@ function (common) {
             }
             return response;
         },
-        
+
         validate: function(attrs){
             var errors = [];
-            if($.trim(attrs.subject) == ""){
+            if(attrs.subject === "" || !Validation.withMinLength(attrs.subject)){
                 errors.push(
                     {
                         name:"Subject",
                         field:"subject",
-                        msg:"Subject can not be empty"
+                        msg:"Subject " + Validation.errorMessages['minLengthMsg']
                     }
                 );
             }
-            if($.trim(attrs.name.first) == ""){
+            if(attrs.name.first === "" || !Validation.withMinLength(attrs.name.first)){
                 errors.push(
                     {
                         name:"First Name",
                         field:"firstName",
-                        msg:"First name can not be empty"
+                        msg:"First name " + Validation.errorMessages['minLengthMsg']
                     }
                 );
             }
-            if($.trim(attrs.name.last) == ""){
+            if(attrs.name.last === "" || !Validation.withMinLength(attrs.name.last)){
                 errors.push(
                     {
                         name: "Last Name",
                         field: "lastName",
-                        msg: "Last name can not be empty"
+                        msg: "Last name " + Validation.errorMessages['minLengthMsg']
                     }
                 );
             }
-            if(attrs.department == ""){
+            if(attrs.department === ""){
                 errors.push(
                     {
                         name: "Department",
@@ -61,6 +61,63 @@ function (common) {
                     }
                 );
             }
+            if(attrs.workEmail){
+                if(!Validation.validEmail(attrs.workEmail)){
+                    errors.push(
+                        {
+                            name: "Applications",
+                            field: "email",
+                            msg: "Work email " + Validation.errorMessages['invalidEmailMsg']
+                        }
+                    );
+                }
+            }
+            if(attrs.wphones.phone.length > 0){
+                if(!Validation.validPhone(attrs.wphones.phone)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "phone",
+                            msg: "Work phone should contain only numbers"
+                        }
+                    );
+                }
+            }
+            if(attrs.wphones.mobile.length > 0){
+                if(!Validation.validPhone(attrs.wphones.mobile)){
+                    errors.push(
+                        {
+                            name: "Person",
+                            field: "mobile",
+                            msg: "Mobile phone should contain only numbers"
+                        }
+                    );
+                }
+            }
+
+            if(attrs.expectedSalary){
+                if(!Validation.validMoneyAmount(attrs.expectedSalary)){
+                    errors.push(
+                        {
+                            name: "Applications",
+                            field: "expectedSalary",
+                            msg: "Expected salary " + Validation.errorMessages['invalidMoneyAmountMsg']
+                        }
+                    );
+                }
+            }
+            if(attrs.proposedSalary){
+                if(!Validation.validMoneyAmount(attrs.proposedSalary)){
+                    errors.push(
+                        {
+                            name: "Applications",
+                            field: "proposedSalary",
+                            msg: "Proposed salary " + Validation.errorMessages['invalidMoneyAmountMsg']
+                        }
+                    );
+                }
+            }
+
             if(errors.length > 0)
                 return errors;
         },

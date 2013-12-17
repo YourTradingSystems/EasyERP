@@ -65,20 +65,20 @@ define([
                 var mid = 39;
                 var employeeModel = new EmployeeModel();
                 var name = {
-                    first: $.trim($("#first").val()),
-                    last: $.trim($("#last").val())
+                    first: $.trim(this.$el.find("#first").val()),
+                    last: $.trim(this.$el.find("#last").val())
                 };
                 var workAddress = {};
                 $("dd").find(".workAddress").each(function () {
                     var el = $(this);
-                    workAddress[el.attr("name")] = el.val();
+                    workAddress[el.attr("name")] = $.trim(el.val());
                 });
-                var tags = $.trim($("#tags").val()).split(',');
-                var workEmail = $.trim($("#workEmail").val());
-                var skype = $.trim($("#skype").val());
+                var tags = $.trim(this.$el.find("#tags").val()).split(',');
+                var workEmail = $.trim(this.$el.find("#workEmail").val());
+                var skype = $.trim(this.$el.find("#skype").val());
 
-                var phone = $.trim($("#phone").val());
-                var mobile = $.trim($("#mobile").val());
+                var phone = $.trim(this.$el.find("#phone").val());
+                var mobile = $.trim(this.$el.find("#mobile").val());
                 var workPhones = {
                     phone: phone,
                     mobile: mobile
@@ -170,10 +170,11 @@ define([
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
-                    changeMonth : true,
-                    changeYear : true,
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
                     yearRange: '-100y:c+nn',
-                    maxDate: '-1d'
+                    maxDate: '-18y'
                 });
                 return this;
             }

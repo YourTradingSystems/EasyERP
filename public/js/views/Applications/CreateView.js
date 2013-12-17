@@ -171,7 +171,12 @@ define([
                 common.populateDegrees(App.ID.degreesDd, "/Degrees");
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
-                $('#nextAction').datepicker();
+                $('#nextAction').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 return this;
             }
 
