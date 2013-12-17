@@ -84,7 +84,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             _.each(workflows, function (workflow, i) {
                 TaskCount = 0
                 TaskRemaining = 0;
-                _.each(this.collection.taskCount, function(wfId){
+                _.each(this.collection.optionsArray, function(wfId){
                     if (wfId.id == workflow._id) {
                             TaskCount = wfId.namberOfTasks;
                             TaskRemaining = wfId.remainingOfTasks;
