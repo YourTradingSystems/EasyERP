@@ -656,7 +656,13 @@ var requestHandler = function (fs, mongoose) {
 
         if (req.session && req.session.loggedIn) {
             data.jobPosition.uId = req.session.uId;
-            jobPosition.create(data.jobPosition, res);
+            access.getEditWritAccess(req.session.uId, 14, function(access) {
+                if (access) {
+					jobPosition.create(data.jobPosition, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -664,7 +670,13 @@ var requestHandler = function (fs, mongoose) {
 
     function getJobPosition(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            jobPosition.get(res);
+            access.getReadAccess(req.session.uId, 14, function(access) {
+                if (access) {
+					jobPosition.get(res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -673,8 +685,15 @@ var requestHandler = function (fs, mongoose) {
     function getCustomJobPosition(req, res, data) {
         console.log("Requst getCustomJobPosition is success");
         if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 14, function(access) {
+                if (access) {
+					jobPosition.get(res);
+                } else {
+                    res.send(403);
+                }
+			});
+
             //company.get(res);
-            jobPosition.get(res);
         } else {
             res.send(401);
         }
@@ -683,7 +702,13 @@ var requestHandler = function (fs, mongoose) {
     function getJobPositionById(req, res, data) {
         console.log("----------->Request getJobPositionById is success");
         if (req.session && req.session.loggedIn) {
-            jobPosition.getJobPositionById(data.id, res);
+            access.getReadAccess(req.session.uId, 14, function(access) {
+                if (access) {
+					jobPosition.getJobPositionById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -696,7 +721,14 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            jobPosition.update(id, data.jobPosition, res);
+            access.getEditWritAccess(req.session.uId, 14, function(access) {
+                if (access) {
+					jobPosition.update(id, data.jobPosition, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -704,7 +736,13 @@ var requestHandler = function (fs, mongoose) {
 
     function removeJobPosition(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            jobPosition.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 14, function(access) {
+                if (access) {
+					jobPosition.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -915,7 +953,13 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst createDepartment is success");
         if (req.session && req.session.loggedIn) {
             data.department.uId = req.session.uId;
-            department.create(data.department, res);
+            access.getEditWritAccess(req.session.uId, 15, function(access) {
+                if (access) {
+					department.create(data.department, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -923,7 +967,13 @@ var requestHandler = function (fs, mongoose) {
 
     function getDepartment(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            department.get(res);
+            access.getReadAccess(req.session.uId, 15, function(access) {
+                if (access) {
+					department.get(res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -936,8 +986,13 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-
-            department.update(id, data.department, res);
+            access.getEditWritAccess(req.session.uId, 15, function(access) {
+                if (access) {
+					department.update(id, data.department, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -946,7 +1001,13 @@ var requestHandler = function (fs, mongoose) {
     function removeDepartment(req, res, id, data) {
         console.log("Requst removeDepartment is success");
         if (req.session && req.session.loggedIn) {
-            department.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 15, function(access) {
+                if (access) {
+					department.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -964,7 +1025,14 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst getDepartment is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            department.getCustomDepartment(data, res);
+            access.getReadAccess(req.session.uId, 15, function(access) {
+                if (access) {
+					department.getCustomDepartment(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -973,7 +1041,14 @@ var requestHandler = function (fs, mongoose) {
     function getDepartmentById(req, res, data) {
         console.log("----------->Request getDepartmentById is success");
         if (req.session && req.session.loggedIn) {
-            department.getDepartmentById(data.id, res);
+            access.getReadAccess(req.session.uId, 15, function(access) {
+                if (access) {
+					department.getDepartmentById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1054,7 +1129,13 @@ var requestHandler = function (fs, mongoose) {
 
     function getLeads(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            opportunities.getLeads(res);
+            access.getReadAccess(req.session.uId, 30, function(access) {
+                if (access) {
+					opportunities.getLeads(res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1062,7 +1143,13 @@ var requestHandler = function (fs, mongoose) {
 
     function getLeadsById(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            opportunities.getById(data.id, res);
+            access.getReadAccess(req.session.uId, 30, function(access) {
+                if (access) {
+					opportunities.getById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1070,7 +1157,13 @@ var requestHandler = function (fs, mongoose) {
 
     function getLeadsCustom(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            opportunities.getLeadsCustom(data, res);
+            access.getReadAccess(req.session.uId, 30, function(access) {
+                if (access) {
+					opportunities.getLeadsCustom(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1079,7 +1172,14 @@ var requestHandler = function (fs, mongoose) {
     function createLead(req, res, data) {
         if (req.session && req.session.loggedIn) {
             data.lead.uId = req.session.uId;
-            opportunities.create(data.lead, res);
+            access.getEditWritAccess(req.session.uId, 30, function(access) {
+                if (access) {
+					opportunities.create(data.lead, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1092,7 +1192,14 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: date
             };
-            opportunities.update(id, data.lead, res);
+            access.getEditWritAccess(req.session.uId, 30, function(access) {
+                if (access) {
+					opportunities.update(id, data.lead, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1100,7 +1207,14 @@ var requestHandler = function (fs, mongoose) {
 
     function removeLead(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            opportunities.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 30, function(access) {
+                if (access) {
+					opportunities.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1203,7 +1317,14 @@ var requestHandler = function (fs, mongoose) {
     function createEvent(req, res, data) {
         console.log("Requst createEvent is success");
         if (req.session && req.session.loggedIn) {
-            events.create(data.event, res, req);
+            access.getEditWritAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.create(data.event, res, req);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1212,7 +1333,13 @@ var requestHandler = function (fs, mongoose) {
     function getEvents(req, res, data) {
         console.log("Requst getEvents is success");
         if (req.session && req.session.loggedIn) {
-            events.get(data.idArray, res);
+            access.getReadAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.get(data.idArray, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1221,7 +1348,13 @@ var requestHandler = function (fs, mongoose) {
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
         if (req.session && req.session.loggedIn) {
-            events.update(id, data.event, res, req);
+            access.getEditWritAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.update(id, data.event, res, req);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1230,7 +1363,13 @@ var requestHandler = function (fs, mongoose) {
     function removeEvent(req, res, id, data) {
         console.log("Requst removeEvents is success");
         if (req.session && req.session.loggedIn) {
-            events.remove(id, res, req);
+            access.getDeleteAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.remove(id, res, req);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1238,7 +1377,13 @@ var requestHandler = function (fs, mongoose) {
     function createCalendar(req, res, data) {
         console.log("Requst createCalendar is success");
         if (req.session && req.session.loggedIn) {
-            events.createCalendar(data.calendar, res);
+            access.getEditWritAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.createCalendar(data.calendar, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1247,7 +1392,13 @@ var requestHandler = function (fs, mongoose) {
     function getCalendars(req, res, data) {
         console.log("Requst getCalendars is success");
         if (req.session && req.session.loggedIn) {
-            events.getCalendars(res);
+            access.getReadAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.getCalendars(res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1256,7 +1407,13 @@ var requestHandler = function (fs, mongoose) {
     function updateCalendar(req, res, id, data) {
         console.log("Requst updateCalendar is success");
         if (req.session && req.session.loggedIn) {
-            events.updateCalendar(id, data.calendar, res);
+            access.getEditWritAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.updateCalendar(id, data.calendar, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1265,7 +1422,13 @@ var requestHandler = function (fs, mongoose) {
     function removeCalendar(req, res, id, data) {
         console.log("Requst removeCalendar is success");
         if (req.session && req.session.loggedIn) {
-            events.removeCalendar(id, res);
+            access.getDeleteAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					events.removeCalendar(id, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1274,32 +1437,68 @@ var requestHandler = function (fs, mongoose) {
     function googleCalSync(req, res, data) {
         console.log("Requst googleCalSync is success");
         if (req.session && req.session.loggedIn) {
-            console.log(data);
-            google.getEventsByCalendarIds(req.session.credentials, data.calendar, function (eventsArray) {
-                events.googleCalSync(eventsArray, res);
-            });
+            access.getEditWritAccess(req.session.uId, 26, function(access) {
+                if (access) {
+					google.getEventsByCalendarIds(req.session.credentials, data.calendar, function (eventsArray) {
+						events.googleCalSync(eventsArray, res);
+					});
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
     }
     function getXML(req, res, link, data) {
-        events.getXML(res, link);
+        access.getEditWritAccess(req.session.uId, 26, function(access) {
+            if (access) {
+
+				events.getXML(res, link);
+            } else {
+                res.send(403);
+            }
+		});
     }
 
     function getToken(req, res) {
-        google.getToken(req, res, function (token) {
-            res.redirect('#easyErp/Calendars');
-        });
+        access.getReadAccess(req.session.uId, 26, function(access) {
+            if (access) {
+				google.getToken(req, res, function (token) {
+					res.redirect('#easyErp/Calendars');
+				});
+            } else {
+                res.send(403);
+            }
+		});
     }
 
     function googleCalendars(req, res) {
-        google.getGoogleCalendars(req.session.credentials, res);
+        access.getReadAccess(req.session.uId, 26, function(access) {
+            if (access) {
+				google.getGoogleCalendars(req.session.credentials, res);
+            } else {
+                res.send(403);
+            }
+		});
     }
     function sendToGoogleCalendar(req, res) {
-        events.sendToGoogleCalendar(req, res);
+        access.getReadAccess(req.session.uId, 26, function(access) {
+            if (access) {
+				events.sendToGoogleCalendar(req, res);
+            } else {
+                res.send(403);
+            }
+		});
     }
     function changeSyncCalendar(id, isSync, res, req) {
-        events.changeSyncCalendar(id, isSync, res, req);
+        access.getEditWritAccess(req.session.uId, 26, function(access) {
+            if (access) {
+				events.changeSyncCalendar(id, isSync, res, req);
+            } else {
+                res.send(403);
+            }
+		});
 
     }
 

@@ -1046,7 +1046,7 @@ app.put('/Leads/:viewType/:_id', function (req, res) {
     requestHandler.updateLead(req, res, id, data);
 });
 
-app.delete('/Leads/:_id', function (req, res) {
+app.delete('/Leads/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
