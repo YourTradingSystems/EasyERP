@@ -25,10 +25,12 @@
 
                 </div>
                 <div class="mainInfo">
-                    <div class="half-block left">
-                        <h3>
-                            <span title='<%=name.first%>'><%=name.first%></span><span title='<%=name.last%>'><%=name.last%></span>  <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
+                 <h3>
+                            <span title='<%=name.first%> <%=name.last%>'><%=name.first%> <%=name.last%></span> 
+                            <span><% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%></span>
                         </h3>
+                    <div class="half-block left">
+                       
                         <dl class="person-info">
                             <dt>Position :</dt>
                             <dd id="jobPosition" class="editable"><%=jobPosition%></dd>

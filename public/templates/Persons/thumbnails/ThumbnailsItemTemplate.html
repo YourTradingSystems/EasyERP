@@ -13,11 +13,11 @@
         </ul>
     </div>
     <div class="avatar">
-    	<a class = "gotoForm" href="#"> <img src="<%=imageSrc%>" /></a>
+    	<a class = "gotoForm" href="#" title="<%=name.first%> <%=name.last%>"> <img src="<%=imageSrc%>" /></a>
 	</div>
     <div class="info">
-        <p><a class = "gotoForm" href="#"><%=(name.first.length>18)?(name.first.substring(0,18)+"..."):name.first%> <%=(name.last.length>18)?(name.last.substring(0,18)+"..."):name.last%></a></p>
-       <% if (company){%><a class="company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%>
+        <p><a class = "gotoForm title" href="#" title="<%=name.first%> <%=name.last%>"><%=(name.first.length>12)?(name.first.substring(0,12)+"..."):name.first%> <%=(name.last.length>11)?(name.last.substring(0,11)+"..."):name.last%></a></p>
+        <% if (company){%><a class="company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=(company.name.first.length>18)?(company.name.first.substring(0,18)+"..."):company.name.first%></a><%}%>
         <p><a href="mailto:<%=email%>" target="_blank"><%=email%></a></p>
     </div>
 </div>
