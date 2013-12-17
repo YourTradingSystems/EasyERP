@@ -441,24 +441,57 @@ var Employee = function (logWriter, mongoose) {
     function getFilterApplications(data, response) {
         var res = {};
         res['data'] = [];
-        var query = employee.find();
-        query.where('isEmployee', false);
-        query.populate('relatedUser department jobPosition workflow').
-			populate('createdBy.user').
-            populate('editedBy.user');
+        res['showMore'] = [];
+        res['options'] = [];
+        var optionsArray = [];
+        var showMore = false;
 
-        query.skip((data.page - 1) * data.count).limit(data.count);
-        query.sort({ 'name.first': 1 });
-        query.exec(function (err, applications) {
-            if (err) {
-                console.log(err);
-                logWriter.log('Employees.js get Application.find' + err);
-                response.send(500, { error: "Can't find Application" });
-            } else {
-                res['data'] = applications;
-                response.send(res);
-            }
-        });
+        var queryAggregate =  employee.aggregate({ $match: { isEmployee : false } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"}}});
+        queryAggregate.exec(
+            function (err,responseTasks) {
+                if (!err) {
+
+                    var responseTasksArray =[];
+                    var columnValue = data.count;
+                    var page = data.page;
+
+                    responseTasks.forEach(function(value){
+                        value.taskId.forEach(function(idTask,taskIndex){
+                            if (((page-1)*columnValue <= taskIndex) && (taskIndex < (page-1)*columnValue + columnValue )) {
+                                responseTasksArray.push(idTask);
+                            }
+                        });
+                        var myObj = {
+                            id: value._id,
+                            namberOfApplications: value.taskId.length
+                        };
+                        optionsArray.push(myObj);
+                        if (value.taskId.length > ((page-1)*columnValue + columnValue)) {
+                            showMore = true;
+                        }
+                    });
+                    employee.find()
+                        .where('_id').in(responseTasksArray)
+                        .populate('relatedUser department jobPosition workflow')
+                        .populate('createdBy.user')
+                        .populate('editedBy.user')
+                        .exec(function (err, resalt) {
+                            if (!err) {
+                                res['showMore'] = showMore;
+                                res['options'] = optionsArray;
+                                res['data'] = resalt;
+                                response.send(res);
+                            } else {
+                                logWriter.log("Employee.js getFilterApplications employee.find " + err);
+                                response.send(500, { error: "Can't find Application" });
+                            }
+                        })
+                } else {
+                    logWriter.log("Employee.js getFilterApplications employee.find " + err);
+                    response.send(500, { error: "Can't group Application" });
+                }
+            });
+
     };
 
     return {

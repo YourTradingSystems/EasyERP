@@ -818,8 +818,8 @@ var Project = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         res['showMore'] = [];
-        res['taskCount'] = [];
-        var taskCount = [];
+        res['options'] = [];
+        var optionsArray = [];
         var showMore = false;
 
         var queryAggregate = (data.parrentContentId) ?
@@ -844,7 +844,7 @@ var Project = function (logWriter, mongoose) {
                             namberOfTasks: value.taskId.length,
                             remainingOfTasks: value.remaining
                         };
-                        taskCount.push(myObj);
+                        optionsArray.push(myObj);
                         if (value.taskId.length > ((page-1)*columnValue + columnValue)) {
                             showMore = true;
                         }
@@ -860,7 +860,7 @@ var Project = function (logWriter, mongoose) {
                     .exec(function (err, resalt) {
                         if (!err) {
                             res['showMore'] = showMore;
-                            res['taskCount'] = taskCount;
+                            res['options'] = optionsArray;
                             res['data'] = resalt;
                             response.send(res);
                         } else {
