@@ -23,6 +23,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         selectItem: function (e) {
 			$(e.target).parents(".item").parents("table").find(".active").removeClass("active");
 			$(e.target).parents(".item").addClass("active");
+
         },
 
         gotoEditForm: function (e) {
@@ -133,11 +134,8 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                     var column = ui.item.closest(".column");
                     if (model) {
                         model.set({ workflow: column.data('id') });
-                        model.save({}, {
-                            //headers: {
-                            //    mid: mid
-                            //}
-                        });
+                        model.save({});
+
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                         column.find(".remaining span").html(parseFloat(column.find(".remaining span").html()) + (model.get("remaining")));
                     }

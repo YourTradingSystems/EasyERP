@@ -821,52 +821,22 @@ var Project = function (logWriter, mongoose) {
         res['taskCount'] = [];
         var taskCount = [];
         var showMore = false;
-        var remaining;
-        /*   var query = (data.parrentContentId) ? tasks.find({ project: data.parrentContentId }) : tasks.find({});
-        query.populate('project', '_id projectShortDesc projectName')
-            .populate('assignedTo', '_id name imageSrc')
-            .populate('extrainfo.customer createdBy.user editedBy.user')
-            .populate('workflow')
-            .populate('createdBy.user')
-            .populate('editedBy.user');
 
-
-      //  query.skip((data.page - 1) * data.count+1).limit(data.count);
-       // query.sort({ summary: 1 });
-        query.exec(function (err, _tasks) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js getTasksByProjectId task.find " + err);
-                response.send(500, { error: "Can't find Tasks" });
-            } else {
-                //res['data'] = taskFormatDate(_tasks, 0);
-                console.log('______________________populate ok_____________________');
-                console.log(_tasks);
-               // res['data'] = _tasks;
-                console.log(res['data']);
-               // console.log(data.page);
-                //console.log(data.count);
-               // console.log(data.parrentContentId);
-                response.send(res);
-            }
-        });
-         */
         var queryAggregate = (data.parrentContentId) ?
-            tasks.aggregate({ $match: { project : newObjectId(data.parrentContentId) } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"},remaining: { $min: "$remaining"}}}) :
-            tasks.aggregate({ $group: {_id: "$workflow",taskId:{$push:"$_id"},remaining: { $min: "$remaining"}}});
+            tasks.aggregate({ $match: { project : newObjectId(data.parrentContentId) } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"},remaining: { $sum: "$remaining"}}}) :
+            tasks.aggregate({ $group: {_id: "$workflow",taskId:{$push:"$_id"},remaining: { $sum: "$remaining"}}});
         queryAggregate.exec(
-          //  { $group:{_id:"$workflow",taskId:{$push:"$_id"}}},
-            function (err,responseT) {
+            function (err,responseTasks) {
                 if (!err) {
 
-                    var responseTasks =[];
+                    var responseTasksArray =[];
                     var columnValue = data.count;
                     var page = data.page;
 
-                    responseT.forEach(function(value){
+                    responseTasks.forEach(function(value){
                         value.taskId.forEach(function(idTask,taskIndex){
                             if (((page-1)*columnValue <= taskIndex) && (taskIndex < (page-1)*columnValue + columnValue )) {
-                                responseTasks.push(idTask);
+                                responseTasksArray.push(idTask);
                             }
                         });
                         var myObj = {
@@ -880,7 +850,7 @@ var Project = function (logWriter, mongoose) {
                         }
                     });
                     tasks.find()
-                    .where('_id').in(responseTasks)
+                    .where('_id').in(responseTasksArray)
                     .populate('project', '_id projectShortDesc projectName')
                     .populate('assignedTo', '_id name imageSrc')
                     .populate('extrainfo.customer createdBy.user editedBy.user')
@@ -889,7 +859,6 @@ var Project = function (logWriter, mongoose) {
                     .populate('editedBy.user')
                     .exec(function (err, resalt) {
                         if (!err) {
-
                             res['showMore'] = showMore;
                             res['taskCount'] = taskCount;
                             res['data'] = resalt;
