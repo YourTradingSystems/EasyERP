@@ -1015,7 +1015,7 @@ app.get('/Leads/:viewType', function (req, res) {
     }
     var viewType = req.params.viewType;
     switch (viewType) {
-        case "form": requestHandler.getOpportunityById(req, res, data);
+        case "form": requestHandler.getLeadsById(req, res, data);
             break;
         default: requestHandler.getLeadsCustom(req, res, data);
             break;

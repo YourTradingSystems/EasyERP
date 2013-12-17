@@ -566,7 +566,7 @@ var requestHandler = function (fs, mongoose) {
     function getOwnCompanies(req, res, data) {
         console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 5, function(access) {
+            access.getReadAccess(req.session.uId, 5, function(access) {
                 if (access) {
 					customer.getOwnCompanies(data, res);
                 } else {
@@ -582,7 +582,7 @@ var requestHandler = function (fs, mongoose) {
     function removeCompany(req, res, id, data) {
         console.log("Requst removeCompany is success");
         if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 5, function(access) {
+            access.getDeleteAccess(req.session.uId, 50, function(access) {
                 if (access) {
 					customer.remove(id, res);
                 } else {
@@ -599,7 +599,7 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst createCompany is success");
         if (req.session && req.session.loggedIn) {
             data.company.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 5, function(access) {
+            access.getEditWritAccess(req.session.uId, 50, function(access) {
                 if (access) {
 					customer.create(data.company, res);
 
@@ -619,7 +619,7 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req.session.uId, 5, function(access) {
+            access.getEditWritAccess(req.session.uId, 50, function(access) {
                 if (access) {
 					customer.update(id, remove, data.company, res);
                 } else {
@@ -637,7 +637,14 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst getFilterCompanies is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            customer.getFilterCompanies(data, res);
+            access.getReadAccess(req.session.uId, 50, function(access) {
+                if (access) {
+					customer.getFilterCompanies(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1053,7 +1060,7 @@ var requestHandler = function (fs, mongoose) {
         }
     }
 
-    function getOpportunityById(req, res, data) {
+    function getLeadsById(req, res, data) {
         if (req.session && req.session.loggedIn) {
             opportunities.getById(data.id, res);
         } else {
@@ -1102,7 +1109,28 @@ var requestHandler = function (fs, mongoose) {
     function createOpportunitie(req, res, data) {
         if (req.session && req.session.loggedIn) {
             data.opportunitie.uId = req.session.uId;
-            opportunities.create(data.opportunitie, res);
+            access.getEditWritAccess(req.session.uId, 25, function(access) {
+                if (access) {
+					opportunities.create(data.opportunitie, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
+        } else {
+            res.send(401);
+        }
+    }
+    function getOpportunityById(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 25, function(access) {
+                if (access) {
+					opportunities.getById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1111,7 +1139,13 @@ var requestHandler = function (fs, mongoose) {
     function getFilterOpportunities(req, res, data) {
         console.log("Requst getFilterOpportunities is success");
         if (req.session && req.session.loggedIn) {
-            opportunities.getFilterOpportunities(data, res);
+            access.getReadAccess(req.session.uId, 25, function(access) {
+                if (access) {
+					opportunities.getFilterOpportunities(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1119,7 +1153,13 @@ var requestHandler = function (fs, mongoose) {
 
     function getOpportunities(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            opportunities.get(res);
+            access.getReadAccess(req.session.uId, 25, function(access) {
+                if (access) {
+					opportunities.get(res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1132,7 +1172,13 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: date
             };
-            opportunities.update(id, data.opportunitie, res);
+            access.getEditWritAccess(req.session.uId, 25, function(access) {
+                if (access) {
+					opportunities.update(id, data.opportunitie, res);
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -1140,7 +1186,14 @@ var requestHandler = function (fs, mongoose) {
 
     function removeOpportunitie(req, res, id, data) {
         if (req.session && req.session.loggedIn) {
-            opportunities.remove(id, res);
+            access.getEditWritAccess(req.session.uId, 25, function(access) {
+                if (access) {
+					opportunities.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -1355,6 +1408,7 @@ var requestHandler = function (fs, mongoose) {
         getLeadsCustom: getLeadsCustom,
         updateLead: updateLead,
         removeLead: removeLead,
+		getLeadsById: getLeadsById,
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
