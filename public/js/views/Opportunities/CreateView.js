@@ -181,7 +181,6 @@ define([
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
                     width: "50%",
-                    height: 513,
                     title: "Create Opportunity",
                     buttons: {
                         save: {
