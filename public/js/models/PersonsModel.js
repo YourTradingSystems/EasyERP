@@ -57,7 +57,7 @@ define(["Validation"],function (Validation) {
                     );
                 }
             }
-            if(attrs.dateBirth.length > 0){
+            if(attrs.dateBirth){
                 if(!Validation.validDate(attrs.dateBirth)){
                     errors.push(
                         {
