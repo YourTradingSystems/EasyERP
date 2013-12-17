@@ -34,7 +34,9 @@ define([
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
             keydownHandler: function(e){
                 switch (e.which){

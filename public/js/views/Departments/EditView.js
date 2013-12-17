@@ -75,8 +75,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "create-dialog",
-                    width: "50%",
-                    height: 303,
+                    width: "80%",
                     title: "Edit Department",
                     buttons: [{
 								  text: "Save",

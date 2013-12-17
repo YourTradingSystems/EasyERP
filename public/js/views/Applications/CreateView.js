@@ -19,7 +19,9 @@ define([
             events: {
                 "click #tabList a": "switchTab",
                 "click #hire": "isEmployee",
-                "change #workflowNames": "changeWorkflows"
+                "change #workflowNames": "changeWorkflows",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
             hideDialog: function () {
                 $(".edit-dialog").remove();
@@ -52,7 +54,20 @@ define([
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
             },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
             saveItem: function () {
                 var self = this;
                 var mid = 39;
