@@ -44,7 +44,7 @@ var Module = function (logWriter, mongoose, users, profile) {
                 },
                 {
                     $match: {
-                        _id: 1387181674000
+                        _id: id
                     }
                 },
                 {
