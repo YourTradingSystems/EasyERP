@@ -1,5 +1,6 @@
 var JobPosition = function (logWriter, mongoose, employee) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var objectId = mongoose.Types.ObjectId;
     var jobPositionSchema = mongoose.Schema({
         name: { type: String, default: '' },
         expectedRecruitment: { type: Number, default: 0 },
@@ -13,14 +14,14 @@ var JobPosition = function (logWriter, mongoose, employee) {
         workflow: { type: ObjectId, ref: 'workflows', default: null },
         numberOfEmployees: { type: Number, default: 0 },
         totalForecastedEmployees: { type: Number, default: 0 },
-		createdBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date, default: Date.now}
-		},
-		editedBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date}
-		}
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
+        },
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date }
+        }
 
     }, { collection: 'JobPosition' });
 
@@ -53,7 +54,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
                 try {
                     _job = new job();
                     if (data.uId) {
-                        _job.createdBy.user=data.uId;
+                        _job.createdBy.user = data.uId;
                     }
                     if (data.name) {
                         _job.name = data.name;
@@ -72,7 +73,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
                     if (data.department) {
                         //if (data.department._id) {
                         //    console.log(data.department._id);
-                            _job.department = data.department;
+                        _job.department = data.department;
                         //    console.log(new ObjectId(data.department._id));
                         //}
                         //if (data.department.departmentName) {
@@ -111,17 +112,36 @@ var JobPosition = function (logWriter, mongoose, employee) {
             res.send(500, { error: 'JobPosition.save  error' });
         }
     };//End create
-    function getJobPositionById(id,res){
-        job.findById(id, function(err, responce){
-            if(err){
+
+    function getJobPositionById(id, res) {
+        job.findById(id, function (err, response) {
+            if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
                 res.send(500, { error: "Can't find JobPosition" });
-            }else{
-                res.send(responce);
+            } else {
+                 var aggregate = employee.employee.aggregate(
+                   {
+                       $match: {
+                           jobPosition: objectId(id)
+                       }
+                   },
+                   function (err, result) {
+                       if (err) {
+                           logWriter.log('JobPosition.js getJobPositionById aggregate ' + err);
+                           res.send(500, {error:"Cant't find an JobPosition"});
+                       } else {
+                           response.numberOfEmployees = result.length;
+                           response.totalForecastedEmployees = response.expectedRecruitment + result.length;
+                           res.send(response);
+                       }
+                   }
+               );
+                res.send(response);
             }
         });
     }
+
     function get(response) {
         var res = {};
         res['data'] = [];
@@ -136,26 +156,89 @@ var JobPosition = function (logWriter, mongoose, employee) {
                 logWriter.log('JobPosition.js get job.find' + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
-                console.log(result);
-                getTotalEmployees(result, 0);
+                res['data'] = result;
+                response.send(res);
+                //getTotalEmployees(result, 0);
                 //console.log(res);
                 //response.send(res);
             }
         });
-        var getTotalEmployees = function (jobPositions, count) {
+        //var getTotalEmployees = function (jobPositions, count) {
+        //    if (jobPositions && jobPositions.length > count) {
+        //        employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
+        //            if (err) {
+        //                console.log(err);
+        //                res['data'] = jobPositions;
+        //                response.send(res);
+        //            } else {
+        //                jobPositions[count].numberOfEmployees = _employees.length;
+        //                jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
+        //                count++;
+        //                getTotalEmployees(jobPositions, count);
+        //            }
+        //        });
+        //    } else {
+        //        res['data'] = jobPositions;
+        //        response.send(res);
+        //    }
+        //}
+    }; //end get
+
+    function getCustom(response) {
+        var res = {};
+        res['data'] = [];
+        var query = job.find({});
+        query.populate('department').
+			populate('createdBy.user').
+            populate('editedBy.user');
+        query.sort({ name: 1 });
+        query.exec(function (err, jobPos) {
+            if (err) {
+                console.log(err);
+                logWriter.log('JobPosition.js get job.find' + err);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                //res['data'] = result;
+                //response.send(res);
+                getTotalEmployees(jobPos, 0);
+                //console.log(res);
+                //response.send(res);
+            }
+        });
+        var getTotalEmployees = function(jobPositions, count) {
             if (jobPositions && jobPositions.length > count) {
-                employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
-                    if (err) {
-                        console.log(err);
-                        res['data'] = jobPositions;
-                        response.send(res);
-                    } else {
-                        jobPositions[count].numberOfEmployees = _employees.length;
-                        jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
-                        count++;
-                        getTotalEmployees(jobPositions, count);
+                var jobId = jobPositions[count]._id.toString();
+                console.log(jobId);
+                var aggregate = employee.employee.aggregate(
+                    {
+                        $match: {
+                            jobPosition: objectId(jobId)
+                        }
+                    },
+                    function(err, result) {
+                        if (result) {
+                            jobPositions[count].numberOfEmployees = result.length;
+                            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
+                            count++;
+                            getTotalEmployees(jobPositions, count);
+                        }
                     }
-                });
+                );
+                //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
+                //        if (err) {
+                //            console.log(err);
+                //            res['data'] = jobPositions;
+                //            response.send(res);
+                //        } else {
+                //            jobPositions[count].numberOfEmployees = _employees.length;
+                //            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
+                //            count++;
+                //            getTotalEmployees(jobPositions, count);
+                //        }
+                //    });
+                //} else {
+                //    res['data'] = jobPositions;
+                //    response.send(res);
             } else {
                 res['data'] = jobPositions;
                 response.send(res);
@@ -163,67 +246,70 @@ var JobPosition = function (logWriter, mongoose, employee) {
         }
     }; //end get
 
-    function update(_id, data, res) {
-        try {
-            delete data._id;
-            delete data.createdBy;
-            console.log(data);
-            if (data.workflow.status === 'New') {
-                data.expectedRecruitment = 0;
-            } else {
-                if (data.expectedRecruitment === 0) {
-                    ++data.expectedRecruitment;
+        function update(_id, data, res) {
+            try {
+                delete data._id;
+                delete data.createdBy;
+                console.log(data);
+                if (data.workflow.status === 'New') {
+                    data.expectedRecruitment = 0;
+                } else {
+                    if (data.expectedRecruitment === 0) {
+                        ++data.expectedRecruitment;
+                    }
                 }
+                console.log(data);
+                if (data.department && data.department._id) {
+                    data.department = data.department._id;
+                }
+                if (data.workflow && data.workflow._id) {
+                    data.workflow = data.workflow._id;
+                }
+                job.update({ _id: _id }, data, function (err, result) {
+                    if (err) {
+                        console.log(err);
+                        logWriter.log("JobPosition.js update job.update " + err);
+                        res.send(500, { error: "Can't update JobPosition" });
+                    } else {
+                        res.send(200, { success: 'JobPosition updated success' });
+                    }
+                });
             }
-            console.log(data);
-            if (data.department && data.department._id) {
-                data.department = data.department._id;
+            catch (exception) {
+                console.log(exception);
+                logWriter.log("JobPosition.js update " + exception);
+                res.send(500, { error: 'JobPosition updated error' });
             }
-            if (data.workflow && data.workflow._id) {
-                data.workflow = data.workflow._id;
-            }
-            job.update({ _id: _id }, data, function (err, result) {
+        };// end update
+
+        function remove(_id, res) {
+            job.remove({ _id: _id }, function (err, result) {
                 if (err) {
                     console.log(err);
-                    logWriter.log("JobPosition.js update job.update " + err);
-                    res.send(500, { error: "Can't update JobPosition" });
+                    logWriter.log("JobPosition.js remove job.remove " + err);
+                    res.send(500, { error: "Can't remove JobPosition" });
                 } else {
-                    res.send(200, { success: 'JobPosition updated success' });
+                    res.send(200, { success: 'JobPosition removed' });
                 }
             });
-        }
-        catch (exception) {
-            console.log(exception);
-            logWriter.log("JobPosition.js update " + exception);
-            res.send(500, { error: 'JobPosition updated error' });
-        }
-    };// end update
+        };// end remove
 
-    function remove(_id, res) {
-        job.remove({ _id: _id }, function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("JobPosition.js remove job.remove " + err);
-                res.send(500, { error: "Can't remove JobPosition" });
-            } else {
-                res.send(200, { success: 'JobPosition removed' });
-            }
-        });
-    };// end remove
+        return {
 
-    return {
+            getJobPositionById: getJobPositionById,
 
-        getJobPositionById:getJobPositionById,
-        create: create,
+            getCustom: getCustom,
 
-        get: get,
+            create: create,
 
-        update: update,
+            get: get,
 
-        remove: remove,
+            update: update,
 
-        job: job
+            remove: remove,
+
+            job: job
+        };
     };
-};
 
-module.exports = JobPosition;
+    module.exports = JobPosition;
