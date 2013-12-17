@@ -524,8 +524,16 @@ var requestHandler = function (fs, mongoose) {
     function getCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 50, function(access) {
+                if (access) {
+					customer.getCompanies(res);
+					
+                } else {
+                    res.send(403);
+                }
+			});
+
             //company.get(res);
-            customer.getCompanies(res);
         } else {
             res.send(401);
         }
@@ -535,7 +543,14 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn) {
             //company.get(res);
-            customer.getCompanyById(data.id, res);
+            access.getReadAccess(req.session.uId, 50, function(access) {
+                if (access) {
+					customer.getCompanyById(data.id, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -544,7 +559,14 @@ var requestHandler = function (fs, mongoose) {
     function getOwnCompanies(req, res, data) {
         console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn) {
-            customer.getOwnCompanies(data, res);
+            access.getEditWritAccess(req.session.uId, 5, function(access) {
+                if (access) {
+					customer.getOwnCompanies(data, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -553,7 +575,14 @@ var requestHandler = function (fs, mongoose) {
     function removeCompany(req, res, id, data) {
         console.log("Requst removeCompany is success");
         if (req.session && req.session.loggedIn) {
-            customer.remove(id, res);
+            access.getDeleteAccess(req.session.uId, 5, function(access) {
+                if (access) {
+					customer.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
@@ -563,7 +592,14 @@ var requestHandler = function (fs, mongoose) {
         console.log("Requst createCompany is success");
         if (req.session && req.session.loggedIn) {
             data.company.uId = req.session.uId;
-            customer.create(data.company, res);
+            access.getEditWritAccess(req.session.uId, 5, function(access) {
+                if (access) {
+					customer.create(data.company, res);
+
+                } else {
+                    res.send(403);
+                }
+			});
         } else {
             res.send(401);
         }
@@ -576,7 +612,14 @@ var requestHandler = function (fs, mongoose) {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            customer.update(id, remove, data.company, res);
+            access.getEditWritAccess(req.session.uId, 5, function(access) {
+                if (access) {
+					customer.update(id, remove, data.company, res);
+                } else {
+                    res.send(403);
+                }
+			});
+
         } else {
             res.send(401);
         }
