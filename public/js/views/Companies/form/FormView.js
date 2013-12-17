@@ -316,14 +316,14 @@ define([
             },
             socialActive: function (e) {
                 e.preventDefault();
-                $(e.target).animate({
+                $(e.target).stop().animate({
                     'background-position-y': '-38px'
 
                 }, 300, function () { });
             },
             socialNotActive: function (e) {
                 e.preventDefault();
-                $(e.target).animate({
+                $(e.target).stop().animate({
                     'background-position-y': '0px'
 
                 }, 300, function () { });

@@ -10,34 +10,34 @@
         <div style="margin-left:150px; width:auto; display:block;">
             <div class="half-block left">
                 <dl class="person-info">
-                    <dt><label for="name">Company Name :</label></dt>
+                    <dt><label for="name">Company </label></dt>
                     <dd><input type="text" name="name" id="name" required value="<%=model.name.first%>" maxlength="32"/></dd>
                 </dl>
                 <dl class="person-info">
-                    <dt><label for="website">Website :</label></dt>
+                    <dt><label for="website">Website </label></dt>
                     <dd><input type="text" name="website" id="website" value="<%=model.website%>" maxlength="32" /></dd>
-                    <dt><label for="email">Email :</label></dt>
+                    <dt><label for="email">Email </label></dt>
                     <dd><input type="text" name="email" id="email" value="<%=model.email%>" maxlength="32" /></dd>
-                    <dt><label for="phone">Phone :</label></dt>
+                    <dt><label for="phone">Phone </label></dt>
                     <dd><input type="text" name="phone" id="phone" value="<%=model.phones.phone%>" maxlength="32" /></dd>
-                    <dt><label for="mobile">Mobile :</label></dt>
+                    <dt><label for="mobile">Mobile </label></dt>
                     <dd><input type="text" name="mobile" id="mobile" value="<%=model.phones.mobile%>" maxlength="32" /></dd>
-                    <dt><label for="fax">Fax :</label></dt>
+                    <dt><label for="fax">Fax </label></dt>
                     <dd><input type="text" name="fax" id="fax" value="<%=model.phones.fax%>" maxlength="32" /></dd>
                 </dl>
             </div>
             <div class="half-block left">
              
                 <dl class="person-info">
-                    <dt><label for="street">Steet :</label></dt>
+                    <dt><label for="street">Steet </label></dt>
                     <dd><input type="text" name="street" id="street" placeholder="Street..." value="<%=model.address.street%>" maxlength="32" /></dd>
-                    <dt><label for="city">City :</label></dt>
+                    <dt><label for="city">City </label></dt>
                     <dd><input type="text" name="city" id="city" placeholder="City" value="<%=model.address.city%>" maxlength="32" /></dd>
-                    <dt><label for="state">State :</label></dt>
+                    <dt><label for="state">State </label></dt>
                     <dd><input type="text" name="state" id="state" placeholder="State" value="<%=model.address.state%>" maxlength="32" /></dd>
-                    <dt><label for="zip">Zip :</label></dt>
+                    <dt><label for="zip">Zip </label></dt>
                     <dd><input type="text" name="zip" id="zip" placeholder="ZIP" value="<%=model.address.zip%>" maxlength="32" /></dd>
-                    <dt><label for="country">Country :</label></dt>
+                    <dt><label for="country">Country </label></dt>
                     <dd><input type="text" name="country" id="country" placeholder="Country" value="<%=model.address.country%>" maxlength="32" /></dd>
                 </dl>
               
@@ -72,20 +72,20 @@
         <div class="inner">
             <div class="half-block left">
                 <dl class="person-info">
-                    <dt><label for="employeesDd">Salesperson :</label></dt>
+                    <dt><label for="employeesDd">Salesperson </label></dt>
                     <dd>
                         <select id="employeesDd">
 
                         </select>
                     </dd>
-                    <dt><label for="departmentDd">Sales Team :</label></dt>
+                    <dt><label for="departmentDd">Sales Team </label></dt>
                     <dd>
                         <select id="departmentDd">
 
                         </select>
                     </dd>
-                    <dt><label for="reference">Reference :</label></dt><dd><input class="blueback" type="text" id="reference" value="<%=model.salesPurchases.reference%>" maxlength="32"/></dd>
-                    <dt><label for="language">Language :</label></dt>
+                    <dt><label for="reference">Reference </label></dt><dd><input class="blueback" type="text" id="reference" value="<%=model.salesPurchases.reference%>" maxlength="32"/></dd>
+                    <dt><label for="language">Language </label></dt>
                     <dd>
                         <select id="language">
                             <option>English</option>
@@ -95,9 +95,9 @@
             </div>
             <div class="half-block left">
                 <dl class="person-info">
-                   <dt><label for="isCustomer">Customer :</label></dt><dd><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></dd>
-                    <dt><label for="isSupplier">Supplier :</label></dt><dd><input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></dd>
-                    <dt><label for="active">Active :</label></dt><dd><input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> /></dd>
+                   <dt><label for="isCustomer">Customer </label></dt><dd><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></dd>
+                    <dt><label for="isSupplier">Supplier </label></dt><dd><input type="checkbox" id="isSupplier" <%=(model.salesPurchases.isSupplier)? "checked='checked'":''%>/></dd>
+                    <dt><label for="active">Active </label></dt><dd><input type="checkbox" id="active" <%=(model.salesPurchases.active)? "checked='checked'":''%> /></dd>
                 </dl>
             </div>
         </div>

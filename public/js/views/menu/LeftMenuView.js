@@ -13,6 +13,7 @@ define([
             
             events: {
                 "click a": "selectMenuItem",
+//                "click a": "hoverItem",
                 "mouseover a": "hoverItem",
                 "mouseleave a": "mouseLeave"
             },

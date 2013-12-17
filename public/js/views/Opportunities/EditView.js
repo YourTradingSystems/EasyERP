@@ -213,7 +213,6 @@
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-opportunity-dialog",
                     width: 900,
-                    height: 650,
                     buttons: {
                         save: {
                             text: "Save",
