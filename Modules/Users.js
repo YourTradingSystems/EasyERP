@@ -107,7 +107,7 @@ var Users = function (logWriter, mongoose) {
                 if (data.login || data.email) {
                     User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                         try {
-                            if (_users && _users.length !== 0) {
+							if (_users && _users.length !== 0) {
                                 var shaSum = crypto.createHash('sha256');
                                 shaSum.update(data.pass);
                                 if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {
@@ -121,7 +121,7 @@ var Users = function (logWriter, mongoose) {
                             } else {
                                 if (err) {
                                     console.log(err);
-                                    logWriter.log("User.js. login User.find " + err);
+									logWriter.log("User.js. login User.find " + err);
                                 }
                                 res.send(500);
                             }
