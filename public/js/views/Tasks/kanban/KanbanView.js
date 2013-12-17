@@ -23,6 +23,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         selectItem: function (e) {
 			$(e.target).parents(".item").parents("table").find(".active").removeClass("active");
 			$(e.target).parents(".item").addClass("active");
+
         },
 
         gotoEditForm: function (e) {
@@ -78,12 +79,15 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
             var TaskCount;
+            var TaskRemaining;
 
             _.each(workflows, function (workflow, i) {
                 TaskCount = 0
+                TaskRemaining = 0;
                 _.each(this.collection.taskCount, function(wfId){
                     if (wfId.id == workflow._id) {
-                            TaskCount = wfId.namberOfTasks
+                            TaskCount = wfId.namberOfTasks;
+                            TaskRemaining = wfId.remainingOfTasks;
                     }
                 });
                 var column = this.$(".column").eq(i);
@@ -95,7 +99,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                         column.append(kanbanItemView.render().el);
                 }, this);
                 var count = " <span>(<span class='counter'>" + TaskCount + "</span>)</span>";
-                var content = "<p class='remaining'>Remaining time: <span>" + 0 + "</span></p>";
+                var content = "<p class='remaining'>Remaining time: <span>" + TaskRemaining + "</span></p>";
                 column.find(".columnNameDiv h2").append(count);
                 column.find(".columnNameDiv").append(content);
             }, this);
@@ -130,11 +134,8 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                     var column = ui.item.closest(".column");
                     if (model) {
                         model.set({ workflow: column.data('id') });
-                        model.save({}, {
-                            //headers: {
-                            //    mid: mid
-                            //}
-                        });
+                        model.save({});
+
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                         column.find(".remaining span").html(parseFloat(column.find(".remaining span").html()) + (model.get("remaining")));
                     }
