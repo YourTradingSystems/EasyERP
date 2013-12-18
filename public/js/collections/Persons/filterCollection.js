@@ -22,7 +22,6 @@
                     data: filterObject,
                     reset: true,
                     success: function (model,res) {
-                        debugger;
                         console.log("Persons fetchSuccess");
                         that.page += 1;
                     },
