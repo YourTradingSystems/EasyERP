@@ -13,6 +13,7 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
+                _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
@@ -134,6 +135,27 @@ define([
                 $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
                 $(id).hide();
             },
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-person-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-person-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
             render: function () {
                 var self = this;
                 console.log('render persons dialog');
@@ -155,7 +177,11 @@ define([
 						{
 							text: "Cancel",
 							click: function () { $(this).dialog().remove(); }
-						}]
+						},
+						{
+							text: "Delete",
+							click: self.deleteItem }
+						]
 
                 });
                 this.$el.find('#dateBirth').datepicker({

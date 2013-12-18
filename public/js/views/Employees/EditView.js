@@ -19,7 +19,7 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
-
+                _.bindAll(this, "render", "deleteItem");
             if (options.collection) {
                 this.employeesCollection = options.collection;
                 this.currentModel = this.employeesCollection.getElement();
@@ -155,6 +155,27 @@ define([
                 });
 
             },
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-employee-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-employee-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
 
             render: function () {
                 console.log(this.currentModel.toJSON());
@@ -180,6 +201,11 @@ define([
                             text: "Cancel",
                             class: "btn",
                             click: self.hideDialog
+                        },
+                        delete:{
+                            text: "Delete",
+                            class: "btn",
+                            click: self.deleteItem
                         }
                     }
                 });

@@ -14,6 +14,7 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
                 this.departmentsCollection = new DepartmentsCollection();
+                _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
@@ -66,6 +67,27 @@ define([
             hideDialog: function () {
                 $(".create-dialog").remove();
             },
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
             render: function () {
                 var formString = this.template({
                     model: this.currentModel.toJSON(),
@@ -84,6 +106,10 @@ define([
 							  {
 								  text: "Cancel",
 								  click: function () { $(this).remove(); }
+							  },
+							  {
+								  text: "Delete",
+								  click:self.deleteItem 
 							  }]
                 });
 				common.populateDepartments(App.ID.parentDepartment, "/Departments", this.currentModel.toJSON());

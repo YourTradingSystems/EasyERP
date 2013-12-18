@@ -13,6 +13,7 @@
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
+                _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
@@ -48,6 +49,27 @@
 
 
             },
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
 
             render: function () {
                 var formString = this.template(this.currentModel.toJSON());
@@ -68,6 +90,11 @@
                             click: function(){
                                 self.hideDialog();
                             }
+                        },
+                        delete:{
+                            text: "Delete",
+                            class: "btn",
+                            click: self.deleteItem
                         }
                     }
                 });
