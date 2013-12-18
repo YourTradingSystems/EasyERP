@@ -3,8 +3,9 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
         parentDepartment: { type: ObjectId, ref: 'Department', default:null },
-        departmentManager: { type: ObjectId, ref: 'Employees', default:null },
-		createdBy:{
+        departmentManager: { type: ObjectId, ref: 'Employees', default: null },
+        users: [{ type: ObjectId, ref: 'Users', default: null }],
+        createdBy:{
 			user:{type:ObjectId, ref: 'Users', default:null},
 			date:{type:Date, default: Date.now}
 		},
