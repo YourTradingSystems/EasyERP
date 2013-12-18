@@ -44,7 +44,6 @@ define([
 
             },
             saveItem: function (event) {
-                event.preventDefault();
                 var self = this;
                 var mid = 39;
 
@@ -146,7 +145,18 @@ define([
                     resizable: true,
                     dialogClass: "edit-person-dialog",
                     title: "Edit Person",
-                    width: "80%"
+                    width: "80%",
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						}]
+
                 });
                 $('#dateBirth').datepicker({
                     dateFormat: "d M, yy",
