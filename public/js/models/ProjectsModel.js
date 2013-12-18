@@ -1,13 +1,12 @@
-define(function () {
+define(['Validation'],
+    function (Validation) {
     var ProjectModel = Backbone.Model.extend({
         idAttribute: "_id",
 
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
-                        return error.msg;
-                    }).join('\n');
+                    var msg = errors.join('\n');
                     alert(msg);
                 }
             });
@@ -16,24 +15,8 @@ define(function () {
         validate: function(attrs){
             var errors = [];
 
-            if(attrs.projectName === ""){
-                errors.push(
-                    {
-                        name:"Project",
-                        field:"projectName",
-                        msg:"Project name can not be empty"
-                    }
-                );
-            }
-            if(attrs.projectShortDesc === ""){
-                errors.push(
-                    {
-                        name: "Project",
-                        field: "projectName",
-                        msg: "Project description can not be empty"
-                    }
-                );
-            }
+            Validation.checkNameField(errors, true, attrs.projectName, "Project name");
+            Validation.checkNameField(errors, true, attrs.projectShortDesc, "Short description");
 
             if(errors.length > 0)
                 return errors;

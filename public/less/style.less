@@ -3786,3 +3786,42 @@ a.current-selected{
 	width:100% !important;
 	max-width:initial !important;
 }
+ul.dialog-tabs{
+	height:35px;
+	border-bottom: 1px solid #DDD;
+	margin:0 -20px;
+	padding:0 20px;
+	li{
+		flaot:left;
+		a{
+			border: 1px solid rgba(0, 0, 0, 0);
+			display:block;
+			float:left;
+			padding-left:20px;
+			padding-right:20px;
+			height:35px;
+			text-align:center;
+			line-height:35px;
+			text-decoration:none;
+			&.active{
+				height:36px;
+				line-height:34px;
+				border: 1px solid #DDD;
+				border-bottom: none;
+				background-color:white;
+			}
+			&:hover{
+				background-color: #EEE;
+			}
+		}
+	}
+}
+.dialog-tabs-items {
+	margin-bottom:-29px;
+	.dialog-tabs-item{
+		display:none;
+		&.active{
+			display:block;
+		}
+	}
+}

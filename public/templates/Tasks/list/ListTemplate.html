@@ -1,19 +1,16 @@
 
-        <% tasksCollection.forEach(function(task, index){ %>
-        <tr data-index="<%= index %>" data-id="<%= task._id%>">
-            <td><input type="checkbox" value="<%=task._id%>" class="checkbox" /></td>
-            <td><%= index + 1 %></td>
-            <td><%=(task.project) ? task.project.projectName : ''%></td>
-            <td><%=(task.project) ? task.project.projectShortDesc : ''%></td>
-            <td><%=task.summary%></td>
-            <td><%=(task.project) ? task.project.projectShortDesc : ''%><%=task.taskCount%></td>
-            <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
-            <td><%=task.extrainfo.StartDate%></td>
-            <td><%=task.extrainfo.EndDate%></td>
-            <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
-            <td><%=(task.workflow) ? task.workflow.name : ''%></td>
-            <td><%=(task.createdBy.user) ? task.createdBy.date + " (" + task.createdBy.user.login + ")" : ''%></td>
-            <td><%=(task.editedBy.user) ? task.editedBy.date + " (" + task.editedBy.user.login + ")" : ''%></td>
-
+        <tr data-index="<%=index%>" data-id="<%= _id%>">
+            <td><input type="checkbox" value="<%=_id%>" class="checkbox" /></td>
+            <td><%=index%></td>
+            <td><%=(project) ? project.projectName : ''%></td>
+            <td><%=(project) ? project.projectShortDesc : ''%></td>
+            <td><%=summary%></td>
+            <td><%=(project) ? project.projectShortDesc : ''%><%=taskCount%></td>
+            <td><%=(assignedTo) ? assignedTo.name.first + ' ' + assignedTo.name.last : ''%></td>
+            <td><%=extrainfo.StartDate%></td>
+            <td><%=extrainfo.EndDate%></td>
+            <td><progress name="taskProgress" max="100" value="<%=progress%>" /></td>
+            <td><%=(workflow) ? workflow.name : ''%></td>
+            <td><%=(createdBy.user) ? createdBy.date + " (" + createdBy.user.login + ")" : ''%></td>
+            <td><%=(editedBy.user) ? editedBy.date + " (" + editedBy.user.login + ")" : ''%></td>
         </tr>
-        <% }) %>

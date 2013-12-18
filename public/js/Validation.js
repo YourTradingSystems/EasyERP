@@ -230,7 +230,41 @@ define(
                 }
             }
         }
+
+        var checkMoneyField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(!validateMoneyAmount(fieldValue))
+                    errorArray.push([fieldName, errorMessages.invalidMoneyAmountMsg].join(' '));
+            } else {
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(!validateMoneyAmount(fieldValue))
+                        errorArray.push([fieldName, errorMessages.invalidMoneyAmountMsg].join(' '));
+                }
+            }
+        }
+
+        var checkFirstDateIsGreater = function(errorArray, greaterDate, greaterDateName, smallerDate, smallerDateName){
+            if((new Date(greaterDate) < new Date(smallerDate))){
+                 errorArray.push(smallerDateName + " can not be greater than " + greaterDateName);
+                 return;
+            }
+
+        }
         return {
+            checkMoneyField:checkMoneyField,
+            checkFirstDateIsGreater:checkFirstDateIsGreater,
             checkNotesField:checkNotesField,
             checkEmailField:checkEmailField,
             checkStreetField:checkStreetField,
