@@ -8,9 +8,7 @@ function (common, Validation) {
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
-                        return error.msg;
-                    }).join('\n');
+                    var msg = errors.join('\n');
                     alert(msg);
                 }
             });
@@ -30,46 +28,10 @@ function (common, Validation) {
         validate: function(attrs){
             var errors = [];
 
-            if(new Date(attrs.nextAction.date) > new Date(attrs.expectedClosing)){
-                errors.push(
-                    {
-                        name: "Opportunities",
-                        field: "expectedClosing",
-                        msg: "Next action date can not be greater than expected closing date"
-                    }
-                );
-            }
-
-            if(attrs.expectedClosing.length > 0){
-                if(!Validation.validDate(attrs.expectedClosing)){
-                    errors.push(
-                        {
-                            name: "Opportunities",
-                            field: "expectedClosing",
-                            msg: "Expected closing date is not a valid date"
-                        }
-                    );
-                }
-            }
-
-            if(attrs.name === ""){
-                errors.push(
-                    {
-                        name: "Opportunities",
-                        field: "subject",
-                        msg: "Opportunity subject can not be empty"
-                    }
-                );
-            }
-            if(!Validation.validMoneyAmount(attrs.expectedRevenue.value)){
-                errors.push(
-                    {
-                        name: "Opportunities",
-                        field: "expectedRevenue",
-                        msg: "Expected revenue can contain only numbers dot separated with max 2 digits after dot"
-                    }
-                );
-            }
+            Validation.checkNameField(errors, true, attrs.name, "Subject");
+            if(attrs.expectedClosing && attrs.nextAction)
+                Validation.checkFirstDateIsGreater(errors, attrs.expectedClosing, "expected closing date", attrs.nextAction.date, "Next action date");
+            Validation.checkMoneyField(errors, false, attrs.expectedRevenue.value, "Expected revenue");
             if(errors.length > 0)
                 return errors;
         },

@@ -257,15 +257,14 @@
                     }
                 });
 
-                $('#StartDate').datepicker({ dateFormat: "d M, yy" });
-                $('#EndDate').datepicker({ dateFormat: "d M, yy" });
-                $('#deadline').datepicker({ dateFormat: "d M, yy" });
+
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.projectDd);});
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.assignedToDd);});
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
 				this.styleSelect("#type");
                 this.delegateEvents(this.events);
+                $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#deadline').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
