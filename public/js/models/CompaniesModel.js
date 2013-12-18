@@ -46,17 +46,6 @@
                     );
                 }
             }
-            if(attrs.phones.fax.length > 0){
-                if(!Validation.validPhone(attrs.phones.fax)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "fax",
-                            msg: "Fax should contain only numbers"
-                        }
-                    );
-                }
-            }
             if(attrs.phones.mobile.length > 0){
                 if(!Validation.validPhone(attrs.phones.mobile)){
                     errors.push(

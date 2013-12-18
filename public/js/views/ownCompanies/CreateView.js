@@ -41,6 +41,7 @@ define([
                 $(".create-dialog").remove();
             },
 
+
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -48,27 +49,27 @@ define([
                 var companyModel = new CompanyModel();
 
                 var name = {
-                    first: $.trim(this.$el.find("#name").val()),
+                    first: $("#name").val(),
                     last:''
                 };
 
                 var address = {};
-                this.$el.find(".person-info").find(".address").each(function () {
+                $(".person-info").find(".address").each(function () {
                     var el = $(this);
-                    address[el.attr("name")] = $.trim(el.val());
+                    address[el.attr("name")] = el.val();
                 });
 
-                var email = $.trim(this.$el.find("#email").val());
+                var email = $("#email").val();
 
-                var phone = $.trim(this.$el.find("#phone").val());
+                var phone = $("#phone").val();
 
-                var mobile = $.trim(this.$el.find("#mobile").val());
+                var mobile = $("#mobile").val();
 
-                var fax = $.trim(this.$el.find("#fax").val());
+                var fax = $("#fax").val();
 
-                var website = $.trim(this.$el.find("#website").val());
+                var website = $("#website").val();
 
-                var internalNotes = $.trim(this.$el.find("#internalNotes").val());
+                var internalNotes = $.trim($("#internalNotes").val());
 
                 var salesPerson = this.$("#employeesDd option:selected").val();
                 //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
@@ -76,15 +77,15 @@ define([
                 var salesTeam = this.$("#departmentDd option:selected").val();
                 //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
-                var reference = $.trim(this.$el.find("#reference").val());
+                var reference = $("#reference").val();
 
-                var language = $.trim(this.$el.find("#language").val());
+                var language = $("#language").val();
 
-                var isCustomer = (this.$el.find("#isCustomer").is(":checked")) ? true : false;
+                var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
 
-                var isSupplier = (this.$el.find("#isSupplier").is(":checked")) ? true : false;
+                var isSupplier = ($("#isSupplier").is(":checked")) ? true : false;
 
-                var active = (this.$el.find("#active").is(":checked")) ? true : false;
+                var active = ($("#active").is(":checked")) ? true : false;
 
                 companyModel.save({
                     name: name,
@@ -96,6 +97,7 @@ define([
                         fax: fax
                     },
                     address: address,
+                    isOwn:true,
                     website: website,
                     internalNotes: internalNotes,
                     salesPurchases: {
@@ -149,13 +151,7 @@ define([
                 common.populateDepartments(App.ID.departmentDd, "/Departments");
                 common.populateEmployeesDd(App.ID.employeesDd, "/Employees");
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
-                this.$el.find('#date').datepicker({
-                    dateFormat: "d M, yy",
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: '-100y:c+nn',
-                    maxDate: '-18y'
-                });
+                $('#date').datepicker({ dateFormat: "d M, yy" });
                 return this;
             }
 

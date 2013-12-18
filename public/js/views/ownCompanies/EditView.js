@@ -119,11 +119,11 @@ define([
                     wait: true,
                     success: function (model) {
                         $(".edit-companies-dialog").remove();
-                        Backbone.history.navigate("easyErp/Companies", { trigger: true });
+                        Backbone.history.navigate("easyErp/ownCompanies", { trigger: true });
                     },
                     error: function () {
                         $(".edit-companies-dialog").remove();
-                        Backbone.history.navigate("easyErp/Companies", { trigger: true });
+                        Backbone.history.navigate("easyErp/owmCompanies", { trigger: true });
                     }
                 });
             },
