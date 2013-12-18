@@ -189,21 +189,20 @@ define([
                     }
                 });
 
-                $('#StartDate').datepicker({ dateFormat: "d M, yy" });
-                $('#EndDate').datepicker({ dateFormat: "d M, yy" });
-                $('#deadline').datepicker({ dateFormat: "d M, yy" });
+
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model,function(){self.styleSelect(App.ID.projectDd);});
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.assignedToDd);});
                 common.populatePriority(App.ID.priorityDd, "/Priority", model, function(){self.styleSelect(App.ID.priorityDd);} );
 				this.styleSelect("#type");
+                $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#deadline').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,
                     minDate: new Date()
                 });
-                $("#ui-datepicker-div").addClass("createFormDatepicker");
+                //$("#ui-datepicker-div").addClass("createFormDatepicker");
 
                 this.delegateEvents(this.events);
                 return this;

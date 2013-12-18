@@ -19,9 +19,16 @@ define([
             events: {
                 "submit form": "formSubmitHandler",
                 "change #workflowNames": "changeWorkflows",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                'click .dialog-tabs a': 'changeTab'
             },
-
+			changeTab:function(e){
+				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
+				$(e.target).addClass("active");
+				var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+				$(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
+				$(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+			},
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:

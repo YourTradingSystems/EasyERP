@@ -36,7 +36,7 @@ define([
                             });
                             that.formModel.save({}, {
                                 headers: {
-                                    mid: mid
+                                    mid: 39
                                 },
                                 success: function (model) {
                                     $(self).dialog("close");

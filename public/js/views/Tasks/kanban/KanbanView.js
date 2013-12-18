@@ -37,6 +37,7 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             _.bind(this.collection.showMore, this.collection);
             this.collection.showMore();
         },
+
         showMoreContent: function (newModels) {
             var workflows = this.workflowsCollection.toJSON();
 

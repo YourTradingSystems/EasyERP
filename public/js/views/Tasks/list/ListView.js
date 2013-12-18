@@ -11,7 +11,9 @@ function (TasksListTemplate, CreateView, ListItemView) {
         initialize: function (options) {
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.startNumber = 0;
+            listLimit = this.collection.count;
+            arrayOfTasks = [];
+            counter = 0;
             this.render();
         },
 
@@ -23,10 +25,26 @@ function (TasksListTemplate, CreateView, ListItemView) {
 
         render: function () {
 
-            console.log('Tasks render');
+           // var counter = 0;
             $('.ui-dialog ').remove();
+            var that = this;
             this.$el.html(_.template(TasksListTemplate));
-            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
+                       // this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
+
+            _.each( this.collection.models, function (taskModel,modelKey ){
+                if (modelKey < listLimit) {
+                    counter++;
+                    var listItemView  = new ListItemView({ model: taskModel,index: counter});
+                    listItemView.render();
+                } else {
+                    arrayOfTasks.push(taskModel);
+                }
+            });
+
+            if (arrayOfTasks.length > 0) {
+                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            }
+
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
                 if ($("input.checkbox:checked").length > 0)
@@ -34,18 +52,42 @@ function (TasksListTemplate, CreateView, ListItemView) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
-            this.startNumber += this.collection.length;
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+
         },
 
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: 50});
+            this.collection.showMore();
         },
 
         showMoreContent: function (newModels) {
-            new ListItemView({ collection: newModels, startNumber: this.startNumber }).render();
-            this.startNumber += newModels.length;
+            debugger;
+            var that = this;
+            var localCounter = 0;
+            for (var i=0; i<arrayOfTasks.length; i++) {
+                counter++;
+                localCounter++;
+                var listItemView  = new ListItemView({ model: arrayOfTasks[i],index: counter});
+                listItemView.render();
+                arrayOfTasks.splice(i,1);
+                i--;
+            }
+
+            _.each( newModels.models, function (taskModel ){
+                if (localCounter < listLimit) {
+                    localCounter++;
+                    counter++;
+                    var listItemView  = new ListItemView({ model: taskModel,index: counter});
+                    listItemView.render();
+                } else {
+                    arrayOfTasks.push(taskModel);
+                }
+            });
+
+            if (arrayOfTasks.length == 0) {
+                $('#showMoreDiv').hide();
+            }
+
         },
         gotoForm: function (e) {
             App.ownContentType = true;
