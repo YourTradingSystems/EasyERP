@@ -1053,6 +1053,12 @@ app.delete('/Leads/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
 });
+app.delete('/Leads/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeLead(req, res, id, data);
+});
 //---------------------Opportunities---------------------
 app.post('/Opportunities', function (req, res) {
     data = {};

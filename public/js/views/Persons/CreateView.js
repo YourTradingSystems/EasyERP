@@ -46,7 +46,7 @@ define([
                 var mid = 39;
 
                 var company = $('#companiesDd option:selected').val();
-                var dateBirth = $.trim($("#dateBirth").val());
+                var dateBirth = $(".dateBirth").val();
                 var department = $("#departmentDd option:selected").val();
                 var data = {
                     name: {
@@ -131,7 +131,7 @@ define([
 
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 //common.contentHolderHeightFixer();
-                this.$el.find('#dateBirth').datepicker({
+                this.$el.find('.dateBirth').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,
