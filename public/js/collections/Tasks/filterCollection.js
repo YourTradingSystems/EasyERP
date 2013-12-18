@@ -23,13 +23,13 @@
                 for (var i in options) {
                     filterObject[i] = options[i];
                 }
-
+                filterObject['count'] = filterObject['count']*2;
                 this.fetch({
                     data: filterObject,
                     reset: true,
                     success: function(models, response) {
                         console.log("Tasks fetchSuccess");
-                        that.page += 1;
+                        that.page += 2;
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
                     },
@@ -43,11 +43,11 @@
                 });
             },
 
-            showMore: function () {
+            showMore: function (options) {
                 var that = this;
                 var filterObject = {};
-                filterObject['page'] = this.page;
-                filterObject['count'] = this.count;
+                filterObject['page'] = (options && options.page) ? options.page : this.page;
+                filterObject['count'] = (options && options.count) ? options.count : this.count;
                 var NewCollection = Backbone.Collection.extend({
                     model: TaskModel,
                     url: that.url,

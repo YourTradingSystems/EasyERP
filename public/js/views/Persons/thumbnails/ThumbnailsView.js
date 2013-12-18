@@ -30,7 +30,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
                 var holder = this.$el;
                 var thumbnailsItemView;
                 _.each(this.collection.models, function (model,index) {
-                        if(index < namberOfpersons){
+                        if (index < namberOfpersons) {
                             thumbnailsItemView = new ThumbnailsItemView({ model: model });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);

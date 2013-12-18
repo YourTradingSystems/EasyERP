@@ -48,8 +48,8 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
-                var dateBirth = this.$el.find("#dateBirth").val();
+                //var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
+                var dateBirth = this.$el.find(".dateBirth").val();
                 var company = $('#companiesDd option:selected').val();
                 company = (company) ? company : null;
 
@@ -184,7 +184,7 @@ define([
 						]
 
                 });
-                this.$el.find('#dateBirth').datepicker({
+                this.$el.find('.dateBirth').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,

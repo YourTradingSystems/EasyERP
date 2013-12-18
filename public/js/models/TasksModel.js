@@ -7,10 +7,8 @@ define([
         idAttribute: "_id",
         initialize: function () {
             this.on('invalid', function (model, errors) {
-                if (errors.length > 0) {
-                    var msg = $.map(errors, function (error) {
-                        return error.msg;
-                    }).join('\n');
+                if(errors.length > 0){
+                    var msg = errors.join('\n');
                     alert(msg);
                 }
             });
@@ -28,67 +26,12 @@ define([
 
         validate: function (attrs) {
             var errors = [];
-            if (attrs.summary.trim() === "") {
-                errors.push(
-                    {
-                        name: "Summary",
-                        field: "summary",
-                        msg: "Summary name can not be empty"
-                    }
-                );
-            }
-            if(attrs.summary.length > 0){
-                if(!Validation.validName(attrs.summary)){
-                    errors.push(
-                        {
-                            name: "Task",
-                            field: "summary",
-                            msg: "Summary " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
-            if (attrs.project === "") {
-                errors.push(
-                    {
-                        name: "Project",
-                        field: "project",
-                        msg: "Project should be selected"
-                    }
-                );
-            }
-            if(attrs.deadline.length > 0){
-                if(!Validation.validDate(attrs.deadline)){
-                    errors.push(
-                        {
-                            name: "Tasks",
-                            field: "deadline",
-                            msg: "Deadline date is not a valid date"
-                        }
-                    );
-                } else{
-                    if(new Date(attrs.deadline) < new Date(attrs.extrainfo.StartDate)){
-                        errors.push(
-                            {
-                                name: "Tasks",
-                                field: "deadline",
-                                msg: "Task start date can not be greater than deadline date"
-                            }
-                        );
-                    }
-                }
-            }
-            if(attrs.extrainfo.StartDate.length > 0){
-                if(!Validation.validDate(attrs.extrainfo.StartDate)){
-                    errors.push(
-                        {
-                            name: "Tasks",
-                            field: "deadline",
-                            msg: "Start date is not a valid date"
-                        }
-                    );
-                }
-            }
+
+            Validation.checkNameField(errors, true, attrs.summary, "Summary");
+            Validation.checkNameField(errors, true, attrs.project, "Project");
+            if(attrs.deadline && attrs.extrainfo.StartDate)
+                Validation.checkFirstDateIsGreater(errors, attrs.deadline, "deadline date",attrs.extrainfo.StartDate, "Start date");
+
             if (errors.length > 0)
                 return errors;
         },

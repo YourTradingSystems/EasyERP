@@ -452,6 +452,8 @@ app.get('/Tasks/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getTaskById(req, res, data);
             break;
+        case "list": requestHandler.getTasksForList(req, res, data);
+            break;
         default: requestHandler.getTasksByProjectId(req, res, data);
             break;
     }
@@ -1048,6 +1050,12 @@ app.put('/Leads/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Leads/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeLead(req, res, id, data);
+});
+app.delete('/Leads/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

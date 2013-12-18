@@ -5,9 +5,7 @@ define(["Validation"],function (Validation) {
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
-                        return error.msg;
-                    }).join('\n');
+                    var msg = errors.join('\n');
                     alert(msg);
                 }
             });
@@ -16,146 +14,18 @@ define(["Validation"],function (Validation) {
         validate: function(attrs){
             var errors = [];
 
-            if(attrs.name.first === ""){
-                errors.push(
-                    {
-                        name: "Person",
-                        field: "firstName",
-                        msg: "First " + Validation.errorMessages['minLengthMsg']
-                    }
-                );
-            }
-            if(attrs.name.last === "" || !Validation.withMinLength(attrs.name.last)){
-                errors.push(
-                    {
-                        name: "Person",
-                        field: "lastName",
-                        msg: "Last " + Validation.errorMessages['minLengthMsg']
-                    }
-                );
-            }
-            if(attrs.name.first.length > 0){
-                if(!Validation.validName(attrs.name.first)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "firstName",
-                            msg: "First " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
-            if(attrs.name.last.length > 0){
-                if(!Validation.validName(attrs.name.last)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "lastName",
-                            msg: "Last " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
-
-            if(attrs.dateBirth){
-                if(!Validation.validDate(attrs.dateBirth)){
-                    errors.push(
-                        {
-                            name: "Persons",
-                            field: "dateBirth",
-                            msg: "Birth date is not a valid date"
-                        }
-                    );
-                }
-            }
-            if(attrs.phones.phone.length > 0){
-                if(!Validation.validPhone(attrs.phones.phone)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "phone",
-                            msg: "Phone should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.phones.fax.length > 0){
-                if(!Validation.validPhone(attrs.phones.fax)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "fax",
-                            msg: "Fax should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.phones.mobile.length > 0){
-                if(!Validation.validPhone(attrs.phones.mobile)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "mobile",
-                            msg: "Mobile phone should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.address.state.length > 0){
-                if(!Validation.validStreet(attrs.address.state)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "state",
-                            msg: "State field should contain only letters"
-                        }
-                    );
-                }
-            }
-            if(attrs.address.zip.length > 0){
-                if(!Validation.validNumber(attrs.address.zip)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "zip",
-                            msg: "Zip field should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.address.country.length > 0){
-                if(!Validation.validStreet(attrs.address.country)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "country",
-                            msg: "Country field should contain only letters"
-                        }
-                    );
-                }
-            }
-            if(attrs.address.street.length > 0){
-                if(!Validation.validStreet(attrs.address.street)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "street",
-                            msg: "Street field should contain only letters, numbers and signs: . , - /"
-                        }
-                    );
-                }
-            }
-            if(attrs.address.city.length > 0){
-                if(!Validation.validStreet(attrs.address.city)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "firstName",
-                            msg: "First name should contain only letters"
-                        }
-                    );
-                }
-            }
+            Validation.checkNameField(errors, true, attrs.name.first, "First name");
+            Validation.checkNameField(errors, true, attrs.name.last, "Last name");
+            Validation.checkPhoneField(errors, false, attrs.phones.phone, "Phone");
+            Validation.checkPhoneField(errors, false, attrs.phones.mobile, "Mobile");
+            Validation.checkPhoneField(errors, false, attrs.phones.fax, "Fax");
+            Validation.checkCountryCityStateField(errors, false, attrs.address.country, "Country");
+            Validation.checkCountryCityStateField(errors, false, attrs.address.state, "State");
+            Validation.checkCountryCityStateField(errors, false, attrs.address.city, "City");
+            Validation.checkCountryCityStateField(errors, false, attrs.jobPosition, "Job position");
+            Validation.checkZipField(errors, false, attrs.address.zip, "Zip");
+            Validation.checkStreetField(errors, false, attrs.address.street, "Street");
+            Validation.checkEmailField(errors, false, attrs.email, "Email");
 
             if(errors.length > 0)
                 return errors;
