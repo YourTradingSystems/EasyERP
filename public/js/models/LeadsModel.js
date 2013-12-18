@@ -17,7 +17,6 @@
             Validation.checkNameField(errors, false, attrs.contactName.first, "Contact first name");
             Validation.checkNameField(errors, false, attrs.contactName.last, "Contact last name");
             Validation.checkNameField(errors, false, attrs.company.name, "Company");
-
             Validation.checkPhoneField(errors, false, attrs.phones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.phones.mobile, "Mobile");
             Validation.checkCountryCityStateField(errors, false, attrs.address.country, "Country");
@@ -27,6 +26,7 @@
             Validation.checkStreetField(errors, false, attrs.address.street, "Street");
             Validation.checkEmailField(errors, false, attrs.email, "Email");
             Validation.checkNotesField(errors, false, attrs.internalNotes, "Notes");
+
             if(errors.length > 0)
                 return errors;
         },

@@ -4,10 +4,10 @@
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
-                        return error.msg;
-                    }).join('\n');
-                    alert(msg);
+                    if(errors.length > 0){
+                        var msg = errors.join('\n');
+                        alert(msg);
+                    }
                 }
             });
         },
@@ -15,199 +15,21 @@
         validate: function(attrs){
             var errors = [];
 
-            if(attrs.name.first === "" || !Validation.withMinLength(attrs.name.first)){
-                errors.push(
-                    {
-                        name:"First Name",
-                        field:"firstName",
-                        msg: "First name " + Validation.errorMessages['minLengthMsg']
-                    }
-                );
-            } else{
-                if(!Validation.validName(attrs.name.first)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "firstName",
-                            msg: "First " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
-            if(attrs.name.last === "" || !Validation.withMinLength(attrs.name.last)){
-                errors.push(
-                    {
-                        name: "Last Name",
-                        field: "lastName",
-                        msg: "Last " + Validation.errorMessages['minLengthMsg']
-                    }
-                );
-            }
-            else {
-                if(!Validation.validName(attrs.name.last)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "lastName",
-                            msg: "Last "  + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
+            Validation.checkNameField(errors, true, attrs.name.first, "First name");
+            Validation.checkNameField(errors, true, attrs.name.last, "Last name");
+            Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");
+            Validation.checkPhoneField(errors, false, attrs.workPhones.mobile, "Mobile");
+            Validation.checkCountryCityStateField(errors, false, attrs.workAddress.country, "Country");
+            Validation.checkCountryCityStateField(errors, false, attrs.workAddress.state, "State");
+            Validation.checkCountryCityStateField(errors, false, attrs.workAddress.city, "City");
+            Validation.checkZipField(errors, false, attrs.workAddress.zip, "Zip");
+            Validation.checkStreetField(errors, false, attrs.workAddress.street, "Street");
+            Validation.checkCountryCityStateField(errors, false, attrs.homeAddress.country, "Country");
+            Validation.checkCountryCityStateField(errors, false, attrs.homeAddress.state, "State");
+            Validation.checkZipField(errors, false, attrs.homeAddress.zip, "Zip");
+            Validation.checkStreetField(errors, false, attrs.homeAddress.street, "Street");
+            Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
 
-            if(attrs.workPhones.phone.length > 0){
-                if(!Validation.validPhone(attrs.workPhones.phone)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "phone",
-                            msg: "Work phone should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.workPhones.mobile.length > 0){
-                if(!Validation.validPhone(attrs.workPhones.mobile)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "mobile",
-                            msg: "Mobile phone should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.workAddress.state.length > 0){
-                if(!Validation.validStreet(attrs.workAddress.state)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "state",
-                            msg: "State field should contain only letters"
-                        }
-                    );
-                }
-            }
-            if(attrs.dateBirth.length > 0){
-                if(!Validation.validDate(attrs.dateBirth)){
-                    errors.push(
-                        {
-                            name: "Persons",
-                            field: "dateBirth",
-                            msg: "Birth date is not a valid date"
-                        }
-                    );
-                }
-            }
-
-            if(attrs.workAddress.zip.length > 0){
-                if(!Validation.validNumber(attrs.workAddress.zip)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "zip",
-                            msg: "Zip field should contain only numbers"
-                        }
-                    );
-                }
-            }
-            if(attrs.workAddress.country.length > 0){
-                if(!Validation.validStreet(attrs.workAddress.country)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "country",
-                            msg: "Country field should contain only letters"
-                        }
-                    );
-                }
-            }
-            if(attrs.workAddress.street.length > 0){
-                if(!Validation.validStreet(attrs.workAddress.street)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "street",
-                            msg: "Street field should contain only letters, numbers and signs: . , - /"
-                        }
-                    );
-                }
-            }
-            if(attrs.workAddress.city.length > 0){
-                if(!Validation.validStreet(attrs.workAddress.city)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "firstName",
-                            msg: "City " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
-            if(attrs.homeAddress.street.length > 0){
-                if(!Validation.validStreet(attrs.homeAddress.street)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "street",
-                            msg: "Street field should contain only letters, numbers and signs: . , - /"
-                        }
-                    );
-                }
-            }
-            /*if(attrs.homeAddress.city.length > 0){
-                if(!Validation.validStreet(attrs.homeAddress.city)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "city",
-                            msg: "City " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }*/
-            if(attrs.homeAddress.state.length > 0){
-                if(!Validation.validStreet(attrs.homeAddress.state)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "state",
-                            msg: "State field should contain only letters"
-                        }
-                    );
-                }
-            }
-            if(attrs.homeAddress.zip.length > 0){
-                if(!Validation.validNumber(attrs.homeAddress.zip)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "zip",
-                            msg: "Zip " + Validation.errorMessages['notNumberMsg']
-                        }
-                    );
-                }
-            }
-            if(attrs.homeAddress.country.length > 0){
-                if(!Validation.validStreet(attrs.homeAddress.country)){
-                    errors.push(
-                        {
-                            name: "Person",
-                            field: "country",
-                            msg: "Country " + Validation.errorMessages['nameError']
-                        }
-                    );
-                }
-            }
-            if(attrs.department === ""){
-                errors.push(
-                    {
-                        name: "Department",
-                        field: "department",
-                        msg: "Department should be selected"
-                    }
-                );
-            }
             if(errors.length > 0)
                 return errors;
         },
