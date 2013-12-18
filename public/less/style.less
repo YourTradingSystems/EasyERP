@@ -1922,16 +1922,22 @@ input, textarea, select {
         padding: 10px;
 
         .info {
-            P {
+			float:left;
+			width:222px;
+			height:80px;
+            div {
                 font-family: @lucida-font;
                 color: #000;
                 font-size: 13px;
                 font-weight: 200 !important;
                 line-height: 20px;
+				text-overflow:ellipsis;
 
-                a {
-                    word-break: break-all;
-                    word-wrap: break-word;
+                a,p {
+					width:222px;
+					display:block;
+					overflow:hidden;
+					text-overflow:ellipsis;
 
                     .bold {
                         font-weight: bold;
