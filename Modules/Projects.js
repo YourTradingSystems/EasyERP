@@ -896,6 +896,31 @@ var Project = function (logWriter, mongoose) {
         });
     };
 
+    function getTasksForList(data, response) {
+        var res = {};
+        res['data'] = [];
+        var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
+        query.populate('project', '_id projectShortDesc projectName')
+            .populate('assignedTo', '_id name imageSrc')
+            .populate('extrainfo.customer createdBy.user editedBy.user')
+            .populate('workflow')
+            .populate('createdBy.user')
+            .populate('editedBy.user')
+            .skip((data.page - 1) * data.count).limit(data.count)
+            .sort({ 'name.first': 1 });
+
+        query.exec(function (err, tasks) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js getTasksForList task.find " + err);
+                response.send(500, { error: "Can't find Tasks" });
+            } else {
+                res['data'] = tasks;
+                response.send(res);
+            }
+        });
+    };
+
     return {
         create: create,//End create
 
@@ -920,6 +945,8 @@ var Project = function (logWriter, mongoose) {
         getTasksByProjectId: getTasksByProjectId,
 
         getTaskById: getTaskById,
+
+        getTasksForList: getTasksForList,
 
         getTasksPriority: getTasksPriority,
 

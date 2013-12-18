@@ -495,6 +495,22 @@ var requestHandler = function (fs, mongoose) {
 
     };
 
+    function getTasksForList(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 40, function (access) {
+                if (access) {
+                    project.getTasksForList(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+
+    };
+
     function removeTask(req, res, id, data) {
         console.log("Requst removeTask is success");
         if (req.session && req.session.loggedIn) {
@@ -1691,6 +1707,7 @@ var requestHandler = function (fs, mongoose) {
         getTasks: getTasks,
         getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,
+        getTasksForList: getTasksForList,
         updateTask: updateTask,
         removeTask: removeTask,
         getTasksPriority: getTasksPriority,
