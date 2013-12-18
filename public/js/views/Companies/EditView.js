@@ -37,6 +37,20 @@ define([
 			toggleDetails:function(e){
 				$("#details-dialog").toggle();
 			},
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
+
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
             hideDialog: function () {
                 $(".edit-companies-dialog").remove();
             },

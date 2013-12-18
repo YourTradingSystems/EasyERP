@@ -1,34 +1,34 @@
 <div class="form-holder">
   <form method="post" action="" id="createEmployeeForm" class="form">
+	    <div class="avatar">
+	        <div class="upload">
+	            Edit
+	            <input type="file" value="Edit" id="inputImg" accept="image/*">
+	        </div>
+	        <canvas id="avatar" width="120" height="120"></canvas>
+	    </div>
+    <div style="margin-left:150px; width:auto; display:block;">
 	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="name">Company </label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" required maxlength="32"/></dd>
+		<dt><label for="name">Company</label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" required maxlength="32"/></dd>
 	  </dl>
-	</div>
-	<div class="half-block left">
-      <div class="avatar">
-        <input type="file" value="Edit" id="inputImg" accept="image/*">
-        <canvas id="avatar" width="120" height="120"></canvas>
-      </div>
-	</div>
-    <div class="clearfix"></div>
-	<div class="half-block left">
 	  <dl class="person-info">
-		<dt><label>Address</label></dt><dd><input type="text" class="address blueback" name="street" id="street" placeholder="Street..." maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city" id="city" placeholder="City" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback"  name="state" id="state" placeholder="State" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" id="zip" placeholder="ZIP" maxlength="32" /></dd>
+		<dt><label for="website">Website </label></dt><dd><input class="blueback" type="text" name="website" id="website" maxlength="32"/></dd>
+		<dt><label for="phone">Phone </label></dt><dd><input class="blueback" type="text" name="phone" id="phone" maxlength="32"/></dd>
+		<dt><label for="mobile">Mobile </label></dt><dd><input class="blueback" type="text" name="mobile" id="mobile" maxlength="32"/></dd>
+		<dt><label for="email">Email </label></dt><dd><input class="blueback" type="text" name="email" id="email" maxlength="32"/></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
 	  <dl class="person-info">
-		<dt><label for="website">Website</label></dt><dd><input class="blueback" type="text" name="website" id="website" maxlength="32"/></dd>
-		<dt><label for="phone">Phone</label></dt><dd><input class="blueback" type="text" name="phone" id="phone" maxlength="32"/></dd>
-		<dt><label for="mobile">Mobile</label></dt><dd><input class="blueback" type="text" name="mobile" id="mobile" maxlength="32"/></dd>
-		<dt><label for="fax">Fax</label></dt><dd><input class="blueback" type="text" name="fax" id="fax" maxlength="32"/></dd>
-		<dt><label for="email">Email</label></dt><dd><input class="blueback" type="text" name="email" id="email" maxlength="32"/></dd>
+		<dt><label>Address </label></dt><dd><input type="text" class="address blueback" name="street" id="street" placeholder="Street..." maxlength="32"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="city" id="city" placeholder="City" maxlength="32"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback"  name="state" id="state" placeholder="State" maxlength="32"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="zip" id="zip" placeholder="ZIP" maxlength="32"/></dd>
+		<dt>&nbsp;</dt><dd><input type="text" class="address blueback" name="country" id="country" placeholder="Country" maxlength="32"/></dd>
 	  </dl>
     </div>
+	</div>
     <div class="clearfix"></div>
 	<div class="formTitle">
 	  <h3 class="left">Contacts</h3>
@@ -39,13 +39,9 @@
 	  <div id="contacts">
 	  </div>
 	</div>
-	<div class="formTitle">
-	  <h3 class="left">Internal Notes</h3>
-	  <div class="clearfix"></div>
-	</div>
-	<div class="inner">
-	  <textarea id="internalNotes" placeholder="Put an internal note..."></textarea>
-	</div>
+	<div class="details center">...</div>
+	<div id="details-dialog">
+
 	<div class="formTitle">
 	  <h3 class="left">Sales &amp; Purchases</h3>
 	  <div class="clearfix"></div>
@@ -84,12 +80,9 @@
 		  <dt><label for="active">Active</label></dt><dd><input type="checkbox" id="active" checked="checked" /></dd>
 		</dl>
 	  </div>
+	</div>
 	  <div class="clearfix">
 	  </div>
-	</div>
-	<div class="formTitle">
-	  <h3 class="left">History</h3>
-	  <div class="clearfix"></div>
 	</div>
   </form>
 </div>

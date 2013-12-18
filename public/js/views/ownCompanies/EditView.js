@@ -32,8 +32,11 @@ define([
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",
+                "click .details": "toggleDetails"
             },
-
+			toggleDetails:function(e){
+				$("#details-dialog").toggle();
+			},
             hideDialog: function () {
                 $(".edit-companies-dialog").remove();
             },
@@ -115,12 +118,12 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        self.hideDialog();
-                        Backbone.history.navigate("easyErp/ownCompanies", { trigger: true });
+                        $(".edit-companies-dialog").remove();
+                        Backbone.history.navigate("easyErp/Companies", { trigger: true });
                     },
                     error: function () {
                         $(".edit-companies-dialog").remove();
-                        Backbone.history.navigate("easyErp", { trigger: true });
+                        Backbone.history.navigate("easyErp/Companies", { trigger: true });
                     }
                 });
             },
