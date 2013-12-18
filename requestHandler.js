@@ -980,28 +980,22 @@ var requestHandler = function (fs, mongoose) {
     //---------END------Employees-----------------------------------
 
     //---------------------Application--------------------------------
-    //function createApplication(res, data) {
-    //    console.log("Requst createEmployee is success");
-    //    res.header("Access-Control-Allow-Origin", "*");
-    //    res.header("Allow Cross Site Origin", "*");
-    //    dbSession.checkHash(data, function (result) {
-    //        console.log('Sending response for checkHash')
-    //        console.log(result);
-    //        if (result.result.status == '0') {
-    //            employee.create(data.employee, function (result) {
-    //                console.log('Sending response for createEmployee');
-    //                console.log(result);
-    //                res.send(result);
-    //            });
-    //        } else {
-    //            result['result'] = {};
-    //            result['result']['status'] = '4';
-    //            result['result']['description'] = 'Bad hash';
-    //            result['data'] = [];
-    //            res.send(result);
-    //        }
-    //    });
-    //};
+    function createApplication(req, res, data) {
+        console.log("Requst createEmployee is success");
+        if (req.session && req.session.loggedIn) {
+            access.getEditWritAccess(req.session.uId, 43, function (access) {
+                if (access) {
+                    data.employee.uId = req.session.uId;
+                    employee.create(data.employee, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
 
     function getApplications(req, res, data) {
         console.log("Requst getApplications is success");
@@ -1066,51 +1060,42 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
-    //function updateApplication(res, id, data) {
-    //    console.log("Requst updateEmployees is success");
-    //    res.header("Access-Control-Allow-Origin", "*");
-    //    res.header("Allow Cross Site Origin", "*");
-    //    dbSession.checkHash(data, function (result) {
-    //        console.log('Sending response for checkHash')
-    //        console.log(result);
-    //        if (result.result.status == '0') {
-    //            employee.update(id, data.employee, function (result2) {
-    //                console.log('Sending response for updateEmployees');
-    //                console.log(result2);
-    //                res.send(result2);
-    //            });
-    //        } else {
-    //            result['result'] = {};
-    //            result['result']['status'] = '4';
-    //            result['result']['description'] = 'Bad hash';
-    //            result['data'] = [];
-    //            res.send(result);
-    //        }
-    //    });
-    //};
+    function updateApplication(req, res, id, data) {
+        console.log("Requst updateEmployees is success");
+        if (req.session && req.session.loggedIn) {
+            access.getEditWritAccess(req.session.uId, 43, function (access) {
+                if (access) {
+                    data.employee.editedBy = {
+                        user: req.session.uId,
+                        date: new Date().toISOString()
+                    }
 
-    //function removeApplication(res, id, data) {
-    //    console.log("Requst removeEmployees is success");
-    //    res.header("Access-Control-Allow-Origin", "*");
-    //    res.header("Allow Cross Site Origin", "*");
-    //    dbSession.checkHash(data, function (result) {
-    //        console.log('Sending response for checkHash')
-    //        console.log(result);
-    //        if (result.result.status == '0') {
-    //            employee.remove(id, function (result2) {
-    //                console.log('Sending response for removeEmployees');
-    //                console.log(result2);
-    //                res.send(result2);
-    //            });
-    //        } else {
-    //            result['result'] = {};
-    //            result['result']['status'] = '4';
-    //            result['result']['description'] = 'Bad hash';
-    //            result['data'] = [];
-    //            res.send(result);
-    //        }
-    //    });
-    //};
+                    employee.update(id, data.employee, res);
+                } else {
+                    res.send(403);
+                }
+            })
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function removeApplication(req, res, id, data) {
+        console.log("Requst removeEmployees is success");
+        if (req.session && req.session.loggedIn) {
+            access.getDeleteAccess(req.session.uId, 43, function (access) {
+                if (access) {
+                    employee.remove(id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
     //---------END------Application-----------------------------------
 
     //---------------------Department--------------------------------
@@ -1744,11 +1729,11 @@ var requestHandler = function (fs, mongoose) {
         getPersonsForDd: getPersonsForDd,
         getDepartmentForDd: getDepartmentForDd,
 
-        //createApplication: createApplication,
+        createApplication: createApplication,
         getApplications: getApplications,
         getApplicationsCustom: getApplicationsCustom,
-        //removeApplication: removeApplication,
-        //updateApplication: updateApplication,
+        removeApplication: removeApplication,
+        updateApplication: updateApplication,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,

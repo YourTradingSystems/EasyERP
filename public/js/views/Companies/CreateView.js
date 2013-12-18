@@ -23,9 +23,12 @@ define([
             events: {
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit"
+                "mouseleave .avatar": "hideEdit",
+                "click .details": "toggleDetails"
             },
-
+			toggleDetails:function(e){
+				$("#details-dialog").toggle();
+			},
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -60,27 +63,27 @@ define([
                 var companyModel = new CompanyModel();
 
                 var name = {
-                    first: $.trim($("#name").val()),
+                    first: $.trim(this.$el.find("#name").val()),
                     last:''
                 };
 
                 var address = {};
-                $(".person-info").find(".address").each(function () {
+                this.$el.find(".person-info").find(".address").each(function () {
                     var el = $(this);
-                    address[el.attr("name")] = el.val();
+                    address[el.attr("name")] = $.trim(el.val());
                 });
 
-                var email = $.trim($("#email").val());
+                var email = $.trim(this.$el.find("#email").val());
 
-                var phone = $.trim($("#phone").val());
+                var phone = $.trim(this.$el.find("#phone").val());
 
-                var mobile = $.trim($("#mobile").val());
+                var mobile = $.trim(this.$el.find("#mobile").val());
 
-                var fax = $.trim($("#fax").val());
+                var fax = $.trim(this.$el.find("#fax").val());
 
-                var website = $.trim($("#website").val());
+                var website = $.trim(this.$el.find("#website").val());
 
-                var internalNotes = $.trim($("#internalNotes").val());
+                var internalNotes = $.trim(this.$el.find("#internalNotes").val());
 
                 var salesPerson = this.$("#employeesDd option:selected").val();
                 //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
@@ -88,15 +91,15 @@ define([
                 var salesTeam = this.$("#departmentDd option:selected").val();
                 //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
-                var reference = $.trim($("#reference").val());
+                var reference = $.trim(this.$el.find("#reference").val());
 
-                var language = $.trim($("#language").val());
+                var language = $.trim(this.$el.find("#language").val());
 
-                var isCustomer = ($("#isCustomer").is(":checked")) ? true : false;
+                var isCustomer = (this.$el.find("#isCustomer").is(":checked")) ? true : false;
 
-                var isSupplier = ($("#isSupplier").is(":checked")) ? true : false;
+                var isSupplier = (this.$el.find("#isSupplier").is(":checked")) ? true : false;
 
-                var active = ($("#active").is(":checked")) ? true : false;
+                var active = (this.$el.find("#active").is(":checked")) ? true : false;
 
                 companyModel.save({
                     name: name,
@@ -161,7 +164,13 @@ define([
                 common.populateDepartments(App.ID.departmentDd, "/Departments");
                 common.populateEmployeesDd(App.ID.employeesDd, "/Employees");
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
-                $('#date').datepicker({ dateFormat: "d M, yy" });
+                this.$el.find('#date').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100y:c+nn',
+                    maxDate: '-18y'
+                });
                 return this;
             }
 

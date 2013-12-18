@@ -22,7 +22,7 @@
                     <dd><input type="text" id="jobPositionInput" value="<%= model.jobPosition%>" placeholder="e.g. Sales Manager" maxlength="32"/></dd>
 
                     <dt><label for="dateBirth">Date Of Birth</label></dt>
-                    <dd><input class="blueback" type="text" id="dateBirth" value="<%= model.dateBirth%>" /></dd>
+                    <dd><input class="blueback dateBirth" type="text" value="<%= model.dateBirth%>" readonly /></dd>
                     <dt><label for="emailInput">Email</label></dt>
                     <dd><input type="text" id="emailInput" value="<%= model.email%>" maxlength="32"/></dd>
                     <dt><label for="mobileInput">Mobile</label></dt>
@@ -111,10 +111,6 @@
      
        
         <div class="clearfix">
-        </div>
-        <div class="buttons">
-            <input type="button" id="saveBtn" class="btn" value="Save" />
-            <input type="button" id="cancelBtn" class="btn" value="Cancel" />
         </div>
     </form>
 </div>

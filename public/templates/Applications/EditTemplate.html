@@ -8,12 +8,13 @@
 		  <dt><label for="last">Last Name</label></dt><dd><input type="text" class="title-input name" id="last" value="<%=model.name.last%>" maxlength="32"/></dd>
 		</dl>
 	  </div>
-	  <div class="half-block left">
         <div class="avatar">
+        	<div class="upload">
+                Edit
           <input type="file" value="Edit" id="inputImg" accept="image/*">
+          </div>
           <canvas id="avatar" width="120" height="120"></canvas>
         </div>
-	  </div>
       <div class="clearfix"></div>
 	  <div class="half-block left">
 		<dl class="person-info">
@@ -29,7 +30,7 @@
 		<dl class="person-info">
 		  <dt><label for="degreesDd">Degree </label></dt><dd><select id="degreesDd"> </select></dd>
 		  <dt><label for="relatedUsersDd">Responsible </label></dt><dd><select id="relatedUsersDd"> </select></dd>
-		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" value="<%=model.nextAction%>" maxlength="32"/></dd>
+		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" value="<%=model.nextAction%>" readonly maxlength="32"/></dd>
 		  <dt><label for="sourceDd">Source </label></dt><dd><select id="sourceDd"> </select></dd>
 		  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" value="<%=model.referredBy%>" maxlength="32"/></dd>
 		</dl>

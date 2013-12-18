@@ -13,6 +13,7 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
+                _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
@@ -44,12 +45,11 @@ define([
 
             },
             saveItem: function (event) {
-                event.preventDefault();
                 var self = this;
                 var mid = 39;
 
-                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
-                var dateBirth = this.$el.find("#dateBirth").val();
+                //var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
+                var dateBirth = this.$el.find(".dateBirth").val();
                 var company = $('#companiesDd option:selected').val();
                 company = (company) ? company : null;
 
@@ -135,6 +135,27 @@ define([
                 $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
                 $(id).hide();
             },
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-person-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-person-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
             render: function () {
                 var self = this;
                 console.log('render persons dialog');
@@ -146,9 +167,24 @@ define([
                     resizable: true,
                     dialogClass: "edit-person-dialog",
                     title: "Edit Person",
-                    width: "80%"
+                    width: "80%",
+                    buttons: [
+                        {
+                            text: "Create",
+                            click: function () { self.saveItem(); }
+                        },
+
+						{
+							text: "Cancel",
+							click: function () { $(this).dialog().remove(); }
+						},
+						{
+							text: "Delete",
+							click: self.deleteItem }
+						]
+
                 });
-                $('#dateBirth').datepicker({
+                this.$el.find('.dateBirth').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,

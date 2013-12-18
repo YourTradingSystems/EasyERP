@@ -9,6 +9,7 @@
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
+                _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
@@ -20,7 +21,8 @@
                 'keydown': 'keydownHandler',
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
-                "click": "hideNewSelect"
+                "click": "hideNewSelect",
+				"click #projectTopName":"hideDialog"
             },
             keydownHandler: function(e){
                 switch (e.which){
@@ -206,6 +208,27 @@
 				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
 				$(id).hide();
 			},
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
             render: function () {
                 var formString = this.template({
                     model: this.currentModel.toJSON()
@@ -225,6 +248,11 @@
                             text: "Cancel",
                             class: "btn",
                             click: self.hideDialog
+                        },
+                        delete:{
+                            text: "Delete",
+                            class: "btn",
+                            click: self.deleteItem
                         }
                     }
                 });
@@ -238,7 +266,12 @@
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
 				this.styleSelect("#type");
                 this.delegateEvents(this.events);
-                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                $('#deadline').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");
                 return this;
             }

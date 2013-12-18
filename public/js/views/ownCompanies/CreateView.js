@@ -20,9 +20,14 @@ define([
             },
 
             events: {
-                "click #tabList a": "switchTab"
+                "click #tabList a": "switchTab",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit",
+                "click .details": "toggleDetails"
             },
-
+			toggleDetails:function(e){
+				$("#details-dialog").toggle();
+			},
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -35,6 +40,7 @@ define([
             hideDialog: function () {
                 $(".create-dialog").remove();
             },
+
 
             saveItem: function () {
                 var self = this;

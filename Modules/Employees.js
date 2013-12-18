@@ -446,7 +446,14 @@ var Employee = function (logWriter, mongoose) {
         var optionsArray = [];
         var showMore = false;
 
-        var queryAggregate =  employee.aggregate({ $match: { isEmployee : false } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"}}});
+        var queryAggregate = employee.aggregate(
+            {
+                $match:
+                    { isEmployee: false }
+            },
+            {
+                 $group: { _id: "$workflow", taskId: { $push: "$_id" } }
+            });
         queryAggregate.exec(
             function (err,responseTasks) {
                 if (!err) {

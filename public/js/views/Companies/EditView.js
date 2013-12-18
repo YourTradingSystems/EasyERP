@@ -17,6 +17,7 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
+                _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
             },
@@ -31,8 +32,25 @@ define([
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",
+                "click .details": "toggleDetails"
             },
+			toggleDetails:function(e){
+				$("#details-dialog").toggle();
+			},
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
             hideDialog: function () {
                 $(".edit-companies-dialog").remove();
             },
@@ -150,6 +168,28 @@ define([
             },
 
             template: _.template(EditTemplate),
+            
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.edit-companies-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.edit-companies-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
 
             render: function () {
                 var formString = this.template({
@@ -170,6 +210,11 @@ define([
                         },{
                         text: "Cancel",
                         click: function () { $(this).dialog().remove(); }
+                    },
+                    {
+                        text: "Delete",
+                        class: "btn",
+                        click: self.deleteItem
                     }],
                     //closeOnEscape: false,
                     modal: true

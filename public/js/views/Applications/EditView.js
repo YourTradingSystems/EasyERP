@@ -12,6 +12,7 @@
             template: _.template(EditTemplate),
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
+                _.bindAll(this, "render", "deleteItem");
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render();
@@ -22,7 +23,9 @@
                 "click .breadcrumb a, #refuse": "changeWorkflow",
                 "click #hire": "isEmployee",
                 "change #workflowNames": "changeWorkflows",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
 
             changeWorkflows: function () {
@@ -78,6 +81,20 @@
 
             hideDialog: function () {
                 $(".applications-edit-dialog").remove();
+            },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
+
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
             },
 
             saveItem: function () {
@@ -141,7 +158,27 @@
                 });
 
             },
-
+            deleteItem: function(event) {
+                var mid = 39;
+                event.preventDefault();
+                var self = this;
+                    var answer = confirm("Realy DELETE items ?!");
+                    if (answer == true) {
+                        this.currentModel.destroy({
+                            headers: {
+                                mid: mid
+                            },
+                            success: function () {
+                                $('.applications-edit-dialog').remove();
+                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                            },
+                            error: function () {
+                                $('.applications-edit-dialog').remove();
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
+                        });
+                }
+            },
             render: function () {
                 var formString = this.template({ model: this.currentModel.toJSON() });
                 var self = this;
@@ -159,6 +196,11 @@
                             text: "Cancel",
                             class: "btn",
                             click: self.hideDialog
+                        },
+                        delete:{
+                            text: "Delete",
+                            class: "btn",
+                            click: self.deleteItem
                         }
                     }
                 });
@@ -168,7 +210,7 @@
                 common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON());
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
                 common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON());
-                common.canvasDraw({ model: this.currentModel }, this);
+                common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker();
                 return this;
             }

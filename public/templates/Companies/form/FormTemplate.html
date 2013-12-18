@@ -21,7 +21,7 @@
 		  </div>
 
 		</div>
-        <div class="company-info">
+        <div class="mainInfo">
           <h3><span title='<%=name.first%>'><%=name.first%></span></h3>
           <div class="half-block left">
             <dl class="person-info company">
@@ -29,9 +29,7 @@
 			  <dt>Phone</dt><dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
 			  <dt>Mobile</dt><dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
                <dt>Email</dt><dd id="email" class="editable" title="<%=email%>"><%=email%></dd>
-              <dt>Created by</dt><dd title='<%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%>'><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
-              <dt>Edited by</dt><dd title='<%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%>'><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
-            </dl>
+         </dl>
 
          </div>
           <div class="half-block left">
@@ -56,7 +54,10 @@
 
           <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
+         <div class = "edited-block"> 
+              <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span>| Owner</p>
+         </div>
+         <div class="clearfix"></div>
      <div class="details right">...</div>	
 
 
@@ -94,12 +95,6 @@
         </div>
         <div class="clearfix"></div>
 
-	  </div>
-	  <div class="formTitle">
-        <h3 class="left">History</h3>  
-        <div class="clearfix"></div>
-	  </div>
-      <div class="inner">
 	  </div>
 	 </div>
   </div>

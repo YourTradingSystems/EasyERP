@@ -20,6 +20,9 @@ define([
                 "click #tabList a": "switchTab",
                 "click #deadline": "showDatePicker",
                 "change #workflowNames": "changeWorkflows",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect",
                 'keydown': 'keydownHandler'
             },
 
@@ -121,6 +124,41 @@ define([
                     }
                 });
             },
+			showNewSelect:function(e){
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li>"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				
+			},
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				this.hideNewSelect();
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				return false;
+				
+			},
+			chooseOption:function(e){
+				var k = $(e.target).parent().find("li").index($(e.target));
+				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			},
+
+			styleSelect:function(id){
+				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				$(id).hide();
+			},
 
             render: function () {
                 var projectID = (window.location.hash).split('/')[3];
@@ -135,7 +173,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: 800,
+                    width: 600,
                     title: "Create Task",
                     buttons: {
                         save: {
@@ -154,12 +192,17 @@ define([
                 $('#StartDate').datepicker({ dateFormat: "d M, yy" });
                 $('#EndDate').datepicker({ dateFormat: "d M, yy" });
                 $('#deadline').datepicker({ dateFormat: "d M, yy" });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model);
-                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
-                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd");
-                common.populatePriority(App.ID.priorityDd, "/Priority", model);
-
-                $('#deadline').datepicker({ dateFormat: "d M, yy", showOtherMonths: true, selectOtherMonths: true });
+                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model,function(){self.styleSelect(App.ID.projectDd);});
+                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.assignedToDd);});
+                common.populatePriority(App.ID.priorityDd, "/Priority", model, function(){self.styleSelect(App.ID.priorityDd);} );
+				this.styleSelect("#type");
+                $('#deadline').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 $("#ui-datepicker-div").addClass("createFormDatepicker");
 
                 this.delegateEvents(this.events);

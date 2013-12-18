@@ -832,9 +832,10 @@ h3 {
 
 .summary-info {
 	.dl-auto(500px,20%);
-
+	width:95%;
+	margin-left:20px;
     input {
-        width: 99% !important;
+        width: 97% !important;
         max-width: none !important;
 	}
 }
@@ -1331,7 +1332,7 @@ h3 {
                 text-overflow: ellipsis;
 
                 &:nth-child(2) {
-                    text-align: right;
+                    text-align: center;
                 }
 
                 progress {
@@ -1411,7 +1412,7 @@ h3 {
 
     .formTitle {
         &.withMargin {
-            margin-bottom: 10px;
+            margin-bottom: 0px;
 		}
 
         width: 100%;
@@ -1450,7 +1451,7 @@ h3 {
 
         span {
             padding:0;
-            width: 50%;
+            width: 99%;
             display: block;
             float: left;
             overflow: hidden;
@@ -1467,7 +1468,7 @@ h3 {
         h3 {
             color: #333;
             font-size: 24px;
-            line-height: 24px;
+            line-height: 30px;
             min-height: 24px;
             font: @lucida-font;
         }
@@ -1489,6 +1490,9 @@ h3 {
         cursor: pointer;
         width: 12px;
         height: 6px;
+		&.center{
+			margin:0 auto;
+		}
     }
 
     #details {
@@ -1573,7 +1577,6 @@ h3 {
     .inner {
         margin: 16px 0px;
     }
-
     & > #tabList {
         li {
             float: left;
@@ -1919,16 +1922,22 @@ input, textarea, select {
         padding: 10px;
 
         .info {
-            P {
+			float:left;
+			width:222px;
+			height:80px;
+            div {
                 font-family: @lucida-font;
                 color: #000;
                 font-size: 13px;
                 font-weight: 200 !important;
                 line-height: 20px;
+				text-overflow:ellipsis;
 
-                a {
-                    word-break: break-all;
-                    word-wrap: break-word;
+                a,p {
+					width:222px;
+					display:block;
+					overflow:hidden;
+					text-overflow:ellipsis;
 
                     .bold {
                         font-weight: bold;
@@ -2368,6 +2377,9 @@ button {
         }
     }
 }
+.notDialog .inner .avatar{
+	margin-top:8px;
+}
 #createProfileForm{
 	input[type='text'] {
         width: 100%;
@@ -2440,7 +2452,11 @@ button {
         max-width: 150px;
 	}
 }
-
+#editEmployeeForm{
+	a{
+		line-height:20px !important;
+	}
+}
 #createFormDiv > #createProjectForm {
     margin: 0;
     width: auto;
@@ -2575,7 +2591,7 @@ button {
             margin-bottom: 0px;
 
             textarea {
-                height: 363px;
+                height: 363px !important;
             }
         }
     }
@@ -2944,20 +2960,30 @@ button {
 .task-header,
 .application-header {
     padding: 1px 0 4px 4px;
-    background-color: @taskBorderColor;
-    color: #fff;
+//    background-color: @taskBorderColor;
+    color: black;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     transition: background-color 1s ease;
     position: relative;
 
     p {
-        width: 120px;
+        width: 100%;;
         margin-left: 1px;
         font-size: 12px;
+		font-weight:bold;
+		text-align:center;
     }
 }
-
+.task-header{
+	p{
+		text-align:left;
+	}
+}
+.application-content p{
+	line-height:20px;
+	padding-left:10px;
+}
 .tag {
     margin: 0 0 3px 1px;
     display: inline-block;
@@ -3492,7 +3518,7 @@ table#workflows {
 	}
 
     .newSelectList {
-        margin-left: -100px;
+//        margin-left: -100px;
 	}
 }
 
@@ -3501,13 +3527,15 @@ table#workflows {
 	border: solid 1px #898989;
     background-color: white;
     padding: 3px 0;
+	z-index:100;
 	.box-shadow(0,1px,3px,rgba(150, 150, 150, 0.7));
 
     li {
 		margin: 0;
 		padding: 3px 16px 5px;
         cursor: pointer;
-
+		font-size:12px;
+			
 		&.testing,
         &.analysis {
             background-color: #D9FFC8 !important;
@@ -3742,4 +3770,19 @@ table#workflows {
 		}
 		
 	}
+}
+#details-dialog{
+	display:none;
+}
+a.current-selected{
+	color:#1E8FC6 !important;
+	font-size:12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+#projectTopName{
+	line-height:20px;
+}
+.input-title-long{
+	width:100% !important;
+	max-width:initial !important;
 }
