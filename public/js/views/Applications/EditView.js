@@ -184,7 +184,7 @@
                 common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON());
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
                 common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON());
-                common.canvasDraw({ model: this.currentModel }, this);
+                common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker();
                 return this;
             }
