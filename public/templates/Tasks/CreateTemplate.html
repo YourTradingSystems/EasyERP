@@ -1,43 +1,45 @@
 <div class="form-holder">
   <form method="post" action="" id="createTaskForm" class="form notDialog">
+	<dl class="summary-info">
+	  <dt><label>Summary </label></dt><dd><input type="text" name="summary" class="input-title blueback" id="summary" required maxlength="32"/></dd>
+	</dl>
     <div class="half-block left withPaddingLeft">
-      <div class="formTitle">
-		<h3 class="left">Description</h3>
-		<div class="clearfix"></div>
-	  </div>
 	  <div class="inner">
         <div class="textarea-wrapper">
 		  <textarea type="text" name="description" placeholder="Add a Description..." id="description" required />
 		</div>
 	  </div>
     </div>
-    <div class="half-block left">
-
-      <div class="formTitle">
-		<h3 class="left">Extra Info</h3>
-		<div class="clearfix"></div>
-	  </div>
+    <div class="half-block left withPaddingLeft">
 	  <div class="inner">
+
 		<dl class="person-info">
-		  <dt><label>Summary</label></dt><dd><input type="text" class="title-input blueback" name="summary" id="summary" required maxlength="32"/></dd>
 
 		  <dt><label>Project</label></dt><dd>
 			<select id="projectDd">
 
             </select>
 		  </dd>
-		  <dt><label for="workflowNamesDd">Workflow Name</label></dt><dd>
+		  <dt><label for="workflowNamesDd">Workflow</label></dt><dd>
             <select id="workflowNamesDd">
 
             </select>
 
 		  </dd>
             
-		    <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow">
+		    <dt><label for="workflowsDd">State</label></dt><dd id="selectWorkflow">
 		         <select id="workflowsDd">
 
 		         </select>
 		    </dd>
+            <dt><label for="type">Type </label></dt><dd>
+            <select id="type">
+                <option selected="selected" value="0">Select...</option>
+                <option>Task</option>
+                <option>Bug</option>
+                <option>Feature</option>
+            </select>
+		  </dd>
 
 		    <dt><label>Assigned to</label></dt><dd>
             <select id="assignedToDd" required>
@@ -54,23 +56,14 @@
             </select>
 		  </dd>
 		    
-            <dt><label for="type">Type </label></dt><dd>
-            <select id="type">
-                <option selected="selected" value="0">Select...</option>
-                <option>Task</option>
-                <option>Bug</option>
-                <option>Feature</option>
-            </select>
-		  </dd>
 
 		    <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="" readonly /></dd>
 
 		  <dt><label for="logged">Logged </label></dt><dd>
 			<input class="blueback" type="number" min="0" max="1000"  name="loged" id="logged"/>
 		  </dd>
-		  <dt><label for="estimated">Estimeted</label></dt><dd><input class="blueback" type="number" min="0" max="1000" name="estimated" id="estimated"/></dd>
+		  <dt><label for="estimated">Estimated</label></dt><dd><input class="blueback" type="number" min="0" max="1000" name="estimated" id="estimated"/></dd>
 		  <dt><label for="sequence">Sequense </label></dt><dd><input class="extrainfo blueback" type="text" name="sequence" id="sequence" required maxlength="32"/></dd>
-		   <dt> <label for="tags">Tags </label></dt><dd><input class="blueback" type="text" name="tags" id="tags" maxlength="32"/></dd>
 		</dl>	  
 
       </div>

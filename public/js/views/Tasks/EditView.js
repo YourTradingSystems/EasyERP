@@ -20,7 +20,8 @@
                 'keydown': 'keydownHandler',
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
-                "click": "hideNewSelect"
+                "click": "hideNewSelect",
+				"click #projectTopName":"hideDialog"
             },
             keydownHandler: function(e){
                 switch (e.which){
