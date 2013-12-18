@@ -178,7 +178,6 @@ define([
                                         remove: true
                                     },
                                     success: function (model, response, options) {
-                                        console.log(response);
                                         $('#' + id_int).remove();
                                     }
                                 });
@@ -249,7 +248,7 @@ define([
 
             addAttach: function (event) {
                 event.preventDefault();
-                var currentModel = this.collection.getElement();
+                var currentModel = this.formModel;
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
@@ -287,7 +286,7 @@ define([
 
             deleteAttach: function (e) {
                 var id = e.target.id;
-                var currentModel = this.collection.getElement();
+                var currentModel = this.formModel;
                 var attachments = currentModel.get('attachments');
                 var new_attachments = _.filter(attachments, function (attach) {
                     if (attach._id != id) {

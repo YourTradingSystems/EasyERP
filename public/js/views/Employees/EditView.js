@@ -34,7 +34,9 @@ define([
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
             keydownHandler: function(e){
                 switch (e.which){
@@ -85,13 +87,13 @@ define([
                 var manager = this.$el.find("#projectManagerDD option:selected").val();
                 manager = manager ? manager : null;
 
-                var coach = this.$el.find("#coachDd option:selected").val();
+                var coach = $.trim(this.$el.find("#coachDd option:selected").val());
                 coach = coach ? coach : null;
 
                 var homeAddress = {};
                 $("dd").find(".homeAddress").each(function () {
                     var el = $(this);
-                    homeAddress[el.attr("name")] = el.val();
+                    homeAddress[el.attr("name")] = $.trim(el.val());
                 });
 
                 var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
@@ -110,11 +112,11 @@ define([
                         last: $.trim(this.$el.find("#last").val())
                     },
                     workAddress: {
-                        street: this.$el.find('#street').val(),
-                        city: this.$el.find('#city').val(),
-                        state: this.$el.find('#state').val(),
-                        zip: this.$el.find('#zip').val(),
-                        country: this.$el.find('#country').val()
+                        street:$.trim( this.$el.find('#street').val()),
+                        city: $.trim(this.$el.find('#city').val()),
+                        state: $.trim(this.$el.find('#state').val()),
+                        zip: $.trim(this.$el.find('#zip').val()),
+                        country: $.trim(this.$el.find('#country').val())
                     },
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     workEmail: $.trim(this.$el.find("#workEmail").val()),
@@ -129,7 +131,7 @@ define([
                     jobPosition: jobPosition,
                     manager: manager,
                     coach: coach,
-                    identNo: parseInt($("#identNo").val()),
+                    identNo: $.trim($("#identNo").val()),
                     passportNo: $.trim(this.$el.find("#passportNo").val()),
                     otherId: $.trim(this.$el.find("#otherId").val()),
                     homeAddress: homeAddress,

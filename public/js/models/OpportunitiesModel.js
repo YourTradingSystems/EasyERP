@@ -30,28 +30,17 @@ function (common, Validation) {
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.nextAction.date).length > 0){
-                if(!Validation.validDate(attrs.nextAction.date)){
-                    errors.push(
-                        {
-                            name: "Opportunities",
-                            field: "nextAction",
-                            msg: "Next action date is not a valid date"
-                        }
-                    );
-                } else{
-                    if(new Date(attrs.nextAction.date) > new Date(attrs.expectedClosing)){
-                        errors.push(
-                            {
-                                name: "Opportunities",
-                                field: "expectedClosing",
-                                msg: "Next action date can not be greater than expected closing date"
-                            }
-                        );
+            if(new Date(attrs.nextAction.date) > new Date(attrs.expectedClosing)){
+                errors.push(
+                    {
+                        name: "Opportunities",
+                        field: "expectedClosing",
+                        msg: "Next action date can not be greater than expected closing date"
                     }
-                }
+                );
             }
-            if($.trim(attrs.expectedClosing).length > 0){
+
+            if(attrs.expectedClosing.length > 0){
                 if(!Validation.validDate(attrs.expectedClosing)){
                     errors.push(
                         {
@@ -63,7 +52,7 @@ function (common, Validation) {
                 }
             }
 
-            if($.trim(attrs.name) == ""){
+            if(attrs.name === ""){
                 errors.push(
                     {
                         name: "Opportunities",

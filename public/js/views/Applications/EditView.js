@@ -22,7 +22,9 @@
                 "click .breadcrumb a, #refuse": "changeWorkflow",
                 "click #hire": "isEmployee",
                 "change #workflowNames": "changeWorkflows",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit"
             },
 
             changeWorkflows: function () {
@@ -78,6 +80,20 @@
 
             hideDialog: function () {
                 $(".applications-edit-dialog").remove();
+            },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
+
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
             },
 
             saveItem: function () {
@@ -168,7 +184,7 @@
                 common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON());
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
                 common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON());
-                common.canvasDraw({ model: this.currentModel }, this);
+                common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker();
                 return this;
             }

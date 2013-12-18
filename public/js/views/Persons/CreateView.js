@@ -131,7 +131,7 @@ define([
 
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 //common.contentHolderHeightFixer();
-                $('#dateBirth').datepicker({
+                this.$el.find('#dateBirth').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,

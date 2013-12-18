@@ -13,7 +13,7 @@
 	</div>
     <div class="half-block left">
       <div class="avatar">
-        <input type="file" value="Edit" id="inputImg">
+        <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
         <canvas id="avatar" width="120" height="120"></canvas>
       </div>
       
@@ -144,7 +144,7 @@
 	  </div>
 	  
 	  <dl class="person-info">
-		<dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=dateBirth%>" required maxlength="32"/></dd>
+		<dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=dateBirth%>" readonly/></dd>
 	  </dl>
 	</div>	
     <div class="clearfix">

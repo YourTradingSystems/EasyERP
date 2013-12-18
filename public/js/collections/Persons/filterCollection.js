@@ -9,6 +9,7 @@
             page: 1,
             initialize: function (options) {
                 var that = this;
+                this.namberToShow = options.count;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     delete options.viewType;
@@ -20,7 +21,8 @@
                 this.fetch({
                     data: filterObject,
                     reset: true,
-                    success: function () {
+                    success: function (model,res) {
+                        debugger;
                         console.log("Persons fetchSuccess");
                         that.page += 1;
                     },
@@ -43,8 +45,8 @@
                         filterObject[i] = options[i];
                     }
                 }
-                filterObject['page'] = (filterObject.hasOwnProperty('page')) ? filterObject['page'] : this.page;
-                filterObject['count'] = (filterObject.hasOwnProperty('count')) ? filterObject['count'] : 10;
+                filterObject['page'] = this.page;
+                filterObject['count'] = this.namberToShow;
                 this.fetch({
                     data: filterObject,
                     waite: true,
@@ -82,7 +84,7 @@
                     });
                 }
                 return response.data;
-            },
+            }
 
 
         });

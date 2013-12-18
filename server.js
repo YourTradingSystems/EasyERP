@@ -345,6 +345,7 @@ app.delete('/Persons/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
 });
+
 app.delete('/Persons/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -911,7 +912,7 @@ app.post('/Applications', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
     data.employee = req.body;
-    requestHandler.createEmployee(req, res, data);
+    requestHandler.createApplication(req, res, data);
 });
 
 app.put('/Applications/:_id', function (req, res) {
@@ -920,7 +921,7 @@ app.put('/Applications/:_id', function (req, res) {
     var id = req.body._id;
     data.mid = req.headers.mid;
     data.employee = req.body;
-    requestHandler.updateEmployees(req, res, id, data);
+    requestHandler.updateApplication(req, res, id, data);
 });
 
 app.put('/Applications/:viewType/:_id', function (req, res) {
@@ -929,21 +930,21 @@ app.put('/Applications/:viewType/:_id', function (req, res) {
     var id = req.body._id;
     data.mid = req.headers.mid;
     data.employee = req.body;
-    requestHandler.updateEmployees(req, res, id, data);
+    requestHandler.updateApplication(req, res, id, data);
 });
 
 app.delete('/Applications/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    requestHandler.removeEmployees(req, res, id, data);
+    requestHandler.removeApplication(req, res, id, data);
 });
 
 app.delete('/Applications/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    requestHandler.removeEmployees(req, res, id, data);
+    requestHandler.removeApplication(req, res, id, data);
 });
 
 app.get('/Degrees', function (req, res) {
