@@ -42,11 +42,8 @@
                             <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
                             <dt>Phone :</dt>
                             <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
-                            <dt>Created By :</dt>
-                            <dd title='<%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%>'><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
-                            <dt>Edited By :</dt>
-                            <dd title='<%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%>'><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
-                        </dl>
+                          </dl>
+                       
                     </div>
                     <div class="half-block left">
                         <h3></h3>
@@ -68,7 +65,12 @@
                         </dl>
                     </div>
                     <div class="clearfix"></div>
+                    
                 </div>
+                <div class = "edited-block"> 
+                  <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span>| Owner</p>
+                </div>
+                <div class="clearfix"></div>
                 <div class="details right">...</div>
 
 
