@@ -70,7 +70,7 @@ define([
             },
 
             changeColor: function (color) {
-                this.$(".colorPicker a").closest(".task-header").css('background-color', color).closest(".item").css('border-color', color);
+//                this.$(".colorPicker a").closest(".task-header").css('background-color', color).closest(".item").css('border-color', color);
             },
 
             isLater: function (str1, str2) {

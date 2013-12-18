@@ -1922,16 +1922,22 @@ input, textarea, select {
         padding: 10px;
 
         .info {
-            P {
+			float:left;
+			width:222px;
+			height:80px;
+            div {
                 font-family: @lucida-font;
                 color: #000;
                 font-size: 13px;
                 font-weight: 200 !important;
                 line-height: 20px;
+				text-overflow:ellipsis;
 
-                a {
-                    word-break: break-all;
-                    word-wrap: break-word;
+                a,p {
+					width:222px;
+					display:block;
+					overflow:hidden;
+					text-overflow:ellipsis;
 
                     .bold {
                         font-weight: bold;
@@ -2954,20 +2960,30 @@ button {
 .task-header,
 .application-header {
     padding: 1px 0 4px 4px;
-    background-color: @taskBorderColor;
-    color: #fff;
+//    background-color: @taskBorderColor;
+    color: black;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     transition: background-color 1s ease;
     position: relative;
 
     p {
-        width: 120px;
+        width: 100%;;
         margin-left: 1px;
         font-size: 12px;
+		font-weight:bold;
+		text-align:center;
     }
 }
-
+.task-header{
+	p{
+		text-align:left;
+	}
+}
+.application-content p{
+	line-height:20px;
+	padding-left:10px;
+}
 .tag {
     margin: 0 0 3px 1px;
     display: inline-block;
