@@ -104,14 +104,14 @@
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
-                var department = this.$el.find("#departmentsDd option:selected").val();
+                var department = this.$el.find("#departmentDd option:selected").val();
                 department = department ? department : null;
 
-                var nextActionSt = $.trim(this.$el.find("#nextAction").val());
-                var nextAction = "";
+                var nextAction = $.trim(this.$el.find("#nextAction").val());
+                /*var nextAction = "";
                 if (nextActionSt) {
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
-                }
+                }*/
                 var jobPositionId = this.$el.find("#jobPositionDd option:selected").val() ? this.$el.find("#jobPositionDd option:selected").val() : null;
 
                 var data = {
@@ -211,7 +211,12 @@
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
                 common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
-                $('#nextAction').datepicker();
+                $('#nextAction').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 return this;
             }
 

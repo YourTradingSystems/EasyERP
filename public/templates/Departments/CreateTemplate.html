@@ -1,34 +1,44 @@
 <div class="form-holder">
-  <form method="post" action="" id="createDepartmentForm" class="form">
-    <fieldset>
-      <div class="inner">
-      <ul class="dialog-tabs">
-        <li><a class="active" href="javascript:;">Main Info</a></li>
-        <li><a href="javascript:;">Second Info</a></li>
-      </ul>
-      <div class="clearfix">
-      </div>
-	  <div class="dialog-tabs-items">
-        <div class="dialog-tabs-item active">
-
-          <div class="half-block left">
-			<dl class="department-info">
-			  <dt><label for="departmentName">Department Name</label></dt><dd><input type="text" class="title-input blueback" name="departmentName" id="departmentName" maxlength="32"/></dd>
-			  <dt><label for="parentDepartment">Parent Department</label></dt><dd><select id="parentDepartment"></select></dd>
-			</dl>
-          </div>
-          <div class="half-block left">
-			<dl class="department-info">
-			  <dt><label for="departmentManager">Manager</label></dt><dd><select id="departmentManager"></select></dd>
-			</dl>
-          </div>
-		</div>
-        <div class="dialog-tabs-item">
-		</div>
-	  </div>
-      <div class="clearfix">
-      </div>
-	  </div>
-    </fieldset>
-  </form>
+    <form method="post" action="" id="createDepartmentForm" class="form">
+        <fieldset>
+            <div class="inner">
+                <ul class="dialog-tabs">
+                    <li><a class="active" href="javascript:;">Main Info</a></li>
+                    <li><a href="javascript:;">Second Info</a></li>
+                </ul>
+                <div class="clearfix">
+                </div>
+                <div class="dialog-tabs-items">
+                    <div class="dialog-tabs-item active">
+                        <div class="half-block left">
+                            <dl class="department-info">
+                                <dt><label for="departmentName">Department Name</label></dt>
+                                <dd><input type="text" class="title-input blueback" name="departmentName" id="departmentName" maxlength="32" /></dd>
+                                <dt><label for="parentDepartment">Parent Department</label></dt>
+                                <dd><select id="parentDepartment"></select></dd>
+                            </dl>
+                        </div>
+                        <div class="half-block left">
+                            <dl class="department-info">
+                                <dt><label for="departmentManager">Manager</label></dt>
+                                <dd><select id="departmentManager"></select></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="dialog-tabs-item">
+                        <ul id="sourceUsers">
+                            
+                        </ul>
+                        <button id="addUsers">add</button>
+                        <button id="removeUsers">remove</button>
+                        <ul id="targetUsers">
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="clearfix">
+                </div>
+            </div>
+        </fieldset>
+    </form>
 </div>
