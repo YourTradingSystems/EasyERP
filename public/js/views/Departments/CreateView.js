@@ -22,7 +22,9 @@ define([
 			events:{
                 'click .dialog-tabs a': 'changeTab',
                 'click #sourceUsers li': 'chooseUser',
-			    'click #addUsers':'addUsers'
+                'click #targetUsers li': 'chooseUser',
+			    'click #addUsers':'addUsers',
+			    'click #removeUsers':'removeUsers'
 			},
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
@@ -42,6 +44,11 @@ define([
                 e.preventDefault();
                 $('#targetUsers').append($('#sourceUsers .choosen'));
             },
+            removeUsers: function (e) {
+                e.preventDefault();
+                $('#sourceUsers').append($('#targetUsers .choosen'));
+            },
+
             saveItem: function () {
 
                 var self = this;
