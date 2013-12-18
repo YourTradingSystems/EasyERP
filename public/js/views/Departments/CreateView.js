@@ -20,7 +20,11 @@ define([
                 this.render();
             },
 			events:{
-                'click .dialog-tabs a': 'changeTab'
+                'click .dialog-tabs a': 'changeTab',
+                'click #sourceUsers li': 'chooseUser'
+			},
+			chooseUser:function(e){
+				$(e.target).toggleClass("choosen");
 			},
 			changeTab:function(e){
 				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
