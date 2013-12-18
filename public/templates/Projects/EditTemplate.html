@@ -2,8 +2,15 @@
     <form id="createProjectForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <div class="inner">
+			  <ul class="dialog-tabs">
+				<li><a class="active" href="javascript:;">Main Info</a></li>
+				<li><a href="javascript:;">Second Info</a></li>
+			  </ul>
+			  <div class="clearfix"></div>
+        <div class="dialog-tabs-items">
+          <div class="dialog-tabs-item active">
                 <div class="half-block left">
-                    <dl class="person-info">
+                    <dl class="profile-edit-info">
                         <dt>
                             <label for="projectName">Project Name </label>
                         </dt>
@@ -14,6 +21,10 @@
                         </dt>
                         <dd>
                             <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" maxlength="32"/></dd>
+                    </dl>
+                </div>
+                <div class="half-block left">
+                    <dl class="profile-edit-info">
                         <dt>
                             <label for="projectManagerDD">Project Manager</label>
                         </dt>
@@ -31,8 +42,11 @@
 
                     </dl>
                 </div>
+
+		  </div>
+          <div class="dialog-tabs-item">
                 <div class="half-block left">
-                    <dl class="person-info">
+                    <dl class="profile-edit-info">
                         <dt>
                             <label for="workflowNamesDd">Project Workflow Name</label>
                         </dt>
@@ -46,6 +60,11 @@
                             <select id="workflowsDd">
                             </select>
                         </dd>
+                    </dl>
+
+                </div>
+                <div class="half-block left">
+                    <dl class="profile-edit-info">
                         <dt>
                             <label for="usereditDd">Users Can Edit Project </label>
                         </dt>
@@ -57,6 +76,7 @@
 
                 </div>
 
+		  </div>
                 <div class="clearfix"></div>
             </div>
         </fieldset>

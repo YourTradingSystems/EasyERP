@@ -18,8 +18,16 @@ define([
 
             events: {
                 "click .breadcrumb a": "changeWorkflow",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                'click .dialog-tabs a': 'changeTab'
             },
+			changeTab:function(e){
+				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
+				$(e.target).addClass("active");
+				var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+				$(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
+				$(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+			},
 
             keydownHandler: function(e){
                 switch (e.which){
@@ -155,7 +163,7 @@ define([
                     resizable: false,
                     title: "Edit Project",
                     dialogClass: "edit-project-dialog",
-                    width: "80%",
+                    width: "950px",
                     //height: 225,
                     buttons:{
                         save:{
