@@ -39,7 +39,6 @@
 
           <dt><label>Type </label></dt><dd>
 			<select id="type">
-              <option value="0">Select...</option>
               <% ['Task', 'Bug', 'Feature'].forEach(function(option){ %>
               <option <%= (option == model.type) ? 'selected="selected"' : ''%>><%= option%></option>
               <% }); %>
