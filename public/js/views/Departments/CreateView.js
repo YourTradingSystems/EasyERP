@@ -21,7 +21,8 @@ define([
             },
 			events:{
                 'click .dialog-tabs a': 'changeTab',
-                'click #sourceUsers li': 'chooseUser'
+                'click #sourceUsers li': 'chooseUser',
+			    'click #addUsers':'addUsers'
 			},
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
@@ -37,7 +38,10 @@ define([
             close: function () {
                 this._modelBinder.unbind();
             },
-
+            addUsers: function (e) {
+                e.preventDefault();
+                $('#targetUsers').append($('#sourceUsers .choosen'));
+            },
             saveItem: function () {
 
                 var self = this;
