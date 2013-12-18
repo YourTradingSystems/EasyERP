@@ -94,11 +94,11 @@ define([
 
                 var workflow = $("#workflowsDd option:selected").data("id");
                 var relatedUserId = $("#relatedUsersDd option:selected").val();
-                var nextActionSt = $.trim($("#nextAction").val());
-                var nextAction = "";
+                var nextAction = $.trim($("#nextAction").val());
+                /*var nextAction = "";
                 if (nextActionSt) {
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
-                }
+                }*/
                 var sourceId = $("#source option:selected").val();
                 var referredBy = $.trim($("#referredBy").val());
                 var departmentId = $("#departmentDd option:selected").val();
@@ -116,7 +116,7 @@ define([
                     imageSrc: this.imageSrc,
                     name: name,
                     workEmail: wemail,
-                    wphones: wphones,
+                    workPhones: wphones,
                     relatedUser: relatedUserId,
                     nextAction: nextAction,
                     source: sourceId,
