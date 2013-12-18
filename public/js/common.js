@@ -438,7 +438,6 @@
         var populateUsersForGroups = function (selectId, model, callback) {
             var selectList = $(selectId);
             var self = this;
-            selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData('/Users', { mid: 39 }, function (response) {
                 var options = [];
                 if (model && model.users) {

@@ -43,23 +43,24 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
             }
             function saveToDb(data) {
                 try {
-                    _department = new department(data);
-                    //if (data.departmentName) {
-                    //    _department.departmentName = data.departmentName;
-                    //}
+                    _department = new department();
+                    
+                    if (data.departmentName) {
+                        _department.departmentName = data.departmentName;
+                    }
                     if (data.uId) {
                         _department.createdBy.user=data.uId;
                     }
                     if (data.users && data.users.length > 0) {
                         _department.users = data.users;
                     }
-                    //if (data.parentDepartment) {
-                    //    _department.parentDepartment = data.parentDepartment;
-                    //}
-                    //if (data.departmentManager) {
-                    //    _department.departmentManager = data.departmentManager;
+                    if (data.parentDepartment) {
+                        _department.parentDepartment = data.parentDepartment;
+                    }
+                    if (data.departmentManager) {
+                        _department.departmentManager = data.departmentManager;
                         
-                    //}
+                    }
                     _department.save(function (err, result) {
                         if (err) {
                             console.log(err);

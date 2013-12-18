@@ -20,7 +20,14 @@ define([
                 this.render();
             },
 			events:{
-                'click .dialog-tabs a': 'changeTab'
+                'click .dialog-tabs a': 'changeTab',
+                'click #sourceUsers li': 'chooseUser',
+                'click #targetUsers li': 'chooseUser',
+			    'click #addUsers':'addUsers',
+			    'click #removeUsers':'removeUsers'
+			},
+			chooseUser:function(e){
+				$(e.target).toggleClass("choosen");
 			},
 			changeTab:function(e){
 				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
@@ -32,6 +39,14 @@ define([
 
             close: function () {
                 this._modelBinder.unbind();
+            },
+            addUsers: function (e) {
+                e.preventDefault();
+                $('#targetUsers').append($('#sourceUsers .choosen'));
+            },
+            removeUsers: function (e) {
+                e.preventDefault();
+                $('#sourceUsers').append($('#targetUsers .choosen'));
             },
 
             saveItem: function () {
