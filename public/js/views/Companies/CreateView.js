@@ -23,9 +23,12 @@ define([
             events: {
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit"
+                "mouseleave .avatar": "hideEdit",
+                "click .details": "toggleDetails"
             },
-
+			toggleDetails:function(e){
+				$("#details-dialog").toggle();
+			},
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
