@@ -311,6 +311,28 @@
                 if (callback) callback();
             });
         };
+        var populateParentDepartments = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.parentDepartment && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
+                    options = $.map(response.data, function (item) {
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
+                            $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.departmentName);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+						if (!item.parentDepartment){
+                        return $('<option/>').val(item._id).text(item.departmentName);}
+                    });
+                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
 
         var populatePriority = function (selectId, url, model, callback) {
             var selectList = $(selectId);
@@ -549,6 +571,7 @@
             canvasDraw: canvasDraw,
             saveToLocalStorage: saveToLocalStorage,
             getFromLocalStorage: getFromLocalStorage,
-            populateUsersForGroups: populateUsersForGroups
+            populateUsersForGroups: populateUsersForGroups,
+			populateParentDepartments:populateParentDepartments
         }
     });

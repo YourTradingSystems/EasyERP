@@ -1944,7 +1944,7 @@ input, textarea, select {
 					display:block;
 					overflow:hidden;
 					text-overflow:ellipsis;
-
+					line-height:20px;
                     .bold {
                         font-weight: bold;
                     }
@@ -3245,7 +3245,7 @@ button {
 }
 
 #modulesAccessTable {
-    display: none;
+    display: none; 
 	tr{
 		&.child{
 			display:none;
@@ -3259,12 +3259,12 @@ button {
 			color:white;
 			border:2px solid #1E8FC6;
 			td{
+				
 			}
 		}
 
 	}
 }
-
 .noteWrapper {
     width: 50%;
     margin: 0 25px;
@@ -3847,4 +3847,76 @@ ul.dialog-tabs{
 	}
 }
 #targetUsers{
+}
+#groupList{
+	@linh: 25px;
+	margin-top:10px;
+	margin-left:10px;
+	border-left:1px dotted black;
+	font-size:14px;
+	li{
+		line-height:@linh;
+		.dotted-line{
+			display:block;
+			float:left;
+			width:20px;
+			height:@linh/2;
+			border-bottom:1px dotted black;
+			margin-right:2px;
+		}
+		.text{
+			display:block;
+			margin-left:20px;
+			cursor:pointer;
+			padding-left:17px;
+            background-image: url("@{imagesfolder}/open-folder.png");
+			background-repeat:no-repeat;
+			background-position:0 50%;
+			&:hover{
+				background-color:#eee;
+			}
+		}
+		.edit{
+			display:none;
+			width:16px;
+			height:@linh;
+            background-image: url("@{imagesfolder}/edit-button.png");
+			background-position:0 50%;
+			background-repeat:no-repeat;
+			float:right;
+			margin-right:5px;
+		}
+		.trash{
+			display:none;
+			width:13px;
+			height:@linh;
+            background-image: url("@{imagesfolder}/trash.png");
+			background-position:0 50%;
+			background-repeat:no-repeat;
+			float:right;
+			margin-right:20px;
+		}
+
+		&.child{
+			.dotted-line{
+				display:block;
+				float:left;
+				width:40px;
+				height:@linh/2;
+				border-bottom:1px dotted black;
+				margin-right:2px;
+			}
+			.text{
+				padding-left:0px;
+				background-image:none;
+				margin-left:40px;
+			}
+		}
+		&:hover{
+			.edit, .trash{
+				display:block;
+			}
+		}
+		
+	}
 }

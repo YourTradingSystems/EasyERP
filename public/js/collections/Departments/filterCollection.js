@@ -18,7 +18,7 @@
                     filterObject[i] = options[i];
                 };
                 this.fetch({
-                    data: filterObject,
+                    data: null,
                     reset: true,
                     success: function() {
                         console.log("Departments fetchSuccess");
@@ -40,7 +40,7 @@
                 filterObject['page'] = (filterObject.hasOwnProperty('page')) ? filterObject['page'] : this.page;
                 filterObject['count'] = (filterObject.hasOwnProperty('count')) ? filterObject['count'] : 10;
                 this.fetch({
-                    data: filterObject,
+                    data: null,
                     waite: true,
                     success: function (models) {
                         that.page += 1;
