@@ -3,8 +3,9 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
         parentDepartment: { type: ObjectId, ref: 'Department', default:null },
-        departmentManager: { type: ObjectId, ref: 'Employees', default:null },
-		createdBy:{
+        departmentManager: { type: ObjectId, ref: 'Employees', default: null },
+        users: [{ type: ObjectId, ref: 'Users', default: null }],
+        createdBy:{
 			user:{type:ObjectId, ref: 'Users', default:null},
 			date:{type:Date, default: Date.now}
 		},
@@ -43,29 +44,22 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
             function saveToDb(data) {
                 try {
                     _department = new department();
+                    
                     if (data.departmentName) {
                         _department.departmentName = data.departmentName;
                     }
                     if (data.uId) {
                         _department.createdBy.user=data.uId;
                     }
-                    /*if (data.parentDepartment) {
-                        if (data.parentDepartment._id) {
-                            _department.parentDepartment.id = data.parentDepartment._id;
-                        }
-                        if (data.parentDepartment.departmentName) {
-                            _department.parentDepartment = data.parentDepartment.departmentName;
-                        }
-                    }*/
+                    if (data.users && data.users.length > 0) {
+                        _department.users = data.users;
+                    }
                     if (data.parentDepartment) {
                         _department.parentDepartment = data.parentDepartment;
                     }
                     if (data.departmentManager) {
                         _department.departmentManager = data.departmentManager;
-                        //}
-                        //if (data.departmentManager.name) {
-                        //    _department.departmentManager.name = data.departmentManager.name.first + " " + data.departmentManager.name.last;
-                        //}
+                        
                     }
                     _department.save(function (err, result) {
                         if (err) {

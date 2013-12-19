@@ -6,8 +6,8 @@ var Employee = function (logWriter, mongoose) {
         imageSrc: { type: String, default: '' },
         subject: { type: String, default: '' },
         name: {
-            first: { type: String, default: 'demo' },
-            last: { type: String, default: 'User' }
+            first: { type: String, default: '' },
+            last: { type: String, default: '' }
         },
         tags: { type: Array, default: [] },
         workAddress: {

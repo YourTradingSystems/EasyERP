@@ -19,9 +19,34 @@ define([
                 this.model = new DepartmentsModel();
                 this.render();
             },
+			events:{
+                'click .dialog-tabs a': 'changeTab',
+                'click #sourceUsers li': 'chooseUser',
+                'click #targetUsers li': 'chooseUser',
+			    'click #addUsers':'addUsers',
+			    'click #removeUsers':'removeUsers'
+			},
+			chooseUser:function(e){
+				$(e.target).toggleClass("choosen");
+			},
+			changeTab:function(e){
+				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
+				$(e.target).addClass("active");
+				var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+				$(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
+				$(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+			},
 
             close: function () {
                 this._modelBinder.unbind();
+            },
+            addUsers: function (e) {
+                e.preventDefault();
+                $('#targetUsers').append($('#sourceUsers .choosen'));
+            },
+            removeUsers: function (e) {
+                e.preventDefault();
+                $('#sourceUsers').append($('#targetUsers .choosen'));
             },
 
             saveItem: function () {
@@ -69,7 +94,7 @@ define([
                     resizable:true,
 					dialogClass:"create-dialog",
 					title: "Edit department",
-					width:"80%",
+					width:"950px",
                     buttons: [
                         {
                             text: "Create",
@@ -83,7 +108,8 @@ define([
 
                 });
 				common.populateDepartments(App.ID.parentDepartment, "/Departments");
-                common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
+				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
+				common.populateUsersForGroups('#sourceUsers');
                 return this;
             }
 

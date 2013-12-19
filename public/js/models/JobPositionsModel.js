@@ -1,12 +1,10 @@
-﻿define(function () {
+﻿define(['Validation'], function (Validation) {
     var JobPositionsModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
-                        return error.msg;
-                    }).join('\n');
+                    var msg = errors.join('\n');
                     alert(msg);
                 }
             });
@@ -15,15 +13,8 @@
         validate: function(attrs){
             var errors = [];
 
-            if($.trim(attrs.name) == ""){
-                errors.push(
-                    {
-                        name:"Job Position",
-                        field:"name",
-                        msg:"Job Position name can not be empty"
-                    }
-                );
-            }
+            Validation.checkNameField(errors, true, attrs.name, "Job name");
+
             if(errors.length > 0)
                 return errors;
         },

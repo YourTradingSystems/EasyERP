@@ -151,8 +151,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
-                        model.set({ workflow: column.data('id') });
-                        model.save({}, {
+                        model.save({workflow: column.data('id')}, {
                             //headers: {
                             //    mid: mid
                             //}
