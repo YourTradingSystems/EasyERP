@@ -43,10 +43,10 @@ define([
                 var mid = 39;
                 this.model.save({
                     imageSrc: this.imageSrc,
-                    email: $('#email').val(),
-                    login: $('#login').val(),
-                    pass: $('#password').val(),
-                    profile: $('#profilesDd option:selected').val()
+                    email: $.trim(this.$el.find('#email').val()),
+                    login: $.trim(this.$el.find('#login').val()),
+                    pass: $.trim(this.$el.find('#password').val()),
+                    profile: $.trim(this.$el.find('#profilesDd option:selected').val())
                 },
                 {
                     headers: {

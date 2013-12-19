@@ -337,7 +337,7 @@
         var populatePriority = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
-            selectList.append($("<option/>").val('').text('Select...'));
+   
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && ((model.extrainfo && model.extrainfo.priority) || model.priority)) {
@@ -348,7 +348,9 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item.priority).text(item.priority);
+                        return(item.priority == "P3") ? 
+                        		$('<option/>').val(item.priority).text(item.priority).attr('selected', 'selected') :
+                        		$('<option/>').val(item.priority).text(item.priority);
                     });
                 }
                 selectList.append(options);

@@ -18,12 +18,13 @@
                 for (var i in options) {
                     filterObject[i] = options[i];
                 };
+                filterObject['count'] = filterObject['count']*2;
                 this.fetch({
                     data: filterObject,
                     reset: true,
                     success: function (model,res) {
                         console.log("Persons fetchSuccess");
-                        that.page += 1;
+                        that.page += 2;
                     },
                     error: function (models, xhr, options) {
                         if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
@@ -44,8 +45,8 @@
                         filterObject[i] = options[i];
                     }
                 }
-                filterObject['page'] = this.page;
-                filterObject['count'] = this.namberToShow;
+                filterObject['page'] = (options && options.page) ? options.page: this.page;
+                filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 this.fetch({
                     data: filterObject,
                     waite: true,

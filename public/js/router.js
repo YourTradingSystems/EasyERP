@@ -82,7 +82,7 @@ define([
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 2 });
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 10 });
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
@@ -202,7 +202,7 @@ define([
             self = this;
             Custom.setCurrentVT('thumbnails');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 10, parrentContentId: parrentContentId }) : new ContentCollection();
+                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 5, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     var contentView = new ContentView({ collection: collection });
