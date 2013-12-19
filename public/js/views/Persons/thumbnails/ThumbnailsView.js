@@ -6,12 +6,14 @@
     'views/Persons/CreateView'
 ],
 
-function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView) {
     var PersonsThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
             this.collection = options.collection;
+            arrayOfPersons = [];
+            dataIndexCounter = 0;
             this.render();
 
         },
@@ -21,7 +23,6 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         render: function () {
-            arrayOfPersons = [];
             var namberOfpersons = this.collection.namberToShow;
         	$('.ui-dialog ').remove();
             console.log('Person render');
@@ -31,7 +32,8 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
                 var thumbnailsItemView;
                 _.each(this.collection.models, function (model,index) {
                         if (index < namberOfpersons) {
-                            thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                            dataIndexCounter++;
+                            thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
                             thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                             $(holder).append(thumbnailsItemView.render().el);
                         } else {
@@ -50,7 +52,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
 
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({ count: 20 });
+            this.collection.showMore();
         },
 
         showMoreContent: function (newModels) {
@@ -63,7 +65,8 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
                 for (var i=0; i<arrayOfPersons.length; i++) {
                     if (counter < namberOfPersons ) {
                         counter++;
-                        thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfPersons[i]});
+                        dataIndexCounter++;
+                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[i], dataIndex: dataIndexCounter });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                         holder.before(thumbnailsItemView.render().el);
                         arrayOfPersons.splice(i,1);
@@ -74,7 +77,9 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
             }
             _.each(newModels.models, function (model) {
                 if (counter < namberOfPersons) {
-                    thumbnailsItemView = new ThumbnailsItemView({ model: model });
+                    counter++;
+                    dataIndexCounter++;
+                    thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
                     thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                     holder.before(thumbnailsItemView.render().el);
                 } else {

@@ -9,6 +9,7 @@
             page: 1,
             initialize: function (options) {
                 var that = this;
+                this.namberToShow = options.count;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     delete options.viewType;
@@ -16,13 +17,14 @@
                 var filterObject = {};
                 for (var i in options) {
                     filterObject[i] = options[i];
-                };
+                }
+                filterObject['count'] = filterObject['count']*2;
                 this.fetch({
                     data: filterObject,
                     reset: true,
                     success: function() {
                         console.log("Employees fetchSuccess");
-                        that.page += 1;
+                        that.page += 2;
                     },
                     error: this.fetchError
                 });
@@ -41,8 +43,8 @@
                         filterObject[i] = options[i];
                     }
                 }
-                filterObject['page'] = (filterObject.hasOwnProperty('page')) ? filterObject['page'] : this.page;
-                filterObject['count'] = (filterObject.hasOwnProperty('count')) ? filterObject['count'] : 10;
+                filterObject['page'] = (options && options.page) ? options.page: this.page;
+                filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 this.fetch({
                     data: filterObject,
                     waite: true,

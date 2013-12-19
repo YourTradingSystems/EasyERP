@@ -7,7 +7,9 @@ define([
             tagName: "div",
             className: "thumbnail",
 
-            initialize: function () {
+            initialize: function (options) {
+                this.dataIndex = options.dataIndex;
+                this.model.on('change', this.render, this);
                 this.render();
             },
 
@@ -65,7 +67,7 @@ define([
 
             render: function () {
                 var color = common.hexToRgb(this.model.get('color'));
-                this.$el.attr("data-index", this.model.collection.indexOf(this.model));
+                this.$el.attr("data-index", this.dataIndex);
                 this.$el.html(this.template(this.model.toJSON()));
                 this.$el.attr("id", this.model.get('_id'));
                 this.$el.css('background-color', 'rgba(' + color.r + ',' + color.g + ',' + color.b + ', 0.20)');
