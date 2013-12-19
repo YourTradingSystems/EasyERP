@@ -8,9 +8,10 @@ var Project = function (logWriter, mongoose) {
         privacy: { type: String, default: 'All Users' },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
-        teams: {
-            users: { type: Array, default: [] },
-            Teams: { type: Array, default: [] }
+		groups: {
+            owner: { type: ObjectId, ref: 'Users', default: null },
+            users: [{ type: ObjectId, ref: 'Users', default: null }],
+            group: [{ type: ObjectId, ref: 'Department', default: null }]
         },
         info: {
             StartDate: Date,
@@ -369,8 +370,8 @@ var Project = function (logWriter, mongoose) {
                     if (data.privacy) {
                         _project.privacy = data.privacy;
                     }
-                    if (data.teams) {
-                        _project.teams = data.teams;
+                    if (data.groups) {
+                        _project.groups = data.groups;
                     }
                     if (data.info) {
                         if (data.info.StartDate) {

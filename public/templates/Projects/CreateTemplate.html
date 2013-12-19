@@ -1,6 +1,7 @@
 <div class="form-holder">
   <form method="post" action="" id="createProjectForm" class="form">
     <fieldset>
+	  <div>
       <div class="inner">
         <ul class="dialog-tabs">
           <li><a class="active" href="javascript:;">Main Info</a></li>
@@ -34,7 +35,27 @@
 			</div>
 
 			<div class="clearfix"></div>
-
+		<div class="formTitle">
+		  <h3 class="left">Who can read and write</h3>
+		  <div class="clearfix"></div>
+		</div>
+			<div class="half-block left">
+			  <dl class="profile-edit-info">
+				<dt><input type="radio" name="canRead" id="owner" checked><label for="owner">Owner</label></dt><dd>
+					<select id="allUsers">
+					</select>
+				  </dd>
+				<dt><input type="radio" name="canRead">Everyone</dt><dd>&nbsp;</dd>
+			  </dl>
+			</div>
+			<div class="half-block left">
+			  <dl class="profile-edit-info">
+				<dt><input type="radio" name="canRead">Group</dt><dd>
+				  <select id="allGroup" multiple="multiple">
+				  </select>
+				</dd>
+			  </dl>
+			</div>
           </div>
           <div class="dialog-tabs-item">
 			<div class="half-block left">
@@ -68,7 +89,11 @@
 
 		  </div>
 		</div>
+		<div class="clearfix"></div>
 	  </div>
-    </fieldset>
+	  </div>
+		<div>
+		</div>
+	</fieldset>
   </form>
 </div>
