@@ -12,11 +12,12 @@ define([
             template: _.template(CreateTemplate),
 
             initialize: function (options) {
+            	_.bindAll(this, "saveItem", "render");
+                this.collection = options.collection;
+                this.collection.bind('reset', _.bind(this.render, this));
+                this.render = _.after(1, this.render);
                 this.relatedStatusesCollection = new RelatedStatusesCollection();
                 this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
-                this.bind('reset', _.bind(this.render, this));
-                this.collection = options.collection;
-                this.render();
             },
 
             close: function () {
@@ -24,15 +25,18 @@ define([
             },
 
             events: {
-                "click button#add": "addNameStatus",
+                "click .addStatus": "addNameStatus",
                 "click button.remove": "removeNameStatus"
+            },
+            hideDialog: function () {
+                $(".edit-dialog").remove();
             },
 
             addNameStatus: function (e) {
-                e.preventDefault();
-                $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
-            },
-
+                  e.preventDefault();
+                  alert("Ura");
+                  $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
+             },
             removeNameStatus: function (e) {
                 $(e.target).closest(".nameStatus").remove();
             },
@@ -72,17 +76,45 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                    	self.hideDialog();
+                        Backbone.history.navigate("easyErp/Workflows", { trigger: true });
                     },
                     error: function () {
-                        Backbone.history.navigate("home", { trigger: true });
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
             },
 
             render: function () {
+                var projectID = (window.location.hash).split('/')[3];
                 var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
-                this.$el.html(this.template({ relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds }));
+                model = projectID
+                    ? {
+                        project: {
+                            _id: projectID
+                        }
+                    }
+                    : null;
+                var formString = this.template({ relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds });
+                var self = this;
+                this.$el = $(formString).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "80%",
+                    title: "Create Task",
+                    buttons: {
+                        save: {
+                            text: "Save",
+                            class: "btn",
+                            click: self.saveItem
+                        },
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: self.hideDialog
+                        }
+                    }
+                });
+
                 $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
                 $("#allNamesStatuses .nameStatus:first-of-type button.remove").remove();
                 return this;

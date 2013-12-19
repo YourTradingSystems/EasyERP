@@ -12,8 +12,7 @@
             <div class="half-block left">
                 <p>
                     <select id="wId">
-                        <option selected="selected" value="0">Select...</option>
-                        <% workflowsWIds.forEach(function(option){ %>
+                        <% _.each(workflowsWIds, function(option){ %>
                         <option value="<%= option %>"><%= option %></option>
                         <% }); %>
                     </select>
@@ -25,8 +24,7 @@
             <div id="allNamesStatuses">
                
             </div>
-            <button id="add" class="btn">Add</button>
+            <input type="button" value="Add" class="addStatus">
         </fieldset>
-        <input type="submit" class="btn" value="Create" />
     </form>
 </div>

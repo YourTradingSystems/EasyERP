@@ -3,9 +3,10 @@ define([
     'views/Workflows/list/ListItemView',
     'text!templates/Workflows/form/FormTemplate.html',
     'collections/RelatedStatuses/RelatedStatusesCollection',
+    'views/Workflows/CreateView',
     'custom'
 ],
-function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, Custom) {
+function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,CreateView, Custom) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
@@ -100,6 +101,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
 
         },
         chooseWorkflowNames: function (e) {
+        	e.preventDefault();
             this.$(".workflow-sub-list>*").remove();
             this.$("#details").addClass("active").show();
             this.$("#workflows").empty();
@@ -158,9 +160,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             var values = [];
             _.each(this.collection.models, function (model) {
                 if (model.get('wName') == name) {
-                    console.log(model);
                     values.push({ id: model.get("_id"), name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
-                    console.log(values);
                 }
             }, this);
             this.$("#sub-details").attr("data-id", name).find("#workflows").empty().append($("<thead />").append(
@@ -184,7 +184,9 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             else
                 $("#top-bar-deleteBtn").hide();
         },
-
+        createItem: function(){
+            new CreateView({collection: this.collection});
+        },
         deleteItems: function () {
             var self = this,
                 mid = 39,

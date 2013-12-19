@@ -110,10 +110,10 @@ define([
                         },
                         wait: true,
                         success: function (model) {
-                            Backbone.history.navigate("home/content-" + self.contentType, { trigger: true });
+                            Backbone.history.navigate("easyErp/Workflows", { trigger: true });
                         },
                         error: function () {
-                            Backbone.history.navigate("home", { trigger: true });
+                            Backbone.history.navigate("easyErp", { trigger: true });
                         }
                     });
                 }
