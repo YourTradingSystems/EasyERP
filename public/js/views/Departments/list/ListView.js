@@ -96,7 +96,6 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
         },
 
         showMore: function () {
