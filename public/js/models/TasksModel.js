@@ -28,7 +28,7 @@ define([
             var errors = [];
 
             Validation.checkNameField(errors, true, attrs.summary, "Summary");
-            Validation.checkNameField(errors, true, attrs.project, "Project");
+            Validation.checkNameField(errors, true, attrs.project._id || attrs.project, "Project");
             if(attrs.deadline && attrs.extrainfo.StartDate)
                 Validation.checkFirstDateIsGreater(errors, attrs.deadline, "deadline date",attrs.extrainfo.StartDate, "Start date");
 
