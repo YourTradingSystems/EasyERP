@@ -14,18 +14,18 @@
     <div class="inner">
       <div class="half-block left">
         <dl class="person-info">
-		  <dt>Email :</dt><dd><span><%=email%></span></dd>
-		  <dt>Phone :</dt><dd><span><%=phones.phone%></span></dd>
-		  <dt>Salesperson :</dt><dd><span><%=(salesPerson) ? salesPerson.name.first + ' ' + salesPerson.name.last : ''%></span></dd>
-		  <dt>Sales Team :</dt><dd><span><%=(salesTeam) ? salesTeam.departmentName : ''%></span></dd>
-		  <dt>Status :</dt><dd><span><%=(workflow) ? workflow.name : ''%></span></dd>
+		  <dt>Email </dt><dd><span><%=email%></span></dd>
+		  <dt>Phone </dt><dd><span><%=phones.phone%></span></dd>
+		  <dt>Salesperson </dt><dd><span><%=(salesPerson) ? salesPerson.name.first + ' ' + salesPerson.name.last : ''%></span></dd>
+		  <dt>Sales Team </dt><dd><span><%=(salesTeam) ? salesTeam.departmentName : ''%></span></dd>
+		  <dt>Status </dt><dd><span><%=(workflow) ? workflow.name : ''%></span></dd>
 		</dl>
 	  </div>
 	  <div class="half-block left">
         <dl class="person-info">			
-		  <dt>Next Action :</dt><dd><span><%=nextAction.date%> - <%=nextAction.desc%></span></dd>
-		  <dt>Expected Closing :</dt><dd><span><%=expectedClosing%></span></dd>
-		  <dt>Priority :</dt><dd><span><%=priority%></span></dd>
+		  <dt>Next Action </dt><dd><span><%=nextAction.date%> - <%=nextAction.desc%></span></dd>
+		  <dt>Expected Closing </dt><dd><span><%=expectedClosing%></span></dd>
+		  <dt>Priority </dt><dd><span><%=priority%></span></dd>
 		</dl>
 	  </div>
 	  <div class="clearfix"></div>
@@ -36,22 +36,22 @@
 		  </div>
 		</div>
         <dl class="person-info">
-		  <dt>Customer Name :</dt><dd><span><%=contactName.first%> <%=contactName.last%></span></dd>
+		  <dt>Customer Name </dt><dd><span><%=contactName.first%> <%=contactName.last%></span></dd>
 		  <dt>Address :</dt><dd><span><%=address.street%></span></dd>
 		  <dt>&nbsp;</dt><dd><span><%=address.city%></span></dd>
 		  <dt>&nbsp;</dt><dd><span><%=address.state%></span></dd>
 		  <dt>&nbsp;</dt><dd><span><%=address.zip%></span></dd>
 		  <dt>&nbsp;</dt><dd><span><%=address.country%></span></dd>
-		  <dt>Contact Name :</dt><dd><span><%=contactName.first%> <%=contactName.last%></span></dd>
-		  <dt>Function :</dt><dd><span><%=func%></span></dd>
-		  <dt>Mobile :</dt><dd><span><%=phones.mobile%></span></dd>
+		  <dt>Contact Name </dt><dd><span><%=contactName.first%> <%=contactName.last%></span></dd>
+		  <dt>Function </dt><dd><span><%=func%></span></dd>
+		  <dt>Mobile </dt><dd><span><%=phones.mobile%></span></dd>
 		  <dt><h4>Mailings</h4></dt><dd>&nbsp;</dd>
-		  <dt>Opt-Out :</dt><dd class="withCheckbox"><input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" /></dd>
+		  <dt>Opt-Out </dt><dd class="withCheckbox"><input type="checkbox" <%= (optout)? checked='checked':''%> id="optout" /></dd>
 		  <dt><h4>Misc</h4></dt><dd>&nbsp;</dd>
-		  <dt>Active :</dt><dd  class="withCheckbox"><input type="checkbox" <%= (active)? checked='checked':''%> id="active" /></dd>
-		  <dt>Days To Open :</dt><dd><span>0.00</span></dd>
-		  <dt>Days To Close :</dt><dd><span>0.00</span></dd>
-		  <dt>Referred By :</dt><dd><span><%=reffered%></span></dd>
+		  <dt>Active </dt><dd  class="withCheckbox"><input type="checkbox" <%= (active)? checked='checked':''%> id="active" /></dd>
+		  <dt>Days To Open </dt><dd><span>0.00</span></dd>
+		  <dt>Days To Close </dt><dd><span>0.00</span></dd>
+		  <dt>Referred By </dt><dd><span><%=reffered%></span></dd>
 		</dl>		  
 	  </div>		
 	  <div class="half-block left">

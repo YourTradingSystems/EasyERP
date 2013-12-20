@@ -11,7 +11,6 @@
             template: _.template(ListItemTemplate),
 
             render: function () {
-                console.log(this.$el);
                 this.$el.html(this.template({ model: this.model }));
                 return this;
             }

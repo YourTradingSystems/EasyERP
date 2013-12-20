@@ -40,7 +40,20 @@ define([
             hideDialog: function () {
                 $(".create-dialog").remove();
             },
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
 
             saveItem: function () {
                 var self = this;

@@ -7,11 +7,11 @@
   <form class="form" id="applicationForm" data-id="<%=_id%>">
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Subject :</dt><dd><%=subject%></dd>
-		<dt>First Name :</dt><dd><%=name.first%></dd>
-		<dt>Last Name :</dt><dd><%=name.last%></dd>
-        <dt>Created By :</dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
-        <dt>Edited By :</dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
+		<dt>Subject </dt><dd><%=subject%></dd>
+		<dt>First Name </dt><dd><%=name.first%></dd>
+		<dt>Last Name </dt><dd><%=name.last%></dd>
+        <dt>Created By </dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
+        <dt>Edited By </dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
@@ -24,13 +24,13 @@
     </div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Email :</dt><dd><span><%=workEmail%></span></dd>
-		<dt>Phone :</dt><dd><span><%=workPhones.phone%></span></dd>
+		<dt>Email </dt><dd><span><%=workEmail%></span></dd>
+		<dt>Phone </dt><dd><span><%=workPhones.phone%></span></dd>
 	  </dl>
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Mobile :</dt><dd><span><%=workPhones.mobile%></span></dd>
+		<dt>Mobile </dt><dd><span><%=workPhones.mobile%></span></dd>
 	  </dl>
 	</div>
 
@@ -42,13 +42,13 @@
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Applied Job :</dt><dd><%=(jobPosition) ? jobPosition.name : ''%></dd>
-		<dt>Department :</dt><dd><%=(department) ? department.departmentName : ''%></dd>
+		<dt>Applied Job </dt><dd><%=(jobPosition) ? jobPosition.name : ''%></dd>
+		<dt>Department </dt><dd><%=(department) ? department.departmentName : ''%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Tags :</dt><dd><%=tags%></dd>
+		<dt>Tags </dt><dd><%=tags%></dd>
 	  </dl>
 	</div>	
 	<div class="clearfix">
@@ -59,14 +59,14 @@
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Responsible :</dt><dd><%=(relatedUser) ? relatedUser.login : ''%></dd>
-		<dt>Next Action :</dt><dd><%=(nextAction) ? nextAction : ''%></dd>
+		<dt>Responsible </dt><dd><%=(relatedUser) ? relatedUser.login : ''%></dd>
+		<dt>Next Action </dt><dd><%=(nextAction) ? nextAction : ''%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Source :</dt><dd><%=(source) ? source.name : ''%></dd>
-		<dt>Referred By :</dt><dd><%=referredBy%></dd>
+		<dt>Source </dt><dd><%=(source) ? source.name : ''%></dd>
+		<dt>Referred By </dt><dd><%=referredBy%></dd>
 	  </dl>
 	</div>	
 	<div class="clearfix">
@@ -77,12 +77,12 @@
 	</div>
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Expected Salary :</dt><dd><%=expectedSalary%></dd>
+		<dt>Expected Salary </dt><dd><%=expectedSalary%></dd>
 	  </dl>
 	</div>	
     <div class="half-block left">
 	  <dl class="app-info">
-		<dt>Proposed Salary :</dt><dd><%=proposedSalary%></dd>
+		<dt>Proposed Salary </dt><dd><%=proposedSalary%></dd>
 	  </dl>
 	</div>	
 	<div class="clearfix">
