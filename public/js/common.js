@@ -199,7 +199,7 @@
         var populateEmployeesDd = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
-            selectList.append($("<option/>").val('').text('Select...'));
+            //selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && (model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson || model.departmentManager)) {
