@@ -97,7 +97,7 @@ var Workflow = function (logWriter, mongoose) {
             res['data'] = [];
             //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             var query = workflow.find({ wId: data.type.id });
-            //query.sort({ 'name': 1 });
+            query.sort({ 'sequence': 1 });
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -119,7 +119,9 @@ var Workflow = function (logWriter, mongoose) {
                 res['data'] = [];
                 if (data) {
                     var query = (data.id) ? { wId: data.id } : {};
-                    workflow.find(query, function (err, result) {
+                    var query2 = workflow.find(query);
+                    query2.sort({ 'sequence': 1 });
+                    query2.exec(query, function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
