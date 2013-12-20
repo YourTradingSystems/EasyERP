@@ -6,12 +6,14 @@
     'views/ownCompanies/CreateView'
 ],
 
-function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (OwnCompaniesThumbnailsItemView, Custom, common, EditView, CreateView) {
     var CompanyThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
             this.collection = options.collection;
+            arrayOfOwnCcompanies = [];
+            dataIndexCounter = 0;
             this.render();
         },
 
@@ -20,36 +22,69 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         render: function () {
+            var namberOfOwnCompanies = this.collection.namberToShow;
             console.log('Company render');
             this.$el.html('');
             if (this.collection.length > 0) {
                 var holder = this.$el;
                 var thumbnailsItemView;
-                _.each(this.collection.models, function (model) {
-                    thumbnailsItemView = new ThumbnailsItemView({ model: model });
-                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    $(holder).append(thumbnailsItemView.render().el);
+                _.each(this.collection.models, function (model, index) {
+                    if (index < namberOfOwnCompanies) {
+                        dataIndexCounter++;
+                        thumbnailsItemView = new OwnCompaniesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
+                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                        $(holder).append(thumbnailsItemView.render().el);
+                    } else {
+                        arrayOfOwnCcompanies.push(model);
+                    }
                 }, this);
             } else {
                 this.$el.html('<h2>No Companies found</h2>');
             }
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            if (arrayOfOwnCcompanies.length > 0) {
+                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            }
             return this;
         },
 
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({ count: 20 });
+            this.collection.showMore();
         },
 
         showMoreContent: function (newModels) {
             var holder = this.$el.find('#showMoreDiv');
             var thumbnailsItemView;
+            var counter =0;
+            var namberOfOwnCompanies = this.collection.namberToShow;
+
+            if (arrayOfOwnCcompanies.length > 0) {
+                for (var i=0; i<arrayOfOwnCcompanies.length; i++) {
+                    if (counter < namberOfOwnCompanies ) {
+                        counter++;
+                        dataIndexCounter++;
+                        thumbnailsItemView = new OwnCompaniesThumbnailsItemView({ model: arrayOfOwnCcompanies[i], dataIndex: dataIndexCounter });
+                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                        holder.before(thumbnailsItemView.render().el);
+                        arrayOfOwnCcompanies.splice(i,1);
+                        i--;
+                    }
+                }
+            }
             _.each(newModels.models, function (model) {
-                thumbnailsItemView = new ThumbnailsItemView({ model: model });
-                thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                $(holder).prepend(thumbnailsItemView.render().el);
+                    if (counter < namberOfOwnCompanies) {
+                        dataIndexCounter++;
+                        thumbnailsItemView = new OwnCompaniesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
+                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                        $(holder).prepend(thumbnailsItemView.render().el);
+                    } else {
+                        arrayOfOwnCcompanies.push(model);
+                    }
             }, this);
+
+            if (arrayOfOwnCcompanies.length == 0) {
+                this.$el.find('#showMoreDiv').hide();
+            }
         },
 
         createItem: function () {

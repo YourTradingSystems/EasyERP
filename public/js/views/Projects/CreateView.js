@@ -125,6 +125,8 @@ define([
                 });
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.populateCustomers(App.ID.customerDd, "/Customer");
+                common.populateUsers("#allUsers", "/Users");
+                common.populateDepartments("#allGroup", "/Departments");
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 this.delegateEvents(this.events);

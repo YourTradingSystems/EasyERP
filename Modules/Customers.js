@@ -300,7 +300,7 @@
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
                   populate('editedBy.user');
-            query.skip((data.page-1)*data.count*2).limit(data.count*2);
+            query.skip((data.page-1)*data.count).limit(data.count);
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {

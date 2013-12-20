@@ -7,7 +7,8 @@ define([
             tagName:"div",
             className: "thumbnailcusomers",
 
-            initialize: function () {
+            initialize: function (options) {
+                this.dataIndex = options.dataIndex;
                 this.model.on('change', this.render, this);
                 this.render();
             },
@@ -67,7 +68,7 @@ define([
 
             render: function () {
                 this.$el.html(this.template(this.model.toJSON()));
-                this.$el.attr("data-index", this.model.collection.indexOf(this.model));
+                this.$el.attr("data-index", this.dataIndex);
                 this.$el.attr("id", this.model.get('_id'));
                 this.changeColor(this.model.get('color'));
                 return this;

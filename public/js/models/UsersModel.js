@@ -1,4 +1,4 @@
-define(function () {
+define(['Validation'],function (Validation) {
     var UserModel = Backbone.Model.extend({
         idAttribute: "_id",
         defaults: {
@@ -19,9 +19,7 @@ define(function () {
         initialize: function(){
             this.on('invalid', function(model, errors){
                 if(errors.length > 0){
-                    var msg = $.map(errors,function(error){
-                        return error.msg;
-                    }).join('\n');
+                    var msg = errors.join('\n');
                     alert(msg);
                 }
             });
@@ -30,54 +28,12 @@ define(function () {
         validate: function(attrs, options){
             var errors = [];
 
-            if(attrs.login.trim() == ""){
-                errors.push(
-                    {
-                        name:"Login",
-                        field:"login",
-                        msg:"Login can not be empty"
-                    }
-                );
-            }
-            //if model is in edit mode than no to ask password and confirm password
+            Validation.checkLoginField(errors, true, attrs.login, "Login");
+            Validation.checkEmailField(errors, false, attrs.email, "Email");
             if(!options.editMode){
-                if(attrs.pass.trim() == ""){
-                    errors.push(
-                        {
-                            name:"Password",
-                            field:"pass",
-                            msg:"Password can not be empty"
-                        }
-                    );
-                }
-                if(options.confirmPass.trim() == ""){
-                    errors.push(
-                        {
-                            name:"Confirmation password",
-                            field:"confirmPass",
-                            msg:"Confirmation password can not be empty"
-                        }
-                    );
-                }
-                if(attrs.pass != options.confirmPass){
-                    errors.push(
-                        {
-                            name:"",
-                            field:"",
-                            msg:"Password and confirm password do not match"
-                        }
-                    );
-                }
-            }
-
-            if(attrs.email.trim() == ""){
-                errors.push(
-                    {
-                        name:"Email",
-                        field:"email",
-                        msg:"Email can not be empty"
-                    }
-                );
+                Validation.checkPasswordField(errors, true, attrs.pass, "Password");
+                Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
+                Validation.comparePasswords(errors, attrs.pass, options.confirmPass);
             }
             if(errors.length > 0)
                 return errors;

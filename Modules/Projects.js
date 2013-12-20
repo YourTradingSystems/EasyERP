@@ -30,11 +30,11 @@ var Project = function (logWriter, mongoose) {
         createdBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
-        },
+		},
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-        }
+		}
     }, { collection: 'Project' });
 
     var TasksSchema = mongoose.Schema({
@@ -371,8 +371,8 @@ var Project = function (logWriter, mongoose) {
                     if (data.privacy) {
                         _project.privacy = data.privacy;
                     }
-                    if (data.teams) {
-                        _project.teams = data.teams;
+                    if (data.groups) {
+                        _project.groups = data.groups;
                     }
                     if (data.info) {
                         if (data.info.StartDate) {

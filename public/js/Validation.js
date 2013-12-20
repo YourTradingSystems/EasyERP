@@ -3,6 +3,7 @@ define(
         var phoneRegExp = /^[0-9\+]?([0-9-\s()])+[0-9()]$/,
             intNumberRegExp = /[0-9]+/,
             nameRegExp = /^[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
+            loginRegExp = /^[\w\.@]{6,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
             countryRegExp = /[a-zA-Zа-яА-Я\s-]+/,
             zipRegExp = /[a-zA-Zа-яА-Я0-9\s-]+/,
@@ -10,10 +11,15 @@ define(
             moneyAmountRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/,
             emailRegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             loggedRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/;
-        var MIN_LENGTH = 2;
+        var MIN_LENGTH = 2,
+            LOGIN_MIN_LENGTH = 6;
 
         var validateEmail = function(validatedString){
             return emailRegExp.test(validatedString);
+        }
+
+        var validateLogin = function(validatedString){
+            return loginRegExp.test(validatedString);
         }
 
         var validateZip = function(validatedString){
@@ -62,18 +68,21 @@ define(
 
         var errorMessages = {
             invalidNameMsg: "field value is incorrect. It should start with letter or number",
+            invalidLoginMsg: "field value is incorrect. It should contain only the following symbols: A-Z, a-z, 0-9, _ @",
             notNumberMsg: "field should contain a valid integer value",
             invalidCountryMsg: "field should contain only letters, whitespaces and '-' sign",
             loggedNotValid: "field should contain a valid decimal value with max 1 digit after dot",
-            minLengthMsg: "field should be at least " + MIN_LENGTH + " characters long",
+            minLengthMsg: function(minLength){ return "field should be at least " + minLength + " characters long"},
             invalidMoneyAmountMsg: "field should contain a number with max 2 digits after dot",
             invalidEmailMsg: "field should contain a valid email address",
             requiredMsg: "field can not be empty",
             invalidCharsMsg: "field can not contain '~ < > ^ * ₴' signs",
             invalidStreetMsg: "field can contain only letters, numbers and '. , - /' signs",
             invalidPhoneMsg: "field should contain only numbers and '+ - ( )' signs",
-            invalidZipMsg: "field should contain only letters, numbers and '-' sing"
+            invalidZipMsg: "field should contain only letters, numbers and '-' sing",
+            passwordsNotMatchMsg: "Password and confirm password field do not match"
         }
+
 
         var checkNameField = function(errorArray, required, fieldValue, fieldName){
             if(required){
@@ -85,8 +94,8 @@ define(
                     errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
                     return;
                 }
-                if(fieldValue.length < 2) {
-                    errorArray.push([fieldName, errorMessages.minLengthMsg].join(' '));
+                if(fieldValue.length < MIN_LENGTH) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(MIN_LENGTH)].join(' '));
                     return;
                 }
                 if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
@@ -97,6 +106,36 @@ define(
                         return;
                     }
                     if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
+                }
+            }
+        }
+
+        var checkLoginField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(fieldValue.length < LOGIN_MIN_LENGTH) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(LOGIN_MIN_LENGTH)].join(' '));
+                    return;
+                }
+                if(!validateLogin(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(fieldValue.length < MIN_LENGTH) {
+                        errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
+                        return;
+                    }
+                    if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
                 }
             }
         }
@@ -255,6 +294,19 @@ define(
             }
         }
 
+        var checkPasswordField = function(errorArray, required, fieldValue, fieldName){
+            if(!fieldValue){
+                errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                return;
+            }
+        }
+
+        var comparePasswords = function(errorArray, password, confirmPass){
+            if(password && confirmPass)
+                if(password !== confirmPass)
+                    errorArray.push(errorMessages.passwordsNotMatchMsg);
+        }
+
         var checkFirstDateIsGreater = function(errorArray, greaterDate, greaterDateName, smallerDate, smallerDateName){
             if((new Date(greaterDate) < new Date(smallerDate))){
                  errorArray.push(smallerDateName + " can not be greater than " + greaterDateName);
@@ -263,6 +315,9 @@ define(
 
         }
         return {
+            comparePasswords:comparePasswords,
+            checkPasswordField:checkPasswordField,
+            checkLoginField:checkLoginField,
             checkMoneyField:checkMoneyField,
             checkFirstDateIsGreater:checkFirstDateIsGreater,
             checkNotesField:checkNotesField,

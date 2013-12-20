@@ -107,7 +107,7 @@ define([
 						}]
 
                 });
-				common.populateDepartments(App.ID.parentDepartment, "/Departments");
+				common.populateParentDepartments(App.ID.parentDepartment, "/Departments");
 				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
 				common.populateUsersForGroups('#sourceUsers');
                 return this;

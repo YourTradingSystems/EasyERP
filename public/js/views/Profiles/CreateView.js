@@ -16,7 +16,6 @@ define([
                 this.render();
             },
             events:{
-                "click #top-bar-nextBtn": "nextForm",
                 'click .viewAll': 'toggleView',
                 'click .writeAll': 'toggleWrite',
                 'click .deleteAll': 'toggleDelete',
@@ -54,30 +53,26 @@ define([
                     throw new Error("No profile found after filter: ModulesTableView -> filterCollection");
             },
             saveItem: function(){
-                this.model.set({
-                    profileName: $.trim(this.$el.find('#profileName').val()),
-                    profileDescription: $.trim(this.$el.find('#profileDescription').val())
-                }, {validate:true});
-                if(!this.model.isValid())
-                    return;
-                /*var stringModel = JSON.stringify(this.model.toJSON());
-                window.localStorage.setItem('tempModel', stringModel);*/
-
                 var choice = $('input[name=group]:checked').val();
                 switch(choice){
                     case "new":
-                        this.selectedProfile = this.profilesCollection.get('1387181747000');
+                        this.selectedProfile = this.profilesCollection.findWhere({profileName:"baned"});
                         break;
                     case "base":
                         var profileId = $('#profilesDd option:selected').val();
                         this.selectedProfile = this.profilesCollection.get(profileId);
                         break;
                 }
+                if(!this.selectedProfile)
+                    throw new Error('Base profile is undefined');
+
                 var self = this;
-				this.model.set({
-					profileAccess: this.selectedProfile.get('profileAccess')
-				});
-				this.model.save({},{
+
+				this.model.save({
+                    profileName: $.trim(this.$el.find('#profileName').val()),
+                    profileDescription: $.trim(this.$el.find('#profileDescription').val()),
+                    profileAccess: this.selectedProfile.get('profileAccess')
+                },{
 					headers:{
 						mid:39
 					},
