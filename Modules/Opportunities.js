@@ -1,4 +1,4 @@
-var Opportunities = function (logWriter, mongoose, customer) {
+var Opportunities = function (logWriter, mongoose, customer, workflow) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var opportunitiesSchema = mongoose.Schema({
         isOpportunitie: { type: Boolean, default: false },
@@ -315,9 +315,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
     };
 
     function update(_id, data, res) {
-        try {
-            delete data._id;
-            delete data.createdBy;
+        function updateOpp() {
             var createPersonCustomer = function (company) {
                 if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
                     var _person = {
@@ -366,7 +364,7 @@ var Opportunities = function (logWriter, mongoose, customer) {
             }
             if (data.customer && data.customer._id) {
                 data.customer = data.customer._id;
-            } 
+            }
             if (data.salesPerson && data.salesPerson._id) {
                 data.salesPerson = data.salesPerson._id;
             }
@@ -439,6 +437,22 @@ var Opportunities = function (logWriter, mongoose, customer) {
                     res.send(200, { success: 'Opportunities updated success' });
                 }
             });
+        };
+
+        try {
+            delete data._id;
+            delete data.createdBy;
+            if (data.workflow && data.workflow.wId == 'Lead') {
+                workflow.workflow.findOne({ wId: 'Opportunity' }, function(err, _workflow) {
+                    if (_workflow) {
+                        data.workflow._id = _workflow._id;
+                    }
+                    updateOpp();
+                });
+            } else {
+                updateOpp();
+            }
+            
         }
         catch (exception) {
             console.log(exception);

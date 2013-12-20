@@ -158,7 +158,8 @@ var Workflow = function (logWriter, mongoose) {
                 logWriter.log("Workflow.js  create " + exception);
                 response.send(500, { error: "Can't find Workflow" });
             }
-        }
+        },
+        workflow:workflow
     };
 };
 

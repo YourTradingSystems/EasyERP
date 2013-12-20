@@ -13,7 +13,7 @@ var requestHandler = function (fs, mongoose) {
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
 
     function getModules(req, res) {
