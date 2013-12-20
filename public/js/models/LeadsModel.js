@@ -42,6 +42,10 @@
                 id: '',
                 name: ''
             },
+            nextAction: {
+                date: null,
+                desc: ''
+            },
             address: {
                 street: '',
                 city: '',

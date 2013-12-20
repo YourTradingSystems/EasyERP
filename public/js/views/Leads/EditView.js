@@ -127,6 +127,8 @@ define([
                 this.currentModel.save({
                     name: name,
                     company: company,
+                    campaign: this.$el.find('#campaignDd option:selected').val(),
+                    source: this.$el.find('#sourceDd option:selected').val(),
                     customer: idCustomer,
                     address: address,
                     salesPerson: salesPersonId,
@@ -208,7 +210,8 @@ define([
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
                 common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
                 this.delegateEvents(this.events);
-
+                $('#campaignDd').val(this.currentModel.get('campaign'));
+                $('#sourceDd').val(this.currentModel.get('source'));
                 return this;
             }
 

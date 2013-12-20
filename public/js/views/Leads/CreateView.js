@@ -43,7 +43,6 @@ define([
                 var $company = this.$("#company");
                 var mid = 39;
                 var name = $.trim(this.$el.find("#name").val());
-
                 var company = {
                     name: $company.val(),
                     id: $company.data('id')
@@ -84,6 +83,8 @@ define([
                 this.model.save({
                     name: name,
                     company: company,
+                    campaign: $('#campaignDd option:selected').val(),
+                    source: $('#sourceDd option:selected').val(),
                     customer: idCustomer,
                     address: address,
                     salesPerson: salesPersonId,
