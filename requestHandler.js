@@ -198,7 +198,7 @@ var requestHandler = function (fs, mongoose) {
         try {
             console.log("Requst getPersonsForDd is success");
             if (req.session && req.session.loggedIn) {
-                employee.getForDd(res);
+                employee.getForDd(req.session.uId, res);
             } else {
                 res.send(401);
             }

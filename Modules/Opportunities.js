@@ -55,7 +55,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-        }
+        },
+        campaign: { type: String, default: '' },
+        source: { type: String, default: '' }
     }, { collection: 'Opportunities' });
 
     var opportunitie = mongoose.model('Opportunities', opportunitiesSchema);
@@ -206,6 +208,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
                     }
                     if (data.uId) {
                         _opportunitie.createdBy.user = data.uId;
+                    }
+                    if (data.campaign) {
+                        _opportunitie.campaign = data.campaign;
+                    }
+                    if (data.source) {
+                        _opportunitie.source = data.source;
                     }
                     _opportunitie.save(function (err, result) {
                         if (err) {

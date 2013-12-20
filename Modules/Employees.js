@@ -321,10 +321,10 @@ var Employee = function (logWriter, mongoose) {
         });
     };
 
-    function getForDd(response) {
+    function getForDd(uId, response) {
         var res = {};
         res['data'] = [];
-        var query = employee.find();
+        var query = employee.find({ relatedUser: uId });
         query.where('isEmployee', true);
         query.select('_id name ');
         query.sort({ 'name.first': 1 });
