@@ -20,6 +20,7 @@ define([
                 this.collection = options.collection;
                 this.collection.url = '/Workflows';
                 this.collection.bind('reset', _.bind(this.render, this));
+                this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.render = _.after(1, this.render);
             },
 
@@ -77,8 +78,7 @@ define([
 
                 var itemIndex = Custom.getCurrentII() - 1;
 
-                if (itemIndex != -1) {
-                    var currentModel = this.collection.models[itemIndex];
+
 
                     var mid = 39;
 
@@ -98,13 +98,13 @@ define([
                         value.push({ name: names[i], status: statuses[i], sequence: i });
                     }
 
-                    currentModel.set({
+                    this.currentModel.set({
                         wId: wId,
                         name: name,
                         value: value
                     });
 
-                    currentModel.save({}, {
+                    this.currentModel.save({}, {
                         headers: {
                             mid: mid
                         },
@@ -116,19 +116,15 @@ define([
                             Backbone.history.navigate("easyErp", { trigger: true });
                         }
                     });
-                }
+
             },
 
             render: function () {
                 var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
                 var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                } else {
                     var currentModel = this.collection.models[itemIndex];
                     this.$el.html(_.template(EditTemplate, { model: currentModel.toJSON(), relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds, workflowsCollection: this.collection }));
-                }
+
                 for (var i = 0; i < currentModel.get("value").length; i++) {
                     $("#allNamesStatuses").append(_.template(editList, { value: currentModel.get("value")[i], relatedStatusesCollection: this.relatedStatusesCollection }));
                 }

@@ -28,6 +28,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
             "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
             "click #workflowNames span": "chooseWorkflowDetailes",
             "click td .edit": "edit",
+            "click td .delete": "deleteItem",
             "click a:contains('Cancel')": "cancel",
             "click a:contains('Save')": "save"
         },
@@ -54,7 +55,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
                     mid: 39
                 },
                 success: function () {
-                    Backbone.history.navigate("#home/content-Workflows", { trigger: true });
+                    Backbone.history.navigate("#easyErp/Workflows", { trigger: true });
                 }
             });
         },
