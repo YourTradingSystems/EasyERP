@@ -115,7 +115,7 @@
                 var jobPositionId = this.$el.find("#jobPositionDd option:selected").val() ? this.$el.find("#jobPositionDd option:selected").val() : null;
 
                 var data = {
-                    subject: this.$el.find("#subject").val(),
+                    //subject: this.$el.find("#subject").val(),
                     imageSrc: this.imageSrc,
                     name: {
                         first: this.$el.find("#first").val(),

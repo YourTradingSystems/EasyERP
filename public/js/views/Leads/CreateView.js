@@ -56,16 +56,13 @@ define([
                 });
 
                 var salesPersonId = this.$("#salesPerson option:selected").val();
-
                 var salesTeamId = this.$("#salesTeam option:selected").val();
-
                 var first = $.trim(this.$el.find("#first").val());
                 var last = $.trim(this.$el.find("#last").val());
                 var contactName = {
                     first: first,
                     last: last
                 };
-
                 var email = $.trim(this.$el.find("#email").val());
                 var func = $.trim(this.$el.find("#func").val());
 
@@ -78,15 +75,10 @@ define([
                     fax: fax
                 };
                 var workflow = this.$("#workflowsDd option:selected").data('id');
-
                 var priority = $("#priorityDd").val();
-
                 var internalNotes = $.trim(this.$el.find("#internalNotes").val());
-
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
-
                 var optout = (this.$el.find("#optout").is(":checked")) ? true : false;
-
                 var reffered = $.trim(this.$el.find("#reffered").val());
 
                 this.model.save({

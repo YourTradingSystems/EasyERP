@@ -24,7 +24,6 @@ function (common, Validation) {
         validate: function(attrs){
             var errors = [];
 
-            Validation.checkNameField(errors, true, attrs.subject, "Subject");
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
             Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
