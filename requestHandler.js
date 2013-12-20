@@ -1,5 +1,6 @@
 var requestHandler = function (fs, mongoose) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
+        department = require("./Modules/Department.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
         access = require("./Modules/additions/access.js")(profile.profile, users.User),
@@ -10,7 +11,6 @@ var requestHandler = function (fs, mongoose) {
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
-        department = require("./Modules/Department.js")(logWriter, mongoose, employee.employee),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer),
@@ -365,6 +365,7 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 39, function (access) {
                 if (access) {
+                    data.uId = req.session.uId;
                     project.get(data, res);
                 } else {
                     res.send(403);

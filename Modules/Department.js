@@ -1,4 +1,4 @@
-var Department = function (logWriter, mongoose, employeeModel, event) {
+var Department = function (logWriter, mongoose) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },

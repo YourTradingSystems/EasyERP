@@ -53,9 +53,6 @@ var Users = function (logWriter, mongoose) {
             function savetoBd(data) {
                 try {
                     _user = new User();
-                    if (data.isUser) {
-                        _user.isUser = data.isUser;
-                    }
                     if (data.profile) {
                         _user.profile = data.profile;
                     }
