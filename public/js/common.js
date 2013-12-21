@@ -290,9 +290,10 @@
             });
         };
 
-        var populateDepartments = function (selectId, url, model, callback) {
+        var populateDepartments = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
             var self = this;
+			if (!removeSelect)
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
@@ -438,9 +439,10 @@
                 if (callback) callback();
             });
         }
-        var populateUsers = function (selectId, url, model, callback) {
+        var populateUsers = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
             var self = this;
+			if (!removeSelect)
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
