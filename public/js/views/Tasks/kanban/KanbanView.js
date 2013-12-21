@@ -129,7 +129,6 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
 
                 },
                 stop: function (event, ui) {
-                    debugger;
                     var id = ui.item.attr('data-id');
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");

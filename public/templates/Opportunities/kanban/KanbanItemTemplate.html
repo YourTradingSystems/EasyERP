@@ -1,7 +1,7 @@
 <div class="inner" id="<%=model._id%>" data-id="<%=model._id%>">
     <div class="opportunity-header">
         <h4 class="bold left" style="max-width:56%"><%=model.name%></h4>
-        <h3>$<%=(model.expectedRevenue.value).toString().replace(/(\d{1,3})(?=(?:\d{3})+$)/g, '$1 ')%></h3>        
+        <h3>$<%=(model.expectedRevenue.value) ? (model.expectedRevenue.value).toString().replace(/(\d{1,3})(?=(?:\d{3})+$)/g, '$1 ') : ''%></h3>        
         <!--<div class="dropDown">
             <a href="#">
                 <img hidden="hidden" src="./images/downCircleWhite.png" alt="Down" />

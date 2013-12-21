@@ -9,19 +9,19 @@
       <div class="inner">
         <div class="half-block left">
           <dl class="person-info">
-            <dt>Project :</dt>
+            <dt>Project </dt>
             <dd><a id="<%=project._id%>" href="#"><%=project.projectName%></a></dd>
-            <dt>Assigned to :</dt>
+            <dt>Assigned to </dt>
             <dd><%=(assignedTo) ? assignedTo.name.first + ' ' + assignedTo.name.last : ''%></dd>
-            <dt>Workflow :</dt>
+            <dt>Workflow </dt>
             <dd><%=(workflow) ? workflow.name : ''%></dd>
           </dl>
         </div>
         <div class="half-block left">
           <dl class="person-info">
-            <dt>Deadline :</dt>
+            <dt>Deadline </dt>
             <dd><%=deadline%></dd>
-            <dt>Tags :</dt>
+            <dt>Tags </dt>
             <dd><%=tags%></dd>
           </dl>
         </div>
@@ -44,23 +44,23 @@
       <div class="inner">
       <div class="half-block left">
         <dl class="person-info">
-          <dt>Priority :</dt>
+          <dt>Priority </dt>
           <dd><%=extrainfo.priority%></dd>
-          <dt>Sequense :</dt>
+          <dt>Sequense </dt>
           <dd><%=extrainfo.sequence%></dd>
-          <dt>Customer :</dt>
+          <dt>Customer </dt>
           <dd><%=(extrainfo.customer) ? extrainfo.customer.name.first + ' ' + extrainfo.customer.name.last : ''%></dd>
-          <dt>Logged :</dt>
+          <dt>Logged </dt>
           <dd><%=logged%></dd>
         </dl>
       </div>
       <div class="half-block left">
         <dl class="person-info">
-          <dt>Estimated :</dt>
+          <dt>Estimated </dt>
           <dd><%=estimated%></dd>
-          <dt>Starting Date :</dt>
+          <dt>Starting Date </dt>
           <dd><%=extrainfo.StartDate%></dd>
-          <dt>Ending Date :</dt>
+          <dt>Ending Date </dt>
           <dd><%=extrainfo.EndDate%></dd>
         </dl>
       </div>

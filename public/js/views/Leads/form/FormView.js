@@ -30,18 +30,17 @@ define([
                             var self = this;
                             var id = $("form").data("id");
                             var createCustomer = ($("select#createCustomerOrNot option:selected").val()) ? true : false;
-                            that.formModel.set({
+                            that.formModel.save({
                                 isOpportunitie: true,
                                 createCustomer: createCustomer
-                            });
-                            that.formModel.save({}, {
+                            }, {
                                 headers: {
                                     mid: 39
                                 },
                                 success: function (model) {
                                     $(self).dialog("close");
-                                    that.opportunitiesCollection.add(model);
-                                    Backbone.history.navigate("easyErp/Opportunities/form/" + model.id, { trigger: true });
+                                    //that.opportunitiesCollection.add(model);
+                                    Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                                 }
 
                             });

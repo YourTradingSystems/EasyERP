@@ -176,7 +176,6 @@ define([
                     return {checked:this.checked,index:$(this).closest("tr").attr("data-i")};
                 }).get();
                 $("#modulesAccessTable tr th input").prop("disabled",true);
-				alert(readAccess[0])
                 for(var i= 0, len = readAccess.length; i < len; i++){
                     jsonProfile.profileAccess[readAccess[i].index].access.read = readAccess[i].checked;
                     jsonProfile.profileAccess[writeAccess[i].index].access.editWrite = writeAccess[i].checked;
