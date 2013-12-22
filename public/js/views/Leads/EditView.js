@@ -206,7 +206,8 @@ define([
                 });
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
                 common.populateDepartments(App.ID.salesTeam, "/Departments", this.currentModel.toJSON());
-                common.populateEmployeesDd(App.ID.salesPerson, "/Employees", this.currentModel.toJSON());
+                //common.populateEmployeesDd(App.ID.salesPerson, "/Employees", this.currentModel.toJSON());
+                common.populateEmployeesDd(App.ID.salesPerson, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
                 common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
                 this.delegateEvents(this.events);
