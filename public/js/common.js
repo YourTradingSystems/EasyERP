@@ -411,13 +411,13 @@
                         options = $.map(response.data, function (item) {
                             return model.workflow == item._id ?
                                 $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
-                                $('<option/>').val(item._id).text(item.name);
+                                $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
                         });
                     } else {
                         options = $.map(response.data, function (item) {
                             return model.workflow._id === item._id ?
                                 $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
-                                $('<option/>').val(item._id).text(item.name);
+                                $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
                         });
 
                     }
