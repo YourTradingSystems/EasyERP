@@ -52,13 +52,15 @@
 			  <div class="clearfix"></div>
 			</div>
 			<div class="dialog-tabs-item">
+
 			  <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
               <div class="addUserDialog">
+
 				<div class="formTitle">
 				  <h3 class="left">Choose Users</h3>
 				  <div class="clearfix"></div>
 				</div>
-                <ul id="sourceUsersProject">
+                <ul id="sourceUsers" class="source">
                   
                 </ul>
 
@@ -67,21 +69,30 @@
 				  <br/>
                   <button id="removeUsers">remove</button>
 				</div>
-                <ul id="targetUsers">
+                <ul id="targetUsers" class="target">
                   
                 </ul>
 
-				<div class="clearfix">
-				</div>
+				<div class="clearfix"></div>
               </div>
               <div class="addGroupDialog">
 				<div class="formTitle">
 				  <h3 class="left">Choose Groups</h3>
 				  <div class="clearfix"></div>
 				</div>
+                <ul id="sourceGroups" class="source">
+                  
+                </ul>
 
-				<select id="allGroup" multiple="multiple">
-				</select>
+				<div class="left">
+                  <button id="addUsersGroups">add</button>
+				  <br/>
+                  <button id="removeUsersGroups">remove</button>
+				</div>
+                <ul id="targetGroups" class="target">
+                  
+                </ul>
+				<div class="clearfix"></div>
               </div>
 
 			  <table class="groupsAndUser">
@@ -89,41 +100,11 @@
 				  <th>Groups and Users</th><th></th>
 				</tr>
 			  </table>
-			  <!--			<div class="half-block left">
-							<dl class="profile-edit-info">
-							  <dt><input type="radio" name="canRead" id="owner" checked><label for="owner">Owner</label></dt><dd>
-								<select id="allUsers">
-								</select>
-							  </dd>
-							  <dt><label for="usereditDd">Users Can Edit Project</label></dt>
-							  <dd>
-								<select id="userEditDd" size="3" multiple>
-
-								</select>
-
-							  </dd>
-							</dl>
-
-			  </div>
-			  <div class="half-block left">
-				<dl class="profile-edit-info">
-				  <dt><input type="radio" name="canRead" id="everyone"><label for="everyone">Everyone</label></dt><dd>&nbsp;</dd>
-				  <dt><input type="radio" name="canRead" id="group"><label for="group">Group</label></dt><dd>
-					<select id="allGroup" multiple="multiple">
-					</select>
-				  </dd>
-				</dl>
-			  </div>
-
-			  <div class="clearfix"></div>
-			  -->
 			  <div class="clearfix"></div>
 			</div>
 		  </div>
 		  <div class="clearfix"></div>
 		</div>
-	  </div>
-	  <div>
 	  </div>
 	</fieldset>
   </form>

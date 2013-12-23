@@ -17,7 +17,7 @@ define([
             },
 
             events: {
-                'click #sourceUsersProject': 'a',
+				'click #workflowNamesDd': 'chooseUser',
                 "submit form": "formSubmitHandler",
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler',
@@ -31,18 +31,16 @@ define([
 			    'click #removeUsers':'removeUsers'
 
             },
-			a:function(e){
-				alert();
+			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
 			},
             addUsers: function (e) {
                 e.preventDefault();
-				alert();
-                $('#targetUsers').append($('#sourceUsers .choosen'));
+				$(e.target).closest(".ui-dialog").find(".target").append($(e.target).closest(".ui-dialog").find(".source .choosen"));
             },
             removeUsers: function (e) {
-                e.preventDefault();
-                $('#sourceUsers').append($('#targetUsers .choosen'));
+                e.preventDefault();
+				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).closest(".ui-dialog").find(".target .choosen"));
             },
 
 			addToTarget:function(e){
@@ -63,23 +61,27 @@ define([
 			},
 			addUserToTable:function(id){
 				$(".groupsAndUser").show();
-				$(id).find("option:selected").each(function(){
-					$(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).val()+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
-					$(this).remove();
+				$(".groupsAndUser tr").each(function(){
+					if ($(this).data("type")==id.replace("#","")){
+						$(this).remove();
+					}
+				});
+				$(id).find("li").each(function(){
+					$(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
 				});
 			},
 			addUser:function(e){
 				var self = this;
 				$(".addUserDialog").dialog({
-                    dialogClass: "add-user-dialog",
-                    width: "250px;",
+                    dialogClass: "add-user-dialoga",
+                    width: "315px",
                     buttons:{
                         save:{
                             text:"Choose",
                             class:"btn",
 
                             click: function(){
-								click: self.addUserToTable("#allUsers")
+								click: self.addUserToTable("#targetUsers")
 								$( this ).dialog( "close" );
                             }
 
@@ -94,18 +96,23 @@ define([
                     }
 
 				});
+				$("#sourceUsers li").unbind().on("click",this.chooseUser);
+				$("#targetUsers li").unbind().on("click",this.chooseUser);
+				$("#addUsers").unbind().on("click",this.addUsers);
+				$("#removeUsers").unbind().on("click",this.removeUsers);
+
 			},
 			addGroup:function(e){
 				var self = this;
 				$(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
-                    width: "100px;",
+                    width: "315px;",
                     buttons:{
                         save:{
                             text:"Choose",
                             class:"btn",
                             click: function(){
-								self.addUserToTable("#allGroup")
+								self.addUserToTable("#targetGroups")
 								$( this ).dialog( "close" );											  
 							}
                         },
@@ -119,6 +126,11 @@ define([
                     }
 
 				});
+				$("#sourceGroups li").unbind().on("click",this.chooseUser);
+				$("#targetGroups li").unbind().on("click",this.chooseUser);
+				$("#addUsersGroups").unbind().on("click",this.addUsers);
+				$("#removeUsersGroups").unbind().on("click",this.removeUsers);
+
 			},
 
 			changeTab:function(e){
@@ -172,10 +184,10 @@ define([
 				var usersId=[];
 				var groupsId=[];
 				$(".groupsAndUser tr").each(function(){
-					if ($(this).data("type")=="allUsers"){
+					if ($(this).data("type")=="targetUsers"){
 						usersId.push($(this).data("id"));
 					}
-					if ($(this).data("type")=="allGroup"){
+					if ($(this).data("type")=="targetGroups"){
 						groupsId.push($(this).data("id"));
 					}
 
@@ -233,11 +245,11 @@ define([
                         }
                     }
                 });
-				common.populateUsersForGroups('#sourceUsersProject');
+				common.populateUsersForGroups('#sourceUsers');
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.populateCustomers(App.ID.customerDd, "/Customer");
 //                common.populateUsers("#allUsers", "/Users",null,null,true);
-//                common.populateDepartments("#allGroup", "/Departments",null,null, true);
+                common.populateDepartmentsList("#sourceGroups", "/Departments",null,null);
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 this.delegateEvents(this.events);

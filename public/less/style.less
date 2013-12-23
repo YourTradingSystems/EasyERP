@@ -3832,12 +3832,14 @@ ul.dialog-tabs{
 		}
 	}
 }
-#sourceUsers,#targetUsers{
+#sourceUsers,#targetUsers,
+#sourceGroups,#targetGroups{
 	width:100px;
 	height:100px;
 	margin:5px;
 	float:left;
 	border:1px solid silver;
+	overflow-x:hidden;
 	li{
 		cursor:pointer;
 		&.choosen{
@@ -3922,7 +3924,7 @@ ul.dialog-tabs{
 }
 .addUserDialog, .addGroupDialog{
 	display:none;
-	#allUsers, #targetUsers, #allGroup{
+	#allUsers, #allGroup{
 		width:180px;
 		height:200px;
 	}
