@@ -77,7 +77,7 @@ define([
                     isEmployee = true;
                     self.contentType = "Employees";
                 }
-                var subject = $.trim($("#subject").val());
+                //var subject = $.trim($("#subject").val());
                 var first = $.trim($("#first").val());
                 var last = $.trim($("#last").val());
                 var name = {
@@ -112,7 +112,7 @@ define([
 
                 this.model.save({
                     isEmployee: isEmployee,
-                    subject: subject,
+                    //subject: subject,
                     imageSrc: this.imageSrc,
                     name: name,
                     workEmail: wemail,

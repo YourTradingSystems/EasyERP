@@ -8,9 +8,11 @@ var Project = function (logWriter, mongoose) {
         privacy: { type: String, default: 'All Users' },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
-        teams: {
-            users: { type: Array, default: [] },
-            Teams: { type: Array, default: [] }
+        hwoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
+        groups: {
+            owner: { type: ObjectId, ref: 'Users', default: null },
+            users: [{ type: ObjectId, ref: 'Users', default: null }],
+            group: [{ type: ObjectId, ref: 'Department', default: null }]
         },
         info: {
             StartDate: Date,
@@ -25,13 +27,13 @@ var Project = function (logWriter, mongoose) {
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
         progress: { type: Number, default: 0 },
-		createdBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date, default: Date.now}
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
 		},
-		editedBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date}
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date }
 		}
     }, { collection: 'Project' });
 
@@ -64,7 +66,7 @@ var Project = function (logWriter, mongoose) {
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date}
+            date: { type: Date }
         }
     }, { collection: 'Tasks' });
 
@@ -357,7 +359,7 @@ var Project = function (logWriter, mongoose) {
                         _project.projectShortDesc = data.projectShortDesc;
                     }
                     if (data.uId) {
-                        _project.createdBy.user=data.uId;
+                        _project.createdBy.user = data.uId;
                     }
 
                     if (data.task) {
@@ -369,8 +371,8 @@ var Project = function (logWriter, mongoose) {
                     if (data.privacy) {
                         _project.privacy = data.privacy;
                     }
-                    if (data.teams) {
-                        _project.teams = data.teams;
+                    if (data.groups) {
+                        _project.groups = data.groups;
                     }
                     if (data.info) {
                         if (data.info.StartDate) {
@@ -442,7 +444,46 @@ var Project = function (logWriter, mongoose) {
     function get(data, response) {
         var res = {};
         res['data'] = [];
-        var query = project.find({});
+        //project.aggregate(
+        //    {
+        //        $group: {
+        //            _id: "$groups.group",
+        //            object: {
+        //                 $addToSet: {
+        //                     _id: "$_id",
+
+        //                 }
+        //            }
+        //        }
+        //    }
+        //);
+        var query = project.find().
+        or([
+            {
+                'hwoCanRW': 'everyOne'
+            },
+            {
+                $and: [
+                    { 'hwoCanRW': 'owner' },
+                    { 'groups.owner': data.uId }
+                ]
+            },
+            {
+                $or: [{
+                    $and: [
+                        { 'hwoCanRW': 'group' },
+                        { 'groups.users': data.uId }
+                    ]
+                },
+                    {
+                        $and: [
+                            { 'hwoCanRW': 'group' },
+                            { 'groups.users': data.uId }
+                        ]
+                    }
+                ]
+            }
+        ]);
         query.populate("projectmanager customer task").populate('workflow').
                   populate('createdBy.user').
                   populate('editedBy.user');
@@ -595,7 +636,7 @@ var Project = function (logWriter, mongoose) {
             function saveTaskToBd(data, n) {
                 try {
                     console.log(data);
-                    _task = new tasks({taskCount: n});
+                    _task = new tasks({ taskCount: n });
                     _task.summary = data.summary;
                     if (data.project) {
                         _task.project = data.project;
@@ -824,19 +865,19 @@ var Project = function (logWriter, mongoose) {
         var showMore = false;
 
         var queryAggregate = (data.parrentContentId) ?
-            tasks.aggregate({ $match: { project : newObjectId(data.parrentContentId) } },{ $group:{_id:"$workflow",taskId:{$push:"$_id"},remaining: { $sum: "$remaining"}}}) :
-            tasks.aggregate({ $group: {_id: "$workflow",taskId:{$push:"$_id"},remaining: { $sum: "$remaining"}}});
+            tasks.aggregate({ $match: { project: newObjectId(data.parrentContentId) } }, { $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } }) :
+            tasks.aggregate({ $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
         queryAggregate.exec(
-            function (err,responseTasks) {
+            function (err, responseTasks) {
                 if (!err) {
 
-                    var responseTasksArray =[];
+                    var responseTasksArray = [];
                     var columnValue = data.count;
                     var page = data.page;
 
-                    responseTasks.forEach(function(value){
-                        value.taskId.forEach(function(idTask,taskIndex){
-                            if (((page-1)*columnValue <= taskIndex) && (taskIndex < (page-1)*columnValue + columnValue )) {
+                    responseTasks.forEach(function (value) {
+                        value.taskId.forEach(function (idTask, taskIndex) {
+                            if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
                                 responseTasksArray.push(idTask);
                             }
                         });
@@ -846,7 +887,7 @@ var Project = function (logWriter, mongoose) {
                             remainingOfTasks: value.remaining
                         };
                         optionsArray.push(myObj);
-                        if (value.taskId.length > ((page-1)*columnValue + columnValue)) {
+                        if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
                             showMore = true;
                         }
                     });

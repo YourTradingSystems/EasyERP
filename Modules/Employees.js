@@ -251,6 +251,7 @@ var Employee = function (logWriter, mongoose) {
                                 res.send(500, { error: 'Employees.save BD error' });
                             } else {
                                 res.send(201, { success: 'A new Employees create success' });
+                                console.log(result);
                             }
                         } catch (error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
@@ -260,6 +261,8 @@ var Employee = function (logWriter, mongoose) {
                     console.log(error);
                     logWriter.log("Employees.js create savetoBd " + error);
                     res.send(500, { error: 'Employees.save  error' });
+                    console.log('======================Reguest');
+
                 }
             }
         }
@@ -318,10 +321,10 @@ var Employee = function (logWriter, mongoose) {
         });
     };
 
-    function getForDd(response) {
+    function getForDd(uId, response) {
         var res = {};
         res['data'] = [];
-        var query = employee.find();
+        var query = employee.find({ relatedUser: uId });
         query.where('isEmployee', true);
         query.select('_id name ');
         query.sort({ 'name.first': 1 });

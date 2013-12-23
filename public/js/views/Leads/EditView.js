@@ -22,6 +22,10 @@ define([
                 "click .breadcrumb a, #cancelCase, #reset": "changeWorkflow",
                 "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows",
+                "change #workflowNames": "changeWorkflows",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect",
                 'keydown': 'keydownHandler'
             },
 
@@ -108,7 +112,7 @@ define([
                     fax: fax
                 };
 
-                var workflow = this.$("#workflowsDd option:selected").data('id')
+                var workflow = this.$("#workflowsDd option:selected").data('id');
                 workflow = workflow ? workflow : null;
                 var priority = $("#priorityDd option:selected").val();
 
@@ -127,6 +131,8 @@ define([
                 this.currentModel.save({
                     name: name,
                     company: company,
+                    campaign: this.$el.find('#campaignDd option:selected').val(),
+                    source: this.$el.find('#sourceDd option:selected').val(),
                     customer: idCustomer,
                     address: address,
                     salesPerson: salesPersonId,
@@ -177,13 +183,48 @@ define([
                         });
                 }
             },
+			showNewSelect:function(e){
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li>"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				
+			},
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				this.hideNewSelect();
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				return false;
+				
+			},
+			chooseOption:function(e){
+				var k = $(e.target).parent().find("li").index($(e.target));
+				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			},
+
+			styleSelect:function(id){
+				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				$(id).hide();
+			},
+
             render: function () {
                 var formString = this.template(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-leads-dialog",
                     width: 900,
-                    height: 650,
                     buttons: {
                         save: {
                             text: "Save",
@@ -202,13 +243,16 @@ define([
                         }
                     }
                 });
-                common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
-                common.populateDepartments(App.ID.salesTeam, "/Departments", this.currentModel.toJSON());
-                common.populateEmployeesDd(App.ID.salesPerson, "/Employees", this.currentModel.toJSON());
-                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON());
-                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
+                common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.customerDd);});
+                common.populateDepartments(App.ID.salesTeam, "/Departments", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.salesTeam);});
+                common.populateEmployeesDd(App.ID.salesPerson, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.salesPerson);});
+                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.priorityDd);});
+                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+				this.styleSelect("#sourceDd");
+				this.styleSelect("#campaignDd");
                 this.delegateEvents(this.events);
-
+                $('#campaignDd').val(this.currentModel.get('campaign'));
+                $('#sourceDd').val(this.currentModel.get('source'));
                 return this;
             }
 

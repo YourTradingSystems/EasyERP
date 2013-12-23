@@ -1,10 +1,11 @@
 define([
     'text!templates/Departments/list/ListHeader.html',
     'views/Departments/CreateView',
-    'views/Departments/list/ListItemView'
+    'views/Departments/list/ListItemView',
+    'views/Departments/EditView',
 ],
 
-function (ListTemplate, CreateView, ListItemView) {
+function (ListTemplate, CreateView, ListItemView, EditView) {
     var DepartmentsListView = Backbone.View.extend({
         el: '#content-holder',
 
@@ -18,15 +19,76 @@ function (ListTemplate, CreateView, ListItemView) {
         events: {
             "click #showMore": "showMore",
             "click .checkbox": "checked",
-            "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
+            "click #groupList li": "gotoForm",
+            "click #groupList .edit": "editItem",
+            "click #groupList .trash": "deleteItem"
+        },
+/*		createDepartmentListRow:function(department,index,className){
+			return ('<tr class="'+className+'" data-id="'+department._id+'">'+
+				'<td><input type="checkbox" value="department._id" class="checkbox"/></td>'+
+				'<td>'+index+'</td>'+
+				'<td>'+department.departmentName+'</td>'+
+				'<td>'+((department.departmentManager) ? department.departmentManager.name.first + ' ' + department.departmentManager.name.last : '')+'</td>'+
+				'<td><a href="#">'+department.users.length+'</a></td>'+
+				'</tr>');
+		},*/
+		createDepartmentListRow:function(department,index,className){
+		    return ('<li class="' + className + '" data-id="' + department._id + '" data-level="' + department.nestingLevel + '"><span class="dotted-line"></span><span class="text">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
+		},
+        editItem: function(e){
+            //create editView in dialog here
+            new EditView({myModel:this.collection.get($(e.target).closest("li").data("id"))});
+			return false;
+        },
+        deleteItem: function(e){
+			var myModel=this.collection.get($(e.target).closest("li").data("id"))
+            var mid = 39;
+            event.preventDefault();
+            var self = this;
+            var answer = confirm("Realy DELETE items ?!");
+            if (answer == true) {
+                myModel.destroy({
+                    headers: {
+                        mid: mid
+                    },
+                    success: function () {
+						self.render();
+                    },
+                    error: function () {
+                        Backbone.history.navigate("home", { trigger: true });
+                    }
+                });
+            }
+
+			return false;
         },
 
         render: function () {
-
             console.log('Departments render');
             $('.ui-dialog ').remove();
             this.$el.html(_.template(ListTemplate));
-            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
+//            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
+			var departments = this.collection.toJSON();
+			var parentDepartments =  jQuery.grep(departments, function( item ) {
+				return (!item.parentDepartment);
+			});
+			var childDepartments =  jQuery.grep(departments, function( item ){
+				return (item.parentDepartment);
+			});
+
+			for (var i=0;i<parentDepartments.length;i++){
+				this.$el.find("#groupList").append(this.createDepartmentListRow(parentDepartments[i],i+1,"parent"));
+				var k=0;
+				for (var j=childDepartments.length-1;j>=0;j--){
+					if (childDepartments[j].parentDepartment._id==parentDepartments[i]._id){
+						k++;
+						this.$el.find("#groupList").append(this.createDepartmentListRow(childDepartments[j],k,"child"));
+						childDepartments.splice(j,1);
+					}
+					
+				}
+			}
+//            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
                 if ($("input.checkbox:checked").length > 0)
@@ -34,8 +96,6 @@ function (ListTemplate, CreateView, ListItemView) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
-            this.startNumber += this.collection.length;
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
         },
 
         showMore: function () {
@@ -49,7 +109,7 @@ function (ListTemplate, CreateView, ListItemView) {
         },
         gotoForm: function (e) {
             App.ownContentType = true;
-            var id = $(e.target).closest("tr").data("id");
+            var id = $(e.target).closest("li").data("id");
             window.location.hash = "#easyErp/Departments/form/" + id;
         },
 

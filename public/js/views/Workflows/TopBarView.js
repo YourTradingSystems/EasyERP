@@ -13,9 +13,10 @@ define([
             events: {
                 "click a.changeContentView": 'changeContentViewType',
                 "click ul.changeContentIndex a": 'changeItemIndex',
-                "click #top-bar-deleteBtn": "deleteEvent",
                 "click #top-bar-saveBtn": "saveEvent",
-                "click #top-bar-discardBtn": "discardEvent"
+                "click #top-bar-discardBtn": "discardEvent",
+                "click #top-bar-editBtn": "editEvent",
+                "click #top-bar-createBtn": "createEvent"
             },
 
             changeContentViewType: Custom.changeContentViewType,
@@ -24,20 +25,12 @@ define([
 
             initialize: function (options) {
                 this.actionType = options.actionType;
-                if (this.actionType !== "Content")
-                    Custom.setCurrentVT("form");
-                this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
 
             render: function () {
-                var viewType = Custom.getCurrentVT();
-                var collectionLength = this.collection.length;
-                var itemIndex = Custom.getCurrentII();
-
-                this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, collectionLength: collectionLength, itemIndex: itemIndex }));
-                Common.displayControlBtnsByActionType(this.actionType, viewType);
+                this.$el.html(this.template({contentType: this.contentType}));
+                Common.displayControlBtnsByActionType(this.actionType);
 
                 return this;
             },
@@ -56,6 +49,10 @@ define([
             discardEvent: function (event) {
                 event.preventDefault();
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+            },
+            createEvent: function (event) {
+                event.preventDefault();
+                this.trigger('createEvent');
             }
         });
 

@@ -58,14 +58,15 @@ define([
                 
                 var parentDepartment = this.$("#parentDepartment option:selected").val();
                 //var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
-     
+                var nestingLevel = this.$("#parentDepartment option:selected").data('level');
                 var departmentManager = this.$("#departmentManager option:selected").val();
                 //var departmentManager = common.toObject(managerId, this.accountDdCollection);
                 
                 this.model.save({
                     departmentName: departmentName,
                     parentDepartment: parentDepartment,
-                    departmentManager: departmentManager
+                    departmentManager: departmentManager,
+                    nestingLevel: nestingLevel
                 },
                 {
                     headers: {

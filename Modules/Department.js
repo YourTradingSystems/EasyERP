@@ -1,18 +1,19 @@
-var Department = function (logWriter, mongoose, employeeModel, event) {
+var Department = function (logWriter, mongoose) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var DepartmentSchema = mongoose.Schema({
         departmentName: { type: String, default: 'emptyDepartment' },
-        parentDepartment: { type: ObjectId, ref: 'Department', default:null },
+        parentDepartment: { type: ObjectId, ref: 'Department', default: null },
         departmentManager: { type: ObjectId, ref: 'Employees', default: null },
         users: [{ type: ObjectId, ref: 'Users', default: null }],
-        createdBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date, default: Date.now}
-		},
-		editedBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date}
-		}
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
+        },
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date }
+        },
+        nestingLevel: { type: Number, default: 0 }
 
     }, { collection: 'Department' });
 
@@ -44,12 +45,12 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
             function saveToDb(data) {
                 try {
                     _department = new department();
-                    
+
                     if (data.departmentName) {
                         _department.departmentName = data.departmentName;
                     }
                     if (data.uId) {
-                        _department.createdBy.user=data.uId;
+                        _department.createdBy.user = data.uId;
                     }
                     if (data.users && data.users.length > 0) {
                         _department.users = data.users;
@@ -59,7 +60,11 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
                     }
                     if (data.departmentManager) {
                         _department.departmentManager = data.departmentManager;
-                        
+
+                    }
+                    if (data.nestingLevel) {
+                        _department.nestingLevel = data.nestingLevel;
+
                     }
                     _department.save(function (err, result) {
                         if (err) {
@@ -85,24 +90,24 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         }
     };
 
-    function getDepartmentById(id,res){
-    	var query = department.findById(id);
-    	query.populate('departmentManager parentDepartment').
+    function getDepartmentById(id, res) {
+        var query = department.findById(id);
+        query.populate('departmentManager parentDepartment').
 			populate('createdBy.user').
             populate('editedBy.user');
 
-    	//query.skip((data.page - 1) * data.count).limit(data.count);
-    	query.exec(function(err, responce){
-            if(err){
+        //query.skip((data.page - 1) * data.count).limit(data.count);
+        query.exec(function (err, responce) {
+            if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
                 res.send(500, { error: "Can't find JobPosition" });
-            }else{
+            } else {
                 res.send(responce);
             }
         });
     }
-    
+
     function getForDd(response) {
         var res = {};
         res['result'] = {};
@@ -111,7 +116,7 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         res['data'] = [];
         var query = department.find({}, { _id: 1, departmentName: 1 });
         query.sort({ departmentName: 1 });
-        query.exec( function (err, result) {
+        query.exec(function (err, result) {
             try {
                 if (err) {
                     console.log(err);
@@ -130,8 +135,8 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
         });
     };
 
-    
-    
+
+
     function get(response) {
         var res = {};
         res['data'] = [];
@@ -189,22 +194,24 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
             populate('editedBy.user');
 
         query.sort({ departmentName: 1 });
-        query.skip((data.page - 1) * data.count).limit(data.count);
+        //query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, departments) {
             if (err) {
                 console.log(err);
                 logWriter.log("Department.js getDepartments Department.find " + err);
                 response.send(500, { error: "Can't find Department" });
             } else {
+                departments.forEach(function (department) {
 
+                });
                 res['data'] = departments;
                 response.send(res);
             }
         });
     };
 
-    
-    
+
+
     function update(_id, data, res) {
         try {
             delete data._id;
@@ -240,14 +247,14 @@ var Department = function (logWriter, mongoose, employeeModel, event) {
 
 
     return {
-    	   	
+
         create: create,
-        getDepartmentById:getDepartmentById,
-        
+        getDepartmentById: getDepartmentById,
+
         getForDd: getForDd,
 
         get: get,
-        getCustomDepartment:getCustomDepartment,
+        getCustomDepartment: getCustomDepartment,
 
         update: update,
 

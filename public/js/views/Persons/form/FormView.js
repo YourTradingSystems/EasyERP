@@ -26,7 +26,7 @@ define([
                 "mouseover .social a": "socialActive",
                 "mouseout .social a": "socialNotActive",
                 "click .company": "gotoCompanyForm",
-                "click #attachSubmit": "addAttach",
+                "change #inputAttach": "addAttach",
                 "click #addNote": "addNote",
                 "click .editDelNote": "editDelNote",
                 "click #cancelNote": "cancelNote",
@@ -272,15 +272,14 @@ define([
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
-                if(!addInptAttach){
-                    alert('No files to attach');
-                    return;
-                }
                 if(!this.fileSizeIsAcceptable(addInptAttach)){
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
                 addFrmAttach.submit(function (e) {
+                    var bar = $('.bar');
+                    var status = $('.status');
+                    
                     var formURL = "http://" + window.location.host + "/uploadFiles";
                     e.preventDefault();
                     addFrmAttach.ajaxSubmit({
@@ -289,20 +288,33 @@ define([
                         processData: false,
                         contentType: false,
                         data: [addInptAttach],
+
                         beforeSend: function (xhr) {
                             xhr.setRequestHeader("id", currentModelID);
+                            status.show();
+                            var statusVal = '0%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
                         },
-
+                        
+                        uploadProgress: function(event, position, total, statusComplete) {
+                            var statusVal = statusComplete + '%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+                         
                         success: function (data) {
                             var attachments = currentModel.get('attachments');
                             var date = common.utcDateToLocaleDate(data.uploadDate);
                             attachments.push(data);
                             $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));
+                            console.log('Attach file');
                             addFrmAttach[0].reset();
+                            status.hide();
                         },
 
                         error: function () {
-
+                            console.log("Attach file error");
                         }
                     });
                 });

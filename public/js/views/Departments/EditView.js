@@ -15,7 +15,12 @@ define([
                 _.bindAll(this, "render", "saveItem");
                 this.departmentsCollection = new DepartmentsCollection();
                 _.bindAll(this, "render", "deleteItem");
-                this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				if (options.myModel){
+					this.currentModel = options.myModel
+				}
+				else{
+					this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				}
                 this.render();
             },
 
@@ -112,7 +117,7 @@ define([
 								  click:self.deleteItem 
 							  }]
                 });
-				common.populateDepartments(App.ID.parentDepartment, "/Departments", this.currentModel.toJSON());
+				common.populateParentDepartments(App.ID.parentDepartment, "/Departments", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON());
 
                 return this;
