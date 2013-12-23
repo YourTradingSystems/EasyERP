@@ -17,13 +17,13 @@
         }
 
         var utcDateToLocaleFullDateTime = function (utcDateString) {
-            utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:m:s TT", false) : null;
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:MM:s TT", false) : null;
             return utcDateString;
         }
 
         var utcDateToLocaleDateTime = function (utcDateString) {
             if (!utcDateString) return null;
-            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:MM", false) : null;
             return utcDateString;
         }
 
