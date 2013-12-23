@@ -380,7 +380,7 @@
             });
         };
 
-        var populateCustomers = function (selectId, url, model) {
+        var populateCustomers = function (selectId, url, model,callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -398,6 +398,7 @@
                     });
                 }
                 selectList.append(options);
+                if (callback) callback();
             });
         };
 
@@ -457,7 +458,7 @@
                 });
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
-                if (callback) callback();
+                if (callback) callback(selectId);
             });
         }
         var populateUsers = function (selectId, url, model, callback,removeSelect) {

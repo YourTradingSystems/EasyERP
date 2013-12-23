@@ -1,139 +1,68 @@
 <div class="form-holder">
-    <form method="post" action="" class="form" id="leadForm" data-id="<%=_id%>">
+    <form method="post" action="" class="form edit-lead-form" id="leadForm" data-id="<%=_id%>">
         <fieldset>
             <div class="inner">
-                <p>
-                    <label for="name">Subject</label>
-                    <input type="text" class="title-input blueback" id="name" value="<%=name%>" required maxlength="32"/>
-                </p>
-                <div class="half-block left">
-                    <div class="half-block left">                        
-                        <p>
-                            <label for="company">Company Name</label>
-                        </p>
-                        <p>
-                            <label for="customerDd">Customer</label>
-                        </p>
-                        <p>
-                            <label for="name">Address</label>
-                        </p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                        <p><label></label></p>
-                        <p><label for="campaignDd">Campaign</label></p>
-                        <p><label for="campaignDd">Source</label></p>
-                        <p>
-                            <label for="salesPerson">Salesperson</label>
-                        </p>
-                        <p>
-                            <label for="salesTeam">Sales Team</label>
+			  <dl class="summary-info">
+				<dt><label>Subject </label></dt><dd>
+				  <input type="text" class="title-input blueback" id="name" value="<%=name%>" required maxlength="32"/>
+				</dd>
+			  </dl>
+              <div class="half-block left">
+				<textarea id="internalNotes" placeholder="Add a Description..."><%=internalNotes%></textarea>
+				<dl class="person-info">
+				  <dt><label for="campaignDd">Campaign</label></dt>
+				  <dd>
+					<select id="campaignDd">
+                      <option value="telesales">Telesales</option>
+                      <option value="web">Web</option>
+                      <option value="email">Email</option>
+                      <option value="newsletter">Newsletter</option>
+                      <option value="call">Call</option>
+                    </select>
 
-                        </p>
-                    </div>
-                    <div class="half-block left">                       
-                        <p>
-                            <input type="text" id="company" value="<%= tempCompanyField %>" maxlength="32" />
-                        </p>
-                        <p>
-                            <select id="customerDd"> </select>
-                        </p>
-                        <p><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" maxlength="32"/></p>
-                        <p>
-                            <input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" maxlength="32"/>
-                        </p>
-                        <p>
-                            <input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" maxlength="32"/>
-                        </p>
-                        <p>
-                            <input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" maxlength="32"/>
-                        </p>
-                        <p>
-                            <input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" maxlength="32"/>
-                        </p>
-                        <p>
-                            <select id="campaignDd">
-                                <option value="telesales">Telesales</option>
-                                <option value="web">Web</option>
-                                <option value="email">Email</option>
-                                <option value="newsletter">Newsletter</option>
-                                <option value="call">Call</option>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="sourceDd">
-                                <option value="linkedin">LinkedIn</option>
-                                <option value="jobscore.com">www.jobscore.com</option>
-                                <option value="stackoverflow.com">stackoverflow.com</option>
-                                <option value="jobvite.com">jobvite.com</option>
-                                <option value="zappos.com">zappos.com</option>
-                                <option value="sixtostart.com">sixtostart.com</option>
-                                <option value="creativecircle.com">creativecircle.com</option>
-                                <option value="sangfroidgame.com">sangfroidgame.com</option>
-                                <option value="partnet">Partner</option>
-                                <option value="customer">Customer</option>
-                                <option value="selfGenerated">Self Generated</option>
-                                <option value="website">Website</option>
-                            </select>
-                        </p>
-                        <p>
-                            <select id="salesPerson">  </select>
-                        </p>
-                        <p>
-                            <select id="salesTeam">
-                            </select>
-                        </p>
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <div class="half-block left">
-                        <p>
-                            <label for="name">Contact name</label>
-                        </p>
-                        <p><label></label></p>
-                        <p>
-                            <label for="email">Email</label>
-                        </p>
-                        <p>
-                            <label for="func">Function</label>
-                        </p>
-                        <p>
-                            <label for="phone">Phone </label>
-                        </p>
-                        <p>
-                            <label for="mobile">Mobile </label>
-                        </p>
-                        <p>
-                            <label for="workflowNamesDd">Workflow Names </label>
-                        </p>                       
-                        <p>
-                            <label for="selectWorkflow">Workflow </label>
-                        </p>
-                        <p>
-                            <label for="priorityDd">Priority </label>
-                        </p>
-                        <p>
-                            <label for="name">Categories</label>
-                        </p>
-                    </div>
-                    <div class="half-block left">
-                        <p><input type="text" class="name" id="first" placeholder="First" value="<%=(contactName) ? contactName.first : ''%>" maxlength="32"/></p>
-                        <p><input type="text" class="name" id="last" placeholder="Last" value="<%=(contactName) ? contactName.last : ''%>" maxlength="32"/></p>
-                        <p><input type="text" id="email" value="<%=email%>" maxlength="32"/></p>
-                        <p><input type="text" id="func" value="<%=func%>" maxlength="32"/></p>
-                        <p><input type="text" id="phone" value="<%=phones.phone%>" maxlength="32"/></p>
-                        <p><input type="text" id="mobile" value="<%=phones.mobile%>" maxlength="32"/></p>
-                        <p>
-                            <select id="workflowNamesDd">  </select>
-                        </p>                      
-                        <p id="selectWorkflow">
-                            <select id="workflowsDd">  </select>
-                        </p>
-                        <p>
-                            <select id="priorityDd"> </select>
-                        </p>
-                    </div>
-                </div>
+				  </dd>
+				  <dt><label for="campaignDd">Source</label></dt>
+				  <dd>
+				    <select id="sourceDd">
+                      <option value="linkedin">LinkedIn</option>
+                      <option value="jobscore.com">www.jobscore.com</option>
+                      <option value="stackoverflow.com">stackoverflow.com</option>
+                      <option value="jobvite.com">jobvite.com</option>
+                      <option value="zappos.com">zappos.com</option>
+                      <option value="sixtostart.com">sixtostart.com</option>
+                      <option value="creativecircle.com">creativecircle.com</option>
+                      <option value="sangfroidgame.com">sangfroidgame.com</option>
+                      <option value="partnet">Partner</option>
+                      <option value="customer">Customer</option>
+                      <option value="selfGenerated">Self Generated</option>
+                      <option value="website">Website</option>
+                    </select>
+				  </dd>
+				  <dt><label for="salesPerson">Salesperson</label></dt><dd><select id="salesPerson">  </select></dd>
+				  <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd><select id="workflowNamesDd">  </select></dd>
+				  <dt><label for="selectWorkflow">Workflow </label></dt><dd id="selectWorkflow"><select id="workflowsDd">  </select></dd>
+
+				</dl>
+			  </div>
+              <div class="half-block left">
+				<dl class="person-info">
+				  <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= tempCompanyField %>" maxlength="32" /></dd>
+				  <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"> </select></dd>
+				  <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" maxlength="32"/></dd>
+				  <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" maxlength="32"/></dd>
+				  <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" maxlength="32"/></dd>
+				  <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" maxlength="32"/></dd>
+				  <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" maxlength="32"/></dd>
+				  <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" value="<%=(contactName) ? contactName.first : ''%>" maxlength="32"/></dd>
+				  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" value="<%=(contactName) ? contactName.last : ''%>" maxlength="32"/></dd>
+				  <dt><label for="email">Email</label></dt><dd><input type="text" id="email" value="<%=email%>" maxlength="32"/></dd>
+				  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=phones.phone%>" maxlength="32"/></dd>
+				  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=phones.mobile%>" maxlength="32"/></dd>
+				  <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"> </select></dd>
+				</dl>
+			  </div>
+
+
                 <div class="clearfix"></div>
             </div>
 
