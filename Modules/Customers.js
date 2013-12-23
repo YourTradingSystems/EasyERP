@@ -296,6 +296,12 @@
             var res = {};
             res['data'] = [];
             var query = customer.find({ type: 'Person' });
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = customer.find({ type: 'Person' });
             query.populate('company', '_id name').
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
