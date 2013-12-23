@@ -118,6 +118,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     };
 
     var getCurrentVT = function (option) {
+        console.log('Get Current View Type -------> ' + Backbone.history.fragment);
         var viewType;
         if (option && (option.contentType != App.contentType)) {
             App.ownContentType = false;
@@ -168,7 +169,6 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             } else {
                 App.currentViewType = "thumbnails";
             }
-            if (option && option.contentType) Backbone.history.navigate('easyErp/' + option.contentType + '/' + App.currentViewType, { trigger: true });
             return App.currentViewType;
         } else {
             if (option && !App.ownContentType) {
@@ -224,7 +224,6 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
         } else {
             viewType = App.currentViewType;
         }
-        if (option && option.contentType) Backbone.history.navigate('easyErp/' + option.contentType + '/' + App.currentViewType, { trigger: true });
         return viewType;
     };
 

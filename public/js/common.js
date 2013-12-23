@@ -208,7 +208,7 @@
                                 (model.projectmanager && model.projectmanager._id === item._id) ||
                                 (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) ||
                                 (model.salesPerson._id === item._id) ||
-                                (model.salesTeam._id === item._id) ||
+                                //(model.salesTeam._id === item._id) ||
                                 (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last);
@@ -433,13 +433,13 @@
                         options = $.map(response.data, function (item) {
                             return model.workflow == item._id ?
                                 $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
-                                $('<option/>').val(item._id).text(item.name);
+                                $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
                         });
                     } else {
                         options = $.map(response.data, function (item) {
                             return model.workflow._id === item._id ?
                                 $('<option/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
-                                $('<option/>').val(item._id).text(item.name);
+                                $('<option/>').val(item._id).text(item.name).attr('data-id', item._id);
                         });
 
                     }
