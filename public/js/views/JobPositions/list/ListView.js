@@ -49,7 +49,7 @@ function (ListHeader, CreateView, ListItemView) {
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
-            window.location.hash = "#easyErp/JobPositions/form/" + id;
+            Backbone.history.navigate("#easyErp/JobPositions/form/" + id, { trigger: true });
         },
 
         createItem: function () {

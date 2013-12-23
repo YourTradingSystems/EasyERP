@@ -8,7 +8,10 @@
     <td><%=lead.phones.phone%></td>
     <td><%=lead.campaign%></td>
     <td><%=lead.source%></td>
-    <td><%=(lead.workflow) ? lead.workflow.name : ''%></td>
+    <td style="width:170px;position:relative;">
+	  <select id='stage<%=lead._id%>'>
+	  </select>
+	  </td>
     <td><%=(lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
     <td><%=(lead.editedBy.user) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
 </tr>

@@ -17,13 +17,13 @@
         }
 
         var utcDateToLocaleFullDateTime = function (utcDateString) {
-            utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:m:s TT", false) : null;
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "dddd, d mm yyyy HH:MM:s TT", false) : null;
             return utcDateString;
         }
 
         var utcDateToLocaleDateTime = function (utcDateString) {
             if (!utcDateString) return null;
-            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:m TT", false) : null;
+            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:MM", false) : null;
             return utcDateString;
         }
 
@@ -290,9 +290,10 @@
             });
         };
 
-        var populateDepartments = function (selectId, url, model, callback) {
+        var populateDepartments = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
             var self = this;
+			if (!removeSelect)
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
@@ -311,6 +312,27 @@
                 if (callback) callback();
             });
         };
+        var populateDepartmentsList = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
+                    options = $.map(response.data, function (item) {
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
+                            $('<li/>').attr("id",item._id).text(item.departmentName).attr('selected', 'selected') :
+                            $('<li/>').attr("id",item._id).text(item.departmentName);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<li/>').attr("id",item._id).text(item.departmentName);
+                    });
+                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
+
         var populateParentDepartments = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
@@ -358,7 +380,7 @@
             });
         };
 
-        var populateCustomers = function (selectId, url, model) {
+        var populateCustomers = function (selectId, url, model,callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -376,6 +398,7 @@
                     });
                 }
                 selectList.append(options);
+                if (callback) callback();
             });
         };
 
@@ -435,12 +458,13 @@
                 });
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
-                if (callback) callback();
+                if (callback) callback(selectId);
             });
         }
-        var populateUsers = function (selectId, url, model, callback) {
+        var populateUsers = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
             var self = this;
+			if (!removeSelect)
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
@@ -574,6 +598,7 @@
             saveToLocalStorage: saveToLocalStorage,
             getFromLocalStorage: getFromLocalStorage,
             populateUsersForGroups: populateUsersForGroups,
-			populateParentDepartments:populateParentDepartments
+			populateParentDepartments:populateParentDepartments,
+			populateDepartmentsList:populateDepartmentsList
         }
     });

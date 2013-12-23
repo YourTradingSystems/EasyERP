@@ -170,7 +170,7 @@ define([
                     width: "80%",
                     buttons: [
                         {
-                            text: "Create",
+                            text: "Save",
                             click: function () { self.saveItem(); }
                         },
 
