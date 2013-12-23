@@ -25,7 +25,6 @@ define([
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
-                'click #add-button': 'addToTarget',
                 'click #targetUsers li': 'chooseUser',
 			    'click #addUsers':'addUsers',
 			    'click #removeUsers':'removeUsers'
@@ -43,11 +42,6 @@ define([
 				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).closest(".ui-dialog").find(".target .choosen"));
             },
 
-			addToTarget:function(e){
-				alert();
-//				$(e.target).closest(".ui-dialog").find("select").eq(1).hide();
-//				$(e.target).closest(".ui-dialog").find("select").eq(1).append($(e.target).closest(".ui-dialog").find("select").eq(0).find("option"));
-			},
 			unassign:function(e){
 				var id=$(e.target).closest("tr").data("id");
 				var type=$(e.target).closest("tr").data("type");
@@ -69,6 +63,9 @@ define([
 				$(id).find("li").each(function(){
 					$(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
 				});
+				if ($(".groupsAndUser tr").length<2){
+					$(".groupsAndUser").hide();
+				}
 			},
 			addUser:function(e){
 				var self = this;
@@ -199,7 +196,7 @@ define([
                     projectmanager: projectmanager ? projectmanager : "",
                     workflow: workflow ? workflow : "",
                     groups: {
-						owner: ($("#owner").prop("checked")?$("allUsers option:selected").val():null),
+						owner: $("#allUsers").val(),
 						users: usersId,
 						group: groupsId
                     }
@@ -222,7 +219,6 @@ define([
             hideDialog: function () {
                 $(".edit-dialog").remove();
             },
-
             render: function () {
                 var formString = this.template();
                 var self = this;
@@ -248,7 +244,7 @@ define([
 				common.populateUsersForGroups('#sourceUsers');
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.populateCustomers(App.ID.customerDd, "/Customer");
-//                common.populateUsers("#allUsers", "/Users",null,null,true);
+				common.populateUsers("#allUsers", "/Users",null,null,true);
                 common.populateDepartmentsList("#sourceGroups", "/Departments",null,null);
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
