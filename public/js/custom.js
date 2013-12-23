@@ -74,7 +74,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             var model = collection.getElement();
             if (viewtype == "form" && model) {
                 url += "/" + model.attributes._id;
-            } 
+            }
         }
 
         //if (viewtype == "form") {

@@ -129,8 +129,8 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/list';
-                    Backbone.history.navigate(url, { replace: true });
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -207,11 +207,11 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = 'easyErp/' + contentType + '/kanban';
-                    if (parrentContentId) {
-                        url += '/' + parrentContentId;
-                    }
-                    this.navigate(url, { replace:true});
+                    //var url = 'easyErp/' + contentType + '/kanban';
+                    //if (parrentContentId) {
+                    //    url += '/' + parrentContentId;
+                    //}
+                    //this.navigate(url, { replace:true});
                 }
             });
         },
@@ -246,9 +246,9 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/thumbnails';
-                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
-                    Backbone.history.navigate(url, { replace: true });
+                    //var url = '#easyErp/' + contentType + '/thumbnails';
+                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    //Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

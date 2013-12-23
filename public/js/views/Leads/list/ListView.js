@@ -50,7 +50,7 @@ function (ListTemplate, CreateView, ListItemView) {
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
-            window.location.hash = "#easyErp/Leads/form/" + id;
+            Backbone.history.navigate("easyErp/Leads/form/" + id, {trigger:true, replace: true});
         },
 
         createItem: function () {

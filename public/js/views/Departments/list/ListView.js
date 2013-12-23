@@ -33,7 +33,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 				'</tr>');
 		},*/
 		createDepartmentListRow:function(department,index,className){
-			return ('<li class="'+className+'" data-id="'+department._id+'"><span class="dotted-line"></span><span class="text">'+department.departmentName+' ('+department.users.length+')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
+		    return ('<li class="' + className + '" data-id="' + department._id + '" data-level="' + department.nestingLevel + '"><span class="dotted-line"></span><span class="text">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
 		},
         editItem: function(e){
             //create editView in dialog here
