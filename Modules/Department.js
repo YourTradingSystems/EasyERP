@@ -43,6 +43,7 @@ var Department = function (logWriter, mongoose) {
                 });
             }
             function saveToDb(data) {
+                console.log(data);
                 try {
                     _department = new department();
 
@@ -112,7 +113,7 @@ var Department = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = department.find({});
-        query.select('_id departmentName');
+        query.select('_id departmentName nestingLevel');
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
             if (err) {
@@ -126,8 +127,6 @@ var Department = function (logWriter, mongoose) {
             }
         });
     };
-
-
 
     function get(response) {
         var res = {};
