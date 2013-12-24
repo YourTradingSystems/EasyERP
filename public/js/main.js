@@ -56,7 +56,9 @@ var App = App ||
 		genres: "#genresDd",
         degreesDd: "#degreesDd",
         sourceDd: "#sourceDd",
-        profilesDd: "#profilesDd"
+        profilesDd: "#profilesDd",
+        statusesDd: "#statusesDd"
+        
     },
     URL: {
         customers: "/Customer",

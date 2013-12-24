@@ -2,22 +2,21 @@ define([
     "text!templates/Workflows/CreateTemplate.html",
     "text!templates/Workflows/createList.html",
     "collections/RelatedStatuses/RelatedStatusesCollection",
-    "models/WorkflowsModel"
+    "models/WorkflowsModel",
+    "common"
 ],
-    function (CreateTemplate, createList, RelatedStatusesCollection, WorkflowsModel) {
+    function (CreateTemplate, createList, RelatedStatusesCollection, WorkflowsModel,common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Workflows",
             template: _.template(CreateTemplate),
 
-            initialize: function (options) {
+            initialize: function (options) {         	
             	_.bindAll(this, "saveItem", "render");
-                this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
-                this.render = _.after(1, this.render);
+            	this.collection = options.collection;
                 this.relatedStatusesCollection = new RelatedStatusesCollection();
-                this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
+            	this.render();
             },
 
             close: function () {
@@ -25,8 +24,8 @@ define([
             },
 
             events: {
-                "click .addStatus": "addNameStatus",
-                "click button.remove": "removeNameStatus"
+                "click #addStatus": "addNameStatus",
+                "click #removeStatus": "removeNameStatus"
             },
             hideDialog: function () {
                 $(".edit-dialog").remove();
@@ -34,10 +33,10 @@ define([
 
             addNameStatus: function (e) {
                   e.preventDefault();
-                  alert("Ura");
                   $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
              },
             removeNameStatus: function (e) {
+            	e.preventDefault();
                 $(e.target).closest(".nameStatus").remove();
             },
 
@@ -58,7 +57,7 @@ define([
                     statuses = [];
                 this.$(".nameStatus").each(function () {
                     names.push($(this).find(".name").val());
-                    statuses.push($(this).find(".status option:selected").text());
+                    statuses.push($(this).find("#statusesDd option:selected").text());
                 });
 
                 for (var i = 0; i < names.length; i++) {
@@ -86,21 +85,14 @@ define([
             },
 
             render: function () {
-                var projectID = (window.location.hash).split('/')[3];
+            	var mid = 39;
                 var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
-                model = projectID
-                    ? {
-                        project: {
-                            _id: projectID
-                        }
-                    }
-                    : null;
-                var formString = this.template({ relatedStatusesCollection: this.relatedStatusesCollection, workflowsWIds: workflowsWIds });
+                var formString = this.template({workflowsWIds: workflowsWIds});
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
                     width: "80%",
-                    title: "Create Task",
+                    title: "Create Workflows",
                     buttons: {
                         save: {
                             text: "Save",
@@ -114,9 +106,8 @@ define([
                         }
                     }
                 });
-
-                $("#allNamesStatuses").append(_.template(createList, { relatedStatusesCollection: this.relatedStatusesCollection }));
-                $("#allNamesStatuses .nameStatus:first-of-type button.remove").remove();
+                common.populateRelatedStatuses(App.ID.statusesDd, "/relatedStatus");
+                
                 return this;
             }
 

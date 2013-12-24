@@ -22,6 +22,7 @@ define([
             "easyErp/:contentType/list": "goToList",
             "easyErp/Profiles": "goToProfiles",
             "easyErp/Workflows": "goToWorkflows",
+            "easyErp/Dashboard": "goToDashboard",
             //"home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "easyErp/:contentType": "getList",
             "*actions": "main"
@@ -50,6 +51,33 @@ define([
                     topBarView.bind('editEvent', contentView.editProfileDetails, contentView);
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                     topBarView.bind('saveEvent', contentView.saveProfile, contentView);
+
+                    this.changeView(contentView);
+                    this.changeTopBarView(topBarView);
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
+                }
+            });
+        },
+
+        goToDashboard: function () {
+            if (this.mainView == null) this.main();
+
+            var ContentViewUrl = "views/Dashboard/ContentView",
+                TopBarViewUrl = "views/Dashboard/TopBarView",
+                CollectionUrl = "collections/Profiles/ProfilesCollection";
+
+            var self = this;
+
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                var collection = new ContentCollection();
+
+                collection.bind('reset', _.bind(createViews, self));
+                Custom.setCurrentVT('list');
+                function createViews() {
+                    collection.unbind('reset');
+                    var contentView = new ContentView({ collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content" });
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
@@ -114,6 +142,7 @@ define([
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50 });
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 5 });
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
@@ -129,8 +158,8 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/list';
-                    Backbone.history.navigate(url, { replace: true });
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -207,11 +236,11 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = 'easyErp/' + contentType + '/kanban';
-                    if (parrentContentId) {
-                        url += '/' + parrentContentId;
-                    }
-                    this.navigate(url, { replace:true});
+                    //var url = 'easyErp/' + contentType + '/kanban';
+                    //if (parrentContentId) {
+                    //    url += '/' + parrentContentId;
+                    //}
+                    //this.navigate(url, { replace:true});
                 }
             });
         },
@@ -246,9 +275,9 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/thumbnails';
-                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
-                    Backbone.history.navigate(url, { replace: true });
+                    //var url = '#easyErp/' + contentType + '/thumbnails';
+                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    //Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

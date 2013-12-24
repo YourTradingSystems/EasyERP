@@ -161,6 +161,17 @@ var Workflow = function (logWriter, mongoose) {
                 response.send(500, { error: "Can't find Workflow" });
             }
         },
+        remove: function (_id, res) {
+        	workflow.remove({ _id: _id }, function (err, workflow) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("workflow.js remove workflow.remove " + err);
+                    res.send(500, { error: "Can't remove Company" });
+                } else {
+                    res.send(200, { success: 'workflow removed' });
+                }
+            });
+        },
         workflow:workflow
     };
 };

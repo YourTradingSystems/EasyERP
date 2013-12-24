@@ -630,6 +630,22 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+    
+    function removeWorkflow(req, res, _id, data) {
+        console.log("Requst removeWorkflow is success");
+        if (req.session && req.session.loggedIn) {
+            access.getDeleteAccess(req.session.uId, 50, function (access) {
+                if (access) {
+                	workflow.remove(_id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
 
     //---------------------Companies-------------------------------
 
@@ -1733,6 +1749,7 @@ var requestHandler = function (fs, mongoose) {
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
+        removeWorkflow:removeWorkflow,
 
         getJobPosition: getJobPosition,
         createJobPosition: createJobPosition,
