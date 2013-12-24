@@ -568,6 +568,13 @@ app.put('/Workflows/:id', function (req, res) {
     //console.log(data);
     requestHandler.updateWorkflow(req, res, _id, data);
 });
+
+app.delete('/Workflows/:_id', function (req, res) {
+    data = {};
+    var _id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeWorkflow(req, res, _id, data);
+});
 //-------------------Companies--------------------------------------------------
 
 app.post('/Companies', function (req, res) {

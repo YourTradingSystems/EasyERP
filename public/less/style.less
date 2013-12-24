@@ -3429,10 +3429,17 @@ table#workflows {
             &.edit {
                 display: none;
             }
+            
+            &.delete {
+                display: none;
+            }
         }
 		
         &:hover {
             a.edit:not(.hidden) {
+                display: inline;
+            }
+            a.delete:not(.hidden) {
                 display: inline;
             }
         }

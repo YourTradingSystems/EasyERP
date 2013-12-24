@@ -289,6 +289,28 @@
                 if (callback) callback();
             });
         };
+        
+        var populateRelatedStatuses = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+            	var options = [];
+                if (model && model.status) {
+                    options = $.map(response.data, function (item) {
+                        return model.status._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.status);
+                    });
+                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
 
         var populateDepartments = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
@@ -312,6 +334,7 @@
                 if (callback) callback();
             });
         };
+        
         var populateDepartmentsList = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
@@ -588,6 +611,7 @@
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
+            populateRelatedStatuses:populateRelatedStatuses,
             toObject: toObject,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
             ISODateToDate: ISODateToDate,
