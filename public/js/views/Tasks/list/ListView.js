@@ -24,13 +24,10 @@ function (TasksListTemplate, CreateView, ListItemView) {
         },
 
         render: function () {
-
-           // var counter = 0;
             $('.ui-dialog ').remove();
             var that = this;
             this.$el.html(_.template(TasksListTemplate));
                        // this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
-
             _.each( this.collection.models, function (taskModel,modelKey ){
                 if (modelKey < listLimit) {
                     counter++;
@@ -43,7 +40,7 @@ function (TasksListTemplate, CreateView, ListItemView) {
 
             if (arrayOfTasks.length > 0) {
                 this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
+               }
 
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
