@@ -1102,15 +1102,8 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getEditWritAccess(req.session.uId, 43, function (access) {
                 if (access) {
-                    employee.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
-                        if (err) {
-                            res.send(401);
-                        }
-                        else {
-                            res.send(200, file);
-                        }
-                    });
-                    employee.update(id, remove, data.employee, res);
+					delete file._id
+                    employee.update( id , { $push: { attachments: file } }, res);
                 } else {
                     res.send(403);
                 }

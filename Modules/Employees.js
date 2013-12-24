@@ -427,6 +427,7 @@ var Employee = function (logWriter, mongoose) {
             if (data.manager && data.manager._id) {
                 data.manager = data.manager._id;
             }
+			console.log("hivno")
             if (data.coach && data.coach._id) {
                 data.coach = data.coach._id;
             }
@@ -436,6 +437,7 @@ var Employee = function (logWriter, mongoose) {
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
             }
+			console.log(_id)
             employee.update({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {

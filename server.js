@@ -161,8 +161,7 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
-    console.log(req.headers);
-    console.log("se blyad appload");
+	console.log(req.files.attachfile.path);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
