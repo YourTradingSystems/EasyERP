@@ -126,6 +126,8 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
         if (App.currentViewType == null) {
             if (option) {
                 switch (option.contentType) {
+                    case 'Dashboard':
+                        App.currentViewType = 'list';
                     case 'Tasks':
                         App.currentViewType = "kanban";
                         break;
