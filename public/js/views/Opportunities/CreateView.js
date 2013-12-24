@@ -93,11 +93,11 @@ define([
                 
                 var salesTeamId = this.$("#salesTeamDd option:selected").val();
                 
-                var nextActionSt = $.trim($("#nextActionDate").val());
-                var nextActionDate = $.trim($("#nextActionDescription").val());
+                var nextAction = $.trim(this.$el.find("#nextActionDate").val());
+                var nextActionDesc = $.trim(this.$el.find("#nextActionDescription").val());
                 var nextAction = {
-                    date: nextActionSt,
-                    desc: nextActionDate
+                    date: nextAction,
+                    desc: nextActionDesc
                 };
 
                 var expectedClosing = $.trim($("#expectedClosing").val());
@@ -197,8 +197,8 @@ define([
                         }
                     }
                 });
-                $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
-                $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
+                $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
+                $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 common.populateCustomers(App.ID.customerDd, App.URL.customers);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons);
                 common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam);

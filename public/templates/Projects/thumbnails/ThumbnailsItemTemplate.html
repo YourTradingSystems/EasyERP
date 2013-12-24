@@ -55,11 +55,11 @@
     <p><%=projectName%></p>
     <p><%=projectShortDesc%></p>
     <p></p>
-    <p><%=(projectmanager) ? projectmanager.name.first + " " + projectmanager.name.last : '' %></p>
+    <p><%=(projectmanager && projectmanager.name) ? projectmanager.name.first + " " + projectmanager.name.last : '' %></p>
 </div>
 <div class="bottom">
     <div class="half-block left">
-        <p class="inner"><span class="status <%=(workflow) ? workflow.status.toLowerCase().split(' ').join('') : ''%>"><%=(workflow) ? workflow.status : ''%></span></p>
+        <p class="inner"><span class="status <%=(workflow && workflow.status) ? workflow.status.toLowerCase().split(' ').join('') : ''%>"><%=(workflow) ? workflow.status : ''%></span></p>
     </div>
     <div class="half-block right">
         <p class="inner">

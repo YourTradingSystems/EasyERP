@@ -5,7 +5,7 @@
 		<dl class="opp-info">
 		  <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="32"/></dd>
 		  <dt><label for="expectedRevenue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" maxlength="32"/><%=model.expectedRevenue.currency%>at</dd>
-		  <dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" maxlength="32"/>%</dd>
+		  <!--<dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" maxlength="32"/>%</dd>-->
 		  <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
 		  <dt><label for="email">Email </label></dt><dd><input type="email" id="email" value="<%=model.email%>" maxlength="32"/></dd>
 		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" maxlength="32"/></dd>
@@ -17,10 +17,10 @@
 		  <dt><label for="workflowDd"> Workflows </label></dt><dd><select id="workflowDd"></select></dd>
 		  <dt><label for="salesPersonDd">Salesperson</label></dt><dd><select id="salesPersonDd"></select></dd>
 		  <dt><label for="salesTeamDd">Sales Team</label></dt><dd><select id="salesTeamDd"></select></dd>
-		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" maxlength="32"/></dd>
+		  <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" maxlength="32" readonly/></dd>
 		  <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=model.nextAction.desc%>" /></dd>
-		  <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" maxlength="32"/></dd>
-		  <dt><label for="priority">Priority </label></dt><dd><select id="priorityDd"></select></dd>
+		  <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" maxlength="32" readonly/></dd>
+		  <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"></select></dd>
 		  <dt></dt><dd></dd>
 		  <dt></dt><dd></dd>
 
@@ -49,7 +49,7 @@
         <textarea id="internalNotes"><%=model.internalNotes%></textarea>
 	  </div>
 	  <div class="clearfix"></div>
-      <div class="half-block left withPaddingLeft">
+<!--      <div class="half-block left withPaddingLeft">
 		<div class="formTitle">
 		  <h3 class="left">Mailings</h3>
 		  <div class="clearfix"></div>
@@ -77,6 +77,8 @@
 	  </div>
 
 	</div>
+	
     <div class="clearfix"></div>
+	-->
   </form>
 </div>

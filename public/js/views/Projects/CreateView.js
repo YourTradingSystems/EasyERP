@@ -37,7 +37,8 @@ define([
                 e.preventDefault();
 				$(e.target).closest(".ui-dialog").find(".target").append($(e.target).closest(".ui-dialog").find(".source .choosen"));
             },
-            removeUsers: function (e) {
+            removeUsers: function (e) {
+
                 e.preventDefault();
 				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).closest(".ui-dialog").find(".target .choosen"));
             },
