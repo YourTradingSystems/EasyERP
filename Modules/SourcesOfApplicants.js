@@ -1,7 +1,8 @@
 var SourcesOfApplicants = function (logWriter, mongoose) {
     var SourcesOfApplicantsSchema = mongoose.Schema({
         _id: { type: String, default: '' },
-        name: { type: String, default: '' }
+		name: { type: String, default: '' },
+		url: { type: String, default: '' }
     }, { collection: 'SourcesOfApplicants' });
 
     var sourcesofapplicants = mongoose.model('SourcesOfApplicants', SourcesOfApplicantsSchema);

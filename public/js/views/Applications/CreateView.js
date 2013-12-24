@@ -15,14 +15,30 @@ define([
                 this.model = new ApplicationModel();
                 this.render();
             },
-
             events: {
                 "click #tabList a": "switchTab",
                 "click #hire": "isEmployee",
                 "change #workflowNames": "changeWorkflows",
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit"
+                "mouseleave .avatar": "hideEdit",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect",
+                "change .inputAttach": "addAttach",
+				"click .deleteAttach":"deleteAttach"
             },
+			deleteAttach:function(e){
+				$(e.target).closest(".attachFile").remove();
+			},
+            addAttach: function (event) {
+				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
+				$(".attachContainer").append('<li class="attachFile">'+
+											 '<a href="javascript:;">'+s+'</a>'+
+											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
+											 );
+				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
+				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
+			},
             hideDialog: function () {
                 $(".edit-dialog").remove();
             },
@@ -68,6 +84,11 @@ define([
                 }, 250);
 
             },
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
+
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -135,21 +156,97 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        self.hideDialog();
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+						var currentModel = model.changed.result;
+						var currentModelID = currentModel["_id"];
+						var addFrmAttach = $("#createApplicationForm");
+						$("li .inputAttach").each(function(){
+							var addInptAttach = $(this)[0].files[0];
+							if(!self.fileSizeIsAcceptable(addInptAttach)){
+								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+								return;
+							}
+							addFrmAttach.submit(function (e) {
+								var bar = $('.bar');
+								var status = $('.status');
+								
+								var formURL = "http://" + window.location.host + "/uploadApplicationFiles";
+								e.preventDefault();
+								addFrmAttach.ajaxSubmit({
+									url: formURL,
+									type: "POST",
+									processData: false,
+									contentType: false,
+									data: [addInptAttach],
+
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader("id", currentModelID);
+										status.show();
+										var statusVal = '0%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									uploadProgress: function(event, position, total, statusComplete) {
+										var statusVal = statusComplete + '%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									success: function (data) {
+										console.log('Attach file');
+										addFrmAttach[0].reset();
+										status.hide();
+										self.hideDialog();
+										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+									},
+
+									error: function () {
+										console.log("Attach file error");
+									}
+								});
+							});
+							addFrmAttach.submit();
+							addFrmAttach.off('submit');
+						});
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
                     }
                 });
             },
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				this.hideNewSelect();
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				return false;
+				
+			},
+			chooseOption:function(e){
+				var k = $(e.target).parent().find("li").index($(e.target));
+				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			},
+
+			styleSelect:function(id){
+				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				$(id).hide();
+			},
 
             render: function () {
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "edit-dialog",
-                    width: 800,
+                    dialogClass: "edit-dialog create-app-dialog",
+                    width: 690,
                     title: "Create Application",
                     buttons:{
                         save:{
@@ -164,12 +261,14 @@ define([
                         }
                     }
                 });
-                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd");
-                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
-                common.populateDepartments(App.ID.departmentDd, "/Departments");
-                common.populateDegrees(App.ID.degreesDd, "/Degrees");
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition");
+                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.relatedUsersDd);});
+//                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
+                common.populateDepartments(App.ID.departmentDd, "/Departments",null,function(){self.styleSelect(App.ID.departmentDd);});
+                common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition",null,function(){self.styleSelect(App.ID.jobPositionDd);});
+				self.styleSelect(App.ID.jobPositionDd);
+				self.styleSelect("#sourceDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

@@ -22,6 +22,7 @@ define([
             "easyErp/:contentType/list": "goToList",
             "easyErp/Profiles": "goToProfiles",
             "easyErp/Workflows": "goToWorkflows",
+            "easyErp/Dashboard": "goToDashboard",
             //"home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
             "easyErp/:contentType": "getList",
             "*actions": "main"
@@ -50,6 +51,33 @@ define([
                     topBarView.bind('editEvent', contentView.editProfileDetails, contentView);
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                     topBarView.bind('saveEvent', contentView.saveProfile, contentView);
+
+                    this.changeView(contentView);
+                    this.changeTopBarView(topBarView);
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
+                }
+            });
+        },
+
+        goToDashboard: function () {
+            if (this.mainView == null) this.main();
+
+            var ContentViewUrl = "views/Dashboard/ContentView",
+                TopBarViewUrl = "views/Dashboard/TopBarView",
+                CollectionUrl = "collections/Profiles/ProfilesCollection";
+
+            var self = this;
+
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+                var collection = new ContentCollection();
+
+                collection.bind('reset', _.bind(createViews, self));
+                Custom.setCurrentVT('list');
+                function createViews() {
+                    collection.unbind('reset');
+                    var contentView = new ContentView({ collection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content" });
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);

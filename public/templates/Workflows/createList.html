@@ -5,12 +5,12 @@
     </p>
     <p>
         <label>Status</label>
-        <select class="status">
+        <select id="statusesDd">
             <option selected="selected" value="0">Select...</option>
             <% relatedStatusesCollection.forEach(function(option){ %>
             <option value="<%= option.get('_id') %>"><%= option.get('status') %></option>
             <% }); %>
         </select>
     </p>
-    <button class="btn remove">Remove</button>
+    <input type="button" value="Remove" id="removeStatus">
 </div>

@@ -1,63 +1,66 @@
 <div class="inner" id="<%=_id%>" data-id="<%=_id%>">
-<div class="application-header">
-    <p><%=name.first%> <%=name.last%></p>
-    <div class="dropDown">
-        <a href="#">
-            <img hidden="hidden" src="./images/downCircleWhite.png" alt="Down" />
-        </a>
-        <ul class="dropDownOpened" hidden="hidden">
-            <li>
-                <a href="#" id="edit">Edit...</a>
-            </li>
-            <li>
-                <a href="#" id="delete">Delete</a>
-            </li>
-            <li>
-                <ul class="colorPicker">
-                    <li>
-                        <a href="#" data-color="#1ABC9C" class="color_0"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#2ECC71" class="color_1"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#3498DB" class="color_2"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#9B59B6" class="color_3"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#34495E" class="color_4"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#F1C40F" class="color_5"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#F39C12" class="color_6"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#E74C3C" class="color_7"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#27AE60" class="color_8"></a>
-                    </li>
-                    <li>
-                        <a href="#" data-color="#2980B9" class="color_9"></a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+  <div class="application-header">
+    <p class="left"><%=name.first%> <%=name.last%></p>    <h3 class="right"><%=proposedSalary?proposedSalary+"$":''%></h3>
+    <div class="clearfix">
     </div>
-</div>
-<div class="application-content">
-  <img class="person left" src="<%=imageSrc%>"/>
-  <div class="left">
-    <p><%=subject%></p>
-    <p><%=(workflow) ? workflow.name : ''%></p>
-    <p><%=(jobPosition) ? jobPosition.name : ''%></p>
-    <p>Mobile: <%=workPhones.mobile%></p>
+    <div class="dropDown">
+<!--      <a href="#">
+        <img hidden="hidden" src="./images/downCircleWhite.png" alt="Down" />
+    </a>-->
+      <ul class="dropDownOpened" hidden="hidden">
+        <li>
+          <a href="#" id="edit">Edit...</a>
+        </li>
+        <li>
+          <a href="#" id="delete">Delete</a>
+        </li>
+        <li>
+          <ul class="colorPicker">
+            <li>
+              <a href="#" data-color="#1ABC9C" class="color_0"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#2ECC71" class="color_1"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#3498DB" class="color_2"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#9B59B6" class="color_3"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#34495E" class="color_4"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#F1C40F" class="color_5"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#F39C12" class="color_6"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#E74C3C" class="color_7"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#27AE60" class="color_8"></a>
+            </li>
+            <li>
+              <a href="#" data-color="#2980B9" class="color_9"></a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div class="clearfix">
+<br>
+  <div class="application-content">
+	  <div class="half-block left">
+<!--		<img class="person left" src="<%=imageSrc%>"/>-->
+		<p class="center"><%=jobPosition?jobPosition.name:''%></p>
+	  </div>
+	  <div class="half-block left">
+		<p class="right"><%=nextAction%></p>
+	  </div>
+      <div class="clearfix">
+      </div>
   </div>
-</div>
 </div>

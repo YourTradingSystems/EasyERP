@@ -24,14 +24,15 @@
                 </li>
             </ul>
         </div>-->
+        <div class="clearfix">
+        </div>
     </div>
     <div class="opportunity-content">
         <div class="half-block left">
             <p class="left"><%=(model.customer) ? model.customer.name.first + ' ' + model.customer.name.last : ''%></p>
         </div>
-        <div class="clearfix"></div>
         <div class="half-block right">
-         	<p class="right" style="text-align:left;"><%=model.nextAction.desc%> </p>
+         	<p class="right" style="text-align:left;"><%=model.nextAction.desc%> </p><br/>
             <p class="right" style="text-align:right;"> <%=model.nextAction.date%></p>
         </div>
         <div class="clearfix"></div>

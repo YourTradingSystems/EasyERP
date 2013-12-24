@@ -1,98 +1,137 @@
 <div class="form-holder">
-    <form method="post" action="" id="createApplicationForm" class="form">
-        <fieldset>
-		  <div class="half-block left">
-			<dl class="person-info">
-			  <!--<dt><label for="subject">Subject</label></dt><dd><input type="text" class="title-input blueback" id="subject" required maxlength="32"/></dd>-->
-			  <dt><label for="first">Name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required maxlength="32"/></dd>
-			  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required maxlength="32"/></dd>
-			</dl>
+  <form method="post" action="" id="createApplicationForm" class="form">
+    <fieldset>
+	  <div class="app-block left">
+		<div class="avatar left">
+          <div class="upload">
+            Edit
+			<input type="file" value="Edit" id="inputImg" accept="image/*">
 		  </div>
-		  <div class="half-block left">
-        <div class="avatar">
-        	<div class="upload">
-                Edit
-          <input type="file" value="Edit" id="inputImg" accept="image/*">
-          </div>
-          <canvas id="avatar" width="120" height="120"></canvas>
-        </div>
-		  </div>
-          <div class="clearfix"></div>
-		  <div class="half-block left">
-			<dl class="person-info">
-			  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" maxlength="32"/></dd>
-			  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32"/></dd>
-			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" maxlength="32"/></dd>
-			  <dt><label for="workflowNamesDd">Workflow Names </label></dt>
-			  <dd>
-				<select id="workflowNamesDd">
+		  <canvas id="avatar" width="120" height="120"></canvas>
+		</div>
+		<div class="app-block left marginLeft">
+		  <dl class="app-empty-info">
+			<dt><input type="text" class="name" id="first" placeholder="First name" required maxlength="32"/></dt><dd>&nbsp;</dd>
+			<dt><input type="text" class="name" id="last" placeholder="Last name" required maxlength="32"/></dt><dd>&nbsp;</dd>
+			<dt><input type="text" id="expectedSalary" placeholder="Expected Salary" maxlength="32"/></dt><dd>&nbsp;</dd>
+			<dt><input type="text" id="proposedSalary" placeholder="Proposed Salary" maxlength="32"/></dt><dd>&nbsp;</dd>
+		  </dl>
+		  
+		  
+		</div>
+	  </div>
+	  <div class="app-block right">
+		<dl class="app-normal-info">
+		  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" maxlength="32"/></dd>
+		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32"/></dd>
+		  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
+		  <!--			  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" maxlength="32"/></dd>-->
+		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" readonly/></dd>
+		</dl>
+	  </div>
+	  <!--		  <div class="half-block left">
+				  <dl class="person-info">
+					<dt><label for="subject">Subject</label></dt><dd><input type="text" class="title-input blueback" id="subject" required maxlength="32"/></dd>
+					<dt><label for="first">Name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" required maxlength="32"/></dd>
+					<dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" required maxlength="32"/></dd>
+				  </dl>
+	  </div>-->
 
-                </select>
-			  </dd>
-			  <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
-              
-			</dl>
-		  </div>
-		  <div class="half-block left">
-			<dl class="person-info">
-			  <dt><label for="degreesDd">Degree </label></dt><dd> <select id="degreesDd"> </select> </dd>
-			  <dt><label for="relatedUsersDd">Responsible </label></dt>
-			  <dd>
-			    <select id="relatedUsersDd">
+	  <div class="clearfix"></div>
+	  <div class="app-block left bottom">
+		<textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>
+		<label>Attachments</label>
 
-                </select>
-			  </dd>
-			  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" readonly/></dd>
-			  <dt><label for="sourceDd">Source </label></dt>
-			  <dd>
-			  <select id="sourceDd">
-
-              </select>
-			  </dd>
-			  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" maxlength="32"/></dd>
-			</dl>
+		  <div id="attachBody">
+			<ul class="attachContainer">       
+			</ul>
 		  </div>
-          <div class="clearfix"></div>
-		  <div class="half-block left withPaddingLeft">
-			<div class="formTitle">
-			  <h3 class="left">Contract</h3>
-			  <div class="clearfix"></div>
+
+		  <div class="input-file">
+			Attach
+			<input type="file" value="Choose File" class="inputAttach" name="attachfile">
+			
+		  </div>
+		  <div class="progress" style="float:left;">
+			<div class="bar">
+			  <span class="status"></span>
 			</div>
-			<dl class="person-info">
-			  <dt><label for="expectedSalary">Expected Salary </label></dt><dd><input type="text" id="expectedSalary" placeholder="0.00" maxlength="32"/></dd>
-			  <dt><label for="proposedSalary">Proposed Salary </label></dt><dd><input type="text" id="proposedSalary" placeholder="0.00" maxlength="32"/></dd>
-			  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
-			</dl>
-		  </div>
+		  </div>		
 
-		  <div class="half-block left withPaddingLeft">
-			<div class="formTitle">
-			  <h3 class="left">Job</h3>
-			  <div class="clearfix"></div>
-			</div>
-			<dl class="person-info">
-			  <dt><label for="jobPositionDd">Applied Job </label></dt>
-			  <dd>
-				<select id="jobPositionDd">
+	  </div>
+	  <div class="app-block right bottom">
+		<dl class="person-info">
+		  <dt><label for="jobPositionDd">Applied Job </label></dt>
+		  <dd>
+			<select id="jobPositionDd">
 
-                </select>
-			  </dd>
-			  <dt><label for="departmentDd">Department</label></dt>
-			  <dd>
-			    <select id="departmentDd">
+            </select>
+		  </dd>
+		  <dt><label for="departmentDd">Department</label></dt>
+		  <dd>
+			<select id="departmentDd">
 
-                </select>
+            </select>
 
-			  </dd>
-			</dl>
-		  </div>
-          <div class="clearfix">
-          </div>
-		  <div class="formTitle">
-			<h3 class="left">Application Summary</h3>
-			<div class="clearfix"></div>
-		  </div>
-          <textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>
-        </fieldset>
-    </form>
+		  </dd>
+		  <dt><label for="sourceDd">Source </label></dt>
+		  <dd>
+			<select id="sourceDd">
+			  <option>www.rabota.ua</option>
+			  <option>www.work.ua</option>
+			  <option>www.ain.net</option>
+			  <option>other</option>
+            </select>
+		  </dd>
+		  <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
+
+		  <!--				  <dt><label for="degreesDd">Degree </label></dt><dd> <select id="degreesDd"> </select> </dd>
+							  <dt><label for="relatedUsersDd">Responsible </label></dt>
+		  <dd>
+			<select id="relatedUsersDd">
+
+            </select>
+		  </dd>
+
+		  <dt><label for="referredBy">Referred By </label></dt><dd><input type="text" id="referredBy" maxlength="32"/></dd>
+		  -->
+		</dl>
+	  </div>
+      <div class="clearfix"></div>
+	  <!--		  <div class="half-block left withPaddingLeft">
+				  <div class="formTitle">
+					<h3 class="left">Contract</h3>
+					<div class="clearfix"></div>
+				  </div>
+				  <dl class="person-info">
+					<dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" /></dd>
+				  </dl>
+	  </div>
+
+	  <div class="half-block left withPaddingLeft">
+		<div class="formTitle">
+		  <h3 class="left">Job</h3>
+		  <div class="clearfix"></div>
+		</div>
+		<dl class="person-info">
+		  <dt><label for="workflowNamesDd">Workflow Names </label></dt>
+		  <dd>
+			<select id="workflowNamesDd">
+
+            </select>
+		  </dd>
+		  <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
+          
+
+		</dl>
+	  </div>
+      <div class="clearfix">
+      </div>-->
+	  <!--		  <div class="formTitle">
+				  <h3 class="left">Application Summary</h3>
+				  <div class="clearfix"></div>
+	  </div>
+	  <textarea id="otherInfo" placeholder="Fedback of interviews..."></textarea>-->
+    </fieldset>
+  </form>
 </div>

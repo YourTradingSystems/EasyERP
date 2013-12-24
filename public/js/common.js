@@ -289,6 +289,28 @@
                 if (callback) callback();
             });
         };
+        
+        var populateRelatedStatuses = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+            	var options = [];
+                if (model && model.status) {
+                    options = $.map(response.data, function (item) {
+                        return model.status._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.status);
+                    });
+                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+        };
 
         var populateDepartments = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
@@ -300,18 +322,19 @@
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
                         return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
-                            $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.departmentName);
+                            $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected').attr('data-level', item.nestingLevel) :
+                            $('<option/>').val(item._id).text(item.departmentName).attr('data-level', item.nestingLevel);
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item._id).text(item.departmentName);
+                        return $('<option/>').val(item._id).text(item.departmentName).attr('data-level', item.nestingLevel);
                     });
                 }
                 selectList.append(options);
                 if (callback) callback();
             });
         };
+        
         var populateDepartmentsList = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
@@ -402,7 +425,7 @@
             });
         };
 
-        var populateDegrees = function (selectId, url, model) {
+        var populateDegrees = function (selectId, url, model,callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -421,6 +444,7 @@
                 }
                 selectList.append(options);
             });
+            if (callback) callback();
         };
 
         var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model, callback) {
@@ -589,6 +613,7 @@
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
+            populateRelatedStatuses:populateRelatedStatuses,
             toObject: toObject,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
             ISODateToDate: ISODateToDate,

@@ -630,6 +630,22 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+    
+    function removeWorkflow(req, res, _id, data) {
+        console.log("Requst removeWorkflow is success");
+        if (req.session && req.session.loggedIn) {
+            access.getDeleteAccess(req.session.uId, 50, function (access) {
+                if (access) {
+                	workflow.remove(_id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
 
     //---------------------Companies-------------------------------
 
@@ -1094,6 +1110,21 @@ var requestHandler = function (fs, mongoose) {
                 }
             })
 
+        } else {
+            res.send(401);
+        }
+    };
+    function uploadApplicationFile(req, res, id, file) {
+        console.log("File Uploading to Persons");
+        if (req.session && req.session.loggedIn) {
+            access.getEditWritAccess(req.session.uId, 43, function (access) {
+                if (access) {
+					delete file._id
+                    employee.update( id , { $push: { attachments: file } }, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
@@ -1728,6 +1759,7 @@ var requestHandler = function (fs, mongoose) {
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
+        removeWorkflow:removeWorkflow,
 
         getJobPosition: getJobPosition,
         createJobPosition: createJobPosition,
@@ -1752,6 +1784,7 @@ var requestHandler = function (fs, mongoose) {
         getApplicationsCustom: getApplicationsCustom,
         removeApplication: removeApplication,
         updateApplication: updateApplication,
+		uploadApplicationFile:uploadApplicationFile,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,

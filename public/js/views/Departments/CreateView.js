@@ -60,13 +60,16 @@ define([
                 //var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
                 var nestingLevel = this.$("#parentDepartment option:selected").data('level');
                 var departmentManager = this.$("#departmentManager option:selected").val();
-                //var departmentManager = common.toObject(managerId, this.accountDdCollection);
-                
+                var users = this.$el.find("#targetUsers .choosen");
+                users = _.map(users, function(elm) {
+                    return $(elm).attr('id');
+                });
                 this.model.save({
                     departmentName: departmentName,
                     parentDepartment: parentDepartment,
                     departmentManager: departmentManager,
-                    nestingLevel: nestingLevel
+                    nestingLevel: ++nestingLevel,
+                    users: users
                 },
                 {
                     headers: {
@@ -108,7 +111,7 @@ define([
 						}]
 
                 });
-				common.populateDepartments(App.ID.parentDepartment, "/Departments");
+                common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam");
 				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
 				common.populateUsersForGroups('#sourceUsers');
                 return this;
