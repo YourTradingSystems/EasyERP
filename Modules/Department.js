@@ -149,76 +149,24 @@ var Department = function (logWriter, mongoose) {
     };
 
     function getCustomDepartment(data, response) {
-        //var res = {};
-        //res['data'] = [];
-        //var query = department.find({});
-        //query.populate('departmentManager parentDepartment').
-		//	populate('createdBy.user').
-        //    populate('editedBy.user');
-
-        //query.sort({ departmentName: 1 });
-        ////query.skip((data.page - 1) * data.count).limit(data.count);
-        //query.exec(function (err, departments) {
-        //    if (err) {
-        //        console.log(err);
-        //        logWriter.log("Department.js getDepartments Department.find " + err);
-        //        response.send(500, { error: "Can't find Department" });
-        //    } else {
-        //        departments.forEach(function (department) {
-
-        //        });
-        //        res['data'] = departments;
-        //        response.send(res);
-        //    }
-        //});
         var res = {};
         res['data'] = [];
-        department.aggregate(
-            {
-                $group: {
-                    _id: "$nestingLevel",
-                    Id: {
-                        $push:"$_id"
-                    }
-                },
-            },
-            {
-                $sort: {
-                    _id: 1
-                }
-            },
-            function (err, result) {
-                if (result) {
-                    var i = 0;
-                    console.log(result);
-                    result.forEach(function (elm) {
-                        var object = {};
-                        object['nestingLevel'] = elm._id;
-                        object['child'] = [];
-                        department.find().
-                            where('_id').in(elm.Id).
-                            exec(function(error, deps) {
-                                if (deps) {
-                                    object['child'] = deps;
-                                    res['data'].push(object);
-                                    i++;
-                                    if (i == result.length) {
-                                        res['data'].sort(function(a, b) {
-                                            if (a.nestingLevel < b.nestingLevel) return -1;
-                                            if (a.nestingLevel > b.nestingLevel) return 1;
-                                            return 0;
-                                        });
-                                        response.send(res);
-                                        console.log(res);
-                                    }
-                                }
-                            });
-                    });
-                } else {
-                    console.log(err);
-                }
+        var query = department.find({});
+        query.exec(function (err, departments) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Department.js getDepartments Department.find " + err);
+                response.send(500, { error: "Can't find Department" });
+            } else {
+                res['data'] = departments;
+                res['data'].sort(function(a, b) {
+                    if (a.nestingLevel < b.nestingLevel) return -1;
+                    if (a.nestingLevel > b.nestingLevel) return 1;
+                    return 0;
+                });
+                response.send(res);
             }
-        );
+        });
     };
 
 
