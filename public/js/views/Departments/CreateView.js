@@ -66,7 +66,7 @@ define([
                     departmentName: departmentName,
                     parentDepartment: parentDepartment,
                     departmentManager: departmentManager,
-                    nestingLevel: nestingLevel
+                    nestingLevel: ++nestingLevel
                 },
                 {
                     headers: {
@@ -108,7 +108,7 @@ define([
 						}]
 
                 });
-				common.populateDepartments(App.ID.parentDepartment, "/Departments");
+                common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam");
 				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
 				common.populateUsersForGroups('#sourceUsers');
                 return this;

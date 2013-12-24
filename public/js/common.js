@@ -300,12 +300,12 @@
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
                         return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
-                            $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.departmentName);
+                            $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected').attr('data-level', item.nestingLevel) :
+                            $('<option/>').val(item._id).text(item.departmentName).attr('data-level', item.nestingLevel);
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item._id).text(item.departmentName);
+                        return $('<option/>').val(item._id).text(item.departmentName).attr('data-level', item.nestingLevel);
                     });
                 }
                 selectList.append(options);

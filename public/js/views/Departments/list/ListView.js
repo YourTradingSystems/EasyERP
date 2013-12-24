@@ -33,7 +33,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 				'</tr>');
 		},*/
 		createDepartmentListRow:function(department,index,className){
-		    return ('<li class="' + className + '" data-id="' + department._id + '" data-level="' + department.nestingLevel + '"><span class="dotted-line"></span><span class="text">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
+		    return ('<li class="' + className + '" data-id="' + department._id + '"><span class="dotted-line"></span><span class="text">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
 		},
         editItem: function(e){
             //create editView in dialog here
@@ -69,25 +69,23 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
             this.$el.html(_.template(ListTemplate));
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
 			var departments = this.collection.toJSON();
-			var parentDepartments =  jQuery.grep(departments, function( item ) {
-				return (!item.parentDepartment);
-			});
-			var childDepartments =  jQuery.grep(departments, function( item ){
-				return (item.parentDepartment);
-			});
-
-			for (var i=0;i<parentDepartments.length;i++){
-				this.$el.find("#groupList").append(this.createDepartmentListRow(parentDepartments[i],i+1,"parent"));
-				var k=0;
-				for (var j=childDepartments.length-1;j>=0;j--){
-					if (childDepartments[j].parentDepartment._id==parentDepartments[i]._id){
-						k++;
-						this.$el.find("#groupList").append(this.createDepartmentListRow(childDepartments[j],k,"child"));
-						childDepartments.splice(j,1);
-					}
+            departments.forEach(function(elm) {
+                elm.child.forEach(function(elm1) {
+                    this.$el.find("#groupList").append(this.createDepartmentListRow(elm1, i + 1, "parent"));
+                });
+            });
+			//for (var i=0;i<parentDepartments.length;i++){
+			//	this.$el.find("#groupList").append(this.createDepartmentListRow(parentDepartments[i],i+1,"parent"));
+			//	var k=0;
+			//	for (var j=childDepartments.length-1;j>=0;j--){
+			//		if (childDepartments[j].parentDepartment._id==parentDepartments[i]._id){
+			//			k++;
+			//			this.$el.find("#groupList").append(this.createDepartmentListRow(childDepartments[j],k,"child"));
+			//			childDepartments.splice(j,1);
+			//		}
 					
-				}
-			}
+			//	}
+			//}
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
