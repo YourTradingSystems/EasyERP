@@ -115,22 +115,22 @@
                     var salesTeamId = this.$("#salesTeamDd option:selected").val();
                     salesTeamId = salesTeamId ? salesTeamId : null;
 
-                    var nextActionSt = $.trim($("#nextActionDate").val());
-                    var nextActionDescription = $.trim($("#nextActionDescription").val());
-                    var nextActionDate = "";
+                    var nextActionDate = $.trim(this.$el.find("#nextActionDate").val());
+                    var nextActionDescription = $.trim(this.$el.find("#nextActionDescription").val());
+                    /*var nextActionDate = "";
                     if (nextActionSt) {
                         nextActionDate = $.trim($("#nextActionDate").val());
-                    };
+                    };*/
                     var nextAction = {
                         date: nextActionDate,
                         desc: nextActionDescription
                     };
 
-                    var expectedClosingSt = $.trim($("#expectedClosing").val());
-                    var expectedClosing = "";
-                    if (expectedClosingSt){
+                    var expectedClosing = $.trim(this.$el.find("#expectedClosing").val());
+                    //var expectedClosing = "";
+                    /*if (expectedClosingSt){
                         expectedClosing = $.trim($("#expectedClosing").val());
-                    };
+                    };*/
 
                     var priority = $(App.ID.priorityDd).val();
 
@@ -253,8 +253,8 @@
                         }
                     }
                 });
-                $('#nextActionDate').datepicker({ dateFormat: "d M, yy" });
-                $('#expectedClosing').datepicker({ dateFormat: "d M, yy" });
+                $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
+                $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 var model = this.currentModel.toJSON();
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);
