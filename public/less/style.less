@@ -817,7 +817,6 @@ h3 {
         line-height: 0px;
         min-height: 16px;
     }
-
     dd {
         line-height: 0px;
         min-height: 16px;
@@ -855,6 +854,29 @@ h3 {
 
 .person-info {
 	.dl-auto();
+}
+.app-empty-info {
+	.dl-auto(200px,100%);
+	margin-top:-3px;
+	dd{
+		display:none;
+	}
+	dt{
+		margin-top:11px !important;
+		input{
+			width:100% !important;
+		}
+	}
+}
+
+.app-normal-info{
+	.dl-auto(200px,35%);
+	dd{
+		input{
+			width:99% !important;
+		}
+	}
+
 }
 .department-info {
 	.dl-auto(200px);
@@ -1316,7 +1338,7 @@ h3 {
             line-height: 18px;
             font-weight: 400;
             font-size: 13px;
-            text-align: center;
+            text-align: left;
             text-shadow: 0 1px 1px rgba(222, 222, 222, 0.5);
 
             input[type="checkbox"] {
@@ -1345,12 +1367,12 @@ h3 {
                 // white-space: pre-line;
                 line-height: 18px;
                 font-size: 11px;
-                text-align: center;
+                text-align: left;
                 white-space: nowrap;
                 text-overflow: ellipsis;
 
                 &:nth-child(2) {
-                    text-align: center;
+                    text-align: left;
                 }
 
                 progress {
@@ -1737,7 +1759,11 @@ input, textarea, select {
         margin-right: 10px;
         border-right: 1px solid #dddddd;
     }
+	&.marginLeft{
+		margin-left:10px;
+		margin-top:8px;
 
+	}
     &.withPaddingLeft {
         >div {
             margin-right: 15px;
@@ -2341,7 +2367,6 @@ button {
     dl {
         dt, dd {
             line-height: 10px;
-            overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
 			a{
@@ -2430,8 +2455,11 @@ button {
 }
 
     #createApplicationForm #otherInfo {
-        margin-top: 10px;
-}
+		margin-top: 13px;
+		width: 316px;
+		height: 113px;
+		min-height: initial;
+	}
 
 #createJobPositionForm #description,
     #editJobPositionForm #description {
@@ -2785,7 +2813,7 @@ button {
     }
 
     .opportunity-header {
-        margin-bottom: 15px;
+        margin-bottom: 7px;
 
         h3 {
             text-align: right;
@@ -2995,7 +3023,7 @@ button {
         margin-left: 1px;
         font-size: 12px;
 		font-weight:bold;
-		text-align:center;
+		text-align:left;
     }
 }
 .task-header{
@@ -3005,7 +3033,6 @@ button {
 }
 .application-content p{
 	line-height:20px;
-	padding-left:10px;
 }
 .tag {
     margin: 0 0 3px 1px;
@@ -3017,7 +3044,16 @@ button {
     background: #f0f0fa;
     color: #4c4c4c;
 }
+.application-header {
+	padding:0;
+}
+.application-header {
+	p {
+        width: auto;
+		line-height:18px !important;
+    }
 
+}
 .task:hover .dropDown img,
 .application:hover .dropDown img,
 .opportunity:hover .dropDown img,
@@ -3591,7 +3627,7 @@ table#workflows {
 		}
 	}
 	&.stage{
-		left:43px;
+		left:0px;
 	}
 }
 	
@@ -3987,4 +4023,29 @@ ul.dialog-tabs{
 	width:95%;
 	height:295px;
 	padding:1px;
+}
+.create-app-dialog .ui-dialog-buttonpane{
+	margin: 0 29px !important;
+	.ui-dialog-buttonset{
+		margin-top:5px !important;
+	}
+}
+.app-block{
+	width:316px;
+	float:left;
+	&.left{
+		margin-right:8px;
+		width:350px;
+	}
+	&.right{
+		width:265px;
+	}
+	&.marginLeft{
+		width:170px;
+		margin-left:10px;
+	}
+	&.bottom{
+		margin-top:-5px;
+		margin-bottom:8px;
+	}
 }

@@ -402,7 +402,7 @@
             });
         };
 
-        var populateDegrees = function (selectId, url, model) {
+        var populateDegrees = function (selectId, url, model,callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -421,6 +421,7 @@
                 }
                 selectList.append(options);
             });
+            if (callback) callback();
         };
 
         var populateWorkflows = function (workflowType, selectId, workflowNamesDd, url, model, callback) {
