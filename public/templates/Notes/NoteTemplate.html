@@ -54,7 +54,7 @@
         		attachments.reverse();
         		_.each(attachments, function(data,key){ %>
        <li class="attachFile_<%=data['_id'] %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
-              <a id="<%=data['_id'] %>" class="deleteAttach">Delete</a>
+              <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
 	   </li>
            <% }); attachments.reverse(); %>
        </ul>

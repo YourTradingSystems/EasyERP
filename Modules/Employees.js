@@ -64,7 +64,16 @@ var Employee = function (logWriter, mongoose) {
 		editedBy:{
 			user:{type:ObjectId, ref: 'Users', default:null},
 			date:{type:Date}
-		}
+		},
+        attachments: [{
+            id: { type: Number, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            size:Number,
+            uploaderName: {type: String, default: ''},
+            uploadDate: { type: Date, default: Date.now }
+        }]
+
     }, { collection: 'Employees' });
 
     var employee = mongoose.model('Employees', employeeSchema);
@@ -112,6 +121,26 @@ var Employee = function (logWriter, mongoose) {
                         }
                         if (data.name.last) {
                             _employee.name.last = data.name.last;
+                        }
+                    }
+                    if (data.attachments) {
+                        if (data.attachments.id) {
+                            _employee.attachments.id = data.attachments.id;
+                        }
+                        if (data.attachments.name) {
+                            _employee.attachments.name = data.attachments.name;
+                        }
+                        if (data.attachments.path) {
+                            _employee.attachments.path = data.attachments.path;
+                        }
+                        if (data.attachments.size) {
+                            _employee.attachments.size = data.attachments.size;
+                        }
+                        if (data.attachments.uploadDate) {
+                            _employee.attachments.uploadDate = data.attachments.uploadDate;
+                        }
+                        if (data.attachments.uploaderName) {
+                            _employee.attachments.uploaderName = data.attachments.uploaderName;
                         }
                     }
                     if (data.subject) {
@@ -250,7 +279,7 @@ var Employee = function (logWriter, mongoose) {
                                 logWriter.log("Employees.js create savetoBd _employee.save " + err);
                                 res.send(500, { error: 'Employees.save BD error' });
                             } else {
-                                res.send(201, { success: 'A new Employees create success' });
+                                res.send(201, { success: 'A new Employees create success', result:result });
                                 console.log(result);
                             }
                         } catch (error) {

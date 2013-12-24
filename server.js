@@ -157,6 +157,25 @@ app.post('/uploadFiles', function (req, res, next) {
         });
     });
 });
+app.post('/uploadApplicationFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    file = {};
+    console.log(req.headers);
+    console.log("se blyad appload");
+    fs.readFile(req.files.attachfile.path, function (err, data) {
+        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+        fs.writeFile(path, data, function (err) {
+            file._id = mongoose.Types.ObjectId();
+            file.name = req.files.attachfile.name;
+            file.path = path;
+            file.size = req.files.attachfile.size;
+            file.uploadDate = new Date();
+            file.uploaderName = req.session.uName;
+            requestHandler.uploadApplicationFile(req, res, req.headers.id, file);
+        });
+    });
+});
 
 app.get('/logout', function (req, res, next) {
     console.log('>>>>>>>>>>>logut<<<<<<<<<<<<<<');

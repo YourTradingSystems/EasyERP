@@ -1097,6 +1097,28 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+    function uploadApplicationFile(req, res, id, file) {
+        console.log("File Uploading to Persons");
+        if (req.session && req.session.loggedIn) {
+            access.getEditWritAccess(req.session.uId, 43, function (access) {
+                if (access) {
+                    employee.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                        if (err) {
+                            res.send(401);
+                        }
+                        else {
+                            res.send(200, file);
+                        }
+                    });
+                    employee.update(id, remove, data.employee, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
     function removeApplication(req, res, id, data) {
         console.log("Requst removeEmployees is success");
@@ -1752,6 +1774,7 @@ var requestHandler = function (fs, mongoose) {
         getApplicationsCustom: getApplicationsCustom,
         removeApplication: removeApplication,
         updateApplication: updateApplication,
+		uploadApplicationFile:uploadApplicationFile,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,
