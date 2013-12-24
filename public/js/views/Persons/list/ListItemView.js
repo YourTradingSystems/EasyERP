@@ -12,7 +12,7 @@ function (ListTemplate) {
         },
         render: function() {
             this.$el.append(_.template(ListTemplate, { personsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
-        },
+        }
     });
 
     return PersonsListItemView;

@@ -792,7 +792,7 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getCustom(res);
+                    jobPosition.getJobPosition(data,res);
                 } else {
                     res.send(403);
                 }
@@ -888,7 +888,7 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 42, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getCustom(data, res);
+                    employee.getEmployeeForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1014,7 +1014,7 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getCustom(data, res);
+                    employee.getEmployeeForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1051,6 +1051,23 @@ var requestHandler = function (fs, mongoose) {
                 console.log(access);
                 if (access) {
                     employee.getFilterApplications(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getApplicationsForList (req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getApplicationsForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1752,6 +1769,7 @@ var requestHandler = function (fs, mongoose) {
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
+        getApplicationsForList: getApplicationsForList,
         getApplicationById: getApplicationById,
 
         createLead: createLead,

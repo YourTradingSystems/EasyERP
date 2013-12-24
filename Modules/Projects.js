@@ -484,6 +484,39 @@ var Project = function (logWriter, mongoose) {
                 ]
             }
         ]);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        query = project.find().
+            or([
+                {
+                    'hwoCanRW': 'everyOne'
+                },
+                {
+                    $and: [
+                        { 'hwoCanRW': 'owner' },
+                        { 'groups.owner': data.uId }
+                    ]
+                },
+                {
+                    $or: [{
+                        $and: [
+                            { 'hwoCanRW': 'group' },
+                            { 'groups.users': data.uId }
+                        ]
+                    },
+                        {
+                            $and: [
+                                { 'hwoCanRW': 'group' },
+                                { 'groups.users': data.uId }
+                            ]
+                        }
+                    ]
+                }
+            ]);
         query.populate("projectmanager customer task").populate('workflow').
                   populate('createdBy.user').
                   populate('editedBy.user');
@@ -940,6 +973,12 @@ var Project = function (logWriter, mongoose) {
     function getTasksForList(data, response) {
         var res = {};
         res['data'] = [];
+        var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
         var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')
