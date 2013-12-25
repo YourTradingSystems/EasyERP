@@ -7,7 +7,7 @@ var requestHandler = function (fs, mongoose) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         google = require("./Modules/Google.js")(users),
         events = require("./Modules/Events.js")(logWriter, mongoose, google),
-        project = require("./Modules/Projects.js")(logWriter, mongoose),
+        project = require("./Modules/Projects.js")(logWriter, mongoose, department),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
@@ -1115,12 +1115,12 @@ var requestHandler = function (fs, mongoose) {
         }
     };
     function uploadApplicationFile(req, res, id, file) {
-        console.log("File Uploading to Persons");
+        console.log("File Uploading to app");
         if (req.session && req.session.loggedIn) {
             access.getEditWritAccess(req.session.uId, 43, function (access) {
                 if (access) {
-					delete file._id
-                    employee.update( id , { $push: { attachments: file } }, res);
+					console.log(file);
+                    employee.update( id , {$push:{ attachments: {$each:file}}}, res);
                 } else {
                     res.send(403);
                 }

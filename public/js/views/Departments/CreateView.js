@@ -24,7 +24,10 @@ define([
                 'click #sourceUsers li': 'chooseUser',
                 'click #targetUsers li': 'chooseUser',
 			    'click #addUsers':'addUsers',
-			    'click #removeUsers':'removeUsers'
+			    'click #removeUsers':'removeUsers',
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect"
 			},
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
@@ -88,6 +91,36 @@ define([
             hideDialog: function () {
                 $(".create-dialog").remove();
             },
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				this.hideNewSelect();
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				return false;
+				
+			},
+			chooseOption:function(e){
+				var k = $(e.target).parent().find("li").index($(e.target));
+				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			},
+
+			styleSelect:function(id){
+				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				if (text){
+					$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				}else{
+					$(id).parent().append("<a class='current-selected' href='javascript:;'>Empty</a>");		
+				}
+				$(id).hide();
+			},
 
             render: function () {
 				var self = this;
@@ -111,8 +144,8 @@ define([
 						}]
 
                 });
-                common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam");
-				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd");
+                common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam",null,function(){self.styleSelect(App.ID.parentDepartment);});
+				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.departmentManager);});
 				common.populateUsersForGroups('#sourceUsers');
                 return this;
             }

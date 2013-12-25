@@ -377,6 +377,25 @@ var Employee = function (logWriter, mongoose) {
         });
     };
 
+    function getForDdByRelatedUser(uId, response) {
+        var res = {};
+        res['data'] = [];
+        var query = employee.find({ relatedUser: uId });
+        query.where('isEmployee', true);
+        query.select('_id name ');
+        query.sort({ 'name.first': 1 });
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Employee.find' + err);
+                response.send(500, { error: "Can't find Employee" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+
     function getApplications(response) {
         var res = {};
         res['data'] = [];
@@ -412,7 +431,7 @@ var Employee = function (logWriter, mongoose) {
             }
         });
         query = employee.find();
-        query.where('isEmployee', true);
+        query.where('isEmployee', false).where('workflow').in(data.status);
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
             populate('editedBy.user');
@@ -468,7 +487,6 @@ var Employee = function (logWriter, mongoose) {
             if (data.manager && data.manager._id) {
                 data.manager = data.manager._id;
             }
-			console.log("hivno")
             if (data.coach && data.coach._id) {
                 data.coach = data.coach._id;
             }
@@ -478,15 +496,14 @@ var Employee = function (logWriter, mongoose) {
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
             }
-			console.log(_id)
-            employee.update({ _id: _id }, data, function (err, result) {
+            employee.findByIdAndUpdate({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
                         logWriter.log("Employees.js update employee.update " + err);
                         res.send(500, { error: "Can't update Employees" });
                     } else {
-                        res.send(200, { success: 'Employees updated success' });
+                        res.send(200, { success: 'Employees updated success' ,data:result});
                     }
                 }
                 catch (exception) {
@@ -584,6 +601,8 @@ var Employee = function (logWriter, mongoose) {
         getEmployeeForList: getEmployeeForList,
 
         getForDd: getForDd,
+
+        getForDdByRelatedUser: getForDdByRelatedUser,
 
         update: update,
 
