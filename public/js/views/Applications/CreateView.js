@@ -159,12 +159,16 @@ define([
 						var currentModel = model.changed.result;
 						var currentModelID = currentModel["_id"];
 						var addFrmAttach = $("#createApplicationForm");
+										   var fileArr= [];
+										   var addInptAttach = '';
 						$("li .inputAttach").each(function(){
-							var addInptAttach = $(this)[0].files[0];
+											   addInptAttach = $(this)[0].files[0];
+											   fileArr.push(addInptAttach);
 							if(!self.fileSizeIsAcceptable(addInptAttach)){
 								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
 								return;
 							}
+										   });
 							addFrmAttach.submit(function (e) {
 								var bar = $('.bar');
 								var status = $('.status');
@@ -176,7 +180,7 @@ define([
 									type: "POST",
 									processData: false,
 									contentType: false,
-									data: [addInptAttach],
+												   data: [fileArr],
 
 									beforeSend: function (xhr) {
 										xhr.setRequestHeader("id", currentModelID);
@@ -207,7 +211,7 @@ define([
 							});
 							addFrmAttach.submit();
 							addFrmAttach.off('submit');
-						});
+
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });

@@ -1,9 +1,10 @@
 ﻿define([
     "text!templates/Applications/EditTemplate.html",
+    'text!templates/Notes/AddAttachments.html',
     "common",
     "custom"
 ],
-    function (EditTemplate, common, Custom) {
+    function (EditTemplate, addAttachTemplate, common, Custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -25,8 +26,112 @@
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler',
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit"
+                "mouseleave .avatar": "hideEdit",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect",
+                "click .deleteAttach": "deleteAttach",
+                "change .inputAttach": "addAttach",
             },
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
+            addAttach: function (event) {
+                event.preventDefault();
+                var currentModel = this.currentModel;
+                var currentModelID = currentModel["id"];
+                var addFrmAttach = $("#createApplicationForm");
+                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
+                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                    return;
+                }
+                addFrmAttach.submit(function (e) {
+                    var bar = $('.bar');
+                    var status = $('.status');
+                    var formURL = "http://" + window.location.host + "/uploadApplicationFiles";
+                    e.preventDefault();
+                    addFrmAttach.ajaxSubmit({
+                        url: formURL,
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: [addInptAttach],
+
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("id", currentModelID);
+                            status.show();
+                            var statusVal = '0%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+                        
+                        uploadProgress: function(event, position, total, statusComplete) {
+                            var statusVal = statusComplete + '%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+                        
+                        success: function (data) {
+                            var attachments = currentModel.get('attachments');
+							$('.attachContainer').empty();
+							data.data.attachments.forEach(function(item){
+								var date = common.utcDateToLocaleDate(item.uploadDate);
+								attachments.push(item);
+								$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+});
+                            console.log('Attach file');
+                            addFrmAttach[0].reset();
+                            status.hide();
+                        },
+
+                        error: function () {
+                            console.log("Attach file error");
+                        }
+                    });
+				})
+				addFrmAttach.submit();
+				addFrmAttach.off('submit');
+			},
+/*
+			addAttach: function (event) {
+				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
+				$(".attachContainer").append('<li class="attachFile">'+
+											 '<a href="javascript:;">'+s+'</a>'+
+											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
+											);
+				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
+				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
+			},
+*/
+				deleteAttach: function (e) {
+					if ($(e.target).closest("li").hasClass("attachFile")){
+						$(e.target).closest(".attachFile").remove();
+					}
+					else{
+						var id = e.target.id;
+						var currentModel = this.currentModel;
+						var attachments = currentModel.get('attachments');
+						var new_attachments = _.filter(attachments, function (attach) {
+							if (attach._id != id) {
+								return attach;
+							}
+						});
+						currentModel.set('attachments', new_attachments);
+						currentModel.save({},
+										  {
+											  headers: {
+												  mid: 39
+											  },
+
+											  success: function (model, response, options) {
+												  $('.attachFile_' + id).remove();
+											  }
+										  });
+					}
+				},
+
 
             changeWorkflows: function () {
                 var itemIndex = Custom.getCurrentII() - 1;
@@ -179,12 +284,41 @@
                         });
                 }
             },
+			   hideNewSelect:function(e){
+				   $(".newSelectList").remove();;
+			   },
+			   showNewSelect:function(e){
+				   this.hideNewSelect();
+				   var s="<ul class='newSelectList'>";
+				   $(e.target).parent().find("select option").each(function(){
+					   s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				   });
+				   s+="</ul>";
+				   $(e.target).parent().append(s);
+				   return false;
+				   
+			   },
+			   chooseOption:function(e){
+				   var k = $(e.target).parent().find("li").index($(e.target));
+				   $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				   $(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				   $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			   },
+
+			   styleSelect:function(id){
+				   var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				   $(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				   $(id).hide();
+			   },
+
+    
             render: function () {
                 var formString = this.template({ model: this.currentModel.toJSON() });
+				var b= this.currentModel.toJSON() ;
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "applications-edit-dialog",
-                    width: 900,
+                    width: 690,
                     title: "Edit Application",
                     buttons:{
                         save:{
@@ -204,12 +338,14 @@
                         }
                     }
                 });
-                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON());
-                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants" , this.currentModel.toJSON());
-                common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON());
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
-                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON());
+                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.relatedUsersDd);});
+                common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentDd);});
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.jobPositionDd);});
+                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
+				   self.styleSelect(App.ID.jobPositionDd);
+				   self.styleSelect("#sourceDd");
+
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

@@ -438,17 +438,8 @@ var Employee = function (logWriter, mongoose) {
                 res['listLength'] = result.length;
             }
         });
-
-        var query = employee.find();
-        query.where('isEmployee', true);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-
         query = employee.find();
-        query.where('isEmployee', true);
+        query.where('isEmployee', false).where('workflow').in(data.status);
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
             populate('editedBy.user');
@@ -504,7 +495,6 @@ var Employee = function (logWriter, mongoose) {
             if (data.manager && data.manager._id) {
                 data.manager = data.manager._id;
             }
-			console.log("hivno")
             if (data.coach && data.coach._id) {
                 data.coach = data.coach._id;
             }
@@ -514,15 +504,14 @@ var Employee = function (logWriter, mongoose) {
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
             }
-			console.log(_id)
-            employee.update({ _id: _id }, data, function (err, result) {
+            employee.findByIdAndUpdate({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
                         logWriter.log("Employees.js update employee.update " + err);
                         res.send(500, { error: "Can't update Employees" });
                     } else {
-                        res.send(200, { success: 'Employees updated success' });
+                        res.send(200, { success: 'Employees updated success' ,data:result});
                     }
                 }
                 catch (exception) {
