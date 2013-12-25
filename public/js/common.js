@@ -507,19 +507,19 @@
                 if (callback) callback();
             });
         }
-        var populateUsersForGroups = function (selectId, model, callback) {
+        var populateUsersForGroups = function (selectId, model,callback) {
             var selectList = $(selectId);
             var self = this;
             dataService.getData('/Users', { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.users) {
-                    options = $.map(
-                        _.filter(response.data, function(filteredItem) {
-                            return !(filteredItem in model.users);
-                        }),
-                        function (item) {
-                            return $('<li/>').attr('id', item._id).text(item.login);
-                        });
+                if (model) {
+					options = $.map(
+						_.filter(response.data, function(filteredItem) {
+							return !(filteredItem in model.users);
+						}),
+						function (item) {
+							return $('<li/>').attr('id', item._id).text(item.login);
+						});
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<li/>').text(item.login).attr('id', item._id);

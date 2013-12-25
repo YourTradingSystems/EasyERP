@@ -438,17 +438,8 @@ var Employee = function (logWriter, mongoose) {
                 res['listLength'] = result.length;
             }
         });
-
-        var query = employee.find();
-        query.where('isEmployee', true);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-
         query = employee.find();
-        query.where('isEmployee', true);
+        query.where('isEmployee', false).where('workflow').in(data.status);
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
             populate('editedBy.user');
