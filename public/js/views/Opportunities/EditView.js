@@ -87,7 +87,6 @@
             },
 
             saveItem: function () {
-                event.preventDefault();
                 var self = this;
 
                     var mid = 39;

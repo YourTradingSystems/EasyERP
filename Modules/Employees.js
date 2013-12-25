@@ -428,8 +428,7 @@ var Employee = function (logWriter, mongoose) {
     };
 
     function getApplicationsForList(data, response) {
-        var res = {}
-        var description = "";
+        var res = {};
         res['data'] = [];
         var query = employee.find();
         query.where('isEmployee', false);
@@ -439,7 +438,10 @@ var Employee = function (logWriter, mongoose) {
             }
         });
         query = employee.find();
-        query.where('isEmployee', false).where('workflow').in(data.status);
+        query.where('isEmployee', false);
+        if (data.staus) {
+            query.where('workflows').in(data.staus);
+        }
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
             populate('editedBy.user');
@@ -449,7 +451,7 @@ var Employee = function (logWriter, mongoose) {
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
-                logWriter.log('Employees.js get Employee.find' + description);
+                logWriter.log('Employees.js get Employee.find');
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
                 res['data'] = result;
