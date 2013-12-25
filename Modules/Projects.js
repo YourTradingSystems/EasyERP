@@ -30,11 +30,11 @@ var Project = function (logWriter, mongoose, department) {
         createdBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
-		},
+        },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-		}
+        }
     }, { collection: 'Project' });
 
     var TasksSchema = mongoose.Schema({
@@ -448,6 +448,10 @@ var Project = function (logWriter, mongoose, department) {
         var qeryEveryOne = function (arrayOfId, n) {
             project.find().
                 where('_id').in(arrayOfId).
+                populate("projectmanager customer task").
+                populate('workflow').
+                populate('createdBy.user').
+                populate('editedBy.user').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -464,6 +468,10 @@ var Project = function (logWriter, mongoose, department) {
             project.find().
                 where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
+                populate("projectmanager customer task").
+                populate('workflow').
+                populate('createdBy.user').
+                populate('editedBy.user').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -479,27 +487,40 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            department.department.find({users: data.uId},{_id:1},
-            function (err, deps) {
-                console.log(deps);
-                if (!err) {
-                    project.find().
-                        where('_id').in(arrayOfId).
-                        where('groups.group').in(deps).
-                        exec(function (error, _res) {
-                            if (!error) {
-                                i++;
-                                console.log(i);
-                                console.log(n);
-                                res['data'] = res['data'].concat(_res);
-                                console.log(res['data']);
-                                if (i == n) findTasksById(res['data'], 0);;
-                            } else {
-                                console.log(error);
-                            }
-                        });
-                }
-            });
+            project.find().
+                   where({ 'groups.users': data.uId }).
+                   exec(function (error, _res1) {
+                       if (!error) {
+                           department.department.find({ users: data.uId }, { _id: 1 },
+                                function (err, deps) {
+                                    console.log(deps);
+                                    if (!err) {
+                                        project.find().
+                                            where('_id').in(arrayOfId).
+                                            where('groups.group').in(deps).
+                                            populate("projectmanager customer task").
+                                            populate('workflow').
+                                            populate('createdBy.user').
+                                            populate('editedBy.user').
+                                            exec(function (error, _res) {
+                                                if (!error) {
+                                                    i++;
+                                                    console.log(i);
+                                                    console.log(n);
+                                                    res['data'] = res['data'].concat(_res1);
+                                                    res['data'] = res['data'].concat(_res);
+                                                    console.log(res['data']);
+                                                    if (i == n) findTasksById(res['data'], 0);;
+                                                } else {
+                                                    console.log(error);
+                                                }
+                                            });
+                                    }
+                                });
+                       } else {
+                           console.log(error);
+                       }
+                   });
         };
 
         project.aggregate(
@@ -516,79 +537,27 @@ var Project = function (logWriter, mongoose, department) {
                     result.forEach(function (_project) {
                         switch (_project._id) {
                             case "everyOne":
-            {
+                                {
                                     qeryEveryOne(_project.ID, result.length);
                                 }
                                 break;
                             case "owner":
-            {
+                                {
                                     qeryOwner(_project.ID, result.length);
                                 }
                                 break;
                             case "group":
-                    {
+                                {
                                     qeryByGroup(_project.ID, result.length);
-                    }
+                                }
                                 break;
-            }
-        ]);
-        query.populate("projectmanager customer task").populate('workflow').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
-
-        query.sort({ projectName: 1 });
-        query.skip((data.page - 1) * data.count).limit(data.count);
-        query.exec(function (err, projects) {
-            if (err) {
-                console.log(err);
+                        }
+                    });
+                } else {
+                    console.log(err);
                 }
             }
         );
-
-        //var query = project.find().
-        //or([
-        //    {
-        //        'hwoCanRW': 'everyOne'
-        //    },
-        //    {
-        //        $and: [
-        //            { 'hwoCanRW': 'owner' },
-        //            { 'groups.owner': data.uId }
-        //        ]
-        //    },
-        //    {
-        //        $or: [{
-        //            $and: [
-        //                { 'hwoCanRW': 'group' },
-        //                { 'groups.users': data.uId }
-        //            ]
-        //        },
-        //            {
-        //                $and: [
-        //                    { 'hwoCanRW': 'group' },
-        //                    { 'groups.users': data.uId }
-        //                ]
-        //            }
-        //        ]
-        //    }
-        //]);
-        //$where(queryFunc);
-        //query.populate("projectmanager customer task").populate('workflow').
-        //          populate('createdBy.user').
-        //          populate('editedBy.user');
-
-        //query.sort({ projectName: 1 });
-        //query.skip((data.page - 1) * data.count).limit(data.count);
-        //query.exec(function (err, projects) {
-        //    if (err) {
-        //        console.log(err);
-        //        logWriter.log("Project.js getProjects project.find " + err);
-        //        response.send(500, { error: "Can't find JobPosition" });
-        //    } else {
-        //        console.log(projects);
-        //        findTasksById(projects, 0);
-        //    }
-        //});
 
         var findTasksById = function (_projects, count) {
             try {
