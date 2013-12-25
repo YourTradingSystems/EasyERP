@@ -808,7 +808,7 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getCustom(res);
+                    jobPosition.getJobPosition(data,res);
                 } else {
                     res.send(403);
                 }
@@ -904,7 +904,7 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 42, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getCustom(data, res);
+                    employee.getEmployeeForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1030,7 +1030,7 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getCustom(data, res);
+                    employee.getEmployeeForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1077,6 +1077,23 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getApplicationsForList (req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getApplicationsForList(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function updateApplication(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn) {
@@ -1102,15 +1119,8 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getEditWritAccess(req.session.uId, 43, function (access) {
                 if (access) {
-                    employee.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
-                        if (err) {
-                            res.send(401);
-                        }
-                        else {
-                            res.send(200, file);
-                        }
-                    });
-                    employee.update(id, remove, data.employee, res);
+					delete file._id
+                    employee.update( id , { $push: { attachments: file } }, res);
                 } else {
                     res.send(403);
                 }
@@ -1792,6 +1802,7 @@ var requestHandler = function (fs, mongoose) {
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
+        getApplicationsForList: getApplicationsForList,
         getApplicationById: getApplicationById,
 
         createLead: createLead,

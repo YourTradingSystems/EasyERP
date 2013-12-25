@@ -246,6 +246,75 @@ var JobPosition = function (logWriter, mongoose, employee) {
         }
     }; //end get
 
+    function getJobPosition(data,response) {
+        var res = {};
+        res['data'] = [];
+        var query = job.find();
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+        query = job.find();
+        query.populate('department').
+            populate('createdBy.user').
+            populate('editedBy.user');
+        query.skip((data.page-1)*data.count).limit(data.count);
+        query.sort({ name: 1 });
+        query.exec(function (err, jobPos) {
+            if (err) {
+                console.log(err);
+                logWriter.log('JobPosition.js get job.find' + err);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                //res['data'] = result;
+                //response.send(res);
+                getTotalEmployees(jobPos, 0);
+                //console.log(res);
+                //response.send(res);
+            }
+        });
+        var getTotalEmployees = function(jobPositions, count) {
+            if (jobPositions && jobPositions.length > count) {
+                var jobId = jobPositions[count]._id.toString();
+                console.log(jobId);
+                var aggregate = employee.employee.aggregate(
+                    {
+                        $match: {
+                            jobPosition: objectId(jobId)
+                        }
+                    },
+                    function(err, result) {
+                        if (result) {
+                            jobPositions[count].numberOfEmployees = result.length;
+                            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
+                            count++;
+                            getTotalEmployees(jobPositions, count);
+                        }
+                    }
+                );
+                //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
+                //        if (err) {
+                //            console.log(err);
+                //            res['data'] = jobPositions;
+                //            response.send(res);
+                //        } else {
+                //            jobPositions[count].numberOfEmployees = _employees.length;
+                //            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
+                //            count++;
+                //            getTotalEmployees(jobPositions, count);
+                //        }
+                //    });
+                //} else {
+                //    res['data'] = jobPositions;
+                //    response.send(res);
+            } else {
+                res['data'] = jobPositions;
+                response.send(res);
+            }
+        }
+    };
+
         function update(_id, data, res) {
             try {
                 delete data._id;
@@ -303,6 +372,8 @@ var JobPosition = function (logWriter, mongoose, employee) {
             create: create,
 
             get: get,
+
+            getJobPosition: getJobPosition,
 
             update: update,
 

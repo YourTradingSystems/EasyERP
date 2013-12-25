@@ -158,7 +158,7 @@ define([
                     success: function (model) {
 						var currentModel = model.changed.result;
 						var currentModelID = currentModel["_id"];
-						var addFrmAttach = $("#addAttachments");
+						var addFrmAttach = $("#createApplicationForm");
 						$("li .inputAttach").each(function(){
 							var addInptAttach = $(this)[0].files[0];
 							if(!self.fileSizeIsAcceptable(addInptAttach)){

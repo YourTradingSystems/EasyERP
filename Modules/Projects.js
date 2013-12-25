@@ -30,11 +30,11 @@ var Project = function (logWriter, mongoose, department) {
         createdBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
-        },
+		},
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-        }
+		}
     }, { collection: 'Project' });
 
     var TasksSchema = mongoose.Schema({
@@ -516,24 +516,31 @@ var Project = function (logWriter, mongoose, department) {
                     result.forEach(function (_project) {
                         switch (_project._id) {
                             case "everyOne":
-                                {
+            {
                                     qeryEveryOne(_project.ID, result.length);
                                 }
                                 break;
                             case "owner":
-                                {
+            {
                                     qeryOwner(_project.ID, result.length);
                                 }
                                 break;
                             case "group":
-                                {
+                    {
                                     qeryByGroup(_project.ID, result.length);
-                                }
+                    }
                                 break;
-                        }
-                    });
-                } else {
-                    console.log(err);
+            }
+        ]);
+        query.populate("projectmanager customer task").populate('workflow').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+
+        query.sort({ projectName: 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.exec(function (err, projects) {
+            if (err) {
+                console.log(err);
                 }
             }
         );
@@ -1022,6 +1029,12 @@ var Project = function (logWriter, mongoose, department) {
     function getTasksForList(data, response) {
         var res = {};
         res['data'] = [];
+        var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
         var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')

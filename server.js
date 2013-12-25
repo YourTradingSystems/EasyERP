@@ -161,8 +161,7 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
-    console.log(req.headers);
-    console.log("se blyad appload");
+	console.log(req.files.attachfile.path);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
@@ -408,6 +407,7 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.updateProject(req, res, id, data);
 });
+
 app.put('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -423,6 +423,7 @@ app.delete('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.removeProject(req, res, id, data);
 });
+
 app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
@@ -667,6 +668,7 @@ app.delete('/Companies/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeCompany(req, res, id, data);
 });
+
 app.delete('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -726,8 +728,7 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
-
-//-----------------------------End Companies--------------------------------------------------
+//------------------JobPositions---------------------------------------------------
 
 app.post('/JobPositions', function (req, res) {
     data = {};
@@ -928,6 +929,8 @@ app.get('/Applications/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
             break;
+        case "list": requestHandler.getApplicationsForList(req, res, data);
+            break;
         default: requestHandler.getFilterApplications(req, res, data);
             break;
     }
@@ -1037,6 +1040,7 @@ app.get('/Leads', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getLeads(req, res, data);
 });
+
 app.get('/Leads/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -1050,6 +1054,7 @@ app.get('/Leads/:viewType', function (req, res) {
             break;
     }
 });
+
 app.post('/Leads', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -1081,6 +1086,7 @@ app.delete('/Leads/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
 });
+
 app.delete('/Leads/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

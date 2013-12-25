@@ -1,14 +1,77 @@
-﻿<table class="list task-list">
-    <thead>
-        <tr>
-            <th>
-                <input type="checkbox" id="check_all" />
-            </th>
-            <th>#</th>
-            <th>Login</th>
-            <th>Email</th>
-            <th>Profile Name</th>
-        </tr>
-    </thead>
-    <tbody id="listTable"></tbody>
-</table>
+﻿<div>
+    <table class="list task-list">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="check_all" />
+                </th>
+                <th>#</th>
+                <th>Login</th>
+                <th>Email</th>
+                <th>Profile Name</th>
+            </tr>
+        </thead>
+        <tbody id="listTable"></tbody>
+    </table>
+    <div>
+        <div>
+                <span>
+                    <span id="grid-start"></span>
+                    -
+                    <span id="grid-end"></span>
+                    of
+                    <span id="grid-count"></span>
+                    items
+                </span>
+
+            <div>
+                <button>
+                    <span id="itemsNumber"></span>
+                </button>
+                <ul>
+                    <li>
+                        <a class="itemsNumber" href="#">5</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="#">10</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="#">20</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="#">50</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="#">100</a>
+                    </li>
+                </ul>
+            </div>
+            <span>Per Page</span>
+        </div>
+        <div>
+            <button id="previousPage" type="button">
+                <<<
+            </button>
+            <span>Page</span>
+            <div>
+                <div>
+                    <input id="currentShowPage" type="text">
+                    <div>
+                        <button>
+                            more
+                        </button>
+                        <ul id="pageList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+                <span>
+                    of
+                    <span id="lastPage"></span>
+                </span>
+            <button  id="nextPage" type="button">
+                >>>
+            </button>
+        </div>
+    </div>
+</div>
