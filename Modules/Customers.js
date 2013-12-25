@@ -411,6 +411,12 @@
             var res = {};
             res['data'] = [];
             var query = customer.find({$and:[{ type: 'Company' }, {isOwn: true}]});
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = customer.find({$and:[{ type: 'Company' }, {isOwn: true}]});
             query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
