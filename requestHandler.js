@@ -1098,12 +1098,12 @@ var requestHandler = function (fs, mongoose) {
         }
     };
     function uploadApplicationFile(req, res, id, file) {
-        console.log("File Uploading to Persons");
+        console.log("File Uploading to app");
         if (req.session && req.session.loggedIn) {
             access.getEditWritAccess(req.session.uId, 43, function (access) {
                 if (access) {
-					delete file._id
-                    employee.update( id , { $push: { attachments: file } }, res);
+					console.log(file);
+                    employee.update( id , {$push:{ attachments: {$each:file}}}, res);
                 } else {
                     res.send(403);
                 }

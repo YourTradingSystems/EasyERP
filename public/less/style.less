@@ -84,7 +84,7 @@
 
 a {
     //color: @lightmagenta;
-    color: #36a9e1;
+    color: #4D5A75;
     text-decoration: none;
 
     &:hover {
@@ -265,11 +265,11 @@ article {
     background: #fff;
     height: @height;
     .no-marpad;
-    border-bottom: 1px solid @activeColor;
+    border-bottom: 1px solid #4D5A75;
 
     nav {
         .left;
-        background: #1e8fc6;
+        background: #4D5A75;
 
         ul {
             .no-marpad;
@@ -340,7 +340,7 @@ article {
     .mainmenu;
 }
 
-.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #36a9e1) {
+.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
     display: block;
     position: relative;
     height: @height;
@@ -1954,7 +1954,7 @@ input, textarea, select {
     }
 
     .title {
-        color: #36A9E1 !important;
+        color: #4D5A75 !important;
         font-size: 13px;
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
@@ -2454,11 +2454,18 @@ button {
         width: 95%;
 }
 
-    #createApplicationForm #otherInfo {
-		margin-top: 13px;
-		width: 316px;
-		height: 113px;
-		min-height: initial;
+    #createApplicationForm {
+		#otherInfo {
+			margin-top: 13px;
+			width: 316px;
+			height: 113px;
+			min-height: initial;
+		}
+		.input-file{
+			padding: 2px 8px;
+			width:auto;
+			margin-top:5px;
+		}
 	}
 
 #createJobPositionForm #description,
@@ -2892,7 +2899,7 @@ button {
 
         .columnNameDiv {
             background: #fff;
-            height: 55px;
+            height: 35px;
 
             .remaining, .revenue {
                 border-bottom: 2px solid #e88f04;
