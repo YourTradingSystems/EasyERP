@@ -326,11 +326,27 @@ var Employee = function (logWriter, mongoose) {
     };
 
     // Custom function for list
-    function getCustom(data, response) {
+    function getEmployeeForList(data, response) {
         var res = {}
         var description = "";
         res['data'] = [];
         var query = employee.find();
+        query.where('isEmployee', true);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        var query = employee.find();
+        query.where('isEmployee', true);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        query = employee.find();
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
 			populate('createdBy.user').
@@ -369,10 +385,30 @@ var Employee = function (logWriter, mongoose) {
         });
     };
 
+    function getForDdByRelatedUser(uId, response) {
+        var res = {};
+        res['data'] = [];
+        var query = employee.find({ relatedUser: uId });
+        query.where('isEmployee', true);
+        query.select('_id name ');
+        query.sort({ 'name.first': 1 });
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Employee.find' + err);
+                response.send(500, { error: "Can't find Employee" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+
     function getApplications(response) {
         var res = {};
         res['data'] = [];
         var query = employee.find();
+
         query.where('isEmployee', false);
         query.populate('relatedUser department jobPosition workflow').
             populate('createdBy.user').
@@ -389,7 +425,48 @@ var Employee = function (logWriter, mongoose) {
                 response.send(res);
             }
         });
-    };//end getById
+    };
+
+    function getApplicationsForList(data, response) {
+        var res = {}
+        var description = "";
+        res['data'] = [];
+        var query = employee.find();
+        query.where('isEmployee', false);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        var query = employee.find();
+        query.where('isEmployee', true);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        query = employee.find();
+        query.where('isEmployee', true);
+        query.populate('relatedUser department jobPosition manager coach').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
+        query.sort({ 'name.first': 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Employee.find' + description);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+    //end getById
 
     function getById(data, response) {
         var query = employee.findById(data.id, function (err, res) { });
@@ -538,15 +615,19 @@ var Employee = function (logWriter, mongoose) {
 
         get: get,
 
-        getCustom: getCustom,
+        getEmployeeForList: getEmployeeForList,
 
         getForDd: getForDd,
+
+        getForDdByRelatedUser: getForDdByRelatedUser,
 
         update: update,
 
         remove: remove,
 
         getApplications: getApplications,
+
+        getApplicationsForList: getApplicationsForList,
         
         getFilterApplications: getFilterApplications,
 

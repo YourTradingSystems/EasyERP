@@ -1,4 +1,4 @@
-var Project = function (logWriter, mongoose) {
+var Project = function (logWriter, mongoose, department) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var ProjectSchema = mongoose.Schema({
@@ -8,7 +8,7 @@ var Project = function (logWriter, mongoose) {
         privacy: { type: String, default: 'All Users' },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
-        hwoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
+        whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
         groups: {
             owner: { type: ObjectId, ref: 'Users', default: null },
             users: [{ type: ObjectId, ref: 'Users', default: null }],
@@ -30,11 +30,11 @@ var Project = function (logWriter, mongoose) {
         createdBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
-		},
+        },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-		}
+        }
     }, { collection: 'Project' });
 
     var TasksSchema = mongoose.Schema({
@@ -444,62 +444,120 @@ var Project = function (logWriter, mongoose) {
     function get(data, response) {
         var res = {};
         res['data'] = [];
-        //project.aggregate(
-        //    {
-        //        $group: {
-        //            _id: "$groups.group",
-        //            object: {
-        //                 $addToSet: {
-        //                     _id: "$_id",
-
-        //                 }
-        //            }
-        //        }
-        //    }
-        //);
-        var query = project.find().
-        or([
-            {
-                'hwoCanRW': 'everyOne'
-            },
-            {
-                $and: [
-                    { 'hwoCanRW': 'owner' },
-                    { 'groups.owner': data.uId }
-                ]
-            },
-            {
-                $or: [{
-                    $and: [
-                        { 'hwoCanRW': 'group' },
-                        { 'groups.users': data.uId }
-                    ]
-                },
-                    {
-                        $and: [
-                            { 'hwoCanRW': 'group' },
-                            { 'groups.users': data.uId }
-                        ]
+        var i = 0;
+        var qeryEveryOne = function (arrayOfId, n) {
+            project.find().
+                where('_id').in(arrayOfId).
+                populate("projectmanager customer task").
+                populate('workflow').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) findTasksById(res['data'], 0);;
                     }
-                ]
-            }
-        ]);
-        query.populate("projectmanager customer task").populate('workflow').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
+                });
+        };
 
-        query.sort({ projectName: 1 });
-        query.skip((data.page - 1) * data.count).limit(data.count);
-        query.exec(function (err, projects) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js getProjects project.find " + err);
-                response.send(500, { error: "Can't find JobPosition" });
-            } else {
-                console.log(projects);
-                findTasksById(projects, 0);
+        var qeryOwner = function (arrayOfId, n) {
+            project.find().
+                where('_id').in(arrayOfId).
+                where({ 'groups.owner': data.uId }).
+                populate("projectmanager customer task").
+                populate('workflow').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) findTasksById(res['data'], 0);;
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        var qeryByGroup = function (arrayOfId, n) {
+            project.find().
+                   where({ 'groups.users': data.uId }).
+                   exec(function (error, _res1) {
+                       if (!error) {
+                           department.department.find({ users: data.uId }, { _id: 1 },
+                                function (err, deps) {
+                                    console.log(deps);
+                                    if (!err) {
+                                        project.find().
+                                            where('_id').in(arrayOfId).
+                                            where('groups.group').in(deps).
+                                            populate("projectmanager customer task").
+                                            populate('workflow').
+                                            populate('createdBy.user').
+                                            populate('editedBy.user').
+                                            exec(function (error, _res) {
+                                                if (!error) {
+                                                    i++;
+                                                    console.log(i);
+                                                    console.log(n);
+                                                    res['data'] = res['data'].concat(_res1);
+                                                    res['data'] = res['data'].concat(_res);
+                                                    console.log(res['data']);
+                                                    if (i == n) findTasksById(res['data'], 0);;
+                                                } else {
+                                                    console.log(error);
+                                                }
+                                            });
+                                    }
+                                });
+                       } else {
+                           console.log(error);
+                       }
+                   });
+        };
+
+        project.aggregate(
+            {
+                $group: {
+                    _id: "$whoCanRW",
+                    ID: { $push: "$_id" },
+                    groupId: { $push: "$groups.group" }
+                }
+            },
+            function (err, result) {
+                if (!err) {
+                    //console.log(result);
+                    result.forEach(function (_project) {
+                        switch (_project._id) {
+                            case "everyOne":
+                                {
+                                    qeryEveryOne(_project.ID, result.length);
+                                }
+                                break;
+                            case "owner":
+                                {
+                                    qeryOwner(_project.ID, result.length);
+                                }
+                                break;
+                            case "group":
+                                {
+                                    qeryByGroup(_project.ID, result.length);
+                                }
+                                break;
+                        }
+                    });
+                } else {
+                    console.log(err);
+                }
             }
-        });
+        );
 
         var findTasksById = function (_projects, count) {
             try {
@@ -940,6 +998,12 @@ var Project = function (logWriter, mongoose) {
     function getTasksForList(data, response) {
         var res = {};
         res['data'] = [];
+        var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
         var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')

@@ -10,12 +10,15 @@
             count: 13,
 
             initialize: function (options) {
+                debugger;
                 this.count = options.count;
                 this.page = options.page;
+                this.namberToShow = options.count;
                 var that = this;
 
                 if (options && options.viewType) {
                     this.url += options.viewType;
+                    var viewType = options.viewType;
                     delete options.viewType;
                 }
 
@@ -23,12 +26,29 @@
                 for (var i in options) {
                     filterObject[i] = options[i];
                 };
+
+                switch (viewType) {
+                    case 'thumbnails': {
+                        filterObject['count'] = filterObject['count']*2;
+                        var addPage = 2;
+                        break;
+                    }
+                    case 'list': {
+                        filterObject['page'] = 1;
+                        var addPage = 0;
+                        break;
+                    }
+                    default: {
+                        var addPage = 1;
+                    }
+                }
+
                 this.fetch({
                     data: filterObject,
                     reset: true,
                     success: function(model,response) {
                         console.log("Application fetchSuccess");
-                        that.page += 1;
+                        that.page += addPage;
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
                     },
@@ -46,8 +66,8 @@
             showMore: function (options) {
                 var that = this;
                 var filterObject = {};
-                filterObject['page'] = this.page;
-                filterObject['count'] = this.count;
+                filterObject['page'] = (options && options.page) ? options.page: this.page;
+                filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 var NewCollection = Backbone.Collection.extend({
                     model: ApplicationModel,
                     url: that.url,
@@ -91,6 +111,7 @@
                         return application;
                     });
                 }
+                this.listLength = response.listLength;
                 return response.data;
             },
 
