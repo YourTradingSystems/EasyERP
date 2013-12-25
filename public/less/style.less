@@ -1336,7 +1336,7 @@ h3 {
         th {
             padding: 3px 6px;
             line-height: 18px;
-            font-weight: 400;
+            font-weight: bold;
             font-size: 13px;
             text-align: left;
             text-shadow: 0 1px 1px rgba(222, 222, 222, 0.5);
@@ -4061,5 +4061,132 @@ ul.dialog-tabs{
 	&.bottom{
 		margin-top:-5px;
 		margin-bottom:8px;
+	}
+}
+.pagination{
+	width:100%;
+	float:right;
+	margin-top:5px;
+	div{
+		float:left;
+	}
+	.countOnPage{
+		float:left;
+	}
+	.nextPrev{
+		float:right;
+		margin-right:5px;
+	}
+	.countOnPage{
+		margin-left:5px;
+	}
+	#previousPage,#nextPage,.currentPageList{
+		background-color:white;
+		background-image:none;
+		line-height:20px;
+		width:22px;
+		text-align:center;
+		padding:0;
+		border-radius:0;
+		font-weight:bold;
+			&:hover{
+				background-color: #F7F8F9;
+			}
+			&.disabled{
+				color:silver;
+			}
+
+	}
+	.allPage{
+		position:relative;
+	}
+	#currentShowPage{
+		width:20px;
+		height:16px;
+		margin-left:5px;
+	}
+	#pageList{
+		background-color:white;
+		border:1px solid silver;
+		position:absolute;
+		bottom:22px;
+		left:-14px;
+		display:none;
+		li{
+				display:block;
+				width:34px;
+				height:20px;
+				line-height:20px;
+				text-align:center;
+				&:hover{
+					background-color: #13C4A5;
+					color:white;
+					text-decoration:none;
+				}
+		}
+
+	}
+	.currentPageList{
+		margin-right:5px;
+		.caret {
+			margin-top:-2px;
+			display: inline-block;
+			width: 0;
+			height: 0;
+			vertical-align: middle;
+			border-top: 4px solid #000;
+			border-right: 4px solid rgba(0, 0, 0, 0);
+			border-left: 4px solid rgba(0, 0, 0, 0);
+			border-bottom-color: #656565;
+			border-top: 0 dotted;
+			border-bottom: 4px solid #000;
+			content: "";
+			display: inline-block;
+			width: 0;
+			height: 0;
+			&:before,&:after{
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+		}
+	}
+	.pageList{
+		
+		position:relative;
+		button{
+			background-color:white;
+			background-image:none;
+			border-radius:0;
+			width:36px;
+			margin:0 5px;
+			&:hover{
+				background-color: #F7F8F9;
+			}
+		}
+		ul{
+			background-color:white;
+			border:1px solid silver;
+			position:absolute;
+			bottom:20px;
+			left:5px;
+			display:none;
+			li{
+				a{
+					display:block;
+					width:34px;
+					height:20px;
+					line-height:20px;
+					text-align:center;
+					&:hover{
+						background-color: #13C4A5;
+						color:white;
+						text-decoration:none;
+					}
+				}
+				
+			}
+		}
+
 	}
 }
