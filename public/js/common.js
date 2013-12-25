@@ -507,15 +507,24 @@
                 if (callback) callback();
             });
         }
-        var populateUsersForGroups = function (selectId, model,callback) {
+        var populateUsersForGroups = function (selectId, model, callback) {
             var selectList = $(selectId);
             var self = this;
             dataService.getData('/Users', { mid: 39 }, function (response) {
                 var options = [];
                 if (model) {
+					var ids=$.map(model.users,function(item){
+						return item._id
+					});
+					console.log(">>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<");
+					console.log(ids);
+					var tt=_.filter(response.data, function(filteredItem) {
+						return (ids.indexOf(filteredItem._id)!=-1);
+					});
+					console.log(tt);
 					options = $.map(
 						_.filter(response.data, function(filteredItem) {
-							return !(filteredItem in model.users);
+							return (ids.indexOf(filteredItem._id)==-1);
 						}),
 						function (item) {
 							return $('<li/>').attr('id', item._id).text(item.login);

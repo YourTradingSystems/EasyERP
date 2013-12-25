@@ -100,6 +100,9 @@ define([
 					departmentManager = null;
 				}
                 var nestingLevel = parseInt(this.$("#parentDepartment option:selected").data('level'))+1;
+				if (!nestingLevel){
+					nestingLevel=0;
+				}
                 var users = this.$el.find("#targetUsers .choosen");
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
@@ -187,11 +190,11 @@ define([
                 });
 				common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.parentDepartment);} );
                 common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentManager);});
-				$('#targetUsers').append(
-					$.map(this.currentModel.toJSON().users, function (item) {
-                        return $('<li/>').text(item.login).attr('id', item._id);
-                    })
-				);
+				var k=this.currentModel.toJSON().users;
+				var b=$.map(this.currentModel.toJSON().users, function (item) {
+                    return $('<li/>').text(item.login).attr("id",item._id);
+                });
+				$('#targetUsers').append(b);
 				common.populateUsersForGroups('#sourceUsers',this.currentModel.toJSON());
                 return this;
             }

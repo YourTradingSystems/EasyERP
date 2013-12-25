@@ -95,6 +95,7 @@ var Department = function (logWriter, mongoose) {
         var query = department.findById(id);
         query.populate('departmentManager parentDepartment').
 			populate('createdBy.user').
+			populate('users').
             populate('editedBy.user');
 
         //query.skip((data.page - 1) * data.count).limit(data.count);
@@ -172,11 +173,14 @@ var Department = function (logWriter, mongoose) {
 	function updateNestingLevel(id, nestingLevel, callback){
 		department.find({parentDepartment:id}).exec(function(err,result){
 			var n=0;
-			if (result){
+			if (result.length==0){
 				result.forEach(function(item){
 					n++;
 					department.findByIdAndUpdate({id:id},{nestingLevel:nestingLevel+1},function(){
 						updateNestingLevel(item._id,item.nestingLevel,function(){
+							console.log("<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>")
+							console.log(result)
+							console.log(n)
 							if (result.length==n)
 								callback();
 						});
@@ -198,7 +202,9 @@ var Department = function (logWriter, mongoose) {
                     res.send(500, { error: "Can't update Department" });
                 } else {
 					if (data.isAllUpdate){
-						updateNestingLevel(data.id,data.nestingLevel);
+						updateNestingLevel(data.id,data.nestingLevel,function(){
+							res.send(200, { success: 'Department updated success' });
+						});
 					}
 					else{
 						res.send(200, { success: 'Department updated success' });
