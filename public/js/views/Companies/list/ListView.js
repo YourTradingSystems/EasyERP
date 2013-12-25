@@ -29,15 +29,13 @@ function (ListTemplate, CreateView, ListItemView) {
 				"click":"hideItemsNumber"
 
             },
-		hideItemsNumber:function(e){
-			$(".allNumberPerPage").hide();
-		},
-		itemsNumber:function(e){
-			$(e.target).closest("button").next("ul").toggle();
-			return false;
-		},
-
-
+ 			hideItemsNumber:function(e){
+				$(".allNumberPerPage").hide();
+			},
+			itemsNumber:function(e){
+				$(e.target).closest("button").next("ul").toggle();
+				return false;
+			},
             render: function () {
 				var self=this;
                 console.log('Companies render');

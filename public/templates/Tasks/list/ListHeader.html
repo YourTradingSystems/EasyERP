@@ -21,65 +21,67 @@
         </thead>
         <tbody id="listTable"></tbody>
     </table>
-    <div>
-        <div>
-                <span>
-                    <span id="grid-start"></span>
-                    -
-                    <span id="grid-end"></span>
-                    of
-                    <span id="grid-count"></span>
-                    items
-                </span>
-
-            <div>
-                <button>
-                    <span id="itemsNumber"></span>
-                </button>
-                <ul>
-                    <li>
-                        <a class="itemsNumber" href="#">5</a>
-                    </li>
-                    <li>
-                        <a class="itemsNumber" href="#">10</a>
-                    </li>
-                    <li>
-                        <a class="itemsNumber" href="#">20</a>
-                    </li>
-                    <li>
-                        <a class="itemsNumber" href="#">50</a>
-                    </li>
-                    <li>
-                        <a class="itemsNumber" href="#">100</a>
-                    </li>
-                </ul>
-            </div>
-            <span>Per Page</span>
+    <div class="pagination">
+      <div class="countOnPage">
+		<div>
+          <span>
+            <span id="grid-start"></span>
+            -
+            <span id="grid-end"></span>
+            of
+            <span id="grid-count"></span>
+            items
+          </span>
+		</div>
+        <div class="pageList">
+          <button id="itemsButton">
+            <span id="itemsNumber"></span>
+          </button>
+          <ul class="allNumberPerPage">
+            <li>
+              <a class="itemsNumber" href="#">5</a>
+            </li>
+            <li>
+              <a class="itemsNumber" href="#">10</a>
+            </li>
+            <li>
+              <a class="itemsNumber" href="#">20</a>
+            </li>
+            <li>
+              <a class="itemsNumber" href="#">50</a>
+            </li>
+            <li>
+              <a class="itemsNumber" href="#">100</a>
+            </li>
+          </ul>
         </div>
+        <span>Per Page</span>
+      </div>
+      <div class="nextPrev">
+		<div>
+          <button id="previousPage" type="button"><</button>
+        <span>Page</span>
+		</div>
         <div>
-            <button id="previousPage" type="button">
-                <<<
-            </button>
-            <span>Page</span>
-            <div>
-                <div>
-                    <input id="currentShowPage" type="text">
-                    <div>
-                        <button>
-                            more
-                        </button>
-                        <ul id="pageList">
-                        </ul>
-                    </div>
-                </div>
+          <div>
+			<div>
+              <input id="currentShowPage" type="text">
+			</div>
+            <div class="allPage">
+              <button class="currentPageList">
+                <i class="caret"></i>
+              </button>
+              <ul id="pageList" class="allNumberPerPage">
+              </ul>
             </div>
-                <span>
-                    of
-                    <span id="lastPage"></span>
-                </span>
-            <button  id="nextPage" type="button">
-                >>>
-            </button>
+          </div>
         </div>
+        <span>
+          of
+          <span id="lastPage"></span>
+        </span>
+        <button  id="nextPage" type="button">></button>
+      </div>
     </div>
+
 </div>
