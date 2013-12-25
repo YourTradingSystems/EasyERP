@@ -449,7 +449,7 @@ var Employee = function (logWriter, mongoose) {
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
-                logWriter.log('Employees.js get Employee.find' + description);
+                logWriter.log('Employees.js get Employee.find' + err);
                 response.send(500, { error: "Can't find JobPosition" });
             } else {
                 res['data'] = result;
