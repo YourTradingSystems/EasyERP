@@ -207,7 +207,7 @@
                         return ((model.manager && model.manager._id === item._id) ||
                                 (model.projectmanager && model.projectmanager._id === item._id) ||
                                 (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) ||
-                                (model.salesPerson._id === item._id) ||
+                                (model.salesPerson && model.salesPerson._id === item._id) ||
                                 //(model.salesTeam._id === item._id) ||
                                 (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :

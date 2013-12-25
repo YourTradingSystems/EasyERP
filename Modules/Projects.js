@@ -374,6 +374,9 @@ var Project = function (logWriter, mongoose, department) {
                     if (data.groups) {
                         _project.groups = data.groups;
                     }
+                    if (data.whoCanRW) {
+                        _project.whoCanRW = data.whoCanRW;
+                    }
                     if (data.info) {
                         if (data.info.StartDate) {
                             _project.info.StartDate = data.info.StartDate;
@@ -533,9 +536,9 @@ var Project = function (logWriter, mongoose, department) {
             },
             function (err, result) {
                 if (!err) {
-                    //console.log(result);
-                    result.forEach(function (_project) {
-                        switch (_project._id) {
+                    if (result.length != 0) {
+                        result.forEach(function(_project) {
+                            switch (_project._id) {
                             case "everyOne":
                                 {
                                     qeryEveryOne(_project.ID, result.length);
@@ -551,8 +554,11 @@ var Project = function (logWriter, mongoose, department) {
                                     qeryByGroup(_project.ID, result.length);
                                 }
                                 break;
-                        }
-                    });
+                            }
+                        });
+                    } else {
+                        response.send(res);
+                    }
                 } else {
                     console.log(err);
                 }
