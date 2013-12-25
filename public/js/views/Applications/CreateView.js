@@ -262,7 +262,7 @@ define([
                     }
                 });
                 common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.relatedUsersDd);});
+                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getForDdByRelatedUser", null, function () { self.styleSelect(App.ID.relatedUsersDd); });
 //                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
                 common.populateDepartments(App.ID.departmentDd, "/Departments",null,function(){self.styleSelect(App.ID.departmentDd);});
                 common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
