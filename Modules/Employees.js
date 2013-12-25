@@ -338,14 +338,6 @@ var Employee = function (logWriter, mongoose) {
             }
         });
 
-        var query = employee.find();
-        query.where('isEmployee', true);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-
         query = employee.find();
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
@@ -419,15 +411,6 @@ var Employee = function (logWriter, mongoose) {
                 res['listLength'] = result.length;
             }
         });
-
-        var query = employee.find();
-        query.where('isEmployee', true);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-
         query = employee.find();
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').

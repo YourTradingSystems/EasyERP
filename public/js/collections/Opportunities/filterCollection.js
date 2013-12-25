@@ -39,8 +39,10 @@
                 this.fetch({
                     data: filterObject,
                     reset: true,
-                    success: function() {
+                    success: function(models,response) {
                         console.log("Opportunities fetchSuccess");
+                        that.showMoreButton = response.showMore;
+                        that.optionsArray = response.options;
                         that.page += addPage;
                     },
                     error: this.fetchError
@@ -62,11 +64,30 @@
                 }
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
-                this.fetch({
+                var NewCollection = Backbone.Collection.extend({
+                    model: OpportunityModel,
+                    url: that.url,
+                    parse: true,
+                    parse: function(response) {
+                        return response.data;
+                    },
+                    page: that.page,
+
+                    filterByWorkflow: function (id) {
+                        return this.filter(function (data) {
+                            return data.get("workflow")._id == id;
+                        });
+                    }
+                });
+                var newCollection = new NewCollection();
+
+                newCollection.fetch({
                     data: filterObject,
                     waite: true,
-                    success: function (models) {
+                    success: function (models,response) {
                         that.page += 1;
+                        that.showMoreButton = response.showMore;
+                        that.optionsArray = response.options;
                         that.trigger('showmore', models);
                     },
                     error: function() {
