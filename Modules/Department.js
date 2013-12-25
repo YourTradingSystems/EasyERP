@@ -218,7 +218,7 @@ var Department = function (logWriter, mongoose) {
 
         remove: remove,
 
-        Department: Department
+        department: department
     };
 };
 
