@@ -435,7 +435,7 @@ article {
     display: block;
     width: auto;
     height: 30px;
-    border-bottom: 1px solid #cacaca;
+    border-bottom: 1px solid #ababab;
     background: #fff;
     clear: both;
     /*.gradient(#ededed);
@@ -1375,8 +1375,10 @@ h3 {
 
         tr {
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
-            border-top: 1px solid #cacaca;
-
+            border-top: 1px solid #ababab;
+			&:last-child{
+				border-bottom: 1px solid #ababab;
+			}
             td {
                 cursor: pointer;
                 padding: 4px 5px;
@@ -4171,6 +4173,7 @@ ul.dialog-tabs{
 		width:20px;
 		height:11px;
 		margin-left:5px;
+		font-size:12px;
 	}
 	#pageList{
 		background-color:white;
@@ -4185,6 +4188,7 @@ ul.dialog-tabs{
 				height:20px;
 				line-height:20px;
 				text-align:center;
+				font-size:12px;
 				&:hover{
 					background-color: #13C4A5;
 					color:white;
@@ -4228,6 +4232,7 @@ ul.dialog-tabs{
 			width:27px;
 			margin:0 5px;
 			line-height:10px;
+			font-size: 12px;
 			&:hover{
 				background-color: #F7F8F9;
 			}
@@ -4239,6 +4244,7 @@ ul.dialog-tabs{
 			bottom:17px;
 			left:5px;
 			display:none;
+			font-size: 12px;
 			li{
 				a{
 					display:block;
@@ -4256,5 +4262,37 @@ ul.dialog-tabs{
 			}
 		}
 
+	}
+}
+.filterButton{
+	background-color: #FFF;
+	border: 1px solid #ABABAB;
+	position: absolute;
+	right: 118px;
+	top: -26px;
+	display: block;
+	height: 24px;
+	line-height: 24px;
+	width: 50px;
+	text-align: center;
+	cursor:pointer;
+	&:hover{
+		background-color: #D8D8D8;
+	}
+}
+.filter-check-list{
+	display:none;
+	position:absolute;
+	right: 118px;
+	width:150px;
+	background-color:white;
+	border:1px solid silver;
+	top:-1px;
+	z-index:1000;
+	li{
+		line-height:20px;
+	}
+	input{
+		margin:0 5px;
 	}
 }

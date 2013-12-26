@@ -488,6 +488,46 @@
                 if (callback) callback(selectId);
             });
         }
+        var populateWorkflowsList = function (workflowType, selectId, workflowNamesDd, url, model, callback) {
+            var selectList = $(selectId);
+            var workflowNamesDd = $(workflowNamesDd);
+            var self = this;
+            dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
+                var options = [];
+                if (model && model.workflow) {
+                    if (model.workflow._id == undefined) {
+                        options = $.map(response.data, function (item) {
+                            return model.workflow == item._id ?
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id);
+                        });
+                    } else {
+                        options = $.map(response.data, function (item) {
+                            return model.workflow._id === item._id ?
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id);
+                        });
+
+                    }
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return "<li><input type='checkbox' value='"+item._id+"'"+"/><span>"+item.name+"</span></li>"
+							   
+                    });
+                }
+                var wNames = $.map(response.data, function (item) {
+                    return item.wName;
+                });
+                wNames = _.uniq(wNames);
+                var wfNamesOption = $.map(wNames, function (item) {
+                    return $('<option/>').text(item);
+                });
+                workflowNamesDd.append(wfNamesOption);
+                selectList.append(options);
+                if (callback) callback(selectId);
+            });
+        }
+
         var populateUsers = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
             var self = this;
@@ -621,6 +661,7 @@
             populateDepartments: populateDepartments,
             populateCompanies: populateCompanies,
             populateWorkflows: populateWorkflows,
+			populateWorkflowsList:populateWorkflowsList,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
