@@ -110,14 +110,17 @@ define([
                     },
                     wait: true,
                     success: function (model) {
+                        var url = window.location.href;
+                        url = url.substring(0, url.indexOf('#')) + '#/';
+                        window.location.replace(url);
                         model = model.toJSON();
-                        self.hideDialog();
                         if (!model.project) {
-                            Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
+                            Backbone.history.navigate("#easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("easyErp/Tasks", { trigger: true });
+                            Backbone.history.navigate("#easyErp/Tasks/kanban/" + model.project, { trigger: true });
                         }
+                        self.hideDialog();
                     },
                     error: function (model, xhr, options) {
                         Backbone.history.navigate("easyErp", { trigger: true });

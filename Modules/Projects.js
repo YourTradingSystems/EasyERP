@@ -492,7 +492,11 @@ var Project = function (logWriter, mongoose, department) {
         var qeryByGroup = function (arrayOfId, n) {
             project.find().
                    where({ 'groups.users': data.uId }).
-                   exec(function (error, _res1) {
+                    populate("projectmanager customer task").
+                    populate('workflow').
+                    populate('createdBy.user').
+                    populate('editedBy.user').
+                    exec(function (error, _res1) {
                        if (!error) {
                            department.department.find({ users: data.uId }, { _id: 1 },
                                 function (err, deps) {
