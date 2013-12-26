@@ -303,6 +303,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         var res = {};
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: false });
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+        var query = opportunitie.find({ isOpportunitie: false });
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ name: 1 });
         query.populate('customer salesPerson salesTeam workflow').
@@ -472,6 +478,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
     function getFilterOpportunities(data, response) {
         var res = {};
         res['data'] = [];
+        var query = opportunitie.find();
+        query.where('isOpportunitie', true);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
         var query = opportunitie.find();
         query.where('isOpportunitie', true);
         query.populate('relatedUser customer department jobPosition workflow').

@@ -33,7 +33,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 				'</tr>');
 		},*/
 		createDepartmentListRow:function(department,index,className){
-		    return ('<li class="' + className + '" data-id="' + department._id + '"data-level="' + department.nestingLevel +'"><span class="dotted-line"></span><span class="text">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
+		    return ('<li class="' + className + '" data-id="' + department._id + '"data-level="' + department.nestingLevel +'"><span class="dotted-line" style="width:'+(20*(department.nestingLevel+1))+'px"></span><span class="text" style="margin-left:'+(20*(department.nestingLevel+1))+'px">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash"></span><span title="edit" class="edit"></span></span></li>');
 		},
         editItem: function(e){
             //create editView in dialog here
@@ -74,7 +74,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
                 if (!elm.parentDepartment) {
                     self.$el.find("#groupList").append(self.createDepartmentListRow(elm, i + 1, "parent"));
                 } else {
-                    self.$el.find("[data-id='" + elm.parentDepartment + "']").removeClass('child').addClass('parent').append(self.createDepartmentListRow(elm, i + 1, "child"));
+                    self.$el.find("[data-id='" + elm.parentDepartment + "']").removeClass('child').addClass('parent').after(self.createDepartmentListRow(elm, i + 1, "child"));
                 };
             });
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());

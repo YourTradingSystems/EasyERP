@@ -160,21 +160,32 @@ app.post('/uploadFiles', function (req, res, next) {
 app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
-    file = {};
-    console.log(req.headers);
-    console.log("se blyad appload");
-    fs.readFile(req.files.attachfile.path, function (err, data) {
-        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
-        fs.writeFile(path, data, function (err) {
-            file._id = mongoose.Types.ObjectId();
-            file.name = req.files.attachfile.name;
-            file.path = path;
-            file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderName = req.session.uName;
-            requestHandler.uploadApplicationFile(req, res, req.headers.id, file);
-        });
-    });
+	var files = [];
+	if (!req.files.attachfile.length){
+		req.files.attachfile=[req.files.attachfile];
+	}
+	console.log(req.files.attachfile);
+	req.files.attachfile.forEach(function(item){
+
+		fs.readFile(item.path, function (err, data) {
+			var path = __dirname + "\\uploads\\" + item.name;
+			fs.writeFile(path, data, function (err) {
+				var file = {};
+				file._id = mongoose.Types.ObjectId();
+				file.name = item.name;
+				file.path = path;
+				file.size = item.size;
+				file.uploadDate = new Date();
+				file.uploaderName = req.session.uName;
+				files.push(file);
+				if (files.length==req.files.attachfile.length){
+					console.log(files);
+					console.log(req.files.attachfile.length);
+					requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+				}
+			});
+		});
+	})
 });
 
 app.get('/logout', function (req, res, next) {
@@ -375,6 +386,7 @@ app.delete('/Persons/:_id', function (req, res) {
 //---------------------------Projects--------------------------------------------------------
 
 app.get('/Projects', function (req, res) {
+    console.log('Get Projects');
     data = {};
     data.mid = req.param('mid');
     requestHandler.getProjects(req, res, data);
@@ -408,6 +420,7 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.updateProject(req, res, id, data);
 });
+
 app.put('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -423,6 +436,7 @@ app.delete('/Projects/:viewType/:_id', function (req, res) {
     data.project = req.body;
     requestHandler.removeProject(req, res, id, data);
 });
+
 app.delete('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.params._id;
@@ -667,6 +681,7 @@ app.delete('/Companies/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeCompany(req, res, id, data);
 });
+
 app.delete('/Companies/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -726,8 +741,7 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     requestHandler.updateCompany(req, res, id, data, remove);
 });
 
-
-//-----------------------------End Companies--------------------------------------------------
+//------------------JobPositions---------------------------------------------------
 
 app.post('/JobPositions', function (req, res) {
     data = {};
@@ -850,6 +864,14 @@ app.get('/Employees', function (req, res) {
     requestHandler.getEmployees(req, res, data);
 });
 
+app.get('/getForDdByRelatedUser', function (req, res) {
+    console.log('------getAccountsForDd-----------------');
+    data = {};
+    //data.ownUser = true;
+    data.mid = req.param('mid');
+    requestHandler.getForDdByRelatedUser(req, res, data);
+});
+
 app.get('/Employees/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -927,6 +949,8 @@ app.get('/Applications/:viewType', function (req, res) {
     viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
+            break;
+        case "list": requestHandler.getApplicationsForList(req, res, data);
             break;
         default: requestHandler.getFilterApplications(req, res, data);
             break;
@@ -1037,6 +1061,7 @@ app.get('/Leads', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getLeads(req, res, data);
 });
+
 app.get('/Leads/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -1050,6 +1075,7 @@ app.get('/Leads/:viewType', function (req, res) {
             break;
     }
 });
+
 app.post('/Leads', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -1081,6 +1107,7 @@ app.delete('/Leads/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
 });
+
 app.delete('/Leads/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

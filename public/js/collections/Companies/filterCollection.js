@@ -12,19 +12,34 @@
                 this.namberToShow = options.count;
                 if (options && options.viewType) {
                     this.url += options.viewType;
+                    var viewType = options.viewType;
                     delete options.viewType;
                 }
                 var filterObject = {};
                 for (var i in options) {
                     filterObject[i] = options[i];
                 };
-                filterObject['count'] = filterObject['count']*2;
+                switch (viewType) {
+                    case 'thumbnails': {
+                        filterObject['count'] = filterObject['count']*2;
+                        var addPage = 2;
+                        break;
+                    }
+                    case 'list': {
+                        filterObject['page'] = 1;
+                        var addPage = 0;
+                        break;
+                    }
+                    default: {
+                        var addPage = 1;
+                    }
+                }
                 this.fetch({
                     data: filterObject,
                     reset: true,
                     success: function() {
                         console.log("Companies fetchSuccess");
-                        that.page += 2;
+                        that.page += addPage;
                     },
                     error: this.fetchError
                 });
@@ -67,6 +82,7 @@
                         return company;
                     });
                 }
+                this.listLength = response.listLength;
                 return response.data;
             }
 

@@ -207,7 +207,7 @@
                         return ((model.manager && model.manager._id === item._id) ||
                                 (model.projectmanager && model.projectmanager._id === item._id) ||
                                 (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) ||
-                                (model.salesPerson._id === item._id) ||
+                                (model.salesPerson && model.salesPerson._id === item._id) ||
                                 //(model.salesTeam._id === item._id) ||
                                 (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
@@ -512,14 +512,23 @@
             var self = this;
             dataService.getData('/Users', { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.users) {
-                    options = $.map(
-                        _.filter(response.data, function(filteredItem) {
-                            return !(filteredItem in model.users);
-                        }),
-                        function (item) {
-                            return $('<li/>').attr('id', item._id).text(item.login);
-                        });
+                if (model) {
+					var ids=$.map(model.users,function(item){
+						return item._id
+					});
+					console.log(">>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<");
+					console.log(ids);
+					var tt=_.filter(response.data, function(filteredItem) {
+						return (ids.indexOf(filteredItem._id)!=-1);
+					});
+					console.log(tt);
+					options = $.map(
+						_.filter(response.data, function(filteredItem) {
+							return (ids.indexOf(filteredItem._id)==-1);
+						}),
+						function (item) {
+							return $('<li/>').attr('id', item._id).text(item.login);
+						});
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<li/>').text(item.login).attr('id', item._id);

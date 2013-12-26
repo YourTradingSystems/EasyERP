@@ -23,6 +23,66 @@ define([
 				}
                 this.render();
             },
+			events:{
+                'click .dialog-tabs a': 'changeTab',
+                'click #sourceUsers li': 'chooseUser',
+                'click #targetUsers li': 'chooseUser',
+			    'click #addUsers':'addUsers',
+			    'click #removeUsers':'removeUsers',
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click": "hideNewSelect"
+			},
+			chooseUser:function(e){
+				$(e.target).toggleClass("choosen");
+			},
+            addUsers: function (e) {
+                e.preventDefault();
+                $('#targetUsers').append($('#sourceUsers .choosen'));
+            },
+            removeUsers: function (e) {
+                e.preventDefault();
+                $('#sourceUsers').append($('#targetUsers .choosen'));
+            },
+
+			changeTab:function(e){
+				$(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
+				$(e.target).addClass("active");
+				var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+				$(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
+				$(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+			},
+
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				this.hideNewSelect();
+				var s="<ul class='newSelectList'>";
+				$(e.target).parent().find("select option").each(function(){
+					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+				});
+				 s+="</ul>";
+				$(e.target).parent().append(s);
+				return false;
+				
+			},
+			chooseOption:function(e){
+				var k = $(e.target).parent().find("li").index($(e.target));
+				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
+				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+			},
+
+			styleSelect:function(id){
+				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				if (text){
+					$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				}else{
+					$(id).parent().append("<a class='current-selected' href='javascript:;'>Empty</a>");		
+				}
+				$(id).hide();
+			},
 
             saveItem: function () {
 
@@ -39,6 +99,14 @@ define([
 				if (departmentManager==""){
 					departmentManager = null;
 				}
+                var nestingLevel = parseInt(this.$("#parentDepartment option:selected").data('level'))+1;
+				if (!nestingLevel){
+					nestingLevel=0;
+				}
+                var users = this.$el.find("#targetUsers .choosen");
+                users = _.map(users, function(elm) {
+                    return $(elm).attr('id');
+                });
                 //var _departmentManager = common.toObject(managerId, this.accountDdCollection);
                 //var departmentManager = {};
                 //if (_departmentManager) {
@@ -51,7 +119,10 @@ define([
                 this.currentModel.set({
                     departmentName: departmentName,
                     parentDepartment: parentDepartment,
-                    departmentManager: departmentManager
+                    departmentManager: departmentManager,
+                    nestingLevel: nestingLevel,
+                    users: users,
+					isAllUpdate:nestingLevel!=this.currentModel.toJSON().nestingLevel
                 });
 
                 this.currentModel.save({}, {
@@ -102,7 +173,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "create-dialog",
-                    width: "80%",
+                    width: "950px",
                     title: "Edit Department",
                     buttons: [{
 								  text: "Save",
@@ -117,9 +188,14 @@ define([
 								  click:self.deleteItem 
 							  }]
                 });
-				common.populateParentDepartments(App.ID.parentDepartment, "/Departments", this.currentModel.toJSON());
-                common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON());
-
+				common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.parentDepartment);} );
+                common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentManager);});
+				var k=this.currentModel.toJSON().users;
+				var b=$.map(this.currentModel.toJSON().users, function (item) {
+                    return $('<li/>').text(item.login).attr("id",item._id);
+                });
+				$('#targetUsers').append(b);
+				common.populateUsersForGroups('#sourceUsers',this.currentModel.toJSON());
                 return this;
             }
 

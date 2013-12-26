@@ -326,11 +326,27 @@ var Employee = function (logWriter, mongoose) {
     };
 
     // Custom function for list
-    function getCustom(data, response) {
+    function getEmployeeForList(data, response) {
         var res = {}
         var description = "";
         res['data'] = [];
         var query = employee.find();
+        query.where('isEmployee', true);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        var query = employee.find();
+        query.where('isEmployee', true);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+
+        query = employee.find();
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
 			populate('createdBy.user').
@@ -350,7 +366,26 @@ var Employee = function (logWriter, mongoose) {
         });
     };
 
-    function getForDd(uId, response) {
+    function getForDd(response) {
+        var res = {};
+        res['data'] = [];
+        var query = employee.find();
+        query.where('isEmployee', true);
+        query.select('_id name ');
+        query.sort({ 'name.first': 1 });
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Employee.find' + err);
+                response.send(500, { error: "Can't find Employee" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+
+    function getForDdByRelatedUser(uId, response) {
         var res = {};
         res['data'] = [];
         var query = employee.find({ relatedUser: uId });
@@ -373,6 +408,7 @@ var Employee = function (logWriter, mongoose) {
         var res = {};
         res['data'] = [];
         var query = employee.find();
+
         query.where('isEmployee', false);
         query.populate('relatedUser department jobPosition workflow').
             populate('createdBy.user').
@@ -389,7 +425,41 @@ var Employee = function (logWriter, mongoose) {
                 response.send(res);
             }
         });
-    };//end getById
+    };
+
+    function getApplicationsForList(data, response) {
+        var res = {};
+        res['data'] = [];
+        var query = employee.find();
+        query.where('isEmployee', false);
+        query.exec(function (err, result) {
+            if (!err) {
+                res['listLength'] = result.length;
+            }
+        });
+        query = employee.find();
+        query.where('isEmployee', false);
+        if (data.staus) {
+            query.where('workflows').in(data.staus);
+        }
+        query.populate('relatedUser department jobPosition manager coach').
+            populate('createdBy.user').
+            populate('editedBy.user');
+
+        query.sort({ 'name.first': 1 });
+        query.skip((data.page - 1) * data.count).limit(data.count);
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('Employees.js get Employee.find');
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+    //end getById
 
     function getById(data, response) {
         var query = employee.findById(data.id, function (err, res) { });
@@ -436,14 +506,14 @@ var Employee = function (logWriter, mongoose) {
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
             }
-            employee.update({ _id: _id }, data, function (err, result) {
+            employee.findByIdAndUpdate({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
                         logWriter.log("Employees.js update employee.update " + err);
                         res.send(500, { error: "Can't update Employees" });
                     } else {
-                        res.send(200, { success: 'Employees updated success' });
+                        res.send(200, { success: 'Employees updated success' ,data:result});
                     }
                 }
                 catch (exception) {
@@ -538,15 +608,19 @@ var Employee = function (logWriter, mongoose) {
 
         get: get,
 
-        getCustom: getCustom,
+        getEmployeeForList: getEmployeeForList,
 
         getForDd: getForDd,
+
+        getForDdByRelatedUser: getForDdByRelatedUser,
 
         update: update,
 
         remove: remove,
 
         getApplications: getApplications,
+
+        getApplicationsForList: getApplicationsForList,
         
         getFilterApplications: getFilterApplications,
 

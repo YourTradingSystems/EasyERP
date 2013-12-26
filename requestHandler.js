@@ -7,7 +7,7 @@ var requestHandler = function (fs, mongoose) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose),
         google = require("./Modules/Google.js")(users),
         events = require("./Modules/Events.js")(logWriter, mongoose, google),
-        project = require("./Modules/Projects.js")(logWriter, mongoose),
+        project = require("./Modules/Projects.js")(logWriter, mongoose, department),
         customer = require("./Modules/Customers.js")(logWriter, mongoose),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
@@ -194,11 +194,25 @@ var requestHandler = function (fs, mongoose) {
 
     //---------END------Profile-----------------------------------
     //---------------Persons--------------------------------
+    function getForDdByRelatedUser(req, res, data) {
+        try {
+            console.log("Requst getPersonsForDd is success");
+            if (req.session && req.session.loggedIn) {
+                employee.getForDdByRelatedUser(req.session.uId, res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            errorLog("requestHandler.js  " + Exception);
+        }
+    };
+
     function getPersonsForDd(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
             if (req.session && req.session.loggedIn) {
-                employee.getForDd(req.session.uId, res);
+                employee.getForDd(res);
             } else {
                 res.send(401);
             }
@@ -808,7 +822,7 @@ var requestHandler = function (fs, mongoose) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getCustom(res);
+                    jobPosition.getJobPosition(data,res);
                 } else {
                     res.send(403);
                 }
@@ -904,7 +918,7 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 42, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getCustom(data, res);
+                    employee.getEmployeeForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1030,7 +1044,7 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getCustom(data, res);
+                    employee.getEmployeeForList(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1077,6 +1091,23 @@ var requestHandler = function (fs, mongoose) {
         }
     };
 
+    function getApplicationsForList (req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getApplicationsForList(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function updateApplication(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn) {
@@ -1098,19 +1129,12 @@ var requestHandler = function (fs, mongoose) {
         }
     };
     function uploadApplicationFile(req, res, id, file) {
-        console.log("File Uploading to Persons");
+        console.log("File Uploading to app");
         if (req.session && req.session.loggedIn) {
             access.getEditWritAccess(req.session.uId, 43, function (access) {
                 if (access) {
-                    employee.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
-                        if (err) {
-                            res.send(401);
-                        }
-                        else {
-                            res.send(200, file);
-                        }
-                    });
-                    employee.update(id, remove, data.employee, res);
+					console.log(file);
+                    employee.update( id , {$push:{ attachments: {$each:file}}}, res);
                 } else {
                     res.send(403);
                 }
@@ -1760,6 +1784,7 @@ var requestHandler = function (fs, mongoose) {
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,
         getEmployees: getEmployees,
+        getForDdByRelatedUser:getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
         getEmployeesById: getEmployeesById,
@@ -1792,6 +1817,7 @@ var requestHandler = function (fs, mongoose) {
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
+        getApplicationsForList: getApplicationsForList,
         getApplicationById: getApplicationById,
 
         createLead: createLead,

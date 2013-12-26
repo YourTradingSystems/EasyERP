@@ -95,6 +95,7 @@ var Department = function (logWriter, mongoose) {
         var query = department.findById(id);
         query.populate('departmentManager parentDepartment').
 			populate('createdBy.user').
+			populate('users').
             populate('editedBy.user');
 
         //query.skip((data.page - 1) * data.count).limit(data.count);
@@ -169,7 +170,33 @@ var Department = function (logWriter, mongoose) {
     };
 
 
+	function updateNestingLevel(id, nestingLevel, callback){
+		department.find({parentDepartment:id}).exec(function(err,result){
+			var n=0;
+			console.log("my super data")
+			console.log(result)
 
+			if (result.length!=0){
+				result.forEach(function(item){
+					n++;
+					console.log("my super item")
+					console.log(item)
+
+					department.findByIdAndUpdate(item._id,{nestingLevel:nestingLevel+1},function(){
+						updateNestingLevel(item._id,item.nestingLevel+1,function(){
+							console.log("<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>")
+							console.log(result)
+							console.log(n)
+							if (result.length==n)
+								callback();
+						});
+					});
+				});
+			}else{
+				callback();
+			}
+		});
+	}
     function update(_id, data, res) {
         try {
             delete data._id;
@@ -180,7 +207,17 @@ var Department = function (logWriter, mongoose) {
                     logWriter.log("Department.js update Department.update " + err);
                     res.send(500, { error: "Can't update Department" });
                 } else {
-                    res.send(200, { success: 'Department updated success' });
+					if (data.isAllUpdate){
+						console.log("my super res")
+						console.log(data)
+
+						updateNestingLevel(_id,data.nestingLevel,function(){
+							res.send(200, { success: 'Department updated success' });
+						});
+					}
+					else{
+						res.send(200, { success: 'Department updated success' });
+					}
                 }
             });
         }
@@ -218,7 +255,7 @@ var Department = function (logWriter, mongoose) {
 
         remove: remove,
 
-        Department: Department
+        department: department
     };
 };
 
