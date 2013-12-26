@@ -26,8 +26,8 @@ define([
                 'keydown': 'keydownHandler'
             },
 
-            keydownHandler: function(e){
-                switch (e.which){
+            keydownHandler: function (e) {
+                switch (e.which) {
                     case 27:
                         this.hideDialog();
                         break;
@@ -97,7 +97,7 @@ define([
                     deadline: deadline,
                     description: description,
                     extrainfo: {
-                    	priority: priority,
+                        priority: priority,
                         sequence: sequence,
                         StartDate: StartDate
                     },
@@ -110,58 +110,56 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        var url = window.location.href;
-                        url = url.substring(0, url.indexOf('#')) + '#/';
-                        window.location.replace(url);
                         model = model.toJSON();
+                        self.hideDialog();
                         if (!model.project) {
-                            Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
+                            Backbone.history.navigate("#easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
+                            if (Backbone.history.fragment == "easyErp/Tasks/kanban/" + model.project) Backbone.history.fragment = ""; 
                             Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project, { trigger: true });
                         }
-                        self.hideDialog();
                     },
                     error: function (model, xhr, options) {
                         Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
             },
-			showNewSelect:function(e){
-				var s="<ul class='newSelectList'>";
-				$(e.target).parent().find("select option").each(function(){
-					s+="<li>"+$(this).text()+"</li>";
-				});
-				 s+="</ul>";
-				$(e.target).parent().append(s);
-				
-			},
-			hideNewSelect:function(e){
-				$(".newSelectList").remove();;
-			},
-			showNewSelect:function(e){
-				this.hideNewSelect();
-				var s="<ul class='newSelectList'>";
-				$(e.target).parent().find("select option").each(function(){
-					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-				});
-				 s+="</ul>";
-				$(e.target).parent().append(s);
-				return false;
-				
-			},
-			chooseOption:function(e){
-				var k = $(e.target).parent().find("li").index($(e.target));
-				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
-				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-			},
+            showNewSelect: function (e) {
+                var s = "<ul class='newSelectList'>";
+                $(e.target).parent().find("select option").each(function () {
+                    s += "<li>" + $(this).text() + "</li>";
+                });
+                s += "</ul>";
+                $(e.target).parent().append(s);
 
-			styleSelect:function(id){
-				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
-				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
-				$(id).hide();
-			},
+            },
+            hideNewSelect: function (e) {
+                $(".newSelectList").remove();;
+            },
+            showNewSelect: function (e) {
+                this.hideNewSelect();
+                var s = "<ul class='newSelectList'>";
+                $(e.target).parent().find("select option").each(function () {
+                    s += "<li class=" + $(this).text().toLowerCase() + ">" + $(this).text() + "</li>";
+                });
+                s += "</ul>";
+                $(e.target).parent().append(s);
+                return false;
+
+            },
+            chooseOption: function (e) {
+                var k = $(e.target).parent().find("li").index($(e.target));
+                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+            },
+
+            styleSelect: function (id) {
+                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
+                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
+                $(id).hide();
+            },
 
             render: function () {
                 var projectID = (window.location.hash).split('/')[3];
@@ -193,11 +191,11 @@ define([
                 });
 
 
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model,function(){self.styleSelect(App.ID.projectDd);});
-                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.assignedToDd);});
-                common.populatePriority(App.ID.priorityDd, "/Priority", model, function(){self.styleSelect(App.ID.priorityDd);} );
-				this.styleSelect("#type");
+                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model, function () { self.styleSelect(App.ID.projectDd); });
+                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", null, function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
+                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", null, function () { self.styleSelect(App.ID.assignedToDd); });
+                common.populatePriority(App.ID.priorityDd, "/Priority", model, function () { self.styleSelect(App.ID.priorityDd); });
+                this.styleSelect("#type");
                 $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#deadline').datepicker({
                     dateFormat: "d M, yy",

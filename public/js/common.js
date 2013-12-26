@@ -10,6 +10,8 @@
             return _tempObject;
         };
 
+
+
         var utcDateToLocaleDate = function (utcDateString) {
             utcDateString = (utcDateString) ? dateFormat(utcDateString, "d mmm, yyyy", false) : null;
             return utcDateString;
