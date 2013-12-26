@@ -423,17 +423,30 @@ var Employee = function (logWriter, mongoose) {
         var res = {}
         var description = "";
         res['data'] = [];
-        var query = employee.find();
-        query.where('isEmployee', false);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-        query = employee.find();
-        query.where('isEmployee', false);
-        if (data.staus) {
-            query.where('workflows').in(data.staus);
+
+
+        if (data.status) {
+            var query = employee.find();
+            query.where('isEmployee', false);
+            query.where('workflow').in(data.status);
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = employee.find();
+            query.where('isEmployee', false);
+            query.where('workflow').in(data.status);
+        } else {
+            var query = employee.find();
+            query.where('isEmployee', false);
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = employee.find();
+            query.where('isEmployee', false);
         }
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').

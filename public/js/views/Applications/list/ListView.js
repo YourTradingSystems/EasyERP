@@ -117,7 +117,6 @@ define([
                 } else {
                     $("#grid-end").text(page*itemsNumber);
                 }
-                $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, status: this.collection.status});
@@ -141,7 +140,6 @@ define([
                 } else {
                     $("#grid-end").text(page*itemsNumber);
                 }
-                $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, status: this.collection.status});
@@ -174,8 +172,6 @@ define([
                     $("#grid-end").text(0);
                     $("#nextPage").prop("disabled",true);
                 }
-
-                $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: 1, status: this.collection.status});
@@ -210,9 +206,6 @@ define([
                 } else {
                     $("#grid-end").text(page*itemsNumber);
                 }
-
-                $("#grid-count").text(this.collection.listLength);
-
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page});
             },
@@ -260,6 +253,7 @@ define([
                 } else {
                     $("#nextPage").prop("disabled",false);
                 }
+                $("#grid-count").text(this.collection.listLength);
             },
             gotoForm: function (e) {
                 App.ownContentType = true;
