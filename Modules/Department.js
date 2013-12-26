@@ -173,11 +173,17 @@ var Department = function (logWriter, mongoose) {
 	function updateNestingLevel(id, nestingLevel, callback){
 		department.find({parentDepartment:id}).exec(function(err,result){
 			var n=0;
-			if (result.length==0){
+			console.log("my super data")
+			console.log(result)
+
+			if (result.length!=0){
 				result.forEach(function(item){
 					n++;
-					department.findByIdAndUpdate({id:id},{nestingLevel:nestingLevel+1},function(){
-						updateNestingLevel(item._id,item.nestingLevel,function(){
+					console.log("my super item")
+					console.log(item)
+
+					department.findByIdAndUpdate(item._id,{nestingLevel:nestingLevel+1},function(){
+						updateNestingLevel(item._id,item.nestingLevel+1,function(){
 							console.log("<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>")
 							console.log(result)
 							console.log(n)
@@ -202,7 +208,10 @@ var Department = function (logWriter, mongoose) {
                     res.send(500, { error: "Can't update Department" });
                 } else {
 					if (data.isAllUpdate){
-						updateNestingLevel(data.id,data.nestingLevel,function(){
+						console.log("my super res")
+						console.log(data)
+
+						updateNestingLevel(_id,data.nestingLevel,function(){
 							res.send(200, { success: 'Department updated success' });
 						});
 					}
