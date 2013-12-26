@@ -141,7 +141,7 @@ define([
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 5, status: [] });
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50, status: [] });
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');

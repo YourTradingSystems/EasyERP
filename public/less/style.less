@@ -469,13 +469,17 @@ h3 {
     border: @thin-border #ccc;
     padding: 20px 0 13px;
     font-family: 'Open Sans', sans-serif;
-
+	.error{
+		padding-left:30px;
+		line-height:30px;
+		display:none;
+		color:red;
+	}
     h2 {
         font-weight: 300 !important;
         font-size: 24px;
         margin: 25px 0 35px 30px;
     }
-
     .icon-pass,
     .icon-login {
         border: @thin-border #e5e5e5;
@@ -497,6 +501,15 @@ h3 {
             border-left: 2px solid #35aa74;
         }
     }
+	&.notRegister{
+		.error{
+			display:block;
+		}
+		.icon-pass,
+		.icon-login {
+	        border: @thin-border red;	
+		}
+	}
 
     .icon-login {
         .icon {
@@ -891,6 +904,9 @@ h3 {
 
 .project-info {
 	.dl-auto(150px);
+}
+.project-owner-info {
+	.dl-auto(100px);
 }
 
 .job-info {
@@ -1534,7 +1550,9 @@ h3 {
 			margin:0 auto;
 		}
 		&.person{
-			margin-top:-22px;
+			margin-top:-45px;
+			z-index: 100;
+			position: relative;
 		}
     }
 
@@ -2437,6 +2455,10 @@ button {
 	}
 
 }
+#createProjectForm  .project-owner-info {
+	.dl-auto(90px);
+}
+
 #leadForm input[type='email'],
     #leadForm input[type='text'] {
         width: 71%;
@@ -3857,6 +3879,12 @@ a.current-selected{
 	font-size:12px;
 	font-family: Arial, Helvetica, sans-serif;
 	line-height:21px !important;
+	&.forList{
+		display: block;
+		float: left;
+		min-width: 100px;
+		clear:left;
+	}
 }
 #projectTopName{
 	line-height:20px;
@@ -4122,8 +4150,8 @@ ul.dialog-tabs{
 	#previousPage,#nextPage,.currentPageList{
 		background-color:white;
 		background-image:none;
-		line-height:20px;
-		width:22px;
+		line-height:15px;
+		width:20px;
 		text-align:center;
 		padding:0;
 		border-radius:0;
@@ -4141,19 +4169,19 @@ ul.dialog-tabs{
 	}
 	#currentShowPage{
 		width:20px;
-		height:16px;
+		height:11px;
 		margin-left:5px;
 	}
 	#pageList{
 		background-color:white;
 		border:1px solid silver;
 		position:absolute;
-		bottom:22px;
-		left:-14px;
+		bottom:17px;
+		left:-7px;
 		display:none;
 		li{
 				display:block;
-				width:34px;
+				width:25px;
 				height:20px;
 				line-height:20px;
 				text-align:center;
@@ -4197,8 +4225,9 @@ ul.dialog-tabs{
 			background-color:white;
 			background-image:none;
 			border-radius:0;
-			width:36px;
+			width:27px;
 			margin:0 5px;
+			line-height:10px;
 			&:hover{
 				background-color: #F7F8F9;
 			}
@@ -4207,13 +4236,13 @@ ul.dialog-tabs{
 			background-color:white;
 			border:1px solid silver;
 			position:absolute;
-			bottom:20px;
+			bottom:17px;
 			left:5px;
 			display:none;
 			li{
 				a{
 					display:block;
-					width:34px;
+					width:25px;
 					height:20px;
 					line-height:20px;
 					text-align:center;
