@@ -430,9 +430,13 @@ var Employee = function (logWriter, mongoose) {
                 res['listLength'] = result.length;
             }
         });
-        query = employee.find();
-        query.where('isEmployee', false).where('workflow').in(data.status);
-        query.populate('relatedUser department jobPosition manager coach').
+
+        query = employee.find().where('isEmployee', false);
+        if (data.status) {
+            query.where('workflow').in(data.status);
+        }
+
+        query.populate('relatedUser department Applications manager coach').
             populate('createdBy.user').
             populate('editedBy.user');
 
@@ -442,7 +446,7 @@ var Employee = function (logWriter, mongoose) {
             if (err) {
                 console.log(err);
                 logWriter.log('Employees.js get Employee.find' + description);
-                response.send(500, { error: "Can't find JobPosition" });
+                response.send(500, { error: "Can't find Applications" });
             } else {
                 res['data'] = result;
                 response.send(res);

@@ -13,6 +13,7 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
+                this.collection.status = [];
                 this.render();
             },
 
@@ -23,6 +24,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
+                "click #do-filter": "showFilteredPage",
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
 
@@ -78,6 +80,7 @@ define([
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
                 }
+
                 this.deleteCounter = 0;
             },
 
@@ -101,7 +104,7 @@ define([
                 $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: page});
+                this.collection.showMore({count: itemsNumber, page: page, status: this.collection.status});
                 $("#nextPage").prop("disabled",false);
             },
 
@@ -125,7 +128,7 @@ define([
                 $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: page});
+                this.collection.showMore({count: itemsNumber, page: page, status: this.collection.status});
                 $("#previousPage").prop("disabled",false);
             },
 
@@ -159,7 +162,7 @@ define([
                 $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: 1});
+                this.collection.showMore({count: itemsNumber, page: 1, status: this.collection.status});
             },
 
             showPage: function (event) {
@@ -181,7 +184,6 @@ define([
 
                 if (this.collection.listLength == 0) {
                     $("#grid-start").text((page - 1)*itemsNumber);
-
                 } else {
                     $("#grid-start").text((page - 1)*itemsNumber+1);
                 }
@@ -196,6 +198,19 @@ define([
 
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page});
+            },
+
+            showFilteredPage: function (event) {
+                event.preventDefault();
+                var workflowIdArray = [];
+                $('input:checkbox:checked').each(function(){
+                    workflowIdArray.push($(this).val());
+                })
+                this.collection.status = workflowIdArray;
+                var itemsNumber = $("#itemsNumber").text();
+
+                _.bind(this.collection.showMore, this.collection);
+                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray });
             },
 
             showMoreContent: function (newModels) {
