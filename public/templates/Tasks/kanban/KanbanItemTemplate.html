@@ -28,7 +28,7 @@
 <div class="task-content">
     <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
     <div class="info">
-        <p><%=model.project.projectName%></p>
+        <p><%=(model.project && model.project.projectName) ? model.project.projectName : ''%></p>
         <p><%=model.summary%></p>
         <% _.each(model.tags,function(tag){ %>
              <span class="tag"><%=tag%></span>

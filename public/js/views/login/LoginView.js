@@ -41,6 +41,7 @@ define([
 
         login: function(event){
         	event.preventDefault();
+			$("#loginForm").removeClass("notRegister");
         	var data = {
         			login: this.$("#ulogin").val(),
         			pass: this.$("#upass").val()
@@ -54,7 +55,7 @@ define([
         	    },
         	    error: function () {
         	        Custom.runApplication(false, "Server is unavailable...");
-        	        alert("Such user doesn't registered");
+					$("#loginForm").addClass("notRegister");
         	    }
         	});
         }

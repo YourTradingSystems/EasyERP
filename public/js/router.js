@@ -23,9 +23,8 @@ define([
             "easyErp/Profiles": "goToProfiles",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
-            //"home/content-:type(/:viewtype)(/:curitem)(/:hash)": "getList",
-            "easyErp/:contentType": "getList",
-            "*actions": "main"
+            "easyErp/:contentType": "getList"
+
         },
 
         goToProfiles: function () {
@@ -141,7 +140,7 @@ define([
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 5, status: [] });
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50, status: [] });
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
@@ -235,11 +234,11 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = 'easyErp/' + contentType + '/kanban';
-                    //if (parrentContentId) {
-                    //    url += '/' + parrentContentId;
-                    //}
-                    //this.navigate(url, { replace:true});
+                    var url = 'easyErp/' + contentType + '/kanban';
+                    if (parrentContentId) {
+                        url += '/' + parrentContentId;
+                    }
+                    Backbone.history.navigate(url, { replace:true});
                 }
             });
         },
@@ -274,9 +273,9 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/thumbnails';
-                    //url = (parrentContentId) ? url + '/' + parrentContentId : url;
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = '#easyErp/' + contentType + '/thumbnails';
+                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

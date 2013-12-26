@@ -855,6 +855,13 @@ app.delete('/Departments/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeDepartment(req, res, id, data);
 });
+app.get('/getDepartmentsForEditDd', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    var id = req.param('id');
+    requestHandler.getDepartmentForEditDd(req, res,id, data);
+});
+
 
 //------------------Employee---------------------------------------------------
 
