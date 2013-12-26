@@ -194,11 +194,25 @@ var requestHandler = function (fs, mongoose) {
 
     //---------END------Profile-----------------------------------
     //---------------Persons--------------------------------
+    function getForDdByRelatedUser(req, res, data) {
+        try {
+            console.log("Requst getPersonsForDd is success");
+            if (req.session && req.session.loggedIn) {
+                employee.getForDdByRelatedUser(req.session.uId, res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            errorLog("requestHandler.js  " + Exception);
+        }
+    };
+
     function getPersonsForDd(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
             if (req.session && req.session.loggedIn) {
-                employee.getForDd(req.session.uId, res);
+                employee.getForDd(res);
             } else {
                 res.send(401);
             }
@@ -1784,6 +1798,7 @@ var requestHandler = function (fs, mongoose) {
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,
         getEmployees: getEmployees,
+        getForDdByRelatedUser:getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
         getEmployeesById: getEmployeesById,

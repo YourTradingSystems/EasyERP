@@ -23,10 +23,20 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
+                "click #itemsButton": "itemsNumber",
+                "click .currentPageList": "itemsNumber",
+                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
+				"click":"hideItemsNumber"
             },
-
+			hideItemsNumber:function(e){
+				$(".allNumberPerPage").hide();
+			},
+			itemsNumber:function(e){
+				$(e.target).closest("button").next("ul").toggle();
+				return false;
+			},
             render: function () {
+				var self=this;
                 console.log('Users render');
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
@@ -55,10 +65,12 @@ define([
 
                 $("#lastPage").text(pageNumber);
                 $("#previousPage").prop("disabled",true);
+                $("#previousPage").addClass("disabled");
 
                 if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
                     $("#grid-start").text(0);
                     $("#nextPage").prop("disabled",true);
+					$("#nextPage").addClass("disabled");
                 } else {
                     $("#grid-start").text(1);
                 }
@@ -77,8 +89,12 @@ define([
 
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
+					$("#nextPage").addClass("disabled");
                 }
                 this.deleteCounter = 0;
+				$(document).on("click",function(){
+					self.hideItemsNumber();
+				});
             },
 
             previousPage: function (event) {
@@ -103,6 +119,7 @@ define([
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page});
                 $("#nextPage").prop("disabled",false);
+                $("#nextPage").removeClass("disabled");
             },
 
             nextPage: function (event) {
@@ -127,11 +144,14 @@ define([
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page});
                 $("#previousPage").prop("disabled",false);
+				$("#previousPage").removeClass("disabled");
+				
             },
 
             switchPageCounter: function (event) {
                 event.preventDefault();
                 $("#previousPage").prop("disabled",true);
+				$("#previousPage").addClass("disabled");
                 var itemsNumber = event.target.textContent;
                 $("#itemsNumber").text(itemsNumber);
                 $("#currentShowPage").val(1);
@@ -139,6 +159,7 @@ define([
                 if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
                     $("#grid-start").text(0);
                     $("#nextPage").prop("disabled",true);
+					$("#nextPage").addClass("disabled");
                 } else {
                     $("#grid-start").text(1);
                 }
@@ -147,13 +168,16 @@ define([
                     if (this.collection.listLength <= itemsNumber) {
                         $("#grid-end").text(this.collection.listLength);
                         $("#nextPage").prop("disabled",true);
+						$("#nextPage").addClass("disabled");
                     } else {
                         $("#grid-end").text(itemsNumber);
                         $("#nextPage").prop("disabled",false);
+						$("#nextPage").removeClass("disabled");
                     }
                 } else {
                     $("#grid-end").text(0);
                     $("#nextPage").prop("disabled",true);
+					$("#nextPage").addClass("disabled");
                 }
 
                 $("#grid-count").text(this.collection.listLength);
@@ -219,14 +243,18 @@ define([
 
                 if (currentPage <= 1) {
                     $("#previousPage").prop("disabled",true);
+					$("#previousPage").addClass("disabled");
                 } else {
                     $("#previousPage").prop("disabled",false);
+					$("#previousPage").removeClass("disabled");
                 }
 
                 if ((currentPage == pageNumber) || (pageNumber <= 1)) {
                     $("#nextPage").prop("disabled",true);
+					$("#nextPage").addClass("disabled");
                 } else {
                     $("#nextPage").prop("disabled",false);
+					$("#nextPage").removeClass("disabled");
                 }
             },
             gotoForm: function (e) {

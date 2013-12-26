@@ -386,6 +386,7 @@ app.delete('/Persons/:_id', function (req, res) {
 //---------------------------Projects--------------------------------------------------------
 
 app.get('/Projects', function (req, res) {
+    console.log('Get Projects');
     data = {};
     data.mid = req.param('mid');
     requestHandler.getProjects(req, res, data);
@@ -861,6 +862,14 @@ app.get('/Employees', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getEmployees(req, res, data);
+});
+
+app.get('/getForDdByRelatedUser', function (req, res) {
+    console.log('------getAccountsForDd-----------------');
+    data = {};
+    //data.ownUser = true;
+    data.mid = req.param('mid');
+    requestHandler.getForDdByRelatedUser(req, res, data);
 });
 
 app.get('/Employees/:viewType', function (req, res) {

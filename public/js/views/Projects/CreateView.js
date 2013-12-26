@@ -190,6 +190,7 @@ define([
 					}
 
 				});
+                var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 this.model.save({
                     projectName: $.trim(this.$el.find("#projectName").val()),
                     projectShortDesc: $.trim(this.$el.find("#projectShortDesc").val()),
@@ -200,7 +201,8 @@ define([
 						owner: $("#allUsers").val(),
 						users: usersId,
 						group: groupsId
-                    }
+                    },
+                    whoCanRW: whoCanRW
                 },
                 {
                     headers: {

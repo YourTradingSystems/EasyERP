@@ -317,7 +317,7 @@ define([
                             console.log("Attach file error");
                         }
                     });
-				}
+				});
                 addFrmAttach.submit();
                 addFrmAttach.off('submit');
             },

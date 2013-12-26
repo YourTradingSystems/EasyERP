@@ -23,10 +23,22 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
+                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
+				"click #itemsButton": "itemsNumber",
+				"click .currentPageList": "itemsNumber",
+				"click":"hideItemsNumber"
+
             },
+ 			hideItemsNumber:function(e){
+				$(".allNumberPerPage").hide();
+			},
+			itemsNumber:function(e){
+				$(e.target).closest("button").next("ul").toggle();
+				return false;
+			},
 
             render: function () {
+				var self=this;
                 console.log('JobPositions render');
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
@@ -79,6 +91,10 @@ define([
                     $("#nextPage").prop("disabled",true);
                 }
                 this.deleteCounter = 0;
+				$(document).on("click",function(){
+					self.hideItemsNumber();
+				});
+
             },
 
             previousPage: function (event) {
