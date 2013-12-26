@@ -24,11 +24,24 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
+                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
+				"click #itemsButton": "itemsNumber",
+				"click .currentPageList": "itemsNumber",
+				"click":"hideItemsNumber",
+
                 "click #do-filter": "showFilteredPage",
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
+ 			hideItemsNumber:function(e){
+				$(".allNumberPerPage").hide();
+			},
+			itemsNumber:function(e){
+				$(e.target).closest("button").next("ul").toggle();
+				return false;
+			},
 
             render: function () {
+				var self=this;
                 console.log('Applications render');
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
@@ -80,8 +93,11 @@ define([
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
                 }
-
                 this.deleteCounter = 0;
+				$(document).on("click",function(){
+					self.hideItemsNumber();
+				});
+
             },
 
             previousPage: function (event) {
@@ -184,6 +200,7 @@ define([
 
                 if (this.collection.listLength == 0) {
                     $("#grid-start").text((page - 1)*itemsNumber);
+
                 } else {
                     $("#grid-start").text((page - 1)*itemsNumber+1);
                 }
