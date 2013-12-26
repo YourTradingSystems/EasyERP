@@ -128,6 +128,50 @@ var Department = function (logWriter, mongoose) {
             }
         });
     };
+	function getAllChildIds(id,callback,trueCallback){
+		department.find({parentDepartment:id}).exec(function(err,result){
+			var n=0;
+			if (result.length!=0){
+				result.forEach(function(item){
+					callback(item._id);
+					getAllChildIds(item._id,callback,function(){
+						n++;
+						if (n==result.length){
+							trueCallback();
+						}
+					});
+				});
+			}else{
+				trueCallback();
+			}
+		});
+	}
+    function getForEditDd(id,response) {
+        var res = {};
+        res['data'] = [];
+        var query = department.find({});
+        query.select('_id departmentName nestingLevel');
+        query.sort({ departmentName: 1 });
+        query.exec(function (err, departments) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Department.js getDepartments Department.find " + err);
+                response.send(500, { error: "Can't find Department" });
+            } else {
+				var ids=[id];
+				getAllChildIds(id,function(id){ids.push(id.toString())},function(){	
+					var result = [];
+					for(var i=0;i<departments.length;i++){
+						if (ids.indexOf(departments[i]._id.toString())==-1){
+							result.push(departments[i]);
+						}
+					}
+					res['data'] = result;
+					response.send(res);
+				});
+            }
+        });
+    };
 
     function get(response) {
         var res = {};
@@ -179,14 +223,9 @@ var Department = function (logWriter, mongoose) {
 			if (result.length!=0){
 				result.forEach(function(item){
 					n++;
-					console.log("my super item")
-					console.log(item)
 
-					department.findByIdAndUpdate(item._id,{nestingLevel:nestingLevel+1},function(){
-						updateNestingLevel(item._id,item.nestingLevel+1,function(){
-							console.log("<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>")
-							console.log(result)
-							console.log(n)
+					department.findByIdAndUpdate(item._id,{nestingLevel:nestingLevel+1},function(err,res){
+						updateNestingLevel(res._id,res.nestingLevel,function(){
 							if (result.length==n)
 								callback();
 						});
@@ -247,6 +286,7 @@ var Department = function (logWriter, mongoose) {
         getDepartmentById: getDepartmentById,
 
         getForDd: getForDd,
+		getForEditDd:getForEditDd,
 
         get: get,
         getCustomDepartment: getCustomDepartment,

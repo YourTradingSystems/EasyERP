@@ -1234,6 +1234,14 @@ var requestHandler = function (fs, mongoose) {
         }
     }
 
+    function getDepartmentForEditDd(req, res, id, data) {
+        if (req.session && req.session.loggedIn) {
+            department.getForEditDd(id,res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getCustomDepartment(req, res, data) {
         console.log("Requst getDepartment is success");
         if (req.session && req.session.loggedIn) {
@@ -1807,6 +1815,7 @@ var requestHandler = function (fs, mongoose) {
         removeDepartment: removeDepartment,
         getDepartmentById: getDepartmentById,
         getCustomDepartment: getCustomDepartment,
+		getDepartmentForEditDd:getDepartmentForEditDd,
         createDegree: createDegree,
         getDegrees: getDegrees,
         updateDegree: updateDegree,

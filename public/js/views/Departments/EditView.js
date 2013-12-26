@@ -188,7 +188,7 @@ define([
 								  click:self.deleteItem 
 							  }]
                 });
-				common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.parentDepartment);} );
+				common.populateDepartments(App.ID.parentDepartment, "/getDepartmentsForEditDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.parentDepartment);} );
                 common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentManager);});
 				var k=this.currentModel.toJSON().users;
 				var b=$.map(this.currentModel.toJSON().users, function (item) {
