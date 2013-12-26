@@ -338,14 +338,6 @@ var Employee = function (logWriter, mongoose) {
             }
         });
 
-        var query = employee.find();
-        query.where('isEmployee', true);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-
         query = employee.find();
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
@@ -428,19 +420,33 @@ var Employee = function (logWriter, mongoose) {
     };
 
     function getApplicationsForList(data, response) {
-        var res = {};
+        var res = {}
+        var description = "";
         res['data'] = [];
-        var query = employee.find();
-        query.where('isEmployee', false);
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-        query = employee.find();
-        query.where('isEmployee', false);
-        if (data.staus) {
-            query.where('workflows').in(data.staus);
+
+
+        if (data.status) {
+            var query = employee.find();
+            query.where('isEmployee', false);
+            query.where('workflow').in(data.status);
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = employee.find();
+            query.where('isEmployee', false);
+            query.where('workflow').in(data.status);
+        } else {
+            var query = employee.find();
+            query.where('isEmployee', false);
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = employee.find();
+            query.where('isEmployee', false);
         }
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
@@ -451,8 +457,8 @@ var Employee = function (logWriter, mongoose) {
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
-                logWriter.log('Employees.js get Employee.find');
-                response.send(500, { error: "Can't find JobPosition" });
+                logWriter.log('Employees.js get Employee.find' + description);
+                response.send(500, { error: "Can't find Applications" });
             } else {
                 res['data'] = result;
                 response.send(res);

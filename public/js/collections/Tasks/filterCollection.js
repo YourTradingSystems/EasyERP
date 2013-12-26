@@ -11,6 +11,7 @@
 
             initialize: function (options) {
                 this.namberToShow = options.count;
+                this.count = options.count;
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;

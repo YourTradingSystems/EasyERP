@@ -55,7 +55,6 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
                         $( "#"+ wfModel.get('_id')).hide();
                         column.append(kanbanItemView.render().el);
                     }
-                    column.append(kanbanItemView.render().el);
                 }, this);
             }, this);
             this.collection.add(newModels.models);
