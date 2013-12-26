@@ -9,8 +9,9 @@ define([
             contentType: "Opportunities",
             template: _.template(CreateTemplate),
 
-            initialize: function () {
+            initialize: function (options) {
                 _.bindAll(this, "saveItem");
+                var model = (options && options.model) ? options.model : null;
                 this.render();
             },
 
@@ -199,7 +200,7 @@ define([
                 });
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
-                common.populateCustomers(App.ID.customerDd, App.URL.customers);
+                common.populateCustomers(App.ID.customerDd, App.URL.customers,this.model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons);
                 common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam);
                 common.populatePriority(App.ID.priorityDd, App.URL.priorities);
