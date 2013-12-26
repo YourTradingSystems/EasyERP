@@ -11,6 +11,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
+        	_.bindAll(this, "saveStatus", "render");
             this.relatedStatusesCollection = new RelatedStatusesCollection();
             this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
             console.log('Init Workflows View');
@@ -243,6 +244,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
         createItem: function(){
             new CreateView({collection: this.collection});
         },
+        
         editItem: function () {
             //create editView in dialog here
             new EditView({collection: this.collection});
@@ -284,11 +286,8 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
             var value = [];
             var names = [],
                 statuses = [];
-    
-                names.push($(".nameStatus").val());
+                names.push($.trim($(".nameStatus").val()));
                 statuses.push($("#statusesDd option:selected").val());
-
-
             for (var i = 0; i < names.length; i++) {
                 value.push({ name: names[i], status: statuses[i], sequence: i });
             }
@@ -308,7 +307,6 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
                 },
                 wait: true,
                 success: function (model) {
-                	self.hideDialog();
                     Backbone.history.navigate("easyErp/Workflows", { trigger: true });
                 },
                 error: function () {
