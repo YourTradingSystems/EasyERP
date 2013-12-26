@@ -17,6 +17,7 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new PersonModel();
+                this.models = (options && options.model) ? options.model : null;
                 this.render();
             },
             
@@ -138,7 +139,7 @@ define([
                     yearRange: '-100y:c+nn',
                     maxDate: '-18y'
                 });
-                common.populateCompanies(App.ID.companiesDd, "/Companies");
+                common.populateCompanies(App.ID.companiesDd, "/Companies", this.models);
                 common.populateDepartments(App.ID.departmentDd, "/Departments");
                 this.delegateEvents(this.events);
 

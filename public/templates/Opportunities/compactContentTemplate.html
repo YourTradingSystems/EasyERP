@@ -1,7 +1,7 @@
 ﻿<div class="formTitle">
     <h3 class="left">Opportunities</h3>
     <div class="btnHolder">
-        <div class="icon-img add" title="Add"></div>
+        <a href="#" class="icon-img add opportunities" title="Add"></a>
     </div>
     <div class="clearfix"></div>
 </div>
@@ -35,9 +35,8 @@
 	        </li>
 	    	<% }%>   
 	    	<% }%>  
-	    	
 	    	<% if (company && (company.type == 'Company')) { %>
-	    	<% if (model.customer && (model.customer.company == company._id)){ %>
+	    	<% if (model.customer && (model.customer._id == company._id) || (model.customer._id == company._id)){ %>
 	        <li class="inner">
 	            <div class="half-block left">
 	                <p>
