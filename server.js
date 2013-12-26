@@ -90,49 +90,49 @@ app.get('/account/authenticated', function (req, res, next) {
 });
 app.get('/getGoogleToken', function (req, res) {
     requestHandler.getToken(req, res);
-            //googleapis
-            //    .discover('calendar', 'v3')
-            //    .execute(function (err, client) {
-            //        if (err) console.log(err);
-            //        client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
-            //            function (err, result) {
-            //                if (result) {
-            //                    var calendars = [];
-            //                    for (var i in result.items) {
-            //                        calendars.push({
-            //                            id: result.items[i].id,
-            //                            summary: result.items[i].summary
-            //                        });
-            //                    }
-            //                    console.log(calendars);
-            //                } else {
-            //                    console.log(err);
-            //                }
-            //                var event = {
-            //                    "summary": "rrrrrrrrrr",
-            //                    'start': {
-            //                        "date": "2013-12-6"
-            //                    },
-            //                    'end': {
-            //                        "date": "2013-12-6"
-            //                    }
-                           
-            //                };
-            //                //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-            //                //    .withAuthClient(oauth2Client).execute(
-            //                //    function (err, result) {
-            //                //        if (result) {
-            //                //            console.log(result);
-            //                //        } else {
-            //                //            console.log(err);
-            //                //        }
-            //                //        ;
-            //                //    });
-            //            });
-            //        res.redirect('/#easyErp/Calendar');
-            //    });
-    
-                                });
+    //googleapis
+    //    .discover('calendar', 'v3')
+    //    .execute(function (err, client) {
+    //        if (err) console.log(err);
+    //        client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
+    //            function (err, result) {
+    //                if (result) {
+    //                    var calendars = [];
+    //                    for (var i in result.items) {
+    //                        calendars.push({
+    //                            id: result.items[i].id,
+    //                            summary: result.items[i].summary
+    //                        });
+    //                    }
+    //                    console.log(calendars);
+    //                } else {
+    //                    console.log(err);
+    //                }
+    //                var event = {
+    //                    "summary": "rrrrrrrrrr",
+    //                    'start': {
+    //                        "date": "2013-12-6"
+    //                    },
+    //                    'end': {
+    //                        "date": "2013-12-6"
+    //                    }
+
+    //                };
+    //                //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
+    //                //    .withAuthClient(oauth2Client).execute(
+    //                //    function (err, result) {
+    //                //        if (result) {
+    //                //            console.log(result);
+    //                //        } else {
+    //                //            console.log(err);
+    //                //        }
+    //                //        ;
+    //                //    });
+    //            });
+    //        res.redirect('/#easyErp/Calendar');
+    //    });
+
+});
 //---------------------Users--and Profiles------------------------------------------------
 
 app.get('/getModules', function (req, res) {
@@ -160,32 +160,32 @@ app.post('/uploadFiles', function (req, res, next) {
 app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
-	var files = [];
-	if (!req.files.attachfile.length){
-		req.files.attachfile=[req.files.attachfile];
-	}
-	console.log(req.files.attachfile);
-	req.files.attachfile.forEach(function(item){
+    var files = [];
+    if (!req.files && !req.files.attachfile.length) {
+        req.files.attachfile = [req.files.attachfile];
+    }
+    console.log(req.files.attachfile);
+    req.files.attachfile.forEach(function (item) {
 
-		fs.readFile(item.path, function (err, data) {
-			var path = __dirname + "\\uploads\\" + item.name;
-			fs.writeFile(path, data, function (err) {
-				var file = {};
-				file._id = mongoose.Types.ObjectId();
-				file.name = item.name;
-				file.path = path;
-				file.size = item.size;
-				file.uploadDate = new Date();
-				file.uploaderName = req.session.uName;
-				files.push(file);
-				if (files.length==req.files.attachfile.length){
-					console.log(files);
-					console.log(req.files.attachfile.length);
-					requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
-				}
-			});
-		});
-	})
+        fs.readFile(item.path, function (err, data) {
+            var path = __dirname + "\\uploads\\" + item.name;
+            fs.writeFile(path, data, function (err) {
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
+                file.name = item.name;
+                file.path = path;
+                file.size = item.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                files.push(file);
+                if (files.length == req.files.attachfile.length) {
+                    console.log(files);
+                    console.log(req.files.attachfile.length);
+                    requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                }
+            });
+        });
+    })
 });
 
 app.get('/logout', function (req, res, next) {
@@ -823,7 +823,7 @@ app.get('/Departments/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
-    }                                             3
+    } 3
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
@@ -834,7 +834,7 @@ app.get('/Departments/:viewType', function (req, res) {
 
 });
 
-app.put('/Departments/:viewType/:_id', function (req, res) {  
+app.put('/Departments/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -859,7 +859,7 @@ app.get('/getDepartmentsForEditDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     var id = req.param('id');
-    requestHandler.getDepartmentForEditDd(req, res,id, data);
+    requestHandler.getDepartmentForEditDd(req, res, id, data);
 });
 
 

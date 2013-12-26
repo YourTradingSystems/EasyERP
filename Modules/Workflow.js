@@ -21,6 +21,7 @@ var Workflow = function (logWriter, mongoose) {
         create: function (data, result) {
             try {
                 if (data) {
+                    console.log(data);
                     workflow.find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
@@ -28,38 +29,26 @@ var Workflow = function (logWriter, mongoose) {
                             result.send(400, { error: 'WorkFlow.js create workflow Incorrect Incoming Data' });
                             return;
                         } else {
-                            console.log(workflows);
-                            if (workflows[0]) {
-                                result.send(500, { error: 'WorkFlow.js create save error' });
-                            } else {
-                                try {
-
-                                    for (var i = 0; i < data.value.length; i++) {
-                                        _workflow = new workflow();
-                                        _workflow.wId = data._id;
-                                        _workflow.wName = data.wName;
-                                        _workflow.name = data.value[i].name;
-                                        _workflow.status = data.value[i].status;
-                                        _workflow.sequence = data.value[i].sequence;
-
-                                        _workflow.save(function(err, workfloww) {
-                                            if (err) {
-                                                console.log(err);
-                                                logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
-                                                result.send(500, { error: 'WorkFlow.js create save error' });
-                                            } else {
-                                                result.send(201, { success: 'A new WorkFlow crate success' });
-                                            }
-                                        });
+                            for (var i = 0; i < data.value.length; i++) {
+                                _workflow = new workflow();
+                                _workflow.wId = data._id;
+                                _workflow.wName = data.wName;
+                                _workflow.name = data.value[i].name;
+                                _workflow.status = data.value[i].status;
+                                _workflow.sequence = data.value[i].sequence;
+                                _workflow.save(function (err, workfloww) {
+                                    if (err) {
+                                        console.log(err);
+                                        logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
+                                        result.send(500, { error: 'WorkFlow.js create save error' });
+                                    } else {
+                                        result.send(201, { success: 'A new WorkFlow crate success' });
+                                        console.log(workfloww);
                                     }
-                                }
-                                catch (err) {
-                                    console.log(err);
-                                    logWriter.log('WorkFlow.js create _workflow.save ' + err);
-                                    result.send(500, { error: 'WorkFlow.js create error' });
-                                }
+                                });
                             }
                         }
+
                     });
                 }
             }
@@ -112,7 +101,6 @@ var Workflow = function (logWriter, mongoose) {
             });
         },
 
-
         get: function (data, response) {
             try {
                 var res = {};
@@ -161,8 +149,9 @@ var Workflow = function (logWriter, mongoose) {
                 response.send(500, { error: "Can't find Workflow" });
             }
         },
+
         remove: function (_id, res) {
-        	workflow.remove({ _id: _id }, function (err, workflow) {
+            workflow.remove({ _id: _id }, function (err, workflow) {
                 if (err) {
                     console.log(err);
                     logWriter.log("workflow.js remove workflow.remove " + err);
@@ -172,7 +161,7 @@ var Workflow = function (logWriter, mongoose) {
                 }
             });
         },
-        workflow:workflow
+        workflow: workflow
     };
 };
 

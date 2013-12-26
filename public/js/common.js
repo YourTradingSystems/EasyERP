@@ -2,12 +2,9 @@
     "dataService"
 ],
     function (dataService) {
-        var toObject = function (_id, collection) {
-            var _tempObject = null;
-            if (_id && collection) {
-                _tempObject = (collection.get(_id)) ? collection.get(_id).toJSON() : null;
-            }
-            return _tempObject;
+        var checkBackboneFragment = function (url) {
+            if (Backbone.history.fragment == url) Backbone.history.fragment = "";
+            Backbone.history.navigate(url, { trigger: true });
         };
 
 
@@ -626,7 +623,7 @@
             populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
             populateRelatedStatuses:populateRelatedStatuses,
-            toObject: toObject,
+            checkBackboneFragment: checkBackboneFragment,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
             ISODateToDate: ISODateToDate,
             hexToRgb: hexToRgb,
