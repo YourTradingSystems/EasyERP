@@ -253,7 +253,19 @@ define([
                 } else {
                     $("#nextPage").prop("disabled",false);
                 }
+
                 $("#grid-count").text(this.collection.listLength);
+                if (this.collection.listLength < parseInt( $("#itemsNumber").text()*currentPage)) {
+                    $("#grid-end").text(this.collection.listLength)
+                } else {
+                    $("#grid-end").text(currentPage*itemsNumber);
+                }
+                if (this.collection.listLength < 1) {
+                    $("#grid-start").text(0)
+                } else {
+                    $("#grid-start").text((currentPage-1)*itemsNumber+1)
+                }
+
             },
             gotoForm: function (e) {
                 App.ownContentType = true;
