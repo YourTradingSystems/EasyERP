@@ -317,7 +317,8 @@
             var self = this;
 			if (!removeSelect)
             selectList.append($("<option/>").val('').text('Select...'));
-            dataService.getData(url, { mid: 39 ,id:model._id}, function (response) {
+			var id=(model)?(model._id):null;
+            dataService.getData(url, { mid: 39 ,id:id}, function (response) {
                 var options = [];
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function (item) {

@@ -2900,7 +2900,9 @@ button {
         .columnNameDiv {
             background: #fff;
             height: 35px;
-
+			&.task{
+				height:42px;
+			}
             .remaining, .revenue {
                 border-bottom: 2px solid #e88f04;
                 padding-bottom: 5px;
@@ -3902,21 +3904,58 @@ ul.dialog-tabs{
 		}
 	}
 }
+.groupsChooser{
+	margin-top:25px;
+}
 #sourceUsers,#targetUsers,
 #sourceGroups,#targetGroups{
-	width:100px;
-	height:100px;
+	width:250px;
+	height:150px;
 	margin:5px;
-	float:left;
 	border:1px solid silver;
 	overflow-x:hidden;
 	li{
 		cursor:pointer;
+		line-height: 18px;
+		padding: 0 3px;
 		&.choosen{
 			background-color:#36A9E1;
 			color:white;
 		}
 	}
+	&:hover{
+		border-color:#36A9E1;
+	}
+}
+.canReadAndWrite{
+	margin:10px 0 0 0;
+	padding-bottom:10px;
+	input{
+		margin-right:10px;
+	}
+}
+#sourceUsers,#sourceGroups{
+	margin-left:150px;
+}
+#addUsers,#removeUsers,
+#addUsersGroups, #removeUsersGroups{
+	width:30px;
+	height:30px;	
+	background-image:url("@{imagesfolder}/arrow-left.png");
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	background-color:white;
+	border-radius:0;
+	margin-top:5px;
+	display:block;
+	&:hover{
+		.box-shadow(0px, 0px, 10px);
+	}
+	
+}
+#addUsers,#addUsersGroups{
+	margin-top:40px;
+	background-image:url("@{imagesfolder}/arrow-right.png");
 }
 #targetUsers{
 }

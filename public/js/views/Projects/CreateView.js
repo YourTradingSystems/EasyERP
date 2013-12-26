@@ -72,7 +72,7 @@ define([
 				var self = this;
 				$(".addUserDialog").dialog({
                     dialogClass: "add-user-dialoga",
-                    width: "315px",
+                    width: "900px",
                     buttons:{
                         save:{
                             text:"Choose",
@@ -104,7 +104,7 @@ define([
 				var self = this;
 				$(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
-                    width: "315px;",
+                    width: "900px",
                     buttons:{
                         save:{
                             text:"Choose",
