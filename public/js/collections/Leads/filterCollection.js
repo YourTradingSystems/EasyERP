@@ -8,7 +8,7 @@
             url: "/Leads/",
             page: 1,
             initialize: function (options) {
-                debugger;
+
                 var that = this;
                 this.namberToShow = options.count;
                 if (options && options.viewType) {

@@ -1,5 +1,6 @@
 var Opportunities = function (logWriter, mongoose, customer, workflow) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var newObjectId = mongoose.Types.ObjectId;
     var opportunitiesSchema = mongoose.Schema({
         isOpportunitie: { type: Boolean, default: false },
         name: { type: String, default: '' },
@@ -505,6 +506,64 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         });
     };
 
+    function getFilterOpportunitiesForKanban(data, response) {
+        var res = {};
+        res['data'] = [];
+        res['showMore'] = [];
+        res['options'] = [];
+        var optionsArray = [];
+        var showMore = false;
+
+        var queryAggregate = opportunitie.aggregate({ $match: { isOpportunitie: true } }, { $group: { _id: "$workflow", opportunitieId: { $push: "$_id" } } })
+        queryAggregate.exec(
+            function (err, responseOpportunitie) {
+                if (!err) {
+
+                    var responseOpportunitieArray = [];
+                    var columnValue = data.count;
+                    var page = data.page;
+
+                    responseOpportunitie.forEach(function (value) {
+                        value.opportunitieId.forEach(function (idOpportunitie, opportunitieIndex) {
+                            if (((page - 1) * columnValue <= opportunitieIndex) && (opportunitieIndex < (page - 1) * columnValue + columnValue)) {
+                                responseOpportunitieArray.push(idOpportunitie);
+                            }
+                        });
+                        var myObj = {
+                            id: value._id,
+                            namberOfOpportunitie: value.opportunitieId.length,
+                            remainingOfOpportunitie: value.remaining
+                        };
+                        optionsArray.push(myObj);
+                        if (value.opportunitieId.length > ((page - 1) * columnValue + columnValue)) {
+                            showMore = true;
+                        }
+                    });
+                    opportunitie.find()
+                        .where('_id').in(responseOpportunitieArray)
+                        .populate('relatedUser customer department jobPosition workflow')
+                        .populate('createdBy.user')
+                        .populate('editedBy.user')
+                        .exec(function (err, resalt) {
+                            if (!err) {
+                                res['showMore'] = showMore;
+                                res['options'] = optionsArray;
+                                res['data'] = resalt;
+                                response.send(res);
+                            } else {
+                                logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find " + err);
+                                response.send(500, { error: "Can't find Opportunitie" });
+                            }
+                        })
+                } else {
+                    logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find " + err);
+                    response.send(500, { error: "Can't group Opportunitie" });
+                }
+            });
+
+
+    };
+
     function remove(_id, res) {
         opportunitie.remove({ _id: _id }, function (err, result) {
             if (err) {
@@ -525,6 +584,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         getById: getById,
 
         getFilterOpportunities: getFilterOpportunities,
+
+        getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
 
         getLeads: getLeads,
 

@@ -13,6 +13,7 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
+                this.collection.status = [];
                 this.render();
             },
 
@@ -26,8 +27,10 @@ define([
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
-				"click":"hideItemsNumber"
+				"click":"hideItemsNumber",
 
+                "click #do-filter": "showFilteredPage",
+                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
@@ -114,10 +117,9 @@ define([
                 } else {
                     $("#grid-end").text(page*itemsNumber);
                 }
-                $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: page});
+                this.collection.showMore({count: itemsNumber, page: page, status: this.collection.status});
                 $("#nextPage").prop("disabled",false);
             },
 
@@ -138,10 +140,9 @@ define([
                 } else {
                     $("#grid-end").text(page*itemsNumber);
                 }
-                $("#grid-count").text(this.collection.listLength);
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: page});
+                this.collection.showMore({count: itemsNumber, page: page, status: this.collection.status});
                 $("#previousPage").prop("disabled",false);
             },
 
@@ -172,10 +173,8 @@ define([
                     $("#nextPage").prop("disabled",true);
                 }
 
-                $("#grid-count").text(this.collection.listLength);
-
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: 1});
+                this.collection.showMore({count: itemsNumber, page: 1, status: this.collection.status});
             },
 
             showPage: function (event) {
@@ -207,11 +206,21 @@ define([
                 } else {
                     $("#grid-end").text(page*itemsNumber);
                 }
-
-                $("#grid-count").text(this.collection.listLength);
-
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page});
+            },
+
+            showFilteredPage: function (event) {
+                event.preventDefault();
+                var workflowIdArray = [];
+                $('input:checkbox:checked').each(function(){
+                    workflowIdArray.push($(this).val());
+                })
+                this.collection.status = workflowIdArray;
+                var itemsNumber = $("#itemsNumber").text();
+
+                _.bind(this.collection.showMore, this.collection);
+                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray });
             },
 
             showMoreContent: function (newModels) {
@@ -244,6 +253,7 @@ define([
                 } else {
                     $("#nextPage").prop("disabled",false);
                 }
+                $("#grid-count").text(this.collection.listLength);
             },
             gotoForm: function (e) {
                 App.ownContentType = true;

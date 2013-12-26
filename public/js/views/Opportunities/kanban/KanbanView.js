@@ -42,23 +42,28 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
         showMoreContent: function (newModels) {
             var workflows = this.workflowsCollection.toJSON();
-            this.collection.set(newModels.models);
+
             $(".column").last().addClass("lastColumn");
             _.each(workflows, function (workflow, i) {
-                var counter = 0,
-                remaining = 0;
                 var column = this.$(".column").eq(i);
                 var kanbanItemView;
                 var modelByWorkflows = newModels.filterByWorkflow(workflow._id);
                 _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new TasksKanbanItemView({ model: wfModel });
-                    column.append(kanbanItemView.render().el);
-                    counter++;
-                    //remaining += wfModel.get("remaining");
+                    kanbanItemView = new KanbanItemView({ model: wfModel });
+                    var model_id = wfModel.get('_id');
+                    if (this.collection.get(model_id) === undefined) {
+                        column.append(kanbanItemView.render().el);
+                    } else {
+                        $( "#"+ wfModel.get('_id')).hide();
+                        column.append(kanbanItemView.render().el);
+                    }
                 }, this);
-                column.find(".counter").html(parseInt(column.find(".counter").html()) + counter);
-                //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + remaining);
             }, this);
+            this.collection.add(newModels.models);
+
+            if (!this.collection.showMoreButton) {
+                $('#showMoreDiv').hide();
+            }
         },
 
         editItem: function () {
@@ -75,29 +80,37 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             var workflows = this.workflowsCollection.toJSON();
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
+            var OpportunitieCount;
+           // var OpportunitieRemaining;
+
             _.each(workflows, function (workflow, i) {
-                var counter = 0,
-                remaining = 0;
+                OpportunitieCount = 0
+                //OpportunitieRemaining = 0;
+                _.each(this.collection.optionsArray, function(wfId){
+                    if (wfId.id == workflow._id) {
+                        OpportunitieCount = wfId.namberOfOpportunitie;
+                        //OpportunitieRemaining = wfId.remainingOfOpportunitie;
+                    }
+                });
                 var column = this.$(".column").eq(i);
                 var kanbanItemView;
                 var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
-                _.each(modelByWorkflows, function (wfModel) {
-                	
-                	var comID = (wfModel.get("customer")) ? wfModel.get("customer").company : null;
-                	var companies = (comID) ? this.companiesCollection.get(comID).toJSON() : null;
-                    kanbanItemView = new KanbanItemView({ model: wfModel, companies: companies });
-                    column.append(kanbanItemView.render().el);
-                    counter++;
-                    //remaining += wfModel.get("remaining");
 
+                _.each(modelByWorkflows, function (wfModel) {
+                    kanbanItemView = new KanbanItemView({ model: wfModel});
+                    column.append(kanbanItemView.render().el);
                 }, this);
-                var count = " <span>(<span class='counter'>" + counter + "</span>)</span>";
+                var count = " <span>(<span class='counter'>" + OpportunitieCount + "</span>)</span>";
                 /*var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";*/
                 column.find(".columnNameDiv h2").append(count);
                 //column.find(".columnNameDiv").append(content);
             }, this);
             var that = this;
-            this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+
+            if (this.collection.showMoreButton) {
+                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            }
+
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",
@@ -119,15 +132,13 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 },
                 stop: function (event, ui) {
                 	var id = ui.item.context.id;
+                    //var id = ui.item.attr('data-id');
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
                         model.set({ workflow: column.data('id') });
-                        model.save({}, {
-                            //headers: {
-                            //    mid: mid
-                            //}
-                        });
+                        model.save({});
+
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                         //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
                     }

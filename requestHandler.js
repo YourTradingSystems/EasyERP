@@ -1477,6 +1477,20 @@ var requestHandler = function (fs, mongoose) {
             res.send(401);
         }
     };
+    function getFilterOpportunitiesForKanban(req, res, data) {
+        console.log("Requst getFilterOpportunities is success");
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 25, function (access) {
+                if (access) {
+                    opportunities.getFilterOpportunitiesForKanban(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
     function getOpportunities(req, res, data) {
         if (req.session && req.session.loggedIn) {
@@ -1829,6 +1843,7 @@ var requestHandler = function (fs, mongoose) {
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
+        getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
         getOpportunities: getOpportunities,
         getOpportunityById: getOpportunityById,
         updateOpportunitie: updateOpportunitie,

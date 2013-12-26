@@ -10,7 +10,8 @@
             count: 13,
 
             initialize: function (options) {
-                debugger;
+                this.status = [];
+                this.status = options.status;
                 this.count = options.count;
                 this.page = options.page;
                 this.namberToShow = options.count;
@@ -35,6 +36,8 @@
                     }
                     case 'list': {
                         filterObject['page'] = 1;
+                        filterObject['status'] = [];
+                        filterObject['status'] = options.status;;
                         var addPage = 0;
                         break;
                     }
@@ -64,10 +67,13 @@
             },
 
             showMore: function (options) {
+                debugger;
                 var that = this;
                 var filterObject = {};
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
+                filterObject['status'] = [];
+                filterObject['status'] = (options && options.status) ? options.status: this.status;
                 var NewCollection = Backbone.Collection.extend({
                     model: ApplicationModel,
                     url: that.url,
@@ -92,6 +98,7 @@
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
                         that.page += 1;
+                        that.listLength = response.listLength;
                         that.trigger('showmore', models);
                     },
                     error: function() {
@@ -102,6 +109,7 @@
 
             parse: true,
             parse: function (response) {
+                debugger;
                 if (response.data) {
                     _.map(response.data, function (application) {
                     	application.creationDate = common.utcDateToLocaleDate(application.creationDate);
