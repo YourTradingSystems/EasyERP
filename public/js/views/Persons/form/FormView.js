@@ -94,10 +94,18 @@ define([
                 $("#" + parent[0].id).addClass('quickEdit');
                 $('#editSpan').remove();
                 this.text = $('#' + parent[0].id).text();
-                if ($("#" + parent[0].id).hasClass('date')) {
+
+             
+                if (parent[0].id== 'dateBirth'){
                     $("#" + parent[0].id).text('');
                     $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left has-datepicker"/>');
-                    $('.has-datepicker').datepicker();
+                    $('.has-datepicker').datepicker({
+                        dateFormat: "d M, yy",
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: '-100y:c+nn',
+                        maxDate: '-18y'
+                    });
                 } else if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
