@@ -115,10 +115,10 @@ define([
                         window.location.replace(url);
                         model = model.toJSON();
                         if (!model.project) {
-                            Backbone.history.navigate("#easyErp/Tasks/kanban", { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            Backbone.history.navigate("#easyErp/Tasks/kanban/" + model.project, { trigger: true });
+                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project, { trigger: true });
                         }
                         self.hideDialog();
                     },
