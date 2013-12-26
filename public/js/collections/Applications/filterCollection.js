@@ -67,7 +67,6 @@
             },
 
             showMore: function (options) {
-                debugger;
                 var that = this;
                 var filterObject = {};
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
@@ -109,7 +108,6 @@
 
             parse: true,
             parse: function (response) {
-                debugger;
                 if (response.data) {
                     _.map(response.data, function (application) {
                     	application.creationDate = common.utcDateToLocaleDate(application.creationDate);
