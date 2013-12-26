@@ -1234,6 +1234,14 @@ var requestHandler = function (fs, mongoose) {
         }
     }
 
+    function getDepartmentForEditDd(req, res, id, data) {
+        if (req.session && req.session.loggedIn) {
+            department.getForEditDd(id,res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getCustomDepartment(req, res, data) {
         console.log("Requst getDepartment is success");
         if (req.session && req.session.loggedIn) {
@@ -1469,6 +1477,20 @@ var requestHandler = function (fs, mongoose) {
             access.getReadAccess(req.session.uId, 25, function (access) {
                 if (access) {
                     opportunities.getFilterOpportunities(data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    function getFilterOpportunitiesForKanban(req, res, data) {
+        console.log("Requst getFilterOpportunities is success");
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 25, function (access) {
+                if (access) {
+                    opportunities.getFilterOpportunitiesForKanban(data, res);
                 } else {
                     res.send(403);
                 }
@@ -1807,6 +1829,7 @@ var requestHandler = function (fs, mongoose) {
         removeDepartment: removeDepartment,
         getDepartmentById: getDepartmentById,
         getCustomDepartment: getCustomDepartment,
+		getDepartmentForEditDd:getDepartmentForEditDd,
         createDegree: createDegree,
         getDegrees: getDegrees,
         updateDegree: updateDegree,
@@ -1829,6 +1852,7 @@ var requestHandler = function (fs, mongoose) {
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
+        getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
         getOpportunities: getOpportunities,
         getOpportunityById: getOpportunityById,
         updateOpportunitie: updateOpportunitie,

@@ -10,7 +10,8 @@
             count: 13,
 
             initialize: function (options) {
-                debugger;
+                this.status = [];
+                this.status = options.status;
                 this.count = options.count;
                 this.page = options.page;
                 this.namberToShow = options.count;
@@ -35,6 +36,8 @@
                     }
                     case 'list': {
                         filterObject['page'] = 1;
+                        filterObject['status'] = [];
+                        filterObject['status'] = options.status;;
                         var addPage = 0;
                         break;
                     }
@@ -68,6 +71,8 @@
                 var filterObject = {};
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
+                filterObject['status'] = [];
+                filterObject['status'] = (options && options.status) ? options.status: this.status;
                 var NewCollection = Backbone.Collection.extend({
                     model: ApplicationModel,
                     url: that.url,
@@ -92,6 +97,7 @@
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
                         that.page += 1;
+                        that.listLength = response.listLength;
                         that.trigger('showmore', models);
                     },
                     error: function() {

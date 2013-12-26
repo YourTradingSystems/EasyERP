@@ -54,6 +54,7 @@ define([
         	    },
         	    error: function () {
         	        Custom.runApplication(false, "Server is unavailable...");
+        	        alert("Such user doesn't registered");
         	    }
         	});
         }

@@ -11,6 +11,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
+        	_.bindAll(this, "saveStatus", "render");
             this.relatedStatusesCollection = new RelatedStatusesCollection();
             this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
             console.log('Init Workflows View');
@@ -40,6 +41,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
         save: function (e) {
             e.preventDefault();
             var mid = 39;
+            $("#addNewStatus").show();
             var tr = $(e.target).closest("tr");
             var name = tr.find("td.name input").val();
             var status = tr.find("td.status option:selected").text();
@@ -75,15 +77,18 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
             targetParent.siblings().find("span").removeClass("hidden").end().find("input, select, a:contains('Cancel'), a:contains('Save')").remove();
             targetParent.find(".edit").removeClass("hidden").end().find("a:contains('Cancel'), a:contains('Save')").remove();
             targetParent.find(".delete").removeClass("hidden").end().find("a:contains('Cancel'), a:contains('Save')").remove();
+            $("#addNewStatus").show();
         },
 
         edit: function (e) {
-            e.preventDefault();
+            e.preventDefault();      
             var targetParent = $(e.target).parent();
             $("span").removeClass("hidden");
-            $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
+            $(".addnew, .SaveCancel").remove();
+            $(".name input, input.nameStatus, select, a:contains('Cancel'), a:contains('Save')").remove();
             $(".edit").removeClass("hidden");
             $(".delete").removeClass("hidden");
+            $("#addNewStatus").show();
             var target = $(e.target);
             var td = target.parent();
             var text = "<a href='#'>";
@@ -163,15 +168,18 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
 
             }
             var names = [], wName;
+            
             _.each(this.collection.models, function (model) {
                 if (model.get('wId') == wId && wName != model.get('wName')) {
-                    names.push(model.get('wName'));
-                    wName = model.get('wId');
+                	names.push(model.get('wName'));
+                    wName = model.get('wName');
+                    
                 }
             }, this);
 
             var first = false;
-            _.each(names, function (name) {
+            var workflowsWname = _.uniq(names);
+            _.each(workflowsWname, function (name) {
                 if (first) {
                     this.$(".workflow-sub-list").append("<li class='active'><a class='workflow-sub' id='"+ wName+"' data-id='" + name + "'href='javascript:;'>" + name + "</a></li>");
                     first = false;
@@ -222,6 +230,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
             Custom.setCurrentCL(this.collection.models.length);
             console.log('Render Workflows View');
             var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
+            var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName'), false);
             this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds }));
             return this;
         },
@@ -235,12 +244,17 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
         createItem: function(){
             new CreateView({collection: this.collection});
         },
+        
         editItem: function () {
             //create editView in dialog here
             new EditView({collection: this.collection});
         },
         
         addNewStatus:function(e){
+            $("span").removeClass("hidden");
+            $(".name input, select, a:contains('Cancel'), a:contains('Save')").remove();
+            $(".edit").removeClass("hidden");
+            $(".delete").removeClass("hidden");
         	e.preventDefault();
         	var mid = 39;
             e.preventDefault();
@@ -264,8 +278,6 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
         
         saveStatus:function(e){
         	e.preventDefault();
-  
-        	$("#addNewStatus").show();
             var mid = 39;
             var workflowsModel = new WorkflowsModel();
             var wId = $(".workflow-list li.active").text();
@@ -274,15 +286,16 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
             var value = [];
             var names = [],
                 statuses = [];
-    
-                names.push($(".nameStatus").val());
+                names.push($.trim($(".nameStatus").val()));
                 statuses.push($("#statusesDd option:selected").val());
-
-
             for (var i = 0; i < names.length; i++) {
                 value.push({ name: names[i], status: statuses[i], sequence: i });
             }
           	$(".addnew, .SaveCancel").remove();
+            $("span").removeClass("hidden");
+            $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
+            $(".edit").removeClass("hidden");
+            $(".delete").removeClass("hidden");
             workflowsModel.save({
                 wId: wId,
                 name: name,
@@ -294,7 +307,6 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection,Cr
                 },
                 wait: true,
                 success: function (model) {
-                	self.hideDialog();
                     Backbone.history.navigate("easyErp/Workflows", { trigger: true });
                 },
                 error: function () {
