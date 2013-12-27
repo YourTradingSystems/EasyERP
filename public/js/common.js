@@ -201,12 +201,13 @@
             //selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson || model.departmentManager)) {
+                if (model && (model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson || model.departmentManager || model.assignedTo)) {
                     options = $.map(response.data, function (item) {
                         return ((model.manager && model.manager._id === item._id) ||
                                 (model.projectmanager && model.projectmanager._id === item._id) ||
                                 (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) ||
                                 (model.salesPerson && model.salesPerson._id === item._id) ||
+                                (model.assignedTo && model.assignedTo._id === item._id) ||
                                 //(model.salesTeam._id === item._id) ||
                                 (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
@@ -577,7 +578,7 @@
 					if (model.users){
 						users=model.users;
 					}
-					if (model.groups.users){
+					if (model.groups&&model.groups.users){
 						users=model.groups.users;
 					}
 
