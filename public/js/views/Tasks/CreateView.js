@@ -116,8 +116,7 @@ define([
                             Backbone.history.navigate("#easyErp/Tasks/kanban", { trigger: true });
 
                         } else {
-                            if (Backbone.history.fragment == "easyErp/Tasks/kanban/" + model.project) Backbone.history.fragment = ""; 
-                            Backbone.history.navigate("easyErp/Tasks/kanban/" + model.project, { trigger: true });
+                            common.checkBackboneFragment("easyErp/Tasks/kanban/" + model.project);
                         }
                     },
                     error: function (model, xhr, options) {

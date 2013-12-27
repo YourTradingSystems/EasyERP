@@ -6,10 +6,11 @@ define([
     'text!templates/Notes/AddNote.html',
     'text!templates/Notes/AddAttachments.html',
     'collections/Opportunities/OpportunitiesCollection',
+    'views/Opportunities/CreateView',
     'common'
 ],
 
-    function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, common) {
+    function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, CreateViewOpportunities, common) {
         var PersonTasksView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -35,9 +36,16 @@ define([
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
-                "click #saveSpan": "saveClick"
+                "click #saveSpan": "saveClick",
+                "click .btnHolder .add.opportunities": "addOpportunities"
             },
 
+            addOpportunities: function (e) {
+            	e.preventDefault();
+            	var model = this.formModel.toJSON();
+            	new CreateViewOpportunities({model:model});
+            },
+            
             quickEdit: function (e) {
                 $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
             },

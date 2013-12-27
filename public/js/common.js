@@ -2,12 +2,9 @@
     "dataService"
 ],
     function (dataService) {
-        var toObject = function (_id, collection) {
-            var _tempObject = null;
-            if (_id && collection) {
-                _tempObject = (collection.get(_id)) ? collection.get(_id).toJSON() : null;
-            }
-            return _tempObject;
+        var checkBackboneFragment = function (url) {
+            if (Backbone.history.fragment == url) Backbone.history.fragment = "";
+            Backbone.history.navigate(url, { trigger: true });
         };
 
 
@@ -261,7 +258,9 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item._id).text(item.name.first);
+                        return model._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first);
                     });
                 }
                 selectList.append(options);
@@ -412,9 +411,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.customer) {
+                if (model) {
                     options = $.map(response.data, function (item) {
-                        return (model.customer && (model.customer._id === item._id)) ?
+                        return ((model.customer && (model.customer._id === item._id)) || (model._id === item._id) ) ?
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                     });
@@ -667,7 +666,7 @@
             populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
             populateRelatedStatuses:populateRelatedStatuses,
-            toObject: toObject,
+            checkBackboneFragment: checkBackboneFragment,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
             ISODateToDate: ISODateToDate,
             hexToRgb: hexToRgb,

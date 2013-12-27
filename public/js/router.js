@@ -23,8 +23,8 @@ define([
             "easyErp/Profiles": "goToProfiles",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
-            "easyErp/:contentType": "getList"
-
+            "easyErp/:contentType": "getList",
+            "*eny": "main"
         },
 
         goToProfiles: function () {
@@ -53,8 +53,8 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/list';
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = '#easyErp/Profiles';
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -80,11 +80,12 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/list';
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = '#easyErp/' + contentType + '/list';
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
+
         goToWorkflows: function () {
             if (this.mainView == null) this.main();
 
@@ -99,6 +100,7 @@ define([
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
+
                 function createViews() {
                     collection.unbind('reset');
                     var contentView = new ContentView({ collection: collection });
@@ -111,8 +113,8 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/list';
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = '#easyErp/Workflows';
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -156,8 +158,8 @@ define([
                     collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/list';
-                    //Backbone.history.navigate(url, { replace: true });
+                    var url = '#easyErp/' + contentType + '/list';
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -263,6 +265,7 @@ define([
                 collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 50, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
+                    collection.unbind('reset');
                     var contentView = new ContentView({ collection: collection });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
