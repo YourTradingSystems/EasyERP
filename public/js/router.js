@@ -19,7 +19,7 @@ define([
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "easyErp/:contentType/thumbnails(/:parrentContentId)": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
-            "easyErp/:contentType/list": "goToList",
+            "easyErp/:contentType/list(/:parrentContentId)": "goToList",
             "easyErp/Profiles": "goToProfiles",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
@@ -129,7 +129,7 @@ define([
             }
         },
 
-        goToList: function (contentType) {
+        goToList: function (contentType, parrentContentId) {
             // console.API.clear();
             if (this.mainView == null) this.main();
 
@@ -140,7 +140,7 @@ define([
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 5, status: [] });
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 5, status: [], parrentContentId: parrentContentId  });
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');

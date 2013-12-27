@@ -931,59 +931,203 @@ var Project = function (logWriter, mongoose, department) {
         res['options'] = [];
         var optionsArray = [];
         var showMore = false;
+        var i = 0;
 
-        var queryAggregate = (data.parrentContentId) ?
-            tasks.aggregate({ $match: { project: newObjectId(data.parrentContentId) } }, { $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } }) :
-            tasks.aggregate({ $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
-        queryAggregate.exec(
-            function (err, responseTasks) {
+        var qeryEveryOne = function (arrayOfId, n) {
+            project.find().
+                where('_id').in(arrayOfId).
+               // populate("projectmanager customer task").
+               // populate('workflow').
+               // populate('createdBy.user').
+               // populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) {
+                            qeryGetTasks(res['data'],data.parrentContentId);
+                        }
+                    }
+                });
+        };
+
+        var qeryOwner = function (arrayOfId, n) {
+            project.find().
+                where('_id').in(arrayOfId).
+                where({ 'groups.owner': data.uId }).
+              //  populate("projectmanager customer task").
+              //  populate('workflow').
+              //  populate('createdBy.user').
+              //  populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) {
+                            qeryGetTasks(res['data'],data.parrentContentId);
+                        }
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        var qeryByGroup = function (arrayOfId, n) {
+            project.find().
+                where({ 'groups.users': data.uId }).
+              //  populate("projectmanager customer task").
+              //  populate('workflow').
+              //  populate('createdBy.user').
+              //  populate('editedBy.user').
+                exec(function (error, _res1) {
+                    if (!error) {
+                        department.department.find({ users: data.uId }, { _id: 1 },
+                            function (err, deps) {
+                                console.log(deps);
+                                if (!err) {
+                                    project.find().
+                                        where('_id').in(arrayOfId).
+                                        where('groups.group').in(deps).
+                                      //  populate("projectmanager customer task").
+                                      //  populate('workflow').
+                                      //  populate('createdBy.user').
+                                      //  populate('editedBy.user').
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                i++;
+                                                console.log(i);
+                                                console.log(n);
+                                                res['data'] = res['data'].concat(_res1);
+                                                res['data'] = res['data'].concat(_res);
+                                                console.log(res['data']);
+                                                if (i == n) {
+                                                    qeryGetTasks(res['data'],data.parrentContentId);
+                                                }
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                }
+                            });
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        project.aggregate(
+            {
+                $group: {
+                    _id: "$whoCanRW",
+                    ID: { $push: "$_id" },
+                    groupId: { $push: "$groups.group" }
+                }
+            },
+            function (err, result) {
                 if (!err) {
-
-                    var responseTasksArray = [];
-                    var columnValue = data.count;
-                    var page = data.page;
-
-                    responseTasks.forEach(function (value) {
-                        value.taskId.forEach(function (idTask, taskIndex) {
-                            if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
-                                responseTasksArray.push(idTask);
+                    if (result.length != 0) {
+                        result.forEach(function(_project) {
+                            switch (_project._id) {
+                                case "everyOne":
+                                {
+                                    qeryEveryOne(_project.ID, result.length);
+                                }
+                                    break;
+                                case "owner":
+                                {
+                                    qeryOwner(_project.ID, result.length);
+                                }
+                                    break;
+                                case "group":
+                                {
+                                    qeryByGroup(_project.ID, result.length);
+                                }
+                                    break;
                             }
                         });
-                        var myObj = {
-                            id: value._id,
-                            namberOfTasks: value.taskId.length,
-                            remainingOfTasks: value.remaining
-                        };
-                        optionsArray.push(myObj);
-                        if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
-                            showMore = true;
-                        }
-                    });
-                    tasks.find()
-                    .where('_id').in(responseTasksArray)
-                    .populate('project', '_id projectShortDesc projectName')
-                    .populate('assignedTo', '_id name imageSrc')
-                    .populate('extrainfo.customer createdBy.user editedBy.user')
-                    .populate('workflow')
-                    .populate('createdBy.user')
-                    .populate('editedBy.user')
-                    .exec(function (err, resalt) {
-                        if (!err) {
-                            res['showMore'] = showMore;
-                            res['options'] = optionsArray;
-                            res['data'] = resalt;
-                            response.send(res);
-                        } else {
-                            logWriter.log("Project.js getTasksByProjectId task.find " + err);
-                            response.send(500, { error: "Can't find Tasks" });
-                        }
-                    })
+                    } else {
+                        response.send(res);
+                    }
                 } else {
-                    logWriter.log("Project.js getTasksByProjectId task.find " + err);
-                    response.send(500, { error: "Can't group Tasks" });
+                    console.log(err);
                 }
+            }
+        );
+
+        var qeryGetTasks = function (projects, projectId) {
+            var accessCheck = false;
+            if (projects.length != 0) {
+                for(var k = 0; k < projects.length; k++) {
+                    if ((projects[k]._id == projectId) && (projectId)) {
+                        accessCheck = true;
+                        console.log('------------accessCheck-------------------------------------------');
+                    };
+                    projects[k] = new newObjectId(projects[k]._id.toString());
+                }
+            }
+
+            if (accessCheck) {
+                var queryAggregate = tasks.aggregate({ $match: { project: newObjectId(projectId) } }, { $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
+
+            } else {
+                var queryAggregate = tasks.aggregate({ $match: { project: {$in: projects} } },{ $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
+            }
+
+            queryAggregate.exec(
+                function (err, responseTasks) {
+                    if (!err) {
+                        var responseTasksArray = [];
+                        var columnValue = data.count;
+                        var page = data.page;
+
+                        responseTasks.forEach(function (value) {
+                            value.taskId.forEach(function (idTask, taskIndex) {
+                                if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
+                                    responseTasksArray.push(idTask);
+                                }
+                            });
+                            var myObj = {
+                                id: value._id,
+                                namberOfTasks: value.taskId.length,
+                                remainingOfTasks: value.remaining
+                            };
+                            optionsArray.push(myObj);
+                            if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
+                                showMore = true;
+                            }
+                        });
+                        tasks.find()
+                            .where('_id').in(responseTasksArray)
+                            .populate('project', '_id projectShortDesc projectName')
+                            .populate('assignedTo', '_id name imageSrc')
+                            .populate('extrainfo.customer createdBy.user editedBy.user')
+                            .populate('workflow')
+                            .populate('createdBy.user')
+                            .populate('editedBy.user')
+                            .exec(function (err, result) {
+                                if (!err) {
+                                    res['showMore'] = showMore;
+                                    res['options'] = optionsArray;
+                                    res['data'] = result;
+                                    response.send(res);
+                                } else {
+                                    logWriter.log("Project.js getTasksByProjectId task.find " + err);
+                                    response.send(500, { error: "Can't find Tasks" });
+                                }
+                            })
+                    } else {
+                        logWriter.log("Project.js getTasksByProjectId task.find " + err);
+                        response.send(500, { error: "Can't group Tasks" });
+                    }
             });
 
+        }
     };
 
     function getTaskById(data, response) {
@@ -1008,13 +1152,13 @@ var Project = function (logWriter, mongoose, department) {
     function getTasksForList(data, response) {
         var res = {};
         res['data'] = [];
-        var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
+        var query = (data.parrentContentId) ? tasks.find({ 'project': newObjectId(data.parrentContentId) }) : tasks.find();
         query.exec(function (err, result) {
             if (!err) {
                 res['listLength'] = result.length;
             }
         });
-        var query = (data.id) ? tasks.find({ 'project': data.id }) : tasks.find();
+        var query = (data.parrentContentId) ? tasks.find({ 'project': newObjectId(data.parrentContentId)}) : tasks.find();
         query.populate('project', '_id projectShortDesc projectName')
             .populate('assignedTo', '_id name imageSrc')
             .populate('extrainfo.customer createdBy.user editedBy.user')

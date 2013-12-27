@@ -14,7 +14,7 @@ define([
             },
 
             events: {
-                "click #tasksKanban,  #tasksList": "gotoTasks",
+                "click #tasksKanban,  #tasksList": "gotoTasks"
                
                 //"click #delete": "deleteEvent",
                 //"click .dropDown > a": "openDropDown",
@@ -56,7 +56,7 @@ define([
                 if ($(e.target).attr("id") == "tasksKanban") {
                     Backbone.history.navigate("#easyErp/Tasks/kanban/" + this.model.get("_id"), { trigger: true });
                 } else {
-                    Backbone.history.navigate("#easyErp/Tasks/list", { trigger: true });
+                    Backbone.history.navigate("#easyErp/Tasks/list/" + this.model.get("_id"), { trigger: true });
                 }
 				return false;
             },

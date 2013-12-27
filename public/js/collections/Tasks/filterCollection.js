@@ -102,9 +102,9 @@
                     _.map(response.data, function (task) {
                         task.createdBy.date = common.utcDateToLocaleDateTime(task.createdBy.date);
                         task.editedBy.date = common.utcDateToLocaleDateTime(task.editedBy.date);
-                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        task.deadline = common.utcDateToLocaleDate(task.deadline);
+                       // task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
+                       // task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
+                       // task.deadline = common.utcDateToLocaleDate(task.deadline);
                         return task;
                     });
                 }
