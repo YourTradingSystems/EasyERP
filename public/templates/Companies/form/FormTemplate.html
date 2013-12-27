@@ -88,9 +88,15 @@
         <div class="half-block left">
 
             <dl class="person-info company long">
-			  <dt>Customer</dt><dd><a class="person-checkbox disabled<% if(salesPurchases.isCustomer) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
-			  <dt>Supplier</dt><dd><a class="person-checkbox disabled<% if(salesPurchases.isSupplier) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
-			  <dt>Active </dt><dd><a class="person-checkbox disabled<% if(salesPurchases.active) { %> active <% } %>" href="javascript:;"><span class="check"></span>&nbsp;</a></dd>
+			  <dt>Customer</dt><dd id="salesPurchases_isCustomer" class="with-checkbox">
+                <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
+			  </dd>
+			  <dt>Supplier</dt><dd id="salesPurchases_isSupplier" class="with-checkbox">
+                <input class="left" type="checkbox" <%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
+			  </dd>
+			  <dt>Active </dt><dd id="salesPurchases_active" class="with-checkbox">
+                <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
+			  </dd>
             </dl>
         </div>
         <div class="clearfix"></div>
