@@ -450,7 +450,9 @@ var Employee = function (logWriter, mongoose) {
         }
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
-            populate('editedBy.user');
+            populate('editedBy.user').
+			populate("workflow");
+		
 
         query.sort({ 'name.first': 1 });
         query.skip((data.page - 1) * data.count).limit(data.count);
