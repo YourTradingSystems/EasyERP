@@ -839,6 +839,9 @@ h3 {
         &.with-checkbox {
 //            margin-top: 15px !important;
         }
+		a.formLink{
+			line-height:0px;
+		}
     }
 }
 .edit-lead-form{
@@ -1392,7 +1395,10 @@ h3 {
                 &:nth-child(2) {
                     text-align: left;
                 }
-
+			   	&.withSelect{
+//					width:170px;
+					position:relative;
+				}
                 progress {
                     width: 100%;
                 }
@@ -2056,12 +2062,20 @@ input, textarea, select {
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
         line-height: 18px;
         font-family: @lucida-font;
+		overflow: hidden;
+		text-overflow: ellipsis;
     }
 
     .inner {
         padding: 10px;
 
         .info {
+			float:left;
+			width:200px;
+			div{
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
             P {
                 font-family: @lucida-font;
                 color: #000;
@@ -2400,6 +2414,9 @@ button {
 
         dd {
             margin-top: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
         }
     }
 
@@ -2853,6 +2870,7 @@ button {
     padding: 0;
     //  display: inline-flexbox;
     width: 100%;
+	table-layout: fixed;
 
     tbody {
         width: 100%;
@@ -3896,6 +3914,9 @@ a.current-selected{
 	font-size:12px;
 	font-family: Arial, Helvetica, sans-serif;
 	line-height:21px !important;
+//	width:165px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	&.forList{
 		display: block;
 		float: left;

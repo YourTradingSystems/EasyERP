@@ -10,7 +10,7 @@
         <div class="half-block left">
           <dl class="person-info">
             <dt>Project </dt>
-            <dd><a id="<%=project._id%>" href="#"><%=project.projectName%></a></dd>
+            <dd><a class="formLink" id="<%=project._id%>" href="#easyErp/Projects/form/<%=project._id%>"><%=project.projectName%></a></dd>
             <dt>Assigned to </dt>
             <dd><%=(assignedTo) ? assignedTo.name.first + ' ' + assignedTo.name.last : ''%></dd>
             <dt>Workflow </dt>

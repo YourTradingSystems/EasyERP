@@ -1,16 +1,22 @@
 define([
     'text!templates/Persons/list/ListHeader.html',
     'views/Persons/CreateView',
-    'views/Persons/list/ListItemView'
+    'views/Persons/list/ListItemView',
+    'text!templates/Alpabet/AphabeticTemplate.html',
+	'common'
 ],
 
-function (ListTemplate, CreateView, ListItemView) {
+function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
     var PersonsListView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
+            this.originalCollection = options.collection;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="All";
             this.defaultItemsNumber = this.collection.namberToShow;
             this.deleteCounter = 0;
             this.render();
@@ -26,8 +32,17 @@ function (ListTemplate, CreateView, ListItemView) {
             "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click #itemsButton": "itemsNumber",
             "click .currentPageList": "itemsNumber",
-			"click":"hideItemsNumber"
+			"click":"hideItemsNumber",
+            "click .letter:not(.empty)": "alpabeticalRender"
         },
+		alpabeticalRender:function(e){
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+			this.collection = this.originalCollection.filterByLetter($(e.target).text());
+			this.selectedLetter=$(e.target).text();
+			this.render();
+		},
+
 		hideItemsNumber:function(e){
 			$(".allNumberPerPage").hide();
 		},
@@ -39,8 +54,11 @@ function (ListTemplate, CreateView, ListItemView) {
         render: function () {
 			var self=this;
             console.log('Persons render');
+			var p = this.collection.toJSON();
             $('.ui-dialog ').remove();
-            this.$el.html(_.template(ListTemplate));
+            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
+			
+            this.$el.append(_.template(ListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection}).render());
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
@@ -49,7 +67,6 @@ function (ListTemplate, CreateView, ListItemView) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
-
             $("#pageList").empty();
             if (this.defaultItemsNumber) {
                 var itemsNumber = this.defaultItemsNumber;

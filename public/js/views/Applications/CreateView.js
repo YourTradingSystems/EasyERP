@@ -217,7 +217,7 @@ define([
 							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
 
 						}
-							addFrmAttach.off('submit');
+						addFrmAttach.off('submit');
 
                     },
                     error: function () {
