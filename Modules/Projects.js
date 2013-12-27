@@ -455,13 +455,13 @@ var Project = function (logWriter, mongoose, department) {
                 populate('workflow').
                 populate('createdBy.user').
                 populate('editedBy.user').
+				populate('groups.users').
+				populate('groups.group').
+
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
-                        console.log(i);
-                        console.log(n);
                         res['data'] = res['data'].concat(_res);
-                        console.log(res['data']);
                         if (i == n) findTasksById(res['data'], 0);;
                     }
                 });
@@ -475,6 +475,9 @@ var Project = function (logWriter, mongoose, department) {
                 populate('workflow').
                 populate('createdBy.user').
                 populate('editedBy.user').
+				populate('groups.users').
+				populate('groups.group').
+
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -496,6 +499,9 @@ var Project = function (logWriter, mongoose, department) {
                     populate('workflow').
                     populate('createdBy.user').
                     populate('editedBy.user').
+    				populate('groups.users').
+			    	populate('groups.group').
+
                     exec(function (error, _res1) {
                        if (!error) {
                            department.department.find({ users: data.uId }, { _id: 1 },
@@ -509,6 +515,8 @@ var Project = function (logWriter, mongoose, department) {
                                             populate('workflow').
                                             populate('createdBy.user').
                                             populate('editedBy.user').
+    										populate('groups.users').
+			    							populate('groups.group').
                                             exec(function (error, _res) {
                                                 if (!error) {
                                                     i++;
@@ -599,7 +607,6 @@ var Project = function (logWriter, mongoose, department) {
         query.populate('workflow').
             populate('createdBy.user').
             populate('editedBy.user');
-
 
         query.exec(function (err, project) {
             if (err) {

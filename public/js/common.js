@@ -342,13 +342,20 @@
             var self = this;
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
-                    options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
-                            $('<li/>').attr("id",item._id).text(item.departmentName).attr('selected', 'selected') :
-                            $('<li/>').attr("id",item._id).text(item.departmentName);
-                    });
-                } else {
+                if (model && model.groups && model.groups.group) {
+					var ids=$.map(model.groups.group,function(item){
+						return item._id
+					});
+					options = $.map(
+						_.filter(response.data, function(filteredItem) {
+							return (ids.indexOf(filteredItem._id)==-1);
+						}),
+						function (item) {
+							return $('<li/>').attr('id', item._id).text(item.departmentName);
+						}
+					);
+					
+				} else {
                     options = $.map(response.data, function (item) {
                         return $('<li/>').attr("id",item._id).text(item.departmentName);
                     });
@@ -534,12 +541,23 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.relatedUser) {
-                    options = $.map(response.data, function (item) {
-                        return model.relatedUser._id === item._id ?
-                            $('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.login);
-                    });
+                if (model) {
+					if (model.relatedUser){
+						options = $.map(response.data, function (item) {
+							return model.relatedUser._id === item._id ?
+								$('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
+								$('<option/>').val(item._id).text(item.login);
+						});
+					}else{
+						if (model.groups&&model.groups.owner){
+							options = $.map(response.data, function (item) {
+								return model.groups.owner === item._id ?
+									$('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
+									$('<option/>').val(item._id).text(item.login);
+							});
+
+						}
+					}
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.login);
@@ -555,15 +573,20 @@
             dataService.getData('/Users', { mid: 39 }, function (response) {
                 var options = [];
                 if (model) {
-					var ids=$.map(model.users,function(item){
+					var users=[];
+					if (model.users){
+						users=model.users;
+					}
+					if (model.groups.users){
+						users=model.groups.users;
+					}
+
+					var ids=$.map(users,function(item){
 						return item._id
 					});
-					console.log(">>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<");
-					console.log(ids);
 					var tt=_.filter(response.data, function(filteredItem) {
 						return (ids.indexOf(filteredItem._id)!=-1);
 					});
-					console.log(tt);
 					options = $.map(
 						_.filter(response.data, function(filteredItem) {
 							return (ids.indexOf(filteredItem._id)==-1);

@@ -63,9 +63,9 @@
 
 			  <div class="half-block left">
                 <div class="canReadAndWrite">
-                    <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
-                    <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
-                    <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
+                    <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
+                    <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
+                    <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
                 </div>
 			  </div>
 			  <div class="half-block left">

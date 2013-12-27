@@ -38,7 +38,6 @@ define([
 				$(e.target).closest(".ui-dialog").find(".target").append($(e.target).closest(".ui-dialog").find(".source .choosen"));
             },
             removeUsers: function (e) {
-
                 e.preventDefault();
 				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).closest(".ui-dialog").find(".target .choosen"));
             },
@@ -71,7 +70,7 @@ define([
 			addUser:function(e){
 				var self = this;
 				$(".addUserDialog").dialog({
-                    dialogClass: "add-user-dialoga",
+                    dialogClass: "add-user-dialog",
                     width: "900px",
                     buttons:{
                         save:{
@@ -221,6 +220,8 @@ define([
 
             hideDialog: function () {
                 $(".edit-dialog").remove();
+				$(".add-group-dialog").remove();
+				$(".add-user-dialog").remove();
             },
             render: function () {
                 var formString = this.template();

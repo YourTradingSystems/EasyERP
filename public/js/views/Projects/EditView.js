@@ -70,7 +70,7 @@ define([
 			addUser:function(e){
 				var self = this;
 				$(".addUserDialog").dialog({
-                    dialogClass: "add-user-dialoga",
+                    dialogClass: "add-user-dialog",
                     width: "900px",
                     buttons:{
                         save:{
@@ -150,6 +150,8 @@ define([
 
             hideDialog: function () {
                 $('.edit-project-dialog').remove();
+				$(".add-group-dialog").remove();
+				$(".add-user-dialog").remove();
                 Backbone.history.navigate("home/content-" + 'Projects');
             },
 
@@ -197,6 +199,18 @@ define([
                         name: val.innerHTML
                     });
                 });
+				var usersId=[];
+				var groupsId=[];
+				$(".groupsAndUser tr").each(function(){
+					if ($(this).data("type")=="targetUsers"){
+						usersId.push($(this).data("id"));
+					}
+					if ($(this).data("type")=="targetGroups"){
+						groupsId.push($(this).data("id"));
+					}
+
+				});
+                var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var data = {
                     projectName: projectName,
                     projectShortDesc: projectShortDesc,
@@ -205,7 +219,14 @@ define([
                     workflow: workflow ? workflow : null,
                     teams: {
                         users: users
-                    }
+                    },
+                    groups: {
+						owner: $("#allUsers").val(),
+						users: usersId,
+						group: groupsId
+                    },
+                    whoCanRW: whoCanRW
+
 
                 };
 
@@ -216,6 +237,8 @@ define([
                     //wait: true,
                     success: function () {
                         $('.edit-project-dialog').remove();
+						$(".add-group-dialog").remove();
+						$(".add-user-dialog").remove();
                         Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                     },
                     error: function () {
@@ -292,13 +315,27 @@ define([
                         }
                     }
                 });
-				common.populateUsersForGroups('#sourceUsers');
+				common.populateUsersForGroups('#sourceUsers',this.currentModel.toJSON());
 				common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups", "/Departments",null,null);
+                common.populateDepartmentsList("#sourceGroups", "/Departments",this.currentModel.toJSON(),null);
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
+				var model = this.currentModel.toJSON();
+				if (model.groups)
+					if (model.groups.users.length>0||model.groups.group.length){
+						$(".groupsAndUser").show();
+						model.groups.group.forEach(function(item){
+							$(".groupsAndUser").append("<tr data-type='targetGroups' data-id='"+ item._id+"'><td>"+item.departmentName+"</td><td class='text-right'></td></tr>");
+							$("#targetGroups").append("<li id='"+item._id+"'>"+item.departmentName+"</li>");
+						});
+						model.groups.users.forEach(function(item){
+							$(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
+							$("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
+						})
+
+					}
                 this.delegateEvents(this.events);
 
                 return this;
