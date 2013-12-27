@@ -52,7 +52,7 @@ function (common,ListTemplate) {
 			styleSelect:function(id){
 				$(id).parent().find(".current-selected").remove();
 				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
-				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
+				$(id).parent().append("<a class='current-selected forList' href='javascript:;'>"+text+"</a><div class='clearfix'></div>");
 				$(id).hide();
 				$(document).on("click",this.hideNewSelect);
 			},

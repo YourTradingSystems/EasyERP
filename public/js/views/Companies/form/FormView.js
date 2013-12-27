@@ -9,10 +9,12 @@ define([
     'common',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
+    'views/Opportunities/CreateView',
+    'views/Persons/CreateView',
     'text!templates/Notes/AddAttachments.html'
 ],
 
-    function (CompaniesFormTemplate, EditView, OpportunitiesCollection, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate) {
+    function (CompaniesFormTemplate, EditView, OpportunitiesCollection, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -39,7 +41,10 @@ define([
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
-                "click #saveSpan": "saveClick"
+                "click #saveSpan": "saveClick",
+                "click .btnHolder .add.opportunities": "addOpportunities",
+                "click .btnHolder .add.persons": "addPersons",
+                "change .person-info.company.long input": "saveCheckboxChange"
             },
             
             render: function () {
@@ -73,6 +78,18 @@ define([
             quickEdit: function (e) {
                 // alert(e.target.id);
                 $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+            },
+            
+            addOpportunities: function (e) {
+            	e.preventDefault();
+            	var model = this.formModel.toJSON();
+            	new CreateViewOpportunities({model:model});
+            },
+            
+            addPersons: function (e) {
+            	e.preventDefault();
+            	var model = this.formModel.toJSON();
+            	new CreateViewPersons({model:model});
             },
             
             removeEdit: function (e) {
@@ -109,6 +126,26 @@ define([
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
+			saveCheckboxChange:function(e){
+                var parent = $(e.target).parent();
+                var objIndex = parent[0].id.split('_');
+                var obj = {};
+                var currentModel = this.model;
+
+                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
+                    obj = this.formModel.get(objIndex[0]);
+                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
+					this.formModel.set(obj);
+					this.formModel.save({}, {
+						headers: {
+							mid: 39
+						},
+						success: function () {
+							Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
+						}
+					});
+				}
+			},
 
             saveClick: function (e) {
                 e.preventDefault();

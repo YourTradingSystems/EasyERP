@@ -6,10 +6,11 @@ define([
     'text!templates/Notes/AddNote.html',
     'text!templates/Notes/AddAttachments.html',
     'collections/Opportunities/OpportunitiesCollection',
+    'views/Opportunities/CreateView',
     'common'
 ],
 
-    function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, common) {
+    function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, CreateViewOpportunities, common) {
         var PersonTasksView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -35,9 +36,17 @@ define([
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
-                "click #saveSpan": "saveClick"
+                "click #saveSpan": "saveClick",
+                "click .btnHolder .add.opportunities": "addOpportunities",
+                "change .sale-purchase input": "saveCheckboxChange"
             },
 
+            addOpportunities: function (e) {
+            	e.preventDefault();
+            	var model = this.formModel.toJSON();
+            	new CreateViewOpportunities({model:model});
+            },
+            
             quickEdit: function (e) {
                 $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
             },
@@ -117,7 +126,26 @@ define([
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
+			saveCheckboxChange:function(e){
+                var parent = $(e.target).parent();
+                var objIndex = parent[0].id.split('_');
+                var obj = {};
+                var currentModel = this.model;
 
+                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
+                    obj = this.formModel.get(objIndex[0]);
+                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
+					this.formModel.set(obj);
+					this.formModel.save({}, {
+						headers: {
+							mid: 39
+						},
+						success: function () {
+							Backbone.history.navigate("#easyErp/Persons/form/" + currentModel.id, { trigger: true });
+						}
+					});
+				}
+			},
             saveClick: function (e) {
                 e.preventDefault();
                 var parent = $(event.target).parent().parent();

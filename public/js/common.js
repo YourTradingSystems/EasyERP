@@ -2,12 +2,9 @@
     "dataService"
 ],
     function (dataService) {
-        var toObject = function (_id, collection) {
-            var _tempObject = null;
-            if (_id && collection) {
-                _tempObject = (collection.get(_id)) ? collection.get(_id).toJSON() : null;
-            }
-            return _tempObject;
+        var checkBackboneFragment = function (url) {
+            if (Backbone.history.fragment == url) Backbone.history.fragment = "";
+            Backbone.history.navigate(url, { trigger: true });
         };
 
 
@@ -204,12 +201,13 @@
             //selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson || model.departmentManager)) {
+                if (model && (model.manager || model.projectmanager || (model.salesPurchases && model.salesPurchases.salesPerson) || model.salesPerson || model.departmentManager || model.assignedTo)) {
                     options = $.map(response.data, function (item) {
                         return ((model.manager && model.manager._id === item._id) ||
                                 (model.projectmanager && model.projectmanager._id === item._id) ||
                                 (model.salesPurchases && model.salesPurchases.salesPerson && model.salesPurchases.salesPerson._id === item._id) ||
                                 (model.salesPerson && model.salesPerson._id === item._id) ||
+                                (model.assignedTo && model.assignedTo._id === item._id) ||
                                 //(model.salesTeam._id === item._id) ||
                                 (model.departmentManager && model.departmentManager._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + " " + item.name.last).attr('selected', 'selected') :
@@ -261,7 +259,9 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return $('<option/>').val(item._id).text(item.name.first);
+                        return model._id === item._id ?
+                            $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name.first);
                     });
                 }
                 selectList.append(options);
@@ -343,13 +343,20 @@
             var self = this;
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
-                    options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
-                            $('<li/>').attr("id",item._id).text(item.departmentName).attr('selected', 'selected') :
-                            $('<li/>').attr("id",item._id).text(item.departmentName);
-                    });
-                } else {
+                if (model && model.groups && model.groups.group) {
+					var ids=$.map(model.groups.group,function(item){
+						return item._id
+					});
+					options = $.map(
+						_.filter(response.data, function(filteredItem) {
+							return (ids.indexOf(filteredItem._id)==-1);
+						}),
+						function (item) {
+							return $('<li/>').attr('id', item._id).text(item.departmentName);
+						}
+					);
+					
+				} else {
                     options = $.map(response.data, function (item) {
                         return $('<li/>').attr("id",item._id).text(item.departmentName);
                     });
@@ -412,9 +419,9 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.customer) {
+                if (model) {
                     options = $.map(response.data, function (item) {
-                        return (model.customer && (model.customer._id === item._id)) ?
+                        return ((model.customer && (model.customer._id === item._id)) || (model._id === item._id) ) ?
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                     });
@@ -488,6 +495,46 @@
                 if (callback) callback(selectId);
             });
         }
+        var populateWorkflowsList = function (workflowType, selectId, workflowNamesDd, url, model, callback) {
+            var selectList = $(selectId);
+            var workflowNamesDd = $(workflowNamesDd);
+            var self = this;
+            dataService.getData(url, { mid: 39, id: workflowType }, function (response) {
+                var options = [];
+                if (model && model.workflow) {
+                    if (model.workflow._id == undefined) {
+                        options = $.map(response.data, function (item) {
+                            return model.workflow == item._id ?
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id);
+                        });
+                    } else {
+                        options = $.map(response.data, function (item) {
+                            return model.workflow._id === item._id ?
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id).attr('selected', 'selected') :
+                                $('<li/>').val(item._id).text(item.name).attr('data-id', item._id);
+                        });
+
+                    }
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return "<li><input type='checkbox' value='"+item._id+"'"+"/><span>"+item.name+"</span></li>"
+							   
+                    });
+                }
+                var wNames = $.map(response.data, function (item) {
+                    return item.wName;
+                });
+                wNames = _.uniq(wNames);
+                var wfNamesOption = $.map(wNames, function (item) {
+                    return $('<option/>').text(item);
+                });
+                workflowNamesDd.append(wfNamesOption);
+                selectList.append(options);
+                if (callback) callback(selectId);
+            });
+        }
+
         var populateUsers = function (selectId, url, model, callback,removeSelect) {
             var selectList = $(selectId);
             var self = this;
@@ -495,12 +542,23 @@
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
-                if (model && model.relatedUser) {
-                    options = $.map(response.data, function (item) {
-                        return model.relatedUser._id === item._id ?
-                            $('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
-                            $('<option/>').val(item._id).text(item.login);
-                    });
+                if (model) {
+					if (model.relatedUser){
+						options = $.map(response.data, function (item) {
+							return model.relatedUser._id === item._id ?
+								$('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
+								$('<option/>').val(item._id).text(item.login);
+						});
+					}else{
+						if (model.groups&&model.groups.owner){
+							options = $.map(response.data, function (item) {
+								return model.groups.owner === item._id ?
+									$('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
+									$('<option/>').val(item._id).text(item.login);
+							});
+
+						}
+					}
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.login);
@@ -516,15 +574,20 @@
             dataService.getData('/Users', { mid: 39 }, function (response) {
                 var options = [];
                 if (model) {
-					var ids=$.map(model.users,function(item){
+					var users=[];
+					if (model.users){
+						users=model.users;
+					}
+					if (model.groups&&model.groups.users){
+						users=model.groups.users;
+					}
+
+					var ids=$.map(users,function(item){
 						return item._id
 					});
-					console.log(">>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<");
-					console.log(ids);
 					var tt=_.filter(response.data, function(filteredItem) {
 						return (ids.indexOf(filteredItem._id)!=-1);
 					});
-					console.log(tt);
 					options = $.map(
 						_.filter(response.data, function(filteredItem) {
 							return (ids.indexOf(filteredItem._id)==-1);
@@ -621,12 +684,13 @@
             populateDepartments: populateDepartments,
             populateCompanies: populateCompanies,
             populateWorkflows: populateWorkflows,
+			populateWorkflowsList:populateWorkflowsList,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
             populateRelatedStatuses:populateRelatedStatuses,
-            toObject: toObject,
+            checkBackboneFragment: checkBackboneFragment,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
             ISODateToDate: ISODateToDate,
             hexToRgb: hexToRgb,

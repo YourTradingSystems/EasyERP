@@ -1,10 +1,11 @@
 define([
     'text!templates/Applications/list/ListHeader.html',
     'views/Applications/CreateView',
-    'views/Applications/list/ListItemView'
+    'views/Applications/list/ListItemView',
+	'common'
 ],
 
-    function (ListTemplate, CreateView, ListItemView) {
+    function (ListTemplate, CreateView, ListItemView,common) {
         var ApplicationsListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -28,12 +29,22 @@ define([
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
 				"click":"hideItemsNumber",
-
                 "click #do-filter": "showFilteredPage",
+				"click .filterButton":"showfilter",
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
             },
+			showfilter:function(e){
+				$(".filter-check-list").toggle();
+				return false;
+			},
  			hideItemsNumber:function(e){
-				$(".allNumberPerPage").hide();
+				if ($(e.target).attr("type")!="checkbox"){
+					$(".allNumberPerPage").hide();
+					if ($(".filter-check-list").is(":visible")){
+						$(".filter-check-list").hide();
+						this.showFilteredPage();
+					}
+				}
 			},
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
@@ -93,9 +104,11 @@ define([
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
                 }
+                common.populateWorkflowsList("Application", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows",null);
+				
                 this.deleteCounter = 0;
-				$(document).on("click",function(){
-					self.hideItemsNumber();
+				$(document).on("click",function(e){
+					self.hideItemsNumber(e);
 				});
 
             },
@@ -211,9 +224,8 @@ define([
             },
 
             showFilteredPage: function (event) {
-                event.preventDefault();
                 var workflowIdArray = [];
-                $('input:checkbox:checked').each(function(){
+                $('.filter-check-list input:checked').each(function(){
                     workflowIdArray.push($(this).val());
                 })
                 this.collection.status = workflowIdArray;

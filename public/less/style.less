@@ -435,7 +435,7 @@ article {
     display: block;
     width: auto;
     height: 30px;
-    border-bottom: 1px solid #cacaca;
+    border-bottom: 1px solid #ababab;
     background: #fff;
     clear: both;
     /*.gradient(#ededed);
@@ -469,13 +469,17 @@ h3 {
     border: @thin-border #ccc;
     padding: 20px 0 13px;
     font-family: 'Open Sans', sans-serif;
-
+	.error{
+		padding-left:30px;
+		line-height:30px;
+		display:none;
+		color:red;
+	}
     h2 {
         font-weight: 300 !important;
         font-size: 24px;
         margin: 25px 0 35px 30px;
     }
-
     .icon-pass,
     .icon-login {
         border: @thin-border #e5e5e5;
@@ -497,6 +501,15 @@ h3 {
             border-left: 2px solid #35aa74;
         }
     }
+	&.notRegister{
+		.error{
+			display:block;
+		}
+		.icon-pass,
+		.icon-login {
+	        border: @thin-border red;	
+		}
+	}
 
     .icon-login {
         .icon {
@@ -826,6 +839,9 @@ h3 {
         &.with-checkbox {
 //            margin-top: 15px !important;
         }
+		a.formLink{
+			line-height:0px;
+		}
     }
 }
 .edit-lead-form{
@@ -891,6 +907,9 @@ h3 {
 
 .project-info {
 	.dl-auto(150px);
+}
+.project-owner-info {
+	.dl-auto(100px);
 }
 
 .job-info {
@@ -1359,8 +1378,10 @@ h3 {
 
         tr {
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
-            border-top: 1px solid #cacaca;
-
+            border-top: 1px solid #ababab;
+			&:last-child{
+				border-bottom: 1px solid #ababab;
+			}
             td {
                 cursor: pointer;
                 padding: 4px 5px;
@@ -1534,7 +1555,9 @@ h3 {
 			margin:0 auto;
 		}
 		&.person{
-			margin-top:-22px;
+			margin-top:-45px;
+			z-index: 100;
+			position: relative;
 		}
     }
 
@@ -2036,12 +2059,20 @@ input, textarea, select {
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
         line-height: 18px;
         font-family: @lucida-font;
+		overflow: hidden;
+		text-overflow: ellipsis;
     }
 
     .inner {
         padding: 10px;
 
         .info {
+			float:left;
+			width:200px;
+			div{
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
             P {
                 font-family: @lucida-font;
                 color: #000;
@@ -2380,6 +2411,9 @@ button {
 
         dd {
             margin-top: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
         }
     }
 
@@ -2437,6 +2471,10 @@ button {
 	}
 
 }
+#createProjectForm  .project-owner-info {
+	.dl-auto(90px);
+}
+
 #leadForm input[type='email'],
     #leadForm input[type='text'] {
         width: 71%;
@@ -2814,6 +2852,7 @@ button {
     padding: 0;
     //  display: inline-flexbox;
     width: 100%;
+	table-layout: fixed;
 
     tbody {
         width: 100%;
@@ -3857,6 +3896,15 @@ a.current-selected{
 	font-size:12px;
 	font-family: Arial, Helvetica, sans-serif;
 	line-height:21px !important;
+//	width:165px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	&.forList{
+		display: block;
+		float: left;
+		min-width: 100px;
+		clear:left;
+	}
 }
 #projectTopName{
 	line-height:20px;
@@ -4122,8 +4170,8 @@ ul.dialog-tabs{
 	#previousPage,#nextPage,.currentPageList{
 		background-color:white;
 		background-image:none;
-		line-height:20px;
-		width:22px;
+		line-height:15px;
+		width:20px;
 		text-align:center;
 		padding:0;
 		border-radius:0;
@@ -4141,22 +4189,24 @@ ul.dialog-tabs{
 	}
 	#currentShowPage{
 		width:20px;
-		height:16px;
+		height:11px;
 		margin-left:5px;
+		font-size:12px;
 	}
 	#pageList{
 		background-color:white;
 		border:1px solid silver;
 		position:absolute;
-		bottom:22px;
-		left:-14px;
+		bottom:17px;
+		left:-7px;
 		display:none;
 		li{
 				display:block;
-				width:34px;
+				width:25px;
 				height:20px;
 				line-height:20px;
 				text-align:center;
+				font-size:12px;
 				&:hover{
 					background-color: #13C4A5;
 					color:white;
@@ -4197,8 +4247,10 @@ ul.dialog-tabs{
 			background-color:white;
 			background-image:none;
 			border-radius:0;
-			width:36px;
+			width:27px;
 			margin:0 5px;
+			line-height:10px;
+			font-size: 12px;
 			&:hover{
 				background-color: #F7F8F9;
 			}
@@ -4207,13 +4259,14 @@ ul.dialog-tabs{
 			background-color:white;
 			border:1px solid silver;
 			position:absolute;
-			bottom:20px;
+			bottom:17px;
 			left:5px;
 			display:none;
+			font-size: 12px;
 			li{
 				a{
 					display:block;
-					width:34px;
+					width:25px;
 					height:20px;
 					line-height:20px;
 					text-align:center;
@@ -4227,5 +4280,37 @@ ul.dialog-tabs{
 			}
 		}
 
+	}
+}
+.filterButton{
+	background-color: #FFF;
+	border: 1px solid #ABABAB;
+	position: absolute;
+	right: 118px;
+	top: -26px;
+	display: block;
+	height: 24px;
+	line-height: 24px;
+	width: 50px;
+	text-align: center;
+	cursor:pointer;
+	&:hover{
+		background-color: #D8D8D8;
+	}
+}
+.filter-check-list{
+	display:none;
+	position:absolute;
+	right: 118px;
+	width:150px;
+	background-color:white;
+	border:1px solid silver;
+	top:-1px;
+	z-index:1000;
+	li{
+		line-height:20px;
+	}
+	input{
+		margin:0 5px;
 	}
 }

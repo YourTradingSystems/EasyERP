@@ -16,11 +16,13 @@
         <a href="#" class="title gotoForm" title="<%=name.first%> <%=name.last%>"><img src="<%=imageSrc%>" /></a>
     </div>
     <div class="info">
+	  <div>
         <a class = "gotoForm title" href="#" title="<%=name.first%> <%=name.last%>"><%=name.first%> <%=name.last%> <% if(relatedUser) { %>
             <span>(<%= relatedUser.login %>)</span>
             <% } else { %>
             <span></span>
             <% } %></a>
+	  </div>
         <p><%=(department) ? department.departmentName : ''%> / <%=(jobPosition) ? jobPosition.name : ''%></p>
         <p><label>Age: </label><%=age%>
             <% if(dateBirth) { %>

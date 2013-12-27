@@ -9,10 +9,12 @@ define([
     'common',
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
+    'views/Opportunities/CreateView',
+    'views/Persons/CreateView',
     'text!templates/Notes/AddAttachments.html'
 ],
 
-    function (CompaniesFormTemplate, EditView, OpportunitiesCollection, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, addAttachTemplate) {
+    function (CompaniesFormTemplate, EditView, OpportunitiesCollection, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate,CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -38,7 +40,9 @@ define([
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
-                "click #saveSpan": "saveClick"
+                "click #saveSpan": "saveClick",
+                "click .btnHolder .add.opportunities": "addOpportunities",
+                "click .btnHolder .add.persons": "addPersons"
             },
             
             render: function () {
@@ -62,6 +66,18 @@ define([
                         }).render().el
                     );
                 return this;
+            },
+            
+            addOpportunities: function (e) {
+            	e.preventDefault();
+            	var model = this.formModel.toJSON();
+            	new CreateViewOpportunities({model:model});
+            },
+            
+            addPersons: function (e) {
+            	e.preventDefault();
+            	var model = this.formModel.toJSON();
+            	new CreateViewPersons({model:model});
             },
             
             editItem: function () {
@@ -158,7 +174,7 @@ define([
                 var id_int = id.substr(k + 1);
 
 
-                var currentModel = this.collection.getElement();
+                var currentModel = this.formModel;
                 var notes = currentModel.get('notes');
 
                 switch (type) {
@@ -196,7 +212,7 @@ define([
                 var val = $('#noteArea').val();
                 var title = $('#noteTitleArea').val();
                 if (val || title) {
-                    var currentModel = this.collection.getElement();
+                	var currentModel = this.formModel;
                     var notes = currentModel.get('notes');
                     var arr_key_str = $('#getNoteKey').attr("value");
                     var note_obj = {

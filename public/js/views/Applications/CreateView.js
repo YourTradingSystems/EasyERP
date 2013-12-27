@@ -159,16 +159,16 @@ define([
 						var currentModel = model.changed.result;
 						var currentModelID = currentModel["_id"];
 						var addFrmAttach = $("#createApplicationForm");
-										   var fileArr= [];
-										   var addInptAttach = '';
+						var fileArr= [];
+						var addInptAttach = '';
 						$("li .inputAttach").each(function(){
-											   addInptAttach = $(this)[0].files[0];
-											   fileArr.push(addInptAttach);
+							addInptAttach = $(this)[0].files[0];
+							fileArr.push(addInptAttach);
 							if(!self.fileSizeIsAcceptable(addInptAttach)){
 								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
 								return;
 							}
-										   });
+						});
 							addFrmAttach.submit(function (e) {
 								var bar = $('.bar');
 								var status = $('.status');
@@ -209,8 +209,15 @@ define([
 									}
 								});
 							});
+						if(fileArr.length>0){
 							addFrmAttach.submit();
-							addFrmAttach.off('submit');
+						}
+						else{
+							self.hideDialog();
+							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+
+						}
+						addFrmAttach.off('submit');
 
                     },
                     error: function () {
