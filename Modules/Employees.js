@@ -632,6 +632,8 @@ var Employee = function (logWriter, mongoose) {
 
         employee: employee,
 
+        employeeSchema: employeeSchema,
+
         getById: getById
     };
 };

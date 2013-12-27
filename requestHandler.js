@@ -1,4 +1,4 @@
-var requestHandler = function (fs, mongoose) {
+var requestHandler = function (fs, mongoose, tempDb) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         department = require("./Modules/Department.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose),
@@ -14,7 +14,8 @@ var requestHandler = function (fs, mongoose) {
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow),
-        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile);
+        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile),
+        birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, tempDb);
 
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
@@ -199,6 +200,20 @@ var requestHandler = function (fs, mongoose) {
             console.log("Requst getPersonsForDd is success");
             if (req.session && req.session.loggedIn) {
                 employee.getForDdByRelatedUser(req.session.uId, res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            errorLog("requestHandler.js  " + Exception);
+        }
+    };
+
+    function Birthdays(req, res, data) {
+        try {
+            console.log("Requst getPersonsForDd is success");
+            if (req.session && req.session.loggedIn) {
+                birthdays.get();
             } else {
                 res.send(401);
             }
@@ -1812,6 +1827,8 @@ var requestHandler = function (fs, mongoose) {
         getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
+
+        Birthdays:Birthdays,
 
         getPersonsForDd: getPersonsForDd,
         getDepartmentForDd: getDepartmentForDd,
