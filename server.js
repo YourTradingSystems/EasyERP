@@ -585,16 +585,17 @@ app.post('/Workflows', function (req, res) {
     requestHandler.createWorkflow(req, res, data);
 });
 
-app.put('/Workflows/:id', function (req, res) {
+app.put('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
     data = {};
-    var _id = req.param('id');
+    var _id = req.param('_id');
     console.log("*************");
     console.log(_id);
 
     data.mid = req.headers.mid;
     data.status = req.body.status;
     data.name = req.body.name;
+    data.wName = req.body.wName;
     //console.log(data);
     requestHandler.updateWorkflow(req, res, _id, data);
 });

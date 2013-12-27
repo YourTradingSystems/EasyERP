@@ -9,7 +9,7 @@
             <td><%=application.workEmail%></td>
             <td><%=application.workPhones.mobile%></td>
             <td><%=(application.jobPosition) ? application.jobPosition.name : ''%></td>
-            <td><%=(application.workflow) ? application.workflow.name : ''%></td>
+            <td class="withSelect"><select id='stage<%=application._id%>'></select></td>
             <td><%=(application.relatedUser) ? application.relatedUser.login : ''%></td>
             <td><%=(application.createdBy.user) ? application.createdBy.user.login + " (" + application.createdBy.date + ")" : ''%></td>
             <td><%=(application.editedBy.user) ? application.editedBy.user.login + " (" + application.editedBy.date + ")" : ''%></td>

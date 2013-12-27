@@ -8,7 +8,10 @@
             <td><%=(opportunity.customer) ? opportunity.customer.name.first + ' ' + opportunity.customer.name.last : ''%></td>
             <td><%=opportunity.nextAction.date%></td>
             <td><%=opportunity.nextAction.desc%></td>
-            <td><%=(opportunity.workflow) ? opportunity.workflow.name : ''%></td>
+            <td class="withSelect">
+			  <select id='stage<%=opportunity._id%>'>
+			  </select>
+			</td>
             <td><%=opportunity.expectedRevenue.value%></td>
             <td><%=opportunity.expectedRevenue.progress%>%</td>
             <td><%=(opportunity.salesPerson && opportunity.salesPerson.name) ? opportunity.salesPerson.name.first + ' ' + opportunity.salesPerson.name.last : ''%></td>
