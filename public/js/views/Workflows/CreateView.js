@@ -76,7 +76,7 @@ define([
                     wait: true,
                     success: function (model) {
                     	self.hideDialog();
-                        Backbone.history.navigate("easyErp/Workflows", { trigger: true });
+                    	common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("easyErp", { trigger: true });

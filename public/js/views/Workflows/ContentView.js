@@ -25,7 +25,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             "click .checkbox": "checked",
             //"click td:not(:has('input[type='checkbox']'))": "gotoForm",
             "click a.workflow": "chooseWorkflowNames",
-            "click .workflow-sub-list li": "chooseWorkflowDetailes",
+            "click .workflow-sub": "chooseWorkflowDetailes",
             "click .workflow-list li": "chooseWorkflowNames",
             "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
             "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
@@ -33,10 +33,16 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             "click td .edit": "edit",
             "click td .delete": "deleteItems",
             "click #addNewStatus": "addNewStatus",
-            "click a:contains('Cancel')": "cancel",
-            "click a:contains('Save')": "save",
+            "click a.cancel": "cancel",
+            "click a.save": "save",
             "click #saveStatus": "saveStatus",
-            "click #cancelStatus": "cancelStatus"
+            "click #cancelStatus": "cancelStatus",
+            "click .editAll": "editAll",
+            "click .deleteAll": "deleteAll",
+            "click .saveAll": "saveAll",
+            "click .cancelAll": "cancelAll",
+            "mouseenter .workflow-sub-list li:not(.quickEdit)":"quickEdit",
+            "mouseleave .workflow-sub-list li": "removeEdit",
         },
 
         save: function (e) {
@@ -60,7 +66,6 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
             $(".edit").removeClass("hidden");
             $(".delete").removeClass("hidden");
-            console.log(obj);
             model.set(obj);
             model.save({}, {
                 headers: {
@@ -108,8 +113,8 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             td.siblings(".name").append(
                 $("<input>").val(td.siblings("td.name").text()));
             td.append(
-                $(text).text("Save"),
-                $(text).text("Cancel")
+                $(text).text("Save").addClass("save"),
+                $(text).text("Cancel").addClass("cancel")
             );
         },
 
@@ -132,7 +137,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("easyErp/Workflows", { trigger: true });
+                    	common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("easyErp", { trigger: true });
@@ -173,7 +178,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             _.each(this.collection.models, function (model) {
                 if (model.get('wId') == wId && wName != model.get('wName')) {
                     names.push(model.get('wName'));
-                    wName = model.get('wName');
+                    wName = model.get('wId');
 
                 }
             }, this);
@@ -186,7 +191,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
                     first = false;
                 }
                 else {
-                    this.$(".workflow-sub-list").append("<li id='" + wName + "' data-id='" + name + "'><a class='workflow-sub' id='" + wName + "' data-id='" + name + "' href='javascript:;'>" + name + "</a></li>");
+                    this.$(".workflow-sub-list").append("<li id='" + name + "' data-id='" + name + "'><a class='workflow-sub' id='" + wName + "' data-id='" + name + "' href='javascript:;'>" + name + "</a></li>");
                 }
             }, this);
         },
@@ -313,6 +318,89 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
                     Backbone.history.navigate("easyErp", { trigger: true });
                 }
             });
+        },
+        cancelAll:function(e) {
+            e.preventDefault();
+            $(".save-status").remove();
+            $(".wNameEdit").remove();
+            $("li").find("a.workflow-sub").show();
+            $(".quickEdit").removeClass();
+        },
+        editAll: function(e){
+            e.preventDefault();
+            $(".save-status").remove();
+            $(".wNameEdit").remove();
+            $("li").find("a.workflow-sub").show();
+            $(".quickEdit").removeClass();
+            var targetInput = $(e.target).parent();
+           // targetInput.closest("li").find("span, .edit").hide();
+            var text = targetInput.closest("li").find("a.workflow-sub").text();
+            targetInput.closest("li").find("a.workflow-sub").hide();
+            targetInput.closest("li").addClass("quickEdit")
+            targetInput.closest("li").find("span").hide();
+            targetInput.closest("li").append(
+                    $("<input class='wNameEdit' type='text' value = '"+text+"'>")
+            );
+            targetInput.closest("li").append("<span class='save-status'><a href='#' class='saveAll'>Save</a> <a href='#' class='cancelAll'>Cancel</a></span>");
+            
+        },
+        
+        quickEdit:function(e){
+
+        	$(".workflow-sub-list li#" + e.target.id).append("<span class='edit-holder'><a href='#' class='editAll'>Edit</a>&nbsp;<a href='#' class='deleteAll'>Delete</a></span>");
+        },
+        removeEdit:function(){
+        	$(".edit-holder").remove();
+        },
+        
+        deleteAll: function(e){
+            e.preventDefault();
+            var wId = $(e.target).parent().attr("id");
+            var mid = 39;
+            var targetInput = $(e.target).parent();
+            var wName = targetInput.closest("li").find("a.workflow-sub").text();
+            var answer = confirm("Realy DELETE items ?!");
+            if (answer == true) {
+            	this.collection.url = "/Workflows";
+            	_.each(this.collection.models, function (model) {
+                    if ((model.get('wName')) == wName){
+                            model.destroy({
+                                headers: {
+                                    mid: mid
+                                },
+                                success: function () {
+                                	common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
+                                },
+                                error: function () {
+                                    Backbone.history.navigate("easyErp", { trigger: true });
+                                }
+                            });
+                        
+                    }
+            }, this);
+            }
+        },
+        
+        saveAll:function(e){
+            e.preventDefault();
+            var mid = 39;
+            var targetInput = $(e.target).parent();
+            var wName = targetInput.closest("li").find("a.workflow-sub").text();
+            this.collection.url = "/Workflows";
+            _.each(this.collection.models, function (model) {
+                    if ((model.get('wName')) == wName){
+                    	var new_wname = $(".wNameEdit").val();
+                    	model.set('wName', new_wname);
+                    	model.save({}, {
+                             headers: {
+                                 mid: mid
+                             },
+                             success: function (model) {
+                                 common.checkBackboneFragment("easyErp/Workflows");
+                             }
+                        });
+                    }
+            }, this);
         }
     });
 
