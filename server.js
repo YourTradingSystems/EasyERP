@@ -6,7 +6,7 @@ var http = require('http'),
 var mongoose = require('mongoose');
 
 
-mongoose.connect('mongodb://localhost/CRM');
+mongoose.connect('mongodb://localhost/EasyERP');
 var db = mongoose.connection;
 var tempDb = mongoose.createConnection('localhost', 'tempDb');
 var express = require('express');

@@ -16,6 +16,21 @@
         var _month = now.getMonth() + 1;
         console.log(now);
         console.log(_month);
+        var a = 3;
+        if (a < 2) {
+            var query = {
+                $and: [
+                    { month: { $gte: 7 } }, { month: { $lte: 12 } }
+                ]
+            }
+        } else {
+            var query = {
+                $or: [
+        				{ $and: [{ month: { $gte: 7 } }, { month: { $lte: 8 } }, { days: { $gte: 20 } }, { days: { $lte: 31 } }] },
+        				{ $and: [{ month: 12 }, { days: { $gte: 20 } }, { days: { $lte: 31 } }] }
+                ]
+            }
+        }
         employee.employee.aggregate(
             {
                 $match: {
@@ -25,15 +40,12 @@
             {
                 $project: {
                     _id: 1,
-                    month: { $month: '$dateBirth' }
+                    month: { $month: '$dateBirth' },
+                    days: { $dayOfMonth: '$dateBirth' }
                 }
             },
             {
-                $match: {
-                    $and:[
-                    { month: { $gte: _month } }, { month: { $lte: _month + 2 } }
-                    ]
-                }
+                $match: query
             },
             function (err, res) {
                 if (err) {
