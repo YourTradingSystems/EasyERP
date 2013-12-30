@@ -23,8 +23,8 @@ define([
                 'click .dialog-tabs a': 'changeTab',
                 'click #sourceUsers li': 'chooseUser',
                 'click #targetUsers li': 'chooseUser',
-			    'click #addUsers':'addUsers',
-			    'click #removeUsers':'removeUsers',
+			    'click #sourceUsers li':'addUsers',
+			    'click #targetUsers li':'removeUsers',
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect"
@@ -95,14 +95,18 @@ define([
 				$(".newSelectList").remove();;
 			},
 			showNewSelect:function(e){
-				this.hideNewSelect();
-				var s="<ul class='newSelectList'>";
-				$(e.target).parent().find("select option").each(function(){
-					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-				});
-				 s+="</ul>";
-				$(e.target).parent().append(s);
-				return false;
+				if ($(".newSelectList").length){
+					this.hideNewSelect();
+					return false;
+				}else{
+					var s="<ul class='newSelectList'>";
+					$(e.target).parent().find("select option").each(function(){
+						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+					});
+					s+="</ul>";
+					$(e.target).parent().append(s);
+					return false;
+				}
 				
 			},
 			chooseOption:function(e){

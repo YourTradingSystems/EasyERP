@@ -186,14 +186,17 @@
 				$(".newSelectList").remove();;
 			},
 			showNewSelect:function(e){
+				if ($(".newSelectList").length){
 				this.hideNewSelect();
-				var s="<ul class='newSelectList'>";
-				$(e.target).parent().find("select option").each(function(){
-					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-				});
-				 s+="</ul>";
-				$(e.target).parent().append(s);
-				return false;
+				}else{
+					var s="<ul class='newSelectList'>";
+					$(e.target).parent().find("select option").each(function(){
+						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+					});
+					s+="</ul>";
+					$(e.target).parent().append(s);
+					return false;
+				}
 				
 			},
 			chooseOption:function(e){

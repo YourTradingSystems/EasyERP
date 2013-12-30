@@ -5,6 +5,7 @@
             <td><%=index + 1 %></td>
             <td><%=opportunity.creationDate%></td>
             <td><%=opportunity.name%></td>
+            <td><%=opportunity.expectedRevenue.value%></td>
             <td><%=(opportunity.customer) ? opportunity.customer.name.first + ' ' + opportunity.customer.name.last : ''%></td>
             <td><%=opportunity.nextAction.date%></td>
             <td><%=opportunity.nextAction.desc%></td>
@@ -12,8 +13,6 @@
 			  <select id='stage<%=opportunity._id%>'>
 			  </select>
 			</td>
-            <td><%=opportunity.expectedRevenue.value%></td>
-            <td><%=opportunity.expectedRevenue.progress%>%</td>
             <td><%=(opportunity.salesPerson && opportunity.salesPerson.name) ? opportunity.salesPerson.name.first + ' ' + opportunity.salesPerson.name.last : ''%></td>
             <td><%=(opportunity.createdBy.user) ? opportunity.createdBy.user.login + " (" + opportunity.createdBy.date +  ")" : ''%></td>
             <td><%=(opportunity.editedBy.user) ? opportunity.editedBy.user.login + " (" + opportunity.editedBy.date + ")" : ''%></td>

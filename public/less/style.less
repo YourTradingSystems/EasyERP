@@ -871,6 +871,9 @@ h3 {
 .person-info {
 	.dl-auto();
 }
+.customer-info {
+	.dl-auto(110px,18%);
+}
 .app-empty-info {
 	.dl-auto(200px,100%);
 	margin-top:-3px;
@@ -1268,6 +1271,7 @@ h3 {
     float: left;
     margin: 0 12px;
     border: 1px solid #ababab;
+	border-right:0;
     border-bottom: 0;
     position: absolute;
     bottom: 0;
@@ -1306,7 +1310,7 @@ h3 {
     }
 
     li:last-child {
-        border-right: 0;
+//        border-right: 0;
     }
 }
 
@@ -1402,7 +1406,9 @@ h3 {
                 progress {
                     width: 100%;
                 }
-
+				a{
+					color: #1E8FC6 !important;
+				}
                 progress {
                     background-color: #F5F5F5;
                 }
@@ -2049,6 +2055,7 @@ input, textarea, select {
     position: relative;
     float: left;
     width: 420px;
+	min-height:128px;
     margin-left: 7px;
     margin-top: 7px;
     border: @thin-border transparent;
@@ -2071,7 +2078,7 @@ input, textarea, select {
 
         .info {
 			float:left;
-			width:200px;
+			width:290px;
 			div{
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -3628,7 +3635,9 @@ table#workflows {
 #saveSpan, #cancelSpan {
     line-height: 20px;
 }
-
+#editSpan{
+	margin-left:5px;
+}
 .with-checkbox #editSpan,
 .with-checkbox #saveSpan,
 .with-checkbox #cancelSpan {
@@ -3972,25 +3981,31 @@ ul.dialog-tabs{
 }
 .groupsChooser{
 	margin-top:25px;
+	.swich{
+		margin-top:60px;
+		width:30px;
+		height:30px;
+		background-image:url("@{imagesfolder}/switch.png");
+		background-repeat:no-repeat;
+		background-position:50% 50%;
+	}
 }
 #sourceUsers,#targetUsers,
 #sourceGroups,#targetGroups{
 	width:250px;
 	height:150px;
 	margin:5px;
-	border:1px solid silver;
+	border:@thin-border #E5E5E5;
 	overflow-x:hidden;
 	li{
 		cursor:pointer;
-		line-height: 18px;
-		padding: 0 3px;
-		&.choosen{
-			background-color:#36A9E1;
-			color:white;
+		line-height: 20px;
+		padding-left:10px;
+		border-bottom:@thin-border #eee;
+		color: #555;
+		&:hover{
+			background-color: #EEE;
 		}
-	}
-	&:hover{
-		border-color:#36A9E1;
 	}
 }
 .canReadAndWrite{
@@ -4172,6 +4187,7 @@ ul.dialog-tabs{
 	width:100%;
 	float:right;
 	margin-top:5px;
+	margin-bottom:5px;
 	div{
 		float:left;
 	}
@@ -4187,13 +4203,19 @@ ul.dialog-tabs{
 	}
 	#previousPage,#nextPage,.currentPageList{
 		background-color:white;
+		color:white;
 		background-image:none;
 		line-height:15px;
 		width:20px;
+		height:18px;
+		display:block;
 		text-align:center;
 		padding:0;
 		border-radius:0;
 		font-weight:bold;
+		background-position:50% 50%;
+		background-repeat:no-repeat;
+		float:left;
 			&:hover{
 				background-color: #F7F8F9;
 			}
@@ -4202,18 +4224,30 @@ ul.dialog-tabs{
 			}
 
 	}
+	#previousPage{
+		background-image: url("@{imagesfolder}/arrow-left-1.png");
+		margin:0 3px;
+
+	}
+	#nextPage{
+		background-image: url("@{imagesfolder}/arrow-right-1.png");
+		margin:0 3px;
+	}
+
 	.allPage{
 		position:relative;
 	}
 	#currentShowPage{
-		width:20px;
-		height:11px;
+		border: @thin-border rgba(0, 0, 0, 0.4);
+		border-right: @thin-border rgba(0, 0, 0, 0);
+		width:21px;
+		height:12px;
 		margin-left:5px;
 		font-size:12px;
 	}
 	#pageList{
 		background-color:white;
-		border:1px solid silver;
+		border:@thin-border rgba(0, 0, 0, 0.4);
 		position:absolute;
 		bottom:17px;
 		left:-7px;
@@ -4236,26 +4270,11 @@ ul.dialog-tabs{
 	.currentPageList{
 		margin-right:5px;
 		.caret {
-			margin-top:-2px;
-			display: inline-block;
-			width: 0;
-			height: 0;
-			vertical-align: middle;
-			border-top: 4px solid #000;
-			border-right: 4px solid rgba(0, 0, 0, 0);
-			border-left: 4px solid rgba(0, 0, 0, 0);
-			border-bottom-color: #656565;
-			border-top: 0 dotted;
-			border-bottom: 4px solid #000;
-			content: "";
-			display: inline-block;
-			width: 0;
-			height: 0;
-			&:before,&:after{
-				-webkit-box-sizing: border-box;
-				-moz-box-sizing: border-box;
-				box-sizing: border-box;
-			}
+			display:block;
+			height:15px;
+			background-image: url("@{imagesfolder}/arrow-up.png");
+			background-position:50% 50%;
+			background-repeat:no-repeat;
 		}
 	}
 	.pageList{
@@ -4275,9 +4294,9 @@ ul.dialog-tabs{
 		}
 		ul{
 			background-color:white;
-			border:1px solid silver;
+			border:@thin-border rgba(0, 0, 0, 0.4);
 			position:absolute;
-			bottom:17px;
+			bottom:15px;
 			left:5px;
 			display:none;
 			font-size: 12px;
@@ -4309,11 +4328,32 @@ ul.dialog-tabs{
 	display: block;
 	height: 24px;
 	line-height: 24px;
-	width: 50px;
+	width: 74px;
 	text-align: center;
 	cursor:pointer;
-	&:hover{
-		background-color: #D8D8D8;
+	.text{
+		float:left;
+		display:block;
+		text-align:center;
+		width:49px;
+		height:24px;
+		line-height:24px;
+		&:hover{
+			background-color: #EEE;
+		}
+
+	}
+	.arrow{
+		height:24px;
+		float:right;
+		border-left:@thin-border #ababab;
+		width:24px;
+        background-image: url("@{imagesfolder}/arrow-down.png");
+		background-repeat:no-repeat;
+		background-position:50% 50%;
+		&:hover{
+			background-color: #EEE;
+		}
 	}
 }
 .filter-check-list{
@@ -4326,7 +4366,12 @@ ul.dialog-tabs{
 	top:-1px;
 	z-index:1000;
 	li{
+		cursor:pointer;
 		line-height:20px;
+		&:hover{
+			background-color: #EEE;
+		}
+
 	}
 	input{
 		margin:0 5px;

@@ -5,7 +5,7 @@
     <td><%=person.name.first.substr(0,15)%></td>
     <td><%=person.name.last%></td>
     <td><%=person.email%></td>
-    <td><%=person.phones.phone%></td>
+    <td><a href="javascript:;"><%=person.phones.phone%></a></td>
     <td><%=person.address.country%></td>
     <td><%=person.createdBy.date + ' (' + person.createdBy.user.login + ')'%></td>
     <td><%=(person.editedBy.user) ? person.editedBy.date + ' (' + person.editedBy.user.login + ')' : ''%></td>

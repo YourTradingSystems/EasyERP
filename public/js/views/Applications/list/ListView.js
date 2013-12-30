@@ -31,14 +31,19 @@ define([
 				"click":"hideItemsNumber",
                 "click #do-filter": "showFilteredPage",
 				"click .filterButton":"showfilter",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm"
+				"click .filter-check-list li":"checkCheckbox"
             },
+			checkCheckbox:function(e){
+				if(!$(e.target).is("input")){
+					$(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
+				}
+			},
 			showfilter:function(e){
 				$(".filter-check-list").toggle();
 				return false;
 			},
  			hideItemsNumber:function(e){
-				if ($(e.target).attr("type")!="checkbox"){
+				if (!$(e.target).closest(".filter-check-list").length){
 					$(".allNumberPerPage").hide();
 					if ($(".filter-check-list").is(":visible")){
 						$(".filter-check-list").hide();

@@ -295,13 +295,23 @@
         getFilterPersons: function (data, response) {
             var res = {};
             res['data'] = [];
-            var query = customer.find({ type: 'Person' });
+			var query;
+			if (data.letter){
+				query = customer.find({ type: 'Person','name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+			}else{
+				query = customer.find({ type: 'Person' });
+			}
             query.exec(function (err, result) {
                 if (!err) {
                     res['listLength'] = result.length;
                 }
             });
-            query = customer.find({ type: 'Person' });
+			if (data.letter){
+				query = customer.find({ type: 'Person','name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+			}else{
+				query = customer.find({ type: 'Person' });
+			}
+
             query.populate('company', '_id name').
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
@@ -382,13 +392,24 @@
         getFilterCompanies: function (data, response) {
             var res = {};
             res['data'] = [];
-            var query = customer.find({ type: 'Company' });
+            var query;
+			if (data.letter){
+				query = customer.find({ type: 'Company','name.first':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+			}else{
+				query = customer.find({ type: 'Company' });
+			}
+
             query.exec(function (err, result) {
                 if (!err) {
                     res['listLength'] = result.length;
                 }
             });
-            query = customer.find({ type: 'Company' });
+			if (data.letter){
+				query = customer.find({ type: 'Company','name.first':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+			}else{
+				query = customer.find({ type: 'Company' });
+			}
+
             query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
