@@ -75,6 +75,7 @@ define([
             },
 
             saveItem: function () {
+                 
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
@@ -101,6 +102,7 @@ define([
                 if (dateBirthSt) {
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 }
+                var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
 
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
 
@@ -137,7 +139,8 @@ define([
                     homeAddress: homeAddress,
                     dateBirth: dateBirth,
                     active: active,
-                    imageSrc: this.imageSrc
+                    imageSrc: this.imageSrc,
+                    recalculate: recalculate
                 };
                 this.currentModel.save(data,{
                         headers: {

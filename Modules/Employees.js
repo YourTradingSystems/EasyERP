@@ -1,5 +1,5 @@
 // JavaScript source code
-var Employee = function (logWriter, mongoose) {
+var Employee = function (logWriter, mongoose, event) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var employeeSchema = mongoose.Schema({
         isEmployee: { type: Boolean, default: false },
@@ -44,6 +44,8 @@ var Employee = function (logWriter, mongoose) {
             country: { type: String, default: '' }
         },
         dateBirth: Date,
+        age: Number,
+        daysForBirth: Number,
         nextAction: Date,
         source: {
             id: { type: String, default: '' },
@@ -57,20 +59,20 @@ var Employee = function (logWriter, mongoose) {
         proposedSalary: Number,
         color: { type: String, default: '#4d5a75' },
         creationDate: { type: Date, default: Date.now },
-		createdBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date, default: Date.now}
-		},
-		editedBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date}
-		},
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
+        },
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date }
+        },
         attachments: [{
             id: { type: Number, default: '' },
             name: { type: String, default: '' },
             path: { type: String, default: '' },
-            size:Number,
-            uploaderName: {type: String, default: ''},
+            size: Number,
+            uploaderName: { type: String, default: '' },
             uploadDate: { type: Date, default: Date.now }
         }]
 
@@ -109,10 +111,10 @@ var Employee = function (logWriter, mongoose) {
                 try {
                     _employee = new employee();
                     if (data.uId) {
-						
-                        _employee.createdBy.user=data.uId;
+
+                        _employee.createdBy.user = data.uId;
                     }
-					if (data.isEmployee) {
+                    if (data.isEmployee) {
                         _employee.isEmployee = data.isEmployee;
                     }
                     if (data.name) {
@@ -279,7 +281,7 @@ var Employee = function (logWriter, mongoose) {
                                 logWriter.log("Employees.js create savetoBd _employee.save " + err);
                                 res.send(500, { error: 'Employees.save BD error' });
                             } else {
-                                res.send(201, { success: 'A new Employees create success', result:result });
+                                res.send(201, { success: 'A new Employees create success', result: result });
                                 console.log(result);
                             }
                         } catch (error) {
@@ -452,7 +454,7 @@ var Employee = function (logWriter, mongoose) {
             populate('createdBy.user').
             populate('editedBy.user').
 			populate("workflow");
-		
+
 
         query.sort({ 'name.first': 1 });
         query.skip((data.page - 1) * data.count).limit(data.count);
@@ -471,11 +473,11 @@ var Employee = function (logWriter, mongoose) {
 
     function getById(data, response) {
         var query = employee.findById(data.id, function (err, res) { });
-        query.populate('manager','name _id');
-        query.populate('department','departmentName _id');
-        query.populate('coach','name _id');
-        query.populate('relatedUser','login _id');
-        query.populate('jobPosition','name _id');
+        query.populate('manager', 'name _id');
+        query.populate('department', 'departmentName _id');
+        query.populate('coach', 'name _id');
+        query.populate('relatedUser', 'login _id');
+        query.populate('jobPosition', 'name _id');
         query.populate('workflow').
 			populate('createdBy.user').
             populate('editedBy.user');
@@ -521,7 +523,10 @@ var Employee = function (logWriter, mongoose) {
                         logWriter.log("Employees.js update employee.update " + err);
                         res.send(500, { error: "Can't update Employees" });
                     } else {
-                        res.send(200, { success: 'Employees updated success' ,data:result});
+                        res.send(200, { success: 'Employees updated success', data: result });
+                        if (data.recalculate) {
+                            event.event.emit('recalculate');
+                        }
                     }
                 }
                 catch (exception) {
@@ -544,10 +549,11 @@ var Employee = function (logWriter, mongoose) {
                 res.send(500, { error: "Can't remove Employees" });
             } else {
                 res.send(200, { success: 'Employees removed' });
+                event.event.emit('recalculate');
             }
         });
     };// end remove
-    
+
     function getFilterApplications(data, response) {
         var res = {};
         res['data'] = [];
@@ -562,19 +568,19 @@ var Employee = function (logWriter, mongoose) {
                     { isEmployee: false }
             },
             {
-                 $group: { _id: "$workflow", taskId: { $push: "$_id" } }
+                $group: { _id: "$workflow", taskId: { $push: "$_id" } }
             });
         queryAggregate.exec(
-            function (err,responseTasks) {
+            function (err, responseTasks) {
                 if (!err) {
 
-                    var responseTasksArray =[];
+                    var responseTasksArray = [];
                     var columnValue = data.count;
                     var page = data.page;
 
-                    responseTasks.forEach(function(value){
-                        value.taskId.forEach(function(idTask,taskIndex){
-                            if (((page-1)*columnValue <= taskIndex) && (taskIndex < (page-1)*columnValue + columnValue )) {
+                    responseTasks.forEach(function (value) {
+                        value.taskId.forEach(function (idTask, taskIndex) {
+                            if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
                                 responseTasksArray.push(idTask);
                             }
                         });
@@ -583,7 +589,7 @@ var Employee = function (logWriter, mongoose) {
                             namberOfApplications: value.taskId.length
                         };
                         optionsArray.push(myObj);
-                        if (value.taskId.length > ((page-1)*columnValue + columnValue)) {
+                        if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
                             showMore = true;
                         }
                     });
@@ -629,7 +635,7 @@ var Employee = function (logWriter, mongoose) {
         getApplications: getApplications,
 
         getApplicationsForList: getApplicationsForList,
-        
+
         getFilterApplications: getFilterApplications,
 
         employee: employee,

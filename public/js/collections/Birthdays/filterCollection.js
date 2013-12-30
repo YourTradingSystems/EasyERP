@@ -19,11 +19,20 @@
             parse: true,
             parse: function (response) {
                 if (response.data) {
-                    _.map(response.data, function (employee) {
-                        employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
-                        employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
-                        return employee;
-                    });
+                    if (response.data.weekly) {
+                        _.map(response.data.weekly, function (employee) {
+                            employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
+                            employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
+                            return employee;
+                        });
+                    }
+                    if (response.data.monthly) {
+                        _.map(response.data.monthly, function (employee) {
+                            employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
+                            employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
+                            return employee;
+                        });
+                    }
                 }
                 return response.data;
             }
