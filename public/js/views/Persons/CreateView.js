@@ -118,6 +118,7 @@ define([
 					width:"950px",
                     buttons: [
                         {
+							id:"create-person-dialog",
                             text: "Create",
                             click: function () { self.saveItem(); }
                         },

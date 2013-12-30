@@ -23,8 +23,8 @@ define([
                 'click .dialog-tabs a': 'changeTab',
                 'click #sourceUsers li': 'chooseUser',
                 'click #targetUsers li': 'chooseUser',
-			    'click #addUsers':'addUsers',
-			    'click #removeUsers':'removeUsers',
+			    'click #sourceUsers li':'addUsers',
+			    'click #targetUsers li':'removeUsers',
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect"

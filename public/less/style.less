@@ -3981,25 +3981,31 @@ ul.dialog-tabs{
 }
 .groupsChooser{
 	margin-top:25px;
+	.swich{
+		margin-top:60px;
+		width:30px;
+		height:30px;
+		background-image:url("@{imagesfolder}/switch.png");
+		background-repeat:no-repeat;
+		background-position:50% 50%;
+	}
 }
 #sourceUsers,#targetUsers,
 #sourceGroups,#targetGroups{
 	width:250px;
 	height:150px;
 	margin:5px;
-	border:1px solid silver;
+	border:@thin-border #E5E5E5;
 	overflow-x:hidden;
 	li{
 		cursor:pointer;
-		line-height: 18px;
-		padding: 0 3px;
-		&.choosen{
-			background-color:#36A9E1;
-			color:white;
+		line-height: 20px;
+		padding-left:10px;
+		border-bottom:@thin-border #eee;
+		color: #555;
+		&:hover{
+			background-color: #EEE;
 		}
-	}
-	&:hover{
-		border-color:#36A9E1;
 	}
 }
 .canReadAndWrite{
