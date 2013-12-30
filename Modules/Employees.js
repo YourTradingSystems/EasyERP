@@ -18,6 +18,7 @@ var Employee = function (logWriter, mongoose) {
             country: { type: String, default: '' }
         },
         workEmail: { type: String, default: '' },
+        personalEmail: { type: String, default: '' },
         workPhones: {
             mobile: { type: String, default: '' },
             phone: { type: String, default: '' }
@@ -168,6 +169,9 @@ var Employee = function (logWriter, mongoose) {
                     }
                     if (data.workEmail) {
                         _employee.workEmail = data.workEmail;
+                    }
+                    if (data.personalEmail) {
+                        _employee.personalEmail = data.personalEmail;
                     }
                     if (data.skype) {
                         _employee.skype = data.skype;

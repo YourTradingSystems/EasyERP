@@ -49,6 +49,7 @@
                 country: ''
             },
             workEmail: '',
+            personalEmail: '',
             workPhones: {
                 mobile: '',
                 phone: ''

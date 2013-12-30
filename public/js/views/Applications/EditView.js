@@ -226,7 +226,7 @@
                         first: this.$el.find("#first").val(),
                         last: this.$el.find("#last").val()
                     },
-                    workEmail: $.trim(this.$el.find("#wemail").val()),
+                    personalEmail: $.trim(this.$el.find("#wemail").val()),
                     workPhones: {
                         phone: $.trim(this.$el.find("#phone").val()),
                         mobile: $.trim(this.$el.find("#mobile").val())
