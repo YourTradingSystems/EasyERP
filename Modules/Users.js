@@ -142,12 +142,15 @@ var Users = function (logWriter, mongoose) {
         }
     }//End login
 
-    function getUsers(response) {
+    function getUsers(response,data) {
         var res = {};
         res['data'] = [];
         var query = User.find({}, { __v: 0, upass: 0 });
         query.populate('profile');
         query.sort({ login: 1 });
+		if (data.page&&data.count){
+			query.skip((data.page-1)*data.count).limit(data.count);
+		}
         query.exec(function (err, result) {
             if (err) {
                 //func();

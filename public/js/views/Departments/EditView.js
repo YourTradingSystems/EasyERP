@@ -21,28 +21,38 @@ define([
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
+				this.page=1;
                 this.render();
             },
 			events:{
                 'click .dialog-tabs a': 'changeTab',
-                'click #sourceUsers li': 'chooseUser',
-                'click #targetUsers li': 'chooseUser',
-			    'click #addUsers':'addUsers',
-			    'click #removeUsers':'removeUsers',
+                'click #sourceUsers li': 'addUsers',
+                'click #targetUsers li': 'removeUsers',
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
-                "click": "hideNewSelect"
+                "click": "hideNewSelect",
+				"click .prevUserList":"prevUserList",
+				"click .nextUserList":"nextUserList"
 			},
+			nextUserList:function(e){
+				this.page+=1;
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+			},
+			prevUserList:function(e){
+				this.page-=1;
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+			},
+
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
 			},
             addUsers: function (e) {
                 e.preventDefault();
-                $('#targetUsers').append($('#sourceUsers .choosen'));
+                $('#targetUsers').append($(e.target));
             },
             removeUsers: function (e) {
                 e.preventDefault();
-                $('#sourceUsers').append($('#targetUsers .choosen'));
+                $('#sourceUsers').append($(e.target));
             },
 
 			changeTab:function(e){
@@ -107,7 +117,7 @@ define([
 				if (!nestingLevel){
 					nestingLevel=0;
 				}
-                var users = this.$el.find("#targetUsers .choosen");
+                var users = this.$el.find("#targetUsers li");
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
                 });
@@ -199,7 +209,7 @@ define([
                     return $('<li/>').text(item.login).attr("id",item._id);
                 });
 				$('#targetUsers').append(b);
-				common.populateUsersForGroups('#sourceUsers',this.currentModel.toJSON());
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 return this;
             }
 

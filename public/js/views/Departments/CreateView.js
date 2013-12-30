@@ -17,18 +17,28 @@ define([
                 _.bindAll(this, "saveItem", "render");
                 this.departmentsCollection = new DepartmentsCollection();
                 this.model = new DepartmentsModel();
+				this.page = 1;
                 this.render();
             },
 			events:{
                 'click .dialog-tabs a': 'changeTab',
-                'click #sourceUsers li': 'chooseUser',
-                'click #targetUsers li': 'chooseUser',
 			    'click #sourceUsers li':'addUsers',
 			    'click #targetUsers li':'removeUsers',
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
-                "click": "hideNewSelect"
+                "click": "hideNewSelect",
+				"click .prevUserList":"prevUserList",
+				"click .nextUserList":"nextUserList"
 			},
+			nextUserList:function(e){
+				this.page+=1;
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+			},
+			prevUserList:function(e){
+				this.page-=1;
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+			},
+
 			chooseUser:function(e){
 				$(e.target).toggleClass("choosen");
 			},
@@ -45,11 +55,11 @@ define([
             },
             addUsers: function (e) {
                 e.preventDefault();
-                $('#targetUsers').append($('#sourceUsers .choosen'));
+                $('#targetUsers').append($(e.target));
             },
             removeUsers: function (e) {
                 e.preventDefault();
-                $('#sourceUsers').append($('#targetUsers .choosen'));
+                $('#sourceUsers').append($(e.target));
             },
 
             saveItem: function () {
@@ -63,7 +73,7 @@ define([
                 //var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
                 var nestingLevel = this.$("#parentDepartment option:selected").data('level');
                 var departmentManager = this.$("#departmentManager option:selected").val();
-                var users = this.$el.find("#targetUsers .choosen");
+                var users = this.$el.find("#targetUsers li");
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
                 });
@@ -150,7 +160,7 @@ define([
                 });
                 common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam",null,function(){self.styleSelect(App.ID.parentDepartment);});
 				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.departmentManager);});
-				common.populateUsersForGroups('#sourceUsers');
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 return this;
             }
 
