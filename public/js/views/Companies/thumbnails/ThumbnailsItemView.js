@@ -5,7 +5,7 @@ define([
     function (ThumbnailsItemTemplate, common) {
         var ThumbnailsItemView = Backbone.View.extend({
             tagName:"div",
-            className: "thumbnailcusomers",
+            className: "thumbnailwithavatar",
 
             initialize: function (options) {
                 this.dataIndex = options.dataIndex;
@@ -48,7 +48,7 @@ define([
             changeColor: function (color) {
                 var rgbColor = common.hexToRgb(color);
                 this.$el.css('background-color', 'rgba(' + rgbColor.r + ',' + rgbColor.g + ',' + rgbColor.b + ', 0.20)');
-                this.$('p').css({ 'color': color, 'font-weight': 'bold', 'text-shadow': '0 1px 1px rgba(' + 255 + ',' + 255 + ',' + 255 + ', 0.5)' });
+                this.$('p').css({ 'color': color, 'text-shadow': '0 1px 1px rgba(' + 255 + ',' + 255 + ',' + 255 + ', 0.5)' });
             },
             
             deleteEvent: function (e) {

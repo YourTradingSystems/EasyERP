@@ -60,6 +60,7 @@
                 }
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
+                filterObject['letter'] = (options && options.letter) ? options.letter: '';
                 this.fetch({
                     data: filterObject,
                     waite: true,

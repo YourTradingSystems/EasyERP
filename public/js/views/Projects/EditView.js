@@ -13,6 +13,8 @@ define([
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				this.page=1;
+				this.pageG=1;
                 this.render();
             },
 
@@ -29,19 +31,31 @@ define([
 			    'click #removeUsers':'removeUsers'
 
             },
-			chooseUser:function(e){
-				$(e.target).toggleClass("choosen");
+			nextUserList:function(e,page){
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
+			},
+			prevUserList:function(e,page){
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
+			},
+			nextGroupList:function(e,page){
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG,null);
+			},
+			prevGroupList:function(e,page){
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG,null);
 			},
             addUsers: function (e) {
                 e.preventDefault();
-				$(e.target).closest(".ui-dialog").find(".target").append($(e.target).closest(".ui-dialog").find(".source .choosen"));
+				$(e.target).closest(".ui-dialog").find(".target").append($(e.target));
+
             },
             removeUsers: function (e) {
-
                 e.preventDefault();
-				$(e.target).closest(".ui-dialog").find(".source").append($(e.target).closest(".ui-dialog").find(".target .choosen"));
+				$(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
 
+			chooseUser:function(e){
+				$(e.target).toggleClass("choosen");
+			},
 			unassign:function(e){
 				var id=$(e.target).closest("tr").data("id");
 				var type=$(e.target).closest("tr").data("type");
@@ -93,10 +107,17 @@ define([
                     }
 
 				});
-				$("#sourceUsers li").unbind().on("click",this.chooseUser);
-				$("#targetUsers li").unbind().on("click",this.chooseUser);
-				$("#addUsers").unbind().on("click",this.addUsers);
-				$("#removeUsers").unbind().on("click",this.removeUsers);
+				$("#targetUsers").unbind().on("click","li",this.removeUsers);
+				$("#sourceUsers").unbind().on("click","li",this.addUsers);
+				var self = this;
+				$(".nextUserList").unbind().on("click",function(e){
+					self.page+=1
+					self.nextUserList(e,self.page)
+				});
+				$(".prevUserList").unbind().on("click",function(e){
+					self.page-=1
+					self.prevUserList(e,self.page)
+				});
 
 			},
 			addGroup:function(e){
@@ -123,11 +144,17 @@ define([
                     }
 
 				});
-				$("#sourceGroups li").unbind().on("click",this.chooseUser);
-				$("#targetGroups li").unbind().on("click",this.chooseUser);
-				$("#addUsersGroups").unbind().on("click",this.addUsers);
-				$("#removeUsersGroups").unbind().on("click",this.removeUsers);
-
+				$("#targetGroups").unbind().on("click","li",this.removeUsers);
+				$("#sourceGroups").unbind().on("click","li",this.addUsers);
+				var self = this;
+				$(".nextGroupList").unbind().on("click",function(e){
+					self.pageG+=1
+					self.nextUserList(e,self.pageG)
+				});
+				$(".prevGroupList").unbind().on("click",function(e){
+					self.pageG-=1
+					self.prevUserList(e,self.pageG)
+				});
 			},
 
 			changeTab:function(e){
@@ -315,9 +342,9 @@ define([
                         }
                     }
                 });
-				common.populateUsersForGroups('#sourceUsers',this.currentModel.toJSON());
+				common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
 				common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups", "/Departments",this.currentModel.toJSON(),null);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");

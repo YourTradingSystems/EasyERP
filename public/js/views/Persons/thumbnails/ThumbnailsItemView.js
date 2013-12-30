@@ -5,7 +5,7 @@ define([
     function (ThumbnailsItemTemplate, common) {
         var ThumbnailsItemView = Backbone.View.extend({
             tagName: "div",
-            className: "thumbnailcusomers",
+            className: "thumbnailwithavatar",
 
             initialize: function (options) {
                 this.dataIndex = options.dataIndex;

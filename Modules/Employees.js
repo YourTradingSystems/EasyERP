@@ -18,6 +18,7 @@ var Employee = function (logWriter, mongoose, event) {
             country: { type: String, default: '' }
         },
         workEmail: { type: String, default: '' },
+        personalEmail: { type: String, default: '' },
         workPhones: {
             mobile: { type: String, default: '' },
             phone: { type: String, default: '' }
@@ -170,6 +171,9 @@ var Employee = function (logWriter, mongoose, event) {
                     }
                     if (data.workEmail) {
                         _employee.workEmail = data.workEmail;
+                    }
+                    if (data.personalEmail) {
+                        _employee.personalEmail = data.personalEmail;
                     }
                     if (data.skype) {
                         _employee.skype = data.skype;
@@ -333,6 +337,10 @@ var Employee = function (logWriter, mongoose, event) {
         var description = "";
         res['data'] = [];
         var query = employee.find();
+		if (data.letter){
+			query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+		}
+
         query.where('isEmployee', true);
         query.exec(function (err, result) {
             if (!err) {
@@ -341,6 +349,10 @@ var Employee = function (logWriter, mongoose, event) {
         });
 
         query = employee.find();
+		if (data.letter){
+			query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+		}
+
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
 			populate('createdBy.user').

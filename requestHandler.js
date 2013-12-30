@@ -55,7 +55,7 @@ var requestHandler = function (fs, mongoose, tempDb) {
     function getUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn) {
-            users.getUsers(res);
+            users.getUsers(res,data);
         } else {
             res.send(401);
         }

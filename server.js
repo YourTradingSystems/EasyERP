@@ -212,6 +212,8 @@ app.get('/Users', function (req, res) {
     console.log('---------------------getUsers-------------');
     data = {};
     data.mid = req.param('mid');
+    data.page = req.param('page');
+    data.count = req.param('count');
     requestHandler.getUsers(req, res, data);
 });
 

@@ -76,7 +76,7 @@ define([
             },
 
             isEmployee: function (e) {
-                this.model.save({
+            	this.model.save({
                     isEmployee: true
                 },{
                     headers: {

@@ -226,7 +226,7 @@
                         first: this.$el.find("#first").val(),
                         last: this.$el.find("#last").val()
                     },
-                    workEmail: $.trim(this.$el.find("#wemail").val()),
+                    personalEmail: $.trim(this.$el.find("#wemail").val()),
                     workPhones: {
                         phone: $.trim(this.$el.find("#phone").val()),
                         mobile: $.trim(this.$el.find("#mobile").val())
@@ -284,21 +284,26 @@
                         });
                 }
             },
-			   hideNewSelect:function(e){
-				   $(".newSelectList").remove();;
-			   },
-			   showNewSelect:function(e){
-				   this.hideNewSelect();
-				   var s="<ul class='newSelectList'>";
-				   $(e.target).parent().find("select option").each(function(){
-					   s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-				   });
-				   s+="</ul>";
-				   $(e.target).parent().append(s);
-				   return false;
-				   
-			   },
-			   chooseOption:function(e){
+			hideNewSelect:function(e){
+				$(".newSelectList").remove();;
+			},
+			showNewSelect:function(e){
+				if ($(".newSelectList").length){
+					this.hideNewSelect();
+					return false;
+				}else{
+					var s="<ul class='newSelectList'>";
+					$(e.target).parent().find("select option").each(function(){
+						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+					});
+					s+="</ul>";
+					$(e.target).parent().append(s);
+					return false;
+				}
+				
+			},
+
+			chooseOption:function(e){
 				   var k = $(e.target).parent().find("li").index($(e.target));
 				   $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
 				   $(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");

@@ -1,10 +1,12 @@
 define([
     'text!templates/Companies/list/ListHeader.html',
     'views/Companies/CreateView',
-    'views/Companies/list/ListItemView'
+    'views/Companies/list/ListItemView',
+    'text!templates/Alpabet/AphabeticTemplate.html',
+    'common'
 ],
 
-function (ListTemplate, CreateView, ListItemView) {
+function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common) {
         var CompaniesListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -13,6 +15,9 @@ function (ListTemplate, CreateView, ListItemView) {
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
+				this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
+				this.allAlphabeticArray = this.buildAllAphabeticArray();
+				this.selectedLetter="";
                 this.render();
             },
 
@@ -26,9 +31,43 @@ function (ListTemplate, CreateView, ListItemView) {
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
-				"click":"hideItemsNumber"
-
+				"click":"hideItemsNumber",
+				"click .letter:not(.empty)": "alpabeticalRender"
             },
+			buildAphabeticArray: function (collection) {
+				if (collection && collection.length > 0) {
+					var filtered = $.map(collection, function (item) {
+						if (item.name.first[0]) {
+							if ($.isNumeric(item.name.first[0].toUpperCase())) {
+								return "0-9"
+							}
+							return item.name.first[0].toUpperCase();
+						}
+					});
+					filtered.push("All");
+					return _.sortBy(_.uniq(filtered), function (a) { return a });
+				}
+				return [];
+			},
+			buildAllAphabeticArray: function () {
+				var associateArray = ["All", "0-9"]
+				for (i = 65; i <= 90; i++) {
+					associateArray.push(String.fromCharCode(i).toUpperCase());
+				}
+				return associateArray;
+			},
+			alpabeticalRender:function(e){
+				$(e.target).parent().find(".current").removeClass("current");
+				$(e.target).addClass("current");
+				var itemsNumber = $("#itemsNumber").text();
+				var page =  parseInt($("#currentShowPage").val());
+				_.bind(this.collection.showMore, this.collection);
+				this.selectedLetter=$(e.target).text();
+				if ($(e.target).text()=="All"){
+					this.selectedLetter="";
+				}
+				this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
+			},
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
 			},
@@ -40,7 +79,8 @@ function (ListTemplate, CreateView, ListItemView) {
 				var self=this;
                 console.log('Companies render');
                 $('.ui-dialog ').remove();
-                this.$el.html(_.template(ListTemplate));
+				this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+                this.$el.append(_.template(ListTemplate));
                 this.$el.append(new ListItemView({ collection: this.collection}).render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -253,6 +293,47 @@ function (ListTemplate, CreateView, ListItemView) {
                     $("#nextPage").prop("disabled",false);
 					$("#nextPage").removeClass("disabled");
                 }
+            $("#pageList").empty();
+            if (this.defaultItemsNumber) {
+                var itemsNumber = this.defaultItemsNumber;
+                this.defaultItemsNumber = false;
+                $("#itemsNumber").text(itemsNumber);
+            } else {
+                var itemsNumber = $("#itemsNumber").text();
+            }
+            $("#currentShowPage").val(1);
+            var pageNumber = Math.ceil(this.collection.listLength/itemsNumber);
+            for (var i=1;i<=pageNumber;i++) {
+                $("#pageList").append('<li class="showPage">'+ i +'</li>')
+            }
+
+            $("#lastPage").text(pageNumber);
+            $("#previousPage").prop("disabled",true);
+
+            if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
+                $("#grid-start").text(0);
+                $("#nextPage").prop("disabled",true);
+            } else {
+                $("#grid-start").text(1);
+            }
+
+            if (this.collection.listLength) {
+                if (this.collection.listLength <= itemsNumber) {
+                    $("#grid-end").text(this.collection.listLength - this.deleteCounter );
+                } else {
+                    $("#grid-end").text(itemsNumber - this.deleteCounter);
+                }
+                $("#grid-count").text(this.collection.listLength);
+            } else {
+                $("#grid-end").text(0);
+                $("#grid-count").text(0);
+            }
+
+            if (pageNumber <= 1) {
+                $("#nextPage").prop("disabled",true);
+            }
+            this.deleteCounter = 0;
+
             },
             gotoForm: function (e) {
                 App.ownContentType = true;

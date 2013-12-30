@@ -3,10 +3,11 @@
     'custom',
     'common',
     'views/Employees/EditView',
-    'views/Employees/CreateView'
+    'views/Employees/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 ],
 
-function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTemplate) {
     var EmployeeThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
@@ -14,17 +15,32 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView) {
             this.collection = options.collection;
             arrayOfEmployees = [];
             dataIndexCounter = 0;
+			this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+			this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="";
             this.render();
         },
 
         events: {
-            "click #showMore": "showMore"
+            "click #showMore": "showMore",
+			"click .letter:not(.empty)": "alpabeticalRender"
         },
+		alpabeticalRender:function(e){
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+            _.bind(this.collection.showMore, this.collection);
+			this.selectedLetter=$(e.target).text();
+			if ($(e.target).text()=="All"){
+				this.selectedLetter="";
+			}
+            this.collection.showMore({count: 50, page: 1, letter:this.selectedLetter});
+		},
 
         render: function () {
             var namberOfemployees = this.collection.namberToShow;
             $('.ui-dialog ').remove();
             this.$el.html('');
+            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
             if (this.collection.length > 0) {
                 var holder = this.$el;
                 var thumbnailsItemView;
@@ -79,7 +95,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView) {
                         dataIndexCounter++;
                         thumbnailsItemView = new EmployeesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).prepend(thumbnailsItemView.render().el);
+                        $(holder).before(thumbnailsItemView.render().el);
                     } else {
                         arrayOfEmployees.push(model);
                     }

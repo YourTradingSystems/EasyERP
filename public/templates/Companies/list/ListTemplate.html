@@ -5,8 +5,8 @@
     <td><%=company.name.first%></td>
     <td><%=company.email%></td>
     <td>
-        <span><%=company.phones.phone%></span>
-        <span><%=company.phones.mobile%></span>
+      <span><a href="javascript:;"><%=company.phones.phone%></a> </span>
+      <span><a href="javascript:;"><%=company.phones.mobile%></a></span>
     </td>
     <td><%=company.createdBy.date + ' (' + company.createdBy.user.login + ')'%></td>
     <td><%=(company.editedBy.date) ? company.editedBy.date + ' (' + company.editedBy.user.login + ')' : ''%></td>

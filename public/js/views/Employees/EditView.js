@@ -122,6 +122,7 @@ define([
                     },
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     workEmail: $.trim(this.$el.find("#workEmail").val()),
+                    personalEmail:$.trim(this.$el.find("#personalEmail").val()),
                     skype: $.trim(this.$el.find("#skype").val()),
                     workPhones: {
                         phone: $.trim(this.$el.find("#phone").val()),

@@ -124,28 +124,22 @@ define([
                     }
                 });
             },
-            showNewSelect: function (e) {
-                var s = "<ul class='newSelectList'>";
-                $(e.target).parent().find("select option").each(function () {
-                    s += "<li>" + $(this).text() + "</li>";
-                });
-                s += "</ul>";
-                $(e.target).parent().append(s);
-
-            },
+			showNewSelect:function(e){
+				if ($(".newSelectList").length){
+				this.hideNewSelect();
+				}else{
+					var s="<ul class='newSelectList'>";
+					$(e.target).parent().find("select option").each(function(){
+						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+					});
+					s+="</ul>";
+					$(e.target).parent().append(s);
+					return false;
+				}
+				
+			},
             hideNewSelect: function (e) {
                 $(".newSelectList").remove();;
-            },
-            showNewSelect: function (e) {
-                this.hideNewSelect();
-                var s = "<ul class='newSelectList'>";
-                $(e.target).parent().find("select option").each(function () {
-                    s += "<li class=" + $(this).text().toLowerCase() + ">" + $(this).text() + "</li>";
-                });
-                s += "</ul>";
-                $(e.target).parent().append(s);
-                return false;
-
             },
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));

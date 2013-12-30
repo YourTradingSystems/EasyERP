@@ -24,16 +24,16 @@
         <div class="mainInfo">
           <h3><span title='<%=name.first%>'><%=name.first%></span></h3>
           <div class="half-block left">
-            <dl class="person-info company">
+            <dl class="customer-info company">
 			  <dt>Website</dt><dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
-			  <dt>Phone</dt><dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
-			  <dt>Mobile</dt><dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
+			  <dt>Phone</dt><dd id="phones_phone" class="editable" title="<%=phones.phone%>"><a href="skype:<%=phones.phone%>?call"><%=phones.phone%></a></dd>
+			  <dt>Mobile</dt><dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><a href="skype:<%=phones.mobile%>?call"><%=phones.mobile%></a></dd>
                <dt>Email</dt><dd id="email" class="editable" title="<%=email%>"><%=email%></dd>
          </dl>
 
          </div>
           <div class="half-block left">
-            <dl class="person-info company">
+            <dl class="customer-info company">
 			  <dt>Street</dt>			 
               <dd id="address_street" class="editable" title="<%=address.street%>"><%=address.street%></dd>
 
@@ -78,7 +78,7 @@
 	  </div>
       <div class="inner sales-purchases">
         <div class="half-block left">
-            <dl class="person-info company long">
+            <dl class="customer-info company long">
 			  <dt>Sales Person</dt><dd title="<%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%>"><%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%></dd>
 <!--			  <dt>Sales Team</dt><dd title="<%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%>"><%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%></dd>-->
 			  <dt>Reference</dt><dd title="<%=salesPurchases.reference%>"><%=salesPurchases.reference%></dd>
@@ -87,7 +87,7 @@
         </div>
         <div class="half-block left">
 
-            <dl class="person-info company long">
+            <dl class="customer-info company long">
 			  <dt>Customer</dt><dd id="salesPurchases_isCustomer" class="with-checkbox">
                 <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
 			  </dd>

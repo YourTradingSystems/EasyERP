@@ -18,7 +18,7 @@
                     <div class="social">
                         <% if (social.FB){%><a class="facebook" href="<%=social.FB%>"></a><%}%>
                         <% if (social.LI){%><a class="linkedin" href="<%=social.LI%>"></a><%}%>
-                        <% if (skype){%><a class="skype" href="<%=skype%>"></a><%}%>
+                        <% if (skype){%><a class="skype" href="skype:<%=skype%>?call"></a><%}%>
 
                         <div class="clearfix"></div>
                     </div>
@@ -31,7 +31,7 @@
                         </h3>
                     <div class="half-block left">
                        
-                        <dl class="person-info">
+            <dl class="customer-info">
                             <dt>Position </dt>
                             <dd id="jobPosition" class="editable" title="<%=jobPosition%>"><%=jobPosition%></dd>
                             <dt>Birthday </dt>
@@ -39,15 +39,15 @@
                             <dt>Email</dt>
                             <dd id="email" class="editable"><a href="mailto:<%=email%>" title="<%=email%>"><%=email%></a></dd>
                             <dt>Skype </dt>
-                            <dd id="skype" class="editable" title="<%=website%>"><%=skype%></dd>
+                            <dd id="skype" class="editable" title="<%=skype%>"><a href="skype:<%=skype%>?call"><%=skype%></a></dd>
                             <dt>Phone </dt>
-                            <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
+                            <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><a href="skype:<%=phones.phone%>?call"><%=phones.phone%></a></dd>
                           </dl>
                        
                     </div>
                     <div class="half-block left">
           
-                        <dl class="person-info">
+            <dl class="customer-info">
                             <dt>Street </dt>
                             <dd id="address_street" class="editable" title="<%=address.street%>"> <%=address.street%></dd>
 
@@ -77,11 +77,11 @@
                 <div class="clearfix"></div>
                 <div id="details" class="person-details">
                     <div class="half-block left">
-                        <dl class="person-info">
+            <dl class="customer-info">
                             <dt>Website </dt>
                             <dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
                             <dt>Mobile </dt>
-                            <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
+                            <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><a href="skype:<%=phones.mobile%>?call"><%=phones.mobile%></a></dd>
                             <dt>Fax </dt>
                             <dd id="phones_fax" class="editable" title="<%=phones.fax%>"><%=phones.fax%></dd>
                             <dt>Title </dt>
@@ -91,7 +91,7 @@
                     <div class="half-block left">
                         <div class="sale-purchase">
                             <span>Sales & Purchases</span>
-                            <dl class="person-info">
+              <dl class="customer-info">
                                 <dt>Customer </dt>
                                 <dd id="salesPurchases_isCustomer" class="with-checkbox">
                                     <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
