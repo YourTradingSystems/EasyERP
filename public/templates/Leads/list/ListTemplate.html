@@ -1,18 +1,18 @@
 <% leadsCollection.forEach(function(lead, index){ %>
 <tr data-id="<%=lead._id%>">
-    <td><input type="checkbox" value="<%=lead._id%>" class="checkbox" /></td>
-    <td><%=index+1%></td>
-    <td><%=lead.name%></td>
-    <td><%=lead.contactName.first%> <%=lead.contactName.last%></td>
-    <td><%=lead.email%></td>
-    <td><%=lead.phones.phone%></td>
-    <td><%=lead.campaign%></td>
-    <td><%=lead.source%></td>
-    <td style="width:170px;position:relative;">
-	  <select id='stage<%=lead._id%>'>
-	  </select>
-	  </td>
-    <td><%=(lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
-    <td><%=(lead.editedBy.user) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
+  <td><input type="checkbox" value="<%=lead._id%>" class="checkbox" /></td>
+  <td><%=index+1%></td>
+  <td><%=lead.name%></td>
+  <td><%=lead.contactName.first%> <%=lead.contactName.last%></td>
+  <td><%=lead.email%></td>
+  <td><%=lead.phones.phone%></td>
+  <td><%=lead.campaign%></td>
+  <td><%=lead.source%></td>
+  <td class="withSelect">
+	<select id='stage<%=lead._id%>'>
+	</select>
+  </td>
+  <td><%=(lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
+  <td><%=(lead.editedBy.user) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
 </tr>
 <% }) %>

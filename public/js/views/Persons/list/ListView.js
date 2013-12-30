@@ -13,10 +13,9 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
         initialize: function (options) {
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.originalCollection = options.collection;
             this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
             this.allAlphabeticArray = common.buildAllAphabeticArray();
-			this.selectedLetter="All";
+			this.selectedLetter="";
             this.defaultItemsNumber = this.collection.namberToShow;
             this.deleteCounter = 0;
             this.render();
@@ -38,9 +37,14 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
 		alpabeticalRender:function(e){
 			$(e.target).parent().find(".current").removeClass("current");
 			$(e.target).addClass("current");
-			this.collection = this.originalCollection.filterByLetter($(e.target).text());
+            var itemsNumber = $("#itemsNumber").text();
+            var page =  parseInt($("#currentShowPage").val());
+            _.bind(this.collection.showMore, this.collection);
 			this.selectedLetter=$(e.target).text();
-			this.render();
+			if ($(e.target).text()=="All"){
+				this.selectedLetter="";
+			}
+            this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
 		},
 
 		hideItemsNumber:function(e){
@@ -56,8 +60,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             console.log('Persons render');
 			var p = this.collection.toJSON();
             $('.ui-dialog ').remove();
-            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: this.selectedLetter,allAlphabeticArray:this.allAlphabeticArray}));
-			
+			this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
             this.$el.append(_.template(ListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection}).render());
             $('#check_all').click(function () {
@@ -133,7 +136,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             $("#grid-count").text(this.collection.listLength);
 
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page});
+            this.collection.showMore({count: itemsNumber, page: page,letter:this.selectedLetter});
             $("#nextPage").prop("disabled",false);
             $("#nextPage").removeClass("disabled");
         },
@@ -158,7 +161,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             $("#grid-count").text(this.collection.listLength);
 
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page});
+            this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
             $("#previousPage").prop("disabled",false);
 			$("#previousPage").removeClass("disabled");
         },
@@ -197,7 +200,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             $("#grid-count").text(this.collection.listLength);
 
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: 1});
+            this.collection.showMore({count: itemsNumber, page: 1, letter:this.selectedLetter});
         },
 
         showPage: function (event) {
@@ -233,7 +236,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             $("#grid-count").text(this.collection.listLength);
 
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page});
+            this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
         },
 
         showMoreContent: function (newModels) {
@@ -271,6 +274,47 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
                 $("#nextPage").prop("disabled",false);
 				$("#nextPage").removeClass("disabled");
             }
+            $("#pageList").empty();
+            if (this.defaultItemsNumber) {
+                var itemsNumber = this.defaultItemsNumber;
+                this.defaultItemsNumber = false;
+                $("#itemsNumber").text(itemsNumber);
+            } else {
+                var itemsNumber = $("#itemsNumber").text();
+            }
+            $("#currentShowPage").val(1);
+            var pageNumber = Math.ceil(this.collection.listLength/itemsNumber);
+            for (var i=1;i<=pageNumber;i++) {
+                $("#pageList").append('<li class="showPage">'+ i +'</li>')
+            }
+
+            $("#lastPage").text(pageNumber);
+            $("#previousPage").prop("disabled",true);
+
+            if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
+                $("#grid-start").text(0);
+                $("#nextPage").prop("disabled",true);
+            } else {
+                $("#grid-start").text(1);
+            }
+
+            if (this.collection.listLength) {
+                if (this.collection.listLength <= itemsNumber) {
+                    $("#grid-end").text(this.collection.listLength - this.deleteCounter );
+                } else {
+                    $("#grid-end").text(itemsNumber - this.deleteCounter);
+                }
+                $("#grid-count").text(this.collection.listLength);
+            } else {
+                $("#grid-end").text(0);
+                $("#grid-count").text(0);
+            }
+
+            if (pageNumber <= 1) {
+                $("#nextPage").prop("disabled",true);
+            }
+            this.deleteCounter = 0;
+
         },
         gotoForm: function (e) {
             App.ownContentType = true;

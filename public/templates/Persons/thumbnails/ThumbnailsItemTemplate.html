@@ -13,12 +13,12 @@
         </ul>
     </div>
     <div class="avatar">
-    	<a class = "gotoForm" href="#" title="<%=name.first%> <%=name.last%>"> <img width="60" height="60" src="<%=imageSrc%>" /></a>
+    	<a class = "gotoForm" href="#" title="<%=name.first%> <%=name.last%>"> <img width="100" height="100" src="<%=imageSrc%>" /></a>
 
 	</div>
     <div class="info">
 	  <div>
-        <a class = "gotoForm title" href="#" title="<%=name.first%> <%=name.last%>"><%=name.first%> <%=name.last%></a></div>
+        <a class = "gotoForm title" href="#" title="<%=name.first%> <%=name.last%>"><span><%=name.first%> <%=name.last%></span></a></div>
 	  
       <% if (company){%><div><a class="company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a></div><%}%>
       <div><a href="mailto:<%=email%>" target="_blank" title="<%=email%>"><%=email%></a></div>

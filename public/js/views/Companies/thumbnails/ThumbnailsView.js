@@ -3,10 +3,11 @@
     'custom',
     'common',
     'views/Companies/EditView',
-    'views/Companies/CreateView'
+    'views/Companies/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 ],
 
-function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTemplate) {
     var CompanyThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
@@ -14,18 +15,54 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
             this.collection = options.collection;
             arrayOfcompanies = [];
             dataIndexCounter = 0;
+			this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
+			this.allAlphabeticArray = this.buildAllAphabeticArray();
+			this.selectedLetter="";
             this.render();
         },
 
         events: {
-            "click #showMore": "showMore"
+            "click #showMore": "showMore",
+			"click .letter:not(.empty)": "alpabeticalRender"
         },
+		buildAphabeticArray: function (collection) {
+			if (collection && collection.length > 0) {
+				var filtered = $.map(collection, function (item) {
+					if (item.name.first[0]) {
+						if ($.isNumeric(item.name.first[0].toUpperCase())) {
+							return "0-9"
+						}
+						return item.name.first[0].toUpperCase();
+					}
+				});
+				filtered.push("All");
+				return _.sortBy(_.uniq(filtered), function (a) { return a });
+			}
+			return [];
+		},
+		buildAllAphabeticArray: function () {
+			var associateArray = ["All", "0-9"]
+			for (i = 65; i <= 90; i++) {
+				associateArray.push(String.fromCharCode(i).toUpperCase());
+			}
+			return associateArray;
+		},
+		alpabeticalRender:function(e){
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+            _.bind(this.collection.showMore, this.collection);
+			this.selectedLetter=$(e.target).text();
+			if ($(e.target).text()=="All"){
+				this.selectedLetter="";
+			}
+            this.collection.showMore({count: 50, page: 1, letter:this.selectedLetter});
+		},
 
         render: function () {
             var namberOfcompanies = this.collection.namberToShow;
             console.log('Company render');
             $('.ui-dialog ').remove();
-            this.$el.html('');
+            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
             if (this.collection.length > 0) {
                 var holder = this.$el;
                 var thumbnailsItemView;
@@ -54,7 +91,8 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
+            var holder = $('#content-holder');
+            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
             var thumbnailsItemView;
             var counter =0;
             var namberOfcompanies = this.collection.namberToShow;
@@ -66,7 +104,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
                         dataIndexCounter++;
                         thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfcompanies[i], dataIndex: dataIndexCounter });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
+                        holder.append(thumbnailsItemView.render().el);
                         arrayOfcompanies.splice(i,1);
                         i--;
                     }
@@ -78,7 +116,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView) {
                         counter++;
                         thumbnailsItemView = new ThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).prepend(thumbnailsItemView.render().el);
+                        $(holder).append(thumbnailsItemView.render().el);
                     } else {
                         arrayOfcompanies.push(model);
                     }

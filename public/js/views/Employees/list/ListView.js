@@ -1,10 +1,13 @@
 define([
     'text!templates/Employees/list/ListHeader.html',
     'views/Employees/CreateView',
-    'views/Employees/list/ListItemView'
+    'views/Employees/list/ListItemView',
+    'common',
+    'text!templates/Alpabet/AphabeticTemplate.html'
+
 ],
 
-    function (ListTemplate, CreateView, ListItemView) {
+    function (ListTemplate, CreateView, ListItemView, common, AphabeticTemplate) {
         var EmployeesListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -13,6 +16,10 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
+				this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+				this.allAlphabeticArray = common.buildAllAphabeticArray();
+				this.selectedLetter = "All";
+				this.collection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
 
@@ -26,9 +33,22 @@ define([
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
-				"click":"hideItemsNumber"
+				"click":"hideItemsNumber",
+				"click .letter:not(.empty)": "alpabeticalRender"
 
             },
+			alpabeticalRender:function(e){
+				$(e.target).parent().find(".current").removeClass("current");
+				$(e.target).addClass("current");
+				var itemsNumber = $("#itemsNumber").text();
+				var page =  parseInt($("#currentShowPage").val());
+				_.bind(this.collection.showMore, this.collection);
+				this.selectedLetter=$(e.target).text();
+				if ($(e.target).text()=="All"){
+					this.selectedLetter="";
+				}
+				this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
+			},
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
 			},
@@ -41,7 +61,8 @@ define([
 				var self=this;
                 console.log('Employees render');
                 $('.ui-dialog ').remove();
-                this.$el.html(_.template(ListTemplate));
+				this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+                this.$el.append(_.template(ListTemplate));
                 this.$el.append(new ListItemView({ collection: this.collection}).render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -244,6 +265,47 @@ define([
                 } else {
                     $("#nextPage").prop("disabled",false);
                 }
+                $("#pageList").empty();
+                if (this.defaultItemsNumber) {
+                    var itemsNumber = this.defaultItemsNumber;
+                    this.defaultItemsNumber = false;
+                    $("#itemsNumber").text(itemsNumber);
+                } else {
+                    var itemsNumber = $("#itemsNumber").text();
+                }
+                $("#currentShowPage").val(1);
+                var pageNumber = Math.ceil(this.collection.listLength/itemsNumber);
+                for (var i=1;i<=pageNumber;i++) {
+                    $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                }
+
+                $("#lastPage").text(pageNumber);
+                $("#previousPage").prop("disabled",true);
+
+                if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
+                    $("#grid-start").text(0);
+                    $("#nextPage").prop("disabled",true);
+                } else {
+                    $("#grid-start").text(1);
+                }
+
+                if (this.collection.listLength) {
+                    if (this.collection.listLength <= itemsNumber) {
+                        $("#grid-end").text(this.collection.listLength - this.deleteCounter );
+                    } else {
+                        $("#grid-end").text(itemsNumber - this.deleteCounter);
+                    }
+                    $("#grid-count").text(this.collection.listLength);
+                } else {
+                    $("#grid-end").text(0);
+                    $("#grid-count").text(0);
+                }
+
+                if (pageNumber <= 1) {
+                    $("#nextPage").prop("disabled",true);
+                }
+                this.deleteCounter = 0;
+
             },
             gotoForm: function (e) {
                 App.ownContentType = true;

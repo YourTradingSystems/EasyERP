@@ -3,30 +3,46 @@
     'custom',
     'common',
     'views/Persons/EditView',
-    'views/Persons/CreateView'
+    'views/Persons/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html'
 ],
 
-function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTemplate) {
     var PersonsThumbnalView = Backbone.View.extend({
         el: '#content-holder',
 
         initialize: function (options) {
             this.collection = options.collection;
+            this.collection.bind('reset', _.bind(this.render, this));
             arrayOfPersons = [];
             dataIndexCounter = 0;
+            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.selectedLetter="";
             this.render();
+
 
         },
 
         events: {
-            "click #showMore": "showMore"
+            "click #showMore": "showMore",
+            "click .letter:not(.empty)": "alpabeticalRender"
         },
-
+		alpabeticalRender:function(e){
+			$(e.target).parent().find(".current").removeClass("current");
+			$(e.target).addClass("current");
+            _.bind(this.collection.showMore, this.collection);
+			this.selectedLetter=$(e.target).text();
+			if ($(e.target).text()=="All"){
+				this.selectedLetter="";
+			}
+            this.collection.showMore({count: 50, page: 1, letter:this.selectedLetter});
+		},
         render: function () {
             var namberOfpersons = this.collection.namberToShow;
         	$('.ui-dialog ').remove();
             console.log('Person render');
-            this.$el.html('');
+            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
             if (this.collection.length > 0) {
                 var holder = this.$el;
                 var thumbnailsItemView;
@@ -56,7 +72,8 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         showMoreContent: function (newModels) {
-            var holder = $('#showMoreDiv');
+            var holder = $('#content-holder');
+            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
             var thumbnailsItemView;
             var counter =0;
             var namberOfPersons = this.collection.namberToShow;
@@ -68,7 +85,7 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView) {
                         dataIndexCounter++;
                         thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[i], dataIndex: dataIndexCounter });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
+                        holder.append(thumbnailsItemView.render().el);
                         arrayOfPersons.splice(i,1);
                         i--;
                     }
@@ -81,7 +98,7 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView) {
                     dataIndexCounter++;
                     thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
                     thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    holder.before(thumbnailsItemView.render().el);
+                    holder.append(thumbnailsItemView.render().el);
                 } else {
                     arrayOfPersons.push(model);
                 }

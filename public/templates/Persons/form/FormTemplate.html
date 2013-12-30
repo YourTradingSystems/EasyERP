@@ -1,120 +1,120 @@
 <div class="form-holder">
-    <div class="formLeftColumn">
-        <form class="form notDialog" id="createEmployeeForm" data-id="<%=_id%>">
-            <div class="formTitle withMargin">
-                <h3 class="left">Details</h3>
-                <!--<div class="btnHolder">
-                    <div class="icon-img add left" title="Create Person"></div>
-                    <div class="icon-img edit left" title="Edit Person"></div>
-                    <div class="icon-img remove left" title="Remove Person"></div>
-                </div>-->
-                <div class="clearfix"></div>
-            </div>
-            <div class="inner overflovHidden">
-                <div class="avatar-wrapper left">
-                    <div class="avatar">
-                        <img alt="" src="<%=imageSrc%>" />
-                    </div>
-                    <div class="social">
-                        <% if (social.FB){%><a class="facebook" href="<%=social.FB%>"></a><%}%>
-                        <% if (social.LI){%><a class="linkedin" href="<%=social.LI%>"></a><%}%>
-                        <% if (skype){%><a class="skype" href="<%=skype%>"></a><%}%>
+  <div class="formLeftColumn">
+    <form class="form notDialog" id="createEmployeeForm" data-id="<%=_id%>">
+      <div class="formTitle withMargin">
+        <h3 class="left">Details</h3>
+        <!--<div class="btnHolder">
+            <div class="icon-img add left" title="Create Person"></div>
+            <div class="icon-img edit left" title="Edit Person"></div>
+            <div class="icon-img remove left" title="Remove Person"></div>
+        </div>-->
+        <div class="clearfix"></div>
+      </div>
+      <div class="inner overflovHidden">
+        <div class="avatar-wrapper left">
+          <div class="avatar">
+            <img alt="" src="<%=imageSrc%>" />
+          </div>
+          <div class="social">
+            <% if (social.FB){%><a class="facebook" href="<%=social.FB%>"></a><%}%>
+            <% if (social.LI){%><a class="linkedin" href="<%=social.LI%>"></a><%}%>
+            <% if (skype){%><a class="skype" href="<%=skype%>"></a><%}%>
 
-                        <div class="clearfix"></div>
-                    </div>
+            <div class="clearfix"></div>
+          </div>
 
-                </div>
-                <div class="mainInfo">
-                 <h3>
-                            <span title='<%=name.first%> <%=name.last%>'><%=(name.first.length>16)?(name.first.substring(0,16)+"..."):name.first%> <%=(name.last.length>16)?(name.last.substring(0,16)+"..."):name.last%>
-                            <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%></span>
-                        </h3>
-                    <div class="half-block left">
-                       
-                        <dl class="person-info">
-                            <dt>Position </dt>
-                            <dd id="jobPosition" class="editable" title="<%=jobPosition%>"><%=jobPosition%></dd>
-                            <dt>Birthday </dt>
-                            <dd id="dateBirth" class="editable"><%=dateBirth%></dd>
-                            <dt>Email</dt>
-                            <dd id="email" class="editable"><a href="mailto:<%=email%>" title="<%=email%>"><%=email%></a></dd>
-                            <dt>Skype </dt>
-                            <dd id="skype" class="editable" title="<%=website%>"><%=skype%></dd>
-                            <dt>Phone </dt>
-                            <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
-                          </dl>
-                       
-                    </div>
-                    <div class="half-block left">
+        </div>
+        <div class="mainInfo">
+          <h3>
+            <span title='<%=name.first%> <%=name.last%>'><%=(name.first.length>16)?(name.first.substring(0,16)+"..."):name.first%> <%=(name.last.length>16)?(name.last.substring(0,16)+"..."):name.last%>
+              <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a><%}%></span>
+          </h3>
+          <div class="half-block left">
+            
+            <dl class="customer-info">
+              <dt>Position </dt>
+              <dd id="jobPosition" class="editable" title="<%=jobPosition%>"><%=jobPosition%></dd>
+              <dt>Birthday </dt>
+              <dd id="dateBirth" class="editable"><%=dateBirth%></dd>
+              <dt>Email</dt>
+              <dd id="email" class="editable"><a href="mailto:<%=email%>" title="<%=email%>"><%=email%></a></dd>
+              <dt>Skype </dt>
+              <dd id="skype" class="editable" title="<%=website%>"><%=skype%></dd>
+              <dt>Phone </dt>
+              <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><%=phones.phone%></dd>
+            </dl>
+            
+          </div>
+          <div class="half-block left">
+			
+            <dl class="customer-info">
+              <dt>Street </dt>
+              <dd id="address_street" class="editable" title="<%=address.street%>"> <%=address.street%></dd>
+
+              <dt>City </dt>
+              <dd id="address_city" class="editable" title="<%=address.city%>"><%=address.city%></dd>
+
+              <dt>State </dt>
+              <dd id="address_state" class="editable" title="<%=address.state%>"><%=address.state%></dd>
+
+              <dt>Zip </dt>
+              <dd id="address_zip" class="editable" title="<%=address.zip%>"><%=address.zip%></dd>
+
+              <dt>Country </dt>
+              <dd id="address_country" class="editable" title="<%=address.country%>"><%=address.country%></dd>
+            </dl>
+          </div>
+          <div class="clearfix"></div>
           
-                        <dl class="person-info">
-                            <dt>Street </dt>
-                            <dd id="address_street" class="editable" title="<%=address.street%>"> <%=address.street%></dd>
-
-                            <dt>City </dt>
-                            <dd id="address_city" class="editable" title="<%=address.city%>"><%=address.city%></dd>
-
-                            <dt>State </dt>
-                            <dd id="address_state" class="editable" title="<%=address.state%>"><%=address.state%></dd>
-
-                            <dt>Zip </dt>
-                            <dd id="address_zip" class="editable" title="<%=address.zip%>"><%=address.zip%></dd>
-
-                            <dt>Country </dt>
-                            <dd id="address_country" class="editable" title="<%=address.country%>"><%=address.country%></dd>
-                        </dl>
-                    </div>
-                    <div class="clearfix"></div>
-                    
-                </div>
-                <div class = "edited-block"> 
-                  <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span></p>
-                </div>
-                <div class="clearfix"></div>
-                <div class="details right person">...</div>
+        </div>
+        <div class = "edited-block"> 
+          <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span></p>
+        </div>
+        <div class="clearfix"></div>
+        <div class="details right person">...</div>
 
 
-                <div class="clearfix"></div>
-                <div id="details" class="person-details">
-                    <div class="half-block left">
-                        <dl class="person-info">
-                            <dt>Website </dt>
-                            <dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
-                            <dt>Mobile </dt>
-                            <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
-                            <dt>Fax </dt>
-                            <dd id="phones_fax" class="editable" title="<%=phones.fax%>"><%=phones.fax%></dd>
-                            <dt>Title </dt>
-                            <dd id="title" class="editable" title="<%=title%>"><%=title%></dd>
-                        </dl>
-                    </div>
-                    <div class="half-block left">
-                        <div class="sale-purchase">
-                            <span>Sales & Purchases</span>
-                            <dl class="person-info">
-                                <dt>Customer </dt>
-                                <dd id="salesPurchases_isCustomer" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
-                                </dd>
-                                <dt>Supplier </dt>
-                                <dd id="salesPurchases_isSupplier" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
-                                </dd>
-                                <dt>Active </dt>
-                                <dd id="salesPurchases_active" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
+        <div class="clearfix"></div>
+        <div id="details" class="person-details">
+          <div class="half-block left">
+            <dl class="customer-info">
+              <dt>Website </dt>
+              <dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
+              <dt>Mobile </dt>
+              <dd id="phones_mobile" class="editable" title="<%=phones.mobile%>"><%=phones.mobile%></dd>
+              <dt>Fax </dt>
+              <dd id="phones_fax" class="editable" title="<%=phones.fax%>"><%=phones.fax%></dd>
+              <dt>Title </dt>
+              <dd id="title" class="editable" title="<%=title%>"><%=title%></dd>
+            </dl>
+          </div>
+          <div class="half-block left">
+            <div class="sale-purchase">
+              <span>Sales & Purchases</span>
+              <dl class="customer-info">
+                <dt>Customer </dt>
+                <dd id="salesPurchases_isCustomer" class="with-checkbox">
+                  <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
+                </dd>
+                <dt>Supplier </dt>
+                <dd id="salesPurchases_isSupplier" class="with-checkbox">
+                  <input class="left" type="checkbox" <%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
+                </dd>
+                <dt>Active </dt>
+                <dd id="salesPurchases_active" class="with-checkbox">
+                  <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
+                </dd>
+              </dl>
             </div>
-        </form>
-    </div>
-    <div class="formRightColumn">
-    </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="formRightColumn">
+  </div>
 
-    <div class="clearfix"></div>
+  <div class="clearfix"></div>
 
 </div>
