@@ -125,7 +125,8 @@ define([
             }
             switch (contentType) {
                 case 'Birthdays':
-                    return "collections/Employees/EmployeesCollection";
+                    //return "collections/Employees/EmployeesCollection";
+                    return "collections/" + contentType + "/filterCollection";
                 default:
                     return "collections/" + contentType + "/filterCollection";
             }

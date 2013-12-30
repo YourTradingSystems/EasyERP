@@ -2645,7 +2645,7 @@ button {
         height: 40px;
         line-height: 40px;
 
-        &:hover {
+        &:hover:not(.quickEdit) {
             background-color: #EEE;
 
             a {
@@ -2674,7 +2674,22 @@ button {
             padding-bottom: 10px;
             padding-left: 15px;
             padding-right: 15px;
-            padding-top: 10px;
+            padding-top: 10px;  
+        }
+        .edit-holder {
+        	a {
+        		padding:0;
+        	}
+        }
+        .wNameEdit {
+        	width:92%;
+        	position:relative;
+        	top:-10px
+        }
+        .saveAll,.cancelAll{
+        	padding:0;        	
+        	position:relative;
+        	top:-30px
         }
     }
 }

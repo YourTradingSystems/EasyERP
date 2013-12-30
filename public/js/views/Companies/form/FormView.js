@@ -54,6 +54,7 @@ define([
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
+                                    personsCollection: this.personsCollection,
                                     model: this.formModel
                                 }).render().el,
                                 new personsCompactContentView({
@@ -61,7 +62,6 @@ define([
                                     model: this.formModel
                                 }).render().el
                             );
-
                 this.$el.find('.formLeftColumn').append(
                         new noteView({
                             model: this.formModel

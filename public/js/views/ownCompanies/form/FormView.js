@@ -42,7 +42,8 @@ define([
                 "click #cancelSpan": "cancelClick",
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
-                "click .btnHolder .add.persons": "addPersons"
+                "click .btnHolder .add.persons": "addPersons",
+                "change .person-info.company.long input": "saveCheckboxChange"
             },
             
             render: function () {
@@ -52,6 +53,7 @@ define([
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
+                                    personsCollection: this.personsCollection,
                                     model: this.formModel
                                 }).render().el,
                                 new personsCompactContentView({
@@ -96,17 +98,36 @@ define([
             
             cancelClick: function (e) {
                 e.preventDefault();
-
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $("#" + parent[0].id).text(this.text);
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                var currentModel = this.collection.getElement();
-
-                Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                var currentModel = this.model;
+                Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
             },
+            
+			saveCheckboxChange:function(e){
+                var parent = $(e.target).parent();
+                var objIndex = parent[0].id.split('_');
+                var obj = {};
+                var currentModel = this.model;
+
+                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
+                    obj = this.formModel.get(objIndex[0]);
+                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
+					this.formModel.set(obj);
+					this.formModel.save({}, {
+						headers: {
+							mid: 39
+						},
+						success: function () {
+							Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
+						}
+					});
+				}
+			},
 
             editClick: function (e) {
                 e.preventDefault();
@@ -134,14 +155,12 @@ define([
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.split('_');
                 var obj = {};
-                var currentModel = this.collection.getElement();
+                var currentModel = this.model;
                 if (objIndex.length > 1) {
-                    obj = currentModel.get(objIndex[0]);
+                    obj = this.formModel.get(objIndex[0]);
                     obj[objIndex[1]] = $('#editInput').val();
-                    console.log(obj);
                 } else if (objIndex.length == 1) {
                     obj[objIndex[0]] = $('#editInput').val();
-                    console.log(obj);
                 }
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
@@ -149,14 +168,14 @@ define([
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                currentModel.set(obj);
+                this.formModel.set(obj);
 
-                currentModel.save({}, {
+                this.formModel.save({}, {
                     headers: {
                         mid: 39
                     },
                     success: function () {
-                        //Backbone.history.navigate("#home/content-Companies/form/" + currentModel.id, { trigger: true });
+                        Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },

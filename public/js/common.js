@@ -259,7 +259,7 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return model._id === item._id ?
+                        return model && model._id === item._id ?
                             $('<option/>').val(item._id).text(item.name.first).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first);
                     });

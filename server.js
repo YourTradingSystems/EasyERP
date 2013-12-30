@@ -2,21 +2,13 @@
 var http = require('http'),
     url = require('url'),
     fs = require("fs");
-//var googleapis = require('googleapis'),
-//    OAuth2Client = googleapis.OAuth2Client;
-//var oauth2Client =
-//    new OAuth2Client('38156718110.apps.googleusercontent.com', 'ZmQ5Z3Ngr5Rb-I9ZnjC2m4dF', 'http://localhost:8088/getGoogleToken');
-//var url = oauth2Client.generateAuthUrl({
-//    access_type: 'offline',
-//    scope: 'http://www.google.com/calendar/feeds/'
-//});
 
 var mongoose = require('mongoose');
 
 
 mongoose.connect('mongodb://localhost/CRM');
 var db = mongoose.connection;
-
+var tempDb = mongoose.createConnection('localhost', 'tempDb');
 var express = require('express');
 var app = express();
 
@@ -72,9 +64,14 @@ app.configure(function () {
     db.once('open', function callback() {
         console.log("Connection to CRM_DB is success");
     });
+    tempDb.on('error', console.error.bind(console, 'connection error:'));
+    tempDb.once('open', function callback() {
+        console.log("Connection to tempDb is success");
+    });
 });
 
-var requestHandler = require("./requestHandler.js")(fs, mongoose, app);
+var requestHandler = require("./requestHandler.js")(fs, mongoose, tempDb);
+
 
 app.get('/', function (req, res) {
     res.sendfile('index.html');
@@ -588,16 +585,17 @@ app.post('/Workflows', function (req, res) {
     requestHandler.createWorkflow(req, res, data);
 });
 
-app.put('/Workflows/:id', function (req, res) {
+app.put('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
     data = {};
-    var _id = req.param('id');
+    var _id = req.param('_id');
     console.log("*************");
     console.log(_id);
 
     data.mid = req.headers.mid;
     data.status = req.body.status;
     data.name = req.body.name;
+    data.wName = req.body.wName;
     //console.log(data);
     requestHandler.updateWorkflow(req, res, _id, data);
 });
@@ -869,6 +867,12 @@ app.get('/Employees', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getEmployees(req, res, data);
+});
+
+app.get('/Birthdays', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.Birthdays(req, res, data);
 });
 
 app.get('/getForDdByRelatedUser', function (req, res) {
