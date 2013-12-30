@@ -32,8 +32,8 @@
             <span></span>
             <% } %>
         </p>
-        <p><label>Tel: </label><%=workPhones.mobile%></p>
-        <p><label>Skype: </label><%=skype%></p>
+        <p><label>Tel: </label><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.mobile%></a></p>
+        <p><label>Skype: </label><a href="skype:<%=skype%>?call"><%=skype%></a></p>
         <p><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></p>            
     </div>
 </div>

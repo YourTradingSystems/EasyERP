@@ -110,7 +110,6 @@ define([
                         language: this.$el.find("#language").val()
                     }
                 };
-                console.log(data);
 
                 this.currentModel.save(data, {
                     headers: {
