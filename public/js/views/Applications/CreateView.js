@@ -136,7 +136,7 @@ define([
                     //subject: subject,
                     imageSrc: this.imageSrc,
                     name: name,
-                    workEmail: wemail,
+                    personalEmail: wemail,
                     workPhones: wphones,
                     relatedUser: relatedUserId,
                     nextAction: nextAction,

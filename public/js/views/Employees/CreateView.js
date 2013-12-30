@@ -75,6 +75,7 @@ define([
                 });
                 var tags = $.trim(this.$el.find("#tags").val()).split(',');
                 var workEmail = $.trim(this.$el.find("#workEmail").val());
+                var personalEmail = $.trim(this.$el.find("#personalEmail").val());
                 var skype = $.trim(this.$el.find("#skype").val());
 
                 var phone = $.trim(this.$el.find("#phone").val());
@@ -110,6 +111,7 @@ define([
                     imageSrc: this.imageSrc,
                     workAddress: workAddress,
                     workEmail: workEmail,
+                    personalEmail: personalEmail,
                     skype: skype,
                     workPhones: workPhones,
                     officeLocation: officeLocation,

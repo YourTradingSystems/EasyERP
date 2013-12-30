@@ -1,4 +1,8 @@
-define(["Validation"],function (Validation) {
+define([
+    'common',
+    'Validation'
+],
+function (common, Validation) {
     var PersonModel = Backbone.Model.extend({
         idAttribute: "_id",
 
@@ -9,6 +13,25 @@ define(["Validation"],function (Validation) {
                     alert(msg);
                 }
             });
+        },
+        
+        parse:true,
+        parse: function (response) {
+
+                    if (response.notes) {
+                        _.map(response.notes, function (note) {
+                        	note.date = common.utcDateToLocaleDate(note.date);
+                            return note;
+                        });
+                    }
+                  
+                    if (response.attachments) {
+                        _.map(response.attachments, function (attachment) {
+                            attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                            return attachment;
+                        });
+                    }
+            return response;
         },
 
         validate: function(attrs){
