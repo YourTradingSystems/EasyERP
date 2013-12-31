@@ -4,9 +4,11 @@ var http = require('http'),
     fs = require("fs");
 
 var mongoose = require('mongoose');
+//Event Listener in Server and Triggering Events
+var events = require('events');
+var event = new events.EventEmitter();
 
-
-mongoose.connect('mongodb://localhost/CRM');
+mongoose.connect('mongodb://localhost/EasyERP');
 var db = mongoose.connection;
 var tempDb = mongoose.createConnection('localhost', 'tempDb');
 var express = require('express');
@@ -70,7 +72,7 @@ app.configure(function () {
     });
 });
 
-var requestHandler = require("./requestHandler.js")(fs, mongoose, tempDb);
+var requestHandler = require("./requestHandler.js")(fs, mongoose, tempDb, event);
 
 
 app.get('/', function (req, res) {

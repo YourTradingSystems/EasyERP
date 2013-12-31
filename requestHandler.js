@@ -1,10 +1,10 @@
-var requestHandler = function (fs, mongoose, tempDb) {
+var requestHandler = function (fs, mongoose, tempDb, event) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         department = require("./Modules/Department.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
         access = require("./Modules/additions/access.js")(profile.profile, users.User),
-        employee = require("./Modules/Employees.js")(logWriter, mongoose),
+        employee = require("./Modules/Employees.js")(logWriter, mongoose, event),
         google = require("./Modules/Google.js")(users),
         events = require("./Modules/Events.js")(logWriter, mongoose, google),
         project = require("./Modules/Projects.js")(logWriter, mongoose, department),
@@ -15,7 +15,7 @@ var requestHandler = function (fs, mongoose, tempDb) {
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile),
-        birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, tempDb);
+        birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, tempDb, event);
 
     function getModules(req, res) {
         if (req.session && req.session.loggedIn) {
@@ -213,7 +213,7 @@ var requestHandler = function (fs, mongoose, tempDb) {
         try {
             console.log("Requst getPersonsForDd is success");
             if (req.session && req.session.loggedIn) {
-                birthdays.get();
+                birthdays.get(res);
             } else {
                 res.send(401);
             }

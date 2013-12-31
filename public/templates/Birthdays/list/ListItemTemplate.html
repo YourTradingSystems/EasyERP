@@ -1,8 +1,9 @@
-<div class="birthday-item">
+<% collection.forEach(function(model, index){ %>  
+<div class="birthday-item" data-index="<%=index%>">
     <div class="date">
         <div class="inner">
-            <h3><%=dateBirth%></h3>
-            <h2><%=age%></h2>
+            <h3><%=model.dateBirth%></h3>
+            <h2><%=model.age%></h2>
         </div>
     </div>
     <div class="info" data-id="<%=model._id%>">
@@ -15,7 +16,7 @@
                 <div class="half-block left">
                     <dl class="person-info">
                         <dt>Department:</dt>
-                        <dd><%=model.department.departmentName%></dd>
+                        <dd><%=(model.department) ? model.department.departmentName : ''%></dd>
                         <dt>Job Positon:</dt>
                         <dd><%= (model.jobPosition) ? model.jobPosition.name : ''%></dd>
                         <dt>Phone:</dt>
@@ -32,3 +33,4 @@
     </div>
 </div>
 <div class="clearfix"></div>
+ <% }) %>
