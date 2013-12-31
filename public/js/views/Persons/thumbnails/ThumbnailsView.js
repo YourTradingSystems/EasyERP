@@ -125,10 +125,10 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
                     if (counter < namberOfPersons ) {
                         counter++;
                         dataIndexCounter++;
-                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[i], dataIndex: dataIndexCounter });
+                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[arrayOfPersons.length-i-1], dataIndex: dataIndexCounter });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                         holder.after(thumbnailsItemView.render().el);
-                        arrayOfPersons.splice(i,1);
+                        arrayOfPersons.splice(arrayOfPersons.length-i-1,1);
                         i--;
                     }
                 }
