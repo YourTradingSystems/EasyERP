@@ -296,7 +296,7 @@ define([
             self = this;
             Custom.setCurrentVT('thumbnails');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 50, parrentContentId: parrentContentId }) : new ContentCollection();
+                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 2, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
@@ -308,6 +308,7 @@ define([
                     topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
 
                     collection.bind('showmore', contentView.showMoreContent, contentView);
+                    collection.bind('showmoreAlphabet', contentView.showMoreAlphabet, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
                     var url = '#easyErp/' + contentType + '/thumbnails';

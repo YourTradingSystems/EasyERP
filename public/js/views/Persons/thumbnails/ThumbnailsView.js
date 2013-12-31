@@ -12,38 +12,38 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
         el: '#content-holder',
 
         initialize: function (options) {
+			var self = this;
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
             arrayOfPersons = [];
             dataIndexCounter = 0;
-            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
             this.allAlphabeticArray = common.buildAllAphabeticArray();
-			this.selectedLetter="";
+    		this.selectedLetter="";
             this.render();
-
-
         },
 
         events: {
             "click #showMore": "showMore",
             "click .letter:not(.empty)": "alpabeticalRender"
         },
+
 		alpabeticalRender:function(e){
 			$(e.target).parent().find(".current").removeClass("current");
 			$(e.target).addClass("current");
-            _.bind(this.collection.showMore, this.collection);
+            _.bind(this.collection.showMoreAlphabet, this.collection);
 			this.selectedLetter=$(e.target).text();
 			if ($(e.target).text()=="All"){
 				this.selectedLetter="";
 			}
-            this.collection.showMore({count: 50, page: 1, letter:this.selectedLetter});
+            this.collection.showMoreAlphabet({count: 50,page:1, letter:this.selectedLetter});
 		},
         render: function () {
+			var self=this;
             var namberOfpersons = this.collection.namberToShow;
         	$('.ui-dialog ').remove();
             console.log('Person render');
-            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
-            if (this.collection.length > 0) {
+			this.$el.html('');
+            if (this.collection.length > 0){
                 var holder = this.$el;
                 var thumbnailsItemView;
                 _.each(this.collection.models, function (model,index) {
@@ -63,17 +63,21 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
             if (arrayOfPersons.length > 0) {
                 this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             }
+			common.buildAphabeticArray(this.collection,function(arr){
+				$(".startLetter").remove();
+				self.alphabeticArray = arr;
+				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
+			});
             return this;
         },
 
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore();
+            this.collection.showMore({letter:this.selectedLetter});
         },
 
         showMoreContent: function (newModels) {
-            var holder = $('#content-holder');
-            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+            var holder = this.$el.find('#showMoreDiv');
             var thumbnailsItemView;
             var counter =0;
             var namberOfPersons = this.collection.namberToShow;
@@ -85,7 +89,7 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
                         dataIndexCounter++;
                         thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[i], dataIndex: dataIndexCounter });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.append(thumbnailsItemView.render().el);
+                        holder.before(thumbnailsItemView.render().el);
                         arrayOfPersons.splice(i,1);
                         i--;
                     }
@@ -98,7 +102,7 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
                     dataIndexCounter++;
                     thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
                     thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    holder.append(thumbnailsItemView.render().el);
+                    holder.before(thumbnailsItemView.render().el);
                 } else {
                     arrayOfPersons.push(model);
                 }
@@ -107,6 +111,47 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
             if (arrayOfPersons.length == 0) {
                 this.$el.find('#showMoreDiv').hide();
             }
+        },
+        showMoreAlphabet: function (newModels) {
+			arrayOfPersons=[];
+            var holder = $('#content-holder .startLetter');
+			$("#content-holder .thumbnailwithavatar").remove();
+            var thumbnailsItemView;
+            var counter =0;
+            var namberOfPersons = this.collection.namberToShow;
+
+            if (arrayOfPersons.length > 0) {
+                for (var i=0; i<arrayOfPersons.length; i++) {
+                    if (counter < namberOfPersons ) {
+                        counter++;
+                        dataIndexCounter++;
+                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[i], dataIndex: dataIndexCounter });
+                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                        holder.after(thumbnailsItemView.render().el);
+                        arrayOfPersons.splice(i,1);
+                        i--;
+                    }
+                }
+
+            }
+            _.each(newModels.models, function (model) {
+                if (counter < namberOfPersons) {
+                    counter++;
+                    dataIndexCounter++;
+                    thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
+                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                    holder.after(thumbnailsItemView.render().el);
+                } else {
+                    arrayOfPersons.push(model);
+                }
+            }, this);
+
+            if (arrayOfPersons.length == 0) {
+                this.$el.find('#showMoreDiv').hide();
+            }
+			else{
+                this.$el.find('#showMoreDiv').show();
+			}
         },
 
         createItem: function () {

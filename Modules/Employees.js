@@ -330,7 +330,21 @@ var Employee = function (logWriter, mongoose, event) {
             }
         });
     };
-
+    function getEmployeesAlphabet(response) {
+		var query=employee.aggregate([ {$match : { isEmployee : true }} ,{$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}}]);
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log("employees.js get employees alphabet " + err);
+                response.send(500, { error: "Can't find employees" });
+            } else {
+				var res={};
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
+    
     // Custom function for list
     function getEmployeeForList(data, response) {
         var res = {}
@@ -635,6 +649,8 @@ var Employee = function (logWriter, mongoose, event) {
         get: get,
 
         getEmployeeForList: getEmployeeForList,
+		
+		getEmployeesAlphabet:getEmployeesAlphabet,
 
         getForDd: getForDd,
 

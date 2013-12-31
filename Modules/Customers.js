@@ -329,15 +329,29 @@
                 }
             });
         },
-        getPersonAlphabet: function (data, response) {
-			query = customer.find({ type: 'Person' })
-			query.aggregate({$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}});
+        getPersonAlphabet: function (response) {
+			var query=customer.aggregate([ {$match : { type : "Person" }} ,{$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}}]);
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
+                    logWriter.log("customer.js get person alphabet " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
+					var res={};
+                    res['data'] = result;
+                    response.send(res);
+                }
+            });
+        },
+        getCompaniesAlphabet: function (response) {
+			var query=customer.aggregate([ {$match : { type : "Company" }} ,{$project:{later:{$substr:["$name.first",0,1]}}},{$group:{_id:"$later"}}]);
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("customer.js get person alphabet " + err);
+                    response.send(500, { error: "Can't find customer" });
+                } else {
+					var res={};
                     res['data'] = result;
                     response.send(res);
                 }
