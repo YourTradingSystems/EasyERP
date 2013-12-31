@@ -11,6 +11,7 @@ define([
                 console.log("init MenuView");
                 if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
+				this.currentRoot = options.currentRoot;
                 this.leftMenu = options.leftMenu;
                 this.render();
 
@@ -45,7 +46,11 @@ define([
 
             render: function () {
                 if (this.selectedModule == null)
-                    this.selectedModule = (this.collection[0]).get('mname');
+					if (this.currentRoot){
+						this.selectedModule = (this.currentRoot[0]).get('mname');
+					}else{
+						this.selectedModule = (this.collection[0]).get('mname');
+					}
                 console.log("Render TopMenuView");
                 var self = this;
                 this.$el.empty();
