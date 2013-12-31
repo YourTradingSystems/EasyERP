@@ -13,7 +13,8 @@ define([
                 'click': 'hideProp',
             },
             
-            initialize: function() {
+            initialize: function(options) {
+				this.contentType = options?options.contentType:null;
                 this.render();
                 this.collection = new MenuItemsCollection();
                 this.collection.bind('reset', this.createMenuViews, this);
@@ -26,8 +27,18 @@ define([
 				}
 			},
             createMenuViews: function() {
-                this.leftMenu = new LeftMenuView({ collection: this.collection });
-                this.topMenu = new TopMenuView({ collection: this.collection.getRootElements(), leftMenu: this.leftMenu });
+				var currentRoot = null;
+				var currentChildren = null;
+				if (this.contentType){
+					console.log(this.contentType);
+					currentChildren = this.collection.where({href:this.contentType});
+					console.log(currentChildren);
+					var currentRootId = currentChildren[0].get("parrent");
+					currentRoot = this.collection.where({_id:currentRootId});
+					console.log(currentRoot);
+				}
+                this.leftMenu = new LeftMenuView({ collection: this.collection, currentChildren:currentChildren,currentRoot: currentRoot });
+                this.topMenu = new TopMenuView({ collection: this.collection.getRootElements(),currentRoot: currentRoot, leftMenu: this.leftMenu });
                 this.topMenu.bind('changeSelection', this.leftMenu.setCurrentSection, { leftMenu: this.leftMenu });
                 this.topMenu.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
             },
