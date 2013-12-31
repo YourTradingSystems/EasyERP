@@ -236,6 +236,19 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
             errorLog("requestHandler.js  " + Exception);
         }
     };
+    function getPersonAlphabet(req, res, data) {
+        try {
+            console.log("Requst getPersonAlphabet is success");
+            if (req.session && req.session.loggedIn) {
+                customer.getPersonAlphabet(res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            console.log("requestHandler.js  " + Exception);
+        }
+    };
 
     function getCustomer(req, res, data) {
         try {
@@ -799,6 +812,19 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
             res.send(401);
         }
     };
+    function getCompaniesAlphabet(req, res, data) {
+        try {
+            console.log("Requst getPersonAlphabet is success");
+            if (req.session && req.session.loggedIn) {
+                customer.getCompaniesAlphabet(res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            console.log("requestHandler.js  " + Exception);
+        }
+    };
 
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
@@ -1022,6 +1048,20 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
             res.send(401);
         }
     };
+    function getEmployeesAlphabet(req, res, data) {
+        try {
+            console.log("Requst getEmployeesAlphabet is success");
+            if (req.session && req.session.loggedIn) {
+                employee.getEmployeesAlphabet(res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            console.log("requestHandler.js  " + Exception);
+        }
+    };
+
 
     //---------END------Employees-----------------------------------
 
@@ -1780,6 +1820,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         uploadFile: uploadFile,
         getCustomer: getCustomer,
         getFilterPersons: getFilterPersons,
+		getPersonAlphabet:getPersonAlphabet,
 
         getProjects: getProjects,
         getProjectsById: getProjectsById,
@@ -1804,6 +1845,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         createCompany: createCompany,
         updateCompany: updateCompany,
         getFilterCompanies: getFilterCompanies,
+		getCompaniesAlphabet:getCompaniesAlphabet,
 
         getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,
@@ -1827,7 +1869,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
-
+		getEmployeesAlphabet:getEmployeesAlphabet,
+		
         Birthdays:Birthdays,
 
         getPersonsForDd: getPersonsForDd,

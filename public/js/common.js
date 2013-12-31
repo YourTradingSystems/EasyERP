@@ -345,6 +345,7 @@
             var selectList = $(selectId);
             var targetList = $(targetId);
             var self = this;
+			selectList.next(".userPagination").remove();
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && model.groups && model.groups.group) {
@@ -388,7 +389,11 @@
 						selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*page)+" of "+(20*page)+"+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
 					}
 				}else{
-					selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
+					if (page==1){
+						selectList.after("<div class='userPagination'><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
+					}else{
+						selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
+					}
 				}
 
                 if (callback) callback();
@@ -601,7 +606,7 @@
             var selectList = $(selectId);
 			var targetList = $(targetId);
 			selectList.empty();
-			$(".userPagination").remove();
+			selectList.next(".userPagination").remove();
             var self = this;
             dataService.getData('/Users', { mid: 39, page:page, count:20 }, function (response) {
                 var options = [];
@@ -652,7 +657,12 @@
 						selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*page)+" of "+(20*page)+"+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
 					}
 				}else{
+					if (page==1){
+					selectList.after("<div class='userPagination'><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
+					}
+					else{
 					selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
+					}
 				}
                 if (callback) callback();
             });
@@ -697,18 +707,22 @@
                 selectList.append(options);
             });
         }
-        var buildAphabeticArray = function (collection) {
-            if (collection && collection.length > 0) {
-                var filtered = $.map(collection, function (item) {
-                    if (item.name.last[0]) {
-                        if ($.isNumeric(item.name.last[0].toUpperCase())) {
-                            return "0-9"
-                        }
-                        return item.name.last[0].toUpperCase();
-                    }
-                });
-                filtered.push("All");
-                return _.sortBy(_.uniq(filtered), function (a) { return a });
+        var buildAphabeticArray = function (collection,callback) {
+            if (collection) {
+				collection.getAlphabet(function(arr){
+					var b = true; 
+					var filtered = $.map(arr, function (item) {
+						if (b&&$.isNumeric(item._id.toUpperCase())) {
+							b=false;
+							return "0-9"
+							
+						}
+						return item._id.toUpperCase();
+					});
+					filtered.push("All");
+					var letterArr = _.sortBy(_.uniq(filtered), function (a) { return a });
+					if (callback)callback(letterArr);
+				});
             }
             return [];
         }

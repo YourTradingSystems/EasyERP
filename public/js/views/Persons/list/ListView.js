@@ -13,7 +13,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
         initialize: function (options) {
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-            this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
+			var self = this;
             this.allAlphabeticArray = common.buildAllAphabeticArray();
 			this.selectedLetter="";
             this.defaultItemsNumber = this.collection.namberToShow;
@@ -60,7 +60,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             console.log('Persons render');
 			var p = this.collection.toJSON();
             $('.ui-dialog ').remove();
-			this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+			this.$el.html('');
             this.$el.append(_.template(ListTemplate));
             this.$el.append(new ListItemView({ collection: this.collection}).render());
             $('#check_all').click(function () {
@@ -113,6 +113,12 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
 			$(document).on("click",function(){
 				self.hideItemsNumber();
 			});
+			common.buildAphabeticArray(this.collection,function(arr){
+				$(".startLetter").remove();
+				self.alphabeticArray = arr;
+				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
+			});
+
 
         },
 

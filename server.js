@@ -316,6 +316,13 @@ app.get('/getPersonsForDd', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getPersonsForDd(req, res, data);
 });
+app.get('/getPersonAlphabet', function (req, res) {
+    console.log('------getAccountsForDd-----------------');
+    data = {};
+    //data.ownUser = true;
+    data.mid = req.param('mid');
+    requestHandler.getPersonAlphabet(req, res, data);
+});
 
 
 
@@ -742,6 +749,14 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     //console.log(data.company.address);
     requestHandler.updateCompany(req, res, id, data, remove);
 });
+app.get('/getCompaniesAlphabet', function (req, res) {
+    console.log('------getAccountsForDd-----------------');
+    data = {};
+    //data.ownUser = true;
+    data.mid = req.param('mid');
+    requestHandler.getCompaniesAlphabet(req, res, data);
+});
+
 
 //------------------JobPositions---------------------------------------------------
 
@@ -945,6 +960,13 @@ app.get('/getSalesTeam', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getDepartmentForDd(req, res, data);
+});
+app.get('/getEmployeesAlphabet', function (req, res) {
+    console.log('------getAccountsForDd-----------------');
+    data = {};
+    //data.ownUser = true;
+    data.mid = req.param('mid');
+    requestHandler.getEmployeesAlphabet(req, res, data);
 });
 
 //------------------Applications---------------------------------------------------

@@ -1,8 +1,9 @@
 ﻿define([
     'models/EmployeesModel',
-    'common'
+    'common',
+    "dataService"
 ],
-    function (EmployeeModel, common) {
+    function (EmployeeModel, common, dataService) {
         var EmployeesCollection = Backbone.Collection.extend({
             model: EmployeeModel,
             url: "/Employees/",
@@ -76,6 +77,39 @@
                     }
                 });
             },
+            showMoreAlphabet: function (options) {
+                var that = this;
+
+                var filterObject = {};
+                if (options) {
+                    for (var i in options) {
+                        filterObject[i] = options[i];
+                    }
+                }
+				that.page=1;
+                filterObject['page'] = (options && options.page) ? options.page: this.page;
+                filterObject['count'] = (options && options.count) ? options.count*2: this.namberToShow;
+                filterObject['letter'] = (options && options.letter) ? options.letter: '';
+                this.fetch({
+                    data: filterObject,
+                    waite: true,
+                    success: function (models) {
+                        that.page += 2;
+							that.trigger('showmoreAlphabet', models);
+                    },
+                    error: function () {
+                        alert('Some Error');
+                    }
+                });
+            },
+
+            getAlphabet: function (callback) {
+				dataService.getData("/getEmployeesAlphabet", { mid: 39 }, function (response) {
+					if (callback){
+						callback(response.data);
+					}
+				});
+			},
 
             parse: true,
             parse: function (response) {
