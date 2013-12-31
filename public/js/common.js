@@ -20,9 +20,12 @@
             return utcDateString;
         }
 
-        var utcDateToLocaleDateTime = function (utcDateString) {
-            if (!utcDateString) return null;
-            utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:MM", false) : null;
+        var utcDateToLocaleDateTime = function (utcDateString, notHours) {
+            if (!notHours) {
+                utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy HH:MM", false) : null;
+            } else {
+                utcDateString = (utcDateString) ? dateFormat(utcDateString, "d/m/yyyy", false) : null;
+            }
             return utcDateString;
         }
 

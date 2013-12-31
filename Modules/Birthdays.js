@@ -25,18 +25,18 @@
             valueOfToday = dateOnly.valueOf();
             var currentEmployees = {};
 
-            function getAge(birthday) {
-                var today = new Date();
-                var years = today.getFullYear() - birthday.getFullYear();
+            //function getAge(birthday) {
+            //    var today = new Date();
+            //    var years = today.getFullYear() - birthday.getFullYear();
 
-                birthday.setFullYear(today.getFullYear());
+            //    birthday.setFullYear(today.getFullYear());
 
-                if (today < birthday) {
-                    years--;
-                }
-                console.log(years);
-                return (years < 0) ? 0 : years;
-            };
+            //    if (today < birthday) {
+            //        years--;
+            //    }
+            //    console.log(years);
+            //    return (years < 0) ? 0 : years;
+            //};
 
             function getDaysToBirthday(birthday) {
                 var today = new Date(),
@@ -58,7 +58,7 @@
 
             currentEmployees.monthly = arrayOfEmployees.map(function (employee) {
                 if (employee.dateBirth) {
-                    employee.age = getAge(employee.dateBirth);
+                    //employee.age = getAge(employee.dateBirth);
                     employee.daysForBirth = getDaysToBirthday(employee.dateBirth);
                 }
                 return employee;

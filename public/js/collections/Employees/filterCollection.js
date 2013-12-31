@@ -115,6 +115,7 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (employee) {
+                        employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
                         employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
                         employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
                         return employee;
