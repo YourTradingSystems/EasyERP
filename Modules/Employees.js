@@ -537,7 +537,7 @@ var Employee = function (logWriter, mongoose, event) {
                     } else {
                         res.send(200, { success: 'Employees updated success', data: result });
                         if (data.recalculate) {
-                            event.event.emit('recalculate');
+                            event.emit('recalculate');
                         }
                     }
                 }
@@ -561,7 +561,7 @@ var Employee = function (logWriter, mongoose, event) {
                 res.send(500, { error: "Can't remove Employees" });
             } else {
                 res.send(200, { success: 'Employees removed' });
-                event.event.emit('recalculate');
+                event.emit('recalculate');
             }
         });
     };// end remove

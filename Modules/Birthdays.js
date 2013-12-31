@@ -219,7 +219,7 @@
         getEmployeesInDateRange(set);
     };
 
-    event.event.on('recalculate', recalculate);
+    event.on('recalculate', recalculate);
 
     return {
         get: get,

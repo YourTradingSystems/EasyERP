@@ -1,6 +1,5 @@
-var requestHandler = function (fs, mongoose, tempDb) {
+var requestHandler = function (fs, mongoose, tempDb, event) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
-        event = require("./Modules/additions/eventHandler.js")(),
         department = require("./Modules/Department.js")(logWriter, mongoose),
         users = require("./Modules/Users.js")(logWriter, mongoose),
         profile = require("./Modules/Profile.js")(logWriter, mongoose),
