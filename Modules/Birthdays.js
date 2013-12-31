@@ -169,6 +169,7 @@
     };
 
     var get = function (response) {
+
         var res = {};
         res['data'] = [];
         check(function (status, emloyees) {
@@ -215,7 +216,8 @@
         });
     };
 
-    recalculate = function() {
+    recalculate = function () {
+        console.log('Recalculate Birthdays Start Success at ' + new Date());
         getEmployeesInDateRange(set);
     };
 
