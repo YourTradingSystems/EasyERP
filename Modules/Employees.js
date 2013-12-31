@@ -81,6 +81,28 @@ var Employee = function (logWriter, mongoose, event) {
 
     var employee = mongoose.model('Employees', employeeSchema);
 
+    function getAge(birthday) {
+        birthday = new Date(birthday);
+        var today = new Date();
+        var years = today.getFullYear() - birthday.getFullYear();
+
+        birthday.setFullYear(today.getFullYear());
+
+        if (today < birthday) {
+            years--;
+        }
+        console.log(years);
+        return (years < 0) ? 0 : years;
+    };
+
+    function getDate(date) {
+        var _date = new Date(date);
+        var currentTimeZoneOffsetInMiliseconds = -_date.getTimezoneOffset()*60*1000;
+        var valaueOf_date = _date.valueOf();
+        valaueOf_date += currentTimeZoneOffsetInMiliseconds;
+        return new Date(valaueOf_date);
+    };
+
     function create(data, res) {
         try {
             if (!data) {
@@ -240,7 +262,8 @@ var Employee = function (logWriter, mongoose, event) {
                         }
                     }
                     if (data.dateBirth) {
-                        _employee.dateBirth = data.dateBirth;
+                        _employee.dateBirth = getDate(data.dateBirth);
+                        _employee.age = getAge(data.dateBirth);
                     }
                     if (data.nextAction) {
                         _employee.nextAction = data.nextAction;
@@ -287,6 +310,7 @@ var Employee = function (logWriter, mongoose, event) {
                             } else {
                                 res.send(201, { success: 'A new Employees create success', result: result });
                                 console.log(result);
+                                event.emit('recalculate');
                             }
                         } catch (error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
@@ -337,9 +361,9 @@ var Employee = function (logWriter, mongoose, event) {
         var description = "";
         res['data'] = [];
         var query = employee.find();
-		if (data.letter){
-			query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
-		}
+        if (data.letter){
+            query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+        }
 
         query.where('isEmployee', true);
         query.exec(function (err, result) {
@@ -349,9 +373,9 @@ var Employee = function (logWriter, mongoose, event) {
         });
 
         query = employee.find();
-		if (data.letter){
-			query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
-		}
+        if (data.letter){
+            query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+        }
 
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
@@ -527,6 +551,10 @@ var Employee = function (logWriter, mongoose, event) {
             }
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
+            }
+            if (data.recalculate && data.dateBirth) {
+                data.dateBirth = getDate(data.dateBirth);
+                data.age = getAge(data.dateBirth);
             }
             employee.findByIdAndUpdate({ _id: _id }, data, function (err, result) {
                 try {

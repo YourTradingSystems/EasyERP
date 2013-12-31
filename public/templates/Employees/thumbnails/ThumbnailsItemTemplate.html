@@ -25,12 +25,7 @@
 	  </div>
         <p><%=(department) ? department.departmentName : ''%> / <%=(jobPosition) ? jobPosition.name : ''%></p>
         <p><label>Age: </label><%=age%>
-            <% if(dateBirth) { %>
-
-            <span>(<%= dateBirth.split('T')[0].replace(/-/g, '/') %>)</span>
-            <% } else { %>
-            <span></span>
-            <% } %>
+            <span>(<%= dateBirth %>)</span>
         </p>
         <p><label>Tel: </label><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.mobile%></a></p>
         <p><label>Skype: </label><a href="skype:<%=skype%>?call"><%=skype%></a></p>

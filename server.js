@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 var events = require('events');
 var event = new events.EventEmitter();
 
-mongoose.connect('mongodb://localhost/CRM');
+mongoose.connect('mongodb://localhost/EasyERP');
 var db = mongoose.connection;
 var tempDb = mongoose.createConnection('localhost', 'tempDb');
 var express = require('express');
