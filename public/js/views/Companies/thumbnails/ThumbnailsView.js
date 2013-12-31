@@ -15,8 +15,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
             this.collection = options.collection;
             arrayOfcompanies = [];
             dataIndexCounter = 0;
-			this.alphabeticArray = this.buildAphabeticArray(this.collection.toJSON());
-			this.allAlphabeticArray = this.buildAllAphabeticArray();
+			this.allAlphabeticArray = common.buildAllAphabeticArray();
 			this.selectedLetter="";
             this.render();
         },
@@ -25,44 +24,23 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
             "click #showMore": "showMore",
 			"click .letter:not(.empty)": "alpabeticalRender"
         },
-		buildAphabeticArray: function (collection) {
-			if (collection && collection.length > 0) {
-				var filtered = $.map(collection, function (item) {
-					if (item.name.first[0]) {
-						if ($.isNumeric(item.name.first[0].toUpperCase())) {
-							return "0-9"
-						}
-						return item.name.first[0].toUpperCase();
-					}
-				});
-				filtered.push("All");
-				return _.sortBy(_.uniq(filtered), function (a) { return a });
-			}
-			return [];
-		},
-		buildAllAphabeticArray: function () {
-			var associateArray = ["All", "0-9"]
-			for (i = 65; i <= 90; i++) {
-				associateArray.push(String.fromCharCode(i).toUpperCase());
-			}
-			return associateArray;
-		},
 		alpabeticalRender:function(e){
 			$(e.target).parent().find(".current").removeClass("current");
 			$(e.target).addClass("current");
-            _.bind(this.collection.showMore, this.collection);
+            _.bind(this.collection.showMoreAlphabet, this.collection);
 			this.selectedLetter=$(e.target).text();
 			if ($(e.target).text()=="All"){
 				this.selectedLetter="";
 			}
-            this.collection.showMore({count: 50, page: 1, letter:this.selectedLetter});
+            this.collection.showMoreAlphabet({count: 50, page: 1, letter:this.selectedLetter});
 		},
 
         render: function () {
+			var self = this;
             var namberOfcompanies = this.collection.namberToShow;
             console.log('Company render');
             $('.ui-dialog ').remove();
-            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+            this.$el.html('');
             if (this.collection.length > 0) {
                 var holder = this.$el;
                 var thumbnailsItemView;
@@ -82,6 +60,12 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
             if (arrayOfcompanies.length > 0) {
                 this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             }
+			common.buildAphabeticArray(this.collection,function(arr){
+				$(".startLetter").remove();
+				self.alphabeticArray = arr;
+				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
+			});
+
             return this;
         },
 
@@ -91,8 +75,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
         },
 
         showMoreContent: function (newModels) {
-            var holder = $('#content-holder');
-            this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+            var holder = this.$el.find('#showMoreDiv');
             var thumbnailsItemView;
             var counter =0;
             var namberOfcompanies = this.collection.namberToShow;
@@ -104,7 +87,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
                         dataIndexCounter++;
                         thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfcompanies[i], dataIndex: dataIndexCounter });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.append(thumbnailsItemView.render().el);
+                        holder.before(thumbnailsItemView.render().el);
                         arrayOfcompanies.splice(i,1);
                         i--;
                     }
@@ -116,7 +99,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
                         counter++;
                         thumbnailsItemView = new ThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).append(thumbnailsItemView.render().el);
+                        $(holder).before(thumbnailsItemView.render().el);
                     } else {
                         arrayOfcompanies.push(model);
                     }
@@ -126,7 +109,47 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
                 this.$el.find('#showMoreDiv').hide();
             }
         },
+        showMoreAlphabet: function (newModels) {
+			arrayOfcompanies=[];
+            var holder = $('#content-holder .startLetter');
+			$("#content-holder .thumbnailwithavatar").remove();
+            var thumbnailsItemView;
+            var counter =0;
+            var namberOfcompanies = this.collection.namberToShow;
 
+            if (arrayOfcompanies.length > 0) {
+                for (var i=0; i<arrayOfcompanies.length; i++) {
+                    if (counter < namberOfcompanies ) {
+                        counter++;
+                        dataIndexCounter++;
+                        thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfcompanies[i], dataIndex: dataIndexCounter });
+                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                        holder.after(thumbnailsItemView.render().el);
+                        arrayOfcompanies.splice(i,1);
+                        i--;
+                    }
+                }
+
+            }
+            _.each(newModels.models, function (model) {
+                if (counter < namberOfcompanies) {
+                    counter++;
+                    dataIndexCounter++;
+                    thumbnailsItemView = new ThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
+                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
+                    holder.after(thumbnailsItemView.render().el);
+                } else {
+                    arrayOfcompanies.push(model);
+                }
+            }, this);
+
+            if (arrayOfcompanies.length == 0) {
+                this.$el.find('#showMoreDiv').hide();
+            }
+			else{
+                this.$el.find('#showMoreDiv').show();
+			}
+        },
         createItem: function () {
             //create editView in dialog here
             new CreateView();

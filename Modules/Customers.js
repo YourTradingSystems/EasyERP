@@ -329,6 +329,34 @@
                 }
             });
         },
+        getPersonAlphabet: function (response) {
+			var query=customer.aggregate([ {$match : { type : "Person" }} ,{$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}}]);
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("customer.js get person alphabet " + err);
+                    response.send(500, { error: "Can't find customer" });
+                } else {
+					var res={};
+                    res['data'] = result;
+                    response.send(res);
+                }
+            });
+        },
+        getCompaniesAlphabet: function (response) {
+			var query=customer.aggregate([ {$match : { type : "Company" }} ,{$project:{later:{$substr:["$name.first",0,1]}}},{$group:{_id:"$later"}}]);
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("customer.js get person alphabet " + err);
+                    response.send(500, { error: "Can't find customer" });
+                } else {
+					var res={};
+                    res['data'] = result;
+                    response.send(res);
+                }
+            });
+        },
 
         getPersonById: function (id, response) {
             var query = customer.findById(id);

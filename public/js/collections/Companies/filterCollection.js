@@ -1,8 +1,9 @@
 ﻿define([
     'models/CompaniesModel',
-    'common'
+    'common',
+    "dataService"
 ],
-    function (CompanyModel, common) {
+    function (CompanyModel, common, dataService) {
         var CompaniesCollection = Backbone.Collection.extend({
             model: CompanyModel,
             url: "/Companies/",
@@ -73,6 +74,39 @@
                     }
                 });
             },
+            showMoreAlphabet: function (options) {
+                var that = this;
+
+                var filterObject = {};
+                if (options) {
+                    for (var i in options) {
+                        filterObject[i] = options[i];
+                    }
+                }
+				that.page=1;
+                filterObject['page'] = (options && options.page) ? options.page: this.page;
+                filterObject['count'] = (options && options.count) ? options.count*2: this.namberToShow;
+                filterObject['letter'] = (options && options.letter) ? options.letter: '';
+                this.fetch({
+                    data: filterObject,
+                    waite: true,
+                    success: function (models) {
+                        that.page += 2;
+							that.trigger('showmoreAlphabet', models);
+                    },
+                    error: function () {
+                        alert('Some Error');
+                    }
+                });
+            },
+
+            getAlphabet: function (callback) {
+				dataService.getData("/getCompaniesAlphabet", { mid: 39 }, function (response) {
+					if (callback){
+						callback(response.data);
+					}
+				});
+			},
 
             parse: true,
             parse: function (response) {

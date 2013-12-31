@@ -16,7 +16,6 @@ define([
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
-				this.alphabeticArray = common.buildAphabeticArray(this.collection.toJSON());
 				this.allAlphabeticArray = common.buildAllAphabeticArray();
 				this.selectedLetter = "All";
 				this.collection.bind('reset', _.bind(this.render, this));
@@ -61,7 +60,7 @@ define([
 				var self=this;
                 console.log('Employees render');
                 $('.ui-dialog ').remove();
-				this.$el.html(_.template(AphabeticTemplate, { alphabeticArray: this.alphabeticArray,selectedLetter: (this.selectedLetter==""?"All":this.selectedLetter),allAlphabeticArray:this.allAlphabeticArray}));
+                this.$el.html('');
                 this.$el.append(_.template(ListTemplate));
                 this.$el.append(new ListItemView({ collection: this.collection}).render());
                 $('#check_all').click(function () {
@@ -115,6 +114,12 @@ define([
 				$(document).on("click",function(){
 					self.hideItemsNumber();
 				});
+				common.buildAphabeticArray(this.collection,function(arr){
+					$(".startLetter").remove();
+					self.alphabeticArray = arr;
+					self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
+				});
+
 
             },
 
