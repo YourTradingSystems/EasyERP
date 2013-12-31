@@ -122,11 +122,13 @@ require.config({
 
         'dateFormat': {
             exports: 'dateFormat'
-        }
+        },
+
     }
 });
 
 require(['app'], function (app) {
+    
     Backbone.Collection.prototype.next = function () {
         this.setElement(this.at(this.indexOf(this.getElement()) + 1));
         return this;
