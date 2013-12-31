@@ -27,14 +27,14 @@ define([
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
-				"click .prevUserList":"prevUserList",
-				"click .nextUserList":"nextUserList"
 
             },
 			nextUserList:function(e,page){
+				var self= this;
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
 			},
 			prevUserList:function(e,page){
+				var self= this;
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
 			},
 			nextGroupList:function(e,page){
@@ -108,11 +108,11 @@ define([
 				$("#targetUsers").unbind().on("click","li",this.removeUsers);
 				$("#sourceUsers").unbind().on("click","li",this.addUsers);
 				var self = this;
-				$(".nextUserList").unbind().on("click",function(e){
+				$(document).on("click",".nextUserList",function(e){
 					self.page+=1
 					self.nextUserList(e,self.page)
 				});
-				$(".prevUserList").unbind().on("click",function(e){
+				$(document).on("click",".prevUserList",function(e){
 					self.page-=1
 					self.prevUserList(e,self.page)
 				});
@@ -144,11 +144,11 @@ define([
 				$("#targetGroups").unbind().on("click","li",this.removeUsers);
 				$("#sourceGroups").unbind().on("click","li",this.addUsers);
 				var self = this;
-				$(".nextGroupList").unbind().on("click",function(e){
+				$(document).unbind().on("click",".nextGroupList",function(e){
 					self.pageG+=1
 					self.nextUserList(e,self.pageG)
 				});
-				$(".prevGroupList").unbind().on("click",function(e){
+				$(document).unbind().on("click",".prevGroupList",function(e){
 					self.pageG-=1
 					self.prevUserList(e,self.pageG)
 				});
