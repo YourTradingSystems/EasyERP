@@ -88,6 +88,7 @@
                         that.page += 1;
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
+                        that.listLength = response.listLength;
                         that.trigger('showmore', models);
                     },
                     error: function() {

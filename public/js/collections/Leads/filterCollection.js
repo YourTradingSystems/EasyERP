@@ -8,9 +8,13 @@
             url: "/Leads/",
             page: 1,
             initialize: function (options) {
+                this.status = [];
+                this.status = options.status;
+                this.count = options.count;
+                this.page = options.page;
+                this.namberToShow = options.count;
 
                 var that = this;
-                this.namberToShow = options.count;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     var viewType = options.viewType;
@@ -29,6 +33,9 @@
                     }
                     case 'list': {
                         filterObject['page'] = 1;
+                        filterObject['status'] = [];
+                        filterObject['status'] = options.status;;
+
                         var addPage = 0;
                         break;
                     }
@@ -40,11 +47,19 @@
                 this.fetch({
                     data: filterObject,
                     reset: true,
-                    success: function() {
+                    success: function(model, response) {
                         console.log("Leads fetchSuccess");
                         that.page += addPage;
+                        that.showMoreButton = response.showMore;
+                        that.optionsArray = response.options;
+
                     },
                     error: this.fetchError
+                });
+            },
+            filterByWorkflow: function (id) {
+                return this.filter(function (data) {
+                    return data.get("workflow")._id == id;
                 });
             },
             
@@ -52,18 +67,35 @@
                 var that = this;
                 
                 var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
-                this.fetch({
+                filterObject['status'] = [];
+                filterObject['status'] = (options && options.status) ? options.status: this.status;
+                var NewCollection = Backbone.Collection.extend({
+                    model: CompanyModel,
+                    url: that.url,
+                    parse: true,
+                    parse: function(response) {
+                        return response.data;
+                    },
+                    page: that.page,
+
+                    filterByWorkflow: function (id) {
+                        return this.filter(function (data) {
+                            return data.get("workflow")._id == id;
+                        });
+                    }
+                });
+                var newCollection = new NewCollection();
+
+                newCollection.fetch({
                     data: filterObject,
                     waite: true,
-                    success: function (models) {
+                    success: function (models, response) {
+                        that.showMoreButton = response.showMore;
+                        that.optionsArray = response.options;
                         that.page += 1;
+                        that.listLength = response.listLength;
                         that.trigger('showmore', models);
                     },
                     error: function() {

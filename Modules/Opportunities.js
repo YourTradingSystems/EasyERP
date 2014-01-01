@@ -304,12 +304,17 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         var res = {};
         res['data'] = [];
         var query = opportunitie.find({ isOpportunitie: false });
+		if (data&&data.status&&data.status.length>0)
+            query.where('workflow').in(data.status);
+
         query.exec(function (err, result) {
             if (!err) {
                 res['listLength'] = result.length;
             }
         });
         var query = opportunitie.find({ isOpportunitie: false });
+		if (data&&data.status&&data.status.length>0)
+            query.where('workflow').in(data.status);
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.sort({ name: 1 });
         query.populate('customer salesPerson salesTeam workflow').
@@ -481,6 +486,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         res['data'] = [];
         var query = opportunitie.find();
         query.where('isOpportunitie', true);
+		if (data&&data.status&&data.status.length>0)
+            query.where('workflow').in(data.status);
+
         query.exec(function (err, result) {
             if (!err) {
                 res['listLength'] = result.length;
@@ -488,6 +496,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         });
         var query = opportunitie.find();
         query.where('isOpportunitie', true);
+		if (data&&data.status&&data.status.length>0)
+            query.where('workflow').in(data.status);
+
         query.populate('relatedUser customer department jobPosition workflow').
             populate('createdBy.user').
             populate('editedBy.user');
