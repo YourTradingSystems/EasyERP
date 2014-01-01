@@ -30,12 +30,9 @@ define([
 				var currentRoot = null;
 				var currentChildren = null;
 				if (this.contentType){
-					console.log(this.contentType);
 					currentChildren = this.collection.where({href:this.contentType});
-					console.log(currentChildren);
 					var currentRootId = currentChildren[0].get("parrent");
 					currentRoot = this.collection.where({_id:currentRootId});
-					console.log(currentRoot);
 				}
                 this.leftMenu = new LeftMenuView({ collection: this.collection, currentChildren:currentChildren,currentRoot: currentRoot });
                 this.topMenu = new TopMenuView({ collection: this.collection.getRootElements(),currentRoot: currentRoot, leftMenu: this.leftMenu });
