@@ -81,6 +81,7 @@ require.config({
     paths: {
         jQuery: './libs/jquery',
         ajaxForm: './libs/jquery.form',
+        imageCrop: './libs/jquery.Jcrop.min',
         jqueryui: './libs/jquery-ui-1.10.3.custom.min',
         Underscore: './libs/underscore_1.5.2',
         Backbone: './libs/backbone v_1_1',
@@ -98,6 +99,7 @@ require.config({
     shim: {
         'jqueryui': ['jQuery'],
         'ajaxForm': ['jQuery'],
+        'imageCrop':['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
         'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm'],
         'chosen': {
