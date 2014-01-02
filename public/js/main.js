@@ -101,7 +101,7 @@ require.config({
         'ajaxForm': ['jQuery'],
         'imageCrop':['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm'],
+        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm','imageCrop'],
         'chosen': {
             exports: 'chosen'
         },
@@ -124,13 +124,11 @@ require.config({
 
         'dateFormat': {
             exports: 'dateFormat'
-        },
-
+        }
     }
 });
 
 require(['app'], function (app) {
-    
     Backbone.Collection.prototype.next = function () {
         this.setElement(this.at(this.indexOf(this.getElement()) + 1));
         return this;
@@ -163,19 +161,3 @@ require(['app'], function (app) {
     app.initialize();
     app.applyDefaults();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
