@@ -13,7 +13,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department),
         modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, tempDb, event);
 
