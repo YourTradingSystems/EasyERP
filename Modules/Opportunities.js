@@ -342,11 +342,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         var i = 0;
         var qeryEveryOne = function (arrayOfId, n) {
-            opportunitie.find({ isOpportunitie: false });
-                opportunitie.where('_id').in(arrayOfId);
-                if (data && data.status && data.status.length>0)
-                    opportunitie.where('workflow').in(data.status);
-                opportunitie.populate('customer salesPerson salesTeam workflow').
+            var query = opportunitie.find({ isOpportunitie: false }).
+                where('_id').in(arrayOfId);
+            if (data && data.status && data.status.length>0)
+                query.where('workflow').in(data.status);
+            query.populate('customer salesPerson salesTeam workflow').
                     populate('createdBy.user').
                     populate('editedBy.user').
                     exec(function (error, _res) {
@@ -361,12 +361,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         };
 
         var qeryOwner = function (arrayOfId, n) {
-            opportunitie.find({ isOpportunitie: false }).
+            var query = opportunitie.find({ isOpportunitie: false }).
                 where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId });
             if (data && data.status && data.status.length>0)
-                opportunitie.where('workflow').in(data.status);
-            opportunitie.populate('customer salesPerson salesTeam workflow').
+                query.where('workflow').in(data.status);
+            query.populate('customer salesPerson salesTeam workflow').
                 populate('createdBy.user').
                 populate('editedBy.user').
 
@@ -384,11 +384,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            opportunitie.find({ isOpportunitie: false }).
+            var query = opportunitie.find({ isOpportunitie: false }).
                 where({ 'groups.users': data.uId });
             if (data && data.status && data.status.length>0)
-                opportunitie.where('workflow').in(data.status);
-            opportunitie.populate('customer salesPerson salesTeam workflow').
+                query.where('workflow').in(data.status);
+            query.populate('customer salesPerson salesTeam workflow').
                 populate('createdBy.user').
                 populate('editedBy.user').
 
@@ -398,12 +398,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         department.department.find({ users: data.uId }, { _id: 1 },
                             function (err, deps) {
                                 if (!err) {
-                                    opportunitie.find({ isOpportunitie: false }).
+                                    var query = opportunitie.find({ isOpportunitie: false }).
                                         where('_id').in(arrayOfId).
                                         where('groups.group').in(deps);
                                     if (data && data.status && data.status.length>0)
-                                        opportunitie.where('workflow').in(data.status);
-                                    opportunitie.populate('customer salesPerson salesTeam workflow').populate('createdBy.user').
+                                        query.where('workflow').in(data.status);
+                                    query.populate('customer salesPerson salesTeam workflow').populate('createdBy.user').
                                         populate('editedBy.user').
                                         exec(function (error, _res) {
                                             if (!error) {
