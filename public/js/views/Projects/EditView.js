@@ -22,7 +22,6 @@ define([
                 "click .breadcrumb a": "changeWorkflow",
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
-                'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
@@ -226,6 +225,7 @@ define([
                         name: val.innerHTML
                     });
                 });
+
 				var usersId=[];
 				var groupsId=[];
 				$(".groupsAndUser tr").each(function(){
