@@ -1416,6 +1416,19 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
             res.send(401);
         }
     }
+    function getLeadsForChart(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 24, function (access) {
+                if (access) {
+                    opportunities.getLeadsForChart(res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
 
     function getLeadsById(req, res, data) {
         if (req.session && req.session.loggedIn) {
@@ -1909,6 +1922,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         updateLead: updateLead,
         removeLead: removeLead,
         getLeadsById: getLeadsById,
+		getLeadsForChart:getLeadsForChart,
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,

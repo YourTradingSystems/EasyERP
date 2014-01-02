@@ -93,7 +93,8 @@ require.config({
         scheduler: './libs/dhtmlxscheduler',
         minical: './libs/dhtmlxscheduler_minical',
         multiselect: './libs/dhtmlxscheduler_multiselect',
-        mvc: './libs/dhtmlxscheduler_mvc'
+        mvc: './libs/dhtmlxscheduler_mvc',
+		d3: './libs/d3.v3.min'
     },
     shim: {
         'jqueryui': ['jQuery'],
@@ -115,11 +116,13 @@ require.config({
         'scheduler': {
             exports: 'scheduler'
         },
+		'd3': {
+            exports: 'd3'
+        },
         'mvc': ['scheduler'],
         'multiselect': ['scheduler'],
         'minical': ['scheduler'],
         'Calendar': ['chosen', 'scheduler', 'mvc', 'minical','multiselect'],
-
         'dateFormat': {
             exports: 'dateFormat'
         },

@@ -1,2 +1,32 @@
-<h3>Dashboard Content</h3>
+<center><h3>How many leads have been created?</h3></center>
         
+<style>
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.group-label {
+  font-weight: bold;
+  text-anchor: end;
+}
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+<form style="display:none">
+  <label><input type="radio" name="mode" value="multiples" checked> Multiples</label>
+  <label><input type="radio" name="mode" value="stacked"> Stacked</label>
+</form>
+<div id="leadChart">
+</div>
+

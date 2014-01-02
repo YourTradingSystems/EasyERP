@@ -113,8 +113,8 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/list';
-                    Backbone.history.navigate(url, { replace: true });
+//                    var url = '#easyErp/' + contentType + '/list';
+//					Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

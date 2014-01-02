@@ -58,7 +58,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
             date: { type: Date }
         },
         campaign: { type: String, default: '' },
-        source: { type: String, default: '' }
+        source: { type: String, default: '' },
+		isConverted: { type: Boolean, default: false }
     }, { collection: 'Opportunities' });
 
     var opportunitie = mongoose.model('Opportunities', opportunitiesSchema);
@@ -88,6 +89,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
             }
             function savetoDb(data) {
                 try {
+//					var last = 365*24*60*60*1000;
+
+//					for (var i=0;i<4000;i++){
+
                     _opportunitie = new opportunitie();
                     _opportunitie.isOpportunitie = (data.isOpportunitie) ? data.isOpportunitie : false;
                     if (data.name) {
@@ -216,15 +221,64 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
                     if (data.source) {
                         _opportunitie.source = data.source;
                     }
-                    _opportunitie.save(function (err, result) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Opportunities.js create savetoDB _opportunitie.save " + err);
-                            res.send(500, { error: 'Opportunities.save BD error' });
-                        } else {
-                            res.send(201, { success: 'A new Opportunities create success' });
-                        }
-                    });
+
+/*					function makeArr()
+					{
+						var text = "";
+						var possible = [						
+						"linkedin",
+						"jobscore.com",
+						"stackoverflow.com",
+						"jobvite.com",
+						"zappos.com",
+						"sixtostart.com",
+						"creativecircle.com",
+						"sangfroidgame.com",
+						"partner",
+						"customer",
+						"selfGenerated",
+						"website"];
+
+						return possible[Math.floor(Math.random() * possible.length)];
+
+
+					}
+					function makeid()
+					{
+						var text = "";
+						var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+						for( var i=0; i < 20; i++ )
+							text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+						return text;
+					}
+					//delete its
+						var a = new Date()-Math.floor(Math.random()*last);
+						var c = new Date(a);
+                        _opportunitie.source = makeArr();
+						_opportunitie.name = makeid();
+						console.log(_opportunitie.name);
+						if (data.uId) {
+							_opportunitie.createdBy.user = data.uId;
+							_opportunitie.createdBy.date = c;
+						}
+						if (Math.random()>0.7){
+							_opportunitie.isOpportunitie=true;
+							_opportunitie.isConverted = true;
+							_opportunitie.workflow="528cdcb4f3f67bc40b000006"
+						}*/
+						_opportunitie.save(function (err, result) {
+							if (err) {
+//								console.log(err);
+								console.log("Opportunities.js create savetoDB _opportunitie.save " + err);
+								res.send(500, { error: 'Opportunities.save BD error' });
+							} else {
+								logWriter.log("Opportunities.js create savetoDB " + result);
+								res.send(201, { success: 'A new Opportunities create success' });
+							}
+						});
+//					}
                 }
                 catch (error) {
                     console.log(error);
@@ -239,7 +293,23 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
             res.send(500, { error: 'opportunitie.save  error' });
         }
     };
-
+	function getLeadsForChart(response){
+		var res={};
+		var c = new Date()-365*24*60*60*1000;
+		var a = new Date(c);
+		opportunitie.aggregate({
+			$match:{$and:[{createdBy:{$ne:null},$or:[{isConverted:true},{isOpportunitie:false}]},{'createdBy.date':{$gte:a}}]}},{$project:{"dateBy":{$month:"$createdBy.date"},isOpportunitie:1}},{$group:{_id:{dateBy:"$dateBy",isOpportunitie:"$isOpportunitie"},count:{$sum:1}}}).exec(function(err,result){
+				if (err) {
+					console.log(err);
+					logWriter.log('Opportunities.js chart' + err);
+					response.send(500, { error: "Can't get chart" });
+				} else {
+					res['data'] = result;
+					response.send(res);
+				}
+				
+			});
+	}
     function get(response) {
         var res = {};
         res['data'] = [];
@@ -599,7 +669,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow) {
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
 
         getLeads: getLeads,
-
+		
+		getLeadsForChart:getLeadsForChart,
+		
         getLeadsCustom: getLeadsCustom,
 
         update: update,

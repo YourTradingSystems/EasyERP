@@ -2055,7 +2055,7 @@ input, textarea, select {
     position: relative;
     float: left;
     width: 180px;
-	min-height:128px;
+	min-height:200px;
     margin-left: 7px;
     margin-top: 7px;
     border: @thin-border transparent;
@@ -2889,7 +2889,17 @@ button {
             text-align: right;
         }
     }
+    .opportunity-content{
+		margin-top:-7px;
+		margin-bottom:-3px;
+		p{
+			display:block;
+			line-height:18px;
+			clear:left;
 
+		}
+
+	}
     tr {
         &:last-child {
             border-right: 10px solid white;
@@ -2909,7 +2919,7 @@ button {
             word-wrap: break-word;
             margin: 5px auto;
             width: 95%;
-            min-height: 50px;
+            min-height: 40px;
             text-align: left;
             border: 1px solid @taskBorderColor;
             background-color: #fff;
@@ -3644,7 +3654,7 @@ table#workflows {
 }
 
 .person-info-h3 {
-    width: 170px;
+    width: auto;
 	.dl-auto(auto,50%);
     clear: none;
 
@@ -3655,6 +3665,13 @@ table#workflows {
         a {
             line-height: 22px;
 		}
+	}
+	dt{
+		width:90px;
+	}
+	dd{
+		
+		width:auto;
 	}
 
     .newSelectList {

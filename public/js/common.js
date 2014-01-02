@@ -340,7 +340,11 @@
                 if (callback) callback();
             });
         };
-        
+        var getLeadsForChart = function(callback){
+            dataService.getData("/LeadsForChart", { }, function (response) {
+				callback(response.data);
+			});
+		}
         var populateDepartmentsList = function (selectId,targetId, url, model, page,callback) {
             var selectList = $(selectId);
             var targetList = $(targetId);
@@ -767,6 +771,7 @@
             getFromLocalStorage: getFromLocalStorage,
             populateUsersForGroups: populateUsersForGroups,
 			populateParentDepartments:populateParentDepartments,
-			populateDepartmentsList:populateDepartmentsList
+			populateDepartmentsList:populateDepartmentsList,
+			getLeadsForChart:getLeadsForChart
         }
     });

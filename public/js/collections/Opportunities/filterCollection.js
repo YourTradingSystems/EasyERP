@@ -103,7 +103,8 @@
                      _.map(response.data, function (opportunity) {
                          opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
                          opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
-                         opportunity.nextAction.date = ( opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date):'';
+						 if (opportunity.nextAction)
+							 opportunity.nextAction.date = ( opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date):'';
                          opportunity.createdBy.date = common.utcDateToLocaleDateTime(opportunity.createdBy.date);
                          opportunity.editedBy.date = common.utcDateToLocaleDateTime(opportunity.editedBy.date);
                          return opportunity;
