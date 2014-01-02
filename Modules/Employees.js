@@ -45,7 +45,7 @@ var Employee = function (logWriter, mongoose, event) {
             country: { type: String, default: '' }
         },
         dateBirth: Date,
-        age: Number,
+        age: { type: Number, default: 0 },
         daysForBirth: Number,
         nextAction: Date,
         source: {
@@ -97,7 +97,7 @@ var Employee = function (logWriter, mongoose, event) {
 
     function getDate(date) {
         var _date = new Date(date);
-        var currentTimeZoneOffsetInMiliseconds = -_date.getTimezoneOffset()*60*1000;
+        var currentTimeZoneOffsetInMiliseconds = -_date.getTimezoneOffset() * 60 * 1000;
         var valaueOf_date = _date.valueOf();
         valaueOf_date += currentTimeZoneOffsetInMiliseconds;
         return new Date(valaueOf_date);
@@ -375,8 +375,8 @@ var Employee = function (logWriter, mongoose, event) {
         var description = "";
         res['data'] = [];
         var query = employee.find();
-        if (data.letter){
-            query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+        if (data.letter) {
+            query = employee.find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
         }
 
         query.where('isEmployee', true);
@@ -387,8 +387,8 @@ var Employee = function (logWriter, mongoose, event) {
         });
 
         query = employee.find();
-        if (data.letter){
-            query = employee.find({'name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
+        if (data.letter) {
+            query = employee.find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
         }
 
         query.where('isEmployee', true);

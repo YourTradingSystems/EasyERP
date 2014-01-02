@@ -15,7 +15,6 @@
     var getEmployeesInDateRange = function (callback, response) {
         var withResponse = (arguments.length == 2) ? true : false;
         var separateWeklyAndMontly = function (arrayOfEmployees) {
-            //var now = new Date();
             var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             var daysToAdd = (dateOnly.getDay() != 0) ? 7 - dateOnly.getDay() : 0;
             var forecast = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -24,19 +23,6 @@
             nowForecast.setDate(31);
             valueOfToday = dateOnly.valueOf();
             var currentEmployees = {};
-
-            //function getAge(birthday) {
-            //    var today = new Date();
-            //    var years = today.getFullYear() - birthday.getFullYear();
-
-            //    birthday.setFullYear(today.getFullYear());
-
-            //    if (today < birthday) {
-            //        years--;
-            //    }
-            //    console.log(years);
-            //    return (years < 0) ? 0 : years;
-            //};
 
             function getDaysToBirthday(birthday) {
                 var today = new Date(),

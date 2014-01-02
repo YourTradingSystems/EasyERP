@@ -29,7 +29,7 @@ define([
         },
 
         goToProfiles: function () {
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main("Profiles");
 
             var ContentViewUrl = "views/Profiles/ContentView",
                 TopBarViewUrl = "views/Profiles/TopBarView",
@@ -61,7 +61,7 @@ define([
         },
         
         goToUserPages: function () {
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main("UsersPages");
 
             var ContentViewUrl = "views/UsersPages/ContentView",
                 TopBarViewUrl = "views/UsersPages/TopBarView",
@@ -93,7 +93,7 @@ define([
         },
 
         goToDashboard: function () {
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main("Dashboard");
 
             var ContentViewUrl = "views/Dashboard/ContentView",
                 TopBarViewUrl = "views/Dashboard/TopBarView",
@@ -120,7 +120,7 @@ define([
         },
 
         goToWorkflows: function () {
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main("Workflows");
 
             var ContentViewUrl = "views/Workflows/ContentView",
                 TopBarViewUrl = "views/Workflows/TopBarView",
@@ -167,7 +167,7 @@ define([
 
         goToList: function (contentType, parrentContentId) {
             // console.API.clear();
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main(contentType);
 
             var ContentViewUrl = "views/" + contentType + "/list/ListView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -199,7 +199,7 @@ define([
         },
 
         goToForm: function (contentType, modelId) {
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main(contentType);
             //console.log(contentType + "Model");
             if (contentType !== 'ownCompanies') {
                 var ContentFormModelUrl = "models/" + contentType + "Model",
@@ -249,7 +249,7 @@ define([
         },
 
         goToKanban: function (contentType, parrentContentId) {
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main(contentType);
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl = this.buildCollectionRoute(contentType);
@@ -281,7 +281,7 @@ define([
 
         goToThumbnails: function (contentType, parrentContentId) {
             //console.API.clear();
-            if (this.mainView == null) this.main();
+            if (this.mainView == null) this.main(contentType);
             var ContentViewUrl,
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
                 CollectionUrl;
@@ -296,7 +296,7 @@ define([
             self = this;
             Custom.setCurrentVT('thumbnails');
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 2, parrentContentId: parrentContentId }) : new ContentCollection();
+                collection = (contentType !== 'Calendar') && (contentType !== 'Workflows') ? new ContentCollection({ viewType: 'thumbnails', page: 1, count: 50, parrentContentId: parrentContentId }) : new ContentCollection();
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
@@ -346,8 +346,8 @@ define([
             this.view = view;
         },
 
-        main: function () {
-            this.mainView = new MainView();
+        main: function (contentType) {
+            this.mainView = new MainView({contentType:contentType});
             this.changeWrapperView(this.mainView);
         },
 

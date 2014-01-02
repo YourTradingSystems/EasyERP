@@ -23,6 +23,7 @@ define([
                 this.leftMenu.render();
             },
             mouseOver: function (section, selectedId) {
+
                 if (this.leftMenu) {
                     this.leftMenu.currentSection = section;
                     this.leftMenu.render(true, selectedId);
@@ -37,8 +38,15 @@ define([
                 console.log("init MenuView");
                 if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
+				if (options.currentRoot)
+					this.currentSection=options.currentRoot[0].get('mname')
+				this.currentChildren = options.currentChildren;
                 _.bindAll(this, 'render');
-                this.render();
+				if (this.currentChildren&&this.currentChildren.length>0){
+					this.render(null,this.currentChildren[0].get("_id"));
+				}else{
+					this.render();
+				}
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.mouseLeave = _.debounce(this.mouseLeaveEl, 2000);
             },
@@ -119,8 +127,10 @@ define([
                     var kids = this.collection.children(model);
                     $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
                 }, this);
-                
                 var clickEl = $dom.find('a')[0];
+				if (this.currentChildren){
+					clickEl = $dom.find('li#'+this.currentChildren[0].get("_id")+" a")[0];	
+				}
                 var _el = $('.selected > a').text();
                 var that = this;
                 
@@ -133,7 +143,10 @@ define([
                         clickEl.click();
                     }
                 });
-                $(clickEl).click();
+				if (!this.currentChildren){
+					$(clickEl).click();
+				}
+				this.currentChildren = null;
                 //var myEl = $('#submenu-holder li > a').filter(function() {
                 //     return $(this).data("module-id") == selectedId
                 //});

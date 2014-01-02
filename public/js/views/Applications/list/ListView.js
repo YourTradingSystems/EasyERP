@@ -25,7 +25,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
+                "click  .list td:not(.notForm)": "gotoForm",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
 				"click":"hideItemsNumber",
@@ -281,6 +281,24 @@ define([
                     $("#grid-start").text(0)
                 } else {
                     $("#grid-start").text((currentPage-1)*itemsNumber+1)
+                }
+                if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
+                    $("#grid-start").text(0);
+                    $("#nextPage").prop("disabled",true);
+                } else {
+                    $("#grid-start").text(1);
+                }
+
+                if (this.collection.listLength) {
+                    if (this.collection.listLength <= itemsNumber) {
+                        $("#grid-end").text(this.collection.listLength - this.deleteCounter );
+                    } else {
+                        $("#grid-end").text(itemsNumber - this.deleteCounter );
+                    }
+                    $("#grid-count").text(this.collection.listLength);
+                } else {
+                    $("#grid-end").text(0);
+                    $("#grid-count").text(0);
                 }
 
             },

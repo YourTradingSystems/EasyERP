@@ -4,11 +4,14 @@ var http = require('http'),
     fs = require("fs");
 
 var mongoose = require('mongoose');
+var Admin = mongoose.mongo.Admin;
+
 //Event Listener in Server and Triggering Events
 var events = require('events');
 var event = new events.EventEmitter();
 
 mongoose.connect('mongodb://localhost/CRM');
+
 var db = mongoose.connection;
 var tempDb = mongoose.createConnection('localhost', 'tempDb');
 var express = require('express');
@@ -65,6 +68,12 @@ app.configure(function () {
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function callback() {
         console.log("Connection to CRM_DB is success");
+        new Admin(db.db).listDatabases(function (err, result) {
+            console.log('listDatabases succeeded');
+            // database list stored in result.databases
+            var allDatabases = result.databases;
+            console.log(allDatabases);
+        });
     });
     tempDb.on('error', console.error.bind(console, 'connection error:'));
     tempDb.once('open', function callback() {

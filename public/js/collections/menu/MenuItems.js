@@ -59,7 +59,6 @@ define(function () {
                 });
             });
         },
-
         children: function (model, self) {
 
             if (!this.relations) this.relationships();

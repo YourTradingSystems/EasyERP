@@ -1,10 +1,11 @@
 define([
     'text!templates/Opportunities/list/ListHeader.html',
     'views/Opportunities/CreateView',
-    'views/Opportunities/list/ListItemView'
+    'views/Opportunities/list/ListItemView',
+    "common"
 ],
 
-    function (ListTemplate, CreateView, ListItemView) {
+    function (ListTemplate, CreateView, ListItemView, common) {
         var OpportunitiesListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -26,11 +27,43 @@ define([
                 "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
-				"click":"hideItemsNumber"
+				"click":"hideItemsNumber",
+				"click .filterButton":"showfilter",
+				"click .filter-check-list li":"checkCheckbox"
+
 
             },
+			checkCheckbox:function(e){
+				if(!$(e.target).is("input")){
+					$(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
+				}
+			},
+            showFilteredPage: function (event) {
+                var workflowIdArray = [];
+                $('.filter-check-list input:checked').each(function(){
+                    workflowIdArray.push($(this).val());
+                })
+                this.collection.status = workflowIdArray;
+                var itemsNumber = $("#itemsNumber").text();
+
+                _.bind(this.collection.showMore, this.collection);
+                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray });
+            },
+
+			showfilter:function(e){
+				$(".filter-check-list").toggle();
+				return false;
+			},
+
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
+				if (!$(e.target).closest(".filter-check-list").length){
+					$(".allNumberPerPage").hide();
+					if ($(".filter-check-list").is(":visible")){
+						$(".filter-check-list").hide();
+						this.showFilteredPage();
+					}
+				}
 			},
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
@@ -90,9 +123,10 @@ define([
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
                 }
+                common.populateWorkflowsList("Opportunity", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows",null);
                 this.deleteCounter = 0;
-				$(document).on("click",function(){
-					self.hideItemsNumber();
+				$(document).on("click",function(e){
+					self.hideItemsNumber(e);
 				});
 
             },
@@ -243,6 +277,24 @@ define([
                     $("#nextPage").prop("disabled",true);
                 } else {
                     $("#nextPage").prop("disabled",false);
+                }
+                if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
+                    $("#grid-start").text(0);
+                    $("#nextPage").prop("disabled",true);
+                } else {
+                    $("#grid-start").text(1);
+                }
+
+                if (this.collection.listLength) {
+                    if (this.collection.listLength <= itemsNumber) {
+                        $("#grid-end").text(this.collection.listLength - this.deleteCounter );
+                    } else {
+                        $("#grid-end").text(itemsNumber - this.deleteCounter );
+                    }
+                    $("#grid-count").text(this.collection.listLength);
+                } else {
+                    $("#grid-end").text(0);
+                    $("#grid-count").text(0);
                 }
             },
             gotoForm: function (e) {

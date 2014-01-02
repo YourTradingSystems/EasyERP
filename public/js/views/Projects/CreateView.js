@@ -117,6 +117,7 @@ define([
 					self.prevUserList(e,self.page)
 				});
 			},
+
 			addGroup:function(e){
 				var self = this;
 				$(".addGroupDialog").dialog({

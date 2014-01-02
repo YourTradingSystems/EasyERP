@@ -448,28 +448,34 @@ var Project = function (logWriter, mongoose, department) {
         var res = {};
         res['data'] = [];
         var i = 0;
-        var qeryEveryOne = function (arrayOfId, n) {
-            project.find().
-                where('_id').in(arrayOfId).
-                        populate("projectmanager customer task").
-                        populate('workflow').
-                        populate('createdBy.user').
-                        populate('editedBy.user').
-                        populate('groups.users').
-                        populate('groups.group').
+        var qeryEveryOne = function (arrayOfId, n, workflowsId) {
+            var query = project.find();
+     		if (workflowsId&&workflowsId.length>0)
+				query.where('workflow').in(workflowsId);
 
-                        exec(function (error, _res) {
-                            if (!error) {
-                        i++;
-                        res['data'] = res['data'].concat(_res);
-                        if (i == n) findTasksById(res['data'], 0);;
-                    }
-                });
+            query.where('_id').in(arrayOfId).
+                populate("projectmanager customer task").
+                populate('workflow').
+                populate('createdBy.user').
+                populate('editedBy.user').
+				populate('groups.users').
+				populate('groups.group').
+
+            exec(function (error, _res) {
+                if (!error) {
+                    i++;
+                    res['data'] = res['data'].concat(_res);
+                    if (i == n) findTasksById(res['data'], 0);;
+                }
+            });
         };
 
-        var qeryOwner = function (arrayOfId, n) {
-            project.find().
-                where('_id').in(arrayOfId).
+        var qeryOwner = function (arrayOfId, n, workflowsId) {
+            var query = project.find();
+ 			if (workflowsId&&workflowsId.length>0)
+				query.where('workflow').in(workflowsId);
+			
+            query.where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
                 populate("projectmanager customer task").
                 populate('workflow').
@@ -478,66 +484,69 @@ var Project = function (logWriter, mongoose, department) {
 				populate('groups.users').
 				populate('groups.group').
 
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        console.log(i);
-                        console.log(n);
-                        res['data'] = res['data'].concat(_res);
-                        console.log(res['data']);
-                        if (i == n) findTasksById(res['data'], 0);;
-                    } else {
-                        console.log(error);
-                    }
-                });
+            exec(function (error, _res) {
+                if (!error) {
+                    i++;
+                    console.log(i);
+                    console.log(n);
+                    res['data'] = res['data'].concat(_res);
+                    console.log(res['data']);
+                    if (i == n) findTasksById(res['data'], 0);;
+                } else {
+                    console.log(error);
+                }
+            });
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            project.find().
-                   where({ 'groups.users': data.uId }).
-                    populate("projectmanager customer task").
-                    populate('workflow').
-                    populate('createdBy.user').
-                    populate('editedBy.user').
-    				populate('groups.users').
-			    	populate('groups.group').
+            var query = project.find();
+     		if (workflowsId&&workflowsId.length>0)
+				query.where('workflow').in(workflowsId);
 
-                    exec(function (error, _res1) {
-                       if (!error) {
-                           department.department.find({ users: data.uId }, { _id: 1 },
-                                function (err, deps) {
-                                    console.log(deps);
-                                    if (!err) {
-                                        project.find().
-                                            where('_id').in(arrayOfId).
-                                            where('groups.group').in(deps).
-                                            populate("projectmanager customer task").
-                                            populate('workflow').
-                                            populate('createdBy.user').
-                                            populate('editedBy.user').
-    										populate('groups.users').
-			    							populate('groups.group').
-                                            exec(function (error, _res) {
-                                                if (!error) {
-                                                    i++;
-                                                    console.log(i);
-                                                    console.log(n);
-                                                    res['data'] = res['data'].concat(_res1);
-                                                    res['data'] = res['data'].concat(_res);
-                                                    console.log(res['data']);
-                                                    if (i == n) findTasksById(res['data'], 0);;
-                                                } else {
-                                                    console.log(error);
-                                                }
-                                            });
-                                    }
-                                });
-                       } else {
-                           console.log(error);
-                       }
-                   });
+            query.where({ 'groups.users': data.uId }).
+                populate("projectmanager customer task").
+                populate('workflow').
+                populate('createdBy.user').
+                populate('editedBy.user').
+    			populate('groups.users').
+			    populate('groups.group').
+
+            exec(function (error, _res1) {
+                if (!error) {
+                    department.department.find({ users: data.uId }, { _id: 1 },
+											   function (err, deps) {
+												   console.log(deps);
+												   if (!err) {
+													   project.find().
+														   where('_id').in(arrayOfId).
+														   where('groups.group').in(deps).
+														   populate("projectmanager customer task").
+														   populate('workflow').
+														   populate('createdBy.user').
+														   populate('editedBy.user').
+    													   populate('groups.users').
+			    										   populate('groups.group').
+														   exec(function (error, _res) {
+															   if (!error) {
+																   i++;
+																   console.log(i);
+																   console.log(n);
+																   res['data'] = res['data'].concat(_res1);
+																   res['data'] = res['data'].concat(_res);
+																   console.log(res['data']);
+																   if (i == n) findTasksById(res['data'], 0);;
+															   } else {
+																   console.log(error);
+															   }
+														   });
+												   }
+											   });
+                } else {
+                    console.log(error);
+                }
+            });
         };
-
+		var workflowsId = data?data.status:null;
         project.aggregate(
             {
                 $group: {
@@ -553,17 +562,17 @@ var Project = function (logWriter, mongoose, department) {
                             switch (_project._id) {
                             case "everyOne":
                                 {
-                                    qeryEveryOne(_project.ID, result.length);
+                                    qeryEveryOne(_project.ID, result.length, workflowsId);
                                 }
                                 break;
                             case "owner":
                                 {
-                                    qeryOwner(_project.ID, result.length);
+                                    qeryOwner(_project.ID, result.length, workflowsId);
                                 }
                                 break;
                             case "group":
                                 {
-                                    qeryByGroup(_project.ID, result.length);
+                                    qeryByGroup(_project.ID, result.length, workflowsId);
                                 }
                                 break;
                             }

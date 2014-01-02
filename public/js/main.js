@@ -81,6 +81,7 @@ require.config({
     paths: {
         jQuery: './libs/jquery',
         ajaxForm: './libs/jquery.form',
+        imageCrop: './libs/jquery.Jcrop.min',
         jqueryui: './libs/jquery-ui-1.10.3.custom.min',
         Underscore: './libs/underscore_1.5.2',
         Backbone: './libs/backbone v_1_1',
@@ -98,6 +99,7 @@ require.config({
     shim: {
         'jqueryui': ['jQuery'],
         'ajaxForm': ['jQuery'],
+        'imageCrop':['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
         'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm'],
         'chosen': {
@@ -122,11 +124,13 @@ require.config({
 
         'dateFormat': {
             exports: 'dateFormat'
-        }
+        },
+
     }
 });
 
 require(['app'], function (app) {
+    
     Backbone.Collection.prototype.next = function () {
         this.setElement(this.at(this.indexOf(this.getElement()) + 1));
         return this;

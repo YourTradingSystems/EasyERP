@@ -2054,7 +2054,7 @@ input, textarea, select {
     display: block;
     position: relative;
     float: left;
-    width: 420px;
+    width: 180px;
 	min-height:128px;
     margin-left: 7px;
     margin-top: 7px;
@@ -2078,10 +2078,11 @@ input, textarea, select {
 
         .info {
 			float:left;
-			width:290px;
+			width:160px;
 			div{
 				overflow: hidden;
 				text-overflow: ellipsis;
+				text-align:center;
 			}
             P {
                 font-family: @lucida-font;
@@ -2089,6 +2090,7 @@ input, textarea, select {
                 font-size: 13px;
                 font-weight: 200 !important;
                 line-height: 16px;
+				text-align:center;
 
                 a {
                     word-break: break-all;
@@ -2104,16 +2106,13 @@ input, textarea, select {
     }
 
     .avatar {
-        float: left;
         display: block;
         width: 100px;
         height: 100px;
         overflow: hidden;
-        margin-bottom: 10px;
         .border-radius(3px);
         .box-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
-        margin-right: 10px;
-
+		margin:0 auto;
         img {
             width: 100%;
             vertical-align: auto;
