@@ -451,15 +451,15 @@ var Project = function (logWriter, mongoose, department) {
         var qeryEveryOne = function (arrayOfId, n) {
             project.find().
                 where('_id').in(arrayOfId).
-                populate("projectmanager customer task").
-                populate('workflow').
-                populate('createdBy.user').
-                populate('editedBy.user').
-				populate('groups.users').
-				populate('groups.group').
+                        populate("projectmanager customer task").
+                        populate('workflow').
+                        populate('createdBy.user').
+                        populate('editedBy.user').
+                        populate('groups.users').
+                        populate('groups.group').
 
-                exec(function (error, _res) {
-                    if (!error) {
+                        exec(function (error, _res) {
+                            if (!error) {
                         i++;
                         res['data'] = res['data'].concat(_res);
                         if (i == n) findTasksById(res['data'], 0);;

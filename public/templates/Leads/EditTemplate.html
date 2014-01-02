@@ -1,5 +1,5 @@
 <div class="form-holder">
-    <form method="post" action="" class="form edit-lead-form" id="leadForm" data-id="<%=_id%>">
+    <form method="post" action="" class="form edit-lead-form" id="leadForm" data-id="<%=model._id%>">
         <fieldset>
         <div class="inner">
             <ul class="dialog-tabs">
@@ -11,11 +11,11 @@
                 <div class="dialog-tabs-item active">
                     <dl class="summary-info">
                         <dt><label>Subject </label></dt><dd>
-                        <input type="text" class="title-input blueback" id="name" value="<%=name%>" required maxlength="32"/>
+                        <input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="32"/>
                     </dd>
                     </dl>
                     <div class="half-block left">
-                        <textarea id="internalNotes" placeholder="Add a Description..."><%=internalNotes%></textarea>
+                        <textarea id="internalNotes" placeholder="Add a Description..."><%=model.internalNotes%></textarea>
                         <dl class="person-info">
                             <dt><label for="campaignDd">Campaign</label></dt>
                             <dd>
@@ -53,18 +53,18 @@
                     </div>
                     <div class="half-block left">
                         <dl class="person-info">
-                            <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= tempCompanyField %>" maxlength="32" /></dd>
+                            <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= model.tempCompanyField %>" maxlength="32" /></dd>
                             <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"> </select></dd>
-                            <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" maxlength="32"/></dd>
-                            <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" maxlength="32"/></dd>
-                            <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" maxlength="32"/></dd>
-                            <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" maxlength="32"/></dd>
-                            <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" maxlength="32"/></dd>
-                            <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" value="<%=(contactName) ? contactName.first : ''%>" maxlength="32"/></dd>
-                            <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" value="<%=(contactName) ? contactName.last : ''%>" maxlength="32"/></dd>
-                            <dt><label for="email">Email</label></dt><dd><input type="text" id="email" value="<%=email%>" maxlength="48"/></dd>
-                            <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=phones.phone%>" maxlength="32"/></dd>
-                            <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=phones.mobile%>" maxlength="32"/></dd>
+                            <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" placeholder="City" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" maxlength="32"/></dd>
+                            <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" value="<%=(model.contactName) ? model.contactName.first : ''%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" value="<%=(model.contactName) ? model.contactName.last : ''%>" maxlength="32"/></dd>
+                            <dt><label for="email">Email</label></dt><dd><input type="text" id="email" value="<%=model.email%>" maxlength="48"/></dd>
+                            <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" maxlength="32"/></dd>
+                            <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" maxlength="32"/></dd>
                             <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"> </select></dd>
                         </dl>
                     </div>
@@ -165,7 +165,7 @@
                     <br />
                 </div>
                 <div class="tab">
-                    <textarea id="internalNotes"><%=internalNotes%></textarea>
+                    <textarea id="internalNotes"><%=model.internalNotes%></textarea>
                 </div>
                 <div class="tab">
                     <div class="half-block left">
@@ -177,7 +177,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <span><%=(workflow) ? workflow.status : ''%></span>
+                                <span><%=(model.workflow) ? model.workflow.status : ''%></span>
                             </p>
                         </div>
                     </div>
@@ -190,7 +190,7 @@
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox" <%= (optout)? 'checked="checked"':''%> id="optout" />
+                                <input type="checkbox" <%= (model.optout)? 'checked="checked"':''%> id="optout" />
                             </p>
                         </div>
                     </div>
@@ -206,8 +206,8 @@
                             </p>
                         </div>
                         <div class="half-block left">
-                            <p><input type="checkbox" <%= (active)? 'checked="checked"':''%> id="active" /></p>
-                            <p><input type="text" id="reffered" value="<%=reffered%>" /></p>
+                            <p><input type="checkbox" <%= (model.active)? 'checked="checked"':''%> id="active" /></p>
+                            <p><input type="text" id="reffered" value="<%=model.reffered%>" /></p>
                         </div>
                     </div>
                     <div class="clearfix"></div>
