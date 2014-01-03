@@ -13,6 +13,8 @@ define([
             initialize: function () {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new LeadModel();
+                this.page=1;
+                this.pageG=1;
                 this.render();
             },
 
@@ -311,7 +313,6 @@ define([
                 common.populatePriority(App.ID.priorityDd, "/Priority");
                 common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
                 this.delegateEvents(this.events);
-
                 return this;
             }
 
