@@ -68,7 +68,7 @@
 				   var leadsCollection=this.collection.toJSON();
 				   for (var i=0;i<leadsCollection.length;i++){
 					   var item = leadsCollection[i];
-					   var id="#stage"+item._id;
+	a				   var id="#stage"+item._id;
 					   common.populateWorkflows("Lead", id, "", "/Workflows", item,function(id){
 						   self.styleSelect(id);
 					   });

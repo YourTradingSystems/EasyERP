@@ -1420,7 +1420,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         if (req.session && req.session.loggedIn) {
             access.getReadAccess(req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.getLeadsForChart(res);
+                    opportunities.getLeadsForChart(res,data);
                 } else {
                     res.send(403);
                 }

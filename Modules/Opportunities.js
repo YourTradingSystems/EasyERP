@@ -64,7 +64,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         },
         createdBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date, default: Date.now }
+            date:{ type: Date, default: Date.now }
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
@@ -72,7 +72,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         },
         campaign: { type: String, default: '' },
         source: { type: String, default: '' },
-		isConverted: { type: Boolean, default: false }
+		isConverted: { type: Boolean, default: false },
+        convertedDate: { type: Date, default: Date.now }
     }, { collection: 'Opportunities' });
 
     var opportunitie = mongoose.model('Opportunities', opportunitiesSchema);
@@ -327,12 +328,29 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             res.send(500, { error: 'opportunitie.save  error' });
         }
     };
-	function getLeadsForChart(response){
+	function getLeadsForChart(response,data){
 		var res={};
-		var c = new Date()-365*24*60*60*1000;
+		console.log(data);
+		if (!data.dataRange)data.dataRange=365;
+		if (!data.dataItem)data.dataItem="M";
+		switch(data.dataItem){
+			case "M":data.dataItem = "$month"
+			break;
+			case "W":data.dataItem = "$week"
+			break;
+			case "D":data.dataItem = "$dayOfYear"
+			break;
+			case "DW":data.dataItem = "$dayOfWeek"
+			break;
+			case "DM":data.dataItem = "$dayOfMonth"
+			break;
+			
+		}
+		if (data.source){
+			
+		var c = new Date()-data.dataRange*24*60*60*1000;
 		var a = new Date(c);
-		opportunitie.aggregate({
-			$match:{$and:[{createdBy:{$ne:null},$or:[{isConverted:true},{isOpportunitie:false}]},{'createdBy.date':{$gte:a}}]}},{$project:{"dateBy":{$month:"$createdBy.date"},isOpportunitie:1}},{$group:{_id:{dateBy:"$dateBy",isOpportunitie:"$isOpportunitie"},count:{$sum:1}}}).exec(function(err,result){
+			opportunitie.aggregate({$match:{$and:[{createdBy:{$ne:null},$or:[{isConverted:true},{isOpportunitie:false}]},{'createdBy.date':{$gte:a}}]}},{$group:{_id:{source:"$source",isOpportunitie:"$isOpportunitie"},count:{$sum:1}}},{$project:{"source":"$_id.source",count:1,"isOpp":"$_id.isOpportunitie",_id:0}}).exec(function(err,result){
 				if (err) {
 					console.log(err);
 					logWriter.log('Opportunities.js chart' + err);
@@ -343,6 +361,28 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 				}
 				
 			});
+		}else{
+			var item = data.dataItem;
+			var myItem = {};
+			myItem["$project"]={isOpportunitie:1};
+			myItem["$project"]["dateBy"]={};
+			myItem["$project"]["dateBy"][data.dataItem]="$convertedDate";
+			var c = new Date()-data.dataRange*24*60*60*1000;
+			var a = new Date(c);
+			opportunitie.aggregate({
+				$match:{$and:[{createdBy:{$ne:null},$or:[{isConverted:true},{isOpportunitie:false}]},{'createdBy.date':{$gte:a}}]}},myItem,{$group:{_id:{dateBy:"$dateBy",isOpportunitie:"$isOpportunitie"},count:{$sum:1}}},{$project:{"source":"$_id.dateBy",count:1,"isOpp":"$_id.isOpportunitie",_id:0}}).exec(function(err,result){
+				if (err) {
+					console.log(err);
+					logWriter.log('Opportunities.js chart' + err);
+					response.send(500, { error: "Can't get chart" });
+				} else {
+					res['data'] = result;
+					console.log(result);
+					response.send(res);
+				}
+				
+			});
+		}
 	}
     function get(response) {
         var res = {};

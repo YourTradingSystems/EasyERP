@@ -33,6 +33,7 @@ define([
                             that.formModel.save({
                                 isOpportunitie: true,
                                 isConverted: true,
+								convertedDate:new Date(),
                                 createCustomer: createCustomer
                             }, {
                                 headers: {

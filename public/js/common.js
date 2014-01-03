@@ -340,8 +340,8 @@
                 if (callback) callback();
             });
         };
-        var getLeadsForChart = function(callback){
-            dataService.getData("/LeadsForChart", { }, function (response) {
+        var getLeadsForChart = function(source, dataRange, dataItem,callback){
+            dataService.getData("/LeadsForChart", {source:source,dataRange:dataRange,dataItem:dataItem }, function (response) {
 				callback(response.data);
 			});
 		}
@@ -428,9 +428,8 @@
         };
 
         var populatePriority = function (selectId, url, model, callback) {
-            var selectList = $(selectId);
             var self = this;
-   
+
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && ((model.extrainfo && model.extrainfo.priority) || model.priority)) {
@@ -446,7 +445,9 @@
                         		$('<option/>').val(item.priority).text(item.priority);
                     });
                 }
+				var selectList = $(selectId);
                 selectList.append(options);
+
                 if (callback) callback();
             });
         };

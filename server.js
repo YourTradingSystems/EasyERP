@@ -10,7 +10,7 @@ var Admin = mongoose.mongo.Admin;
 var events = require('events');
 var event = new events.EventEmitter();
 
-mongoose.connect('mongodb://localhost/EasyERP');
+mongoose.connect('mongodb://localhost/CRM');
 
 var db = mongoose.connection;
 var tempDb = mongoose.createConnection('localhost', 'tempDb');
@@ -1110,6 +1110,9 @@ app.get('/Leads', function (req, res) {
 app.get('/LeadsForChart', function (req, res) {
     data = {};
     data.mid = req.param('mid');
+    data.source = req.param('source');
+    data.dataRange = req.param('dataRange');
+    data.dataItem = req.param('dataItem');
     requestHandler.getLeadsForChart(req, res, data);
 });
 
