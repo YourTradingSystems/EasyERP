@@ -2,10 +2,13 @@
 
   <form method="post" action="" id="createUserForm" class="form">
     <div class="half-block left">
-      <div class="avatar">
-        <div class="upload"><input type="file" value="Edit" id="inputImg" accept="image/*"></div>
-        <canvas id="avatar" width="120" height="120"></canvas>
-      </div>
+        <div class="avatar left">
+            <div class="upload">
+                Edit
+                <input type="file" value="Edit" id="inputImg" accept="image/*">
+            </div>
+            <canvas id="avatar" width="120" height="120"></canvas>
+        </div>
 
 	</div>
 	<div class="half-block left">
@@ -17,5 +20,14 @@
 	</div>
     <div class="clearfix">
     </div>
+    	  <div class="cropImages form" style="display:none;">
+     	<div class="formTitle">
+		<h3 class="left">Crop Images</h3>
+		<div class="clearfix"></div>
+	  	</div><br />	
+      	<div class="image_input" style="float: left;margin-right: 20px;"></div>
+      	<img class="image_output" />
+      	<div class="clearfix"></div>
+      </div>
   </form>
 </div>

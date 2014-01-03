@@ -79,20 +79,67 @@
                 var fr = new FileReader();
                 fr.onload = function () {
                     var src = "data:image/jpg;base64," + btoa(fr.result);
-                    if (model) {
-                        model.imageSrc = src;
-                    } else {
-                        model = {
-                            imageSrc: src
-                        }
-                    }
-                    canvasDrawing({ model: model, canvas: canvas }, context);
+                    $('.image_input').html(['<img src="', src, '"/>'].join(''));
+                    $('.image_input img').Jcrop({
+            			bgColor: 'black',
+            			bgOpacity: .6,
+            			setSelect: [0, 0, 140, 140],
+            			aspectRatio: 1,
+            			onSelect: imgSelect,
+            			onChange: imgSelect,
+            			boxWidth:650,
+            			boxHeight: 650,
+            			minSize:[100,100]
+            		});
+                   
+                	function imgSelect(sellictions) {
+                		 if(parseInt(sellictions.w) > 0){
+		                        var img = $('.image_input img')[0];
+		                		var canvasCrop = document.createElement('canvas');
+		                		canvasCrop.width = canvasCrop.height = 140;
+		            			var ctx = canvasCrop.getContext('2d');
+		            			ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
+		            			$('.image_output').attr('src', canvasCrop.toDataURL());
+                		 }
+            		}
+                	
+                	 $(".cropImages").dialog({
+                         dialogClass: "crop-images-dialog",
+                         width: "900px",
+                         buttons:{
+                             save:{
+                                 text:"Crop",
+                                 class:"btn",
+
+                                 click: function () {
+                                     if (model) {
+                                    	imageSrcCrop = $('.image_output').attr('src');
+                                     	model.imageSrc = imageSrcCrop;
+                                     } else {
+                                         model = {
+                                             imageSrc:  imageSrcCrop
+                                         }
+                                     }
+                                    canvasDrawing({ model: model, canvas: canvas }, context);
+     								$( this ).dialog( "close" );
+                                 }
+
+                             },
+                             cancel:{
+                                 text:"Cancel",
+                                 class:"btn",
+                                 click: function(){
+     								$( this ).dialog( "close" );
+                                 }
+                             }
+                         }
+
+     				});
                 };
                 fr.readAsBinaryString(file);
             });
             canvasDrawing({ model: model }, context);
         };
-
         var displayControlBtnsByActionType = function (actionType, viewType) {
             $("#saveDiscardHolder").hide();
             $("#top-bar-createBtn").hide();
@@ -327,7 +374,7 @@
                 var options = [];
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment._id === item._id)) ?
+                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected').attr('data-level', item.nestingLevel) :
                             $('<option/>').val(item._id).text(item.departmentName).attr('data-level', item.nestingLevel);
                     });
