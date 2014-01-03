@@ -79,20 +79,67 @@
                 var fr = new FileReader();
                 fr.onload = function () {
                     var src = "data:image/jpg;base64," + btoa(fr.result);
-                    if (model) {
-                        model.imageSrc = src;
-                    } else {
-                        model = {
-                            imageSrc: src
-                        }
-                    }
-                    canvasDrawing({ model: model, canvas: canvas }, context);
+                    $('.image_input').html(['<img src="', src, '"/>'].join(''));
+                    $('.image_input img').Jcrop({
+            			bgColor: 'black',
+            			bgOpacity: .6,
+            			setSelect: [0, 0, 140, 140],
+            			aspectRatio: 1,
+            			onSelect: imgSelect,
+            			onChange: imgSelect,
+            			boxWidth:650,
+            			boxHeight: 650,
+            			minSize:[100,100]
+            		});
+                   
+                	function imgSelect(sellictions) {
+                		 if(parseInt(sellictions.w) > 0){
+		                        var img = $('.image_input img')[0];
+		                		var canvasCrop = document.createElement('canvas');
+		                		canvasCrop.width = canvasCrop.height = 140;
+		            			var ctx = canvasCrop.getContext('2d');
+		            			ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
+		            			$('.image_output').attr('src', canvasCrop.toDataURL());
+                		 }
+            		}
+                	
+                	 $(".cropImages").dialog({
+                         dialogClass: "crop-images-dialog",
+                         width: "900px",
+                         buttons:{
+                             save:{
+                                 text:"Crop",
+                                 class:"btn",
+
+                                 click: function () {
+                                     if (model) {
+                                    	imageSrcCrop = $('.image_output').attr('src');
+                                     	model.imageSrc = imageSrcCrop;
+                                     } else {
+                                         model = {
+                                             imageSrc:  imageSrcCrop
+                                         }
+                                     }
+                                    canvasDrawing({ model: model, canvas: canvas }, context);
+     								$( this ).dialog( "close" );
+                                 }
+
+                             },
+                             cancel:{
+                                 text:"Cancel",
+                                 class:"btn",
+                                 click: function(){
+     								$( this ).dialog( "close" );
+                                 }
+                             }
+                         }
+
+     				});
                 };
                 fr.readAsBinaryString(file);
             });
             canvasDrawing({ model: model }, context);
         };
-
         var displayControlBtnsByActionType = function (actionType, viewType) {
             $("#saveDiscardHolder").hide();
             $("#top-bar-createBtn").hide();
