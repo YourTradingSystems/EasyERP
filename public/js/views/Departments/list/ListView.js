@@ -21,9 +21,9 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
             "click .checkbox": "checked",
             "click #groupList li": "gotoForm",
             "click #groupList .edit": "editItem",
-            "click #groupList .trash": "deleteItem"
+            "click #groupList .trash": "editItem"
         },
-/*		createDepartmentListRow:function(department,index,className){
+        /*createDepartmentListRow:function(department,index,className){
 			return ('<tr class="'+className+'" data-id="'+department._id+'">'+
 				'<td><input type="checkbox" value="department._id" class="checkbox"/></td>'+
 				'<td>'+index+'</td>'+
@@ -99,7 +99,9 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("li").data("id");
-            window.location.hash = "#easyErp/Departments/form/" + id;
+            //window.location.hash = "#easyErp/Departments/form/" + id;
+            var formModel = this.collection.get(id);
+            new EditView({ model: formModel });
         },
 
         createItem: function () {

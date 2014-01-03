@@ -3,7 +3,7 @@ define(
         var phoneRegExp = /^[0-9\+]?([0-9-\s()])+[0-9()]$/,
             intNumberRegExp = /[0-9]+/,
             nameRegExp = /^[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
-            groupsNameRegExp = /^[.]?[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
+            groupsNameRegExp = /^[.!@#&]?[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
             loginRegExp = /^[\w\.@]{6,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
             countryRegExp = /[a-zA-Zа-яА-Я\s-]+/,
