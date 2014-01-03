@@ -22,6 +22,7 @@ define([
                     { usersCollection:this.usersCollection.toJSON(),
                         contentType: this.contentType
                     }));
+                console.log(this.usersCollection.toJSON());
                 return this;
             }
         });
