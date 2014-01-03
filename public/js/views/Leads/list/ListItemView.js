@@ -13,7 +13,7 @@
 			   },
                events: {
                    "click .current-selected": "showNewSelect",
-                   "click .newSelectList li": "chooseOption",
+                   "click .newSelectList li": "chooseOption"
                },
 			   hideNewSelect:function(e){
 				   $(".newSelectList").remove();;
@@ -68,13 +68,13 @@
 				   var leadsCollection=this.collection.toJSON();
 				   for (var i=0;i<leadsCollection.length;i++){
 					   var item = leadsCollection[i];
-	a				   var id="#stage"+item._id;
+					   var id="#stage"+item._id;
 					   common.populateWorkflows("Lead", id, "", "/Workflows", item,function(id){
 						   self.styleSelect(id);
 					   });
 					   
 				   }
-			   },
+			   }
 		   });
 
 		   return LeadsListItemView;
