@@ -1,13 +1,7 @@
 <div class="form-holder">
   <form method="post" action="" id="createTaskForm" class="form notDialog">
       <fieldset>
-          <ul class="dialog-tabs">
-              <li><a class="active" href="javascript:;">Main</a></li>
-              <li><a href="javascript:;">Assignees</a></li>
-          </ul>
           <div class="clearfix"></div>
-          <div class="dialog-tabs-items">
-              <div class="dialog-tabs-item active">
                 <dl class="summary-info">
                   <dt><label>Summary </label></dt><dd><input type="text" name="summary" class="input-title blueback" id="summary" required maxlength="32"/></dd>
                 </dl>
@@ -77,90 +71,6 @@
                   </div>
                 </div>
                 <div class="clearfix"></div>
-                  <div class="clearfix"></div>
-              </div>
-              <div class="dialog-tabs-item">
-                  <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-                  <div class="clearfix"></div>
-
-                  <div class="half-block left">
-                      <div class="canReadAndWrite">
-                          <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
-                          <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
-                          <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
-                      </div>
-                  </div>
-                  <div class="half-block left">
-                      <dl class="project-owner-info">
-                          <dt><label for="allUsers">Owner</label></dt><dd>
-
-                          <select id="allUsers">
-
-                          </select>
-
-                      </dd>
-                      </dl>
-                  </div>
-
-
-                  <div class="addUserDialog">
-
-                      <div class="formTitle">
-                          <h3 class="left">Choose Users</h3>
-                          <div class="clearfix"></div>
-                      </div>
-                      <div class="groupsChooser">
-                          <div class="left">
-                              <ul id="sourceUsers" class="source">
-
-                              </ul>
-                          </div>
-                          <div class="left">
-                              <div class="swich"></div>
-                          </div>
-                          <div class="left">
-                              <ul id="targetUsers" class="target">
-
-                              </ul>
-                          </div>
-                      </div>
-
-                      <div class="clearfix"></div>
-                  </div>
-                  <div class="addGroupDialog">
-                      <div class="formTitle">
-                          <h3 class="left">Choose Groups</h3>
-                          <div class="clearfix"></div>
-                      </div>
-
-                      <div class="groupsChooser">
-                          <div class="left">
-                              <ul id="sourceGroups" class="source">
-
-                              </ul>
-                          </div>
-                          <div class="left">
-                              <div class="swich"></div>
-                          </div>
-                          <div class="left">
-                              <ul id="targetGroups" class="target">
-
-                              </ul>
-                          </div>
-                      </div>
-                      <div class="clearfix"></div>
-                  </div>
-
-                  <table class="groupsAndUser">
-                      <tr>
-                          <th>Groups and Users</th><th></th>
-                      </tr>
-                  </table>
-                  <div class="clearfix"></div>
-
-                  <div class="clearfix"></div>
-              </div>
-          </div>
           <div class="clearfix"></div>
       </fieldset>
   </form>

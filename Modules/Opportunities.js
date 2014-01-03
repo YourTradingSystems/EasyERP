@@ -519,6 +519,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }                                              //����� �������� Person
             };
 
+            console.log('___________________________loo__________________________________');
+            console.log(_id);
+            console.log(data.groups);
+
+
             if (data.company && data.company._id) {
                 data.company = data.company._id;
             } else if (data.company) {
@@ -539,6 +544,21 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
             }
+            if (data.groups.group) {
+                data.groups.group.forEach(function (group, index) {
+                    if (group._id)  data.groups.group[index] = newObjectId(group._id.toString());
+                });
+            }
+            if (data.groups.users) {
+                data.groups.users.forEach(function (user, index) {
+                    if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
+                });
+            }
+
+            console.log('=============================================');
+            console.log(data.groups);
+
+
 
             opportunitie.update({ _id: _id }, data, function (err, result) {
                 console.log(data);
@@ -882,7 +902,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             }
         );
 
-        var qeryGetOpportunities = function (opportunitiesArray,data) {
+        var qeryGetOpportunities = function (opportunitiesArray, data) {
 
             for(var k = 0; k < opportunitiesArray.length; k++) {
                 opportunitiesArray[k] = new newObjectId(opportunitiesArray[k]._id.toString());

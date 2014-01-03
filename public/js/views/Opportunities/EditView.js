@@ -354,6 +354,8 @@
 
             hideDialog: function () {
                 $(".edit-opportunity-dialog").remove();
+                $(".add-group-dialog").remove();
+                $(".add-user-dialog").remove();
             },
 
             deleteItem: function(event) {

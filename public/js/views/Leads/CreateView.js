@@ -31,6 +31,7 @@ define([
                 "click .prevUserList":"prevUserList",
                 "click .nextUserList":"nextUserList"
             },
+
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -40,6 +41,7 @@ define([
                         break;
                 }
             },
+
             changeTab:function(e){
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
                 $(e.target).addClass("active");
@@ -47,6 +49,7 @@ define([
                 $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
                 $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
             },
+
             addUser:function(e){
                 var self = this;
                 $(".addUserDialog").dialog({
@@ -85,6 +88,7 @@ define([
                     self.prevUserList(e,self.page)
                 });
             },
+
             addUserToTable:function(id){
                 $(".groupsAndUser").show();
                 $(".groupsAndUser tr").each(function(){
@@ -99,6 +103,7 @@ define([
                     $(".groupsAndUser").hide();
                 }
             },
+
             addGroup:function(e){
                 var self = this;
                 $(".addGroupDialog").dialog({
@@ -136,6 +141,7 @@ define([
                 });
 
             },
+
             unassign:function(e){
                 var id=$(e.target).closest("tr").data("id");
                 var type=$(e.target).closest("tr").data("type");
@@ -147,17 +153,21 @@ define([
                 }
 
             },
+
             nextUserList:function(e,page){
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
             },
+
             prevUserList:function(e,page){
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
             },
+
             addUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
 
             },
+
             removeUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
@@ -276,9 +286,13 @@ define([
 
 
             },
+
             hideDialog: function () {
                 $(".edit-dialog").remove();
+                $(".add-group-dialog").remove();
+                $(".add-user-dialog").remove();
             },
+
             render: function () {
 				var self=this;
                 var formString = this.template({

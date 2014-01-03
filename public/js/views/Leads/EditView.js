@@ -38,6 +38,7 @@ define([
                 'click #addUsers':'addUsers',
                 'click #removeUsers':'removeUsers'
             },
+
             changeTab:function(e){
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
                 $(e.target).addClass("active");
@@ -45,6 +46,7 @@ define([
                 $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
                 $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
             },
+
             addUser:function(e){
                 var self = this;
                 $(".addUserDialog").dialog({
@@ -84,6 +86,7 @@ define([
                 });
 
             },
+
             addGroup:function(e){
                 var self = this;
                 $(".addGroupDialog").dialog({
@@ -120,15 +123,18 @@ define([
                     self.prevUserList(e,self.pageG)
                 });
             },
+
             addUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
 
             },
+
             removeUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
+
             unassign:function(e){
                 var id=$(e.target).closest("tr").data("id");
                 var type=$(e.target).closest("tr").data("type");
@@ -140,9 +146,11 @@ define([
                 }
 
             },
+
             chooseUser:function(e){
                 $(e.target).toggleClass("choosen");
             },
+
             addUserToTable:function(id){
                 $(".groupsAndUser").show();
                 $(".groupsAndUser tr").each(function(){
@@ -170,6 +178,8 @@ define([
 
             hideDialog: function () {
                 $(".edit-leads-dialog").remove();
+                $(".add-group-dialog").remove();
+                $(".add-user-dialog").remove();
             },
 
             switchTab: function (e) {
@@ -332,6 +342,7 @@ define([
                         });
                 }
             },
+
 			showNewSelect:function(e){
 				var s="<ul class='newSelectList'>";
 				$(e.target).parent().find("select option").each(function(){
@@ -341,20 +352,11 @@ define([
 				$(e.target).parent().append(s);
 				
 			},
+
 			hideNewSelect:function(e){
 				$(".newSelectList").remove();;
 			},
-			showNewSelect:function(e){
-				this.hideNewSelect();
-				var s="<ul class='newSelectList'>";
-				$(e.target).parent().find("select option").each(function(){
-					s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-				});
-				 s+="</ul>";
-				$(e.target).parent().append(s);
-				return false;
-				
-			},
+
 			chooseOption:function(e){
 				var k = $(e.target).parent().find("li").index($(e.target));
 				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
