@@ -14,7 +14,7 @@ define(['Validation'],function (Validation) {
                     id:"",
                     name:""
                 }
-            }
+            },
         },
         initialize: function(){
             this.on('invalid', function(model, errors){

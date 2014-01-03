@@ -88,7 +88,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 //OpportunitieRemaining = 0;
                 _.each(this.collection.optionsArray, function(wfId){
                     if (wfId.id == workflow._id) {
-                        OpportunitieCount = wfId.namberOfOpportunitie;
+                        OpportunitieCount = wfId.namberOfOpportunities;
                         //OpportunitieRemaining = wfId.remainingOfOpportunitie;
                     }
                 });

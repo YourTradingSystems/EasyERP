@@ -868,6 +868,14 @@ app.put('/Departments/:viewType/:_id', function (req, res) {
     requestHandler.updateDepartment(req, res, id, data);
 });
 
+app.put('/Departments/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.department = req.body;
+    requestHandler.updateDepartment(req, res, id, data);
+});
+
 app.delete('/Departments/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
