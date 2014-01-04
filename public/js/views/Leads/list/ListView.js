@@ -38,14 +38,18 @@ define([
 			},
             showFilteredPage: function (event) {
                 var workflowIdArray = [];
+                var isConverted = false;
                 $('.filter-check-list input:checked').each(function(){
                     workflowIdArray.push($(this).val());
+                    if ($(this).attr("id") == 'isConverted') {
+                         isConverted = $(this).val();
+                    }
                 })
                 this.collection.status = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray });
+                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray, isConverted : isConverted });
             },
 
 			showfilter:function(e){

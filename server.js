@@ -569,7 +569,6 @@ app.get('/Workflows', function (req, res) {
     requestHandler.getWorkflow(req, res, data);
 });
 
-
 app.get('/taskWorkflows', function (req, res) {
     data = {};
     type = {};
