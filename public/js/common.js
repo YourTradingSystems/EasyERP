@@ -719,7 +719,7 @@
                 if (callback) callback();
             });
         }
-        var populateJobPositions = function (selectId, url, model) {
+        var populateJobPositions = function (selectId, url, model,callback,callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -728,7 +728,7 @@
                 if (model && model.jobPosition) {
                     options = $.map(response.data, function (item) {
                         return model.jobPosition._id === item._id ?
-                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                        	$('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
                 } else {
@@ -737,6 +737,7 @@
                     });
                 }
                 selectList.append(options);
+                if (callback) callback();
             });
         }
         var populateSourceApplicants = function (selectId, url, model) {

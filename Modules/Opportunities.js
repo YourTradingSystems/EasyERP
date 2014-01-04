@@ -781,8 +781,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         var qeryEveryOne = function (arrayOfId, n) {
             var query = opportunitie.find({ isOpportunitie: true }).
                 where('_id').in(arrayOfId);
-            if (data && data.status && data.status.length>0){}
-                query.where('workflow').in(data.status);
+            if (data && data.status && data.status.length>0){
+            	query.where('workflow').in(data.status);
+            }
+    
             query.populate('customer salesPerson salesTeam workflow').
                 populate('createdBy.user').
                 populate('editedBy.user').
@@ -1062,7 +1064,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         });
                         opportunitie.find().
                             where('_id').in(responseOpportunitiesArray).
-                            populate('relatedUser customer department jobPosition workflow').
+                            populate('relatedUser customer department jobPosition salesPerson workflow').
                             populate('createdBy.user').
                             populate('editedBy.user').
                             populate('groups.users').
