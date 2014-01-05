@@ -1,7 +1,7 @@
 // JavaScript source code
-var Employee = function (logWriter, mongoose, event) {
+var Employee = function (logWriter, mongoose, event, models) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
-    var employeeSchema = mongoose.Schema({
+    var schema = mongoose.Schema({
         isEmployee: { type: Boolean, default: false },
         imageSrc: { type: String, default: '' },
         subject: { type: String, default: '' },
@@ -79,7 +79,7 @@ var Employee = function (logWriter, mongoose, event) {
 
     }, { collection: 'Employees' });
 
-    var employee = mongoose.model('Employees', employeeSchema);
+    //var employee = mongoose.model('Employees', employeeSchema);
 
     function getAge(birthday) {
         birthday = new Date(birthday);
@@ -103,7 +103,7 @@ var Employee = function (logWriter, mongoose, event) {
         return new Date(valaueOf_date);
     };
 
-    function create(data, res) {
+    function create(req, data, res) {
         try {
             if (!data) {
                 logWriter.log('Employees.create Incorrect Incoming Data');
@@ -114,7 +114,7 @@ var Employee = function (logWriter, mongoose, event) {
                     $and: [{ 'name.first': data.name.first },
                         { 'name.last': data.name.last }]
                 };
-                employee.find(query, function (error, doc) {
+                models.get(req.session.lastDb - 1, "Employees", schema).find(query, function (error, doc) {
                     if (error) {
                         console.log(error);
                         logWriter.log('Employees.js. create Employee.find' + error);
@@ -132,7 +132,7 @@ var Employee = function (logWriter, mongoose, event) {
 
             function savetoDb(data) {
                 try {
-                    _employee = new employee();
+                    _employee = new  models.get(req.session.lastDb - 1, "Employees", schema)();
                     if (data.uId) {
 
                         _employee.createdBy.user = data.uId;
@@ -332,11 +332,11 @@ var Employee = function (logWriter, mongoose, event) {
         }
     };//End create 
 
-    function get(response) {
+    function get(req, response) {
         var res = {}
         var description = "";
         res['data'] = [];
-        var query = employee.find();
+        var query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
             populate('createdBy.user').
@@ -354,8 +354,8 @@ var Employee = function (logWriter, mongoose, event) {
             }
         });
     };
-    function getEmployeesAlphabet(response) {
-		var query=employee.aggregate([ {$match : { isEmployee : true }} ,{$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}}]);
+    function getEmployeesAlphabet(req, response) {
+		var query= models.get(req.session.lastDb - 1, "Employees", schema).aggregate([ {$match : { isEmployee : true }} ,{$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}}]);
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
@@ -370,13 +370,13 @@ var Employee = function (logWriter, mongoose, event) {
     };
     
     // Custom function for list
-    function getEmployeeForList(data, response) {
+    function getEmployeeForList(req, data, response) {
         var res = {}
         var description = "";
         res['data'] = [];
-        var query = employee.find();
+        var query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
         if (data.letter) {
-            query = employee.find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            query =  models.get(req.session.lastDb - 1, "Employees", schema).find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
         }
 
         query.where('isEmployee', true);
@@ -386,10 +386,9 @@ var Employee = function (logWriter, mongoose, event) {
             }
         });
 
-        query = employee.find();
-        if (data.letter) {
-            query = employee.find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-        }
+        query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
+        if (data.letter)
+            query = models.get(req.session.lastDb - 1, "Employees", schema).find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
 
         query.where('isEmployee', true);
         query.populate('relatedUser department jobPosition manager coach').
@@ -410,10 +409,10 @@ var Employee = function (logWriter, mongoose, event) {
         });
     };
 
-    function getForDd(response) {
+    function getForDd(req, response) {
         var res = {};
         res['data'] = [];
-        var query = employee.find();
+        var query = models.get(req.session.lastDb - 1, 'Employees', schema).find();
         query.where('isEmployee', true);
         query.select('_id name ');
         query.sort({ 'name.first': 1 });
@@ -429,10 +428,10 @@ var Employee = function (logWriter, mongoose, event) {
         });
     };
 
-    function getForDdByRelatedUser(uId, response) {
+    function getForDdByRelatedUser(req, uId, response) {
         var res = {};
         res['data'] = [];
-        var query = employee.find({ relatedUser: uId });
+        var query =  models.get(req.session.lastDb - 1, "Employees", schema).find({ relatedUser: uId });
         query.where('isEmployee', true);
         query.select('_id name ');
         query.sort({ 'name.first': 1 });
@@ -448,10 +447,10 @@ var Employee = function (logWriter, mongoose, event) {
         });
     };
 
-    function getApplications(response) {
+    function getApplications(req, response) {
         var res = {};
         res['data'] = [];
-        var query = employee.find();
+        var query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
 
         query.where('isEmployee', false);
         query.populate('relatedUser department jobPosition workflow').
@@ -471,14 +470,14 @@ var Employee = function (logWriter, mongoose, event) {
         });
     };
 
-    function getApplicationsForList(data, response) {
+    function getApplicationsForList(req, data, response) {
         var res = {}
         var description = "";
         res['data'] = [];
 
 
         if (data.status) {
-            var query = employee.find();
+            var query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
             query.where('isEmployee', false);
             query.where('workflow').in(data.status);
             query.exec(function (err, result) {
@@ -486,18 +485,18 @@ var Employee = function (logWriter, mongoose, event) {
                     res['listLength'] = result.length;
                 }
             });
-            query = employee.find();
+            query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
             query.where('isEmployee', false);
             query.where('workflow').in(data.status);
         } else {
-            var query = employee.find();
+            var query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
             query.where('isEmployee', false);
             query.exec(function (err, result) {
                 if (!err) {
                     res['listLength'] = result.length;
                 }
             });
-            query = employee.find();
+            query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
             query.where('isEmployee', false);
         }
         query.populate('relatedUser department jobPosition manager coach').
@@ -521,8 +520,8 @@ var Employee = function (logWriter, mongoose, event) {
     };
     //end getById
 
-    function getById(data, response) {
-        var query = employee.findById(data.id, function (err, res) { });
+    function getById(req, data, response) {
+        var query =  models.get(req.session.lastDb - 1, "Employees", schema).findById(data.id, function (err, res) { });
         query.populate('manager', 'name _id');
         query.populate('department', 'departmentName _id');
         query.populate('coach', 'name _id');
@@ -544,7 +543,7 @@ var Employee = function (logWriter, mongoose, event) {
 
     };
 
-    function update(_id, data, res) {
+    function update(req, _id, data, res) {
         try {
             delete data._id;
             delete data.createdBy;
@@ -570,7 +569,7 @@ var Employee = function (logWriter, mongoose, event) {
                 data.dateBirth = getDate(data.dateBirth);
                 data.age = getAge(data.dateBirth);
             }
-            employee.findByIdAndUpdate({ _id: _id }, data, function (err, result) {
+             models.get(req.session.lastDb - 1, "Employees", schema).findByIdAndUpdate({ _id: _id }, data, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
@@ -595,8 +594,8 @@ var Employee = function (logWriter, mongoose, event) {
         }
     };// end update
 
-    function remove(_id, res) {
-        employee.remove({ _id: _id }, function (err, result) {
+    function remove(req, _id, res) {
+         models.get(req.session.lastDb - 1, "Employees", schema).remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Employees.js remove employee.remove " + err);
@@ -608,7 +607,7 @@ var Employee = function (logWriter, mongoose, event) {
         });
     };// end remove
 
-    function getFilterApplications(data, response) {
+    function getFilterApplications(req, data, response) {
         var res = {};
         res['data'] = [];
         res['showMore'] = [];
@@ -616,7 +615,7 @@ var Employee = function (logWriter, mongoose, event) {
         var optionsArray = [];
         var showMore = false;
 
-        var queryAggregate = employee.aggregate(
+        var queryAggregate =  models.get(req.session.lastDb - 1, "Employees", schema).aggregate(
             {
                 $match:
                     { isEmployee: false }
@@ -647,7 +646,7 @@ var Employee = function (logWriter, mongoose, event) {
                             showMore = true;
                         }
                     });
-                    employee.find()
+                     models.get(req.session.lastDb - 1, "Employees", schema).find()
                         .where('_id').in(responseTasksArray)
                         .populate('relatedUser department jobPosition workflow')
                         .populate('createdBy.user')
@@ -694,9 +693,7 @@ var Employee = function (logWriter, mongoose, event) {
 
         getFilterApplications: getFilterApplications,
 
-        employee: employee,
-
-        employeeSchema: employeeSchema,
+        schema: schema,
 
         getById: getById
     };

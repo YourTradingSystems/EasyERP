@@ -1,8 +1,10 @@
 // JavaScript source code
-var Users = function (logWriter, mongoose) {
-    var crypto = require('crypto');
+var Users = function (logWriter, mongoose, models) {
 
-    var userSchema = mongoose.Schema({
+    var crypto = require('crypto');
+    var collection = 'Users';
+
+    var schema = mongoose.Schema({
         imageSrc: { type: String, default: '' },
         login: { type: String, default: '' },
         email: { type: String, default: '' },
@@ -12,9 +14,15 @@ var Users = function (logWriter, mongoose) {
             access_token: { type: String, default: '' }
         },
         profile: { type: Number, ref: "Profile" }
-    }, { collection: 'Users' });
+    }, { collection: collection });
 
-    var User = mongoose.model('Users', userSchema);
+    //var User = mongoose.model(collection, schema);
+    //var User = mongoose.model(collection, schema);
+    //var User = loadDb();
+
+    //function loadDb(db, collection, schema) {
+    //    return db.model(collection, schema);
+    //};
 
     function createUser(data, result) {
         try {
@@ -102,7 +110,7 @@ var Users = function (logWriter, mongoose) {
         try {
             if (data) {
                 if (data.login || data.email) {
-                    User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
+                    models.get(req.session.lastDb - 1, collection, schema).find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                         try {
 							if (_users && _users.length !== 0) {
                                 var shaSum = crypto.createHash('sha256');
@@ -111,6 +119,7 @@ var Users = function (logWriter, mongoose) {
                                     req.session.loggedIn = true;
                                     req.session.uId = _users[0]._id;
                                     req.session.uName = _users[0].login;
+                                    res.cookie('lastDb', data.dbId);
                                     res.send(200);
                                 } else {
                                     res.send(400);
@@ -142,7 +151,7 @@ var Users = function (logWriter, mongoose) {
         }
     }//End login
 
-    function getUsers(response,data) {
+    function getUsers(response, data) {
         var res = {};
         res['data'] = [];
         var query = User.find({}, { __v: 0, upass: 0 });
@@ -252,7 +261,7 @@ var Users = function (logWriter, mongoose) {
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
-        User: User
+        schema: schema
     };
 };
 

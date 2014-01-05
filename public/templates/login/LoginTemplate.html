@@ -1,8 +1,15 @@
 <div>
     <form id="loginForm">
+        <div>
+            <select id="dbs">
+                <% options.forEach(function(db, index){%>
+                <option data-id="<%=index + 1%>"><%=db%></option>
+                <%})%>
+            </select>
+        </div>
         <h2>Login to your account</h2>
         <p>
-		  <div class="error">Such user doesn't registered</div>
+            <div class="error">Such user doesn't registered</div>
             <!-- 	        <label for="ulogin">Login:</label> -->
             <div class="icon-login">
                 <span class="icon"></span>

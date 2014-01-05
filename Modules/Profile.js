@@ -15,7 +15,7 @@ var Profile = function (logWriter, mongoose) {
 
     }, { collection: 'Profile' });
 
-    var profile = mongoose.model('Profile', ProfileSchema);
+    //var profile = mongoose.model('Profile', ProfileSchema);
 
     function createProfile(data, res) {
         try {
@@ -160,7 +160,7 @@ var Profile = function (logWriter, mongoose) {
         
         removeProfile: removeProfile,
         
-        profile: profile
+        schema: ProfileSchema
     };
 
 };

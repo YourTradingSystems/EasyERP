@@ -6,8 +6,12 @@ define([
 
     var LoginView = Backbone.View.extend({
         el: '#wrapper',
-        initialize: function(){
-            this.render();
+        initialize: function (options) {
+            if (options && options.dbs) {
+                this.render(options);
+            } else {
+                this.render();
+            }
         },
         events: {
         	"submit #loginForm": "login",
@@ -18,8 +22,13 @@ define([
         	"focusout #upass": "passwordFocus",
         	"click .remember-me": "checkClick"
         },
-        render: function(){
-            this.$el.html(LoginTemplate);
+        render: function(options){
+            if (options) {
+                this.$el.html(_.template(LoginTemplate, { options: options.dbs }));
+            } else {
+                this.$el.html(LoginTemplate);
+                $("#loginForm").addClass("notRegister");
+            }
             return this;
         },
         usernameFocus: function(event){
@@ -42,10 +51,11 @@ define([
         login: function(event){
         	event.preventDefault();
 			$("#loginForm").removeClass("notRegister");
-        	var data = {
-        			login: this.$("#ulogin").val(),
-        			pass: this.$("#upass").val()
-        	};
+            var data = {
+                login: this.$("#ulogin").val(),
+                pass: this.$("#upass").val(),
+                dbId: this.$el.find("#dbs :selected").data("id")
+            };
         	$.ajax({
         	    url: "/login",
         	    type: "POST",
@@ -54,7 +64,7 @@ define([
         	            Custom.runApplication(true);
         	    },
         	    error: function () {
-        	        Custom.runApplication(false, "Server is unavailable...");
+        	        //Custom.runApplication(false, "Server is unavailable...");
 					$("#loginForm").addClass("notRegister");
         	    }
         	});

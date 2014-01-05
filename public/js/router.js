@@ -353,7 +353,19 @@ define([
 
         login: function () {
             this.mainView = null;
-            this.changeWrapperView(new LoginView());
+            var url = "/getDBS";
+            var that = this;
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (response) {
+                    that.changeWrapperView(new LoginView({ dbs: response.dbsNames }));
+                },
+                error: function (data) {
+                    that.changeWrapperView(new LoginView());
+                }
+            });
+            
         }
     });
     return AppRouter;

@@ -1,6 +1,6 @@
-﻿var Customers = function (logWriter, mongoose, findCompany) {
+﻿var Customers = function (logWriter, mongoose, models) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
-    var customerSchema = mongoose.Schema({
+    var schema = mongoose.Schema({
         type: { type: String, default: '' },
         isOwn: { type: Boolean, default: false },
         name: {
@@ -24,7 +24,7 @@
         jobPosition: { type: String, default: '' },
         skype: { type: String, default: '' },
         phones: {
-            phone: { type: String, default: ''  },
+            phone: { type: String, default: '' },
             mobile: { type: String, default: '' },
             fax: { type: String, default: '' }
         },
@@ -50,20 +50,20 @@
         notes: { type: Array, default: [] },
         attachments: { type: Array, default: [] },
         history: { type: Array, default: [] },
-		createdBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date, default: Date.now}
-		},
-		editedBy:{
-			user:{type:ObjectId, ref: 'Users', default:null},
-			date:{type:Date}
-		}
+        createdBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date, default: Date.now }
+        },
+        editedBy: {
+            user: { type: ObjectId, ref: 'Users', default: null },
+            date: { type: Date }
+        }
     }, { collection: 'Customers' });
 
-    var customer = mongoose.model('Customers', customerSchema);
+    //var customer = mongoose.model('Customers', customerSchema);
 
     return {
-        create: function (data, res) {
+        create: function (req, data, res) {
             try {
                 if (!data) {
                     logWriter.log('Person.create Incorrect Incoming Data');
@@ -87,7 +87,7 @@
                                 break;
                         }
                     }
-                    customer.find(query, function (error, doc) {
+                    models.get(req.session.lastDb - 1, "Customers", schema).find(query, function (error, doc) {
                         if (error) {
                             logWriter.log('Person.js. create Person.find' + error);
                             res.send(500, { error: 'Person.create find error' });
@@ -102,10 +102,10 @@
                 }
                 function savetoBd(data) {
                     try {
-                        _customer = new customer();
+                        _customer = new models.get(req.session.lastDb - 1, "Customers", schema)();
                         if (data.uId) {
-						
-                            _customer.createdBy.user=data.uId;
+
+                            _customer.createdBy.user = data.uId;
                         }
 
                         if (data.type) {
@@ -253,10 +253,10 @@
             }
         },//End create
 
-        getForDd: function (response) {
+        getForDd: function (req, response) {
             var res = {};
             res['data'] = [];
-            var query = customer.find({ 'relatedUser.id': { $ne: '' } }, { _id: 1, name: 1 });
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).find({ 'relatedUser.id': { $ne: '' } }, { _id: 1, name: 1 });
             query.sort({ name: 1 });
             query.exec(function (err, customers) {
                 if (err) {
@@ -270,10 +270,11 @@
             });
         },
 
-        getPersons: function (response) {
+        getPersons: function (req, response) {
+            console.log("------------------------------------");
             var res = {};
             res['data'] = [];
-            var query = customer.find({ type: 'Person' });
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Person' });
             query.populate('company', '_id name').
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
@@ -291,32 +292,32 @@
                 }
             });
         },
-        
-        getFilterPersons: function (data, response) {
+
+        getFilterPersons: function (req, data, response) {
             var res = {};
             res['data'] = [];
-			var query;
-			if (data.letter){
-				query = customer.find({ type: 'Person','name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
-			}else{
-				query = customer.find({ type: 'Person' });
-			}
+            var query;
+            if (data.letter) {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Person', 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Person' });
+            }
             query.exec(function (err, result) {
                 if (!err) {
                     res['listLength'] = result.length;
                 }
             });
-			if (data.letter){
-				query = customer.find({ type: 'Person','name.last':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
-			}else{
-				query = customer.find({ type: 'Person' });
-			}
+            if (data.letter) {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Person', 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Person' });
+            }
 
             query.populate('company', '_id name').
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
                   populate('editedBy.user');
-            query.skip((data.page-1)*data.count).limit(data.count);
+            query.skip((data.page - 1) * data.count).limit(data.count);
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -326,40 +327,42 @@
                 } else {
                     res['data'] = result;
                     response.send(res);
+                    console.log("Response send ------------------->");
                 }
             });
         },
-        getPersonAlphabet: function (response) {
-			var query=customer.aggregate([ {$match : { type : "Person" }} ,{$project:{later:{$substr:["$name.last",0,1]}}},{$group:{_id:"$later"}}]);
+
+        getPersonAlphabet: function (req, response) {
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).aggregate([{ $match: { type: "Person" } }, { $project: { later: { $substr: ["$name.last", 0, 1] } } }, { $group: { _id: "$later" } }]);
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("customer.js get person alphabet " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
-					var res={};
+                    var res = {};
                     res['data'] = result;
                     response.send(res);
                 }
             });
         },
-        getCompaniesAlphabet: function (response) {
-			var query=customer.aggregate([ {$match : { type : "Company" }} ,{$project:{later:{$substr:["$name.first",0,1]}}},{$group:{_id:"$later"}}]);
+        getCompaniesAlphabet: function (req, response) {
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).aggregate([{ $match: { type: "Company" } }, { $project: { later: { $substr: ["$name.first", 0, 1] } } }, { $group: { _id: "$later" } }]);
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("customer.js get person alphabet " + err);
                     response.send(500, { error: "Can't find customer" });
                 } else {
-					var res={};
+                    var res = {};
                     res['data'] = result;
                     response.send(res);
                 }
             });
         },
 
-        getPersonById: function (id, response) {
-            var query = customer.findById(id);
+        getPersonById: function (req, id, response) {
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).findById(id);
             query.populate('company', '_id name').
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
@@ -375,10 +378,10 @@
                 }
             });
         },
-        
-        getCompanyById: function (id, response) {
+
+        getCompanyById: function (req, id, response) {
             console.log(id);
-            var query = customer.findById(id);
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).findById(id);
             query.populate('department', '_id departmentName').
             	  populate('salesPurchases.salesPerson', '_id name').
                   populate('createdBy.user').
@@ -395,10 +398,10 @@
             });
         },
 
-        getCompanies: function (response) {
+        getCompanies: function (req, response) {
             var res = {};
             res['data'] = [];
-            var query = customer.find({ type: 'Company' });
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Company' });
             query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
@@ -416,61 +419,34 @@
                 }
             });
         },
-        
-        getFilterCompanies: function (data, response) {
+
+        getFilterCompanies: function (req, data, response) {
             var res = {};
             res['data'] = [];
             var query;
-			if (data.letter){
-				query = customer.find({ type: 'Company','name.first':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
-			}else{
-				query = customer.find({ type: 'Company' });
-			}
+            if (data.letter) {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Company', 'name.first': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Company' });
+            }
 
             query.exec(function (err, result) {
                 if (!err) {
                     res['listLength'] = result.length;
                 }
             });
-			if (data.letter){
-				query = customer.find({ type: 'Company','name.first':new RegExp('^['+data.letter.toLowerCase()+data.letter.toUpperCase()+'].*')});
-			}else{
-				query = customer.find({ type: 'Company' });
-			}
+            if (data.letter) {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Company', 'name.first': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                query = models.get(req.session.lastDb - 1, "Customers", schema).find({ type: 'Company' });
+            }
 
             query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
                   populate('editedBy.user');
 
-            query.skip((data.page-1)*data.count).limit(data.count);
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
-                    response.send(500, { error: "Can't find customer" });
-                } else {
-                    res['data'] = result;
-                    response.send(res);
-                }
-            });
-        },
-        
-        getOwnCompanies: function (data, response) {
-            var res = {};
-            res['data'] = [];
-            var query = customer.find({$and:[{ type: 'Company' }, {isOwn: true}]});
-            query.exec(function (err, result) {
-                if (!err) {
-                    res['listLength'] = result.length;
-                }
-            });
-            query = customer.find({$and:[{ type: 'Company' }, {isOwn: true}]});
-            query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
-            query.skip((data.page-1)*data.count).limit(data.count);
+            query.skip((data.page - 1) * data.count).limit(data.count);
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -483,10 +459,37 @@
             });
         },
 
-        getCustomers: function (response) {
+        getOwnCompanies: function (req, data, response) {
             var res = {};
             res['data'] = [];
-            var query = customer.find({ 'salesPurchases.isCustomer': true });
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
+            query.exec(function (err, result) {
+                if (!err) {
+                    res['listLength'] = result.length;
+                }
+            });
+            query = models.get(req.session.lastDb - 1, "Customers", schema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
+            query.populate('salesPurchases.salesPerson', '_id name').
+                  populate('salesPurchases.salesTeam', '_id departmentName').
+                  populate('createdBy.user').
+                  populate('editedBy.user');
+            query.skip((data.page - 1) * data.count).limit(data.count);
+            query.exec(function (err, result) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("customer.js get customer.find " + err);
+                    response.send(500, { error: "Can't find customer" });
+                } else {
+                    res['data'] = result;
+                    response.send(res);
+                }
+            });
+        },
+
+        getCustomers: function (req, response) {
+            var res = {};
+            res['data'] = [];
+            var query = models.get(req.session.lastDb - 1, "Customers", schema).find({ 'salesPurchases.isCustomer': true });
             query.sort({ "name.first": 1 });
             query.exec(function (err, customers) {
                 if (err) {
@@ -500,7 +503,7 @@
             });
         },
 
-        update: function (_id, remove, data, res) {
+        update: function (req, _id, remove, data, res) {
             try {
                 delete data._id;
                 delete data.createdBy;
@@ -522,7 +525,7 @@
                 if (data.salesPurchases && data.salesPurchases.salesTeam && data.salesPurchases.salesTeam._id) {
                     data.salesPurchases.salesTeam = data.salesPurchases.salesTeam._id;
                 }
-                customer.findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
+                models.get(req.session.lastDb - 1, "Customers", schema).findByIdAndUpdate({ _id: _id }, data, function (err, customers) {
                     if (err) {
                         console.log(err);
                         logWriter.log("Customer.js update customer.update " + err);
@@ -540,8 +543,8 @@
             }
         },
 
-        remove: function (_id, res) {
-            customer.remove({ _id: _id }, function (err, customer) {
+        remove: function (req, _id, res) {
+            models.get(req.session.lastDb - 1, "Customers", schema).remove({ _id: _id }, function (err, customer) {
                 if (err) {
                     console.log(err);
                     logWriter("Project.js remove project.remove " + err);
@@ -552,7 +555,7 @@
             });
         },
 
-        customer: customer
+        schema: schema
     }
 };
 

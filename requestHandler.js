@@ -1,27 +1,29 @@
-var requestHandler = function (fs, mongoose, tempDb, event) {
+var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
-        department = require("./Modules/Department.js")(logWriter, mongoose),
-        users = require("./Modules/Users.js")(logWriter, mongoose),
-        profile = require("./Modules/Profile.js")(logWriter, mongoose),
-        access = require("./Modules/additions/access.js")(profile.profile, users.User),
-        employee = require("./Modules/Employees.js")(logWriter, mongoose, event),
-        google = require("./Modules/Google.js")(users),
-        events = require("./Modules/Events.js")(logWriter, mongoose, google),
-        project = require("./Modules/Projects.js")(logWriter, mongoose, department),
-        customer = require("./Modules/Customers.js")(logWriter, mongoose),
-        workflow = require("./Modules/Workflow.js")(logWriter, mongoose),
-        jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee),
-        degrees = require("./Modules/Degrees.js")(logWriter, mongoose),
-        sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow),
-        modules = require("./Modules/Module.js")(logWriter, mongoose, users, profile),
-        birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, tempDb, event);
+        models = require("./models.js")(dbsArray),
+        department = require("./Modules/Department.js")(logWriter, mongoose, models),
+        users = require("./Modules/Users.js")(logWriter, mongoose, models),
+        profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
+        access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
+        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, models),
+        google = require("./Modules/Google.js")(users, models),
+        events = require("./Modules/Events.js")(logWriter, mongoose, google, models),
+        project = require("./Modules/Projects.js")(logWriter, mongoose, department, models),
+        customer = require("./Modules/Customers.js")(logWriter, mongoose, models),
+        workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models),
+        jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, models),
+        degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
+        sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose, models),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, models),
+        modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
+        birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
     function getModules(req, res) {
-        if (req.session && req.session.loggedIn) {
-            users.User.findById(req.session.uId, function (err, _user) {
+        console.log("Requst get Modules is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            models.get(req.session.lastDb - 1, 'Users', users.schema).findById(req.session.uId, function (err, _user) {
                 if (_user) {
-                    modules.get(_user.profile, res);
+                    modules.get(req, _user.profile, res);
                 } else {
                     res.send(403);
                 }
@@ -38,10 +40,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function createUser(req, res, data) {
         console.log("Requst createUser is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 7, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 7, function (access) {
                 if (access) {
-                    users.createUser(data.user, res);
+                    users.createUser(req, data.user, res);
                 } else {
                     res.send(403);
                 }
@@ -53,8 +55,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getUsers(req, res, data) {
         console.log("Requst getUsers is success");
-        if (req.session && req.session.loggedIn) {
-            users.getUsers(res,data);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            users.getUsers(req, res, data);
         } else {
             res.send(401);
         }
@@ -62,11 +64,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getFilterUsers(req, res, data) {
         console.log("Requst getUsers is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 7, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 7, function (access) {
                 console.log(access);
                 if (access) {
-                    users.getFilterUsers(data, res);
+                    users.getFilterUsers(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -78,11 +80,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getUserById(req, res, data) {
         console.log("Request getUser is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 7, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 7, function (access) {
                 console.log(access);
                 if (access) {
-                    users.getUserById(data.id, res);
+                    users.getUserById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -95,10 +97,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateUser(req, res, id, data) {
         console.log("Requst createUser is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 7, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 7, function (access) {
                 if (access) {
-                    users.updateUser(id, data.user, res);
+                    users.updateUser(req, id, data.user, res);
                 } else {
                     res.send(403);
                 }
@@ -110,10 +112,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeUser(req, res, id) {
         console.log("Requst removeUser is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 7, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 7, function (access) {
                 if (access) {
-                    users.removeUser(id, res);
+                    users.removeUser(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -126,10 +128,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //---------END------Users--------------------------------
     //---------------------Profile--------------------------------
     function createProfile(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 51, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 51, function (access) {
                 if (access) {
-                    profile.createProfile(data.profile, res);
+                    profile.createProfile(req, data.profile, res);
                 } else {
                     res.send(403);
                 }
@@ -143,11 +145,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getProfile(req, res) {
         try {
             console.log("Requst getProfile is success");
-            if (req.session && req.session.loggedIn) {
-                access.getReadAccess(req.session.uId, 51, function (access) {
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                access.getReadAccess(req, req.session.uId, 51, function (access) {
                     console.log(access);
                     if (access) {
-                        profile.getProfile(res);
+                        profile.getProfile(req, res);
                     } else {
                         res.send(403);
                     }
@@ -164,10 +166,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateProfile(req, res, id, data) {
         console.log("Requst updateProfile is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 51, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 51, function (access) {
                 if (access) {
-                    profile.updateProfile(id, data.profile, res);
+                    profile.updateProfile(req, id, data.profile, res);
                 } else {
                     res.send(403);
                 }
@@ -179,10 +181,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeProfile(req, res, id) {
         console.log("Requst removePerson is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 51, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 51, function (access) {
                 if (access) {
-                    profile.removeProfile(id, res);
+                    profile.removeProfile(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -198,8 +200,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getForDdByRelatedUser(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
-            if (req.session && req.session.loggedIn) {
-                employee.getForDdByRelatedUser(req.session.uId, res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                employee.getForDdByRelatedUser(req, req.session.uId, res);
             } else {
                 res.send(401);
             }
@@ -212,8 +214,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function Birthdays(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
-            if (req.session && req.session.loggedIn) {
-                birthdays.get(res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                birthdays.get(req, res);
             } else {
                 res.send(401);
             }
@@ -226,8 +228,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getPersonsForDd(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
-            if (req.session && req.session.loggedIn) {
-                employee.getForDd(res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                employee.getForDd(req, res);
             } else {
                 res.send(401);
             }
@@ -239,8 +241,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getPersonAlphabet(req, res, data) {
         try {
             console.log("Requst getPersonAlphabet is success");
-            if (req.session && req.session.loggedIn) {
-                customer.getPersonAlphabet(res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                customer.getPersonAlphabet(req, res);
             } else {
                 res.send(401);
             }
@@ -253,8 +255,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getCustomer(req, res, data) {
         try {
             console.log("Requst getCustomer is success");
-            if (req.session && req.session.loggedIn) {
-                customer.getCustomers(res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                customer.getCustomers(req, res);
             } else {
                 res.send(401);
             }
@@ -267,9 +269,9 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getPersons(req, res, data) {
         console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             //persons.get(res);
-            customer.getPersons(res);
+            customer.getPersons(req, res);
         } else {
             res.send(401);
         }
@@ -278,11 +280,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getFilterPersons(req, res, data) {
         console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 49, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 49, function (access) {
                 console.log(access);
                 if (access) {
-                    customer.getFilterPersons(data, res);
+                    customer.getFilterPersons(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -296,11 +298,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getPersonById(req, res, data) {
         console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 49, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 49, function (access) {
                 console.log(access);
                 if (access) {
-                    customer.getPersonById(data.id, res);
+                    customer.getPersonById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -313,11 +315,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function createPerson(req, res, data) {
         console.log("Requst createPerson is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 49, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 49, function (access) {
                 if (access) {
                     data.person.uId = req.session.uId;
-                    customer.create(data.person, res);
+                    customer.create(req, data.person, res);
                 } else {
                     res.send(403);
                 }
@@ -329,14 +331,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function updatePerson(req, res, id, data, remove) {
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 49, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 49, function (access) {
                 if (access) {
                     data.person.editedBy = {
                         user: req.session.uId,
                         date: new Date().toISOString()
                     }
-                    customer.update(id, remove, data.person, res);
+                    customer.update(req, id, remove, data.person, res);
                 } else {
                     res.send(403);
                 }
@@ -347,10 +349,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
     function uploadFile(req, res, id, file) {
         console.log("File Uploading to Persons");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 49, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 49, function (access) {
                 if (access) {
-                    customer.customer.update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                    models.get(req.session.lastDb - 1, "Customers", customer.schema).update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
                         if (err) {
                             res.send(401);
                         }
@@ -358,7 +360,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
                             res.send(200, file);
                         }
                     });
-                    customer.update(id, remove, data.person, res);
+                    customer.update(req, id, remove, data.person, res);
                 } else {
                     res.send(403);
                 }
@@ -370,10 +372,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removePerson(req, res, id) {
         console.log("Requst removePerson is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 49, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 49, function (access) {
                 if (access) {
-                    customer.remove(id, res);
+                    customer.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -388,11 +390,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //---------------------Project--------------------------------
     function createProject(req, res, data) {
         console.log("Requst createProject is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 39, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
                     data.project.uId = req.session.uId;
-                    project.create(data.project, res);
+                    project.create(req, data.project, res);
                 } else {
                     res.send(403);
                 }
@@ -404,11 +406,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getProjects(req, res, data) {
         console.log("Requst getProjects is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 39, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
                     data.uId = req.session.uId;
-                    project.get(data, res);
+                    project.get(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -420,10 +422,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getProjectsById(req, res, data) {
         console.log(data);
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 39, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
-                    project.getById(data, res);
+                    project.getById(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -435,8 +437,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getProjectsForDd(req, res, data) {
         console.log("Requst getProjectsForDd is success");
-        if (req.session && req.session.loggedIn) {
-            project.getForDd(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            project.getForDd(req, res);
         } else {
             res.send(401);
         }
@@ -444,14 +446,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateProject(req, res, id, data) {
         console.log("Requst updateProject is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 39, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
                     data.project.editedBy = {
                         user: req.session.uId,
                         date: new Date().toISOString()
                     }
-                    project.update(id, data.project, res);
+                    project.update(req, id, data.project, res);
                 } else {
                     res.send(403);
                 }
@@ -463,10 +465,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeProject(req, res, id, data) {
         console.log("Requst removeProject is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 39, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
-                    project.remove(id, res);
+                    project.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -481,11 +483,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function createTask(req, res, data) {
         console.log("Requst createTask is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 40, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
                     data.task.uId = req.session.uId;
-                    project.createTask(data.task, res);
+                    project.createTask(req, data.task, res);
                 } else {
                     res.send(403);
                 }
@@ -497,8 +499,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getTasks(req, res, data) {
         console.log("Requst getTasks is success");
-        if (req.session && req.session.loggedIn) {
-            project.getTasks(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            project.getTasks(req, res);
         } else {
             res.send(401);
         }
@@ -506,10 +508,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getTasksByProjectId(req, res, data) {
         console.log("Requst getTasksByProjectId is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 40, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
-                    project.getTasksByProjectId(data, res);
+                    project.getTasksByProjectId(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -523,10 +525,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getTaskById(req, res, data) {
 
         console.log("----------->Requst getTasksByProjectId is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 40, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
-                    project.getTaskById(data, res);
+                    project.getTaskById(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -539,10 +541,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function getTasksForList(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 40, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
-                    project.getTasksForList(data, res);
+                    project.getTasksForList(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -556,10 +558,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeTask(req, res, id, data) {
         console.log("Requst removeTask is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 40, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
-                    project.removeTask(id, res);
+                    project.removeTask(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -573,14 +575,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function updateTask(req, res, id, data) {
         console.log("Requst updateTask is success");
         var date = Date.now();
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 40, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
                     data.task['editedBy'] = {
                         user: req.session.uId,
                         date: date
                     };
-                    project.updateTask(id, data.task, res);
+                    project.updateTask(req, id, data.task, res);
                 } else {
                     res.send(403);
                 }
@@ -592,8 +594,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getTasksPriority(req, res, data) {
         console.log("Requst getTasksPriority is success");
-        if (req.session && req.session.loggedIn) {
-            project.getTasksPriority(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            project.getTasksPriority(req, res);
         } else {
             res.send(401);
         }
@@ -604,8 +606,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getRelatedStatus(req, res, data) {
         console.log("Requst getRelatedStatus is success");
-        if (req.session && req.session.loggedIn) {
-            workflow.getRelatedStatus(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            workflow.getRelatedStatus(req, res);
         } else {
             res.send(401);
         }
@@ -613,13 +615,13 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getWorkflow(req, res, data) {
         console.log("Requst getWorkflow is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             console.log('>>>>>>>>>>>');
             console.log(data);
             console.log('<<<<<<<<<<<');
-            access.getReadAccess(req.session.uId, 44, function (access) {
+            access.getReadAccess(req, req.session.uId, 44, function (access) {
                 if (access) {
-                    workflow.get(data, res);
+                    workflow.get(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -631,11 +633,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getWorkflowsForDd(req, res, data) {
         console.log("Requst getWorkflowsForDd is Success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             console.log('<<<<<<<<<<<<>>>>>>>>>>>');
             console.log(data);
             console.log('<<<<<<<<<<<>>>>>>>>>>>>>');
-            workflow.getWorkflowsForDd(data, res);
+            workflow.getWorkflowsForDd(req, data, res);
         } else {
             res.send(401);
         }
@@ -643,10 +645,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function createWorkflow(req, res, data) {
         console.log("Requst createWorkflow is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 44, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 44, function (access) {
                 if (access) {
-                    workflow.create(data, res);
+                    workflow.create(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -659,10 +661,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateWorkflow(req, res, _id, data) {
         console.log("Requst updateWorkflow is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 44, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 44, function (access) {
                 if (access) {
-                    workflow.update(_id, data, res);
+                    workflow.update(req, _id, data, res);
                 } else {
                     res.send(403);
                 }
@@ -672,13 +674,13 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
             res.send(401);
         }
     };
-    
+
     function removeWorkflow(req, res, _id, data) {
         console.log("Requst removeWorkflow is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 50, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                	workflow.remove(_id, res);
+                    workflow.remove(req, _id, res);
                 } else {
                     res.send(403);
                 }
@@ -693,10 +695,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getCompanies(req, res, data) {
         console.log("Requst getCompanies is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 50, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.getCompanies(res);
+                    customer.getCompanies(req, res);
 
                 } else {
                     res.send(403);
@@ -711,11 +713,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getCompanyById(req, res, data) {
         console.log("Requst getCompanies is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             //company.get(res);
-            access.getReadAccess(req.session.uId, 50, function (access) {
+            access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.getCompanyById(data.id, res);
+                    customer.getCompanyById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -728,10 +730,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getOwnCompanies(req, res, data) {
         console.log("Request getOwnCompanies is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 5, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 5, function (access) {
                 if (access) {
-                    customer.getOwnCompanies(data, res);
+                    customer.getOwnCompanies(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -744,10 +746,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeCompany(req, res, id, data) {
         console.log("Requst removeCompany is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 50, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.remove(id, res);
+                    customer.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -760,11 +762,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function createCompany(req, res, data) {
         console.log("Requst createCompany is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.company.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 50, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.create(data.company, res);
+                    customer.create(req, data.company, res);
 
                 } else {
                     res.send(403);
@@ -776,15 +778,15 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function updateCompany(req, res, id, data, remove) {
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             var date = mongoose.Schema.Types.Date;
             data.company.editedBy = {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req.session.uId, 50, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.update(id, remove, data.company, res);
+                    customer.update(req, id, remove, data.company, res);
                 } else {
                     res.send(403);
                 }
@@ -798,11 +800,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getFilterCompanies(req, res, data) {
         console.log("Requst getFilterCompanies is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             //company.get(res);
-            access.getReadAccess(req.session.uId, 50, function (access) {
+            access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.getFilterCompanies(data, res);
+                    customer.getFilterCompanies(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -815,8 +817,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getCompaniesAlphabet(req, res, data) {
         try {
             console.log("Requst getPersonAlphabet is success");
-            if (req.session && req.session.loggedIn) {
-                customer.getCompaniesAlphabet(res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                customer.getCompaniesAlphabet(req, res);
             } else {
                 res.send(401);
             }
@@ -830,11 +832,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //---------------------JobPosition--------------------------------
     function createJobPosition(req, res, data) {
 
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.jobPosition.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.create(data.jobPosition, res);
+                    jobPosition.create(req, data.jobPosition, res);
                 } else {
                     res.send(403);
                 }
@@ -845,10 +847,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function getJobPosition(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 14, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.get(res);
+                    jobPosition.get(req, res);
                 } else {
                     res.send(403);
                 }
@@ -860,10 +862,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getCustomJobPosition(req, res, data) {
         console.log("Requst getCustomJobPosition is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 14, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getJobPosition(data,res);
+                    jobPosition.getJobPosition(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -877,10 +879,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getJobPositionById(req, res, data) {
         console.log("----------->Request getJobPositionById is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 14, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getJobPositionById(data.id, res);
+                    jobPosition.getJobPositionById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -892,14 +894,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function updateJobPosition(req, res, id, data) {
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.jobPosition.editedBy = {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req.session.uId, 14, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.update(id, data.jobPosition, res);
+                    jobPosition.update(req, id, data.jobPosition, res);
                 } else {
                     res.send(403);
                 }
@@ -911,10 +913,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function removeJobPosition(req, res, id, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 14, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.remove(id, res);
+                    jobPosition.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -928,11 +930,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //---------------------Employee--------------------------------
     function createEmployee(req, res, data) {
         console.log("Requst createEmployee is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 42, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
                     data.employee.uId = req.session.uId;
-                    employee.create(data.employee, res);
+                    employee.create(req, data.employee, res);
                 } else {
                     res.send(403);
                 }
@@ -945,8 +947,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getEmployees(req, res) {
         console.log("Requst getEmployee is success");
-        if (req.session && req.session.loggedIn) {
-            employee.get(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            employee.get(req, res);
         } else {
             res.send(401);
         }
@@ -955,11 +957,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     // Custom function for list
     function getEmployeesCustom(req, res, data) {
         console.log("Requst getEmployeesCustom is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 42, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getEmployeeForList(data, res);
+                    employee.getEmployeeForList(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -973,11 +975,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getEmployeesByIdCustom(req, res, data) {
         console.log('----------------}');
         console.log(data);
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 42, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getById(data, res);
+                    employee.getById(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -989,40 +991,17 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     };
 
-    function getEmployeesById(res, data) {
-        console.log("Requst getTaskById is success");
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Allow Cross Site Origin", "*");
-        dbSession.checkHash(data, function (result) {
-            console.log('Sending response for checkHash')
-            console.log(result);
-            if (result.result.status == '0') {
-                employee.getById(data, function (result2) {
-                    console.log('Sending response for getTaskById');
-                    console.log(result2);
-                    res.send(result2);
-                });
-            } else {
-                result['result'] = {};
-                result['result']['status'] = '4';
-                result['result']['description'] = 'Bad hash';
-                result['data'] = [];
-                res.send(result);
-            }
-        });
-    };
-
     function updateEmployees(req, res, id, data) {
         console.log("Requst updateEmployees is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 42, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
                     data.employee.editedBy = {
                         user: req.session.uId,
                         date: new Date().toISOString()
                     }
 
-                    employee.update(id, data.employee, res);
+                    employee.update(req, id, data.employee, res);
                 } else {
                     res.send(403);
                 }
@@ -1035,10 +1014,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeEmployees(req, res, id, data) {
         console.log("Requst removeEmployees is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 42, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
-                    employee.remove(id, res);
+                    employee.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1051,8 +1030,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     function getEmployeesAlphabet(req, res, data) {
         try {
             console.log("Requst getEmployeesAlphabet is success");
-            if (req.session && req.session.loggedIn) {
-                employee.getEmployeesAlphabet(res);
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                employee.getEmployeesAlphabet(req, res);
             } else {
                 res.send(401);
             }
@@ -1068,11 +1047,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //---------------------Application--------------------------------
     function createApplication(req, res, data) {
         console.log("Requst createEmployee is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
                     data.employee.uId = req.session.uId;
-                    employee.create(data.employee, res);
+                    employee.create(req, data.employee, res);
                 } else {
                     res.send(403);
                 }
@@ -1085,8 +1064,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getApplications(req, res, data) {
         console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn) {
-            employee.getApplications(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            employee.getApplications(req, res);
         } else {
             res.send(401);
         }
@@ -1095,11 +1074,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     // Custom function for list (getApplications)
     function getApplicationsCustom(req, res, data) {
         console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getEmployeeForList(data, res);
+                    employee.getEmployeeForList(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1112,11 +1091,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getApplicationById(req, res, data) {
         console.log("Requst getApplicationById is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getById(data, res);
+                    employee.getById(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1131,11 +1110,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getFilterApplications(req, res, data) {
         console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getFilterApplications(data, res);
+                    employee.getFilterApplications(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1146,13 +1125,13 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         }
     };
 
-    function getApplicationsForList (req, res, data) {
+    function getApplicationsForList(req, res, data) {
         console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getApplicationsForList(data, res);
+                    employee.getApplicationsForList(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1165,15 +1144,15 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateApplication(req, res, id, data) {
         console.log("Requst updateEmployees is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
                     data.employee.editedBy = {
                         user: req.session.uId,
                         date: new Date().toISOString()
                     }
 
-                    employee.update(id, data.employee, res);
+                    employee.update(req, id, data.employee, res);
                 } else {
                     res.send(403);
                 }
@@ -1185,11 +1164,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
     function uploadApplicationFile(req, res, id, file) {
         console.log("File Uploading to app");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
-					console.log(file);
-                    employee.update( id , {$push:{ attachments: {$each:file}}}, res);
+                    console.log(file);
+                    employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
                 }
@@ -1201,10 +1180,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeApplication(req, res, id, data) {
         console.log("Requst removeEmployees is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 43, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
-                    employee.remove(id, res);
+                    employee.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1219,11 +1198,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //---------------------Department--------------------------------
     function createDepartment(req, res, data) {
         console.log("Requst createDepartment is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.department.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 15, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    department.create(data.department, res);
+                    department.create(req, data.department, res);
                 } else {
                     res.send(403);
                 }
@@ -1234,10 +1213,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function getDepartment(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 15, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    department.get(res);
+                    department.get(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1249,14 +1228,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateDepartment(req, res, id, data) {
         console.log("Requst updateDepartment is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.department.editedBy = {
                 user: req.session.uId,
                 date: new Date().toISOString()
             }
-            access.getEditWritAccess(req.session.uId, 15, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    department.update(id, data.department, res);
+                    department.update(req, id, data.department, res);
                 } else {
                     res.send(403);
                 }
@@ -1268,10 +1247,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeDepartment(req, res, id, data) {
         console.log("Requst removeDepartment is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 15, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    department.remove(id, res);
+                    department.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1282,16 +1261,16 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function getDepartmentForDd(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            department.getForDd(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            department.getForDd(req, res);
         } else {
             res.send(401);
         }
     }
 
     function getDepartmentForEditDd(req, res, id, data) {
-        if (req.session && req.session.loggedIn) {
-            department.getForEditDd(id,res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            department.getForEditDd(req, id, res);
         } else {
             res.send(401);
         }
@@ -1299,11 +1278,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getCustomDepartment(req, res, data) {
         console.log("Requst getDepartment is success");
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             //company.get(res);
-            access.getReadAccess(req.session.uId, 15, function (access) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    department.getCustomDepartment(data, res);
+                    department.getCustomDepartment(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1316,10 +1295,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getDepartmentById(req, res, data) {
         console.log("----------->Request getDepartmentById is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 15, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 15, function (access) {
                 if (access) {
-                    department.getDepartmentById(data.id, res);
+                    department.getDepartmentById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -1334,16 +1313,16 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function createDegree(req, res, data) {
         console.log("Requst createDegree is success");
-        if (req.session && req.session.loggedIn) {
-            degrees.create(data.degree, res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            degrees.create(req, data.degree, res);
         } else {
             res.send(401);
         }
     }
 
     function getDegrees(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            degrees.get(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            degrees.get(req, res);
         } else {
             res.send(401);
         }
@@ -1351,8 +1330,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateDegree(req, res, id, data) {
         console.log("Requst updateDegree is success");
-        if (req.session && req.session.loggedIn) {
-            degrees.update(id, data.degree, res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            degrees.update(req, id, data.degree, res);
         } else {
             res.send(401);
         }
@@ -1360,8 +1339,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeDegree(req, res, id, data) {
         console.log("Requst removeDegree is success");
-        if (req.session && req.session.loggedIn) {
-            degrees.remove(id, res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            degrees.remove(req, id, res);
         } else {
             res.send(401);
         }
@@ -1369,8 +1348,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //-----------------SourcesOfApplicants--------------------------------------
     function createSourcesOfApplicant(req, res, data) {
         console.log("Requst createSourcesOfApplicant is success");
-        if (req.session && req.session.loggedIn) {
-            sourcesofapplicants.create(data.soa, res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            sourcesofapplicants.create(req, data.soa, res);
         } else {
             res.send(401);
         }
@@ -1378,8 +1357,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getSourcesOfApplicants(req, res, data) {
         console.log("Requst getSourcesOfApplicants is success");
-        if (req.session && req.session.loggedIn) {
-            sourcesofapplicants.get(res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            sourcesofapplicants.get(req, res);
         } else {
             res.send(401);
         }
@@ -1387,8 +1366,8 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateSourcesOfApplicant(req, res, id, data) {
         console.log("Requst updateSourcesOfApplicant is success");
-        if (req.session && req.session.loggedIn) {
-            sourcesofapplicants.update(id, data.soa, res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            sourcesofapplicants.update(req, id, data.soa, res);
         } else {
             res.send(401);
         }
@@ -1396,18 +1375,18 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeSourcesOfApplicant(req, res, id, data) {
         console.log("Requst removeDegree is success");
-        if (req.session && req.session.loggedIn) {
-            sourcesofapplicants.remove(id, res);
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            sourcesofapplicants.remove(req, id, res);
         } else {
             res.send(401);
         }
     }
 
     function getLeads(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 24, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.getLeads(res);
+                    opportunities.getLeads(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1418,10 +1397,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function getLeadsById(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 24, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.getById(data.id, res);
+                    opportunities.getById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -1432,10 +1411,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function getLeadsCustom(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 24, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.getLeadsCustom(data, res);
+                    opportunities.getLeadsCustom(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1446,11 +1425,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function createLead(req, res, data) {
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.lead.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 24, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.create(data.lead, res);
+                    opportunities.create(req, data.lead, res);
                 } else {
                     res.send(403);
                 }
@@ -1463,14 +1442,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateLead(req, res, id, data) {
         var date = Date.now();
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.lead['editedBy'] = {
                 user: req.session.uId,
                 date: date
             };
-            access.getEditWritAccess(req.session.uId, 24, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.update(id, data.lead, res);
+                    opportunities.update(req, id, data.lead, res);
                 } else {
                     res.send(403);
                 }
@@ -1482,10 +1461,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function removeLead(req, res, id, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 24, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
-                    opportunities.remove(id, res);
+                    opportunities.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1497,11 +1476,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
     //-------------------Opportunities---------------------------
     function createOpportunitie(req, res, data) {
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.opportunitie.uId = req.session.uId;
-            access.getEditWritAccess(req.session.uId, 25, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.create(data.opportunitie, res);
+                    opportunities.create(req, data.opportunitie, res);
                 } else {
                     res.send(403);
                 }
@@ -1512,10 +1491,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         }
     }
     function getOpportunityById(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 25, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.getById(data.id, res);
+                    opportunities.getById(req, data.id, res);
                 } else {
                     res.send(403);
                 }
@@ -1528,10 +1507,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getFilterOpportunities(req, res, data) {
         console.log("Requst getFilterOpportunities is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 25, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.getFilterOpportunities(data, res);
+                    opportunities.getFilterOpportunities(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1542,10 +1521,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
     function getFilterOpportunitiesForKanban(req, res, data) {
         console.log("Requst getFilterOpportunities is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 25, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.getFilterOpportunitiesForKanban(data, res);
+                    opportunities.getFilterOpportunitiesForKanban(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1556,10 +1535,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     };
 
     function getOpportunities(req, res, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 25, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.get(res);
+                    opportunities.get(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1571,14 +1550,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateOpportunitie(req, res, id, data) {
         var date = Date.now();
-        if (req.session && req.session.loggedIn) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.opportunitie['editedBy'] = {
                 user: req.session.uId,
                 date: date
             };
-            access.getEditWritAccess(req.session.uId, 25, function (access) {
+            access.getEditWritAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.update(id, data.opportunitie, res);
+                    opportunities.update(req, id, data.opportunitie, res);
                 } else {
                     res.send(403);
                 }
@@ -1589,10 +1568,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function removeOpportunitie(req, res, id, data) {
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 25, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
-                    opportunities.remove(id, res);
+                    opportunities.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1606,10 +1585,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     //--------------------Events--------------------------------
     function createEvent(req, res, data) {
         console.log("Requst createEvent is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.create(data.event, res, req);
+                    events.create(req, data.event, res, req);
                 } else {
                     res.send(403);
                 }
@@ -1622,10 +1601,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getEvents(req, res, data) {
         console.log("Requst getEvents is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.get(data.idArray, res);
+                    events.get(req, data.idArray, res);
                 } else {
                     res.send(403);
                 }
@@ -1637,10 +1616,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateEvent(req, res, id, data) {
         console.log("Requst updateEvent is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.update(id, data.event, res, req);
+                    events.update(req, id, data.event, res, req);
                 } else {
                     res.send(403);
                 }
@@ -1652,10 +1631,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeEvent(req, res, id, data) {
         console.log("Requst removeEvents is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.remove(id, res, req);
+                    events.remove(req, id, res, req);
                 } else {
                     res.send(403);
                 }
@@ -1666,10 +1645,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
     function createCalendar(req, res, data) {
         console.log("Requst createCalendar is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.createCalendar(data.calendar, res);
+                    events.createCalendar(req, data.calendar, res);
                 } else {
                     res.send(403);
                 }
@@ -1681,10 +1660,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function getCalendars(req, res, data) {
         console.log("Requst getCalendars is success");
-        if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.getCalendars(res);
+                    events.getCalendars(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1696,10 +1675,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function updateCalendar(req, res, id, data) {
         console.log("Requst updateCalendar is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.updateCalendar(id, data.calendar, res);
+                    events.updateCalendar(req, id, data.calendar, res);
                 } else {
                     res.send(403);
                 }
@@ -1711,10 +1690,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function removeCalendar(req, res, id, data) {
         console.log("Requst removeCalendar is success");
-        if (req.session && req.session.loggedIn) {
-            access.getDeleteAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getDeleteAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.removeCalendar(id, res);
+                    events.removeCalendar(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1726,11 +1705,11 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
 
     function googleCalSync(req, res, data) {
         console.log("Requst googleCalSync is success");
-        if (req.session && req.session.loggedIn) {
-            access.getEditWritAccess(req.session.uId, 26, function (access) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
                     google.getEventsByCalendarIds(req.session.credentials, data.calendar, function (eventsArray) {
-                        events.googleCalSync(eventsArray, res);
+                        events.googleCalSync(req, eventsArray, res);
                     });
                 } else {
                     res.send(403);
@@ -1741,10 +1720,10 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         }
     }
     function getXML(req, res, link, data) {
-        access.getEditWritAccess(req.session.uId, 26, function (access) {
+        access.getEditWritAccess(req, req.session.uId, 26, function (access) {
             if (access) {
 
-                events.getXML(res, link);
+                events.getXML(req, res, link);
             } else {
                 res.send(403);
             }
@@ -1752,7 +1731,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function getToken(req, res) {
-        access.getReadAccess(req.session.uId, 26, function (access) {
+        access.getReadAccess(req, req.session.uId, 26, function (access) {
             if (access) {
                 google.getToken(req, res, function (token) {
                     res.redirect('#easyErp/Calendars');
@@ -1764,27 +1743,27 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
     }
 
     function googleCalendars(req, res) {
-        access.getReadAccess(req.session.uId, 26, function (access) {
+        access.getReadAccess(req, req.session.uId, 26, function (access) {
             if (access) {
-                google.getGoogleCalendars(req.session.credentials, res);
+                google.getGoogleCalendars(req, req.session.credentials, res);
             } else {
                 res.send(403);
             }
         });
     }
     function sendToGoogleCalendar(req, res) {
-        access.getReadAccess(req.session.uId, 26, function (access) {
+        access.getReadAccess(req, req.session.uId, 26, function (access) {
             if (access) {
-                events.sendToGoogleCalendar(req, res);
+                events.sendToGoogleCalendar(req, req, res);
             } else {
                 res.send(403);
             }
         });
     }
     function changeSyncCalendar(id, isSync, res, req) {
-        access.getEditWritAccess(req.session.uId, 26, function (access) {
+        access.getEditWritAccess(req, req.session.uId, 26, function (access) {
             if (access) {
-                events.changeSyncCalendar(id, isSync, res, req);
+                events.changeSyncCalendar(req, id, isSync, res, req);
             } else {
                 res.send(403);
             }
@@ -1820,7 +1799,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         uploadFile: uploadFile,
         getCustomer: getCustomer,
         getFilterPersons: getFilterPersons,
-		getPersonAlphabet:getPersonAlphabet,
+        getPersonAlphabet: getPersonAlphabet,
 
         getProjects: getProjects,
         getProjectsById: getProjectsById,
@@ -1845,14 +1824,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         createCompany: createCompany,
         updateCompany: updateCompany,
         getFilterCompanies: getFilterCompanies,
-		getCompaniesAlphabet:getCompaniesAlphabet,
+        getCompaniesAlphabet: getCompaniesAlphabet,
 
         getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,
         createWorkflow: createWorkflow,
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
-        removeWorkflow:removeWorkflow,
+        removeWorkflow: removeWorkflow,
 
         getJobPosition: getJobPosition,
         createJobPosition: createJobPosition,
@@ -1863,15 +1842,14 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,
         getEmployees: getEmployees,
-        getForDdByRelatedUser:getForDdByRelatedUser,
+        getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
-        getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
-		getEmployeesAlphabet:getEmployeesAlphabet,
-		
-        Birthdays:Birthdays,
+        getEmployeesAlphabet: getEmployeesAlphabet,
+
+        Birthdays: Birthdays,
 
         getPersonsForDd: getPersonsForDd,
         getDepartmentForDd: getDepartmentForDd,
@@ -1881,7 +1859,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         getApplicationsCustom: getApplicationsCustom,
         removeApplication: removeApplication,
         updateApplication: updateApplication,
-		uploadApplicationFile:uploadApplicationFile,
+        uploadApplicationFile: uploadApplicationFile,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,
@@ -1889,7 +1867,7 @@ var requestHandler = function (fs, mongoose, tempDb, event) {
         removeDepartment: removeDepartment,
         getDepartmentById: getDepartmentById,
         getCustomDepartment: getCustomDepartment,
-		getDepartmentForEditDd:getDepartmentForEditDd,
+        getDepartmentForEditDd: getDepartmentForEditDd,
         createDegree: createDegree,
         getDegrees: getDegrees,
         updateDegree: updateDegree,

@@ -1,4 +1,4 @@
-var Module = function (logWriter, mongoose, users, profile) {
+var Module = function (logWriter, mongoose, profile, models) {
     var moduleSchema = mongoose.Schema({
         _id: Number,
         mname: String,
@@ -12,7 +12,7 @@ var Module = function (logWriter, mongoose, users, profile) {
     
     var ObjectId = mongoose.Schema.Types.ObjectId;
     
-    var _module = mongoose.model('modules', moduleSchema);
+    //var _module = mongoose.model('modules', moduleSchema);
 
     return {
         create: function (data, func) {
@@ -34,9 +34,10 @@ var Module = function (logWriter, mongoose, users, profile) {
             });
         },//End create
 
-        get: function (id, response) {
+        get: function (req, id, response) {
+           
             var res = [];
-            profile.profile.aggregate(
+            models.get(req.session.lastDb - 1, "Profile", profile.schema).aggregate(
                 {
                     $project: {
                         profileAccess: 1
@@ -63,13 +64,17 @@ var Module = function (logWriter, mongoose, users, profile) {
                         console.log(err);
                     } else {
                         console.log(result);
-                        _module.find().
+                        models.get(0, "modules", moduleSchema).find().
                             where('_id').in(result).
                             where({ visible: true }).
                             sort({ sequence: 1 }).
                             exec(function (err, mod) {
                                 if (mod) {
+                                    console.log(mod);
                                     response.send(mod);
+                                } else {
+                                    console.log("Node JS error " + err);
+                                    response.send(401);
                                 }
                             });
                     }

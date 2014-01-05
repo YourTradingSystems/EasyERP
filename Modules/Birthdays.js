@@ -1,8 +1,8 @@
-﻿var Birthdays = function (logWriter, mongoose, employee, db, event) {
+﻿var Birthdays = function (logWriter, mongoose, employee, models, event) {
 
    
 
-    var birthdaysSchema = mongoose.Schema({
+    var schema = mongoose.Schema({
         _id: { type: Number, default: 1 },
         date: Date,
         currentEmployees: {
@@ -10,11 +10,9 @@
             monthly: Array
         }
     }, { collection: 'birthdays' });
-    var birtdaysModel = db.model('birthdays', birthdaysSchema);
 
-    var getEmployeesInDateRange = function (callback, response) {
-        var withResponse = (arguments.length == 2) ? true : false;
-        var separateWeklyAndMontly = function (arrayOfEmployees) {
+    var getEmployeesInDateRange = function (req, callback, response) {
+        var separateWeklyAndMonthly = function (arrayOfEmployees) {
             var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             var daysToAdd = (dateOnly.getDay() != 0) ? 7 - dateOnly.getDay() : 0;
             var forecast = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -94,7 +92,7 @@
             }
         }
 
-        employee.employee.aggregate(
+        models.get(req.session.lastDb - 1, "Employees", employee.schema).aggregate(
             {
                 $match: {
                     dateBirth: { $ne: null }
@@ -114,7 +112,7 @@
                 if (err) {
                     console.log(err);
                 } else {
-                    var query = employee.employee.find();
+                    var query = models.get(req.session.lastDb - 1, "Employees", employee.schema).find();
                     query.where('_id').in(res).
                         populate('relatedUser department jobPosition manager coach').
                         populate('createdBy.user').
@@ -122,9 +120,9 @@
                         exec(function (error, ress) {
                             if (error) {
                                 console.log(error);
-                                callback(separateWeklyAndMontly([]), response);
+                                callback(req, separateWeklyAndMonthly([]), response);
                             } else {
-                                callback(separateWeklyAndMontly(ress), response);
+                                callback(req, separateWeklyAndMonthly(ress), response);
                             }
                         });
                 }
@@ -133,14 +131,14 @@
 
 
 
-    var set = function (currentEmployees, response) {
+    var set = function (req, currentEmployees, response) {
         var withResponse = (arguments.length == 2) ? true : false;
         var res = {};
         var data = {};
         var now = new Date();
         data['date'] = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         data['currentEmployees'] = currentEmployees,
-        birtdaysModel.findByIdAndUpdate({ _id: 1 }, data, { upsert: true }, function (error, birth) {
+        models.get(req.session.lastDb - 1, "birthdays", schema).findByIdAndUpdate({ _id: 1 }, data, { upsert: true }, function (error, birth) {
             if (error) {
                 logWriter.log('Employees.create Incorrect Incoming Data');
                 console.log(error);
@@ -154,11 +152,11 @@
         });
     };
 
-    var get = function (response) {
+    var get = function (req, response) {
 
         var res = {};
         res['data'] = [];
-        check(function (status, emloyees) {
+        check(req, function (status, emloyees) {
             switch (status) {
                 case -1:
                     {
@@ -167,7 +165,7 @@
                     break;
                 case 0:
                     {
-                        getEmployeesInDateRange(set, response);
+                        getEmployeesInDateRange(req, set, response);
                     }
                     break;
                 case 1:
@@ -180,10 +178,10 @@
         });
     };
 
-    var check = function (calback) {
+    var check = function (req, calback) {
         var now = new Date();
         var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        birtdaysModel.find({}, function (err, birth) {
+        models.get(req.session.lastDb - 1, "birthdays", schema).find({}, function (err, birth) {
             if (err) {
                 logWriter.log('Find Birthdays Error');
                 console.log(err);
@@ -204,7 +202,7 @@
 
     recalculate = function () {
         console.log('Recalculate Birthdays Start Success at ' + new Date());
-        getEmployeesInDateRange(set);
+        getEmployeesInDateRange(req, set);
     };
 
     event.on('recalculate', recalculate);
