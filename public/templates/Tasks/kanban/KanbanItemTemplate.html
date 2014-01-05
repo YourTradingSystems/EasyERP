@@ -1,6 +1,8 @@
 <div class="task-header">
-    <div class="half-block left"><p><%=model.project.projectShortDesc%>-<%=model.taskCount%></p></div>
-    <div class="half-block left"><p><%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.name.first + " " + model.assignedTo.name.last : ''%></p></div>
+  <div class="half-block left"><p><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;<select id="priority<%=model._id%>" class="my"></select></p></div>
+    <div class="half-block left">        
+	  <p class="right bold"><%=model.deadline%></p>
+	</div>
     <div class="dropDown">
         <a href="#">
             <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
@@ -28,11 +30,12 @@
 <div class="task-content">
     <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
     <div class="info">
-        <p><%=(model.project && model.project.projectName) ? model.project.projectName : ''%></p>
         <p><%=model.summary%></p>
         <% _.each(model.tags,function(tag){ %>
-             <span class="tag"><%=tag%></span>
         <% });%>
-        <p class="deadline"><%=model.deadline%></p>
+		<br/>
+        <p class="left bold"><%=model.type%></p>
+        <div class="clearfix">
+        </div>
     </div>
 </div>

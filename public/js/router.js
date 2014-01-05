@@ -86,7 +86,7 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/UserPages';
+                    var url = '#easyErp/UsersPages';
                     Backbone.history.navigate(url, { replace: true });
                 }
             });
@@ -113,8 +113,8 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/' + contentType + '/list';
-                    Backbone.history.navigate(url, { replace: true });
+//                    var url = '#easyErp/' + contentType + '/list';
+//					Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

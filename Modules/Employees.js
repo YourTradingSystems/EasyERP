@@ -479,7 +479,9 @@ var Employee = function (logWriter, mongoose, event, models) {
         if (data.status) {
             var query =  models.get(req.session.lastDb - 1, "Employees", schema).find();
             query.where('isEmployee', false);
-            query.where('workflow').in(data.status);
+            if (data && data.status && data.status.length>0){
+            	query.where('workflow').in(data.status);
+            }
             query.exec(function (err, result) {
                 if (!err) {
                     res['listLength'] = result.length;

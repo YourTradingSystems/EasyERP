@@ -1,68 +1,154 @@
 <div class="form-holder">
-    <form method="post" action="" class="form edit-lead-form" id="leadForm" data-id="<%=_id%>">
+    <form method="post" action="" class="form edit-lead-form" id="leadForm" data-id="<%=model._id%>">
         <fieldset>
-            <div class="inner">
-			  <dl class="summary-info">
-				<dt><label>Subject </label></dt><dd>
-				  <input type="text" class="title-input blueback" id="name" value="<%=name%>" required maxlength="32"/>
-				</dd>
-			  </dl>
-              <div class="half-block left">
-				<textarea id="internalNotes" placeholder="Add a Description..."><%=internalNotes%></textarea>
-				<dl class="person-info">
-				  <dt><label for="campaignDd">Campaign</label></dt>
-				  <dd>
-					<select id="campaignDd">
-                      <option value="telesales">Telesales</option>
-                      <option value="web">Web</option>
-                      <option value="email">Email</option>
-                      <option value="newsletter">Newsletter</option>
-                      <option value="call">Call</option>
-                    </select>
+        <div class="inner">
+            <ul class="dialog-tabs">
+                <li><a class="active" href="javascript:;">Main</a></li>
+                <li><a href="javascript:;">Assignees</a></li>
+            </ul>
+            <div class="clearfix"></div>
+            <div class="dialog-tabs-items">
+                <div class="dialog-tabs-item active">
+                    <dl class="summary-info">
+                        <dt><label>Subject </label></dt><dd>
+                        <input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="32"/>
+                    </dd>
+                    </dl>
+                    <div class="half-block left">
+                        <textarea id="internalNotes" placeholder="Add a Description..."><%=model.internalNotes%></textarea>
+                        <dl class="person-info">
+                            <dt><label for="campaignDd">Campaign</label></dt>
+                            <dd>
+                                <select id="campaignDd">
+                                    <option value="telesales">Telesales</option>
+                                    <option value="web">Web</option>
+                                    <option value="email">Email</option>
+                                    <option value="newsletter">Newsletter</option>
+                                    <option value="call">Call</option>
+                                </select>
 
-				  </dd>
-				  <dt><label for="campaignDd">Source</label></dt>
-				  <dd>
-				    <select id="sourceDd">
-                      <option value="linkedin">LinkedIn</option>
-                      <option value="jobscore.com">www.jobscore.com</option>
-                      <option value="stackoverflow.com">stackoverflow.com</option>
-                      <option value="jobvite.com">jobvite.com</option>
-                      <option value="zappos.com">zappos.com</option>
-                      <option value="sixtostart.com">sixtostart.com</option>
-                      <option value="creativecircle.com">creativecircle.com</option>
-                      <option value="sangfroidgame.com">sangfroidgame.com</option>
-                      <option value="partnet">Partner</option>
-                      <option value="customer">Customer</option>
-                      <option value="selfGenerated">Self Generated</option>
-                      <option value="website">Website</option>
-                    </select>
-				  </dd>
-				  <dt><label for="salesPerson">Salesperson</label></dt><dd><select id="salesPerson">  </select></dd>
-				  <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd><select id="workflowNamesDd">  </select></dd>
-				  <dt><label for="selectWorkflow">Workflow </label></dt><dd id="selectWorkflow"><select id="workflowsDd">  </select></dd>
+                            </dd>
+                            <dt><label for="campaignDd">Source</label></dt>
+                            <dd>
+                                <select id="sourceDd">
+                                    <option value="linkedin">LinkedIn</option>
+                                    <option value="jobscore.com">www.jobscore.com</option>
+                                    <option value="stackoverflow.com">stackoverflow.com</option>
+                                    <option value="jobvite.com">jobvite.com</option>
+                                    <option value="zappos.com">zappos.com</option>
+                                    <option value="sixtostart.com">sixtostart.com</option>
+                                    <option value="creativecircle.com">creativecircle.com</option>
+                                    <option value="sangfroidgame.com">sangfroidgame.com</option>
+                                    <option value="partnet">Partner</option>
+                                    <option value="customer">Customer</option>
+                                    <option value="selfGenerated">Self Generated</option>
+                                    <option value="website">Website</option>
+                                </select>
+                            </dd>
+                            <dt><label for="salesPerson">Salesperson</label></dt><dd><select id="salesPerson">  </select></dd>
+                            <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd><select id="workflowNamesDd">  </select></dd>
+                            <dt><label for="selectWorkflow">Workflow </label></dt><dd id="selectWorkflow"><select id="workflowsDd">  </select></dd>
 
-				</dl>
-			  </div>
-              <div class="half-block left">
-				<dl class="person-info">
-				  <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= tempCompanyField %>" maxlength="32" /></dd>
-				  <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"> </select></dd>
-				  <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=address.street%>" maxlength="32"/></dd>
-				  <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" placeholder="City" name="city" value="<%=address.city%>" maxlength="32"/></dd>
-				  <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=address.state%>" maxlength="32"/></dd>
-				  <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=address.zip%>" maxlength="32"/></dd>
-				  <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=address.country%>" maxlength="32"/></dd>
-				  <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" value="<%=(contactName) ? contactName.first : ''%>" maxlength="32"/></dd>
-				  <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" value="<%=(contactName) ? contactName.last : ''%>" maxlength="32"/></dd>
-				  <dt><label for="email">Email</label></dt><dd><input type="text" id="email" value="<%=email%>" maxlength="48"/></dd>
-				  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=phones.phone%>" maxlength="32"/></dd>
-				  <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=phones.mobile%>" maxlength="32"/></dd>
-				  <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"> </select></dd>
-				</dl>
-			  </div>
+                        </dl>
+                    </div>
+                    <div class="half-block left">
+                        <dl class="person-info">
+                            <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= model.tempCompanyField %>" maxlength="32" /></dd>
+                            <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"> </select></dd>
+                            <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" placeholder="City" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" maxlength="32"/></dd>
+                            <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" value="<%=(model.contactName) ? model.contactName.first : ''%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" value="<%=(model.contactName) ? model.contactName.last : ''%>" maxlength="32"/></dd>
+                            <dt><label for="email">Email</label></dt><dd><input type="text" id="email" value="<%=model.email%>" maxlength="48"/></dd>
+                            <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" maxlength="32"/></dd>
+                            <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" maxlength="32"/></dd>
+                            <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"> </select></dd>
+                        </dl>
+                    </div>
 
 
+                </div>
+                <div class="dialog-tabs-item">
+                    <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+                    <div class="clearfix"></div>
+
+                    <div class="half-block left">
+                        <div class="canReadAndWrite">
+                            <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
+                            <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
+                            <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <dl class="project-owner-info">
+                            <dt><label for="allUsers">Owner</label></dt><dd>
+
+                            <select id="allUsers">
+
+                            </select>
+
+                        </dd>
+                        </dl>
+                    </div>
+
+
+                    <div class="addUserDialog">
+
+                        <div class="formTitle">
+                            <h3 class="left">Choose Users</h3>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="groupsChooser">
+                            <div class="left">
+                                <ul id="sourceUsers" class="source">
+
+                                </ul>
+                            </div>
+                            <div class="left">
+                                <div class="swich"></div>
+                            </div>
+                            <div class="left">
+                                <ul id="targetUsers" class="target">
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="addGroupDialog">
+                        <div class="formTitle">
+                            <h3 class="left">Choose Groups</h3>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="groupsChooser">
+                            <div class="left">
+                                <ul id="sourceGroups" class="source">
+
+                                </ul>
+                            </div>
+                            <div class="left">
+                                <div class="swich"></div>
+                            </div>
+                            <div class="left">
+                                <ul id="targetGroups" class="target">
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <table class="groupsAndUser">
+                        <tr>
+                            <th>Groups and Users</th><th></th>
+                        </tr>
+                    </table>
+                    <div class="clearfix"></div>
+                </div>
                 <div class="clearfix"></div>
             </div>
 
@@ -79,32 +165,32 @@
                     <br />
                 </div>
                 <div class="tab">
-                    <textarea id="internalNotes"><%=internalNotes%></textarea>
+                    <textarea id="internalNotes"><%=model.internalNotes%></textarea>
                 </div>
                 <div class="tab">
                     <div class="half-block left">
                         <h3>Categorization</h3>
                         <div class="half-block left">
                             <p>
-                                <label>Status</label>                              
+                                <label>Status</label>
                             </p>
                         </div>
                         <div class="half-block left">
                             <p>
-                                <span><%=(workflow) ? workflow.status : ''%></span>
+                                <span><%=(model.workflow) ? model.workflow.status : ''%></span>
                             </p>
                         </div>
                     </div>
                     <div class="half-block left">
-                        <h3>Mailings</h3>                       
+                        <h3>Mailings</h3>
                         <div class="half-block left">
                             <p>
-                                <label>Opt-Out</label>                              
+                                <label>Opt-Out</label>
                             </p>
                         </div>
                         <div class="half-block left">
                             <p>
-                                <input type="checkbox" <%= (optout)? 'checked="checked"':''%> id="optout" />
+                                <input type="checkbox" <%= (model.optout)? 'checked="checked"':''%> id="optout" />
                             </p>
                         </div>
                     </div>
@@ -112,20 +198,21 @@
                         <h3>Misc</h3>
                         <div class="half-block left">
                             <p>
-                                <label>Active</label>                               
+                                <label>Active</label>
                             </p>
                             <p>
                                 <label>Referred By</label>
-                               
+
                             </p>
                         </div>
                         <div class="half-block left">
-                            <p><input type="checkbox" <%= (active)? 'checked="checked"':''%> id="active" /></p>
-                            <p><input type="text" id="reffered" value="<%=reffered%>" /></p>
+                            <p><input type="checkbox" <%= (model.active)? 'checked="checked"':''%> id="active" /></p>
+                            <p><input type="text" id="reffered" value="<%=model.reffered%>" /></p>
                         </div>
-                    </div>    
-                    <div class="clearfix"></div>   
+                    </div>
+                    <div class="clearfix"></div>
                 </div>-->
+                </div>
             </div>
         </fieldset>
     </form>

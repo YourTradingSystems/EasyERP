@@ -61,6 +61,9 @@
                 }
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
+                filterObject['status'] = [];
+                filterObject['status'] = (options && options.status) ? options.status: this.status;
+
                 this.fetch({
                     data: filterObject,
                     waite: true,

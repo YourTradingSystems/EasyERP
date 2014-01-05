@@ -19,11 +19,11 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
         events: {
             "click #showMore": "showMore",
             "click .checkbox": "checked",
-            "click #groupList li": "gotoForm",
+            "click #groupList li": "editItem",
             "click #groupList .edit": "editItem",
             "click #groupList .trash": "deleteItem"
         },
-/*		createDepartmentListRow:function(department,index,className){
+        /*createDepartmentListRow:function(department,index,className){
 			return ('<tr class="'+className+'" data-id="'+department._id+'">'+
 				'<td><input type="checkbox" value="department._id" class="checkbox"/></td>'+
 				'<td>'+index+'</td>'+
@@ -96,11 +96,11 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
             new ListItemView({ collection: newModels, startNumber: this.startNumber }).render();
             this.startNumber += newModels.length;
         },
-        gotoForm: function (e) {
+        /*gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("li").data("id");
-            window.location.hash = "#easyErp/Departments/form/" + id;
-        },
+            //window.location.hash = "#easyErp/Departments/form/" + id;
+        },*/
 
         createItem: function () {
             //create editView in dialog here

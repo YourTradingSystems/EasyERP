@@ -25,7 +25,6 @@ define([
                 "click": "hideNewSelect",
                 'keydown': 'keydownHandler'
             },
-
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -86,7 +85,6 @@ define([
                 //var priority = common.toObject(idPriority, this.priorityCollection);
 
                 var type = this.$("#type option:selected").text();
-
                 this.model.save({
                     type: type,
                     summary: summary,
@@ -102,18 +100,18 @@ define([
                         StartDate: StartDate
                     },
                     estimated: estimated,
-                    logged: logged
+                    logged: logged,
                 },
                 {
                     headers: {
                         mid: mid
                     },
                     wait: true,
-                    success: function (model) {
+                    success: function (model, res) {
                         model = model.toJSON();
                         self.hideDialog();
                         if (!model.project) {
-                            Backbone.history.navigate("#easyErp/Tasks/kanban", { trigger: true });
+                            Backbone.history.navigate("#easyErp/Tasks", { trigger: true });
 
                         } else {
                             common.checkBackboneFragment("easyErp/Tasks/kanban/" + model.project);
@@ -182,8 +180,6 @@ define([
                         }
                     }
                 });
-
-
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model, function () { self.styleSelect(App.ID.projectDd); });
                 common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", null, function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", null, function () { self.styleSelect(App.ID.assignedToDd); });

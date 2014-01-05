@@ -88,6 +88,7 @@
                         that.page += 1;
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
+                        that.listLength = response.listLength;
                         that.trigger('showmore', models);
                     },
                     error: function() {
@@ -102,7 +103,8 @@
                      _.map(response.data, function (opportunity) {
                          opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
                          opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
-                         opportunity.nextAction.date = ( opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date):'';
+						 if (opportunity.nextAction)
+							 opportunity.nextAction.date = ( opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date):'';
                          opportunity.createdBy.date = common.utcDateToLocaleDateTime(opportunity.createdBy.date);
                          opportunity.editedBy.date = common.utcDateToLocaleDateTime(opportunity.editedBy.date);
                          return opportunity;

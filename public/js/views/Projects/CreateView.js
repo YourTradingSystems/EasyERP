@@ -26,7 +26,7 @@ define([
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
-                'click .unassign': 'unassign',
+                'click .unassign': 'unassign'
 
             },
 			nextUserList:function(e,page){
@@ -117,6 +117,7 @@ define([
 					self.prevUserList(e,self.page)
 				});
 			},
+
 			addGroup:function(e){
 				var self = this;
 				$(".addGroupDialog").dialog({

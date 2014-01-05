@@ -2,86 +2,179 @@
   <form method="post" action="" class="form" id="leadForm">
     <fieldset>
       <div class="inner">
-		<div class="half-block left">
-		  <dl class="opp-info">
-			<dt><label for="name">Subject</label></dt><dd><input type="text" class="title-input blueback" id="name" placeholder="Describe the lead..." required maxlength="48"/></dd>
-			<dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" data-id="" maxlength="32"/></dd>
-			<dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
-			<dt><label>Address :</label></dt><dd><input type="text" class="address" id="street" name="street" placeholder="Street" maxlength="32"/></dd>
-			<dt>&nbsp;</dt><dd><input type="text" class="address" id="city" name="city" placeholder="City"maxlength="32" /></dd>
-			<dt>&nbsp;</dt><dd><input type="text" class="address" id="state" name="state" placeholder="State" maxlength="32"/></dd>
-			<dt>&nbsp;</dt><dd><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" maxlength="32"/></dd>
-			<dt>&nbsp;</dt><dd><input type="text" class="address" id="country" name="country" placeholder="Country" maxlength="32"/></dd>
-            <dt><label for="campaignDd">Campaign</label></dt><dd>
-              <select id="campaignDd">
-                  <option value="telesales">Telesales</option>
-                  <option value="web" selected="selected">Web</option>
-                  <option value="email">Email</option>
-                  <option value="newsletter">Newsletter</option>
-                  <option value="call">Call</option>
-              </select></dd>
-              <dt><label for="sourceDd">Source</label></dt><dd>
-              <select id="sourceDd">
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="jobscore.com">www.jobscore.com</option>
-                  <option value="stackoverflow.com">stackoverflow.com</option>
-                  <option value="jobvite.com">jobvite.com</option>
-                  <option value="zappos.com">zappos.com</option>
-                  <option value="sixtostart.com">sixtostart.com</option>
-                  <option value="creativecircle.com">creativecircle.com</option>
-                  <option value="sangfroidgame.com">sangfroidgame.com</option>
-                  <option value="partnet">Partner</option>
-                  <option value="customer">Customer</option>
-                  <option value="selfGenerated">Self Generated</option>
-                  <option value="website">Website</option>
-              </select></dd>
-            <dt><label for="salesPerson">Salesperson</label></dt><dd><select id="salesPerson"></select></dd>
-			<dt><label for="salesTeam">Sales Team</label></dt><dd><select id="salesTeam"> </select></dd>
-		  </dl>
-		</div>
-		<div class="half-block left">
-		  <dl class="opp-info">
-			<dt><label for="name">Contact name </label></dt><dd><input type="text" class="name" id="first" placeholder="First" maxlength="32"/></dd>
-			<dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" maxlength="32" /></dd>
-			<dt><label for="email">Email </label></dt><dd><input type="text" id="email" maxlength="48"/></dd>
-			<dt><label for="func">Function </label></dt><dd><input type="text" id="func" maxlength="32"/></dd>
-			<dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32"/></dd>
-			<dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" maxlength="32"/></dd>
-			<dt><label for="workflowNamesDd">Workflow Name </label></dt><dd><select id="workflowNamesDd"> </select></dd>
-			<dt><label for="workflowsDd">Workflow </label></dt><dd id="selectWorkflow"><select id="workflowsDd"> </select></dd>
-			<dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"> </select></dd>
-		  </dl>
-		</div>
+        <ul class="dialog-tabs">
+            <li><a class="active" href="javascript:;">Main</a></li>
+            <li><a href="javascript:;">Assignees</a></li>
+        </ul>
         <div class="clearfix"></div>
-		<div class="half-block left withPaddingLeft">
-		  <!--<div class="formTitle">
-			<h3 class="left">Extra Info</h3>
-			<div class="clearfix"></div>
-		  </div>
-		  <dl class="opp-info">
-			<dt><h4>Categorization</h4></dt><dd>&nbsp;</dd>
-			<dt><label>Status </label></dt><dd>&nbsp;</dd>
-			<dt><h4>Mailings</h4></dt><dd>&nbsp;</dd>
-			<dt><label>Opt-Out </label></dt><dd><input type="checkbox" id="optout" /></dd>
-			<dt><h4>Misc</h4></dt><dd>&nbsp;</dd>
-			<dt><label>Active </label></dt><dd><input type="checkbox" checked="checked" id="active" /></dd>
-			<dt><label>Referred By </label></dt><dd><input type="text" id="reffered" /></dd>
-			<dt></dt><dd></dd>
-		  </dl>-->
-		</div>
+        <div class="dialog-tabs-items">
+              <div class="dialog-tabs-item active">
+                <div class="half-block left">
+                  <dl class="opp-info">
+                    <dt><label for="name">Subject</label></dt><dd><input type="text" class="title-input blueback" id="name" placeholder="Describe the lead..." required maxlength="48"/></dd>
+                    <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" data-id="" maxlength="32"/></dd>
+                    <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
+                    <dt><label>Address :</label></dt><dd><input type="text" class="address" id="street" name="street" placeholder="Street" maxlength="32"/></dd>
+                    <dt>&nbsp;</dt><dd><input type="text" class="address" id="city" name="city" placeholder="City"maxlength="32" /></dd>
+                    <dt>&nbsp;</dt><dd><input type="text" class="address" id="state" name="state" placeholder="State" maxlength="32"/></dd>
+                    <dt>&nbsp;</dt><dd><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" maxlength="32"/></dd>
+                    <dt>&nbsp;</dt><dd><input type="text" class="address" id="country" name="country" placeholder="Country" maxlength="32"/></dd>
+                    <dt><label for="campaignDd">Campaign</label></dt><dd>
+                      <select id="campaignDd">
+                          <option value="telesales">Telesales</option>
+                          <option value="web" selected="selected">Web</option>
+                          <option value="email">Email</option>
+                          <option value="newsletter">Newsletter</option>
+                          <option value="call">Call</option>
+                      </select></dd>
+                      <dt><label for="sourceDd">Source</label></dt><dd>
+                      <select id="sourceDd">
+<!--                          <option value="linkedin">LinkedIn</option>
+                          <option value="jobscore.com">www.jobscore.com</option>
+                          <option value="stackoverflow.com">stackoverflow.com</option>-->
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
 
-		<div class="half-block left withPaddingLeft">
+                          <option value="jobvite.com">jobvite.com</option>
+                          <option value="zappos.com">zappos.com</option>
+                          <option value="sixtostart.com">sixtostart.com</option>
+                          <option value="creativecircle.com">creativecircle.com</option>
+                          <option value="sangfroidgame.com">sangfroidgame.com</option>
+                          <option value="partnet">Partner</option>
+                          <option value="customer">Customer</option>
+                          <option value="selfGenerated">Self Generated</option>
+                          <option value="website">Website</option>
+                      </select></dd>
+                    <dt><label for="salesPerson">Salesperson</label></dt><dd><select id="salesPerson"></select></dd>
+                    <dt><label for="salesTeam">Sales Team</label></dt><dd><select id="salesTeam"> </select></dd>
+                  </dl>
+                </div>
+                <div class="half-block left">
+                  <dl class="opp-info">
+                    <dt><label for="name">Contact name </label></dt><dd><input type="text" class="name" id="first" placeholder="First" maxlength="32"/></dd>
+                    <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" maxlength="32" /></dd>
+                    <dt><label for="email">Email </label></dt><dd><input type="text" id="email" maxlength="48"/></dd>
+                    <dt><label for="func">Function </label></dt><dd><input type="text" id="func" maxlength="32"/></dd>
+                    <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32"/></dd>
+                    <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" maxlength="32"/></dd>
+                    <dt><label for="workflowNamesDd">Workflow Name </label></dt><dd><select id="workflowNamesDd"> </select></dd>
+                    <dt><label for="workflowsDd">Workflow </label></dt><dd id="selectWorkflow"><select id="workflowsDd"> </select></dd>
+                    <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"> </select></dd>
+                  </dl>
+                </div>
+                <div class="clearfix"></div>
+                <div class="half-block left withPaddingLeft">
+                  <!--<div class="formTitle">
+                    <h3 class="left">Extra Info</h3>
+                    <div class="clearfix"></div>
+                  </div>
+                  <dl class="opp-info">
+                    <dt><h4>Categorization</h4></dt><dd>&nbsp;</dd>
+                    <dt><label>Status </label></dt><dd>&nbsp;</dd>
+                    <dt><h4>Mailings</h4></dt><dd>&nbsp;</dd>
+                    <dt><label>Opt-Out </label></dt><dd><input type="checkbox" id="optout" /></dd>
+                    <dt><h4>Misc</h4></dt><dd>&nbsp;</dd>
+                    <dt><label>Active </label></dt><dd><input type="checkbox" checked="checked" id="active" /></dd>
+                    <dt><label>Referred By </label></dt><dd><input type="text" id="reffered" /></dd>
+                    <dt></dt><dd></dd>
+                  </dl>-->
+                </div>
+
+                <div class="half-block left withPaddingLeft">
 		  <!--<div class="formTitle">
 			<h3 class="left">Internal Notes</h3>
 			<div class="clearfix"></div>
 		  </div>
 		  <textarea id="internalNotes"></textarea>-->
 		</div>
+                  <div class="clearfix"></div>
+              </div>
+              <div class="dialog-tabs-item">
+                  <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+                  <div class="clearfix"></div>
 
+                  <div class="half-block left">
+                      <div class="canReadAndWrite">
+                          <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
+                          <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
+                          <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
+                      </div>
+                  </div>
+                  <div class="half-block left">
+                      <dl class="project-owner-info">
+                          <dt><label for="allUsers">Owner</label></dt><dd>
+
+                          <select id="allUsers">
+
+                          </select>
+
+                      </dd>
+                      </dl>
+                  </div>
+
+
+                  <div class="addUserDialog">
+
+                      <div class="formTitle">
+                          <h3 class="left">Choose Users</h3>
+                          <div class="clearfix"></div>
+                      </div>
+                      <div class="groupsChooser">
+                          <div class="left">
+                              <ul id="sourceUsers" class="source">
+
+                              </ul>
+                          </div>
+                          <div class="left">
+                              <div class="swich"></div>
+                          </div>
+                          <div class="left">
+                              <ul id="targetUsers" class="target">
+
+                              </ul>
+                          </div>
+                      </div>
+
+                      <div class="clearfix"></div>
+                  </div>
+                  <div class="addGroupDialog">
+                      <div class="formTitle">
+                          <h3 class="left">Choose Groups</h3>
+                          <div class="clearfix"></div>
+                      </div>
+
+                      <div class="groupsChooser">
+                          <div class="left">
+                              <ul id="sourceGroups" class="source">
+
+                              </ul>
+                          </div>
+                          <div class="left">
+                              <div class="swich"></div>
+                          </div>
+                          <div class="left">
+                              <ul id="targetGroups" class="target">
+
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="clearfix"></div>
+                  </div>
+
+                  <table class="groupsAndUser">
+                      <tr>
+                          <th>Groups and Users</th><th></th>
+                      </tr>
+                  </table>
+                  <div class="clearfix"></div>
+
+                  <div class="clearfix"></div>
+              </div>
+        </div>
+        <div class="clearfix"></div>
 		
       </div>
-	  
-      <div class="clearfix"></div>
-
+    </fieldset>
   </form>
 </div>

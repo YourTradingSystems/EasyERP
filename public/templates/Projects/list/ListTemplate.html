@@ -9,7 +9,11 @@
     <td><%=project.estimated%></td>
     <td><%=project.remaining%></td>
     <td><progress name="projectProgress" max="100" value="<%=project.progress%>" /></td>
-    <td><%=(project.workflow) ? project.workflow.name : ''%></td>
+    <td class="withSelect">
+	  <select id='stage<%=project._id%>'>
+	  </select>
+<%=(project.workflow) ? project.workflow.name : ''%>
+	</td>
     <td><%=(project.createdBy.user) ? project.createdBy.date + " (" + project.createdBy.user.login + ")" : ''%></td>
     <td><%=(project.editedBy.user) ? project.editedBy.date + " (" + project.editedBy.user.login + ")" : ''%></td>
 </tr>

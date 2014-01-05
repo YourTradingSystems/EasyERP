@@ -81,6 +81,7 @@ require.config({
     paths: {
         jQuery: './libs/jquery',
         ajaxForm: './libs/jquery.form',
+        imageCrop: './libs/jquery.Jcrop.min',
         jqueryui: './libs/jquery-ui-1.10.3.custom.min',
         Underscore: './libs/underscore_1.5.2',
         Backbone: './libs/backbone v_1_1',
@@ -93,13 +94,15 @@ require.config({
         scheduler: './libs/dhtmlxscheduler',
         minical: './libs/dhtmlxscheduler_minical',
         multiselect: './libs/dhtmlxscheduler_multiselect',
-        mvc: './libs/dhtmlxscheduler_mvc'
+        mvc: './libs/dhtmlxscheduler_mvc',
+		d3: './libs/d3.v3.min'
     },
     shim: {
         'jqueryui': ['jQuery'],
         'ajaxForm': ['jQuery'],
+        'imageCrop':['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm'],
+        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm','imageCrop'],
         'chosen': {
             exports: 'chosen'
         },
@@ -115,20 +118,20 @@ require.config({
         'scheduler': {
             exports: 'scheduler'
         },
+		'd3': {
+            exports: 'd3'
+        },
         'mvc': ['scheduler'],
         'multiselect': ['scheduler'],
         'minical': ['scheduler'],
         'Calendar': ['chosen', 'scheduler', 'mvc', 'minical','multiselect'],
-
         'dateFormat': {
             exports: 'dateFormat'
-        },
-
+        }
     }
 });
 
 require(['app'], function (app) {
-    
     Backbone.Collection.prototype.next = function () {
         this.setElement(this.at(this.indexOf(this.getElement()) + 1));
         return this;
@@ -161,19 +164,3 @@ require(['app'], function (app) {
     app.initialize();
     app.applyDefaults();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

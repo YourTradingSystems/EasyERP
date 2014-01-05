@@ -30,7 +30,58 @@ define([
                 //"click .colorPicker a": "pickColor",
                 //"click .task-content": "gotoForm",
                 //"click #edit": "gotoEditForm",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+
             },
+			   hideNewSelect:function(e){
+				   $(".newSelectList").remove();;
+			   },
+			   showNewSelect:function(e){
+				   if ($(".newSelectList").length){
+					   this.hideNewSelect();
+					   return false;
+				   }else{
+					   var s="<ul class='newSelectList taskPriority'>";
+					   $(e.target).parent().find("select option").each(function(){
+						   s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+					   });
+					   s+="</ul>";
+					   $(e.target).parent().append(s);
+					   return false;
+				   }
+				   
+			   },
+
+			   chooseOption:function(e){
+				   var k = $(e.target).parent().find("li").index($(e.target));
+				   $(e.target).parents("p").find("select option:selected").removeAttr("selected");
+				   $(e.target).parents("p").find("select option").eq(k).attr("selected","selected");
+				   $(e.target).parents("p").find(".current-selected").text($(e.target).text());
+				   var id=$(e.target).parents("p").find("select").attr("id").replace("priority","");
+				   var obj = this.model;
+				   var extr = this.model.get('extrainfo');
+				   extr.priority=$(e.target).parents("p").find("select option").eq(k).val();
+				   obj.set({"extrainfo":extr });
+                   obj.save({}, {
+                       headers: {
+                           mid: 39
+                       },
+                       success: function () {
+                       }
+                   });
+
+				   this.hideNewSelect();
+				   return false;
+			   },
+
+			   styleSelect:function(id){
+				   $(id).parent().find(".current-selected").remove();
+				   var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
+				   $(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a><div class='clearfix'></div>");
+				   $(id).hide();
+				   $(document).on("click",this.hideNewSelect);
+			   },
 
             template: _.template(KanbanItemTemplate),
 
@@ -84,7 +135,9 @@ define([
             },
 
             render: function () {
+				var self = this;
                 var todayString = new Date().format("yyyy-mm-dd");
+
                 if (this.model.get('deadline')) {
                     var deadlineString = this.model.get('deadline').split('T')[0];
                     this.model.set({ deadline: deadlineString.replace(/-/g, '/') }, { silent: true });
@@ -95,7 +148,10 @@ define([
                 }
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-id", this.model.get('_id'));
-                this.$el.addClass(this.model.get('extrainfo').priority); 
+                this.$el.addClass(this.model.get('extrainfo').priority);
+				var item = this.model.toJSON();
+				var id="#priority"+item._id;
+                common.populatePriority(id, "/Priority", item, function () { self.styleSelect(id); });
                 return this;
             }
         });

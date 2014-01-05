@@ -3,6 +3,7 @@ define(
         var phoneRegExp = /^[0-9\+]?([0-9-\s()])+[0-9()]$/,
             intNumberRegExp = /[0-9]+/,
             nameRegExp = /^[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
+            groupsNameRegExp = /^[.!@#&]?[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
             loginRegExp = /^[\w\.@]{6,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
             countryRegExp = /[a-zA-Zа-яА-Я\s-]+/,
@@ -36,6 +37,10 @@ define(
 
         var validateName = function(validatedString){
             return nameRegExp.test(validatedString);
+        }
+        
+        var validateGroupsName = function(validatedString){
+            return groupsNameRegExp.test(validatedString);
         }
 
         var validateCountryName = function(validatedString){
@@ -106,6 +111,32 @@ define(
                         return;
                     }
                     if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
+                }
+            }
+        }
+        
+        var checkGroupsNameField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(fieldValue.length < MIN_LENGTH) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(MIN_LENGTH)].join(' '));
+                    return;
+                }
+                if(!validateGroupsName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(!validateGroupsName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
                 }
             }
         }
@@ -327,6 +358,7 @@ define(
             checkCountryCityStateField:checkCountryCityStateField,
             checkPhoneField:checkPhoneField,
             checkNameField:checkNameField,
+            checkGroupsNameField:checkGroupsNameField,
             validEmail: validateEmail,
             withMinLength: requiredFieldLength,
             validLoggedValue: validateLoggedValue,
@@ -336,6 +368,7 @@ define(
             validDate: validDate,
             validPhone: validatePhone,
             validName: validateName,
+            validGroupsName: validateGroupsName,
             validMoneyAmount: validateMoneyAmount
         }
     });

@@ -32,6 +32,8 @@ define([
                             var createCustomer = ($("select#createCustomerOrNot option:selected").val()) ? true : false;
                             that.formModel.save({
                                 isOpportunitie: true,
+                                isConverted: true,
+								convertedDate:new Date(),
                                 createCustomer: createCustomer
                             }, {
                                 headers: {

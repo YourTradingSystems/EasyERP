@@ -2055,7 +2055,7 @@ input, textarea, select {
     position: relative;
     float: left;
     width: 180px;
-	min-height:128px;
+	min-height:200px;
     margin-left: 7px;
     margin-top: 7px;
     border: @thin-border transparent;
@@ -2889,7 +2889,17 @@ button {
             text-align: right;
         }
     }
+    .opportunity-content{
+		margin-top:-7px;
+		margin-bottom:-3px;
+		p{
+			display:block;
+			line-height:18px;
+			clear:left;
 
+		}
+
+	}
     tr {
         &:last-child {
             border-right: 10px solid white;
@@ -2909,7 +2919,7 @@ button {
             word-wrap: break-word;
             margin: 5px auto;
             width: 95%;
-            min-height: 50px;
+            min-height: 40px;
             text-align: left;
             border: 1px solid @taskBorderColor;
             background-color: #fff;
@@ -2928,9 +2938,19 @@ button {
                 padding: 5px;
             }
 
+            .task-header {
+				p.right{
+					text-align:right;
+				}
+			}
             .task-content {
                 .info {
                     padding: 5px;
+					padding-bottom:2px;
+
+					p.bold{
+						font-weight:bold;
+					}
                 }
             }
         }
@@ -3644,7 +3664,7 @@ table#workflows {
 }
 
 .person-info-h3 {
-    width: 170px;
+    width: auto;
 	.dl-auto(auto,50%);
     clear: none;
 
@@ -3655,6 +3675,13 @@ table#workflows {
         a {
             line-height: 22px;
 		}
+	}
+	dt{
+		width:90px;
+	}
+	dd{
+		
+		width:auto;
 	}
 
     .newSelectList {
@@ -3709,6 +3736,9 @@ table#workflows {
 	}
 	&.stage{
 		left:0px;
+	}
+	&.taskPriority{
+		left:24px;
 	}
 }
 	
@@ -4397,4 +4427,188 @@ ul.dialog-tabs{
 	input{
 		margin:0 5px;
 	}
+}
+
+.group-label {
+  font-weight: bold;
+  text-anchor: end;
+}
+.line {
+  fill: none;
+  stroke: #1ebbea;
+  stroke-width: 3px;
+}
+.chart rect {
+  fill: steelblue;
+}
+.chart rect.bar2 {
+  fill: #6ec262;
+opacity:0.3;
+}
+.chart rect.bar {
+  fill: #6ec262;
+}
+
+.chart text {
+  fill: black;
+  font: 18px sans-serif;
+  text-anchor: end;
+  font-weight:bold;
+}
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.bar {
+  fill: #26a7dd;
+}
+.bar2 {
+  fill: #57D0b5;
+}
+.bar3 {
+  fill: #fff;
+}
+
+.axis text {
+  font: 14px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+.y.label{
+	fill: #57D0b5;
+	font: 18px sans-serif;
+	font-weight:bold;
+}
+.y2.label{
+	fill: #26a7dd;
+	font: 18px sans-serif;
+	font-weight:bold;
+}
+.y .tick line{
+	stroke:#f2f2f2;
+}
+.y2 .tick line{
+	stroke:#fff;
+}
+.axis .domain{
+	stroke:#fff;
+}
+.chart .x .tick line{
+	stroke:#f2f2f2;
+}
+.legend{
+	rect.main{
+		stroke:#e5e5e5;
+		stroke-width:3;
+		fill:white;
+
+	}
+	text{
+		text-anchor:start;
+		font-weight:normal;
+		font-size:16px;
+	}
+	
+}
+.choseDateRange, .choseDateItem, .choseDateRangeSource{
+	padding:5px;
+	border:@thin-border #efefef;
+	float:right;
+	margin-right:10px;
+	.item{
+		margin-left:5px;
+		float:left;
+		padding:5px 10px;
+		color:#939395;
+		font-weight:bold;
+		background-color:#f4f4f4;
+		border:@thin-border #dfdfdf;
+		cursor:pointer;
+		&:first-child{
+			margin-left:0px;
+		}
+		&.active{
+			background-color:#00a2d0;
+			color:white;
+		}
+	}
+}
+.legend-box{
+	padding:5px;
+	border:@thin-border #efefef;
+	width:525px;
+	margin:0 auto;
+	height:32px;
+	padding:0;
+	padding-top:3px;
+	margin-top:-39px;
+	&.small{
+		width:255px;
+	}
+	div{
+		float:left;
+		padding:5px 10px;
+		.square{
+			width:20px;
+			height:20px;
+			background-color:#26A7DD;
+			padding:0;
+		}
+		.text{
+			line-height:20px;
+			height:20px;
+			padding:0;
+			padding-left:10px;
+			padding-right:10px;
+		}
+		&.unconverted{
+			.square{
+				background-color:#57D0B5;
+			}
+		}
+		&.total{
+			.square{
+				background-color: #6EC262;
+				opacity: 0.3;
+			}
+		}
+
+		&.opportunities{
+			.square{
+				background-color: #6EC262;
+			}
+		}
+
+		&.convertRate{
+			.square{
+				border-radius:20px;
+				background-color:#26A7DD;
+			}
+		}
+
+	}
+	
+}
+.choseDateItem{
+	float:left;
+	margin-left:10px;
+}
+h3.dashboard{
+	text-align:center;
+	line-height:50px;
 }
