@@ -88,7 +88,7 @@ app.get('/', function (req, res) {
     res.sendfile('index.html');
 });
 
-app.get('/account/authenticated', function (req, res, next) {
+app.get('/account/authenticated', function (req, res) {
     console.log('>>>>>>>>>>>>>>>>Request authenticate<<<<<<<<<<<<<<<<<<');
     if (req.session && req.session.loggedIn) {
         res.send(200);
@@ -147,10 +147,10 @@ app.get('/getModules', function (req, res) {
     requestHandler.getModules(req, res);
 });
 
-app.post('/uploadFiles', function (req, res, next) {
+app.post('/uploadFiles', function (req, res) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
-    file = {};
+    var file = {};
     console.log(req.headers);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;

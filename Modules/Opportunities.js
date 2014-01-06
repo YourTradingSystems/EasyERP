@@ -450,6 +450,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     function getLeadsCustom(data, response) {
         var res = {};
         res['data'] = [];
+
         var i = 0;
         var qeryEveryOne = function (arrayOfId, n) {
             if (data && data.isConverted == 'true'){
@@ -646,6 +647,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }                                              //����� �������� Person
             };
 
+     
             console.log(_id);
             console.log(data.groups);
 
@@ -1060,7 +1062,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         });
                         opportunitie.find().
                             where('_id').in(responseOpportunitiesArray).
-                            populate('relatedUser customer department jobPosition workflow').
+                            populate('relatedUser customer department jobPosition salesPerson workflow').
                             populate('createdBy.user').
                             populate('editedBy.user').
                             populate('groups.users').
