@@ -450,18 +450,17 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     function getLeadsCustom(data, response) {
         var res = {};
         res['data'] = [];
-
         var i = 0;
         var qeryEveryOne = function (arrayOfId, n) {
-            if (data && data.isConverted){
-                var query = opportunitie.find({isConverted: true });
+            if (data && data.isConverted == 'true'){
+                var query = opportunitie.find({isConverted: true});
             } else {
-                var query = opportunitie.find({ $or: [{isConverted: false}, { isOpportunitie: false }] });
+                var query = opportunitie.find({isConverted: false, isOpportunitie: false });
             }
 
             query.where('_id').in(arrayOfId);
             if (data && data.status && data.status.length>0)
-            query.where('workflow').in(data.status);
+                query.where('workflow').in(data.status);
             query.populate('customer salesPerson salesTeam workflow').
                     populate('createdBy.user').
                     populate('editedBy.user').
@@ -478,10 +477,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         };
 
         var qeryOwner = function (arrayOfId, n) {
-            if (data && data.isConverted){
-                var query = opportunitie.find({isConverted: true });
+            if (data && data.isConverted == 'true'){
+                var query = opportunitie.find({ $or : [{isConverted: true},{ isOpportunitie: true }] });
             } else {
-                var query = opportunitie.find({ $or: [{isConverted: false}, { isOpportunitie: false }] });
+                var query = opportunitie.find({isConverted: false, isOpportunitie: false });
             }
             query.where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId });
@@ -505,10 +504,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            if (data && data.isConverted){
-                var query = opportunitie.find({isConverted: true });
+            if (data && data.isConverted == 'true'){
+                var query = opportunitie.find({ $or : [{isConverted: true},{ isOpportunitie: true }] });
             } else {
-                var query = opportunitie.find({ $or: [{isConverted: false}, { isOpportunitie: false }] });
+                var query = opportunitie.find({isConverted: false, isOpportunitie: false });
             }
             query.where({ 'groups.users': data.uId });
             if (data && data.status && data.status.length>0)
@@ -522,12 +521,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         department.department.find({ users: data.uId }, { _id: 1 },
                             function (err, deps) {
                                 if (!err) {
-                                    if (data && data.isConverted){
-                                        var query = opportunitie.find({isConverted: true });
+                                    if (data && data.isConverted == 'true'){
+                                        var query = opportunitie.find({ $or : [{isConverted: true},{ isOpportunitie: true }] });
                                     } else {
-                                        var query = opportunitie.find({ $or: [{isConverted: false}, { isOpportunitie: false }] });
+                                        var query = opportunitie.find({isConverted: false, isOpportunitie: false });
                                     }
-                                        where('_id').in(arrayOfId).
+                                    query.where('_id').in(arrayOfId).
                                         where('groups.group').in(deps);
                                     if (data && data.status && data.status.length>0)
                                         query.where('workflow').in(data.status);
@@ -647,7 +646,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }                                              //����� �������� Person
             };
 
-            console.log('___________________________loo__________________________________');
             console.log(_id);
             console.log(data.groups);
 
@@ -781,7 +779,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         var qeryEveryOne = function (arrayOfId, n) {
             var query = opportunitie.find({ isOpportunitie: true }).
                 where('_id').in(arrayOfId);
-            if (data && data.status && data.status.length>0){}
+            if (data && data.status && data.status.length>0)
                 query.where('workflow').in(data.status);
             query.populate('customer salesPerson salesTeam workflow').
                 populate('createdBy.user').
