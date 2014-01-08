@@ -584,6 +584,34 @@ var Project = function (logWriter, mongoose, department) {
         );
 
         var findTasksById = function (_projects, count) {
+            var  projectsSendArray = [];
+            var _resultProgress;
+            var startIndex,endIndex;
+
+            if ((data.page-1)*data.count > _projects.length ) {
+                startIndex = _projects.length;
+            } else {
+                startIndex = (data.page-1)*data.count;
+            }
+
+            if (data.page*data.count > _projects.length ) {
+                endIndex = _projects.length;
+            } else {
+                endIndex = data.page*data.count;
+            }
+
+            for (var k = startIndex; k<endIndex; k++) {
+                _resultProgress = returnProgress(_projects[k].task);
+                _projects[k].estimated = _resultProgress.estimated;
+                _projects[k].remaining = _resultProgress.remaining;
+                _projects[k].progress = _resultProgress.progress;
+                projectsSendArray.push(_projects[k]);
+            }
+            res['listLength'] = _projects.length;
+            res['data'] = projectsSendArray;
+            response.send(res);
+
+            /*
             try {
                 if (_projects.length > count) {
                     var _resultProgress = returnProgress(_projects[count].task);
@@ -602,7 +630,7 @@ var Project = function (logWriter, mongoose, department) {
                 console.log(Exception);
                 logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
                 response.send(500, { error: "Can't find Projects" });
-            }
+            }*/
         }
     };
 
