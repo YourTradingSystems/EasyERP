@@ -479,7 +479,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         var qeryOwner = function (arrayOfId, n) {
             if (data && data.isConverted == 'true'){
-                var query = opportunitie.find({ $or : [{isConverted: true},{ isOpportunitie: true }] });
+                var query = opportunitie.find({isConverted: true});
             } else {
                 var query = opportunitie.find({isConverted: false, isOpportunitie: false });
             }
@@ -506,7 +506,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         var qeryByGroup = function (arrayOfId, n) {
             if (data && data.isConverted == 'true'){
-                var query = opportunitie.find({ $or : [{isConverted: true},{ isOpportunitie: true }] });
+                var query = opportunitie.find({isConverted: true});
             } else {
                 var query = opportunitie.find({isConverted: false, isOpportunitie: false });
             }
@@ -523,7 +523,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             function (err, deps) {
                                 if (!err) {
                                     if (data && data.isConverted == 'true'){
-                                        var query = opportunitie.find({ $or : [{isConverted: true},{ isOpportunitie: true }] });
+                                        var query = opportunitie.find({isConverted: true});
                                     } else {
                                         var query = opportunitie.find({isConverted: false, isOpportunitie: false });
                                     }
@@ -682,12 +682,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
                 });
             }
-
-            console.log('=============================================');
-            console.log(data.groups);
-
-
-
             opportunitie.update({ _id: _id }, data, function (err, result) {
                 console.log(data);
                 if (err) {
@@ -968,9 +962,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     opportunitie.find({ isOpportunitie: true }).
                                         where('_id').in(arrayOfId).
                                         where('groups.group').in(deps).
-                                        // populate('customer salesPerson salesTeam workflow').
-                                        // populate('createdBy.user').
-                                        // populate('editedBy.user').
                                         exec(function (error, _res) {
                                             if (!error) {
                                                 i++;
@@ -1043,20 +1034,31 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         var responseOpportunitiesArray = [];
                         var columnValue = data.count;
                         var page = data.page;
+                        var startIndex,endIndex;
 
                         responseOpportunities.forEach(function (value) {
-                            value.opportunitieId.forEach(function (idOpportunitie, taskIndex) {
-                                if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
-                                    responseOpportunitiesArray.push(idOpportunitie);
-                                }
-                            });
+                            if ((data.page-1)*data.count > value.opportunitieId.length ) {
+                                startIndex = value.opportunitieId.length;
+                            } else {
+                                startIndex = (data.page-1)*data.count;
+                            }
+
+                            if (data.page*data.count > value.opportunitieId.length ) {
+                                endIndex = value.opportunitieId.length;
+                            } else {
+                                endIndex = data.page*data.count;
+                            }
+
+                            for (var k = startIndex; k<endIndex; k++) {
+                                responseOpportunitiesArray.push(value.opportunitieId[k]);
+                            }
                             var myObj = {
                                 id: value._id,
                                 namberOfOpportunities: value.opportunitieId.length,
                                 remainingOfOpportunities: value.remaining
                             };
                             optionsArray.push(myObj);
-                            if (value.opportunitieId.length > ((page - 1) * columnValue + columnValue)) {
+                            if (value.opportunitieId.length > (page * columnValue)) {
                                 showMore = true;
                             }
                         });

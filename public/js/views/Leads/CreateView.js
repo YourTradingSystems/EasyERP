@@ -295,9 +295,7 @@ define([
 
             render: function () {
 				var self=this;
-                var formString = this.template({
-
-				});
+                var formString = this.template();
                 this.$el = $(formString).dialog({
                     autoOpen:true,
                     resizable:true,

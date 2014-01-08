@@ -507,41 +507,40 @@ var Project = function (logWriter, mongoose, department) {
                 populate('editedBy.user').
     			populate('groups.users').
 			    populate('groups.group').
-
-            exec(function (error, _res1) {
-                if (!error) {
-                    department.department.find({ users: data.uId }, { _id: 1 },
-											   function (err, deps) {
-												   console.log(deps);
-												   if (!err) {
-													   project.find().
-														   where('_id').in(arrayOfId).
-														   where('groups.group').in(deps).
-														   populate("projectmanager customer task").
-														   populate('workflow').
-														   populate('createdBy.user').
-														   populate('editedBy.user').
-    													   populate('groups.users').
-			    										   populate('groups.group').
-														   exec(function (error, _res) {
-															   if (!error) {
-																   i++;
-																   console.log(i);
-																   console.log(n);
-																   res['data'] = res['data'].concat(_res1);
-																   res['data'] = res['data'].concat(_res);
-																   console.log(res['data']);
-																   if (i == n) findTasksById(res['data'], 0);;
-															   } else {
-																   console.log(error);
-															   }
-														   });
-												   }
-											   });
-                } else {
-                    console.log(error);
-                }
-            });
+                exec(function (error, _res1) {
+                    if (!error) {
+                        department.department.find({ users: data.uId }, { _id: 1 },
+                           function (err, deps) {
+                               console.log(deps);
+                               if (!err) {
+                                   project.find().
+                                       where('_id').in(arrayOfId).
+                                       where('groups.group').in(deps).
+                                       populate("projectmanager customer task").
+                                       populate('workflow').
+                                       populate('createdBy.user').
+                                       populate('editedBy.user').
+                                       populate('groups.users').
+                                       populate('groups.group').
+                                       exec(function (error, _res) {
+                                           if (!error) {
+                                               i++;
+                                               console.log(i);
+                                               console.log(n);
+                                               res['data'] = res['data'].concat(_res1);
+                                               res['data'] = res['data'].concat(_res);
+                                               console.log(res['data']);
+                                               if (i == n) findTasksById(res['data'], 0);;
+                                           } else {
+                                               console.log(error);
+                                           }
+                                       });
+                               }
+                           });
+                    } else {
+                        console.log(error);
+                    }
+                });
         };
 		var workflowsId = data?data.status:null;
         project.aggregate(
@@ -971,7 +970,6 @@ var Project = function (logWriter, mongoose, department) {
     function getTasksByProjectId(data, response) {
         var res = {};
         res['data'] = [];
-        res['showMore'] = [];
         res['options'] = [];
         var optionsArray = [];
         var showMore = false;
@@ -1113,20 +1111,32 @@ var Project = function (logWriter, mongoose, department) {
                         var responseTasksArray = [];
                         var columnValue = data.count;
                         var page = data.page;
+                        var startIndex,endIndex;
 
                         responseTasks.forEach(function (value) {
-                            value.taskId.forEach(function (idTask, taskIndex) {
-                                if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
-                                    responseTasksArray.push(idTask);
-                                }
-                            });
+                            if ((data.page-1)*data.count > value.taskId.length ) {
+                                startIndex = value.taskId.length;
+                            } else {
+                                startIndex = (data.page-1)*data.count;
+                            }
+
+                            if (data.page*data.count > value.taskId.length ) {
+                                endIndex = value.taskId.length;
+                            } else {
+                                endIndex = data.page*data.count;
+                            }
+
+                            for (var k = startIndex; k<endIndex; k++) {
+                                responseTasksArray.push(value.taskId[k]);
+                            }
+
                             var myObj = {
                                 id: value._id,
                                 namberOfTasks: value.taskId.length,
                                 remainingOfTasks: value.remaining
                             };
                             optionsArray.push(myObj);
-                            if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
+                            if (value.taskId.length > (page * columnValue)) {
                                 showMore = true;
                             }
                         });

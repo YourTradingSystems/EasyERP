@@ -1,96 +1,186 @@
 ﻿<div class="form-holder">
   <form method="post" action="" id="createApplicationForm" class="form" data-id="<%=model._id%>">
     <fieldset>
-	  <div class="app-block left">
-		<div class="avatar left">
-          <div class="upload">
-            Edit
-			<input type="file" value="Edit" id="inputImg" accept="image/*">
-		  </div>
-		  <canvas id="avatar" width="120" height="120"></canvas>
-		</div>
-		<div class="app-block left marginLeft">
-		  <dl class="app-empty-info">
-			<dt><input type="text" class="name" id="first" placeholder="First name" required maxlength="32" value="<%=model.name.first%>" /></dt><dd>&nbsp;</dd>
-			<dt><input type="text" class="name" id="last" placeholder="Last name" required maxlength="32" value="<%=model.name.last%>"/></dt><dd>&nbsp;</dd>
-			<dt><input type="text" id="expectedSalary" placeholder="Expected Salary" maxlength="32" value="<%=model.expectedSalary%>"/></dt><dd>&nbsp;</dd>
-			<dt><input type="text" id="proposedSalary" placeholder="Proposed Salary" maxlength="32" value="<%=model.proposedSalary%>"/></dt><dd>&nbsp;</dd>
-		  </dl>
-		  
-		  
-		</div>
-	  </div>
-	  <div class="app-block right">
-		<dl class="app-normal-info">
-		  <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" maxlength="48" value="<%=model.personalEmail%>"/></dd>
-		  <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32" value="<%=model.workPhones.phone%>"/></dd>
-		  <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=model.tags%>" /></dd>
-		  <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" value="<%=model.nextAction%>" readonly/></dd>
-		</dl>
-	  </div>
-	  <div class="clearfix"></div>
-	  <div class="app-block left bottom">
-		<textarea id="otherInfo" placeholder="Fedback of interviews..."><%=model.otherInfo%></textarea>
+        <div class="inner">
+            <ul class="dialog-tabs">
+                <li><a class="active" href="javascript:;">Main</a></li>
+                <li><a href="javascript:;">Assignees</a></li>
+            </ul>
+            <div class="clearfix"></div>
+            <div class="dialog-tabs-items">
+                <div class="dialog-tabs-item active">
+                  <div class="app-block left">
+                    <div class="avatar left">
+                      <div class="upload">
+                        Edit
+                        <input type="file" value="Edit" id="inputImg" accept="image/*">
+                      </div>
+                      <canvas id="avatar" width="120" height="120"></canvas>
+                    </div>
+                    <div class="app-block left marginLeft">
+                      <dl class="app-empty-info">
+                        <dt><input type="text" class="name" id="first" placeholder="First name" required maxlength="32" value="<%=model.name.first%>" /></dt><dd>&nbsp;</dd>
+                        <dt><input type="text" class="name" id="last" placeholder="Last name" required maxlength="32" value="<%=model.name.last%>"/></dt><dd>&nbsp;</dd>
+                        <dt><input type="text" id="expectedSalary" placeholder="Expected Salary" maxlength="32" value="<%=model.expectedSalary%>"/></dt><dd>&nbsp;</dd>
+                        <dt><input type="text" id="proposedSalary" placeholder="Proposed Salary" maxlength="32" value="<%=model.proposedSalary%>"/></dt><dd>&nbsp;</dd>
+                      </dl>
 
-	  </div>
-	  <div class="app-block right bottom">
-		<dl class="person-info">
-		  <dt><label for="jobPositionDd">Applied Job </label></dt>
-		  <dd>
-			<select id="jobPositionDd">
 
-            </select>
-		  </dd>
-		  <dt><label for="departmentDd">Department</label></dt>
-		  <dd>
-			<select id="departmentDd">
+                    </div>
+                  </div>
+                  <div class="app-block right">
+                    <dl class="app-normal-info">
+                      <dt><label for="wemail">Email </label></dt><dd><input type="email" id="wemail" maxlength="48" value="<%=model.personalEmail%>"/></dd>
+                      <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32" value="<%=model.workPhones.phone%>"/></dd>
+                      <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=model.tags%>" /></dd>
+                      <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" value="<%=model.nextAction%>" readonly/></dd>
+                    </dl>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="app-block left bottom">
+                    <textarea id="otherInfo" placeholder="Fedback of interviews..."><%=model.otherInfo%></textarea>
 
-            </select>
+                  </div>
+                  <div class="app-block right bottom">
+                    <dl class="person-info">
+                      <dt><label for="jobPositionDd">Applied Job </label></dt>
+                      <dd>
+                        <select id="jobPositionDd">
 
-		  </dd>
-		  <dt><label for="sourceDd">Source </label></dt>
-		  <dd>
-			<select id="sourceDd">
-			  <option>www.rabota.ua</option>
-			  <option>www.work.ua</option>
-			  <option>www.ain.net</option>
-			  <option>other</option>
-            </select>
-		  </dd>
-		  <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
-		</dl>
-	  </div>
-		<label>Attachments</label>
+                        </select>
+                      </dd>
+                      <dt><label for="departmentDd">Department</label></dt>
+                      <dd>
+                        <select id="departmentDd">
 
-		  <div id="attachBody">
-			<ul class="attachContainer"> 
-               <% var n = model.attachments.length-1;
-        		  model.attachments.reverse();
-        		_.each(model.attachments, function(data,key){ %>
-       <li class="attachFile_<%=data['_id'] %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
-              <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
-	   </li>
-           <% }); model.attachments.reverse(); %>      
-			</ul>
-		  </div>
-		  <div class="clearfix"></div>
-		  <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
-		  <div class="progress" style="float:left;">
-			<div class="bar">
-			  <span class="status"></span>
-			</div>
-		  </div>		
+                        </select>
 
-      <div class="clearfix"></div>
-      <div class="cropImages form" style="display:none;">
-     	<div class="formTitle">
-		<h3 class="left">Crop Images</h3>
-		<div class="clearfix"></div>
-	  	</div><br />	
-      	<div class="image_input" style="float: left;margin-right: 20px;"></div>
-      	<img class="image_output" />
-      	<div class="clearfix"></div>
-      </div>
+                      </dd>
+                      <dt><label for="sourceDd">Source </label></dt>
+                      <dd>
+                        <select id="sourceDd">
+                          <option>www.rabota.ua</option>
+                          <option>www.work.ua</option>
+                          <option>www.ain.net</option>
+                          <option>other</option>
+                        </select>
+                      </dd>
+                      <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
+                    </dl>
+                  </div>
+                    <label>Attachments</label>
+
+                      <div id="attachBody">
+                        <ul class="attachContainer">
+                           <% var n = model.attachments.length-1;
+                              model.attachments.reverse();
+                            _.each(model.attachments, function(data,key){ %>
+                   <li class="attachFile_<%=data['_id'] %>"><a href = "<%=data['path'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+                          <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
+                   </li>
+                       <% }); model.attachments.reverse(); %>
+                        </ul>
+                      </div>
+                      <div class="clearfix"></div>
+                      <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
+                      <div class="progress" style="float:left;">
+                        <div class="bar">
+                          <span class="status"></span>
+                        </div>
+                      </div>
+
+                  <div class="clearfix"></div>
+                  <div class="cropImages form" style="display:none;">
+                    <div class="formTitle">
+                    <h3 class="left">Crop Images</h3>
+                    <div class="clearfix"></div>
+                    </div><br />
+                    <div class="image_input" style="float: left;margin-right: 20px;"></div>
+                    <img class="image_output" />
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+                <div class="dialog-tabs-item">
+                    <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+                    <div class="clearfix"></div>
+
+                    <div class="half-block left">
+                        <div class="canReadAndWrite">
+                            <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
+                            <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
+                            <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
+                        </div>
+                    </div>
+                    <div class="half-block left">
+                        <dl class="project-owner-info">
+                            <dt><label for="allUsers">Owner</label></dt><dd>
+
+                            <select id="allUsers">
+
+                            </select>
+
+                        </dd>
+                        </dl>
+                    </div>
+
+
+                    <div class="addUserDialog">
+
+                        <div class="formTitle">
+                            <h3 class="left">Choose Users</h3>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="groupsChooser">
+                            <div class="left">
+                                <ul id="sourceUsers" class="source">
+
+                                </ul>
+                            </div>
+                            <div class="left">
+                                <div class="swich"></div>
+                            </div>
+                            <div class="left">
+                                <ul id="targetUsers" class="target">
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="addGroupDialog">
+                        <div class="formTitle">
+                            <h3 class="left">Choose Groups</h3>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="groupsChooser">
+                            <div class="left">
+                                <ul id="sourceGroups" class="source">
+
+                                </ul>
+                            </div>
+                            <div class="left">
+                                <div class="swich"></div>
+                            </div>
+                            <div class="left">
+                                <ul id="targetGroups" class="target">
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <table class="groupsAndUser">
+                        <tr>
+                            <th>Groups and Users</th><th></th>
+                        </tr>
+                    </table>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
     </fieldset>
   </form>
 </div>

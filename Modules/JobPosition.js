@@ -1,4 +1,4 @@
-var JobPosition = function (logWriter, mongoose, employee) {
+var JobPosition = function (logWriter, mongoose, employee, department) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var objectId = mongoose.Types.ObjectId;
     var jobPositionSchema = mongoose.Schema({
@@ -12,6 +12,12 @@ var JobPosition = function (logWriter, mongoose, employee) {
         description: String,
         requirements: String,
         workflow: { type: ObjectId, ref: 'workflows', default: null },
+        whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
+        groups: {
+            owner: { type: ObjectId, ref: 'Users', default: null },
+            users: [{ type: ObjectId, ref: 'Users', default: null }],
+            group: [{ type: ObjectId, ref: 'Department', default: null }]
+        },
         numberOfEmployees: { type: Number, default: 0 },
         totalForecastedEmployees: { type: Number, default: 0 },
         createdBy: {
@@ -88,6 +94,12 @@ var JobPosition = function (logWriter, mongoose, employee) {
                     }
                     if (data.workflow) {
                         _job.workflow = data.workflow;
+                    }
+                    if (data.groups) {
+                        _job.groups = data.groups;
+                    }
+                    if (data.whoCanRW) {
+                        _job.whoCanRW = data.whoCanRW;
                     }
                     _job.save(function (err, result) {
                         if (err) {
@@ -246,8 +258,185 @@ var JobPosition = function (logWriter, mongoose, employee) {
         }
     }; //end get
 
-    function getJobPosition(data,response) {
-        var res = {};
+    function getJobPosition(data, response) {
+       /* var res = {};
+        res['data'] = [];
+        var i = 0;
+        var qeryEveryOne = function (arrayOfId, n, workflowsId) {
+            var query = job.find();
+
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+
+            query.where('_id').in(arrayOfId).
+                populate('department').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        res['data'] = res['data'].concat(_res);
+                        if (i == n) getjobPositions(res['data'], 0);;
+                    }
+                });
+        };
+
+        var qeryOwner = function (arrayOfId, n, workflowsId) {
+            var query = job.find();
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+
+            query.where('_id').in(arrayOfId).
+                where({ 'groups.owner': data.uId }).
+                populate('department').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) getjobPositions(res['data'], 0);;
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        var qeryByGroup = function (arrayOfId, n) {
+            var query = job.find();
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+
+            query.where({ 'groups.users': data.uId }).
+                populate('department').
+                populate('createdBy.user').
+                populate('editedBy.user').
+                exec(function (error, _res1) {
+                    if (!error) {
+                        department.department.find({ users: data.uId }, { _id: 1 },
+                            function (err, deps) {
+                                console.log(deps);
+                                if (!err) {
+                                    var query = job.find();
+                                    query.where('_id').in(arrayOfId).
+                                        populate('department').
+                                        populate('createdBy.user').
+                                        populate('editedBy.user').
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                i++;
+                                                console.log(i);
+                                                console.log(n);
+                                                res['data'] = res['data'].concat(_res1);
+                                                res['data'] = res['data'].concat(_res);
+                                                console.log(res['data']);
+                                                if (i == n) getjobPositions(res['data'], 0);;
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                }
+                            });
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+        var workflowsId = data ? data.status : null;
+        job.aggregate(
+            {
+                $group: {
+                    _id: "$whoCanRW",
+                    ID: { $push: "$_id" },
+                    groupId: { $push: "$groups.group" }
+                }
+            },
+            function (err, result) {
+                if (!err) {
+                    if (result.length != 0) {
+                        result.forEach(function(application) {
+                            switch (application._id) {
+                                case "everyOne":
+                                {
+                                    qeryEveryOne(application.ID, result.length, workflowsId);
+                                }
+                                    break;
+                                case "owner":
+                                {
+                                    qeryOwner(application.ID, result.length, workflowsId);
+                                }
+                                    break;
+                                case "group":
+                                {
+                                    qeryByGroup(application.ID, result.length, workflowsId);
+                                }
+                                    break;
+                            }
+                        });
+                    } else {
+                        response.send(res);
+                    }
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+
+        var getjobPositions = function (jobPositions, count) {
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>');
+            var startIndex,endIndex;
+
+            if ((data.page-1)*data.count > jobPositions.length ) {
+                startIndex = jobPositions.length;
+            } else {
+                startIndex = (data.page-1)*data.count;
+            }
+
+            if (data.page*data.count > jobPositions.length ) {
+                endIndex = jobPositions.length;
+            } else {
+                endIndex = data.page*data.count;
+            }
+            var counter = 0;
+            res['listLength'] = jobPositions.length;
+
+            var localstartIndex = startIndex,
+                localendIndex = endIndex;
+
+            var getTotalEmployees = function(jobPositions,startIndex,endIndex) {
+                if (jobPositions && (startIndex >= endIndex)) {
+                    var jobId = jobPositions[count]._id.toString();
+                    console.log(jobId);
+                    var aggregate = employee.employee.aggregate(
+                        {
+                            $match: {
+                                jobPosition: objectId(jobId)
+                            }
+                        },
+                        function(err, result) {
+                            if (result) {
+                                jobPositions[count].numberOfEmployees = result.length;
+                                jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
+                                startIndex++;
+                                getTotalEmployees(jobPositions, count);
+                            }
+                        }
+                    );
+                } else {
+                    var jobPositionsSendArray = [];
+                    for (var m = localstartIndex; m < localendIndex; m++ ) {
+                        jobPositionsSendArray.push(jobPositions[m])
+                    }
+                    res['data'] = jobPositionsSendArray;
+                    response.send(res);
+                }
+            }
+        }
+        //--------------------------------
+     */   var res = {};
         res['data'] = [];
         var query = job.find();
         query.exec(function (err, result) {
@@ -276,22 +465,22 @@ var JobPosition = function (logWriter, mongoose, employee) {
         });
         var getTotalEmployees = function(jobPositions, count) {
             if (jobPositions && jobPositions.length > count) {
-                var jobId = jobPositions[count]._id.toString();
-                console.log(jobId);
-                var aggregate = employee.employee.aggregate(
-                    {
-                        $match: {
-                            jobPosition: objectId(jobId)
+                    var jobId = jobPositions[count]._id.toString();
+                    console.log(jobId);
+                    var aggregate = employee.employee.aggregate(
+                        {
+                            $match: {
+                                jobPosition: objectId(jobId)
+                            }
+                        },
+                        function(err, result) {
+                            if (result) {
+                                jobPositions[count].numberOfEmployees = result.length;
+                                jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
+                                count++;
+                                getTotalEmployees(jobPositions, count);
+                            }
                         }
-                    },
-                    function(err, result) {
-                        if (result) {
-                            jobPositions[count].numberOfEmployees = result.length;
-                            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
-                            count++;
-                            getTotalEmployees(jobPositions, count);
-                        }
-                    }
                 );
                 //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
                 //        if (err) {
