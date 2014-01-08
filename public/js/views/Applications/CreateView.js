@@ -457,8 +457,8 @@ define([
                 common.populateDepartments(App.ID.departmentDd, "/Departments",null,function(){self.styleSelect(App.ID.departmentDd);});
                 common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition",null,function(){self.styleSelect(App.ID.jobPositionDd);});
-				self.styleSelect(App.ID.jobPositionDd);
 				self.styleSelect("#sourceDd");
+				self.styleSelect("#jobtapeDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

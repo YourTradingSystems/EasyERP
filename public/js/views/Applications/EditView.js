@@ -504,13 +504,13 @@
                 common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
 
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.jobPositionDd);});
                 common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.relatedUsersDd);});
                 common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentDd);});
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.jobPositionDd);});
                 common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
-				   self.styleSelect(App.ID.jobPositionDd);
 				   self.styleSelect("#sourceDd");
+				   self.styleSelect("#jobtapeDd");
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({

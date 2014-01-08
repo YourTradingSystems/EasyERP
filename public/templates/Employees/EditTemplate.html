@@ -1,264 +1,186 @@
 <div class="form-holder">
   <form method="post" action="" id="editEmployeeForm" class="form">
-      <fieldset>
-          <div class="inner">
-              <ul class="dialog-tabs">
-                  <li><a class="active" href="javascript:;">Main</a></li>
-                  <li><a href="javascript:;">Assignees</a></li>
-              </ul>
-              <div class="clearfix"></div>
-              <div class="dialog-tabs-items">
-                  <div class="dialog-tabs-item active">
-                    <div class="formTitle">
-                         <h3 class="left">Edit Employee</h3>
-                         <div class="clearfix"></div>
-                      </div>
-                    <div class="half-block left">
-                      <dl class="person-info">
-                        <dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" value="<%=model.name.first%>" required maxlength="32"/></dd>
-                        <dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" value="<%=model.name.last%>" required maxlength="32"/></dd>
-                        <dt><label for="tags">Tags</label></dt><dd><input type="text" id="tags" value="<%=model.tags%>" maxlength="32"/></dd>
-                      </dl>
-                    </div>
-                    <div class="half-block left">
-                      <div class="avatar">
-                        <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
-                        <canvas id="avatar" width="120" height="120"></canvas>
-                      </div>
+	<div class="formTitle">
+	  <h3 class="left">Edit Employee</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" value="<%=name.first%>" required maxlength="32"/></dd>
+		<dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" value="<%=name.last%>" required maxlength="32"/></dd>
+		<dt><label for="tags">Tags</label></dt><dd><input type="text" id="tags" value="<%=tags%>" maxlength="32"/></dd>
+	  </dl>
+	</div>
+    <div class="half-block left">
+      <div class="avatar">
+        <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
+        <canvas id="avatar" width="120" height="120"></canvas>
+      </div>
+      
+	</div>
+    <div class="clearfix">
+    </div>
+	<div class="formTitle">
+	  <h3 class="left">Public Information</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="street">Street</label></dt><dd><input type="text" class="workAddress" id="street" name="street" value="<%=workAddress.street%>" maxlength="32"/></dd>
+		<dt><label for="city">City</label></dt><dd><input type="text" class="workAddress" id="city" name="city" value="<%=workAddress.city%>" maxlength="32"/></dd>
+		<dt><label for="state">State</label></dt><dd><input type="text" class="workAddress" id="state" name="state" value="<%=workAddress.state%>" maxlength="32"/></dd>
+		<dt><label for="zip">Zip</label></dt><dd><input type="text" class="workAddress" id="zip" name="zip" value="<%=workAddress.zip%>" maxlength="32"/></dd>
+		<dt><label for="country">Country</label></dt><dd><input type="text" class="workAddress" id="country" name="country" value="<%=workAddress.country%>" maxlength="32" /></dd>
+		<dt><label for="workEmail">Work Email</label></dt><dd><input type="text"  id="workEmail" value="<%=workEmail%>" required maxlength="48"/></dd>
+		<dt><label for="personalEmail">Personal Email</label></dt><dd><input type="text"  id="personalEmail" value="<%=personalEmail%>" required maxlength="48"/></dd>
+		<dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" value="<%=skype%>" maxlength="32"/></dd>
+		<dt><label for="phone">Work Phone</label></dt><dd><input type="text" name="phone" id="phone" value="<%=workPhones.phone%>" required maxlength="32"/></dd>
 
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="formTitle">
-                      <h3 class="left">Public Information</h3>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="half-block left">
-                      <dl class="person-info">
-                        <dt><label for="street">Street</label></dt><dd><input type="text" class="workAddress" id="street" name="street" value="<%=model.workAddress.street%>" maxlength="32"/></dd>
-                        <dt><label for="city">City</label></dt><dd><input type="text" class="workAddress" id="city" name="city" value="<%=model.workAddress.city%>" maxlength="32"/></dd>
-                        <dt><label for="state">State</label></dt><dd><input type="text" class="workAddress" id="state" name="state" value="<%=model.workAddress.state%>" maxlength="32"/></dd>
-                        <dt><label for="zip">Zip</label></dt><dd><input type="text" class="workAddress" id="zip" name="zip" value="<%=model.workAddress.zip%>" maxlength="32"/></dd>
-                        <dt><label for="country">Country</label></dt><dd><input type="text" class="workAddress" id="country" name="country" value="<%=model.workAddress.country%>" maxlength="32" /></dd>
-                        <dt><label for="workEmail">Work Email</label></dt><dd><input type="text"  id="workEmail" value="<%=model.workEmail%>" required maxlength="48"/></dd>
-                        <dt><label for="personalEmail">Personal Email</label></dt><dd><input type="text"  id="personalEmail" value="<%=model.personalEmail%>" required maxlength="48"/></dd>
-                        <dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="32"/></dd>
-                        <dt><label for="phone">Work Phone</label></dt><dd><input type="text" name="phone" id="phone" value="<%=model.workPhones.phone%>" required maxlength="32"/></dd>
+	  </dl>
+	</div>	
+    <div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="mobile">Work Mobile</label></dt><dd><input type="text" name="mobile" id="mobile" value="<%=workPhones.mobile%>" required maxlength="32"/></dd>
+		<dt><label for="officeLocation">Office Location</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" value="<%=officeLocation%>" required maxlength="32"/></dd>
+		<dt><label for="relatedUsersDd">Related User</label></dt><dd>         
+          <select id="relatedUsersDd">
 
-                      </dl>
-                    </div>
-                    <div class="half-block left">
-                      <dl class="person-info">
-                        <dt><label for="mobile">Work Mobile</label></dt><dd><input type="text" name="mobile" id="mobile" value="<%=model.workPhones.mobile%>" required maxlength="32"/></dd>
-                        <dt><label for="officeLocation">Office Location</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" value="<%=model.officeLocation%>" required maxlength="32"/></dd>
-                        <dt><label for="relatedUsersDd">Related User</label></dt><dd>
-                          <select id="relatedUsersDd">
+        </select></dd>
+		<dt><label for="visibilityDd">Visibility</label></dt><dd>
+          <select id="visibilityDd">
+            <option selected="selected" value="0">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="departmentsDd">Department</label></dt><dd>
+		  <select id="departmentsDd">
+          </select>
+		</dd>
+		<dt><label for="jobPositionDd">Job</label></dt>
+		<dd>
+          <select id="jobPositionDd">
+          </select>
+		</dd>
+		<dt><label for="projectManagerDD">Manager</label></dt>
+		<dd>
+		  <select id="projectManagerDD">
+          </select>
+		</dd>
+		<dt><label for="coachDd">Coach</label></dt>
+		<dd>
+		  <select id="coachDd">
+          </select>
+		</dd>
+		
+		<dt><label for="jobtapeDd">Job type</label></dt>
+		  <dd>
+			<select id="jobtapeDd">
+			  <option>Full-time</option>
+			  <option>Part-time</option>
+			  <option>Remote</option>
+			  <option>Permanent</option>
+			  <option>Contract</option>
+			  <option>Temporary</option>
+            </select>
+		  </dd>
+	  </dl>
+	</div>	
+	<div class="clearfix"></div>
+	<div class="formTitle">
+	  <h3 class="left">Personal Information</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left">Citizenship &amp; Other Info</h3>
+		<div class="clearfix"></div>
+	  </div>
 
-                        </select></dd>
-                        <dt><label for="visibilityDd">Visibility</label></dt><dd>
-                          <select id="visibilityDd">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-                        </dd>
-                        <dt><label for="departmentsDd">Department</label></dt><dd>
-                          <select id="departmentsDd">
-                          </select>
-                        </dd>
-                        <dt><label for="jobPositionDd">Job</label></dt>
-                        <dd>
-                          <select id="jobPositionDd">
-                          </select>
-                        </dd>
-                        <dt><label for="projectManagerDD">Manager</label></dt>
-                        <dd>
-                          <select id="projectManagerDD">
-                          </select>
-                        </dd>
-                        <dt><label for="coachDd">Coach</label></dt>
-                        <dd>
-                          <select id="coachDd">
-                          </select>
-                        </dd>
-                      </dl>
-                    </div>
-                    <div class="formTitle">
-                      <h3 class="left">Personal Information</h3>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="half-block left withPaddingLeft">
-                      <div class="formTitle">
-                        <h3 class="left">Citizenship &amp; Other Info</h3>
-                        <div class="clearfix"></div>
-                      </div>
+	  <dl class="person-info">
+		<dt><label for="nationality">Nationality</label></dt>
+		<dd>
+		  <select id="nationality">
+            <option selected="selected" value="0">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=identNo%>" required maxlength="32"/></dd>
+		<dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=passportNo%>" required maxlength="32"/></dd>
+		<dt><label for="bankAccountNo">Bank Account №</label></dt>
+		<dd>
+		  <select id="bankAccountNo">
+            <option selected="selected" value="0">Select...</option>
+          </select>
 
-                      <dl class="person-info">
-                        <dt><label for="nationality">Nationality</label></dt>
-                        <dd>
-                          <select id="nationality">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-                        </dd>
-                        <dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required maxlength="32"/></dd>
-                        <dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required maxlength="32"/></dd>
-                        <dt><label for="bankAccountNo">Bank Account №</label></dt>
-                        <dd>
-                          <select id="bankAccountNo">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-
-                        </dd>
-                        <dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required maxlength="32"/></dd>
-                      </dl>
-                    </div>
-                    <div class="half-block left withPaddingLeft">
-                      <div class="formTitle">
-                        <h3 class="left">Contact Information</h3>
-                        <div class="clearfix"></div>
-                      </div>
-
-                      <dl class="person-info">
-                        <dt>Home Address</dt><dd>&nbsp;</dd>
-                        <dt><label>Street</label></dt><dd><input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" maxlength="32"/></dd>
-                        <dt><label>State</label></dt><dd><input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>" maxlength="32"/></dd>
-                        <dt><label>Zip</label></dt><dd><input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>" maxlength="32"/></dd>
-                        <dt><label>Country</label></dt><dd><input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>" maxlength="32"/></dd>
-                      </dl>
-                    </div>
-                    <div class="clearfix">
-                    </div>
-                    <div class="half-block left withPaddingLeft">
-                      <div class="formTitle">
-                        <h3 class="left">Status</h3>
-                        <div class="clearfix"></div>
-                      </div>
-
-                      <dl class="person-info">
-                        <dt><label for="gender">Gender</label></dt>
-                        <dd>
-                          <select id="gender">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-                        </dd>
-                        <dt><label for="maritalStatus">Marital Status</label></dt>
-                        <dd>
-                          <select id="maritalStatus">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-                        </dd>
-                      </dl>
-                    </div>
-                    <div class="half-block left withPaddingLeft">
-                      <div class="formTitle">
-                        <h3 class="left">Birth</h3>
-                        <div class="clearfix"></div>
-                      </div>
-
-                      <dl class="person-info">
-                        <dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=model.dateBirth%>" readonly/></dd>
-                      </dl>
-                    </div>
-                    <div class="clearfix">
-                    </div>
-                    <div class="formTitle">
-                      <h3 class="left">HR Settings</h3>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="half-block left">
-                      <dl class="person-info">
-                        <dt><label for="active">Active</label></dt><dd><input type="checkbox" <%= (model.active)? "checked='checked'" : ''%> name="active" id="active" /></dd>
-                      </dl>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="cropImages form" style="display:none;">
-                        <div class="formTitle">
-                        <h3 class="left">Crop Images</h3>
-                        <div class="clearfix"></div>
-                        </div><br />
-                        <div class="image_input" style="float: left;margin-right: 20px;"></div>
-                        <img class="image_output" />
-                        <div class="clearfix"></div>
-                      </div>
-                  </div>
-                  <div class="dialog-tabs-item">
-                <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-                <div class="clearfix"></div>
-
-                <div class="half-block left">
-                    <div class="canReadAndWrite">
-                        <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
-                        <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
-                        <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
-                    </div>
-                </div>
-                <div class="half-block left">
-                    <dl class="project-owner-info">
-                        <dt><label for="allUsers">Owner</label></dt><dd>
-
-                        <select id="allUsers">
-
-                        </select>
-
-                    </dd>
-                    </dl>
-                </div>
-
-
-                <div class="addUserDialog">
-
-                    <div class="formTitle">
-                        <h3 class="left">Choose Users</h3>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="groupsChooser">
-                        <div class="left">
-                            <ul id="sourceUsers" class="source">
-
-                            </ul>
-                        </div>
-                        <div class="left">
-                            <div class="swich"></div>
-                        </div>
-                        <div class="left">
-                            <ul id="targetUsers" class="target">
-
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                </div>
-                <div class="addGroupDialog">
-                    <div class="formTitle">
-                        <h3 class="left">Choose Groups</h3>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="groupsChooser">
-                        <div class="left">
-                            <ul id="sourceGroups" class="source">
-
-                            </ul>
-                        </div>
-                        <div class="left">
-                            <div class="swich"></div>
-                        </div>
-                        <div class="left">
-                            <ul id="targetGroups" class="target">
-
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-
-                <table class="groupsAndUser">
-                    <tr>
-                        <th>Groups and Users</th><th></th>
-                    </tr>
-                </table>
-                <div class="clearfix"></div>
-            </div>
-                  <div class="clearfix"></div>
-              </div>
-          </div>
-      </fieldset>
+		</dd>
+		<dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=otherId%>" required maxlength="32"/></dd>
+	  </dl>
+	</div>
+    <div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left">Contact Information</h3>
+		<div class="clearfix"></div>
+	  </div>
+	  
+	  <dl class="person-info">
+		<dt>Home Address</dt><dd>&nbsp;</dd>
+		<dt><label>Street</label></dt><dd><input type="text" class="homeAddress" name="street" value="<%=homeAddress.street%>" maxlength="32"/></dd>
+		<dt><label>State</label></dt><dd><input type="text" class="homeAddress" name="state" value="<%=homeAddress.state%>" maxlength="32"/></dd>
+		<dt><label>Zip</label></dt><dd><input type="text" class="homeAddress" name="zip" value="<%=homeAddress.zip%>" maxlength="32"/></dd>
+		<dt><label>Country</label></dt><dd><input type="text" class="homeAddress" name="country" value="<%=homeAddress.country%>" maxlength="32"/></dd>
+	  </dl>
+	</div>
+    <div class="clearfix">
+    </div>
+    <div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left">Status</h3>
+		<div class="clearfix"></div>
+	  </div>
+	  
+	  <dl class="person-info">
+		<dt><label for="gender">Gender</label></dt>
+		<dd>
+          <select id="gender">
+            <option selected="selected" value="0">Select...</option>
+          </select>
+		</dd>
+		<dt><label for="maritalStatus">Marital Status</label></dt>
+		<dd>
+          <select id="maritalStatus">
+            <option selected="selected" value="0">Select...</option>
+          </select>
+		</dd>
+	  </dl>
+	</div>
+    <div class="half-block left withPaddingLeft">
+	  <div class="formTitle">
+		<h3 class="left">Birth</h3>
+		<div class="clearfix"></div>
+	  </div>
+	  
+	  <dl class="person-info">
+		<dt><label for="dateBirth">Date of Birth</label></dt><dd><input type="text" name="dateBirth" id="dateBirth" value="<%=dateBirth%>" readonly/></dd>
+	  </dl>
+	</div>	
+    <div class="clearfix">
+    </div>
+	<div class="formTitle">
+	  <h3 class="left">HR Settings</h3>
+	  <div class="clearfix"></div>
+	</div>
+    <div class="half-block left">
+	  <dl class="person-info">
+		<dt><label for="active">Active</label></dt><dd><input type="checkbox" <%= (active)? "checked='checked'" : ''%> name="active" id="active" /></dd>
+	  </dl>
+	</div>
+ <div class="clearfix"></div>
+ 	  <div class="cropImages form" style="display:none;">
+     	<div class="formTitle">
+		<h3 class="left">Crop Images</h3>
+		<div class="clearfix"></div>
+	  	</div><br />	
+      	<div class="image_input" style="float: left;margin-right: 20px;"></div>
+      	<img class="image_output" />
+      	<div class="clearfix"></div>
+      </div>
   </form>
 </div>

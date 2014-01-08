@@ -16,7 +16,12 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
-                this.currentModel = this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				if (options.myModel){
+					this.currentModel = options.myModel
+				}
+				else{
+					this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				}
                 this.page=1;
                 this.pageG=1;
                 this.render();
