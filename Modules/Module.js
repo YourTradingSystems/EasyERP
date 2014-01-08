@@ -12,7 +12,7 @@ var Module = function (logWriter, mongoose, profile, models) {
     
     var ObjectId = mongoose.Schema.Types.ObjectId;
     
-    //var _module = mongoose.model('modules', moduleSchema);
+    mongoose.model('modules', moduleSchema);
 
     return {
         create: function (data, func) {

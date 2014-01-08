@@ -1,5 +1,5 @@
 ﻿// JavaScript source code
-var Events = function (logWriter, mongoose, googleModule) {
+var Events = function (logWriter, mongoose, googleModule, models) {
     var ObjectId = mongoose.Schema.Types.ObjectId,
         request = require('request');
 
@@ -59,11 +59,11 @@ var Events = function (logWriter, mongoose, googleModule) {
 
     }, { collection: 'Calendars' });
 
-    var event = mongoose.model('Events', eventsSchema);
-    var calendar = mongoose.model('Calendars', calendarsSchema);
+    mongoose.model('Events', eventsSchema);
+    mongoose.model('Calendars', calendarsSchema);
 
-    function create(data, res, req) {
-		console.log("create");
+    function create(req, data, res) {
+        console.log("create");
         try {
             if (!data) {
                 logWriter.log('Events.create Incorrect Incoming Data');
@@ -155,9 +155,9 @@ var Events = function (logWriter, mongoose, googleModule) {
     };//End createCalendar
 
     function saveEventToDb(data, res, req) {
-		var self=this;
+        var self = this;
         try {
-            _event = new event();
+            _event = new models.get(req.session.lastDb - 1, "Events", eventsSchema)();
             if (data.calendarId) {
                 _event.calendarId = data.calendarId;
             }
@@ -257,32 +257,31 @@ var Events = function (logWriter, mongoose, googleModule) {
                         logWriter.log("Events.js create savetoBd _event.save " + err);
                         res.send(500, { error: 'Events.save BD error' });
                     } else {
-						calendar.findById(result.calendarId, function(err,response){
-							if (response){
-								if (response.isSync)
-									if (response.id){
-										//sent event to google
-										req.body.calendarsId=[response._id]
-										sendToGoogleCalendar(req,res);
-									}
-						    		else{
-						 				googleModule.createNewGoogleCalendar(req,response,
-																		 function(id){
-																			 calendar.findByIdAndUpdate(result.calendarId, { id: id }, function (err, success) {
-																				 if (success){
-																					 req.body.calendarsId=[response._id]
-																					 sendToGoogleCalendar(req,res);
-																					 
-																					 
-																				 }
-																			 });																			 
-																		 });
-									//create new calendar on google
-								}
-							}
-						});
+                        models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(result.calendarId, function (err, response) {
+                            if (response) {
+                                if (response.isSync)
+                                    if (response.id) {
+                                        //sent event to google
+                                        req.body.calendarsId = [response._id];
+                                        sendToGoogleCalendar(req, res);
+                                    } else {
+                                        googleModule.createNewGoogleCalendar(req, response,
+																		 function (id) {
+																		     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(result.calendarId, { id: id }, function (err, success) {
+																		         if (success) {
+																		             req.body.calendarsId = [response._id];
+																		             sendToGoogleCalendar(req, res);
 
-                        calendar.findByIdAndUpdate(data.calendarId, { $push: { events: result._id } }, function (err, success) {
+
+																		         }
+																		     });
+																		 });
+                                        //create new calendar on google
+                                    }
+                            }
+                        });
+
+                         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(data.calendarId, { $push: { events: result._id } }, function (err, success) {
 
                             if (success) {
 
@@ -307,7 +306,7 @@ var Events = function (logWriter, mongoose, googleModule) {
 
     function saveCalendarToDb(data, res) {
         try {
-            _calendar = new calendar();
+            _calendar = new  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema)();
             if (data.id) {
                 _calendar.id = data.id;
             }
@@ -378,11 +377,11 @@ var Events = function (logWriter, mongoose, googleModule) {
         }
     };//Saving Calendar to Db With Checking it's events
 
-    function getCalendars(response) {
+    function getCalendars(req, response) {
         var res = {}
         var description = "";
         res['data'] = [];
-        var query = calendar.find();
+        var query =  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).find();
         query.sort({ summary: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -396,15 +395,15 @@ var Events = function (logWriter, mongoose, googleModule) {
         });
     }; //end getCalendar
 
-    function updateCalendar(_id, data, res) {
+    function updateCalendar(req, _id, data, res) {
         try {
             delete data._id;
-            calendar.findById(_id, function (err, result) {
+             models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(_id, function (err, result) {
                 if (err) {
 
                 }
                 else if (result) {
-                    calendar.update({ id: _id }, data, function (err, result) {
+                     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).update({ id: _id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -432,8 +431,8 @@ var Events = function (logWriter, mongoose, googleModule) {
         }
     };// end updateCalendar
 
-    function removeCalendar(_id, res) {
-        calendar.remove({ _id: _id }, function (err, result) {
+    function removeCalendar(req, _id, res) {
+         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Events.js remove event.removeCalendar " + err);
@@ -444,15 +443,15 @@ var Events = function (logWriter, mongoose, googleModule) {
         });
     };// end removeCalendar
 
-    function get(idArr, response) {
+    function get(req, idArr, response) {
         var res = {};
         var count = 1;
         res['data'] = [];
         if (!idArr || idArr.length == 0) {
             console.log('>>>>>>ArrIdNull<<<<<<<<<<<<');
-            var query = event.find();
+            var query = models.get(req.session.lastDb - 1, "Events", eventsSchema).find();
             query.sort({ summary: 1 });
-            query.exec(function(err, result) {
+            query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log('Events.js get Events.find' + description);
@@ -471,10 +470,10 @@ var Events = function (logWriter, mongoose, googleModule) {
                 }
             });
         } else {
-            idArr.forEach(function(id) {
-                var query = calendar.findById(id);
+            idArr.forEach(function (id) {
+                var query =  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(id);
                 query.populate('events');
-                query.exec(function(err, result) {
+                query.exec(function (err, result) {
                     if (result) {
                         res['data'] = res['data'].concat(result.events);
                         if (count == idArr.length) {
@@ -495,30 +494,30 @@ var Events = function (logWriter, mongoose, googleModule) {
         }
     }; //end get
 
-    function update(id, data, res, req) {
+    function update(req, id, data, res) {
         //console.log(data);
         try {
-			console.log("update");
-			console.log(data);
-			console.log(id);
+            console.log("update");
+            console.log(data);
+            console.log(id);
             delete data._id;
-			var _id="";
-			try{
-				_id = mongoose.Types.ObjectId(id);
-			}catch(e){
-				_id = mongoose.Types.ObjectId();
-			}
-			console.log(_id);
-            event.find({$or : [{ id: id },{ _id: _id }]}, function (err, result0) {
-				console.log("result");
-				console.log(result0);
+            var _id = "";
+            try {
+                _id = mongoose.Types.ObjectId(id);
+            } catch (e) {
+                _id = mongoose.Types.ObjectId();
+            }
+            console.log(_id);
+            models.get(req.session.lastDb - 1, "Events", eventsSchema).find({ $or: [{ id: id }, { _id: _id }] }, function (err, result0) {
+                console.log("result");
+                console.log(result0);
 
                 if (err) {
-					console.log(err)
+                    console.log(err)
                 }
                 else if (result0.length > 0) {
 
-                    event.update({$or : [{ id: id },{ _id: _id}]}, data, function (err, result) {
+                    models.get(req.session.lastDb - 1, "Events", eventsSchema).update({ $or: [{ id: id }, { _id: _id }] }, data, function (err, result) {
 
                         try {
                             if (err) {
@@ -526,34 +525,34 @@ var Events = function (logWriter, mongoose, googleModule) {
                                 logWriter.log("Events.js update events.update " + err);
                                 res.send(500, { error: "Can't update Events" });
                             } else {
-								calendar.findById(result0[0].calendarId, function(err,response){
-									if (response){
-										if (response.isSync)
-											if (response.id){
-												//sent event to google
-												event.find({$or : [{ id: id },{ _id: ObjectId(id)}]}, function (err, result0) {
-													req.body.calendarsId=[response._id]
-													//												sendToGoogleCalendar(req,res,true);
-													googleModule.updateEvent(req,result0[0],checkEventAsGoogle,response.id)
-												})												
-												//									googleModule.sendEventsToGoogle(req,null, [response], self.checkEventAsGoogle)
-											}
-										else{
-											googleModule.createNewGoogleCalendar(req,response,
-																				 function(id){
-																					 calendar.findByIdAndUpdate(result.calendarId, { id: id }, function (err, success) {
-																						 if (success){
-																							 req.body.calendarsId=[response._id]
-																							 sendToGoogleCalendar(req,res);
-																							 
-																							 
-																						 }
-																					 });																			 
-																				 });
-											//create new calendar on google
-										}
-									}
-								});
+                                 models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(result0[0].calendarId, function (err, response) {
+                                    if (response) {
+                                        if (response.isSync)
+                                            if (response.id) {
+                                                //sent event to google
+                                                models.get(req.session.lastDb - 1, "Events", eventsSchema).find({ $or: [{ id: id }, { _id: ObjectId(id) }] }, function (err, result0) {
+                                                    req.body.calendarsId = [response._id]
+                                                    //												sendToGoogleCalendar(req,res,true);
+                                                    googleModule.updateEvent(req, result0[0], checkEventAsGoogle, response.id)
+                                                })
+                                                //									googleModule.sendEventsToGoogle(req,null, [response], self.checkEventAsGoogle)
+                                            }
+                                            else {
+                                                googleModule.createNewGoogleCalendar(req, response,
+                                                                                     function (id) {
+                                                                                          models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(result.calendarId, { id: id }, function (err, success) {
+                                                                                             if (success) {
+                                                                                                 req.body.calendarsId = [response._id]
+                                                                                                 sendToGoogleCalendar(req, res);
+
+
+                                                                                             }
+                                                                                         });
+                                                                                     });
+                                                //create new calendar on google
+                                            }
+                                    }
+                                });
 
                                 res.send(200, { success: 'Events updated success' });
                             }
@@ -576,18 +575,18 @@ var Events = function (logWriter, mongoose, googleModule) {
         }
     };// end update
 
-    function remove(_id, res,req) {
+    function remove(req, _id, res) {
         var query = (_id.length === 24) ? { _id: _id } : { id: _id };
-		query = event.findOne(query).populate('calendarId');
-		query.exec(function(err,result){
+        query = models.get(req.session.lastDb - 1, "Events", eventsSchema).findOne(query).populate('calendarId');
+        query.exec(function (err, result) {
             if (err) {
                 console.log(err);
-				logWriter.log("Events.js remove google event.remove " + err);
+                logWriter.log("Events.js remove google event.remove " + err);
             } else {
-				googleModule.removeEvent(result,req);
+                googleModule.removeEvent(result, req);
             }
-		});
-        event.remove(query, function (err, result) {
+        });
+        models.get(req.session.lastDb - 1, "Events", eventsSchema).remove(query, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Events.js remove event.remove " + err);
@@ -598,42 +597,42 @@ var Events = function (logWriter, mongoose, googleModule) {
         });
     };// end remove
 
-    function googleCalSync(data, res) {
+    function googleCalSync(req, data, res) {
 
         if (!data) {
             logWriter.log('Events.googleCalSync Incorrect Incoming Data');
             res.send(400, { error: 'Events.googleCalSync Incorrect Incoming Data' });
             return;
         } else {
-			var countCal = 0;
+            var countCal = 0;
             data.forEach(function (cal) {
-				countCal++;
-                var query = calendar.findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
+                countCal++;
+                var query =  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
                 query.exec(function (err, googleCalendar) {
                     if (googleCalendar) {
                         var curentCalendarId = googleCalendar._id;
-						var countEv = 0;
+                        var countEv = 0;
                         cal.items.forEach(function (ev) {
-							countEv++;
+                            countEv++;
                             ev.googleId = curentCalendarId;
                             ev.isGoogle = true;
-							ev.googleId = ev.id;
+                            ev.googleId = ev.id;
                             if (ev.start && ev.start.dateTime) ev['start_date'] = ev.start.dateTime;
                             if (ev.end && ev.end.dateTime) ev['end_date'] = ev.end.dateTime;
                             if (ev.start && ev.start.date) ev['start_date'] = ev.start.date;
                             if (ev.end && ev.end.date) ev['end_date'] = ev.end.date;
-                            var eventQuery = event.findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
+                            var eventQuery = models.get(req.session.lastDb - 1, "Events", eventsSchema).findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
                             eventQuery.exec(function (err, googleEvent) {
                                 if (googleEvent) {
-                                    calendar.findOneAndUpdate({ id: cal.id }, { $addToSet: { events: googleEvent._id } }, function (error, upRes) {
+                                     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOneAndUpdate({ id: cal.id }, { $addToSet: { events: googleEvent._id } }, function (error, upRes) {
                                         if (error) {
                                             console.log(error);
                                             logWriter.log("Events.js googleCalSync calendar.update " + error);
                                             res.send(500, { error: "Can't update Events" });
                                         } else {
-											if(countCal==data.length&&countEv==cal.items.length){
-												res.send(200);
-											}
+                                            if (countCal == data.length && countEv == cal.items.length) {
+                                                res.send(200);
+                                            }
                                             console.log('>>>>>>>>>SetToupdateGoogleCallendar<<<<<<<<<<<<<');
                                             console.log(upRes);
                                         }
@@ -656,7 +655,7 @@ var Events = function (logWriter, mongoose, googleModule) {
         }
     };//end googleCalSync
 
-    function getXML(res, link) {
+    function getXML(req, res, link) {
         link = link.replace("basic", "full") + "?alt=json";
         request({ url: link, json: true }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -678,7 +677,7 @@ var Events = function (logWriter, mongoose, googleModule) {
     }
 
     checkEventAsGoogle = function (_id, id) {
-        event.findByIdAndUpdate(_id, { isGoogle: true, googleId:id }, function (err, ev) {
+        models.get(req.session.lastDb - 1, "Events", eventsSchema).findByIdAndUpdate(_id, { isGoogle: true, googleId: id }, function (err, ev) {
             if (err) {
                 console.log("event check as google ", err)
             }
@@ -688,7 +687,7 @@ var Events = function (logWriter, mongoose, googleModule) {
 
     function sendToGoogleCalendar(req, res) {
         var calendarsId = req.body.calendarsId;
-        var query = event.find();
+        var query = models.get(req.session.lastDb - 1, "Events", eventsSchema).find();
         var calendars = []
         calendarsId.forEach(function (id) {
             query.where({ "calendarId": id }).exec(function (err, events) {
@@ -697,7 +696,7 @@ var Events = function (logWriter, mongoose, googleModule) {
                     logWriter.log("send to google " + err);
 
                 } else {
-                    calendar.findOne({ _id: id }).exec(function (err, result) {
+                     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOne({ _id: id }).exec(function (err, result) {
                         calendars.push({ "id": result.id, "items": events });
                         if (calendars.length == calendarsId.length) {
                             googleModule.sendEventsToGoogle(req, res, calendars, checkEventAsGoogle);
@@ -709,30 +708,30 @@ var Events = function (logWriter, mongoose, googleModule) {
             });
         })
     }
-	function changeSyncCalendar(calId,isSync,res, req){
-        calendar.findByIdAndUpdate(calId, { isSync: isSync  }, function (err, success) {
-			if (err){
-                res.send(500, { error: "Can't update Calendar"+err });
-			}
-			else{
-				res.send(200);
-				if (isSync){
-					googleModule.createNewGoogleCalendar(req,success,
-														 function(id){
-															 calendar.findByIdAndUpdate(calId, { id: id }, function (err, success) {
-																 if (success){
-																	 req.body.calendarsId=[success._id]
-																	 sendToGoogleCalendar(req,res);
-																	 
-																	 
-																 }
-															 });																			 
+    function changeSyncCalendar(req, calId, isSync, res) {
+         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(calId, { isSync: isSync }, function (err, success) {
+            if (err) {
+                res.send(500, { error: "Can't update Calendar" + err });
+            }
+            else {
+                res.send(200);
+                if (isSync) {
+                    googleModule.createNewGoogleCalendar(req, success,
+														 function (id) {
+														      models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(calId, { id: id }, function (err, success) {
+														         if (success) {
+														             req.body.calendarsId = [success._id]
+														             sendToGoogleCalendar(req, res);
+
+
+														         }
+														     });
 														 });
-					
-				}
-			}
-		});	
-	}
+
+                }
+            }
+        });
+    }
 
 
     return {
@@ -747,7 +746,7 @@ var Events = function (logWriter, mongoose, googleModule) {
 
         remove: remove,
 
-        event: event,
+        eventsSchema: eventsSchema,
 
         createCalendar: createCalendar,
 
@@ -761,7 +760,7 @@ var Events = function (logWriter, mongoose, googleModule) {
 
         sendToGoogleCalendar: sendToGoogleCalendar,
 
-		changeSyncCalendar:changeSyncCalendar
+        changeSyncCalendar: changeSyncCalendar
     };
 };
 

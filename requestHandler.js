@@ -14,7 +14,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose, models),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, models),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
@@ -1588,7 +1588,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.create(req, data.event, res, req);
+                    events.create(req, data.event, res);
                 } else {
                     res.send(403);
                 }
@@ -1619,7 +1619,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.update(req, id, data.event, res, req);
+                    events.update(req, id, data.event, res);
                 } else {
                     res.send(403);
                 }
@@ -1634,7 +1634,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getDeleteAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    events.remove(req, id, res, req);
+                    events.remove(req, id, res);
                 } else {
                     res.send(403);
                 }
@@ -1708,7 +1708,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 26, function (access) {
                 if (access) {
-                    google.getEventsByCalendarIds(req.session.credentials, data.calendar, function (eventsArray) {
+                    google.getEventsByCalendarIds(req, req.session.credentials, data.calendar, function (eventsArray) {
                         events.googleCalSync(req, eventsArray, res);
                     });
                 } else {
@@ -1754,16 +1754,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function sendToGoogleCalendar(req, res) {
         access.getReadAccess(req, req.session.uId, 26, function (access) {
             if (access) {
-                events.sendToGoogleCalendar(req, req, res);
+                events.sendToGoogleCalendar(req, res);
             } else {
                 res.send(403);
             }
         });
     }
-    function changeSyncCalendar(id, isSync, res, req) {
+    function changeSyncCalendar(req, id, isSync, res) {
         access.getEditWritAccess(req, req.session.uId, 26, function (access) {
             if (access) {
-                events.changeSyncCalendar(req, id, isSync, res, req);
+                events.changeSyncCalendar(req, id, isSync, res);
             } else {
                 res.send(403);
             }

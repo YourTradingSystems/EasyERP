@@ -1,11 +1,11 @@
 var SourcesOfApplicants = function (logWriter, mongoose) {
-    var SourcesOfApplicantsSchema = mongoose.Schema({
+    var SourcesOfApplicantsSchema = new mongoose.Schema({
         _id: { type: String, default: '' },
 		name: { type: String, default: '' },
 		url: { type: String, default: '' }
     }, { collection: 'SourcesOfApplicants' });
 
-    var sourcesofapplicants = mongoose.model('SourcesOfApplicants', SourcesOfApplicantsSchema);
+    mongoose.model('SourcesOfApplicants', SourcesOfApplicantsSchema);
 
     function create(data, res) {
         try {
@@ -112,7 +112,7 @@ var SourcesOfApplicants = function (logWriter, mongoose) {
 
         remove: remove,
 
-        sourcesofapplicants: sourcesofapplicants
+        SourcesOfApplicantsSchema: SourcesOfApplicantsSchema
     };
 };
 module.exports = SourcesOfApplicants;

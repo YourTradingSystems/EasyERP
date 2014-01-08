@@ -1,8 +1,6 @@
 ﻿var Birthdays = function (logWriter, mongoose, employee, models, event) {
 
-   
-
-    var schema = mongoose.Schema({
+    var birthdaysSchema = mongoose.Schema({
         _id: { type: Number, default: 1 },
         date: Date,
         currentEmployees: {
@@ -10,6 +8,8 @@
             monthly: Array
         }
     }, { collection: 'birthdays' });
+
+    mongoose.model('birthdays', birthdaysSchema);
 
     var getEmployeesInDateRange = function (req, callback, response) {
         var separateWeklyAndMonthly = function (arrayOfEmployees) {
@@ -92,7 +92,7 @@
             }
         }
 
-        models.get(req.session.lastDb - 1, "Employees", employee.schema).aggregate(
+        models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).aggregate(
             {
                 $match: {
                     dateBirth: { $ne: null }
@@ -112,7 +112,7 @@
                 if (err) {
                     console.log(err);
                 } else {
-                    var query = models.get(req.session.lastDb - 1, "Employees", employee.schema).find();
+                    var query = models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).find();
                     query.where('_id').in(res).
                         populate('relatedUser department jobPosition manager coach').
                         populate('createdBy.user').
@@ -138,7 +138,7 @@
         var now = new Date();
         data['date'] = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         data['currentEmployees'] = currentEmployees,
-        models.get(req.session.lastDb - 1, "birthdays", schema).findByIdAndUpdate({ _id: 1 }, data, { upsert: true }, function (error, birth) {
+        models.get(req.session.lastDb - 1, "birthdays", birthdaysSchema).findByIdAndUpdate({ _id: 1 }, data, { upsert: true }, function (error, birth) {
             if (error) {
                 logWriter.log('Employees.create Incorrect Incoming Data');
                 console.log(error);
@@ -181,7 +181,7 @@
     var check = function (req, calback) {
         var now = new Date();
         var dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        models.get(req.session.lastDb - 1, "birthdays", schema).find({}, function (err, birth) {
+        models.get(req.session.lastDb - 1, "birthdays", birthdaysSchema).find({}, function (err, birth) {
             if (err) {
                 logWriter.log('Find Birthdays Error');
                 console.log(err);

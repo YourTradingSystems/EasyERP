@@ -23,8 +23,6 @@ var dbsNames = [];
 var events = require('events');
 var event = new events.EventEmitter();
 
-//mongoose.connect('mongodb://localhost/EasyERP');
-
 var mainDb = mongoose.createConnection('localhost', 'maineDB');
 
 mainDb.on('error', console.error.bind(console, 'connection error:'));
