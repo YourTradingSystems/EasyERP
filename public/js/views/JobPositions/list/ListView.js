@@ -1,10 +1,11 @@
 define([
     'text!templates/JobPositions/list/ListHeader.html',
     'views/JobPositions/CreateView',
-    'views/JobPositions/list/ListItemView'
+    'views/JobPositions/list/ListItemView',
+    'views/JobPositions/EditView'
 ],
 
-    function (ListTemplate, CreateView, ListItemView) {
+    function (ListTemplate, CreateView, ListItemView, EditView) {
         var JobPositionsListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -23,11 +24,18 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
+                "click  .list td:not(:has('input[type='checkbox']'))": "editItem",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
 				"click":"hideItemsNumber"
 
+            },
+            editItem: function(e){
+                //create editView in dialog here
+                App.ownContentType = true;
+                var id = $(e.target).closest("tr").data("id");
+                new EditView({myModel:this.collection.get(id)});
+    			return false;
             },
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
