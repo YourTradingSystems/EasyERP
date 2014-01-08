@@ -1,187 +1,282 @@
 <div class="form-holder">
   <form method="post" action="" id="createEmployeeForm" class="form">
-	<div class="half-block left">
-	  <dl class="person-info">
-		<dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" required maxlength="32"/></dd>
-		<dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" required maxlength="32"/></dd>
-		<dt><label for="tags">Tags</label></dt><dd><input type="text" class="blueback" id="tags" maxlength="32"/></dd>
-	  </dl>
-	</div>
-	<div class="half-block left">
-      <div class="avatar">
-        <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
-        <canvas id="avatar" width="120" height="120"><input type="file" value="Edit" id="File1"></canvas>
-      </div>
-	</div>
-    <div class="clearfix"></div>
+      <fieldset>
+          <div class="inner">
+              <ul class="dialog-tabs">
+                  <li><a class="active" href="javascript:;">Main</a></li>
+                  <li><a href="javascript:;">Assignees</a></li>
+              </ul>
+              <div class="clearfix"></div>
+              <div class="dialog-tabs-items">
+                  <div class="dialog-tabs-item active">
+                        <div class="half-block left">
+                          <dl class="person-info">
+                            <dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" required maxlength="32"/></dd>
+                            <dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" required maxlength="32"/></dd>
+                            <dt><label for="tags">Tags</label></dt><dd><input type="text" class="blueback" id="tags" maxlength="32"/></dd>
+                          </dl>
+                        </div>
+                        <div class="half-block left">
+                          <div class="avatar">
+                            <div class="upload">Edit<input type="file" value="Edit" id="inputImg"></div>
+                            <canvas id="avatar" width="120" height="120"><input type="file" value="Edit" id="File1"></canvas>
+                          </div>
+                        </div>
+                        <div class="clearfix"></div>
 
-    <div class="formTitle">
-	  <h3 class="left"><legend>Public Information</legend></h3>
-	  <div class="clearfix"></div>
-	</div>
-	<div class="half-block left">
-	  <dl class="person-info">
-		<dt><label>Working Address</label></dt><dd><input type="text" class="blueback workAddress" name="street" placeholder="Street..." maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="city" placeholder="City" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="state" placeholder="State" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="zip" placeholder="ZIP" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="country" placeholder="Country" maxlength="32"/></dd>
-		<dt><label for="workEmail">Work Email :</label></dt><dd><input type="text" id="workEmail" class="blueback" maxlength="48"/></dd>
-		<dt><label for="personalEmail">Personal Email :</label></dt><dd><input type="text" id="personalEmail" class="blueback" maxlength="48"/></dd>
-		<dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" class="blueback" maxlength="32"/></dd>
-	  </dl>
-	</div>
-	<div class="half-block left">
-	  <dl class="person-info">
-		<dt><label for="phone">Work Phone</label></dt><dd><input type="text" id="phone" class="blueback" maxlength="32"/></dd>
-		<dt><label for="mobile">Work Mobile :</label></dt><dd><input type="text" id="mobile" class="blueback" maxlength="32"/></dd>
-		<dt><label for="officeLocation">Office Location</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" class="blueback" maxlength="32"/></dd>
-		<dt><label for="relatedUsersDd">Related User</label></dt>
-		<dd>
-		  <select id="relatedUsersDd">
+                        <div class="formTitle">
+                          <h3 class="left"><legend>Public Information</legend></h3>
+                          <div class="clearfix"></div>
+                        </div>
+                        <div class="half-block left">
+                          <dl class="person-info">
+                            <dt><label>Working Address</label></dt><dd><input type="text" class="blueback workAddress" name="street" placeholder="Street..." maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="city" placeholder="City" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="state" placeholder="State" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="zip" placeholder="ZIP" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="blueback workAddress" name="country" placeholder="Country" maxlength="32"/></dd>
+                            <dt><label for="workEmail">Work Email :</label></dt><dd><input type="text" id="workEmail" class="blueback" maxlength="48"/></dd>
+                            <dt><label for="personalEmail">Personal Email :</label></dt><dd><input type="text" id="personalEmail" class="blueback" maxlength="48"/></dd>
+                            <dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" class="blueback" maxlength="32"/></dd>
+                          </dl>
+                        </div>
+                        <div class="half-block left">
+                          <dl class="person-info">
+                            <dt><label for="phone">Work Phone</label></dt><dd><input type="text" id="phone" class="blueback" maxlength="32"/></dd>
+                            <dt><label for="mobile">Work Mobile :</label></dt><dd><input type="text" id="mobile" class="blueback" maxlength="32"/></dd>
+                            <dt><label for="officeLocation">Office Location</label></dt><dd><input type="text" name="officeLocation" id="officeLocation" class="blueback" maxlength="32"/></dd>
+                            <dt><label for="relatedUsersDd">Related User</label></dt>
+                            <dd>
+                              <select id="relatedUsersDd">
 
-          </select>
-		</dd>
-		<dt><label for="visibilityDd">Visibility</label></dt>
-		<dd>
-		  <select id="visibilityDd">
-            <option selected="selected" value="">Select...</option>
-          </select>
-		</dd>
-		<dt><label for="departmentsDd">Department</label></dt>
-		<dd>
-		  <select id="departmentsDd">
+                              </select>
+                            </dd>
+                            <dt><label for="visibilityDd">Visibility</label></dt>
+                            <dd>
+                              <select id="visibilityDd">
+                                <option selected="selected" value="">Select...</option>
+                              </select>
+                            </dd>
+                            <dt><label for="departmentsDd">Department</label></dt>
+                            <dd>
+                              <select id="departmentsDd">
 
-          </select>
-		</dd>
-		<dt><label for="jobPositionDd">Job</label></dt>
-		<dd>
-		  <select id="jobPositionDd">
+                              </select>
+                            </dd>
+                            <dt><label for="jobPositionDd">Job</label></dt>
+                            <dd>
+                              <select id="jobPositionDd">
 
-          </select>
-		</dd>
-		<dt><label for="projectManagerDD">Manager</label></dt>
-		<dd>
-		  <select id="projectManagerDD">
+                              </select>
+                            </dd>
+                            <dt><label for="projectManagerDD">Manager</label></dt>
+                            <dd>
+                              <select id="projectManagerDD">
 
-          </select>
+                              </select>
 
-		</dd>
-		<dt><label for="coachDd">Coach</label></dt>
-		<dd>
-		  <select id="coachDd">
+                            </dd>
+                            <dt><label for="coachDd">Coach</label></dt>
+                            <dd>
+                              <select id="coachDd">
 
-          </select>
+                              </select>
 
-		</dd>
-				  <dt><label for="jobtapeDd">Job type</label></dt>
-		  <dd>
-			<select id="jobtapeDd">
-			  <option>Full-time</option>
-			  <option>Part-time</option>
-			  <option>Remote</option>
-			  <option>Permanent</option>
-			  <option>Contract</option>
-			  <option>Temporary</option>
-            </select>
-		  </dd>
-		  
-	  </dl>
-	</div>
-	<div class="clearfix"></div>
-    <div class="formTitle">
-	  <h3 class="left"><legend>Personal Information</legend></h3>
-	  <div class="clearfix"></div>
-	</div>
-	<div class="half-block left withPaddingLeft">
-	  <div class="formTitle">
-		<h3 class="left"><legend>Citizenship &amp; Other Info</legend></h3>
-		<div class="clearfix"></div>
-	  </div>
+                            </dd>
+                                      <dt><label for="jobtapeDd">Job type</label></dt>
+                              <dd>
+                                <select id="jobtapeDd">
+                                  <option>Full-time</option>
+                                  <option>Part-time</option>
+                                  <option>Remote</option>
+                                  <option>Permanent</option>
+                                  <option>Contract</option>
+                                  <option>Temporary</option>
+                                </select>
+                              </dd>
 
-	  <dl class="person-info">
-		<dt><label for="nationality">Nationality</label></dt>
-		<dd>
-		  <select id="nationality">
-            <option selected="selected" value="">Select...</option>
-          </select>
-		</dd>
-		<dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" class="blueback" maxlength="32"/></dd>
-		<dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" class="blueback" maxlength="32"/></dd>
-		<dt><label for="bankAccountNo">Bank Account №</label></dt>
-		<dd>
-		  <select id="bankAccountNo">
-            <option selected="selected" value="">Select...</option>
-          </select>
-		</dd>
-		<dt><label for="otherId">Other Id </label></dt><dd><input type="text" name="otherId" id="otherId" class="blueback" maxlength="32"/></dd>
-	  </dl>
-      <div class="clearfix"></div>
+                          </dl>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="formTitle">
+                          <h3 class="left"><legend>Personal Information</legend></h3>
+                          <div class="clearfix"></div>
+                        </div>
+                        <div class="half-block left withPaddingLeft">
+                          <div class="formTitle">
+                            <h3 class="left"><legend>Citizenship &amp; Other Info</legend></h3>
+                            <div class="clearfix"></div>
+                          </div>
 
-	  <div class="formTitle">
-		<h3 class="left"><legend>Status</legend></h3>
-		<div class="clearfix"></div>
-	  </div>
-	  <dl class="person-info">
-		<dt><label for="genresDd">Gender </label></dt>
-		<dd>
-		  <select id="genresDd">
-            <option selected="selected" value="">Select...</option>
-          </select>
-		</dd>
-		<dt><label for="maritalStatus">Marital Status </label></dt>
-		<dd>
-		  <select id="maritalStatus">
-            <option selected="selected" value="">Select...</option>
-          </select>
+                          <dl class="person-info">
+                            <dt><label for="nationality">Nationality</label></dt>
+                            <dd>
+                              <select id="nationality">
+                                <option selected="selected" value="">Select...</option>
+                              </select>
+                            </dd>
+                            <dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" class="blueback" maxlength="32"/></dd>
+                            <dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" class="blueback" maxlength="32"/></dd>
+                            <dt><label for="bankAccountNo">Bank Account №</label></dt>
+                            <dd>
+                              <select id="bankAccountNo">
+                                <option selected="selected" value="">Select...</option>
+                              </select>
+                            </dd>
+                            <dt><label for="otherId">Other Id </label></dt><dd><input type="text" name="otherId" id="otherId" class="blueback" maxlength="32"/></dd>
+                          </dl>
+                          <div class="clearfix"></div>
 
-		</dd>
-	  </dl>
-	</div>
-	<div class="half-block left withPaddingLeft">
-	  <div class="formTitle">
-		<h3 class="left"><legend>Contact Information</legend></h3>
-		<div class="clearfix"></div>
-	  </div>
-	  <dl class="person-info">
-		<dt>Home Address </dt><dd><input type="text"  name="street" placeholder="Street..." class="blueback homeAddress" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="blueback homeAddress" name="city" placeholder="City"  maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" class="blueback homeAddress" name="state" placeholder="State" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" name="zip" placeholder="ZIP" class="blueback homeAddress" maxlength="32"/></dd>
-		<dt>&nbsp;</dt><dd><input type="text" name="country" placeholder="Country" class="blueback homeAddress" maxlength="32"/></dd>
-	  </dl>
-      <div class="clearfix"></div>
+                          <div class="formTitle">
+                            <h3 class="left"><legend>Status</legend></h3>
+                            <div class="clearfix"></div>
+                          </div>
+                          <dl class="person-info">
+                            <dt><label for="genresDd">Gender </label></dt>
+                            <dd>
+                              <select id="genresDd">
+                                <option selected="selected" value="">Select...</option>
+                              </select>
+                            </dd>
+                            <dt><label for="maritalStatus">Marital Status </label></dt>
+                            <dd>
+                              <select id="maritalStatus">
+                                <option selected="selected" value="">Select...</option>
+                              </select>
 
-	  <div class="formTitle">
-		<h3 class="left"><legend>Birth</legend></h3>
-		<div class="clearfix"></div>
-	  </div>
-	  <dl class="person-info">
-		<dt><label for="dateBirth">Date of Birth </label></dt><dd><input type="text" name="dateBirth" id="dateBirth" class="blueback" readonly/></dd>
-	  </dl>
-	</div>
-    <div class="clearfix"></div>
-    <div class="formTitle">
-	  <h3 class="left"><legend>HR Settings</legend></h3>
-	  <div class="clearfix"></div>
-	</div>
-	
-	
-      <dl class="person-info">
-          <div class="half-block left">
-              <dt><label for="active">Active </label></dt><dd><input type="checkbox" name="active" id="active" /></dd>
+                            </dd>
+                          </dl>
+                        </div>
+                        <div class="half-block left withPaddingLeft">
+                          <div class="formTitle">
+                            <h3 class="left"><legend>Contact Information</legend></h3>
+                            <div class="clearfix"></div>
+                          </div>
+                          <dl class="person-info">
+                            <dt>Home Address </dt><dd><input type="text"  name="street" placeholder="Street..." class="blueback homeAddress" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="blueback homeAddress" name="city" placeholder="City"  maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="blueback homeAddress" name="state" placeholder="State" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" name="zip" placeholder="ZIP" class="blueback homeAddress" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" name="country" placeholder="Country" class="blueback homeAddress" maxlength="32"/></dd>
+                          </dl>
+                          <div class="clearfix"></div>
+
+                          <div class="formTitle">
+                            <h3 class="left"><legend>Birth</legend></h3>
+                            <div class="clearfix"></div>
+                          </div>
+                          <dl class="person-info">
+                            <dt><label for="dateBirth">Date of Birth </label></dt><dd><input type="text" name="dateBirth" id="dateBirth" class="blueback" readonly/></dd>
+                          </dl>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="formTitle">
+                          <h3 class="left"><legend>HR Settings</legend></h3>
+                          <div class="clearfix"></div>
+                        </div>
+
+
+                          <dl class="person-info">
+                              <div class="half-block left">
+                                  <dt><label for="active">Active </label></dt><dd><input type="checkbox" name="active" id="active" /></dd>
+                              </div>
+                          </dl>
+                         <div class="cropImages form" style="display:none;">
+                            <div class="formTitle">
+                                <h3 class="left">Crop Images</h3>
+                            <div class="clearfix"></div>
+                            </div><br />
+                            <div class="image_input" style="float: left;margin-right: 20px;"></div>
+                            <img class="image_output" />
+                            <div class="clearfix"></div>
+                          </div>
+                           <div class="clearfix"></div>
+                                      </div>
+                                      <div class="dialog-tabs-item">
+                                          <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+                                          <div class="clearfix"></div>
+
+                                          <div class="half-block left">
+                                              <div class="canReadAndWrite">
+                                                  <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
+                                                  <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
+                                                  <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
+                                              </div>
+                                          </div>
+                                          <div class="half-block left">
+                                              <dl class="project-owner-info">
+                                                  <dt><label for="allUsers">Owner</label></dt><dd>
+
+                                                  <select id="allUsers">
+
+                                                  </select>
+
+                                              </dd>
+                                              </dl>
+                                          </div>
+
+
+                                          <div class="addUserDialog">
+
+                                              <div class="formTitle">
+                                                  <h3 class="left">Choose Users</h3>
+                                                  <div class="clearfix"></div>
+                                              </div>
+                                              <div class="groupsChooser">
+                                                  <div class="left">
+                                                      <ul id="sourceUsers" class="source">
+
+                                                      </ul>
+                                                  </div>
+                                                  <div class="left">
+                                                      <div class="swich"></div>
+                                                  </div>
+                                                  <div class="left">
+                                                      <ul id="targetUsers" class="target">
+
+                                                      </ul>
+                                                  </div>
+                                              </div>
+
+                                              <div class="clearfix"></div>
+                                          </div>
+                                          <div class="addGroupDialog">
+                                              <div class="formTitle">
+                                                  <h3 class="left">Choose Groups</h3>
+                                                  <div class="clearfix"></div>
+                                              </div>
+
+                                              <div class="groupsChooser">
+                                                  <div class="left">
+                                                      <ul id="sourceGroups" class="source">
+
+                                                      </ul>
+                                                  </div>
+                                                  <div class="left">
+                                                      <div class="swich"></div>
+                                                  </div>
+                                                  <div class="left">
+                                                      <ul id="targetGroups" class="target">
+
+                                                      </ul>
+                                                  </div>
+                                              </div>
+                                              <div class="clearfix"></div>
+                                          </div>
+
+                                          <table class="groupsAndUser">
+                                              <tr>
+                                                  <th>Groups and Users</th><th></th>
+                                              </tr>
+                                          </table>
+                                          <div class="clearfix"></div>
+
+                                          <div class="clearfix"></div>
+                                      </div>
+              </div>
+              <div class="clearfix"></div>
           </div>
-      </dl>
-     <div class="cropImages form" style="display:none;">
-     	<div class="formTitle">
-			<h3 class="left">Crop Images</h3>
-		<div class="clearfix"></div>
-	  	</div><br />	
-      	<div class="image_input" style="float: left;margin-right: 20px;"></div>
-      	<img class="image_output" />
-      	<div class="clearfix"></div>
-      </div>
-       <div class="clearfix"></div>
+      </fieldset>
   </form>
 </div>
 
