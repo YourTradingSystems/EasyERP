@@ -349,6 +349,7 @@
                 common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentDd);});
                 common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
 				   self.styleSelect("#sourceDd");
+				   self.styleSelect("#jobtapeDd");
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
