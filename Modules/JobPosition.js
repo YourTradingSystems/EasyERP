@@ -132,7 +132,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                 logWriter.log('JobPosition.js get job.find' + err);
                 res.send(500, { error: "Can't find JobPosition" });
             } else {
-                 var aggregate = employee.employee.aggregate(
+                var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
                    {
                        $match: {
                            jobPosition: objectId(id)

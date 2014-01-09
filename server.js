@@ -1140,6 +1140,15 @@ app.delete('/SourcesOfApplicants/:_id', function (req, res) {
 });
 
 //----------------------Leads----------------------------------------------------------------
+app.get('/LeadsForChart', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    data.source = req.param('source');
+    data.dataRange = req.param('dataRange');
+    data.dataItem = req.param('dataItem');
+    requestHandler.getLeadsForChart(req, res, data);
+});
+
 app.get('/Leads', function (req, res) {
     data = {};
     data.mid = req.param('mid');

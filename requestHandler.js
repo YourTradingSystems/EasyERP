@@ -1,7 +1,7 @@
 var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
-        department = require("./Modules/Department.js")(logWriter, mongoose, models),
+        department = require("./Modules/Department.js")(logWriter, mongoose, department, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
@@ -11,7 +11,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models),
         customer = require("./Modules/Customers.js")(logWriter, mongoose, models),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models),
-        jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, models),
+        jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, department, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose, models),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
@@ -1474,6 +1474,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+
+    function getLeadsForChart(req, res, data) {
+        if (req.session && req.session.loggedIn) {
+            access.getReadAccess(req.session.uId, 24, function (access) {
+                if (access) {
+                    opportunities.getLeadsForChart(req, res, data);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
     //-------------------Opportunities---------------------------
     function createOpportunitie(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1887,6 +1901,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateLead: updateLead,
         removeLead: removeLead,
         getLeadsById: getLeadsById,
+        getLeadsForChart: getLeadsForChart,
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
