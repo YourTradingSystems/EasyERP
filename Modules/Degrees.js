@@ -3,7 +3,8 @@ var Degrees = function (logWriter, mongoose) {
         _id: { type: String, default: '' },
         name: { type: String, default: '' }
     }, { collection: 'Degrees' });
-    var degree = mongoose.model('Degrees', degreesSchema);
+
+    mongoose.model('Degrees', degreesSchema);
 
     function create(data, res) {
         try {
@@ -106,8 +107,7 @@ var Degrees = function (logWriter, mongoose) {
         create: create,
         update: update,
         remove: remove,
-
-        degree: degree
+        degreesSchema: degreesSchema
     };
 };
 module.exports = Degrees;

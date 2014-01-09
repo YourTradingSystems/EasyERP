@@ -3,27 +3,67 @@ var http = require('http'),
     url = require('url'),
     fs = require("fs");
 
+process.on('exit', function () {
+    setTimeout(function () {
+        console.log('This will not run  ');
+    }, 0);
+    console.log('About to exit.');
+});
+
+process.on('SIGINT', function () {
+    console.log('Got SIGINT.  Press Control-D to exit.');
+    process.exit();
+});
+
 var mongoose = require('mongoose');
 var Admin = mongoose.mongo.Admin;
-
+var dbsArray = [];
+var dbsNames = [];
 //Event Listener in Server and Triggering Events
 var events = require('events');
 var event = new events.EventEmitter();
 
-mongoose.connect('mongodb://localhost/CRM');
+var mainDb = mongoose.createConnection('localhost', 'maineDB');
 
-var db = mongoose.connection;
-var tempDb = mongoose.createConnection('localhost', 'tempDb');
+mainDb.on('error', console.error.bind(console, 'connection error:'));
+mainDb.once('open', function callback() {
+    console.log("Connection to maineDB is success");
+    maineDBSchema = mongoose.Schema({
+        _id: Number,
+        url: { type: String, default: 'localhost' },
+        DBname: { type: String, default: '' },
+        pass: { type: String, default: '' },
+        user: { type: String, default: '' }
+    }, { collection: 'easyErpDBS' });
+
+    var maine = mainDb.model('easyErpDBS', maineDBSchema);
+    maine.find().exec(function(err, result) {
+        if (!err) {
+            console.log(result);
+            result.forEach(function (_db, index) {
+                var dbObject = mongoose.createConnection(_db.url, _db.DBname);
+                dbObject.on('error', console.error.bind(console, 'connection error:'));
+                dbObject.once('open', function callback() {
+                    console.log("Connection to " + _db.DBname + " is success" + index);
+                    dbsArray[index] = dbObject;
+                    dbsNames[index] = result[index].DBname;
+                });
+            });
+        } else {
+            console.log(err);
+        }
+    });
+});
+
 var express = require('express');
 var app = express();
 
 var MemoryStore = require('connect-mongo')(express);
-//var MemoryStore = require('connect').session.MemoryStore;
 
 var config = {
-    db: db.name,
-    host: db.host,
-    port: db.port,
+    db: mainDb.name,
+    host: mainDb.host,
+    port: mainDb.port,
     reapInterval: 500000
     //mongoose_connection: mongoose.connections[0]
 };
@@ -64,33 +104,28 @@ app.configure(function () {
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
-    app.use(app.router);
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function callback() {
-        console.log("Connection to CRM_DB is success");
-        new Admin(db.db).listDatabases(function (err, result) {
-            console.log('listDatabases succeeded');
-            // database list stored in result.databases
-            var allDatabases = result.databases;
-            console.log(allDatabases);
-        });
-    });
-    tempDb.on('error', console.error.bind(console, 'connection error:'));
-    tempDb.once('open', function callback() {
-        console.log("Connection to tempDb is success");
-    });
-});
 
-var requestHandler = require("./requestHandler.js")(fs, mongoose, tempDb, event);
+    app.use(app.router);
+});
+console.log(dbsArray);
+var requestHandler = require("./requestHandler.js")(fs, mongoose, event, dbsArray);
 
 
 app.get('/', function (req, res) {
     res.sendfile('index.html');
 });
 
+app.get('/getDBS', function (req, res) {
+    console.log('Get DBS is success');
+    res.send(200, { dbsNames: dbsNames });
+});
+
 app.get('/account/authenticated', function (req, res, next) {
     console.log('>>>>>>>>>>>>>>>>Request authenticate<<<<<<<<<<<<<<<<<<');
-    if (req.session && req.session.loggedIn) {
+    //console.log(req);
+    if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
+        console.log(req.cookies);
+        console.log(req.session.lastDb);
         res.send(200);
     } else {
         res.send(401);
@@ -208,6 +243,7 @@ app.post('/login', function (req, res, next) {
     data = {};
     data = req.body;
     console.log(data);
+    req.session.lastDb = data.dbId;
     requestHandler.login(req, res, data);
 });
 
@@ -758,6 +794,7 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     //console.log(data.company.address);
     requestHandler.updateCompany(req, res, id, data, remove);
 });
+
 app.get('/getCompaniesAlphabet', function (req, res) {
     console.log('------getAccountsForDd-----------------');
     data = {};
@@ -868,14 +905,6 @@ app.put('/Departments/:viewType/:_id', function (req, res) {
     requestHandler.updateDepartment(req, res, id, data);
 });
 
-app.put('/Departments/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.department = req.body;
-    requestHandler.updateDepartment(req, res, id, data);
-});
-
 app.delete('/Departments/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -978,6 +1007,7 @@ app.get('/getSalesTeam', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartmentForDd(req, res, data);
 });
+
 app.get('/getEmployeesAlphabet', function (req, res) {
     console.log('------getAccountsForDd-----------------');
     data = {};
@@ -1110,11 +1140,6 @@ app.delete('/SourcesOfApplicants/:_id', function (req, res) {
 });
 
 //----------------------Leads----------------------------------------------------------------
-app.get('/Leads', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getLeads(req, res, data);
-});
 app.get('/LeadsForChart', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1122,6 +1147,12 @@ app.get('/LeadsForChart', function (req, res) {
     data.dataRange = req.param('dataRange');
     data.dataItem = req.param('dataItem');
     requestHandler.getLeadsForChart(req, res, data);
+});
+
+app.get('/Leads', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getLeads(req, res, data);
 });
 
 app.get('/Leads/:viewType', function (req, res) {

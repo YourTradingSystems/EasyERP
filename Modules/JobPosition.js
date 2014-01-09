@@ -1,5 +1,5 @@
-var JobPosition = function (logWriter, mongoose, employee) {
-    var ObjectId = mongoose.Schema.Types.ObjectId;
+var JobPosition = function (logWriter, mongoose, employee, department, models) {
+var ObjectId = mongoose.Schema.Types.ObjectId;
     var objectId = mongoose.Types.ObjectId;
     var jobPositionSchema = mongoose.Schema({
         name: { type: String, default: '' },
@@ -12,6 +12,12 @@ var JobPosition = function (logWriter, mongoose, employee) {
         description: String,
         requirements: String,
         workflow: { type: ObjectId, ref: 'workflows', default: null },
+        whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
+        groups: {
+            owner: { type: ObjectId, ref: 'Users', default: null },
+            users: [{ type: ObjectId, ref: 'Users', default: null }],
+            group: [{ type: ObjectId, ref: 'Department', default: null }]
+        },
         numberOfEmployees: { type: Number, default: 0 },
         totalForecastedEmployees: { type: Number, default: 0 },
         createdBy: {
@@ -25,9 +31,9 @@ var JobPosition = function (logWriter, mongoose, employee) {
 
     }, { collection: 'JobPosition' });
 
-    var job = mongoose.model('JobPosition', jobPositionSchema);
+    mongoose.model('JobPosition', jobPositionSchema);
 
-    function create(data, res) {
+    function create(req, data, res) {
         try {
             if (!data) {
                 logWriter.log('JobPosition.create Incorrect Incoming Data');
@@ -35,7 +41,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
                 return;
             } else {
                 var query = { name: data.name };
-                job.find(query, function (error, doc) {
+                models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find(query, function (error, doc) {
                     if (error) {
                         console.log(error);
                         logWriter.log('JobPosition.js. create job.find' + error);
@@ -52,7 +58,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
             }
             function savetoDb(data) {
                 try {
-                    _job = new job();
+                    _job = new models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema)();
                     if (data.uId) {
                         _job.createdBy.user = data.uId;
                     }
@@ -89,6 +95,12 @@ var JobPosition = function (logWriter, mongoose, employee) {
                     if (data.workflow) {
                         _job.workflow = data.workflow;
                     }
+                    if (data.groups) {
+                        _job.groups = data.groups;
+                    }
+                    if (data.whoCanRW) {
+                        _job.whoCanRW = data.whoCanRW;
+                    }
                     _job.save(function (err, result) {
                         if (err) {
                             console.log(err);
@@ -113,14 +125,14 @@ var JobPosition = function (logWriter, mongoose, employee) {
         }
     };//End create
 
-    function getJobPositionById(id, res) {
-        job.findById(id, function (err, response) {
+    function getJobPositionById(req, id, res) {
+        models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).findById(id, function (err, response) {
             if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
                 res.send(500, { error: "Can't find JobPosition" });
             } else {
-                 var aggregate = employee.employee.aggregate(
+                var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
                    {
                        $match: {
                            jobPosition: objectId(id)
@@ -142,10 +154,10 @@ var JobPosition = function (logWriter, mongoose, employee) {
         });
     }
 
-    function get(response) {
+    function get(req, response) {
         var res = {};
         res['data'] = [];
-        var query = job.find({});
+        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
         query.populate('department').
 			populate('createdBy.user').
             populate('editedBy.user');
@@ -184,10 +196,10 @@ var JobPosition = function (logWriter, mongoose, employee) {
         //}
     }; //end get
 
-    function getCustom(response) {
+    function getCustom(req, response) {
         var res = {};
         res['data'] = [];
-        var query = job.find({});
+        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
         query.populate('department').
 			populate('createdBy.user').
             populate('editedBy.user');
@@ -209,7 +221,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
             if (jobPositions && jobPositions.length > count) {
                 var jobId = jobPositions[count]._id.toString();
                 console.log(jobId);
-                var aggregate = employee.employee.aggregate(
+                var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
                     {
                         $match: {
                             jobPosition: objectId(jobId)
@@ -246,16 +258,16 @@ var JobPosition = function (logWriter, mongoose, employee) {
         }
     }; //end get
 
-    function getJobPosition(data,response) {
+    function getJobPosition(req, data,response) {
         var res = {};
         res['data'] = [];
-        var query = job.find();
+        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
         query.exec(function (err, result) {
             if (!err) {
                 res['listLength'] = result.length;
             }
         });
-        query = job.find();
+        query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
         query.populate('department').
             populate('createdBy.user').
             populate('editedBy.user');
@@ -278,7 +290,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
             if (jobPositions && jobPositions.length > count) {
                 var jobId = jobPositions[count]._id.toString();
                 console.log(jobId);
-                var aggregate = employee.employee.aggregate(
+                var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
                     {
                         $match: {
                             jobPosition: objectId(jobId)
@@ -315,7 +327,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
         }
     };
 
-        function update(_id, data, res) {
+        function update(req, _id, data, res) {
             try {
                 delete data._id;
                 delete data.createdBy;
@@ -334,7 +346,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
                 if (data.workflow && data.workflow._id) {
                     data.workflow = data.workflow._id;
                 }
-                job.update({ _id: _id }, data, function (err, result) {
+                models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).update({ _id: _id }, data, function (err, result) {
                     if (err) {
                         console.log(err);
                         logWriter.log("JobPosition.js update job.update " + err);
@@ -351,8 +363,8 @@ var JobPosition = function (logWriter, mongoose, employee) {
             }
         };// end update
 
-        function remove(_id, res) {
-            job.remove({ _id: _id }, function (err, result) {
+        function remove(req, _id, res) {
+            models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).remove({ _id: _id }, function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log("JobPosition.js remove job.remove " + err);
@@ -379,7 +391,7 @@ var JobPosition = function (logWriter, mongoose, employee) {
 
             remove: remove,
 
-            job: job
+            jobPositionSchema: jobPositionSchema
         };
     };
 

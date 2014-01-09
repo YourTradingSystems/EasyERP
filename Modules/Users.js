@@ -1,6 +1,8 @@
 // JavaScript source code
-var Users = function (logWriter, mongoose) {
+var Users = function (logWriter, mongoose, models) {
+
     var crypto = require('crypto');
+    var collection = 'Users';
 
     var userSchema = mongoose.Schema({
         imageSrc: { type: String, default: '' },
@@ -14,9 +16,15 @@ var Users = function (logWriter, mongoose) {
         profile: { type: Number, ref: "Profile" }
     }, { collection: 'Users' });
 
-    var User = mongoose.model('Users', userSchema);
+    mongoose.model('Users', userSchema);
+    //var User = mongoose.model(collection, schema);
+    //var User = loadDb();
 
-    function createUser(data, result) {
+    //function loadDb(db, collection, schema) {
+    //    return db.model(collection, schema);
+    //};
+
+    function createUser(req, data, result) {
         try {
             var shaSum = crypto.createHash('sha256');
             var res = {};
@@ -25,7 +33,7 @@ var Users = function (logWriter, mongoose) {
                 result.send(400, { error: 'User.create Incorrect Incoming Data' });
                 return;
             } else {
-                User.find({ login: data.login }, function (error, doc) {
+                models.get(req.session.lastDb - 1, 'Users', userSchema).find({ login: data.login }, function (error, doc) {
                     try {
                         if (error) {
                             console.log(error);
@@ -52,7 +60,7 @@ var Users = function (logWriter, mongoose) {
             }
             function savetoBd(data) {
                 try {
-                    _user = new User();
+                    _user = new models.get(req.session.lastDb - 1, 'Users', userSchema)();
                     if (data.profile) {
                         _user.profile = data.profile;
                     }
@@ -102,7 +110,7 @@ var Users = function (logWriter, mongoose) {
         try {
             if (data) {
                 if (data.login || data.email) {
-                    User.find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
+                    models.get(req.session.lastDb - 1, 'Users', userSchema).find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                         try {
 							if (_users && _users.length !== 0) {
                                 var shaSum = crypto.createHash('sha256');
@@ -111,6 +119,7 @@ var Users = function (logWriter, mongoose) {
                                     req.session.loggedIn = true;
                                     req.session.uId = _users[0]._id;
                                     req.session.uName = _users[0].login;
+                                    res.cookie('lastDb', data.dbId);
                                     res.send(200);
                                 } else {
                                     res.send(400);
@@ -142,10 +151,10 @@ var Users = function (logWriter, mongoose) {
         }
     }//End login
 
-    function getUsers(response,data) {
+    function getUsers(req, response, data) {
         var res = {};
         res['data'] = [];
-        var query = User.find({}, { __v: 0, upass: 0 });
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         query.populate('profile');
         query.sort({ login: 1 });
 		if (data.page&&data.count){
@@ -164,9 +173,9 @@ var Users = function (logWriter, mongoose) {
         });
     }
 
-    function getUserById(id, response) {
+    function getUserById(req, id, response) {
         console.log(id);
-        var query = User.findById(id);
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(id);
         query.populate('profile');
         query.exec(function (err, result) {
             if (err) {
@@ -179,17 +188,17 @@ var Users = function (logWriter, mongoose) {
         });
     }
 
-    function getFilterUsers(data, response) {
+    function getFilterUsers(req, data, response) {
         var res = {};
         res['data'] = [];
-        var query = User.find({}, { __v: 0, upass: 0 });
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         query.exec(function (err, result) {
             if (!err) {
                 res['listLength'] = result.length;
             }
         });
 
-        query = User.find({}, { __v: 0, upass: 0 });
+        query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
@@ -204,17 +213,17 @@ var Users = function (logWriter, mongoose) {
         });
     }
 
-    function updateUser(_id, data, res) {
+    function updateUser(req, _id, data, res) {
         try {
             delete data._id;
             var updateFields = {};
             for (var i in data) {
                 if (data[i]) {
-                    updateFields[i] = data[i]
+                    updateFields[i] = data[i];
                 }
             };
             var _object = { $set: updateFields }
-            User.update({ _id: _id }, _object, function (err, result) {
+            models.get(req.session.lastDb - 1, 'Users', userSchema).update({ _id: _id }, _object, function (err, result) {
 
                 if (err) {
                     console.log(err);
@@ -232,8 +241,8 @@ var Users = function (logWriter, mongoose) {
         }
     }
 
-    function removeUser(_id, res) {
-        User.remove({ _id: _id }, function (err, result) {
+    function removeUser(req, _id, res) {
+        models.get(req.session.lastDb - 1, 'Users', userSchema).remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Users.js remove user.remove " + err);
@@ -252,7 +261,7 @@ var Users = function (logWriter, mongoose) {
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
-        User: User
+        schema: userSchema
     };
 };
 

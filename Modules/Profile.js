@@ -1,4 +1,4 @@
-var Profile = function (logWriter, mongoose) {
+var Profile = function (logWriter, mongoose, models) {
     
     var ProfileSchema = mongoose.Schema({
         _id: Number,
@@ -15,9 +15,9 @@ var Profile = function (logWriter, mongoose) {
 
     }, { collection: 'Profile' });
 
-    var profile = mongoose.model('Profile', ProfileSchema);
+    mongoose.model('Profile', ProfileSchema);
 
-    function createProfile(data, res) {
+    function createProfile(req, data, res) {
         try {
             console.log('createProfile');
             if (!data.profileName) {
@@ -26,7 +26,7 @@ var Profile = function (logWriter, mongoose) {
                 return;
             } else {
 //                console.log(data);
-                profile.find({ profileName: data.profileName }, function (error, doc) {
+                models.get(req.session.lastDb - 1, "Profile", ProfileSchema).find({ profileName: data.profileName }, function (error, doc) {
                     try {
                         if (error) {
                             console.log(error);
@@ -48,7 +48,7 @@ var Profile = function (logWriter, mongoose) {
             }
             function saveProfileToDb(data) {
                 try {
-					_profile = new profile({ _id: Date.parse(new Date()) });
+                    _profile = new models.get(req.session.lastDb - 1, "Profile", ProfileSchema)({ _id: Date.parse(new Date()) });
                     if (data.profileName) {
                         _profile.profileName = data.profileName;
                     }
@@ -96,10 +96,10 @@ var Profile = function (logWriter, mongoose) {
         }
     };
 
-    function getProfile(response) {
+    function getProfile(req, response) {
         var res = {};
         res['data'] = [];
-        var query = profile.find({});
+        var query = models.get(req.session.lastDb - 1, "Profile", ProfileSchema).find({});
         query.sort({profileName: 1 }).
         populate('profileAccess.module');
         query.exec(function (err, result) {
@@ -116,10 +116,10 @@ var Profile = function (logWriter, mongoose) {
         });
     };
 
-    function updateProfile(_id, data, res) {
+    function updateProfile(req, _id, data, res) {
         try {
             delete data._id;
-            profile.update({ _id: _id }, data, function (err, result) {
+            models.get(req.session.lastDb - 1, "Profile", ProfileSchema).update({ _id: _id }, data, function (err, result) {
                 if (result) {
                     console.log(" RESULT " + result);
                     res.send(200, { success: 'Profile updated success' });
@@ -138,8 +138,8 @@ var Profile = function (logWriter, mongoose) {
         }
     };
 
-    function removeProfile(_id, res) {
-        profile.remove({ _id: _id }, function (err, result) {
+    function removeProfile(req, _id, res) {
+        models.get(req.session.lastDb - 1, "Profile", ProfileSchema).remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Profile.js remove profile.remove " + err);
@@ -160,7 +160,7 @@ var Profile = function (logWriter, mongoose) {
         
         removeProfile: removeProfile,
         
-        profile: profile
+        schema: ProfileSchema
     };
 
 };

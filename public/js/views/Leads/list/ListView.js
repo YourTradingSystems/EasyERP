@@ -31,21 +31,28 @@ define([
 				"click .filterButton":"showfilter",
 				"click .filter-check-list li":"checkCheckbox"
             },
+
 			checkCheckbox:function(e){
 				if(!$(e.target).is("input")){
 					$(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
 				}
 			},
+
             showFilteredPage: function (event) {
                 var workflowIdArray = [];
+                var isConverted = false;
                 $('.filter-check-list input:checked').each(function(){
-                    workflowIdArray.push($(this).val());
+                    if ($(this).attr("id") == 'isConverted') {
+                         isConverted = true;
+                    } else {
+                        workflowIdArray.push($(this).val());
+                    }
                 })
                 this.collection.status = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
 
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray });
+                this.collection.showMore({count: itemsNumber, page: 1, status: workflowIdArray, isConverted : isConverted });
             },
 
 			showfilter:function(e){
@@ -64,11 +71,11 @@ define([
 				}
 
 			},
+
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
 				return false;
 			},
-
 
             render: function () {
 				var self=this;
@@ -297,6 +304,7 @@ define([
                     $("#grid-count").text(0);
                 }
             },
+
             gotoForm: function (e) {
                 App.ownContentType = true;
                 var id = $(e.target).closest("tr").data("id");

@@ -83,7 +83,7 @@
                     $('.image_input img').Jcrop({
             			bgColor: 'black',
             			bgOpacity: .6,
-            			setSelect: [0, 0, 140, 140],
+            			setSelect: [0, 0, 100, 100],
             			aspectRatio: 1,
             			onSelect: imgSelect,
             			onChange: imgSelect,
@@ -96,7 +96,7 @@
                 		 if(parseInt(sellictions.w) > 0){
 		                        var img = $('.image_input img')[0];
 		                		var canvasCrop = document.createElement('canvas');
-		                		canvasCrop.width = canvasCrop.height = 140;
+		                		canvasCrop.width = canvasCrop.height = 100;
 		            			var ctx = canvasCrop.getContext('2d');
 		            			ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
 		            			$('.image_output').attr('src', canvasCrop.toDataURL());
@@ -719,15 +719,16 @@
                 if (callback) callback();
             });
         }
-        var populateJobPositions = function (selectId, url, model) {
+        
+        var populateJobPositions = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
-            dataService.getData(url, { mid: 39 }, function (response) {
+            dataService.getData(url, { mid: 39}, function (response) {
                 var options = [];
                 if (model && model.jobPosition) {
                     options = $.map(response.data, function (item) {
-                        return model.jobPosition._id === item._id ?
+                        return (model.jobPosition._id === item._id) ?
                             $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name);
                     });
@@ -737,8 +738,10 @@
                     });
                 }
                 selectList.append(options);
+                if (callback) callback();
             });
-        }
+        };
+        
         var populateSourceApplicants = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;

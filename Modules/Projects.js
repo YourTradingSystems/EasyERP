@@ -1,4 +1,4 @@
-var Project = function (logWriter, mongoose, department) {
+var Project = function (logWriter, mongoose, department, models) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var ProjectSchema = mongoose.Schema({
@@ -75,11 +75,11 @@ var Project = function (logWriter, mongoose, department) {
         priority: String
     }, { collection: 'Priority' });
 
-    var project = mongoose.model('Project', ProjectSchema);
+    mongoose.model('Project', ProjectSchema);
 
-    var tasks = mongoose.model('Tasks', TasksSchema);
+    mongoose.model('Tasks', TasksSchema);
 
-    var priority = mongoose.model('Priority', PrioritySchema);
+    mongoose.model('Priority', PrioritySchema);
 
     var toHoursMinutes = function (ticks) {
         var realHours = ((ticks / 1000) / 60) / 60;
@@ -144,13 +144,13 @@ var Project = function (logWriter, mongoose, department) {
         return result;
     };
 
-    var updateProjectTime = function (task) {
+    var updateProjectTime = function (req, task) {
         if (!task.extrainfo.EndDate) {
             return false;
         } else {
             try {
                 var id = (task.project._id) ? task.project._id : task.project;
-                project.findById(id)
+                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(id)
                     //.where('info.EndDate')
                     //.lte(task.extrainfo.EndDate)
                     //.or([{ 'info.EndDate': { $lt: task.extrainfo.EndDate } },
@@ -158,7 +158,7 @@ var Project = function (logWriter, mongoose, department) {
                     .exec(function (err, _project) {
                         if (_project) {
                             if (!_project.info.StartDat && !_project.info.EndDate) {
-                                project.update(
+                                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
                                     {
                                         _id: _project._id
                                     },
@@ -178,7 +178,7 @@ var Project = function (logWriter, mongoose, department) {
                                     });
                             } else {
                                 if (_project.info.EndDate < task.extrainfo.EndDate) {
-                                    project.update(
+                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
                                         {
                                             _id: _project._id
                                         },
@@ -191,7 +191,7 @@ var Project = function (logWriter, mongoose, department) {
                                         function (err, success) {
                                             if (!err) {
                                                 if (_project.info.StartDate > task.extrainfo.StartDate) {
-                                                    project.update(
+                                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
                                                         {
                                                             _id: _project._id
                                                         },
@@ -215,7 +215,7 @@ var Project = function (logWriter, mongoose, department) {
                                         });
                                 }
                                 if (_project.info.StartDate > task.extrainfo.StartDate) {
-                                    project.update(
+                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
                                         {
                                             _id: _project._id
                                         },
@@ -228,7 +228,7 @@ var Project = function (logWriter, mongoose, department) {
                                         function (err, success) {
                                             if (!err) {
                                                 if (_project.info.EndDate < task.extrainfo.EndDate) {
-                                                    project.update(
+                                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
                                                         {
                                                             _id: _project._id
                                                         },
@@ -266,12 +266,12 @@ var Project = function (logWriter, mongoose, department) {
         }
     };
 
-    var _updateTask = function (tasksArray, fieldsObject) {
+    var _updateTask = function (req, tasksArray, fieldsObject) {
         var n = tasksArray.length;
         var i = 0;
         var _update = function (i) {
             if (i < n) {
-                tasks.update({ _id: tasksArray[i]._id }, { $set: fieldsObject }, function (err, result) {
+                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).update({ _id: tasksArray[i]._id }, { $set: fieldsObject }, function (err, result) {
                     if (err) {
                         console.log(err);
                     } else {
@@ -328,7 +328,7 @@ var Project = function (logWriter, mongoose, department) {
         return endDate;
     };
 
-    function create(data, res) {
+    function create(req, data, res) {
         try {
             console.log(data);
             if (!data.projectName || !data.projectShortDesc) {
@@ -336,7 +336,7 @@ var Project = function (logWriter, mongoose, department) {
                 res.send(400, { error: 'Project.create Incorrect Incoming Data' });
                 return;
             } else {
-                project.find({ projectName: data.projectName }, function (error, doc) {
+                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find({ projectName: data.projectName }, function (error, doc) {
                     if (error) {
                         console.log(error);
                         logWriter.log("Project.js create project.find " + error);
@@ -351,7 +351,7 @@ var Project = function (logWriter, mongoose, department) {
             }
             function saveProjectToBd(data) {
                 try {
-                    _project = new project();
+                    _project = new models.get(req.session.lastDb - 1, 'Project', ProjectSchema)();
                     if (data.projectName) {
                         _project.projectName = data.projectName;
                     }
@@ -425,10 +425,10 @@ var Project = function (logWriter, mongoose, department) {
         }
     };
 
-    function getForDd(response) {
+    function getForDd(req, response) {
         var res = {};
         res['data'] = [];
-        var query = project.find({}, { projectName: 1, _id: 1 });
+        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find({}, { projectName: 1, _id: 1 });
         query.sort({ projectName: 1 });
         query.exec(function (err, projects) {
             if (err) {
@@ -443,12 +443,12 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function get(data, response) {
+    function get(req, data, response) {
         var res = {};
         res['data'] = [];
         var i = 0;
         var qeryEveryOne = function (arrayOfId, n, workflowsId) {
-            var query = project.find();
+            var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find();
      		if (workflowsId&&workflowsId.length>0)
 				query.where('workflow').in(workflowsId);
 
@@ -469,7 +469,7 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryOwner = function (arrayOfId, n, workflowsId) {
-            var query = project.find();
+            var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find();
  			if (workflowsId&&workflowsId.length>0)
 				query.where('workflow').in(workflowsId);
 			
@@ -496,7 +496,7 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            var query = project.find();
+            var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find();
      		if (workflowsId&&workflowsId.length>0)
 				query.where('workflow').in(workflowsId);
 
@@ -507,14 +507,13 @@ var Project = function (logWriter, mongoose, department) {
                 populate('editedBy.user').
     			populate('groups.users').
 			    populate('groups.group').
-
             exec(function (error, _res1) {
                 if (!error) {
-                    department.department.find({ users: data.uId }, { _id: 1 },
+                    models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
 											   function (err, deps) {
 												   console.log(deps);
 												   if (!err) {
-													   project.find().
+													   models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
 														   where('_id').in(arrayOfId).
 														   where('groups.group').in(deps).
 														   populate("projectmanager customer task").
@@ -544,7 +543,7 @@ var Project = function (logWriter, mongoose, department) {
             });
         };
 		var workflowsId = data?data.status:null;
-        project.aggregate(
+        models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
             {
                 $group: {
                     _id: "$whoCanRW",
@@ -584,6 +583,34 @@ var Project = function (logWriter, mongoose, department) {
         );
 
         var findTasksById = function (_projects, count) {
+            var  projectsSendArray = [];
+            var _resultProgress;
+            var startIndex,endIndex;
+
+            if ((data.page-1)*data.count > _projects.length ) {
+                startIndex = _projects.length;
+            } else {
+                startIndex = (data.page-1)*data.count;
+            }
+
+            if (data.page*data.count > _projects.length ) {
+                endIndex = _projects.length;
+            } else {
+                endIndex = data.page*data.count;
+            }
+
+            for (var k = startIndex; k<endIndex; k++) {
+                _resultProgress = returnProgress(_projects[k].task);
+                _projects[k].estimated = _resultProgress.estimated;
+                _projects[k].remaining = _resultProgress.remaining;
+                _projects[k].progress = _resultProgress.progress;
+                projectsSendArray.push(_projects[k]);
+            }
+            res['listLength'] = _projects.length;
+            res['data'] = projectsSendArray;
+            response.send(res);
+
+            /*
             try {
                 if (_projects.length > count) {
                     var _resultProgress = returnProgress(_projects[count].task);
@@ -602,12 +629,12 @@ var Project = function (logWriter, mongoose, department) {
                 console.log(Exception);
                 logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
                 response.send(500, { error: "Can't find Projects" });
-            }
+            }*/
         }
     };
 
-    function getById(data, response) {
-        var query = project.findById(data.id, function (err, res) { });
+    function getById(req, data, response) {
+        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(data.id, function (err, res) { });
         query.populate('projectmanager', 'name _id');
         query.populate('customer', 'name _id');
         query.populate('workflow').
@@ -627,26 +654,26 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function update(_id, data, res) {
+    function update(req, _id, data, res) {
         try {
             delete data._id;
             delete data.createdBy;
             delete data.task;
             console.log(data);
-            project.update({ _id: _id }, data, function (err, projects) {
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Project.js update project.update " + err);
                     res.send(500, { error: "Can't update Project" });
                 } else {
-                    tasks.find({ 'project.id': _id }, function (err, result) {
+                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ 'project.id': _id }, function (err, result) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Project.js update tasks.find " + err);
                             res.send(500, { error: "Can't update Project & tasks.find" });
                         } else {
                             if (result.length > 0) {
-                                _updateTask(result, {
+                                _updateTask(req, result, {
                                     'project.name': data.projectName,
                                     'project.projectShortDesc': data.projectShortDesc
                                 });
@@ -664,8 +691,8 @@ var Project = function (logWriter, mongoose, department) {
         }
     };
 
-    function remove(_id, res) {
-        project.remove({ _id: _id }, function (err, projects) {
+    function remove(req, _id, res) {
+        models.get(req.session.lastDb - 1, 'Project', ProjectSchema).remove({ _id: _id }, function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js remove project.remove " + err);
@@ -677,14 +704,14 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function removeTasksByPorjectID(_id) {
-        tasks.find({ 'project': _id }, function (err, taskss) {
+    function removeTasksByPorjectID(req, _id) {
+        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ 'project': _id }, function (err, taskss) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js removeTasksByPorjectID task.find " + err);
             } else {
                 for (var i in taskss) {
-                    tasks.remove({ _id: taskss[i]._id }, function (errr, result) {
+                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).remove({ _id: taskss[i]._id }, function (errr, result) {
                         if (errr) {
                             console.log(err);
                             logWriter.log("Project.js removeTasksByPorjectID tasks.remove " + err);
@@ -695,7 +722,7 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function createTask(data, res) {
+    function createTask(req, data, res) {
         try {
             if (!data.summary || !data.project) {
                 logWriter.log('Task.create Incorrect Incoming Data');
@@ -703,7 +730,7 @@ var Project = function (logWriter, mongoose, department) {
                 return;
             } else {
                 var projectId = data.project;
-                var query = tasks.find({ project: projectId });
+                var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: projectId });
                 query.sort({ taskCount: -1 });
                 query.exec(function (error, _tasks) {
                     if (error) {
@@ -720,7 +747,7 @@ var Project = function (logWriter, mongoose, department) {
             function saveTaskToBd(data, n) {
                 try {
                     console.log(data);
-                    _task = new tasks({ taskCount: n });
+                    _task = new models.get(req.session.lastDb - 1, 'Tasks', TasksSchema)({ taskCount: n });
                     _task.summary = data.summary;
                     if (data.project) {
                         _task.project = data.project;
@@ -779,13 +806,13 @@ var Project = function (logWriter, mongoose, department) {
                             logWriter.log("Project.js createTask saveTaskToBd _task.save " + err);
                             res.send(500, { error: 'Task.save BD error' });
                         } else {
-                            project.findByIdAndUpdate(_task.project, { $push: { task: _task._id } }, function (err, doc) {
+                            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(_task.project, { $push: { task: _task._id } }, function (err, doc) {
                                 if (err) {
                                     console.log(err);
                                     res.send(500, { error: 'Project.save BD error' });
                                 }
                             });
-                            updateProjectTime(_task);
+                            updateProjectTime(req, _task);
                             res.send(201, { success: 'An new Task crate success', task: _task });
                         }
                     });
@@ -804,7 +831,7 @@ var Project = function (logWriter, mongoose, department) {
         }
     };
 
-    function updateTask(_id, data, res) {
+    function updateTask(req, _id, data, res) {
         delete data._id;
         delete data.createdBy;
         data.remaining = data.estimated - data.logged;
@@ -819,7 +846,7 @@ var Project = function (logWriter, mongoose, department) {
             data.project = data.project._id;
         }
         if (data.project) {
-            var query = tasks.find({ project: data.project });
+            var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: data.project });
             query.sort({ taskCount: -1 });
             query.exec(function (error, _tasks) {
                 if (error) {
@@ -827,7 +854,7 @@ var Project = function (logWriter, mongoose, department) {
                     logWriter.log("Project.js updateTask tasks.find doc.length === 0" + error);
                     res.send(500, { error: 'Task find error' });
                 } else {
-                    tasks.findById(_id, function (err, task) {
+                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Project.js updateTask tasks.findById " + err);
@@ -849,7 +876,7 @@ var Project = function (logWriter, mongoose, department) {
                             if (data.workflow && typeof (data.workflow) == 'object') {
                                 data.workflow = data.workflow._id;
                             }
-                            tasks.update({ _id: _id }, data, function (err, taskk) {
+                            models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).update({ _id: _id }, data, function (err, taskk) {
                                 if (err) {
                                     console.log(err);
                                     logWriter.log("Project.js updateTask tasks.update " + err);
@@ -867,12 +894,12 @@ var Project = function (logWriter, mongoose, department) {
         }
     };
 
-    function removeTask(_id, res) {
-        tasks.findById(_id, function (er, task) {
+    function removeTask(req, _id, res) {
+        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (er, task) {
             if (task) {
-                tasks.find({ 'project.id': task.project.id }, function (_er, docs) {
+                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ 'project.id': task.project.id }, function (_er, docs) {
                     if (docs && docs.length == 0) {
-                        project.update({ _id: task.project.id }, {
+                        models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update({ _id: task.project.id }, {
                             $set:
                                 {
                                     'info.StartDate': '',
@@ -891,7 +918,7 @@ var Project = function (logWriter, mongoose, department) {
                 logWriter.log("Project.js => removeTask => tasks.findById " + er);
             }
         });
-        tasks.remove({ _id: _id }, function (err, taskk) {
+        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).remove({ _id: _id }, function (err, taskk) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js remove task.remove " + err);
@@ -902,10 +929,10 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function getTasks(response) {
+    function getTasks(req, response) {
         var res = {};
         res['data'] = [];
-        var query = tasks.find({});
+        var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({});
         query.populate('project assignedTo extrainfo.customer workflow createdBy.user editedBy.user').
             populate('createdBy.user').
             populate('editedBy.user');
@@ -925,10 +952,10 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function getTasksPriority(response) {
+    function getTasksPriority(req, response) {
         var res = {};
         res['data'] = [];
-        priority.find({}, function (err, _priority) {
+        models.get(req.session.lastDb - 1, 'Priority', PrioritySchema).find({}, function (err, _priority) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js getTasksPriority priority.find " + err);
@@ -940,17 +967,16 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function getTasksByProjectId(data, response) {
+    function getTasksByProjectId(req, data, response) {
         var res = {};
         res['data'] = [];
-        res['showMore'] = [];
         res['options'] = [];
         var optionsArray = [];
         var showMore = false;
         var i = 0;
 
         var qeryEveryOne = function (arrayOfId, n) {
-            project.find().
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                 where('_id').in(arrayOfId).
                 exec(function (error, _res) {
                     if (!error) {
@@ -967,7 +993,7 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryOwner = function (arrayOfId, n) {
-            project.find().
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                 where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
                 exec(function (error, _res) {
@@ -987,15 +1013,15 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            project.find().
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                 where({ 'groups.users': data.uId }).
                 exec(function (error, _res1) {
                     if (!error) {
-                        department.department.find({ users: data.uId }, { _id: 1 },
+                        models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
                             function (err, deps) {
                                 console.log(deps);
                                 if (!err) {
-                                    project.find().
+                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                                         where('_id').in(arrayOfId).
                                         where('groups.group').in(deps).
                                         exec(function (error, _res) {
@@ -1021,7 +1047,7 @@ var Project = function (logWriter, mongoose, department) {
                 });
         };
 
-        project.aggregate(
+        models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
             {
                 $group: {
                     _id: "$whoCanRW",
@@ -1073,10 +1099,10 @@ var Project = function (logWriter, mongoose, department) {
             }
 
             if (accessCheck) {
-                var queryAggregate = tasks.aggregate({ $match: { project: newObjectId(projectId) } }, { $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
+                var queryAggregate = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).aggregate({ $match: { project: newObjectId(projectId) } }, { $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
 
             } else {
-                var queryAggregate = tasks.aggregate({ $match: { project: {$in: projects} } },{ $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
+                var queryAggregate = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).aggregate({ $match: { project: {$in: projects} } },{ $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
             }
 
             queryAggregate.exec(
@@ -1085,24 +1111,36 @@ var Project = function (logWriter, mongoose, department) {
                         var responseTasksArray = [];
                         var columnValue = data.count;
                         var page = data.page;
+                        var startIndex,endIndex;
 
                         responseTasks.forEach(function (value) {
-                            value.taskId.forEach(function (idTask, taskIndex) {
-                                if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
-                                    responseTasksArray.push(idTask);
+                            if ((data.page-1)*data.count > value.taskId.length ) {
+                                startIndex = value.taskId.length;
+                            } else {
+                                startIndex = (data.page-1)*data.count;
+                            }
+
+                            if (data.page*data.count > value.taskId.length ) {
+                                endIndex = value.taskId.length;
+                            } else {
+                                endIndex = data.page*data.count;
+                            }
+
+                            for (var k = startIndex; k<endIndex; k++) {
+                                responseTasksArray.push(value.taskId[k]);
                                 }
-                            });
+
                             var myObj = {
                                 id: value._id,
                                 namberOfTasks: value.taskId.length,
                                 remainingOfTasks: value.remaining
                             };
                             optionsArray.push(myObj);
-                            if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
+                            if (value.taskId.length > (page * columnValue)) {
                                 showMore = true;
                             }
                         });
-                        tasks.find().
+                        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find().
                             where('_id').in(responseTasksArray).
                             populate('project', '_id projectShortDesc projectName').
                             populate('assignedTo', '_id name imageSrc').
@@ -1131,8 +1169,8 @@ var Project = function (logWriter, mongoose, department) {
         }
     };
 
-    function getTaskById(data, response) {
-        var query = tasks.findById(data.id, function (err, res) { });
+    function getTaskById(req, data, response) {
+        var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(data.id, function (err, res) { });
         query.populate('project', '_id projectShortDesc projectName').
             populate(' assignedTo', '_id name imageSrc').
             populate('createdBy.user').
@@ -1151,13 +1189,13 @@ var Project = function (logWriter, mongoose, department) {
         });
     };
 
-    function getTasksForList(data, response) {
+    function getTasksForList(req, data, response) {
         var res = {};
         res['data'] = [];
         var i = 0;
 
         var qeryEveryOne = function (arrayOfId, n) {
-            project.find().
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                 where('_id').in(arrayOfId).
                 exec(function (error, _res) {
                     if (!error) {
@@ -1174,7 +1212,7 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryOwner = function (arrayOfId, n) {
-            project.find().
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                 where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
                 exec(function (error, _res) {
@@ -1194,15 +1232,15 @@ var Project = function (logWriter, mongoose, department) {
         };
 
         var qeryByGroup = function (arrayOfId, n) {
-            project.find().
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                 where({ 'groups.users': data.uId }).
                 exec(function (error, _res1) {
                     if (!error) {
-                        department.department.find({ users: data.uId }, { _id: 1 },
+                        models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
                             function (err, deps) {
                                 console.log(deps);
                                 if (!err) {
-                                    project.find().
+                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).find().
                                         where('_id').in(arrayOfId).
                                         where('groups.group').in(deps).
                                         exec(function (error, _res) {
@@ -1228,7 +1266,7 @@ var Project = function (logWriter, mongoose, department) {
                 });
         };
 
-        project.aggregate(
+        models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
             {
                 $group: {
                     _id: "$whoCanRW",
@@ -1280,22 +1318,22 @@ var Project = function (logWriter, mongoose, department) {
             }
 
             if (accessCheck) {
-                var query = tasks.find({project : newObjectId(projectId)});
+                var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({project : newObjectId(projectId)});
                 query.exec(function (err, result) {
                     if (!err) {
                         res['listLength'] = result.length;
                     }
                 });
-                query = tasks.find({project : newObjectId(projectId)});
+                query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({project : newObjectId(projectId)});
 
             } else {
-                var query = tasks.find().where('project').in(projects);
+                var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find().where('project').in(projects);
                 query.exec(function (err, result) {
                     if (!err) {
                         res['listLength'] = result.length;
                     }
                 });
-                query = tasks.find().where('project').in(projects);
+                query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find().where('project').in(projects);
             }
 
             query.populate('project', '_id projectShortDesc projectName').
@@ -1321,34 +1359,21 @@ var Project = function (logWriter, mongoose, department) {
 
     return {
         create: create,//End create
-
         getForDd: getForDd,
-
         get: get,
-
         getById: getById,
-
         update: update,
-
         remove: remove,
-
         createTask: createTask,
-
         updateTask: updateTask,
-
         removeTask: removeTask,
-
         getTasks: getTasks,
-
         getTasksByProjectId: getTasksByProjectId,
-
         getTaskById: getTaskById,
-
         getTasksForList: getTasksForList,
-
         getTasksPriority: getTasksPriority,
-
-        Project: Project
+        ProjectSchema: ProjectSchema,
+        TasksSchema: TasksSchema
     };
 };
 

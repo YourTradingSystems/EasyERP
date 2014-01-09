@@ -21,7 +21,9 @@ define(function () {
             this.fetch({
                 type: 'GET',
                 reset: true,
-                success: this.fetchSuccess,
+                success: function (collection, response) {
+                    collection.relationships();
+                },
                 error: this.fetchError
             });
         },
@@ -32,9 +34,9 @@ define(function () {
             return response;
         },
 
-        fetchSuccess: function (collection, response) {
-            collection.relationships();
-        },
+        //fetchSuccess: function (collection, response) {
+        //    collection.relationships();
+        //},
 
         fetchError: function (collection, response) {
             throw new Error("Not collection received from fetch");

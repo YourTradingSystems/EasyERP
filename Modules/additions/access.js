@@ -1,8 +1,9 @@
-﻿var access = function (profile, users, logWriter) {
-    var getAccess = function (uId, mid, callback) {
-        users.findById(uId, function (err, user) {
+﻿var access = function (profile, users, models, logWriter) {
+    var getAccess = function (req, uId, mid, callback) { 
+        models.get(req.session.lastDb - 1, 'Users', users.schema).findById(uId, function (err, user) {
             if (user) {
-                profile.aggregate(
+                console.log(user);
+                models.get(req.session.lastDb - 1, 'Profile', profile).aggregate(
                 {
                     $project: {
                         profileAccess: 1
@@ -34,8 +35,8 @@
         });
     };
 
-    var getReadAccess = function (uId, mid, callback) {
-        getAccess(uId, mid, function (res) {
+    var getReadAccess = function (req, uId, mid, callback) {
+        getAccess(req, uId, mid, function (res) {
             if (res.error) {
                 console.log(res.error);
             } else {
@@ -43,8 +44,8 @@
             }
         });
     };
-    var getEditWritAccess = function (uId, mid, callback) {
-        getAccess(uId, mid, function (res) {
+    var getEditWritAccess = function (req, uId, mid, callback) {
+        getAccess(req, uId, mid, function (res) {
             if (res.error) {
                 console.log(res.error);
             } else {
@@ -53,8 +54,8 @@
         });
 
     };
-    var getDeleteAccess = function (uId, mid, callback) {
-        getAccess(uId, mid, function (res) {
+    var getDeleteAccess = function (req, uId, mid, callback) {
+        getAccess(req, uId, mid, function (res) {
             if (res.error) {
                 console.log(res.error);
             } else {

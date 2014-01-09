@@ -1,4 +1,4 @@
-var Workflow = function (logWriter, mongoose) {
+var Workflow = function (logWriter, mongoose, models) {
 
     var workflowSchema = mongoose.Schema({
         wId: String,
@@ -14,15 +14,15 @@ var Workflow = function (logWriter, mongoose) {
         status: String
     }, { collection: 'relatedStatus' });
 
-    var workflow = mongoose.model('workflows', workflowSchema);
-    var rStatus = mongoose.model('relatedStatus', relatedStatusSchema);
+    mongoose.model('workflows', workflowSchema);
+    mongoose.model('relatedStatus', relatedStatusSchema);
 
     return {
-        create: function (data, result) {
+        create: function (req, data, result) {
             try {
                 if (data) {
                     console.log(data);
-                    workflow.find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
+                    models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
@@ -30,7 +30,7 @@ var Workflow = function (logWriter, mongoose) {
                             return;
                         } else {
                             for (var i = 0; i < data.value.length; i++) {
-                                _workflow = new workflow();
+                                _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
                                 _workflow.wId = data._id;
                                 _workflow.wName = data.wName;
                                 _workflow.name = data.value[i].name;
@@ -57,13 +57,13 @@ var Workflow = function (logWriter, mongoose) {
             }
         },
 
-        update: function (_id, data, result) {
+        update: function (req, _id, data, result) {
             console.log('>>>>>>>Incoming Workflow Update>>>>>>>');
             console.log(data);
             try {
                 if (data) {
                     delete data._id;
-                    workflow.update({ _id: _id }, data, function (err, res) {
+                    models.get(req.session.lastDb - 1, "workflows", workflowSchema).update({ _id: _id }, data, function (err, res) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js update workflow.update ' + err);
@@ -81,11 +81,11 @@ var Workflow = function (logWriter, mongoose) {
             }
         },
 
-        getWorkflowsForDd: function (data, response) {
+        getWorkflowsForDd: function (req, data, response) {
             var res = {};
             res['data'] = [];
             //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
-            var query = workflow.find({ wId: data.type.id });
+            var query = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ wId: data.type.id });
             query.sort({ 'sequence': 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -101,13 +101,13 @@ var Workflow = function (logWriter, mongoose) {
             });
         },
 
-        get: function (data, response) {
+        get: function (req, data, response) {
             try {
                 var res = {};
                 res['data'] = [];
                 if (data) {
                     var query = (data.id) ? { wId: data.id } : {};
-                    var query2 = workflow.find(query);
+                    var query2 = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find(query);
                     query2.sort({ 'sequence': 1 });
                     query2.exec(query, function (err, result) {
                         if (err) {
@@ -128,11 +128,11 @@ var Workflow = function (logWriter, mongoose) {
             }
         },
 
-        getRelatedStatus: function (response) {
+        getRelatedStatus: function (req, response) {
             try {
                 var res = {};
                 res['data'] = [];
-                rStatus.find({}, function (err, _statuses) {
+                models.get(req.session.lastDb - 1, "relatedStatus", relatedStatusSchema).find({}, function (err, _statuses) {
                     if (err) {
                         console.log(err);
                         logWriter.log('WorkFlow.js getRelatedStatus ' + err);
@@ -150,8 +150,8 @@ var Workflow = function (logWriter, mongoose) {
             }
         },
 
-        remove: function (_id, res) {
-            workflow.remove({ _id: _id }, function (err, workflow) {
+        remove: function (req, _id, res) {
+            models.get(req.session.lastDb - 1, "workflows", workflowSchema).remove({ _id: _id }, function (err, workflow) {
                 if (err) {
                     console.log(err);
                     logWriter.log("workflow.js remove workflow.remove " + err);
@@ -161,7 +161,7 @@ var Workflow = function (logWriter, mongoose) {
                 }
             });
         },
-        workflow: workflow
+        workflowSchema: workflowSchema
     };
 };
 
