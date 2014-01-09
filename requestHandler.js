@@ -5,7 +5,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         users = require("./Modules/Users.js")(logWriter, mongoose, models),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
-        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, models),
+        employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
         google = require("./Modules/Google.js")(users, models),
         events = require("./Modules/Events.js")(logWriter, mongoose, google, models),
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models),
@@ -1477,7 +1477,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function getLeadsForChart(req, res, data) {
         if (req.session && req.session.loggedIn) {
-            access.getReadAccess(req.session.uId, 24, function (access) {
+            access.getReadAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.getLeadsForChart(req, res, data);
                 } else {
