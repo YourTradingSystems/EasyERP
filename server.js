@@ -860,6 +860,14 @@ app.put('/JobPositions/:viewType/:_id', function (req, res) {
     requestHandler.updateJobPosition(req, res, id, data);
 });
 
+app.put('/JobPositions/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.jobPosition = req.body;
+    requestHandler.updateJobPosition(req, res, id, data);
+});
+
 app.delete('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
