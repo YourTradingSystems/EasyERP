@@ -65,8 +65,6 @@ define([
 				   case 10: return "October";
 				   case 11: return "November";
 				   case 12: return "December";
-
-
 				   }
 			   },
  			   
@@ -358,7 +356,7 @@ define([
 					   y2.domain([minval3*100, maxval3*100]);
 					   x2.domain([0, d3.max(data, function(d) { return d.count; })]);
 					   
-					   chart.append("g")
+					  chart.append("g")
 						   .attr("class", "x axis")
 						   .attr("transform", "translate(0," + height + ")")
 						   .call(xAxis)
@@ -367,7 +365,7 @@ define([
 						   .attr("class", "y axis")
 						   .call(yAxis);
 					   
-					   chart.append("g")
+				        chart.append("g")
 						   .attr("class", "y2 axis")
 						   .attr("transform", "translate(" + width + ",0)")
 						   .call(yAxis2)
@@ -377,7 +375,7 @@ define([
 						   .data(data1)
 						   .enter().append("rect")
 						   .attr("class", "bar")
-						   .attr("x", function(d) { return x(d.source); })
+						   .attr("x", function(d,i) { return x(d.source); })
 						   .attr("y", function(d) { return y(d.count); })
 						   .attr("height", function(d) { return height - y(d.count); })
 						   .attr("width", x.rangeBand());
@@ -398,12 +396,12 @@ define([
 						   .attr("height", function(d) { return 2; })
 						   .attr("width", x.rangeBand());
 
-					   chart.append("path")
+				       chart.append("path")
 						   .datum(percent)
 						   .attr("class", "line")
 						   .attr("d", line);
 
-					   chart.selectAll(".circle")
+				       chart.selectAll(".circle")
 						   .data(percent)
 						   .enter().append("circle")
 						   .attr("class", "circle")
