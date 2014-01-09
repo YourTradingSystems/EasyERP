@@ -373,8 +373,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             myItem["$project"] = { isOpportunitie: 1, convertedDate:1 };
             myItem["$project"]["dateBy"] = {};
             myItem["$project"]["dateBy"][data.dataItem] = "$convertedDate";
-            myItem["$project"]["year"] = {};
-            myItem["$project"]["year"]["$year"] = "$convertedDate";
+			if (data.dataItem=="$dayOfYear"){
+				myItem["$project"]["year"] = {};
+				myItem["$project"]["year"]["$year"] = "$convertedDate";
+			}
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
             var a = new Date(c);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(

@@ -226,10 +226,12 @@ define([
 						   .y(function (d) { return y(d.count); })
 						   .interpolate("cardinal");
 //                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
-					   data = _.map(data, function(item){
-						   item.source = item.source+item.year*10000;
-						   return item;
-					   });
+					   if(self.dateItem == "D"){
+						   data = _.map(data, function(item){
+							   item.source = item.source+item.year*10000;
+							   return item;
+						   });
+					   }
 					   data.forEach(function(item){
 						   self.numberToDate[item.source] = item.date[0]
 					   });
@@ -314,6 +316,14 @@ define([
                        y.domain([0, d3.max(data, function (d) { return d.count; })]);
                        y2.domain([minval3 * 100, maxval3 * 100]);
                        x2.domain([0, d3.max(data, function (d) { return d.count; })]);
+					   if(self.dateItem != "D"){
+						   chart.append("g")
+							   .attr("class", "x axis")
+							   .attr("transform", "translate(0," + height + ")")
+							   .call(xAxis)
+							   .selectAll("text")
+
+					   }else{
 					   if (self.dateRange=="7"){
 						   chart.append("g")
 							   .attr("class", "x axis")
@@ -366,6 +376,7 @@ define([
 							   })
 							   .attr("y", "2")
 							   .attr("style", "text-anchor:end;")
+					   }
 					   }
 
                        chart.append("g")
