@@ -10,16 +10,25 @@ define([
                actionType: "Content",
                template: _.template(DashboardTemplate),
                initialize: function () {
+                   this.dateRange = 30;
+                   this.dateRangeSource = 30;
+                   this.dateItem = "D";
                    this.render();
-                   this.dateRange = 365;
-                   this.dateRangeSource = 365;
-                   this.dateItem = "M";
                },
                events: {
                    "click .choseDateRange .item": "newRange",
                    "click .choseDateRangeSource .item": "newRangeSource",
-                   "click .choseDateItem .item": "newItem"
+                   "click .choseDateItem .item": "newItem",
+				   'click .chart-tabs a': 'changeTab',
                },
+			changeTab:function(e){
+				$(e.target).closest(".chart-tabs").find("a.active").removeClass("active");
+				$(e.target).addClass("active");
+				var n = $(e.target).parents(".chart-tabs").find("li").index($(e.target).parent());
+				$(".chart-tabs-items").find(".chart-tabs-item.active").removeClass("active");
+				$(".chart-tabs-items").find(".chart-tabs-item").eq(n).addClass("active");
+			},
+
                newRange: function (e) {
                    $(e.target).parent().find(".active").removeClass("active");
                    $(e.target).addClass("active");
@@ -81,7 +90,7 @@ define([
                    common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
 					   width = $(document).width() - margin.left - margin.right,
-					   height = 800 - margin.top - margin.bottom;
+					   height = 600 - margin.top - margin.bottom;
 
                        var y = d3.scale.ordinal()
 						   .rangeRoundBands([0, height], .3);
