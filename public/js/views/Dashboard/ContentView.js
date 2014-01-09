@@ -338,8 +338,11 @@ define([
 							   .attr("transform", "translate(0," + height + ")")
 							   .call(xAxis)
 							   .selectAll("text")
-							   .attr("transform","rotate(-75)")
-							   .attr("x", function(){
+							   .attr("transform","rotate(-60)")
+							   .attr("x", function(d,i){
+								   if (i%2!=0){
+									   return 1000;
+								   }
 								   return -10;
 							   })
 							   .attr("data-id", function(){
