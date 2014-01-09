@@ -96,26 +96,19 @@ define([
             if (this.mainView == null) this.main("Dashboard");
 
             var ContentViewUrl = "views/Dashboard/ContentView",
-                TopBarViewUrl = "views/Dashboard/TopBarView",
-                CollectionUrl = "collections/Profiles/ProfilesCollection";
-
+                TopBarViewUrl = "views/Dashboard/TopBarView";
             var self = this;
 
-            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection();
-
-                collection.bind('reset', _.bind(createViews, self));
+            require([ContentViewUrl, TopBarViewUrl], function (ContentView, TopBarView) {
+               
                 Custom.setCurrentVT('list');
-                function createViews() {
-                    collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+               
+                    var contentView = new ContentView();
                     var topBarView = new TopBarView({ actionType: "Content" });
-
-                    this.changeView(contentView);
-                    this.changeTopBarView(topBarView);
-//                    var url = '#easyErp/' + contentType + '/list';
-//					Backbone.history.navigate(url, { replace: true });
-                }
+                    self.changeView(contentView);
+                    self.changeTopBarView(topBarView);
+                    //var url = '#easyErp/' + contentType + '/list';
+                    //Backbone.history.navigate(url, { replace: true });
             });
         },
 
