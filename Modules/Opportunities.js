@@ -456,6 +456,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     };
 
     function getLeadsCustom(req, data, response) {
+        console.log('Request get LeadCustom>>>>>>>>>>>>>>>>');
         var res = {};
         res['data'] = [];
 
@@ -557,7 +558,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                 });
 
-            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
+            
+        };
+
+        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                 {
                     $group: {
                         _id: "$whoCanRW",
@@ -596,20 +600,19 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
             );
 
-            var getOpportunities = function (opportunitiesArray, data) {
+        var getOpportunities = function (opportunitiesArray, data) {
 
-                var opportunitiesArrayForSending = [];
-                for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
-                    if (k < opportunitiesArray.length) {
-                        opportunitiesArrayForSending.push(opportunitiesArray[k]);
-                    }
-
+            var opportunitiesArrayForSending = [];
+            for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
+                if (k < opportunitiesArray.length) {
+                    opportunitiesArrayForSending.push(opportunitiesArray[k]);
                 }
-                res['listLength'] = opportunitiesArray.length;
-                res['data'] = opportunitiesArrayForSending;
-                response.send(res);
+
             }
-        };
+            res['listLength'] = opportunitiesArray.length;
+            res['data'] = opportunitiesArrayForSending;
+            response.send(res);
+        }
     };
 
     function update(req, _id, data, res) {
