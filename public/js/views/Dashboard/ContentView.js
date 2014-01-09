@@ -356,7 +356,8 @@ define([
                        });
 
 
-                       var maxval2 = d3.max(percent, function (d) { return d.count; });
+					var maxval2 = d3.max(percent, function (d) { return d.count; });		
+                    if (maxval2==0)maxval2=1;															
                        percent = _.map(percent, function (item) {
                            item.count = (item.count) * maxval / maxval2;
                            return item;
@@ -374,7 +375,11 @@ define([
 
                        chart.append("g")
 						   .attr("class", "y axis")
-						   .call(yAxis);
+						   .call(yAxis)
+						   .selectAll(".tick line")
+						   .attr("x2", function (d) { return width })
+						   .style("fill", "#1EBBEA")
+
 
                        chart.append("g")
 						   .attr("class", "y2 axis")
@@ -441,10 +446,6 @@ define([
 						   .attr("transform", "rotate(90)")
 						   .text("Opportunity Conversion Rate");
 
-                       chart.selectAll(".y .tick line")
-						   .data(percent)
-						   .attr("x2", function (d) { return width })
-						   .style("fill", "#1EBBEA")
                        /*					   var kx = width/2-95;
                                               var ky = -80;
                                               var legend = chart.append("g")
