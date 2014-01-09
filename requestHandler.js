@@ -674,7 +674,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
+    
     function removeWorkflow(req, res, _id, data) {
         console.log("Requst removeWorkflow is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1167,7 +1167,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
-                    console.log(file);
+					console.log(file);
                     employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -1848,7 +1848,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
         getEmployeesAlphabet: getEmployeesAlphabet,
-
+		
         Birthdays: Birthdays,
 
         getPersonsForDd: getPersonsForDd,

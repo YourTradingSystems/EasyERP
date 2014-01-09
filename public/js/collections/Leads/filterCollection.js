@@ -12,6 +12,7 @@
                 this.status = options.status;
                 this.count = options.count;
                 this.page = options.page;
+                this.isConverted = false;
                 this.namberToShow = options.count;
 
                 var that = this;
@@ -34,7 +35,8 @@
                     case 'list': {
                         filterObject['page'] = 1;
                         filterObject['status'] = [];
-                        filterObject['status'] = options.status;;
+                        filterObject['status'] = options.status;
+                        filterObject['isConverted'] = false;
 
                         var addPage = 0;
                         break;
@@ -65,12 +67,13 @@
             
             showMore: function (options) {
                 var that = this;
-                
+
                 var filterObject = {};
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['status'] = [];
                 filterObject['status'] = (options && options.status) ? options.status: this.status;
+                filterObject['isConverted'] = (options && options.isConverted) ? options.isConverted: this.isConverted;
                 var NewCollection = Backbone.Collection.extend({
                     model: CompanyModel,
                     url: that.url,

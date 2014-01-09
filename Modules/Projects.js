@@ -507,7 +507,6 @@ var Project = function (logWriter, mongoose, department, models) {
                 populate('editedBy.user').
     			populate('groups.users').
 			    populate('groups.group').
-
             exec(function (error, _res1) {
                 if (!error) {
                     models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
@@ -584,6 +583,34 @@ var Project = function (logWriter, mongoose, department, models) {
         );
 
         var findTasksById = function (_projects, count) {
+            var  projectsSendArray = [];
+            var _resultProgress;
+            var startIndex,endIndex;
+
+            if ((data.page-1)*data.count > _projects.length ) {
+                startIndex = _projects.length;
+            } else {
+                startIndex = (data.page-1)*data.count;
+            }
+
+            if (data.page*data.count > _projects.length ) {
+                endIndex = _projects.length;
+            } else {
+                endIndex = data.page*data.count;
+            }
+
+            for (var k = startIndex; k<endIndex; k++) {
+                _resultProgress = returnProgress(_projects[k].task);
+                _projects[k].estimated = _resultProgress.estimated;
+                _projects[k].remaining = _resultProgress.remaining;
+                _projects[k].progress = _resultProgress.progress;
+                projectsSendArray.push(_projects[k]);
+            }
+            res['listLength'] = _projects.length;
+            res['data'] = projectsSendArray;
+            response.send(res);
+
+            /*
             try {
                 if (_projects.length > count) {
                     var _resultProgress = returnProgress(_projects[count].task);
@@ -602,7 +629,7 @@ var Project = function (logWriter, mongoose, department, models) {
                 console.log(Exception);
                 logWriter.log("Project.js getProjects findETasksById tasks.find " + Exception);
                 response.send(500, { error: "Can't find Projects" });
-            }
+            }*/
         }
     };
 
@@ -943,7 +970,6 @@ var Project = function (logWriter, mongoose, department, models) {
     function getTasksByProjectId(req, data, response) {
         var res = {};
         res['data'] = [];
-        res['showMore'] = [];
         res['options'] = [];
         var optionsArray = [];
         var showMore = false;
@@ -1085,20 +1111,32 @@ var Project = function (logWriter, mongoose, department, models) {
                         var responseTasksArray = [];
                         var columnValue = data.count;
                         var page = data.page;
+                        var startIndex,endIndex;
 
                         responseTasks.forEach(function (value) {
-                            value.taskId.forEach(function (idTask, taskIndex) {
-                                if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
-                                    responseTasksArray.push(idTask);
+                            if ((data.page-1)*data.count > value.taskId.length ) {
+                                startIndex = value.taskId.length;
+                            } else {
+                                startIndex = (data.page-1)*data.count;
+                            }
+
+                            if (data.page*data.count > value.taskId.length ) {
+                                endIndex = value.taskId.length;
+                            } else {
+                                endIndex = data.page*data.count;
+                            }
+
+                            for (var k = startIndex; k<endIndex; k++) {
+                                responseTasksArray.push(value.taskId[k]);
                                 }
-                            });
+
                             var myObj = {
                                 id: value._id,
                                 namberOfTasks: value.taskId.length,
                                 remainingOfTasks: value.remaining
                             };
                             optionsArray.push(myObj);
-                            if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
+                            if (value.taskId.length > (page * columnValue)) {
                                 showMore = true;
                             }
                         });

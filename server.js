@@ -794,6 +794,7 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     //console.log(data.company.address);
     requestHandler.updateCompany(req, res, id, data, remove);
 });
+
 app.get('/getCompaniesAlphabet', function (req, res) {
     console.log('------getAccountsForDd-----------------');
     data = {};
@@ -1006,6 +1007,7 @@ app.get('/getSalesTeam', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartmentForDd(req, res, data);
 });
+
 app.get('/getEmployeesAlphabet', function (req, res) {
     console.log('------getAccountsForDd-----------------');
     data = {};

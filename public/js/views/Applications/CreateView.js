@@ -13,6 +13,8 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new ApplicationModel();
+                this.page=1;
+                this.pageG=1;
                 this.render();
             },
             events: {
@@ -25,7 +27,156 @@ define([
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",
                 "change .inputAttach": "addAttach",
-				"click .deleteAttach":"deleteAttach"
+				"click .deleteAttach":"deleteAttach",
+
+                'keydown': 'keydownHandler',
+                'click .dialog-tabs a': 'changeTab',
+                'click .addUser': 'addUser',
+                'click .addGroup': 'addGroup',
+                'click .unassign': 'unassign',
+                "click .prevUserList":"prevUserList",
+                "click .nextUserList":"nextUserList"
+            },
+
+            keydownHandler: function(e){
+                switch (e.which){
+                    case 27:
+                        this.hideDialog();
+                        break;
+                    default:
+                        break;
+                }
+            },
+
+            changeTab:function(e){
+                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
+                $(e.target).addClass("active");
+                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
+                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+            },
+
+            addUser:function(e){
+                var self = this;
+                $(".addUserDialog").dialog({
+                    dialogClass: "add-user-dialog",
+                    width: "900px",
+                    buttons:{
+                        save:{
+                            text:"Choose",
+                            class:"btn",
+
+                            click: function(){
+                                click: self.addUserToTable("#targetUsers")
+                                $( this ).dialog( "close" );
+                            }
+
+                        },
+                        cancel:{
+                            text:"Cancel",
+                            class:"btn",
+                            click: function(){
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    }
+
+                });
+                $("#targetUsers").unbind().on("click","li",this.removeUsers);
+                $("#sourceUsers").unbind().on("click","li",this.addUsers);
+                var self = this;
+                $(".nextUserList").unbind().on("click",function(e){
+                    self.page+=1
+                    self.nextUserList(e,self.page)
+                });
+                $(".prevUserList").unbind().on("click",function(e){
+                    self.page-=1
+                    self.prevUserList(e,self.page)
+                });
+            },
+
+            addUserToTable:function(id){
+                $(".groupsAndUser").show();
+                $(".groupsAndUser tr").each(function(){
+                    if ($(this).data("type")==id.replace("#","")){
+                        $(this).remove();
+                    }
+                });
+                $(id).find("li").each(function(){
+                    $(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                });
+                if ($(".groupsAndUser tr").length<2){
+                    $(".groupsAndUser").hide();
+                }
+            },
+
+            addGroup:function(e){
+                var self = this;
+                $(".addGroupDialog").dialog({
+                    dialogClass: "add-group-dialog",
+                    width: "900px",
+                    buttons:{
+                        save:{
+                            text:"Choose",
+                            class:"btn",
+                            click: function(){
+                                self.addUserToTable("#targetGroups")
+                                $( this ).dialog( "close" );
+                            }
+                        },
+                        cancel:{
+                            text:"Cancel",
+                            class:"btn",
+                            click: function(){
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    }
+
+                });
+                $("#targetGroups").unbind().on("click","li",this.removeUsers);
+                $("#sourceGroups").unbind().on("click","li",this.addUsers);
+                var self = this;
+                $(".nextGroupList").unbind().on("click",function(e){
+                    self.pageG+=1
+                    self.nextUserList(e,self.pageG)
+                });
+                $(".prevGroupList").unbind().on("click",function(e){
+                    self.pageG-=1
+                    self.prevUserList(e,self.pageG)
+                });
+
+            },
+
+            unassign:function(e){
+                var id=$(e.target).closest("tr").data("id");
+                var type=$(e.target).closest("tr").data("type");
+                var text=$(e.target).closest("tr").find("td").eq(0).text();
+                $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
+                $(e.target).closest("tr").remove();
+                if ($(".groupsAndUser").find("tr").length==1){
+                    $(".groupsAndUser").hide();
+                }
+
+            },
+
+            nextUserList:function(e,page){
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
+            },
+
+            prevUserList:function(e,page){
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
+            },
+
+            addUsers: function (e) {
+                e.preventDefault();
+                $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
+
+            },
+
+            removeUsers: function (e) {
+                e.preventDefault();
+                $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
 			deleteAttach:function(e){
 				$(e.target).closest(".attachFile").remove();
@@ -41,6 +192,8 @@ define([
 			},
             hideDialog: function () {
                 $(".edit-dialog").remove();
+                $(".add-group-dialog").remove();
+                $(".add-user-dialog").remove();
             },
             getWorkflowValue: function (value) {
                 var workflows = [];
@@ -131,6 +284,18 @@ define([
                 var tags = $.trim($("#tags").val()).split(',');
                 var otherInfo = $("#otherInfo").val();
 
+                var usersId=[];
+                var groupsId=[];
+                $(".groupsAndUser tr").each(function(){
+                    if ($(this).data("type")=="targetUsers"){
+                        usersId.push($(this).data("id"));
+                    }
+                    if ($(this).data("type")=="targetGroups"){
+                        groupsId.push($(this).data("id"));
+                    }
+
+                });
+                var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 this.model.save({
                     isEmployee: isEmployee,
                     //subject: subject,
@@ -148,7 +313,13 @@ define([
                     proposedSalary: proposedSalary,
                     tags: tags,
                     otherInfo: otherInfo,
-                    workflow: workflow
+                    workflow: workflow,
+                    groups: {
+                        owner: $("#allUsers").val(),
+                        users: usersId,
+                        group: groupsId
+                    },
+                    whoCanRW: whoCanRW
                 },
                 {
                     headers: {
@@ -276,14 +447,18 @@ define([
                         }
                     }
                 });
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+                common.populateUsers("#allUsers", "/Users",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+
                 common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.relatedUsersDd, "/getForDdByRelatedUser", null, function () { self.styleSelect(App.ID.relatedUsersDd); });
 //                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
                 common.populateDepartments(App.ID.departmentDd, "/Departments",null,function(){self.styleSelect(App.ID.departmentDd);});
                 common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition",null,function(){self.styleSelect(App.ID.jobPositionDd);});
-				self.styleSelect(App.ID.jobPositionDd);
 				self.styleSelect("#sourceDd");
+				self.styleSelect("#jobtapeDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",
@@ -291,6 +466,7 @@ define([
                     changeYear: true,
                     minDate: new Date()
                 });
+                this.delegateEvents(this.events);
                 return this;
             }
 

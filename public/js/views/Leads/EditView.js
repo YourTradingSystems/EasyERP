@@ -24,7 +24,6 @@ define([
                 "click .breadcrumb a, #cancelCase, #reset": "changeWorkflow",
                 "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows",
-                "change #workflowNames": "changeWorkflows",
                 "click .current-selected": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",

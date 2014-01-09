@@ -9,7 +9,10 @@
             page: 1,
             initialize: function (options) {
                 var that = this;
+                this.status = [];
+                this.status = options.status;
                 this.namberToShow = options.count;
+                this.page = options.page;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     var viewType = options.viewType;
@@ -28,6 +31,8 @@
                     }
                     case 'list': {
                         filterObject['page'] = 1;
+                        filterObject['status'] = [];
+                        filterObject['status'] = options.status;
                         var addPage = 0;
                         break;
                     }
@@ -64,6 +69,8 @@
                 }
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
+                filterObject['status'] = [];
+                filterObject['status'] = (options && options.status) ? options.status: this.status;
                 var NewCollection = Backbone.Collection.extend({
                     model: OpportunityModel,
                     url: that.url,
