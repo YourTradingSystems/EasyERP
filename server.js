@@ -41,12 +41,18 @@ mainDb.once('open', function callback() {
         if (!err) {
             console.log(result);
             result.forEach(function (_db, index) {
+                var dbInfo = {
+                    DBname: '',
+                    url: ''
+                };
                 var dbObject = mongoose.createConnection(_db.url, _db.DBname);
                 dbObject.on('error', console.error.bind(console, 'connection error:'));
                 dbObject.once('open', function callback() {
                     console.log("Connection to " + _db.DBname + " is success" + index);
+                    dbInfo.url = result[index].url;
+                    dbInfo.DBname = result[index].DBname;
                     dbsArray[index] = dbObject;
-                    dbsNames[index] = result[index].DBname;
+                    dbsNames[index] = dbInfo;
                 });
             });
         } else {
