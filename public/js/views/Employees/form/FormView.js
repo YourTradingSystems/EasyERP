@@ -9,6 +9,16 @@ define([
             initialize: function (options) {
                 this.formModel = options.model;
             },
+			events:{
+				   'click .chart-tabs a': 'changeTab'
+               },
+			changeTab:function(e){
+				$(e.target).closest(".chart-tabs").find("a.active").removeClass("active");
+				$(e.target).addClass("active");
+				var n = $(e.target).parents(".chart-tabs").find("li").index($(e.target).parent());
+				$(".chart-tabs-items").find(".chart-tabs-item.active").removeClass("active");
+				$(".chart-tabs-items").find(".chart-tabs-item").eq(n).addClass("active");
+			},
 
             render: function () {
                 var formModel = this.formModel.toJSON();

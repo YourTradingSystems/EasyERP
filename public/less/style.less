@@ -1966,6 +1966,14 @@ input, textarea, select {
     .avatar {
         .avatar(64px, 5px, 20px, 5px, 5px);
     }
+	.project-text{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width:180px;
+		span{
+			font-weight:bold;
+		}
+	}
 }
 
 .thumbnailcusomers {
@@ -3122,6 +3130,14 @@ button {
 	p{
 		text-align:left;
 	}
+	.taskSelect{
+		position:relative;
+		float:left;
+		.current-selected{
+			line-height:normal !important;
+		}
+		
+	}
 }
 .application-content p{
 	line-height:20px;
@@ -3738,7 +3754,7 @@ table#workflows {
 		left:0px;
 	}
 	&.taskPriority{
-		left:24px;
+		left:-15px;
 	}
 }
 	
@@ -3969,10 +3985,10 @@ a.current-selected{
 	width:100% !important;
 	max-width:initial !important;
 }
-ul.dialog-tabs{
+.tabs(@marginTop:0px, @marginLeft:-20px){
 	height:35px;
 	border-bottom: 1px solid #DDD;
-	margin:0 -20px;
+	margin:@marginTop -20px 0 @marginLeft;
 	padding:0 20px;
 	li{
 		flaot:left;
@@ -3986,6 +4002,7 @@ ul.dialog-tabs{
 			text-align:center;
 			line-height:35px;
 			text-decoration:none;
+			color: #36A9E1;
 			&.active{
 				height:36px;
 				line-height:34px;
@@ -3999,14 +4016,28 @@ ul.dialog-tabs{
 		}
 	}
 }
-.dialog-tabs-items {
+.tabs-items {
 	margin-bottom:-29px;
-	.dialog-tabs-item{
+	.dialog-tabs-item,
+	.chart-tabs-item{
 		display:none;
 		&.active{
 			display:block;
 		}
 	}
+}
+
+ul.dialog-tabs{
+	.tabs;
+}
+.dialog-tabs-items {
+	.tabs-items;
+}
+ul.chart-tabs{
+	.tabs(10px, 0px);
+}
+.chart-tabs-items{
+	.tabs-items;
 }
 .groupsChooser{
 	margin-top:25px;
