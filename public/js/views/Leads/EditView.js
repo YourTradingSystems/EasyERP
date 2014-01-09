@@ -399,10 +399,9 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
-
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.customerDd);});
                 common.populateDepartments(App.ID.salesTeam, "/Departments", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.salesTeam);});
-                common.populateEmployeesDd(App.ID.salesPerson, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.salesPerson);});
+                common.populateEmployeesDd(App.ID.salesPerson, "/getForDdByRelatedUser", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.salesPerson); });
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.priorityDd);});
                 common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
 				this.styleSelect("#sourceDd");
