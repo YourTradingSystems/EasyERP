@@ -1,6 +1,7 @@
 // JavaScript source code
 var Employee = function (logWriter, mongoose, event, department, models) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var newObjectId = mongoose.Types.ObjectId;
     var employeeSchema = new mongoose.Schema({
         isEmployee: { type: Boolean, default: false },
         imageSrc: { type: String, default: '' },
