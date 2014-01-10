@@ -1,7 +1,7 @@
 var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
-        department = require("./Modules/Department.js")(logWriter, mongoose, department, models),
+        department = require("./Modules/Department.js")(logWriter, mongoose, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
@@ -17,6 +17,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
+
+    Array.prototype.objectID = function() {
+        var _arrayOfID = [];
+        for (var i = 0; i < this.length; i++) {
+            if (typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
+                _arrayOfID.push(this[i]._id);
+            }
+        }
+        return _arrayOfID;
+    };
 
     function getModules(req, res) {
         console.log("Requst get Modules is success");
