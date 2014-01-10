@@ -930,7 +930,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             }
             query.where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
-
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -1064,6 +1063,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         });
                         models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false }).
                             where('_id').in(responseApplicationsArray).
+							sort({ 'editedBy.date': -1 }).
                             populate('relatedUser department jobPosition workflow').
                             populate('createdBy.user').
                             populate('editedBy.user').

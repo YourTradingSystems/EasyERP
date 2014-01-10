@@ -4,22 +4,32 @@ define([
 	"common"
 ],
        function (DashboardTemplate, d3, common) {
-           var ContentView = Backbone.View.extend({
-               el: '#content-holder',
-               contentType: "Dashboard",
-               actionType: "Content",
+		   var ContentView = Backbone.View.extend({
+			   contentType: "Dashboard",
+			   actionType: "Content",
                template: _.template(DashboardTemplate),
+               el: '#content-holder',
                initialize: function () {
+                   this.dateRange = 30;
+                   this.dateRangeSource = 30;
+                   this.dateItem = "D";
+				   this.numberToDate = {};
                    this.render();
-                   this.dateRange = 365;
-                   this.dateRangeSource = 365;
-                   this.dateItem = "M";
                },
                events: {
                    "click .choseDateRange .item": "newRange",
                    "click .choseDateRangeSource .item": "newRangeSource",
-                   "click .choseDateItem .item": "newItem"
+                   "click .choseDateItem .item": "newItem",
+				   'click .chart-tabs a': 'changeTab',
                },
+			   changeTab:function(e){
+				   $(e.target).closest(".chart-tabs").find("a.active").removeClass("active");
+				   $(e.target).addClass("active");
+				   var n = $(e.target).parents(".chart-tabs").find("li").index($(e.target).parent());
+				   $(".chart-tabs-items").find(".chart-tabs-item.active").removeClass("active");
+				   $(".chart-tabs-items").find(".chart-tabs-item").eq(n).addClass("active");
+			   },
+
                newRange: function (e) {
                    $(e.target).parent().find(".active").removeClass("active");
                    $(e.target).addClass("active");
@@ -39,32 +49,34 @@ define([
                    this.dateItem = $(e.target).data("item");
                    this.renderPopulate();
                },
+			   getDateFromDayOfYear:function(index){
+				   return dateFormat(new Date(this.numberToDate[index]).toString('MMMM ,yyyy'),"mmmm dd, yyyy");
+			   },
                getDay: function (index) {
                    switch (index) {
-                       case 1: return "Monday";
-                       case 2: return "Tuesday";
-                       case 3: return "Wednesday";
-                       case 4: return "Thursday";
-                       case 5: return "Friday";
-                       case 6: return "Saturday";
-                       case 7: return "Sunday";
+                   case 1: return "Monday";
+                   case 2: return "Tuesday";
+                   case 3: return "Wednesday";
+                   case 4: return "Thursday";
+                   case 5: return "Friday";
+                   case 6: return "Saturday";
+                   case 7: return "Sunday";
                    }
                },
-
                getMonth: function (index) {
                    switch (index) {
-                       case 1: return "January";
-                       case 2: return "February";
-                       case 3: return "March";
-                       case 4: return "April";
-                       case 5: return "May";
-                       case 6: return "June";
-                       case 7: return "July";
-                       case 8: return "August";
-                       case 9: return "September";
-                       case 10: return "October";
-                       case 11: return "November";
-                       case 12: return "December";
+                   case 1: return "January";
+                   case 2: return "February";
+                   case 3: return "March";
+                   case 4: return "April";
+                   case 5: return "May";
+                   case 6: return "June";
+                   case 7: return "July";
+                   case 8: return "August";
+                   case 9: return "September";
+                   case 10: return "October";
+                   case 11: return "November";
+                   case 12: return "December";
 
 
                    }
@@ -81,7 +93,7 @@ define([
                    common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
 					   width = $(document).width() - margin.left - margin.right,
-					   height = 800 - margin.top - margin.bottom;
+					   height = 600 - margin.top - margin.bottom;
 
                        var y = d3.scale.ordinal()
 						   .rangeRoundBands([0, height], .3);
@@ -153,54 +165,6 @@ define([
                        chart.selectAll(".x .tick line")
 						   .data(data)
 						   .attr("y2", function (d) { return -height })
-                       /*					   var kx = width/2-95;
-                                              var ky = -60;
-                                              var legend = chart.append("g")
-                                                  .attr("class", "legend")
-                                                  .attr("x", width - 95)
-                                                  .attr("y", 25)
-                                                  .attr("height", 100)
-                                                  .attr("width", 100)
-                       
-                                              legend.append("rect")
-                                                  .attr("class", "main")
-                                                  .attr("x", kx-30)
-                                                  .attr("y", ky)
-                                                  .attr("height",50)
-                                                  .attr("width",250)
-                                                  .text("Converted Leads")
-                       
-                                              legend.append("text")
-                                                  .attr("x", kx)
-                                                  .attr("y", ky+20)
-                                                  .attr("height",30)
-                                                  .attr("width",100)
-                                                  .text("Total Leads")
-                       
-                                              legend.append("rect")
-                                                  .attr("x", kx-23)
-                                                  .attr("y", ky+7)
-                                                  .attr("height",15)
-                                                  .attr("width",15)
-                                                  .style("fill","#6EC262")
-                                                  .style("opacity","0.3")
-                                              
-                       
-                                              legend.append("text")
-                                                  .attr("x", kx)
-                                                  .attr("y", ky+40)
-                                                  .attr("height",30)
-                                                  .attr("width",100)
-                                                  .text("Opportunities")
-                       
-                                              legend.append("rect")
-                                                  .attr("x", kx-23)
-                                                  .attr("y", ky+27)
-                                                  .attr("height",15)
-                                                  .attr("width",15)
-                                                  .style("fill","#6EC262")
-                       
-                       */
                        function type(d) {
                            d.count = +d.count; // coerce to number
                            return d;
@@ -214,7 +178,7 @@ define([
                    $(".leadChart").empty();
                    common.getLeadsForChart(null, this.dateRange, this.dateItem, function (data) {
                        console.log(data);
-                       var margin = { top: 20, right: 160, bottom: 30, left: 160 },
+                       var margin = { top: 20, right: 160, bottom: 190, left: 160 },
 					   width = $(document).width() - margin.left - margin.right,
 					   height = 500 - margin.top - margin.bottom;
                        var x = d3.scale.ordinal()
@@ -234,27 +198,11 @@ define([
 						   .orient("bottom")
 						   .tickFormat(function (d) {
 						       switch (self.dateItem) {
-						           case "DW": return self.getDay(d);
-						           case "M": return self.getMonth(d);
-						           case "D":
-						               if (self.dateRange == 90) {
-						                   if (d % 2 == 0) {
-						                       return ""
-						                   } else {
-						                       return d
-						                   }
-						               }
-						               if (self.dateRange == 365) {
-						                   if (d % 7 == 1) {
-						                       return d
-						                   } else {
-						                       return ""
-						                   }
-						               }
-
-						               return d
-						       }
-						       return d;
+						       case "DW": return self.getDay(d);
+						       case "M": return self.getMonth(d);
+						       case "D":return self.getDateFromDayOfYear(d);
+							   }
+							   return d;
 
 						   });
 
@@ -277,7 +225,17 @@ define([
 						   .x(function (d) { return x(d.source) + x.rangeBand() / 2; })
 						   .y(function (d) { return y(d.count); })
 						   .interpolate("cardinal");
-                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+//                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
+					   if(self.dateItem == "D"){
+						   data = _.map(data, function(item){
+							   item.source = item.source+item.year*10000;
+							   return item;
+						   });
+					   }
+					   data.forEach(function(item){
+						   self.numberToDate[item.source] = item.date[0]
+					   });
+					   
                        data1 = _.filter(data, function (item) {
                            return item.isOpp;
                        });
@@ -347,7 +305,8 @@ define([
                        });
 
 
-                       var maxval2 = d3.max(percent, function (d) { return d.count; });
+					   var maxval2 = d3.max(percent, function (d) { return d.count; });		
+                       if (maxval2==0)maxval2=1;															
                        percent = _.map(percent, function (item) {
                            item.count = (item.count) * maxval / maxval2;
                            return item;
@@ -357,15 +316,76 @@ define([
                        y.domain([0, d3.max(data, function (d) { return d.count; })]);
                        y2.domain([minval3 * 100, maxval3 * 100]);
                        x2.domain([0, d3.max(data, function (d) { return d.count; })]);
+					   if(self.dateItem != "D"){
+						   chart.append("g")
+							   .attr("class", "x axis")
+							   .attr("transform", "translate(0," + height + ")")
+							   .call(xAxis)
+							   .selectAll("text")
 
-                       chart.append("g")
-						   .attr("class", "x axis")
-						   .attr("transform", "translate(0," + height + ")")
-						   .call(xAxis)
+					   }else{
+					   if (self.dateRange=="7"){
+						   chart.append("g")
+							   .attr("class", "x axis")
+							   .attr("transform", "translate(0," + height + ")")
+							   .call(xAxis)
+							   .selectAll("text")
+					   }
+					   if (self.dateRange=="30"){
+						   chart.append("g")
+							   .attr("class", "x axis")
+							   .attr("transform", "translate(0," + height + ")")
+							   .call(xAxis)
+							   .selectAll("text")
+							   .attr("transform","rotate(-60)")
+							   .attr("x", "-10")
+							   .attr("y", "2")
+							   .attr("style", "text-anchor:end;")
+					   }
+					   if (self.dateRange=="90"){
+						   chart.append("g")
+							   .attr("class", "x axis")
+							   .attr("transform", "translate(0," + height + ")")
+							   .call(xAxis)
+							   .selectAll("text")
+							   .attr("transform","rotate(-60)")
+							   .attr("x", function(d,i){
+								   if (i%2!=0){
+									   return 1000;
+								   }
+								   return -10;
+							   })
+							   .attr("data-id", function(){
+								   return this.getComputedTextLength();
+							   })
+							   .attr("style", "text-anchor:end;")
+							   .attr("y", "2")
+					   }
+					   if (self.dateRange=="365"){
+						   chart.append("g")
+							   .attr("class", "x axis")
+							   .attr("transform", "translate(0," + height + ")")
+							   .call(xAxis)
+							   .selectAll("text")
+							   .attr("transform","rotate(-90)")
+							   .attr("x", function(d,i){
+								   if (i%5!=0){
+									   return 1000;
+								   }
+								   return -10;
+							   })
+							   .attr("y", "2")
+							   .attr("style", "text-anchor:end;")
+					   }
+					   }
 
                        chart.append("g")
 						   .attr("class", "y axis")
-						   .call(yAxis);
+						   .call(yAxis)
+						   .selectAll(".tick line")
+						   .attr("x2", function (d) { return width })
+						   .style("fill", "#1EBBEA")
+
 
                        chart.append("g")
 						   .attr("class", "y2 axis")
@@ -381,6 +401,7 @@ define([
 						   .attr("y", function (d) { return y(d.count); })
 						   .attr("height", function (d) { return height - y(d.count); })
 						   .attr("width", x.rangeBand());
+
                        chart.selectAll(".bar2")
 						   .data(data2)
 						   .enter().append("rect")
@@ -389,6 +410,7 @@ define([
 						   .attr("y", function (d) { return y(d.count); })
 						   .attr("height", function (d) { return height - y(d.count); })
 						   .attr("width", x.rangeBand());
+
                        chart.selectAll(".bar3")
 						   .data(data2)
 						   .enter().append("rect")
@@ -431,71 +453,6 @@ define([
 						   .attr("dy", ".75em")
 						   .attr("transform", "rotate(90)")
 						   .text("Opportunity Conversion Rate");
-
-                       chart.selectAll(".y .tick line")
-						   .data(percent)
-						   .attr("x2", function (d) { return width })
-						   .style("fill", "#1EBBEA")
-                       /*					   var kx = width/2-95;
-                                              var ky = -80;
-                                              var legend = chart.append("g")
-                                                  .attr("class", "legend")
-                                                  .attr("x", width - 95)
-                                                  .attr("y", 25)
-                                                  .attr("height", 100)
-                                                  .attr("width", 100)
-                       
-                                              legend.append("rect")
-                                                  .attr("class", "main")
-                                                  .attr("x", kx-30)
-                                                  .attr("y", ky)
-                                                  .attr("height",70)
-                                                  .attr("width",250)
-                                                  .text("Converted Leads")
-                       
-                                              legend.append("text")
-                                                  .attr("x", kx)
-                                                  .attr("y", ky+20)
-                                                  .attr("height",30)
-                                                  .attr("width",100)
-                                                  .text("Converted Leads")
-                       
-                                              legend.append("rect")
-                                                  .attr("x", kx-23)
-                                                  .attr("y", ky+7)
-                                                  .attr("height",15)
-                                                  .attr("width",15)
-                                                  .style("fill","#26A7DD")
-                                              
-                       
-                                              legend.append("text")
-                                                  .attr("x", kx)
-                                                  .attr("y", ky+40)
-                                                  .attr("height",30)
-                                                  .attr("width",100)
-                                                  .text("Unconverted Leads")
-                       
-                                              legend.append("rect")
-                                                  .attr("x", kx-23)
-                                                  .attr("y", ky+27)
-                                                  .attr("height",15)
-                                                  .attr("width",15)
-                                                  .style("fill","#57D0B5")
-                       
-                                              legend.append("text")
-                                                  .attr("x", kx)
-                                                  .attr("y", ky+60)
-                                                  .attr("height",30)
-                                                  .attr("width",100)
-                                                  .text("Opportunity Conversion Rate")
-                       
-                                              legend.append("circle")
-                                                  .attr("cx", kx-16)
-                                                  .attr("cy", ky+55)
-                                                  .attr("r",7)
-                                                  .style("fill","#1EBBEA")
-                       
-                       */
                        function type(d) {
                            d.count = +d.count; // coerce to number
                            return d;
@@ -503,7 +460,6 @@ define([
                        }
                    });
 
-                   return this;
                }
            });
            return ContentView;

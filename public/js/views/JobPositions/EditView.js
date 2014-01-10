@@ -31,7 +31,6 @@ define([
                 "click .breadcrumb a": "changeWorkflow",
                 'keydown': 'keydownHandler',
 
-
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -247,7 +246,7 @@ define([
                     status: this.$("#workflow option:selected").val(),
                 };*/
                 var workflow = this.$("#workflowsDd option:selected").val();
-                this.currentModel.set({
+                this.currentModel.save({
                     name: name,
                     expectedRecruitment: expectedRecruitment,
                     description: description,
@@ -260,9 +259,7 @@ define([
                         group: groupsId
                     },
                     whoCanRW: whoCanRW
-                });
-
-                this.currentModel.save({}, {
+                }, {
                     headers: {
                         mid: mid
                     },
@@ -271,7 +268,6 @@ define([
                         model = model.toJSON();
                         self.hideDialog();
                         Backbone.history.navigate("easyErp/JobPositions", { trigger: true });
-
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
