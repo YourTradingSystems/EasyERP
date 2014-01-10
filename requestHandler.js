@@ -1179,6 +1179,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getApplicationsForKanban(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getApplicationsForKanban(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function getEmployeesForThumbnails(req, res, data) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1969,6 +1986,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getApplicationsForList: getApplicationsForList,
 		getEmployeesForThumbnails: getEmployeesForThumbnails,
         getApplicationById: getApplicationById,
+		getApplicationsForKanban: getApplicationsForKanban,
 
         createLead: createLead,
         getLeads: getLeads,

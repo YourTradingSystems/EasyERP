@@ -112,7 +112,9 @@
                     _.map(response.data, function (application) {
                     	application.creationDate = common.utcDateToLocaleDate(application.creationDate);
                     	application.nextAction = common.utcDateToLocaleDate(application.nextAction);
+						if (application.createdBy)
                         application.createdBy.date = common.utcDateToLocaleDateTime(application.createdBy.date);
+						if (application.editedBy)
                         application.editedBy.date = common.utcDateToLocaleDateTime(application.editedBy.date);
                         return application;
                     });
