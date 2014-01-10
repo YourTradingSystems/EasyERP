@@ -1060,6 +1060,8 @@ app.get('/Applications/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getApplicationsForList(req, res, data);
             break;
+        case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
+            break;
         default: requestHandler.getFilterApplications(req, res, data);
             break;
     }
