@@ -1107,6 +1107,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().
                             where('_id').in(responseOpportunitiesArray).
                             populate('relatedUser customer department jobPosition salesPerson workflow').
+							sort({ 'editedBy.date': -1 }).
                             populate('createdBy.user').
                             populate('editedBy.user').
                             populate('groups.users').

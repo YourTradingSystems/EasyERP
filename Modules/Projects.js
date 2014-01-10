@@ -1104,7 +1104,6 @@ var Project = function (logWriter, mongoose, department, models) {
             } else {
                 var queryAggregate = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).aggregate({ $match: { project: {$in: projects} } },{ $group: { _id: "$workflow", taskId: { $push: "$_id" }, remaining: { $sum: "$remaining" } } });
             }
-
             queryAggregate.exec(
                 function (err, responseTasks) {
                     if (!err) {
@@ -1148,7 +1147,7 @@ var Project = function (logWriter, mongoose, department, models) {
                             populate('workflow').
                             populate('createdBy.user').
                             populate('editedBy.user').
-
+							sort({ 'editedBy.date': -1 }).
                             exec(function (err, result) {
                                 if (!err) {
                                     res['showMore'] = showMore;
