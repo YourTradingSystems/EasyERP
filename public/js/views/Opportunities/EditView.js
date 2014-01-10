@@ -14,8 +14,7 @@
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
-                this.opportunitiesCollection = options.collection;
-                this.currentModel = (options.model) ? options.model : options.collection.getElement();
+                this.currentModel = options.model;
                 this.page=1;
                 this.pageG=1;
                 this.render();
@@ -25,9 +24,7 @@
                 "click .breadcrumb a, #lost, #won": "changeWorkflow",
                 "click #tabList a": "switchTab",
                 "change #customer": "selectCustomer",
-                "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler',
-
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -165,19 +162,7 @@
                 }
             },
 
-            changeWorkflows: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                } else {
-                    var currentModel = this.opportunitiesCollection.models[itemIndex].toJSON();
-                    var name = this.$("#workflowNames option:selected").val();
-                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
-                }
-            },
-
+           
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {

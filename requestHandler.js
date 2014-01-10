@@ -28,6 +28,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         return _arrayOfID;
     };
 
+    Array.prototype.getShowmore = function (countPerPage) {
+        var showMore = false;
+        for (var i = 0; i < this.length; i++) {
+            if (this[i].count > countPerPage) {
+                showMore = true;
+            }
+        }
+        return showMore;
+    };
+
     function getModules(req, res) {
         console.log("Requst get Modules is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {

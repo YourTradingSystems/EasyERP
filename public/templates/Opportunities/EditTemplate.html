@@ -38,7 +38,7 @@
                           <div class="clearfix"></div>
                         </div>
                         <dl class="opp-info">
-                          <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=model.company%>" disabled maxlength="32"/></dd>
+                          <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=(model.company && model.company.name) ? model.company.name.first : ''%>" disabled maxlength="32" /></dd>
                           <dt><label for="address">Address</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
                           <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
                           <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
