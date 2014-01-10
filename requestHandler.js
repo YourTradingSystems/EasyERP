@@ -1,7 +1,7 @@
 var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
-        department = require("./Modules/Department.js")(logWriter, mongoose, department, models),
+        department = require("./Modules/Department.js")(logWriter, mongoose, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
@@ -28,6 +28,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     res.send(403);
                 }
             });
+
 
         } else {
             res.send(401);
