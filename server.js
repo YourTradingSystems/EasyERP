@@ -1034,6 +1034,12 @@ app.get('/getEmployeesAlphabet', function (req, res) {
     requestHandler.getEmployeesAlphabet(req, res, data);
 });
 
+app.get('/getEmployeesImages', function (req, res) {
+    data = {};
+    data.ids = req.param('ids');
+    requestHandler.getEmployeesImages(req, res, data);
+});
+
 //------------------Applications---------------------------------------------------
 
 app.get('/Applications', function (req, res) {

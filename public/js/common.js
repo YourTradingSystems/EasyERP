@@ -796,6 +796,15 @@
             return associateArray;
         }
 
+        var getEmployeesImages = function (ids, callback) {
+            dataService.getData("/getEmployeesImages", {ids:ids }, function (response) {
+				response.data.forEach(function(item){
+					$("#"+item._id+" .inner .avatar img").attr("src",item.imageSrc);
+				});
+                if (callback) callback();
+            });
+        };
+		
         return {
             deleteFromLocalStorage: deleteFromLocalStorage,
             populateProfilesDd: populateProfilesDd,
@@ -830,6 +839,7 @@
             populateUsersForGroups: populateUsersForGroups,
 			populateParentDepartments:populateParentDepartments,
 			populateDepartmentsList:populateDepartmentsList,
-			getLeadsForChart:getLeadsForChart
+			getLeadsForChart:getLeadsForChart,
+			getEmployeesImages:getEmployeesImages
         }
     });
