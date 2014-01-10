@@ -971,6 +971,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
                 console.log(access);
                 if (access) {
+                    employee.getEmployeeForCustom(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    }
+    function getEmployeesForList(req, res, data) {
+        console.log("Requst getEmployeesCustom is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 42, function (access) {
+                console.log(access);
+                if (access) {
                     employee.getEmployeeForList(req, data, res);
                 } else {
                     res.send(403);
@@ -981,6 +997,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+
     // Custom function for form
     function getEmployeesByIdCustom(req, res, data) {
         console.log('----------------}');
@@ -1868,6 +1885,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getEmployees: getEmployees,
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
+		getEmployeesForList:getEmployeesForList,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,

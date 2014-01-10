@@ -973,6 +973,8 @@ app.get('/Employees/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
             break;
+        case "list": requestHandler.getEmployeesForList(req, res, data);
+            break;
         default: requestHandler.getEmployeesCustom(req, res, data);
             break;
     }
