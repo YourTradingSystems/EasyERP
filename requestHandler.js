@@ -1169,6 +1169,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getEmployeesForThumbnails(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getEmployeesForThumbnails(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function updateApplication(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1886,6 +1903,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
 		getEmployeesForList:getEmployeesForList,
+		getEmployeesForThumbnails:getEmployeesForThumbnails,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
@@ -1921,6 +1939,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
         getApplicationsForList: getApplicationsForList,
+		getEmployeesForThumbnails: getEmployeesForThumbnails,
         getApplicationById: getApplicationById,
 
         createLead: createLead,

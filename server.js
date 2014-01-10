@@ -975,6 +975,8 @@ app.get('/Employees/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getEmployeesForList(req, res, data);
             break;
+        case "thumbnails": requestHandler.getEmployeesForThumbnails(req, res, data);
+            break;
         default: requestHandler.getEmployeesCustom(req, res, data);
             break;
     }
