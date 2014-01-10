@@ -554,42 +554,30 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.populate('customer salesPerson salesTeam workflow').
-                                    populate('createdBy.user','login').
-                                    populate('editedBy.user','login').
-                                    exec(function (error, _res) {
-                                        if (!error) {
-                                            res['data'] = _res;
-                                            getOpportunities(res['data'], data);
-
-                                        } else {
-                                            console.log(error);
-                                        }
-                                    });
+                                query.populate('customer', 'name').
+                                populate('workflow', 'name').
+                                populate('createdBy.user', 'login').
+                                populate('editedBy.user', 'login').
+                                skip((data.page - 1) * data.count).
+                                limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        res['listLength'] = _res.length;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
                             } else {
                                 console.log(err);
                             }
                         }
                     );
                 } else {
-
+                    console.log(err);
                 }
             });
-
-
-        var getOpportunities = function (opportunitiesArray, data) {
-
-            var opportunitiesArrayForSending = [];
-            for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
-                if (k < opportunitiesArray.length) {
-                    opportunitiesArrayForSending.push(opportunitiesArray[k]);
-                }
-
-            }
-            res['listLength'] = opportunitiesArray.length;
-            res['data'] = opportunitiesArrayForSending;
-            response.send(res);
-        }
     };
 
     function update(req, _id, data, res) {
