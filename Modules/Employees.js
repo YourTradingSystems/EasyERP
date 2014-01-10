@@ -323,7 +323,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             } else {
                                 res.send(201, { success: 'A new Employees create success', result: result });
                                 console.log(result);
-                                event.emit('recalculate');
+                                event.emit('recalculate', req);
                             }
                         } catch (error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
@@ -867,7 +867,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     } else {
                         res.send(200, { success: 'Employees updated success', data: result });
                         if (data.recalculate) {
-                            event.emit('recalculate');
+                            event.emit('recalculate', req);
                         }
                     }
                 }
@@ -891,7 +891,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 res.send(500, { error: "Can't remove Employees" });
             } else {
                 res.send(200, { success: 'Employees removed' });
-                event.emit('recalculate');
+                event.emit('recalculate', req);
             }
         });
     };// end remove
