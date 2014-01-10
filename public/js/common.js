@@ -88,10 +88,10 @@
         			console.log(canvasContent.toDataURL());
         			
                     $('.image_input img').Jcrop({
-            			bgColor: 'black',
+            			bgColor: 'white',
             			bgOpacity: .6,
             			setSelect: [0, 0, 100, 100],
-            			aspectRatio: 1,
+            			aspectRatio: 0,
             			onSelect: imgSelect,
             			onChange: imgSelect,
             			boxWidth:650,
