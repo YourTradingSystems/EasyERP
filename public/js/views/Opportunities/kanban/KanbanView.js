@@ -4,9 +4,10 @@
         'views/Opportunities/kanban/KanbanItemView',
         'views/Opportunities/EditView',
         'views/Opportunities/CreateView',
-        'collections/Companies/CompaniesCollection'
+        'collections/Companies/CompaniesCollection',
+        'models/OpportunitiesModel'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView,CompaniesCollection) {
+function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, CompaniesCollection, CurrentModel) {
     var OpportunitiesKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -31,8 +32,15 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         gotoEditForm: function (e) {
             e.preventDefault();
             var id = $(e.target).closest(".inner").data("id");
-            var model = this.collection.getElement(id);
-            new EditView({ model: model, collection: this.collection });
+            var model = new CurrentModel();
+            model.urlRoot = '/Opportunities/form';
+            model.fetch({
+                data: { id: id },
+                success: function (model, response, options) {
+                    new EditView({ model: model });
+                },
+                error: function () { alert('Please refresh browser'); }
+            });
         },
         
         showMore: function () {
@@ -87,8 +95,8 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 OpportunitieCount = 0
                 //OpportunitieRemaining = 0;
                 _.each(this.collection.optionsArray, function(wfId){
-                    if (wfId.id == workflow._id) {
-                        OpportunitieCount = wfId.namberOfOpportunities;
+                    if (wfId._id == workflow._id) {
+                        OpportunitieCount = wfId.count;
                         //OpportunitieRemaining = wfId.remainingOfOpportunitie;
                     }
                 });
