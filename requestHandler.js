@@ -1186,6 +1186,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getEmployeesImages(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getEmployeesImages(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function updateApplication(req, res, id, data) {
         console.log("Requst updateEmployees is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1908,6 +1925,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
         getEmployeesAlphabet: getEmployeesAlphabet,
+		getEmployeesImages:getEmployeesImages,
 		
         Birthdays: Birthdays,
 
