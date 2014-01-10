@@ -398,11 +398,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 query.where('workflow').in(workflowsId);
 
             query.where('_id').in(arrayOfId).
-                populate('relatedUser department jobPosition manager coach').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                populate('groups.users').
-                populate('groups.group').
+				select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -423,11 +424,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
             query.where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
-                populate('relatedUser department jobPosition manager coach').
-			populate('createdBy.user').
-                populate('editedBy.user').
-                populate('groups.users').
-                populate('groups.group').
+				select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -452,12 +454,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 query.where('workflow').in(workflowsId);
 
             query.where({ 'groups.users': data.uId }).
-                populate('relatedUser department jobPosition manager coach').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                populate('groups.users').
-                populate('groups.group').
-
+				select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
                 exec(function (error, _res1) {
                     if (!error) {
                         models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
@@ -471,11 +473,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     }
                                     query.where('_id').in(arrayOfId).
                                         where('groups.group').in(deps).
-                                        populate('relatedUser department jobPosition manager coach').
-                                        populate('createdBy.user').
-                                        populate('editedBy.user').
-                                        populate('groups.users').
-                                        populate('groups.group').
+										select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+										populate('manager','name').
+										populate('jobPosition','name').
+										populate('createdBy.user','login').
+										populate('department','departmentName').
+										populate('editedBy.user','login').
                                         exec(function (error, _res) {
                                             if (!error) {
                                                 i++;
