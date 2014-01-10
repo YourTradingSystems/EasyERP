@@ -18,6 +18,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
+    Array.prototype.objectID = function() {
+        var _arrayOfID = [];
+        for (var i = 0; i < this.length; i++) {
+            if (typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
+                _arrayOfID.push(this[i]._id);
+            }
+        }
+        return _arrayOfID;
+    };
+
     function getModules(req, res) {
         console.log("Requst get Modules is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -28,7 +38,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     res.send(403);
                 }
             });
-
 
         } else {
             res.send(401);

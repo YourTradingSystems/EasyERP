@@ -96,7 +96,7 @@
             			onChange: imgSelect,
             			boxWidth:650,
             			boxHeight: 650,
-            			minSize:[100,100]
+            			minSize:[50,50]
             		});
                    
                 	function imgSelect(sellictions) {

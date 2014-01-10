@@ -200,7 +200,7 @@
         });
     };
 
-    recalculate = function () {
+    recalculate = function (req) {
         console.log('Recalculate Birthdays Start Success at ' + new Date());
         getEmployeesInDateRange(req, set);
     };
