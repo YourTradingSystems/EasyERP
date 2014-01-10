@@ -370,59 +370,60 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         } else {
             var item = data.dataItem;
             var myItem = {};
-            myItem["$project"] = { isOpportunitie: 1, convertedDate:1 };
+            myItem["$project"] = { isOpportunitie: 1, convertedDate: 1 };
             myItem["$project"]["dateBy"] = {};
             myItem["$project"]["dateBy"][data.dataItem] = "$convertedDate";
-			if (data.dataItem=="$dayOfYear"){
-				myItem["$project"]["year"] = {};
-				myItem["$project"]["year"]["$year"] = "$convertedDate";
-			}
+            if (data.dataItem == "$dayOfYear") {
+                myItem["$project"]["year"] = {};
+                myItem["$project"]["year"]["$year"] = "$convertedDate";
+            }
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
             var a = new Date(c);
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
 				{
-					$match: { 
-						$and: [{ 
-							createdBy: { $ne: null }, 
-							$or: [{ isConverted: true }, { isOpportunitie: false }] 
-						}, 
-							   { 'createdBy.date': { $gte: a } 
-							   }] 
-					}
-				}, 
-				myItem, 
-				{ 
-					$group: { 
-						_id: { dateBy: "$dateBy", isOpportunitie: "$isOpportunitie", year:"$year"}, 
-						count: { $sum: 1 },
-						date:{$push:"$convertedDate"}
-					}
-				}, 
-				{ 
-					$project: { 
-						"source": "$_id.dateBy", 
-						count : 1,
-						date : 1,
-						year : "$_id.year", 
-						"isOpp" : "$_id.isOpportunitie", 
-						_id: 0 
-					}
+				    $match: {
+				        $and: [{
+				            createdBy: { $ne: null },
+				            $or: [{ isConverted: true }, { isOpportunitie: false }]
+				        },
+							   {
+							       'createdBy.date': { $gte: a }
+							   }]
+				    }
+				},
+				myItem,
+				{
+				    $group: {
+				        _id: { dateBy: "$dateBy", isOpportunitie: "$isOpportunitie", year: "$year" },
+				        count: { $sum: 1 },
+				        date: { $push: "$convertedDate" }
+				    }
 				},
 				{
-					$sort:{year:1,source:1}
+				    $project: {
+				        "source": "$_id.dateBy",
+				        count: 1,
+				        date: 1,
+				        year: "$_id.year",
+				        "isOpp": "$_id.isOpportunitie",
+				        _id: 0
+				    }
+				},
+				{
+				    $sort: { year: 1, source: 1 }
 				}
 			).exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log('Opportunities.js chart' + err);
-                    response.send(500, { error: "Can't get chart" });
-                } else {
-                    res['data'] = result;
-                    console.log(result);
-                    response.send(res);
-                }
+			    if (err) {
+			        console.log(err);
+			        logWriter.log('Opportunities.js chart' + err);
+			        response.send(500, { error: "Can't get chart" });
+			    } else {
+			        res['data'] = result;
+			        console.log(result);
+			        response.send(res);
+			    }
 
-            });
+			});
         }
     }
 
@@ -490,163 +491,93 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     };
 
     function getLeadsCustom(req, data, response) {
-        console.log('Request get LeadCustom>>>>>>>>>>>>>>>>');
         var res = {};
         res['data'] = [];
-
-        var i = 0;
-        var qeryEveryOne = function (arrayOfId, n) {
-            if (data && data.isConverted == 'true') {
-                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ isConverted: true });
-            } else {
-                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ $or: [{ isConverted: false }, { isOpportunitie: false }] });
-            }
-
-            query.where('_id').in(arrayOfId);
-            if (data && data.status && data.status.length > 0)
-                query.where('workflow').in(data.status);
-            query.populate('customer salesPerson salesTeam workflow').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        res['data'] = res['data'].concat(_res);
-                        if (i == n) {
-                            getOpportunities(res['data'], data);
-                        }
-                    }
-                });
-        };
-
-        var qeryOwner = function (arrayOfId, n) {
-            if (data && data.isConverted == 'true') {
-                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ isConverted: true });
-            } else {
-                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ $or: [{ isConverted: false }, { isOpportunitie: false }] });
-            }
-            query.where('_id').in(arrayOfId).
-                where({ 'groups.owner': data.uId });
-            if (data && data.status && data.status.length > 0)
-                query.where('workflow').in(data.status);
-            query.populate('customer salesPerson salesTeam workflow').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        res['data'] = res['data'].concat(_res);
-                        if (i == n) {
-                            getOpportunities(res['data'], data);
-                        }
-                    } else {
-                        console.log(error);
-                    }
-                });
-        };
-
-        var qeryByGroup = function (arrayOfId, n) {
-            if (data && data.isConverted == 'true') {
-                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ isConverted: true });
-            } else {
-                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ $or: [{ isConverted: false }, { isOpportunitie: false }] });
-            }
-            query.where({ 'groups.users': data.uId });
-            if (data && data.status && data.status.length > 0)
-                query.where('workflow').in(data.status);
-            query.populate('customer salesPerson salesTeam workflow').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                exec(function (error, _res1) {
-                    if (!error) {
-                        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
-                            function (err, deps) {
-                                if (!err) {
-                                    if (data && data.isConverted == 'true') {
-                                        var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ isConverted: true });
-                                    } else {
-                                        var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({ $or: [{ isConverted: false }, { isOpportunitie: false }] });
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isOpportunitie: false
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
                                     }
-                                    query.where('_id').in(arrayOfId).
-                                        where('groups.group').in(deps);
-                                    if (data && data.status && data.status.length > 0)
-                                        query.where('workflow').in(data.status);
-                                    query.populate('customer salesPerson salesTeam workflow').populate('createdBy.user').
-                                        populate('editedBy.user').
-                                        exec(function (error, _res) {
-                                            if (!error) {
-                                                i++;
-                                                res['data'] = res['data'].concat(_res1);
-                                                res['data'] = res['data'].concat(_res);
-                                                if (i == n) {
-                                                    getOpportunities(res['data'], data);
-                                                }
-                                            } else {
-                                                console.log(error);
-                                            }
-                                        });
-                                }
-                            });
-                    } else {
-                        console.log(error);
-                    }
-                });
-
-            
-        };
-
-        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
-                {
-                    $group: {
-                        _id: "$whoCanRW",
-                        ID: { $push: "$_id" },
-                        groupId: { $push: "$groups.group" }
-                    }
-                },
-                function (err, result) {
-                    if (!err) {
-                        if (result.length != 0) {
-                            result.forEach(function (_project) {
-                                switch (_project._id) {
-                                    case "everyOne":
-                                        {
-                                            qeryEveryOne(_project.ID, result.length);
-                                        }
-                                        break;
-                                    case "owner":
-                                        {
-                                            qeryOwner(_project.ID, result.length);
-                                        }
-                                        break;
-                                    case "group":
-                                        {
-                                            qeryByGroup(_project.ID, result.length);
-                                        }
-                                        break;
-                                }
-                            });
-                        } else {
-                            response.send(res);
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.populate('customer', 'name').
+                                populate('workflow', 'name').
+                                populate('createdBy.user', 'login').
+                                populate('editedBy.user', 'login').
+                                skip((data.page - 1) * data.count).
+                                limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        res['listLength'] = _res.length;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
+                            } else {
+                                console.log(err);
+                            }
                         }
-                    } else {
-                        console.log(err);
-                    }
+                    );
+                } else {
+                    console.log(err);
                 }
-            );
-
-        var getOpportunities = function (opportunitiesArray, data) {
-
-            var opportunitiesArrayForSending = [];
-            for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
-                if (k < opportunitiesArray.length) {
-                    opportunitiesArrayForSending.push(opportunitiesArray[k]);
-                }
-
-            }
-            res['listLength'] = opportunitiesArray.length;
-            res['data'] = opportunitiesArrayForSending;
-            response.send(res);
-        }
+            });
     };
 
     function update(req, _id, data, res) {

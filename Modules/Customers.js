@@ -81,14 +81,12 @@
                         switch (data.type) {
                             case "Person":
                                 {
-                                    query = (!data.email)
-                                        ? { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Person' }] }
-                                        : { email: data.email };
+                                    query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Person' }] };
                                 }
                                 break;
                             case "Company":
                                 {
-                                    query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Company' }] }
+                                    query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Company' }] };
                                 }
                                 break;
                         }

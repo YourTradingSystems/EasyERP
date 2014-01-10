@@ -659,7 +659,6 @@ var Project = function (logWriter, mongoose, department, models) {
             delete data._id;
             delete data.createdBy;
             delete data.task;
-            console.log(data);
             models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
@@ -876,6 +875,13 @@ var Project = function (logWriter, mongoose, department, models) {
                             if (data.workflow && typeof (data.workflow) == 'object') {
                                 data.workflow = data.workflow._id;
                             }
+							if (data.workflowForList){
+								data={
+									$set:{
+										workflow:data.workflow
+									}
+								}
+							}
                             models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).update({ _id: _id }, data, function (err, taskk) {
                                 if (err) {
                                     console.log(err);
@@ -1204,7 +1210,7 @@ var Project = function (logWriter, mongoose, department, models) {
                         res['data'] = res['data'].concat(_res);
                         console.log(res['data']);
                         if (i == n) {
-                            qeryGetTasks(res['data'],data.parrentContentId);
+                            qeryGetTasksList(res['data'],data.parrentContentId);
                         }
                     }
                 });
@@ -1222,7 +1228,7 @@ var Project = function (logWriter, mongoose, department, models) {
                         res['data'] = res['data'].concat(_res);
                         console.log(res['data']);
                         if (i == n) {
-                            qeryGetTasks(res['data'],data.parrentContentId);
+                            qeryGetTasksList(res['data'],data.parrentContentId);
                         }
                     } else {
                         console.log(error);
@@ -1251,7 +1257,7 @@ var Project = function (logWriter, mongoose, department, models) {
                                                 res['data'] = res['data'].concat(_res);
                                                 console.log(res['data']);
                                                 if (i == n) {
-                                                    qeryGetTasks(res['data'],data.parrentContentId);
+                                                    qeryGetTasksList(res['data'],data.parrentContentId);
                                                 }
                                             } else {
                                                 console.log(error);
@@ -1304,7 +1310,7 @@ var Project = function (logWriter, mongoose, department, models) {
             }
         );
 
-        var qeryGetTasks = function (projects, projectId) {
+        var qeryGetTasksList = function (projects, projectId) {
             var accessCheck = false;
 
             if (projects.length != 0) {
@@ -1334,13 +1340,12 @@ var Project = function (logWriter, mongoose, department, models) {
                 });
                 query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find().where('project').in(projects);
             }
+			query.select("summary _id project assignedTo editedBy createdBy workflow estimated logged type progress");
 
-            query.populate('project', '_id projectShortDesc projectName').
-                populate('assignedTo', '_id name imageSrc').
-                populate('extrainfo.customer createdBy.user editedBy.user').
-                populate('workflow').
-                populate('createdBy.user').
-                populate('editedBy.user').
+            query.populate('project', 'projectShortDesc projectName').
+                populate('assignedTo', 'name').
+                populate('editedBy.user','login').
+                populate('createdBy.user','login').
                 skip((data.page - 1) * data.count).limit(data.count).
                 sort({ 'name.first': 1 }).
                 exec(function (err, returnTasks) {

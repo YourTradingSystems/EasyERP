@@ -79,7 +79,6 @@ define([
 
             render: function () {
 				var self=this;
-                console.log('Projects render');
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
                 this.$el.append(new ListItemView({ collection: this.collection}).render());

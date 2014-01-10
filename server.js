@@ -973,6 +973,10 @@ app.get('/Employees/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
             break;
+        case "list": requestHandler.getEmployeesForList(req, res, data);
+            break;
+        case "thumbnails": requestHandler.getEmployeesForThumbnails(req, res, data);
+            break;
         default: requestHandler.getEmployeesCustom(req, res, data);
             break;
     }
@@ -1028,6 +1032,12 @@ app.get('/getEmployeesAlphabet', function (req, res) {
     //data.ownUser = true;
     data.mid = req.param('mid');
     requestHandler.getEmployeesAlphabet(req, res, data);
+});
+
+app.get('/getEmployeesImages', function (req, res) {
+    data = {};
+    data.ids = req.param('ids');
+    requestHandler.getEmployeesImages(req, res, data);
 });
 
 //------------------Applications---------------------------------------------------

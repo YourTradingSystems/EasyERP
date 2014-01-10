@@ -88,15 +88,15 @@
         			console.log(canvasContent.toDataURL());
         			
                     $('.image_input img').Jcrop({
-            			bgColor: 'black',
+            			bgColor: 'white',
             			bgOpacity: .6,
             			setSelect: [0, 0, 100, 100],
-            			aspectRatio: 1,
+            			aspectRatio: 0,
             			onSelect: imgSelect,
             			onChange: imgSelect,
             			boxWidth:650,
             			boxHeight: 650,
-            			minSize:[100,100]
+            			minSize:[50,50]
             		});
                    
                 	function imgSelect(sellictions) {
@@ -796,6 +796,15 @@
             return associateArray;
         }
 
+        var getEmployeesImages = function (ids, callback) {
+            dataService.getData("/getEmployeesImages", {ids:ids }, function (response) {
+				response.data.forEach(function(item){
+					$("#"+item._id+" .inner .avatar img").attr("src",item.imageSrc);
+				});
+                if (callback) callback();
+            });
+        };
+		
         return {
             deleteFromLocalStorage: deleteFromLocalStorage,
             populateProfilesDd: populateProfilesDd,
@@ -830,6 +839,7 @@
             populateUsersForGroups: populateUsersForGroups,
 			populateParentDepartments:populateParentDepartments,
 			populateDepartmentsList:populateDepartmentsList,
-			getLeadsForChart:getLeadsForChart
+			getLeadsForChart:getLeadsForChart,
+			getEmployeesImages:getEmployeesImages
         }
     });

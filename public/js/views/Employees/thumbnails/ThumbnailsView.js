@@ -65,6 +65,11 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
 				self.alphabeticArray = arr;
 				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 			});
+			var ids = _.map(this.collection.toJSON(),function(item){
+				return item._id;
+			});
+			common.getEmployeesImages(ids);
+
 
             return this;
         },
@@ -118,13 +123,14 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
             var thumbnailsItemView;
             var counter =0;
             var namberOfemployees = this.collection.namberToShow;
-
+			var addedNow = [];
             if (arrayOfEmployees.length > 0) {
                 for (var i=0; i<namberOfemployees.length; i++) {
                     if (counter < namberOfemployees ) {
                         counter++;
                         dataIndexCounter++;
                         thumbnailsItemView = new EmployeesThumbnailsItemView({ model: arrayOfEmployees[i], dataIndex: dataIndexCounter });
+						addedNow.push(arrayOfEmployees[i]);
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                         holder.after(thumbnailsItemView.render().el);
                         arrayOfEmployees.splice(i,1);
@@ -138,12 +144,17 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
                     counter++;
                     dataIndexCounter++;
                     thumbnailsItemView = new EmployeesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
+					addedNow.push(model);
                     thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                     holder.after(thumbnailsItemView.render().el);
                 } else {
                     arrayOfEmployees.push(model);
                 }
             }, this);
+			var ids = _.map(addedNow,function(item){
+				return item.get("_id");
+			});
+			common.getEmployeesImages(ids);
 
             if (arrayOfEmployees.length == 0) {
                 this.$el.find('#showMoreDiv').hide();

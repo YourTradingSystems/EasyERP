@@ -323,7 +323,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             } else {
                                 res.send(201, { success: 'A new Employees create success', result: result });
                                 console.log(result);
-                                event.emit('recalculate');
+                                event.emit('recalculate', req);
                             }
                         } catch (error) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + error);
@@ -383,7 +383,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     };
 
     // Custom function for list
-    function getEmployeeForList(req, data, response) {
+/*    function getEmployeeForList(req, data, response) {
         var res = {}
         res['data'] = [];
         var i = 0;
@@ -398,11 +398,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 query.where('workflow').in(workflowsId);
 
             query.where('_id').in(arrayOfId).
-                populate('relatedUser department jobPosition manager coach').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                populate('groups.users').
-                populate('groups.group').
+				select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -423,11 +424,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
             query.where('_id').in(arrayOfId).
                 where({ 'groups.owner': data.uId }).
-                populate('relatedUser department jobPosition manager coach').
-			populate('createdBy.user').
-                populate('editedBy.user').
-                populate('groups.users').
-                populate('groups.group').
+				select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -452,12 +454,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 query.where('workflow').in(workflowsId);
 
             query.where({ 'groups.users': data.uId }).
-                populate('relatedUser department jobPosition manager coach').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                populate('groups.users').
-                populate('groups.group').
-
+				select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
                 exec(function (error, _res1) {
                     if (!error) {
                         models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
@@ -471,11 +473,407 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     }
                                     query.where('_id').in(arrayOfId).
                                         where('groups.group').in(deps).
-                                        populate('relatedUser department jobPosition manager coach').
-                                        populate('createdBy.user').
-                                        populate('editedBy.user').
-                                        populate('groups.users').
-                                        populate('groups.group').
+										select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+										populate('manager','name').
+										populate('jobPosition','name').
+										populate('createdBy.user','login').
+										populate('department','departmentName').
+										populate('editedBy.user','login').
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                i++;
+                                                console.log(i);
+                                                console.log(n);
+                                                res['data'] = res['data'].concat(_res1);
+                                                res['data'] = res['data'].concat(_res);
+                                                console.log(res['data']);
+                                                if (i == n) getEmployees(res['data'], 0);;
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                }
+                            });
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+        var workflowsId = data ? data.status : null;
+        models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
+            {
+                $group: {
+                    _id: "$whoCanRW",
+                    ID: { $push: "$_id" },
+                    groupId: { $push: "$groups.group" }
+                }
+            },
+            function (err, result) {
+                if (!err) {
+                    if (result.length != 0) {
+                        result.forEach(function (_project) {
+                            switch (_project._id) {
+                                case "everyOne":
+                                    {
+                                        qeryEveryOne(_project.ID, result.length, workflowsId);
+                                    }
+                                    break;
+                                case "owner":
+                                    {
+                                        qeryOwner(_project.ID, result.length, workflowsId);
+                                    }
+                                    break;
+                                case "group":
+                                    {
+                                        qeryByGroup(_project.ID, result.length, workflowsId);
+                                    }
+                                    break;
+                            }
+                        });
+                    } else {
+                        response.send(res);
+                    }
+                } else {
+                    console.log(err);
+                }
+            }
+        );
+
+        var getEmployees = function (employees, count) {
+            var employeesSendArray = [];
+            var startIndex, endIndex;
+
+            if ((data.page - 1) * data.count > employees.length) {
+                startIndex = employees.length;
+            } else {
+                startIndex = (data.page - 1) * data.count;
+            }
+
+            if (data.page * data.count > employees.length) {
+                endIndex = employees.length;
+            } else {
+                endIndex = data.page * data.count;
+            }
+
+            for (var k = startIndex; k < endIndex; k++) {
+                employeesSendArray.push(employees[k]);
+            }
+            res['listLength'] = employees.length;
+            res['data'] = employeesSendArray;
+            response.send(res);
+        }
+    };*/
+    function getEmployeeForList(req, data, response) {
+		var res = {};
+        res['data'] = [];
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isEmployee: true
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+								if (data.letter) {
+									var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') }).where('_id').in(result);
+								} else {
+									var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find().where('_id').in(result);
+								}
+
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+								query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+										populate('manager','name').
+										populate('jobPosition','name').
+										populate('createdBy.user','login').
+										populate('department','departmentName').
+										populate('editedBy.user','login').
+                                    exec(function (error, _res) {
+                                        if (!error) {
+                                            res['data'] = _res;
+                                            getEmployees(res['data'], data);
+
+                                        } else {
+                                            console.log(error);
+                                        }
+                                    });
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+                } else {
+
+                }
+            });
+
+
+        var getEmployees = function (employeesArray, data) {
+
+            var employeesArrayForSending = [];
+            for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
+                if (k < employeesArray.length) {
+                    employeesArrayForSending.push(employeesArray[k]);
+                }
+
+            }
+            res['listLength'] = employeesArray.length;
+            res['data'] = employeesArrayForSending;
+            response.send(res);
+        }
+	};
+
+
+    function getEmployeesForThumbnails(req, data, response) {
+		var res = {};
+        res['data'] = [];
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isEmployee: true
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+								if (data.letter) {
+									var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') }).where('_id').in(result);
+								} else {
+									var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find().where('_id').in(result);
+								}
+
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.select('_id name dateBirth age jobPosition relatedUser workPhones.mobile').
+									populate('relatedUser','login').
+									populate('jobPosition','name').
+                                    exec(function (error, _res) {
+                                        if (!error) {
+                                            res['data'] = _res;
+                                            getEmployees(res['data'], data);
+
+                                        } else {
+                                            console.log(error);
+                                        }
+                                    });
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+                } else {
+
+                }
+            });
+
+
+        var getEmployees = function (employeesArray, data) {
+
+            var employeesArrayForSending = [];
+            for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
+                if (k < employeesArray.length) {
+                    employeesArrayForSending.push(employeesArray[k]);
+                }
+
+            }
+            res['listLength'] = employeesArray.length;
+            res['data'] = employeesArrayForSending;
+            response.send(res);
+        }
+	};
+
+    function getEmployeeForCustom(req, data, response) {
+        var res = {}
+        res['data'] = [];
+        var i = 0;
+        var qeryEveryOne = function (arrayOfId, n, workflowsId) {
+            if (data.letter) {
+                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
+            }
+
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+
+            query.where('_id').in(arrayOfId).
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        res['data'] = res['data'].concat(_res);
+                        if (i == n) getEmployees(res['data'], 0);;
+                    }
+                });
+        };
+
+        var qeryOwner = function (arrayOfId, n, workflowsId) {
+            if (data.letter) {
+                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
+            }
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+
+            query.where('_id').in(arrayOfId).
+                where({ 'groups.owner': data.uId }).
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
+                exec(function (error, _res) {
+                    if (!error) {
+                        i++;
+                        console.log(i);
+                        console.log(n);
+                        res['data'] = res['data'].concat(_res);
+                        console.log(res['data']);
+                        if (i == n) getEmployees(res['data'], 0);;
+                    } else {
+                        console.log(error);
+                    }
+                });
+        };
+
+        var qeryByGroup = function (arrayOfId, n) {
+            if (data.letter) {
+                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+            } else {
+                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
+            }
+            if (workflowsId && workflowsId.length > 0)
+                query.where('workflow').in(workflowsId);
+
+            query.where({ 'groups.users': data.uId }).
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
+                exec(function (error, _res1) {
+                    if (!error) {
+                        models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
+                            function (err, deps) {
+                                console.log(deps);
+                                if (!err) {
+                                    if (data.letter) {
+                                        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+                                    } else {
+                                        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
+                                    }
+                                    query.where('_id').in(arrayOfId).
+                                        where('groups.group').in(deps).
+										select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+										populate('manager','name').
+										populate('jobPosition','name').
+										populate('createdBy.user','login').
+										populate('department','departmentName').
+										populate('editedBy.user','login').
                                         exec(function (error, _res) {
                                             if (!error) {
                                                 i++;
@@ -639,10 +1037,13 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 query.where('workflow').in(workflowsId);
 
             query.where('_id').in(arrayOfId).
-                populate('relatedUser department jobPosition manager coach').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                populate("workflow").
+				select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow').
+                populate('manager','name').
+                populate('jobPosition','name').
+                populate('createdBy.user','login').
+                populate('department','departmentName').
+                populate('editedBy.user','login').
+                populate('workflow','wId').
                 exec(function (error, _res) {
                     if (!error) {
                         i++;
@@ -867,7 +1268,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     } else {
                         res.send(200, { success: 'Employees updated success', data: result });
                         if (data.recalculate) {
-                            event.emit('recalculate');
+                            event.emit('recalculate', req);
                         }
                     }
                 }
@@ -891,7 +1292,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 res.send(500, { error: "Can't remove Employees" });
             } else {
                 res.send(200, { success: 'Employees removed' });
-                event.emit('recalculate');
+                event.emit('recalculate', req);
             }
         });
     };// end remove
@@ -1149,7 +1550,15 @@ var Employee = function (logWriter, mongoose, event, department, models) {
              });*/
 
     };
+	function getEmployeesImages(req, data, res){
+        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
+        query.where('_id').in(data.ids).
+			select('_id imageSrc').
+            exec(function (error, response) {
+				res.send(200,{data:response});
+			});
 
+	};
     return {
         create: create,
 
@@ -1170,6 +1579,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         getApplications: getApplications,
 
         getApplicationsForList: getApplicationsForList,
+
+		getEmployeesForThumbnails:getEmployeesForThumbnails,
+
+		getEmployeeForCustom: getEmployeeForCustom,
+
+		getEmployeesImages: getEmployeesImages,
 
         getFilterApplications: getFilterApplications,
 
