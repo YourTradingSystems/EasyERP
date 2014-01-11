@@ -3,7 +3,7 @@
         <div>
             <select id="dbs">
                 <% options.forEach(function(db, index){%>
-                <option data-id="<%=index + 1%>"><%=db.DBname%> (<%=db.url%>)</option>
+                <option data-id="<%=index + 1%>" <%if(db.DBname == 'EasyERP') {%>selected="selected"<%}%>><%=db.DBname%> (<%=db.url%>)</option>
                 <%})%>
             </select>
         </div>

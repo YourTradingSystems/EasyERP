@@ -64,18 +64,13 @@ var Events = function (logWriter, mongoose, googleModule, models) {
 
     function create(req, data, res) {
         console.log("create");
-        try {
-            if (!data) {
-                logWriter.log('Events.create Incorrect Incoming Data');
-                res.send(400, { error: 'Events.create Incorrect Incoming Data' });
-                return;
-            } else {
-                saveEventToDb(data, res, req);
-            }
-        } catch (exception) {
-            console.log(exception);
-            logWriter.log("Events.js  " + exception);
-            res.send(500, { error: 'Events.save  error' });
+        if (!data) {
+            logWriter.log('Events.create Incorrect Incoming Data');
+            res.send(400, { error: 'Events.create Incorrect Incoming Data' });
+            return;
+        } else {
+            console.log(req);
+            //saveEventToDb(req, data, res);
         }
     };//End create
 
@@ -154,8 +149,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
         }
     };//End createCalendar
 
-    function saveEventToDb(data, res, req) {
-        var self = this;
+    function saveEventToDb(req, data, res) {
         try {
             _event = new models.get(req.session.lastDb - 1, "Events", eventsSchema)();
             if (data.calendarId) {
@@ -281,7 +275,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                             }
                         });
 
-                         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(data.calendarId, { $push: { events: result._id } }, function (err, success) {
+                        models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(data.calendarId, { $push: { events: result._id } }, function (err, success) {
 
                             if (success) {
 
@@ -300,13 +294,13 @@ var Events = function (logWriter, mongoose, googleModule, models) {
         } catch (error) {
             console.log(error);
             logWriter.log("Events.js create savetoBd " + error);
-            res.send(500, { error: 'Events.save  error' });
+            //res.send(500, { error: 'Events.save  error' });
         }
     };//End Saving Event To Db
 
     function saveCalendarToDb(data, res) {
         try {
-            _calendar = new  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema)();
+            _calendar = new models.get(req.session.lastDb - 1, "Calendars", calendarsSchema)();
             if (data.id) {
                 _calendar.id = data.id;
             }
@@ -381,7 +375,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
         var res = {}
         var description = "";
         res['data'] = [];
-        var query =  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).find();
+        var query = models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).find();
         query.sort({ summary: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -398,12 +392,12 @@ var Events = function (logWriter, mongoose, googleModule, models) {
     function updateCalendar(req, _id, data, res) {
         try {
             delete data._id;
-             models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(_id, function (err, result) {
+            models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(_id, function (err, result) {
                 if (err) {
 
                 }
                 else if (result) {
-                     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).update({ id: _id }, data, function (err, result) {
+                    models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).update({ id: _id }, data, function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -432,7 +426,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
     };// end updateCalendar
 
     function removeCalendar(req, _id, res) {
-         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).remove({ _id: _id }, function (err, result) {
+        models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Events.js remove event.removeCalendar " + err);
@@ -471,7 +465,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
             });
         } else {
             idArr.forEach(function (id) {
-                var query =  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(id);
+                var query = models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(id);
                 query.populate('events');
                 query.exec(function (err, result) {
                     if (result) {
@@ -525,7 +519,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                                 logWriter.log("Events.js update events.update " + err);
                                 res.send(500, { error: "Can't update Events" });
                             } else {
-                                 models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(result0[0].calendarId, function (err, response) {
+                                models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findById(result0[0].calendarId, function (err, response) {
                                     if (response) {
                                         if (response.isSync)
                                             if (response.id) {
@@ -540,7 +534,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                                             else {
                                                 googleModule.createNewGoogleCalendar(req, response,
                                                                                      function (id) {
-                                                                                          models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(result.calendarId, { id: id }, function (err, success) {
+                                                                                         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(result.calendarId, { id: id }, function (err, success) {
                                                                                              if (success) {
                                                                                                  req.body.calendarsId = [response._id]
                                                                                                  sendToGoogleCalendar(req, res);
@@ -607,7 +601,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
             var countCal = 0;
             data.forEach(function (cal) {
                 countCal++;
-                var query =  models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
+                var query = models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOneAndUpdate({ id: cal.id }, cal, { upsert: true });
                 query.exec(function (err, googleCalendar) {
                     if (googleCalendar) {
                         var curentCalendarId = googleCalendar._id;
@@ -624,7 +618,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                             var eventQuery = models.get(req.session.lastDb - 1, "Events", eventsSchema).findOneAndUpdate({ id: ev.id }, ev, { upsert: true });
                             eventQuery.exec(function (err, googleEvent) {
                                 if (googleEvent) {
-                                     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOneAndUpdate({ id: cal.id }, { $addToSet: { events: googleEvent._id } }, function (error, upRes) {
+                                    models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOneAndUpdate({ id: cal.id }, { $addToSet: { events: googleEvent._id } }, function (error, upRes) {
                                         if (error) {
                                             console.log(error);
                                             logWriter.log("Events.js googleCalSync calendar.update " + error);
@@ -696,7 +690,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                     logWriter.log("send to google " + err);
 
                 } else {
-                     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOne({ _id: id }).exec(function (err, result) {
+                    models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findOne({ _id: id }).exec(function (err, result) {
                         calendars.push({ "id": result.id, "items": events });
                         if (calendars.length == calendarsId.length) {
                             googleModule.sendEventsToGoogle(req, res, calendars, checkEventAsGoogle);
@@ -709,7 +703,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
         })
     }
     function changeSyncCalendar(req, calId, isSync, res) {
-         models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(calId, { isSync: isSync }, function (err, success) {
+        models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(calId, { isSync: isSync }, function (err, success) {
             if (err) {
                 res.send(500, { error: "Can't update Calendar" + err });
             }
@@ -718,7 +712,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                 if (isSync) {
                     googleModule.createNewGoogleCalendar(req, success,
 														 function (id) {
-														      models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(calId, { id: id }, function (err, success) {
+														     models.get(req.session.lastDb - 1, "Calendars", calendarsSchema).findByIdAndUpdate(calId, { id: id }, function (err, success) {
 														         if (success) {
 														             req.body.calendarsId = [success._id]
 														             sendToGoogleCalendar(req, res);
