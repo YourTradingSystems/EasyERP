@@ -351,11 +351,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         res['data'] = [];
         var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find();
         query.where('isEmployee', true);
-        query.populate('relatedUser department jobPosition manager coach').
-            populate('createdBy.user').
-            populate('editedBy.user');
-
-        query.sort({ 'name.first': 1 });
+        query.select('_id name').
+        sort({ 'name.first': 1 });
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);

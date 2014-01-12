@@ -78,70 +78,70 @@
                 var file = inputFile[0].files[0];
                 var fr = new FileReader();
                 fr.onload = function () {
-                    var src = "data:image/jpeg;base64," + btoa(fr.result);     	
+                    var src = "data:image/jpeg;base64," + btoa(fr.result);
                     $('.image_input').html(['<img src="', src, '"/>'].join(''));
                     var imgc = $('.image_input img')[0];
-            		var canvasContent = document.createElement('canvas');
-            		canvasContent.width = canvasContent.height = 650;
-        			var ctx = canvasContent.getContext('2d');
-        			ctx.drawImage(imgc, 0, 0, canvasContent.width, canvasContent.height);
-        			console.log(canvasContent.toDataURL());
-        			
+                    var canvasContent = document.createElement('canvas');
+                    canvasContent.width = canvasContent.height = 650;
+                    var ctx = canvasContent.getContext('2d');
+                    ctx.drawImage(imgc, 0, 0, canvasContent.width, canvasContent.height);
+                    console.log(canvasContent.toDataURL());
+
                     $('.image_input img').Jcrop({
-            			bgColor: 'white',
-            			bgOpacity: .6,
-            			setSelect: [0, 0, 100, 100],
-            			aspectRatio: 0,
-            			onSelect: imgSelect,
-            			onChange: imgSelect,
-            			boxWidth:650,
-            			boxHeight: 650,
-            			minSize:[50,50]
-            		});
-                   
-                	function imgSelect(sellictions) {
-                		 if(parseInt(sellictions.w) > 0){
-		                        var img = $('.image_input img')[0];
-		                		var canvasCrop = document.createElement('canvas');
-		                		canvasCrop.width = canvasCrop.height = 140;
-		            			var ctx = canvasCrop.getContext('2d');
-		            			ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
-		            			$('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
-                		 }
-            		}
-                	
-                	 $(".cropImages").dialog({
-                         dialogClass: "crop-images-dialog",
-                         width: "900px",
-                         buttons:{
-                             save:{
-                                 text:"Crop",
-                                 class:"btn",
+                        bgColor: 'white',
+                        bgOpacity: .6,
+                        setSelect: [0, 0, 100, 100],
+                        aspectRatio: 0,
+                        onSelect: imgSelect,
+                        onChange: imgSelect,
+                        boxWidth: 650,
+                        boxHeight: 650,
+                        minSize: [50, 50]
+                    });
 
-                                 click: function () {
-                                     if (model) {
-                                    	imageSrcCrop = $('.image_output').attr('src');
-                                     	model.imageSrc = imageSrcCrop;
-                                     } else {
-                                         model = {
-                                             imageSrc:  imageSrcCrop
-                                         }
-                                     }
+                    function imgSelect(sellictions) {
+                        if (parseInt(sellictions.w) > 0) {
+                            var img = $('.image_input img')[0];
+                            var canvasCrop = document.createElement('canvas');
+                            canvasCrop.width = canvasCrop.height = 140;
+                            var ctx = canvasCrop.getContext('2d');
+                            ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
+                            $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
+                        }
+                    }
+
+                    $(".cropImages").dialog({
+                        dialogClass: "crop-images-dialog",
+                        width: "900px",
+                        buttons: {
+                            save: {
+                                text: "Crop",
+                                class: "btn",
+
+                                click: function () {
+                                    if (model) {
+                                        imageSrcCrop = $('.image_output').attr('src');
+                                        model.imageSrc = imageSrcCrop;
+                                    } else {
+                                        model = {
+                                            imageSrc: imageSrcCrop
+                                        }
+                                    }
                                     canvasDrawing({ model: model, canvas: canvas }, context);
-     								$( this ).dialog( "close" );
-                                 }
+                                    $(this).dialog("close");
+                                }
 
-                             },
-                             cancel:{
-                                 text:"Cancel",
-                                 class:"btn",
-                                 click: function(){
-     								$( this ).dialog( "close" );
-                                 }
-                             }
-                         }
+                            },
+                            cancel: {
+                                text: "Cancel",
+                                class: "btn",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        }
 
-     				});
+                    });
                 };
                 fr.readAsBinaryString(file);
             });
@@ -348,13 +348,13 @@
                 if (callback) callback();
             });
         };
-        
+
         var populateRelatedStatuses = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
-            	var options = [];
+                var options = [];
                 if (model && model.status) {
                     options = $.map(response.data, function (item) {
                         return model.status._id === item._id ?
@@ -371,13 +371,13 @@
             });
         };
 
-        var populateDepartments = function (selectId, url, model, callback,removeSelect) {
+        var populateDepartments = function (selectId, url, model, callback, removeSelect) {
             var selectList = $(selectId);
             var self = this;
-			if (!removeSelect)
-            selectList.append($("<option/>").val('').text('Select...'));
-			var id=(model)?(model._id):null;
-            dataService.getData(url, { mid: 39 ,id:id}, function (response) {
+            if (!removeSelect)
+                selectList.append($("<option/>").val('').text('Select...'));
+            var id = (model) ? (model._id) : null;
+            dataService.getData(url, { mid: 39, id: id }, function (response) {
                 var options = [];
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
@@ -394,65 +394,65 @@
                 if (callback) callback();
             });
         };
-        var getLeadsForChart = function(source, dataRange, dataItem,callback){
-            dataService.getData("/LeadsForChart", {source:source,dataRange:dataRange,dataItem:dataItem }, function (response) {
-				callback(response.data);
-			});
-		}
-        var populateDepartmentsList = function (selectId,targetId, url, model, page,callback) {
+        var getLeadsForChart = function (source, dataRange, dataItem, callback) {
+            dataService.getData("/LeadsForChart", { source: source, dataRange: dataRange, dataItem: dataItem }, function (response) {
+                callback(response.data);
+            });
+        }
+        var populateDepartmentsList = function (selectId, targetId, url, model, page, callback) {
             var selectList = $(selectId);
             var targetList = $(targetId);
             var self = this;
-			selectList.next(".userPagination").remove();
+            selectList.next(".userPagination").remove();
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && model.groups && model.groups.group) {
-					var ids=$.map(model.groups.group,function(item){
-						return item._id
-					});
-					options = $.map(
-						_.filter(response.data, function(filteredItem) {
-							return (ids.indexOf(filteredItem._id)==-1);
+                    var ids = $.map(model.groups.group, function (item) {
+                        return item._id
+                    });
+                    options = $.map(
+						_.filter(response.data, function (filteredItem) {
+						    return (ids.indexOf(filteredItem._id) == -1);
 						}),
 						function (item) {
-							return $('<li/>').attr('id', item._id).text(item.departmentName);
+						    return $('<li/>').attr('id', item._id).text(item.departmentName);
 						}
 					);
-					
-				} else {
-					if (targetList.length){
-						var ids=[];
-						targetList.find('li').each(function(item){
-							ids.push($(this).attr("id"));
-						})
-						var tt=_.filter(response.data, function(filteredItem) {
-							return (ids.indexOf(filteredItem._id)==-1);
-						});
-						
-                    options = $.map(tt, function (item) {
-                        return $('<li/>').attr("id",item._id).text(item.departmentName);
-                    });
-					}
-					else{
-						options = $.map(response.data, function (item) {
-							return $('<li/>').attr("id",item._id).text(item.departmentName);
-						});
-					}
+
+                } else {
+                    if (targetList.length) {
+                        var ids = [];
+                        targetList.find('li').each(function (item) {
+                            ids.push($(this).attr("id"));
+                        })
+                        var tt = _.filter(response.data, function (filteredItem) {
+                            return (ids.indexOf(filteredItem._id) == -1);
+                        });
+
+                        options = $.map(tt, function (item) {
+                            return $('<li/>').attr("id", item._id).text(item.departmentName);
+                        });
+                    }
+                    else {
+                        options = $.map(response.data, function (item) {
+                            return $('<li/>').attr("id", item._id).text(item.departmentName);
+                        });
+                    }
                 }
                 selectList.append(options);
-				if (response.data.length>=20){
-					if (page==1){
-						selectList.after("<div class='userPagination'><span class='text'>"+((20*(page-1))+1)+"-"+(20*page)+" of "+(20*page)+"+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
-					}else{
-						selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*page)+" of "+(20*page)+"+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
-					}
-				}else{
-					if (page==1){
-						selectList.after("<div class='userPagination'><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
-					}else{
-						selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
-					}
-				}
+                if (response.data.length >= 20) {
+                    if (page == 1) {
+                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
+                    } else {
+                        selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
+                    }
+                } else {
+                    if (page == 1) {
+                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
+                    } else {
+                        selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
+                    }
+                }
 
                 if (callback) callback();
             });
@@ -472,8 +472,9 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-						if (!item.parentDepartment){
-                        return $('<option/>').val(item._id).text(item.departmentName);}
+                        if (!item.parentDepartment) {
+                            return $('<option/>').val(item._id).text(item.departmentName);
+                        }
                     });
                 }
                 selectList.append(options);
@@ -494,19 +495,19 @@
                     });
                 } else {
                     options = $.map(response.data, function (item) {
-                        return(item.priority == "P3") ? 
+                        return (item.priority == "P3") ?
                         		$('<option/>').val(item.priority).text(item.priority).attr('selected', 'selected') :
                         		$('<option/>').val(item.priority).text(item.priority);
                     });
                 }
-				var selectList = $(selectId);
+                var selectList = $(selectId);
                 selectList.append(options);
 
                 if (callback) callback();
             });
         };
 
-        var populateCustomers = function (selectId, url, model,callback) {
+        var populateCustomers = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -514,7 +515,7 @@
                 var options = [];
                 if (model) {
                     options = $.map(response.data, function (item) {
-                        return ((model.customer && (model.customer._id === item._id)) || (model._id === item._id) ) ?
+                        return ((model.customer && (model.customer._id === item._id)) || (model._id === item._id)) ?
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last).attr('selected', 'selected') :
                             $('<option/>').val(item._id).text(item.name.first + ' ' + item.name.last);
                     });
@@ -528,7 +529,7 @@
             });
         };
 
-        var populateDegrees = function (selectId, url, model,callback) {
+        var populateDegrees = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
@@ -611,8 +612,8 @@
                     }
                 } else {
                     options = $.map(response.data, function (item) {
-                        return "<li><input type='checkbox' value='"+item._id+"'"+"/><span>"+item.name+"</span></li>"
-							   
+                        return "<li><input type='checkbox' value='" + item._id + "'" + "/><span>" + item.name + "</span></li>"
+
                     });
                 }
                 var wNames = $.map(response.data, function (item) {
@@ -628,30 +629,30 @@
             });
         }
 
-        var populateUsers = function (selectId, url, model, callback,removeSelect) {
+        var populateUsers = function (selectId, url, model, callback, removeSelect) {
             var selectList = $(selectId);
             var self = this;
-			if (!removeSelect)
-            selectList.append($("<option/>").val('').text('Select...'));
+            if (!removeSelect)
+                selectList.append($("<option/>").val('').text('Select...'));
             dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model) {
-					if (model.relatedUser){
-						options = $.map(response.data, function (item) {
-							return model.relatedUser._id === item._id ?
+                    if (model.relatedUser) {
+                        options = $.map(response.data, function (item) {
+                            return model.relatedUser._id === item._id ?
 								$('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
 								$('<option/>').val(item._id).text(item.login);
-						});
-					}else{
-						if (model.groups&&model.groups.owner){
-							options = $.map(response.data, function (item) {
-								return model.groups.owner === item._id ?
+                        });
+                    } else {
+                        if (model.groups && model.groups.owner) {
+                            options = $.map(response.data, function (item) {
+                                return model.groups.owner === item._id ?
 									$('<option/>').val(item._id).text(item.login).attr('selected', 'selected') :
 									$('<option/>').val(item._id).text(item.login);
-							});
+                            });
 
-						}
-					}
+                        }
+                    }
                 } else {
                     options = $.map(response.data, function (item) {
                         return $('<option/>').val(item._id).text(item.login);
@@ -663,75 +664,75 @@
         }
         var populateUsersForGroups = function (selectId, targetId, model, page, callback) {
             var selectList = $(selectId);
-			var targetList = $(targetId);
-			selectList.empty();
-			selectList.next(".userPagination").remove();
+            var targetList = $(targetId);
+            selectList.empty();
+            selectList.next(".userPagination").remove();
             var self = this;
-            dataService.getData('/Users', { mid: 39, page:page, count:20 }, function (response) {
+            dataService.getData('/Users', { mid: 39, page: page, count: 20 }, function (response) {
                 var options = [];
                 if (model) {
-					var users=[];
-					if (model.users){
-						users=model.users;
-					}
-					if (model.groups&&model.groups.users){
-						users=model.groups.users;
-					}
+                    var users = [];
+                    if (model.users) {
+                        users = model.users;
+                    }
+                    if (model.groups && model.groups.users) {
+                        users = model.groups.users;
+                    }
 
-					var ids=$.map(users,function(item){
-						return item._id
-					});
-					options = $.map(
-						_.filter(response.data, function(filteredItem) {
-							return (ids.indexOf(filteredItem._id)==-1);
+                    var ids = $.map(users, function (item) {
+                        return item._id
+                    });
+                    options = $.map(
+						_.filter(response.data, function (filteredItem) {
+						    return (ids.indexOf(filteredItem._id) == -1);
 						}),
 						function (item) {
-							return $('<li/>').attr('id', item._id).text(item.login);
+						    return $('<li/>').attr('id', item._id).text(item.login);
 						});
                 } else {
-					if (targetList.length){
-						var ids=[];
-						targetList.find('li').each(function(item){
-							ids.push($(this).attr("id"));
-						})
-						var tt=_.filter(response.data, function(filteredItem) {
-							return (ids.indexOf(filteredItem._id)==-1);
-						});
-						
-						options = $.map(tt, function (item) {
-							return $('<li/>').text(item.login).attr('id', item._id);
-						});
-					}
-					else{
-						options = $.map(response.data, function (item) {
-							return $('<li/>').text(item.login).attr('id', item._id);
-						});
-					}
+                    if (targetList.length) {
+                        var ids = [];
+                        targetList.find('li').each(function (item) {
+                            ids.push($(this).attr("id"));
+                        })
+                        var tt = _.filter(response.data, function (filteredItem) {
+                            return (ids.indexOf(filteredItem._id) == -1);
+                        });
+
+                        options = $.map(tt, function (item) {
+                            return $('<li/>').text(item.login).attr('id', item._id);
+                        });
+                    }
+                    else {
+                        options = $.map(response.data, function (item) {
+                            return $('<li/>').text(item.login).attr('id', item._id);
+                        });
+                    }
                 }
                 selectList.append(options);
-				if (response.data.length>=20){
-					if (page==1){
-						selectList.after("<div class='userPagination'><span class='text'>"+((20*(page-1))+1)+"-"+(20*page)+" of "+(20*page)+"+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
-					}else{
-						selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*page)+" of "+(20*page)+"+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
-					}
-				}else{
-					if (page==1){
-					selectList.after("<div class='userPagination'><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
-					}
-					else{
-					selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>"+((20*(page-1))+1)+"-"+(20*(page-1)+response.data.length)+" of "+(20*(page-1)+response.data.length)+"</span></div>");
-					}
-				}
+                if (response.data.length >= 20) {
+                    if (page == 1) {
+                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
+                    } else {
+                        selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
+                    }
+                } else {
+                    if (page == 1) {
+                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
+                    }
+                    else {
+                        selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
+                    }
+                }
                 if (callback) callback();
             });
         }
-        
+
         var populateJobPositions = function (selectId, url, model, callback) {
             var selectList = $(selectId);
             var self = this;
             selectList.append($("<option/>").val('').text('Select...'));
-            dataService.getData(url, { mid: 39}, function (response) {
+            dataService.getData(url, { mid: 39 }, function (response) {
                 var options = [];
                 if (model && model.jobPosition) {
                     options = $.map(response.data, function (item) {
@@ -748,7 +749,7 @@
                 if (callback) callback();
             });
         };
-        
+
         var populateSourceApplicants = function (selectId, url, model) {
             var selectList = $(selectId);
             var self = this;
@@ -769,22 +770,22 @@
                 selectList.append(options);
             });
         }
-        var buildAphabeticArray = function (collection,callback) {
+        var buildAphabeticArray = function (collection, callback) {
             if (collection) {
-				collection.getAlphabet(function(arr){
-					var b = true; 
-					var filtered = $.map(arr, function (item) {
-						if (b&&$.isNumeric(item._id.toUpperCase())) {
-							b=false;
-							return "0-9"
-							
-						}
-						return item._id.toUpperCase();
-					});
-					filtered.push("All");
-					var letterArr = _.sortBy(_.uniq(filtered), function (a) { return a });
-					if (callback)callback(letterArr);
-				});
+                collection.getAlphabet(function (arr) {
+                    var b = true;
+                    var filtered = $.map(arr, function (item) {
+                        if (b && $.isNumeric(item._id.toUpperCase())) {
+                            b = false;
+                            return "0-9"
+
+                        }
+                        return item._id.toUpperCase();
+                    });
+                    filtered.push("All");
+                    var letterArr = _.sortBy(_.uniq(filtered), function (a) { return a });
+                    if (callback) callback(letterArr);
+                });
             }
             return [];
         }
@@ -797,14 +798,14 @@
         }
 
         var getEmployeesImages = function (ids, callback) {
-            dataService.getData("/getEmployeesImages", {ids:ids }, function (response) {
-				response.data.forEach(function(item){
-					$("#"+item._id+" .inner .avatar img").attr("src",item.imageSrc);
-				});
+            dataService.getData("/getEmployeesImages", { ids: ids }, function (response) {
+                response.data.forEach(function (item) {
+                    $("#" + item._id + " .inner .avatar img").attr("src", item.imageSrc);
+                });
                 if (callback) callback();
             });
         };
-		
+
         return {
             deleteFromLocalStorage: deleteFromLocalStorage,
             populateProfilesDd: populateProfilesDd,
@@ -822,12 +823,12 @@
             populateDepartments: populateDepartments,
             populateCompanies: populateCompanies,
             populateWorkflows: populateWorkflows,
-			populateWorkflowsList:populateWorkflowsList,
+            populateWorkflowsList: populateWorkflowsList,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
             utcDateToLocaleDate: utcDateToLocaleDate,
-            populateRelatedStatuses:populateRelatedStatuses,
+            populateRelatedStatuses: populateRelatedStatuses,
             checkBackboneFragment: checkBackboneFragment,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
             ISODateToDate: ISODateToDate,
@@ -837,9 +838,9 @@
             saveToLocalStorage: saveToLocalStorage,
             getFromLocalStorage: getFromLocalStorage,
             populateUsersForGroups: populateUsersForGroups,
-			populateParentDepartments:populateParentDepartments,
-			populateDepartmentsList:populateDepartmentsList,
-			getLeadsForChart:getLeadsForChart,
-			getEmployeesImages:getEmployeesImages
+            populateParentDepartments: populateParentDepartments,
+            populateDepartmentsList: populateDepartmentsList,
+            getLeadsForChart: getLeadsForChart,
+            getEmployeesImages: getEmployeesImages
         }
     });

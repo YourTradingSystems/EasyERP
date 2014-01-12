@@ -16,11 +16,11 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             "click .item": "selectItem"
         },
         initialize: function (options) {
-        	this.render = _.after(2, this.render);
+        	//this.render = _.after(2, this.render);
         	this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
             this.workflowsCollection.bind('reset', this.render, this);
-            this.companiesCollection = new CompaniesCollection();
-            this.companiesCollection.bind('reset', _.bind(this.render, this));
+            //this.companiesCollection = new CompaniesCollection();
+            //this.companiesCollection.bind('reset', _.bind(this.render, this));
             this.collection = options.collection;
         },
         

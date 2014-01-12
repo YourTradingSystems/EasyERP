@@ -70,18 +70,18 @@ var Events = function (logWriter, mongoose, googleModule, models) {
             return;
         } else {
             console.log(req);
-            //saveEventToDb(req, data, res);
+            saveEventToDb(req, data, res);
         }
     };//End create
 
-    function createCalendar(data, res) {
+    function createCalendar(req, data, res) {
         try {
             if (!data) {
                 logWriter.log('Events.createCalendar Incorrect Incoming Data');
                 res.send(400, { error: 'Events.createCalendar Incorrect Incoming Data' });
                 return;
             } else {
-                saveCalendarToDb(data, res);
+                saveCalendarToDb(req, data, res);
             }
             //function savetoDb(data) {
             //    try {
@@ -294,11 +294,11 @@ var Events = function (logWriter, mongoose, googleModule, models) {
         } catch (error) {
             console.log(error);
             logWriter.log("Events.js create savetoBd " + error);
-            //res.send(500, { error: 'Events.save  error' });
+            res.send(500, { error: 'Events.save  error' });
         }
     };//End Saving Event To Db
 
-    function saveCalendarToDb(data, res) {
+    function saveCalendarToDb(req, data, res) {
         try {
             _calendar = new models.get(req.session.lastDb - 1, "Calendars", calendarsSchema)();
             if (data.id) {
@@ -413,7 +413,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                     });
                 } else if (!result) {
                     //data._id = _id;
-                    createCalendar(data, res);
+                    createCalendar(req, data, res);
                 }
             });
 
@@ -557,7 +557,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                     });
                 } else {
                     data.id = id;
-                    create(data, res, req);
+                    create(req, data, res);
                 }
             });
 

@@ -2,7 +2,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var opportunitiesSchema = mongoose.Schema({
-        isOpportunitie: { type: Boolean, default: false },
+        isOpportunitie: { type: Boolean, default: false, index: true },
         name: { type: String, default: '' },
         expectedRevenue: {
             value: { type: Number, default: '' },
@@ -938,10 +938,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 populate('salesPerson','name').
                                 populate('workflow','_id name').
                                 sort({ 'editedBy.date': -1 }).
-                                populate('createdBy.user').
-                                populate('editedBy.user').
-                                populate('groups.users').
-                                populate('groups.group').
+                                populate('createdBy.user','login').
+                                populate('editedBy.user','login').
+                                populate('groups.users','_id login').
+                                populate('groups.group', '_id departmentName').
                                 exec(function (err, result) {
                                     if (!err) {
                                         res['showMore'] = showMore;

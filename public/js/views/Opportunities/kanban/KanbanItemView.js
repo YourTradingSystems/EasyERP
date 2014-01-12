@@ -78,9 +78,9 @@ define([
                 var index = this.model.collection.indexOf(this.model);
                 //this.$el.html(this.template(this.model.toJSON()));
                 //console.log(this.model);
-                var companyModel = (options && options.companies) ? options.companies : null;
-                this.$el.html(this.template({ model: this.model.toJSON(), colors: this.colors, companies:companyModel}));
-               
+                //var companyModel = (options && options.companies) ? options.companies : null;
+                //this.$el.html(this.template({ model: this.model.toJSON(), colors: this.colors, companies:companyModel}));
+                this.$el.html(this.template({ model: this.model.toJSON()}));
                 this.changeColor(this.model.get('color'));
                 this.$el.attr("data-index", index);
                // this.$el.attr("data-index", this.model.collection.indexOf(this.model));
