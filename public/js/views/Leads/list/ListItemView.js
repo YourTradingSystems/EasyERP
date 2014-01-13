@@ -41,7 +41,7 @@
 				   $(e.target).parents("td").find(".current-selected").text($(e.target).text());
 				   var id=$(e.target).parents("td").find("select").attr("id").replace("stage","");
 				   var obj = this.collection.get(id);
-				   obj.set({workflow: $(e.target).parents("td").find("select option").eq(k).data("id")})
+				   obj.set({workflow: $(e.target).parents("td").find("select option").eq(k).data("id"),workflowForList:true})
                    obj.save({}, {
                        headers: {
                            mid: 39
