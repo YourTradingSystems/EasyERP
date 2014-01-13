@@ -778,7 +778,6 @@
                         if (b && $.isNumeric(item._id.toUpperCase())) {
                             b = false;
                             return "0-9"
-
                         }
                         return item._id.toUpperCase();
                     });
@@ -787,6 +786,12 @@
                     if (callback) callback(letterArr);
                 });
             }
+            return [];
+        }
+        var buildPagination = function (collection, callback) {
+                collection.getListLength(function (listLength) {
+                    callback(listLength);
+                });
             return [];
         }
         var buildAllAphabeticArray = function () {
@@ -811,6 +816,7 @@
             populateProfilesDd: populateProfilesDd,
             buildAllAphabeticArray: buildAllAphabeticArray,
             buildAphabeticArray: buildAphabeticArray,
+            buildPagination: buildPagination,
             populateDegrees: populateDegrees,
             populateSourceApplicants: populateSourceApplicants,
             populateJobPositions: populateJobPositions,

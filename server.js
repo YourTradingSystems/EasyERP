@@ -377,6 +377,7 @@ app.get('/getPersonAlphabet', function (req, res) {
 
 
 
+
 //--------------------------Customers----------------------------------------------------------     
 
 app.get('/Customer', function (req, res) {
@@ -440,6 +441,12 @@ app.delete('/Persons/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
+});
+
+app.get('/getPersonListLength', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getPersonsListLength(req, res, data);
 });
 
 //---------------------------Projects--------------------------------------------------------
