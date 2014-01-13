@@ -280,6 +280,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             console.log("requestHandler.js  " + Exception);
         }
     };
+    function getPersonsListLength(req, res, data) {
+        try {
+            console.log("Requst getPersonListLength is success");
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                customer.getPersonsListLength(req, res, data);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            console.log("requestHandler.js  " + Exception);
+        }
+    };
+
 
     function getCustomer(req, res, data) {
         try {
@@ -1960,6 +1974,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonById: getPersonById,
         updatePerson: updatePerson,
         removePerson: removePerson,
+        getPersonsListLength: getPersonsListLength,
         // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,

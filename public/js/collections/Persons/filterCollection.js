@@ -82,6 +82,7 @@
                     }
                 });
             },
+
             showMoreAlphabet: function (options) {
                 var that = this;
 
@@ -109,12 +110,18 @@
             },
 
             getAlphabet: function (callback) {
-				dataService.getData("/getPersonAlphabet", { mid: 39 }, function (response) {
-					if (callback){
-						callback(response.data);
-					}
-				});
-			},
+                dataService.getData("/getPersonAlphabet", { mid: 39 }, function (response) {
+                    if (callback){
+                        callback(response.data);
+                    }
+                });
+            },
+            getListLength: function (callback) {
+                dataService.getData("/getPersonListLength", { mid: 39 }, function (response) {
+                    console.log(response);
+                    callback(response.listLength);
+                });
+            },
             parse: true,
             parse: function (response) {
                 if (response.data) {
