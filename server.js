@@ -546,6 +546,8 @@ app.get('/Tasks/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getTasksForList(req, res, data);
             break;
+        case "kanban": requestHandler.getTasksForKanban(req, res, data);
+            break;
         default: requestHandler.getTasksByProjectId(req, res, data);
             break;
     }

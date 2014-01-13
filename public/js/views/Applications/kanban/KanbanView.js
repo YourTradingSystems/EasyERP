@@ -3,9 +3,10 @@
         'collections/Workflows/WorkflowsCollection',
         'views/Applications/kanban/KanbanItemView',
         'views/Applications/EditView',
-        'views/Applications/CreateView'
+        'views/Applications/CreateView',
+        'models/ApplicationsModel'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, EditView, CreateView) {
+function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, EditView, CreateView,CurrentModel) {
     var ApplicationKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -27,8 +28,18 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
         gotoEditForm: function (e) {
             e.preventDefault();
             var id = $(e.target).closest(".inner").data("id");
-            var model = this.collection.getElement(id);
-            new EditView({ model: model, collection: this.collection });
+//            var model = this.collection.getElement(id);
+            var model = new CurrentModel();
+            model.urlRoot = '/Applications/form';
+            model.fetch({
+                data: { id: id },
+                success: function (model, response, options) {
+                    new EditView({ model: model });
+                },
+                error: function () { alert('Please refresh browser'); }
+            });
+
+//            new EditView({ model: model, collection: this.collection });
         },
         
        /* filterByWorkflow: function (models, id) {
@@ -107,8 +118,8 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                 ApplicationCount = 0
                 ApplicationRemaining = 0;
                 _.each(this.collection.optionsArray, function(wfId){
-                    if (wfId.id == workflow._id) {
-                        ApplicationCount = wfId.namberOfApplications;
+                    if (wfId._id == workflow._id) {
+                        ApplicationCount = wfId.count;
                     }
                 });
                 var column = this.$(".column").eq(i);

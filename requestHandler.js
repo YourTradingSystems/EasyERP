@@ -576,6 +576,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     };
 
+    function getTasksForKanban(req, res, data) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 40, function (access) {
+                if (access) {
+                    project.getTasksForKanban(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+
+    };
+
     function removeTask(req, res, id, data) {
         console.log("Requst removeTask is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1915,6 +1931,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,
         getTasksForList: getTasksForList,
+        getTasksForKanban: getTasksForKanban,
         updateTask: updateTask,
         removeTask: removeTask,
         getTasksPriority: getTasksPriority,

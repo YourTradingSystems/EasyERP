@@ -931,17 +931,18 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 });
                                 models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().
                                 where('_id').in(responseOpportunitiesArray).
+								select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue").
                                 //populate('relatedUser').
-                                populate('customer','name').
+								populate('customer','name').
                                 //populate('department').
                                 //populate('jobPosition').
                                 populate('salesPerson','name').
-                                populate('workflow','_id name').
-                                sort({ 'editedBy.date': -1 }).
-                                populate('createdBy.user','login').
-                                populate('editedBy.user','login').
-                                populate('groups.users','_id login').
-                                populate('groups.group', '_id departmentName').
+                                populate('workflow','_id').
+								sort({ 'editedBy.date': -1 }).
+								//populate('createdBy.user','login').
+                                //populate('editedBy.user','login').
+                                //populate('groups.users','_id login').
+                                //populate('groups.group', '_id departmentName').
                                 exec(function (err, result) {
                                     if (!err) {
                                         res['showMore'] = showMore;
