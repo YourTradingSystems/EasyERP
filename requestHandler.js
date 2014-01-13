@@ -76,11 +76,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            users.getUsers(req, res, data);
+			users.getUsers(req, res, data);
         } else {
             res.send(401);
         }
     };
+    function getUsersForDd(req, res, data) {
+        console.log("Requst getUsers is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            users.getUsersForDd(req, res, data);
+        } else {
+            res.send(401);
+        }
+    };
+
 
     function getFilterUsers(req, res, data) {
         console.log("Requst getUsers is success");
@@ -744,19 +753,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //---------------------Companies-------------------------------
 
-    function getCompanies(req, res, data) {
+    function getCompaniesForDd(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            access.getReadAccess(req, req.session.uId, 50, function (access) {
-                if (access) {
-                    customer.getCompanies(req, res);
+            customer.getCompaniesForDd(req, res);
 
-                } else {
-                    res.send(403);
-                }
-            });
-
-            //company.get(res);
         } else {
             res.send(401);
         }
@@ -1943,6 +1944,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         login: login,
         createUser: createUser,
         getUsers: getUsers,
+		getUsersForDd:getUsersForDd,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
@@ -1982,7 +1984,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeTask: removeTask,
         getTasksPriority: getTasksPriority,
 
-        getCompanies: getCompanies,
+        getCompaniesForDd: getCompaniesForDd,
         getCompanyById: getCompanyById,
         getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,

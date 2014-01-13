@@ -468,17 +468,18 @@
             });
         },
 
-        getCompanies: function (req, response) {
+        getCompaniesForDd: function (req, response) {
             var res = {};
             res['data'] = [];
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company' });
-            query.populate('salesPurchases.salesPerson', '_id name').
+/*            query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
                   populate('editedBy.user').
                   populate('groups.users').
                   populate('groups.group');
-
+*/
+			query.select("_id name.first")
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {

@@ -269,6 +269,10 @@ app.get('/Users', function (req, res) {
     data.count = req.param('count');
     requestHandler.getUsers(req, res, data);
 });
+app.get('/UsersForDd', function (req, res) {
+    console.log('---------------------getUsers-------------');
+    requestHandler.getUsersForDd(req, res, data);
+});
 
 app.get('/Users/:viewType', function (req, res) {
     console.log('-----------Filter-----getUsers-------------');
@@ -681,11 +685,10 @@ app.post('/Companies', function (req, res) {
     data.company = req.body;
     requestHandler.createCompany(req, res, data);
 });
-
-app.get('/Companies', function (req, res) {
+app.get('/CompaniesForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getCompanies(req, res, data);
+    requestHandler.getCompaniesForDd(req, res, data);
 });
 
 app.get('/ownCompanies', function (req, res) {
@@ -693,7 +696,6 @@ app.get('/ownCompanies', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getOwnCompanies(req, res, data);
 });
-
 app.get('/Companies/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -893,6 +895,11 @@ app.get('/Departments', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getDepartment(req, res, data);
+});
+app.get('/DepartmentsForDd', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getDepartmentForDd(req, res, data);
 });
 
 
