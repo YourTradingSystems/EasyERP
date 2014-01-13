@@ -9,7 +9,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         google = require("./Modules/Google.js")(users, models),
         events = require("./Modules/Events.js")(logWriter, mongoose, google, models),
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models),
-        customer = require("./Modules/Customers.js")(logWriter, mongoose, models),
+        customer = require("./Modules/Customers.js")(logWriter, mongoose, models, department),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, department, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
@@ -26,6 +26,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             }
         }
         return _arrayOfID;
+    };
+
+    Array.prototype.getShowmore = function (countPerPage) {
+        var showMore = false;
+        for (var i = 0; i < this.length; i++) {
+            if (this[i].count > countPerPage) {
+                showMore = true;
+            }
+        }
+        return showMore;
     };
 
     function getModules(req, res) {
@@ -66,11 +76,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            users.getUsers(req, res, data);
+			users.getUsers(req, res, data);
         } else {
             res.send(401);
         }
     };
+    function getUsersForDd(req, res, data) {
+        console.log("Requst getUsers is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            users.getUsersForDd(req, res, data);
+        } else {
+            res.send(401);
+        }
+    };
+
 
     function getFilterUsers(req, res, data) {
         console.log("Requst getUsers is success");
@@ -261,6 +280,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             console.log("requestHandler.js  " + Exception);
         }
     };
+    function getPersonsListLength(req, res, data) {
+        try {
+            console.log("Requst getPersonListLength is success");
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                customer.getPersonsListLength(req, res, data);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            console.log("requestHandler.js  " + Exception);
+        }
+    };
+
 
     function getCustomer(req, res, data) {
         try {
@@ -429,6 +462,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getProjectsForList(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectsForList(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
     function getProjectsById(req, res, data) {
         console.log(data);
@@ -555,6 +603,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             access.getReadAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
                     project.getTasksForList(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+
+    };
+
+    function getTasksForKanban(req, res, data) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 40, function (access) {
+                if (access) {
+                    project.getTasksForKanban(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -703,19 +767,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //---------------------Companies-------------------------------
 
-    function getCompanies(req, res, data) {
+    function getCompaniesForDd(req, res, data) {
         console.log("Requst getCompanies is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            access.getReadAccess(req, req.session.uId, 50, function (access) {
-                if (access) {
-                    customer.getCompanies(req, res);
+            customer.getCompaniesForDd(req, res);
 
-                } else {
-                    res.send(403);
-                }
-            });
-
-            //company.get(res);
         } else {
             res.send(401);
         }
@@ -824,6 +880,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getFilterCompaniesForList(req, res, data) {
+        console.log("Requst getFilterCompanies is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            //company.get(res);
+            access.getReadAccess(req, req.session.uId, 50, function (access) {
+                if (access) {
+                    customer.getFilterCompaniesForList(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function getCompaniesAlphabet(req, res, data) {
         try {
             console.log("Requst getPersonAlphabet is success");
@@ -1169,6 +1242,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getApplicationsForKanban(req, res, data) {
+        console.log("Requst getApplications is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    employee.getApplicationsForKanban(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
     function getEmployeesForThumbnails(req, res, data) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1476,6 +1566,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             access.getReadAccess(req, req.session.uId, 24, function (access) {
                 if (access) {
                     opportunities.getLeadsCustom(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    }
+    function getLeadsForList(req, res, data) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 24, function (access) {
+                if (access) {
+                    opportunities.getLeadsForList(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1855,6 +1958,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         login: login,
         createUser: createUser,
         getUsers: getUsers,
+		getUsersForDd:getUsersForDd,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
@@ -1870,6 +1974,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonById: getPersonById,
         updatePerson: updatePerson,
         removePerson: removePerson,
+        getPersonsListLength: getPersonsListLength,
         // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,
@@ -1877,6 +1982,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonAlphabet: getPersonAlphabet,
 
         getProjects: getProjects,
+		getProjectsForList:getProjectsForList,
         getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
@@ -1888,17 +1994,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,
         getTasksForList: getTasksForList,
+        getTasksForKanban: getTasksForKanban,
         updateTask: updateTask,
         removeTask: removeTask,
         getTasksPriority: getTasksPriority,
 
-        getCompanies: getCompanies,
+        getCompaniesForDd: getCompaniesForDd,
         getCompanyById: getCompanyById,
         getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
         getFilterCompanies: getFilterCompanies,
+		getFilterCompaniesForList:getFilterCompaniesForList,
         getCompaniesAlphabet: getCompaniesAlphabet,
 
         getRelatedStatus: getRelatedStatus,
@@ -1959,6 +2067,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getApplicationsForList: getApplicationsForList,
 		getEmployeesForThumbnails: getEmployeesForThumbnails,
         getApplicationById: getApplicationById,
+		getApplicationsForKanban: getApplicationsForKanban,
 
         createLead: createLead,
         getLeads: getLeads,
@@ -1967,6 +2076,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeLead: removeLead,
         getLeadsById: getLeadsById,
         getLeadsForChart: getLeadsForChart,
+		getLeadsForList:getLeadsForList,
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,

@@ -280,7 +280,12 @@ define([
                             Backbone.history.navigate("easyErp/Leads", { trigger: true });
                         },
                         error: function (model, xhr, options) {
-                            Backbone.history.navigate("easyErp", { trigger: true });
+                            self.hideDialog();
+                            if (xhr && xhr.status === 401) {
+                                Backbone.history.navigate("login", { trigger: true });
+                            } else {
+                                Backbone.history.navigate("home", { trigger: true });
+                            }
                         }
                     });
 

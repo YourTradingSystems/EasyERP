@@ -173,6 +173,28 @@ var Users = function (logWriter, mongoose, models) {
         });
     }
 
+    function getUsersForDd(req, response, data) {
+        var res = {};
+        res['data'] = [];
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find();
+        query.select("_id login");
+        query.sort({ login: 1 });
+		if (data.page&&data.count){
+			query.skip((data.page-1)*data.count).limit(data.count);
+		}
+        query.exec(function (err, result) {
+            if (err) {
+                //func();
+                console.log(err);
+                logWriter.log("Users.js get User.find " + err);
+                response.send(500, { error: 'User get DB error' });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    }
+
     function getUserById(req, id, response) {
         console.log(id);
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(id);
@@ -259,6 +281,7 @@ var Users = function (logWriter, mongoose, models) {
         getUsers: getUsers,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
+		getUsersForDd:getUsersForDd,
         updateUser: updateUser,
         removeUser: removeUser,
         schema: userSchema

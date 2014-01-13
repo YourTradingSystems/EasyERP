@@ -1,5 +1,6 @@
-﻿var Customers = function (logWriter, mongoose, models) {
+﻿var Customers = function (logWriter, mongoose, models, department) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var newObjectId = mongoose.Types.ObjectId;
     var customerSchema = mongoose.Schema({
         type: { type: String, default: '' },
         isOwn: { type: Boolean, default: false },
@@ -46,6 +47,12 @@
         social: {
             FB: { type: String, default: '' },
             LI: { type: String, default: '' }
+        },
+        whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
+        groups: {
+            owner: { type: ObjectId, ref: 'Users', default: null },
+            users: [{ type: ObjectId, ref: 'Users', default: null }],
+            group: [{ type: ObjectId, ref: 'Department', default: null }]
         },
         notes: { type: Array, default: [] },
         attachments: { type: Array, default: [] },
@@ -102,10 +109,14 @@
                     try {
                         _customer = new models.get(req.session.lastDb - 1, "Customers", customerSchema)();
                         if (data.uId) {
-
                             _customer.createdBy.user = data.uId;
                         }
-
+                        if (data.groups) {
+                            _customer.groups = data.groups;
+                        }
+                        if (data.whoCanRW) {
+                            _customer.whoCanRW = data.whoCanRW;
+                        }
                         if (data.type) {
                             _customer.type = data.type;
                         }
@@ -291,72 +302,345 @@
             });
         },
 
+        getPersonsListLength : function (req, response, data) {
+            var res = {};
+            var aggObject = {};
+            if (data.letter) {
+                aggObject['type'] = 'Person';
+                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+            } else {
+                aggObject['type'] = 'Person';
+            };
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        aggObject,
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                {
+                                                    whoCanRW: "everyOne"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+                                    if (data && data.status && data.status.length > 0)
+                                        query.where('workflow').in(data.status)
+                                    query.exec(function (error, _res) {
+                                            if (!error) {
+                                                res['listLength'] = _res.length;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                    });
+                                } else {
+                                    console.log(err);
+                                }
+                            }
+                        );
+
+                    } else {
+                        console.log(err);
+                    }
+                });
+        },
+
         getFilterPersons: function (req, data, response) {
             var res = {};
             res['data'] = [];
-            var query;
-            if (data.letter) {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Person', 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-            } else {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Person' });
-            }
-            query.exec(function (err, result) {
-                if (!err) {
-                    res['listLength'] = result.length;
-                }
-            });
-            if (data.letter) {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Person', 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-            } else {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Person' });
-            }
 
-            query.populate('company', '_id name').
-                  populate('department', '_id departmentName').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
-            query.skip((data.page - 1) * data.count).limit(data.count);
-            query.sort({ "name.first": 1 });
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
-                    response.send(500, { error: "Can't find customer" });
-                } else {
-                    res['data'] = result;
-                    response.send(res);
-                    console.log("Response send ------------------->");
-                }
-            });
+            var aggObject = {};
+            if (data.letter) {
+                aggObject['type'] = 'Person';
+                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+            } else {
+                aggObject['type'] = 'Person';
+            };
+
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        aggObject,
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+                                    if (data && data.status && data.status.length > 0)
+                                        query.where('workflow').in(data.status);
+                                    query.populate('company', '_id name').
+                                        populate('department', '_id departmentName').
+                                        populate('createdBy.user').
+                                        populate('editedBy.user').
+                                        skip((data.page-1)*data.count).
+                                        limit(data.count).
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                res['data'] = _res;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                } else {
+                                    console.log(err);
+                                }
+                            }
+                        );
+
+                    } else {
+                        console.log(err);
+                    }
+                });
         },
 
         getPersonAlphabet: function (req, response) {
-            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate([{ $match: { type: "Person" } }, { $project: { later: { $substr: ["$name.last", 0, 1] } } }, { $group: { _id: "$later" } }]);
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get person alphabet " + err);
-                    response.send(500, { error: "Can't find customer" });
-                } else {
-                    var res = {};
-                    res['data'] = result;
-                    response.send(res);
-                }
-            });
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        {
+                                            type: 'Person'
+                                        },
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1,
+                                    later: { $substr: ["$name.last", 0, 1] }
+                                }
+                            },
+                            {
+                                $group: { _id: "$later" }
+                            },
+                            function (err, result) {
+                                if (err) {
+                                    logWriter.log("customer.js get person alphabet " + err);
+                                    response.send(500, { error: "Can't find customer" });
+                                } else {
+                                    var res = {};
+                                    res['data'] = result;
+                                    response.send(res);
+                                }
+                            }
+                        );
+                    }
+                })
         },
+
         getCompaniesAlphabet: function (req, response) {
-            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate([{ $match: { type: "Company" } }, { $project: { later: { $substr: ["$name.first", 0, 1] } } }, { $group: { _id: "$later" } }]);
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get person alphabet " + err);
-                    response.send(500, { error: "Can't find customer" });
-                } else {
-                    var res = {};
-                    res['data'] = result;
-                    response.send(res);
-                }
-            });
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        {
+                                            type: 'Company'
+                                        },
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1,
+                                    later: { $substr: ["$name.first", 0, 1] }
+                                }
+                            },
+                            {
+                                $group: { _id: "$later" }
+                            },
+                            function (err, result) {
+                                if (err) {
+                                    logWriter.log("customer.js get person alphabet " + err);
+                                    response.send(500, { error: "Can't find customer" });
+                                } else {
+                                    console.log('========== getCompaniesAlphabet ===========');
+                                    console.log(result);
+                                    var res = {};
+                                    res['data'] = result;
+                                    response.send(res);
+                                }
+                            }
+                        );
+                    }
+                })
         },
 
         getPersonById: function (req, id, response) {
@@ -364,7 +648,9 @@
             query.populate('company', '_id name').
                   populate('department', '_id departmentName').
                   populate('createdBy.user').
-                  populate('editedBy.user');
+                  populate('editedBy.user').
+                  populate('groups.users').
+                  populate('groups.group');
 
             query.exec(function (err, result) {
                 if (err) {
@@ -383,7 +669,9 @@
             query.populate('department', '_id departmentName').
             	  populate('salesPurchases.salesPerson', '_id name').
                   populate('createdBy.user').
-                  populate('editedBy.user');
+                  populate('editedBy.user').
+                  populate('groups.users').
+                  populate('groups.group');
 
             query.exec(function (err, result) {
                 if (err) {
@@ -396,15 +684,18 @@
             });
         },
 
-        getCompanies: function (req, response) {
+        getCompaniesForDd: function (req, response) {
             var res = {};
             res['data'] = [];
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company' });
-            query.populate('salesPurchases.salesPerson', '_id name').
+/*            query.populate('salesPurchases.salesPerson', '_id name').
                   populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
-                  populate('editedBy.user');
-
+                  populate('editedBy.user').
+                  populate('groups.users').
+                  populate('groups.group');
+*/
+			query.select("_id name.first")
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -419,73 +710,281 @@
         },
 
         getFilterCompanies: function (req, data, response) {
-            console.log(models.get(req.session.lastDb - 1, "Customers", customerSchema));
             var res = {};
             res['data'] = [];
-            var query;
+
+            var aggObject = {};
             if (data.letter) {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company', 'name.first': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+                aggObject['type'] = 'Company';
+                aggObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company' });
-            }
+                aggObject['type'] = 'Company';
+            };
 
-            query.exec(function (err, result) {
-                if (!err) {
-                    res['listLength'] = result.length;
-                }
-            });
-            if (data.letter) {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company', 'name.first': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-            } else {
-                query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company' });
-            }
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        aggObject,
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+                                    if (data && data.status && data.status.length > 0)
+                                        query.where('workflow').in(data.status);
+                                    query.populate('salesPurchases.salesPerson', '_id name').
+                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                        populate('createdBy.user').
+                                        populate('editedBy.user').
+                                        skip((data.page-1)*data.count).
+                                        limit(data.count).
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                res['data'] = _res;
+                                                res['listLength'] = _res.length;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                } else {
+                                    console.log(err);
+                                }
+                            }
+                        );
+                    } else {
+                        console.log(err);
+                    }
+                });
 
-            query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
-
-            query.skip((data.page - 1) * data.count).limit(data.count);
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
-                    response.send(500, { error: "Can't find customer" });
-                } else {
-                    res['data'] = result;
-                    response.send(res);
-                }
-            });
         },
 
         getOwnCompanies: function (req, data, response) {
-            var res = {};
+
+            var res = {}
             res['data'] = [];
-            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
-            query.exec(function (err, result) {
-                if (!err) {
-                    res['listLength'] = result.length;
-                }
-            });
-            query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
-            query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName').
-                  populate('createdBy.user').
-                  populate('editedBy.user');
-            query.skip((data.page - 1) * data.count).limit(data.count);
-            query.exec(function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("customer.js get customer.find " + err);
-                    response.send(500, { error: "Can't find customer" });
+            var i = 0;
+
+            var qeryEveryOne = function (arrayOfId, n, workflowsId) {
+                if (data.letter) {
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
                 } else {
-                    res['data'] = result;
-                    response.send(res);
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }]});
                 }
-            });
+
+                if (workflowsId && workflowsId.length > 0)
+                    query.where('workflow').in(workflowsId);
+
+                query.where('_id').in(arrayOfId).
+                    populate('salesPurchases.salesPerson', '_id name').
+                    populate('salesPurchases.salesTeam', '_id departmentName').
+                    populate('createdBy.user').
+                    populate('editedBy.user').
+                    exec(function (error, _res) {
+                        if (!error) {
+                            i++;
+                            res['data'] = res['data'].concat(_res);
+                            if (i == n) getOwnCompanies(res['data'], 0);
+                        }
+                    });
+            };
+
+            var qeryOwner = function (arrayOfId, n, workflowsId) {
+                if (data.letter) {
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+                } else {
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
+                }
+                if (workflowsId && workflowsId.length > 0)
+                    query.where('workflow').in(workflowsId);
+
+                query.where('_id').in(arrayOfId).
+                    where({ 'groups.owner': data.uId }).
+                    populate('salesPurchases.salesPerson', '_id name').
+                    populate('salesPurchases.salesTeam', '_id departmentName').
+                    populate('createdBy.user').
+                    populate('editedBy.user').
+                    exec(function (error, _res) {
+                        if (!error) {
+                            i++;
+                            console.log(i);
+                            console.log(n);
+                            res['data'] = res['data'].concat(_res);
+                            console.log(res['data']);
+                            if (i == n) getOwnCompanies(res['data'], 0);;
+                        } else {
+                            console.log(error);
+                        }
+                    });
+            };
+
+            var qeryByGroup = function (arrayOfId, n) {
+                if (data.letter) {
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+                } else {
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
+                }
+                if (workflowsId && workflowsId.length > 0)
+                    query.where('workflow').in(workflowsId);
+
+                query.where({ 'groups.users': data.uId }).
+                    populate('salesPurchases.salesPerson', '_id name').
+                    populate('salesPurchases.salesTeam', '_id departmentName').
+                    populate('createdBy.user').
+                    populate('editedBy.user').
+
+                    exec(function (error, _res1) {
+                        if (!error) {
+                            models.get(req.session.lastDb - 1, 'Department', department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
+                                function (err, deps) {
+                                    console.log(deps);
+                                    if (!err) {
+                                        if (data.letter) {
+                                            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
+                                        } else {
+                                            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
+                                        }
+                                        query.where('_id').in(arrayOfId).
+                                            where('groups.group').in(deps).
+                                            populate('salesPurchases.salesPerson', '_id name').
+                                            populate('salesPurchases.salesTeam', '_id departmentName').
+                                            populate('createdBy.user').
+                                            populate('editedBy.user').
+                                            exec(function (error, _res) {
+                                                if (!error) {
+                                                    i++;
+                                                    console.log(i);
+                                                    console.log(n);
+                                                    res['data'] = res['data'].concat(_res1);
+                                                    res['data'] = res['data'].concat(_res);
+                                                    console.log(res['data']);
+                                                    if (i == n) getOwnCompanies(res['data'], 0);;
+                                                } else {
+                                                    console.log(error);
+                                                }
+                                            });
+                                    }
+                                });
+                        } else {
+                            console.log(error);
+                        }
+                    });
+            };
+            var workflowsId = data ? data.status : null;
+            models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                {
+                    $group: {
+                        _id: "$whoCanRW",
+                        ID: { $push: "$_id" },
+                        groupId: { $push: "$groups.group" }
+                    }
+                },
+                function (err, result) {
+                    if (!err) {
+                        if (result.length != 0) {
+                            result.forEach(function (_project) {
+                                switch (_project._id) {
+                                    case "everyOne":
+                                    {
+                                         qeryEveryOne(_project.ID, result.length, workflowsId);
+                                    }
+                                        break;
+                                    case "owner":
+                                    {
+                                        qeryOwner(_project.ID, result.length, workflowsId);
+                                    }
+                                        break;
+                                    case "group":
+                                    {
+                                        qeryByGroup(_project.ID, result.length, workflowsId);
+                                    }
+                                        break;
+                                }
+                            });
+                        } else {
+                            response.send(res);
+                        }
+                    } else {
+                        console.log(err);
+                    }
+                }
+            );
+
+            var getOwnCompanies = function (ownCompanies, count) {
+                var ownCompaniesSendArray = [];
+                var startIndex, endIndex;
+
+                if ((data.page - 1) * data.count > ownCompanies.length) {
+                    startIndex = ownCompanies.length;
+                } else {
+                    startIndex = (data.page - 1) * data.count;
+                }
+
+                if (data.page * data.count > ownCompanies.length) {
+                    endIndex = ownCompanies.length;
+                } else {
+                    endIndex = data.page * data.count;
+                }
+
+                for (var k = startIndex; k < endIndex; k++) {
+                    ownCompaniesSendArray.push(ownCompanies[k]);
+                }
+                res['listLength'] = ownCompanies.length;
+                res['data'] = ownCompaniesSendArray;
+                response.send(res);
+            }
         },
 
         getCustomers: function (req, response) {
+
             var res = {};
             res['data'] = [];
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ 'salesPurchases.isCustomer': true });

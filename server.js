@@ -269,6 +269,10 @@ app.get('/Users', function (req, res) {
     data.count = req.param('count');
     requestHandler.getUsers(req, res, data);
 });
+app.get('/UsersForDd', function (req, res) {
+    console.log('---------------------getUsers-------------');
+    requestHandler.getUsersForDd(req, res, data);
+});
 
 app.get('/Users/:viewType', function (req, res) {
     console.log('-----------Filter-----getUsers-------------');
@@ -377,6 +381,7 @@ app.get('/getPersonAlphabet', function (req, res) {
 
 
 
+
 //--------------------------Customers----------------------------------------------------------     
 
 app.get('/Customer', function (req, res) {
@@ -440,6 +445,12 @@ app.delete('/Persons/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
+});
+
+app.get('/getPersonListLength', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getPersonsListLength(req, res, data);
 });
 
 //---------------------------Projects--------------------------------------------------------
@@ -513,6 +524,9 @@ app.get('/Projects/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getProjectsById(req, res, data);
             break;
+        case "list": requestHandler.getProjectsForList(req, res, data);
+            break;
+
         default: requestHandler.getProjects(req, res, data);
             break;
     }
@@ -545,6 +559,8 @@ app.get('/Tasks/:viewType', function (req, res) {
         case "form": requestHandler.getTaskById(req, res, data);
             break;
         case "list": requestHandler.getTasksForList(req, res, data);
+            break;
+        case "kanban": requestHandler.getTasksForKanban(req, res, data);
             break;
         default: requestHandler.getTasksByProjectId(req, res, data);
             break;
@@ -676,11 +692,10 @@ app.post('/Companies', function (req, res) {
     data.company = req.body;
     requestHandler.createCompany(req, res, data);
 });
-
-app.get('/Companies', function (req, res) {
+app.get('/CompaniesForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getCompanies(req, res, data);
+    requestHandler.getCompaniesForDd(req, res, data);
 });
 
 app.get('/ownCompanies', function (req, res) {
@@ -688,7 +703,6 @@ app.get('/ownCompanies', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getOwnCompanies(req, res, data);
 });
-
 app.get('/Companies/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -697,6 +711,8 @@ app.get('/Companies/:viewType', function (req, res) {
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
+            break;
+        case "list": requestHandler.getFilterCompaniesForList(req, res, data);
             break;
         default: requestHandler.getFilterCompanies(req, res, data);
             break;
@@ -887,6 +903,11 @@ app.get('/Departments', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartment(req, res, data);
 });
+app.get('/DepartmentsForDd', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getDepartmentForDd(req, res, data);
+});
 
 
 app.post('/Departments', function (req, res) {
@@ -1060,6 +1081,8 @@ app.get('/Applications/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getApplicationsForList(req, res, data);
             break;
+        case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
+            break;
         default: requestHandler.getFilterApplications(req, res, data);
             break;
     }
@@ -1187,6 +1210,8 @@ app.get('/Leads/:viewType', function (req, res) {
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
+            break;
+        case "list": requestHandler.getLeadsForList(req, res, data);
             break;
         default: requestHandler.getLeadsCustom(req, res, data);
             break;

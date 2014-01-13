@@ -24,8 +24,8 @@
                         <dl class="opp-info">
                           <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd><select id="workflowNamesDd"></select></dd>
                           <dt><label for="workflowDd"> Workflows </label></dt><dd><select id="workflowDd"></select></dd>
-                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=model.nextAction.date%>" maxlength="32" readonly/></dd>
-                          <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=model.nextAction.desc%>" /></dd>
+                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" readonly /></dd>
+                          <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=(model.nextAction) ? model.nextAction.desc : ''%>" /></dd>
                           <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" maxlength="32" readonly/></dd>
                           <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"></select></dd>
 
@@ -38,7 +38,7 @@
                           <div class="clearfix"></div>
                         </div>
                         <dl class="opp-info">
-                          <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=model.company%>" disabled maxlength="32"/></dd>
+                          <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=(model.company && model.company.name) ? model.company.name.first : ''%>" disabled maxlength="32" /></dd>
                           <dt><label for="address">Address</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
                           <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
                           <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>

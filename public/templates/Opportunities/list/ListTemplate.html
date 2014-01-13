@@ -7,8 +7,8 @@
             <td><%=opportunity.name%></td>
             <td><%=opportunity.expectedRevenue.value%></td>
             <td><%=(opportunity.customer) ? opportunity.customer.name.first + ' ' + opportunity.customer.name.last : ''%></td>
-            <td><%=opportunity.nextAction.date%></td>
-            <td><%=opportunity.nextAction.desc%></td>
+            <td><%=(opportunity.nextAction) ? opportunity.nextAction.date : ''%></td>
+            <td><%=(opportunity.nextAction) ? opportunity.nextAction.desc : ''%></td>
             <td class="withSelect">
 			  <select id='stage<%=opportunity._id%>'>
 			  </select>

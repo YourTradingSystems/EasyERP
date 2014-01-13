@@ -3,9 +3,10 @@
         'collections/Workflows/WorkflowsCollection',
         'views/Tasks/kanban/KanbanItemView',
         'views/Tasks/EditView',
-        'views/Tasks/CreateView'
+        'views/Tasks/CreateView',
+        'models/TasksModel'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView, CreateView) {
+function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView, CreateView,CurrentModel) {
     var TaskKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -29,8 +30,18 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
         gotoEditForm: function (e) {
             e.preventDefault();
             var id = $(e.target).closest(".item").data("id");
-            var model = this.collection.getElement(id);
-            new EditView({ model: model, collection: this.collection });
+//            var model = this.collection.getElement(id);
+            var model = new CurrentModel();
+            model.urlRoot = '/Tasks/form';
+            model.fetch({
+                data: { id: id },
+                success: function (model, response, options) {
+                    new EditView({ model: model });
+                },
+                error: function () { alert('Please refresh browser'); }
+            });
+
+//            new EditView({ model: model, collection: this.collection });
         },
         
         showMore: function () {
@@ -80,14 +91,13 @@ function (WorkflowsTemplate, WorkflowsCollection, TasksKanbanItemView, EditView,
             $(".column").last().addClass("lastColumn");
             var TaskCount;
             var TaskRemaining;
-
             _.each(workflows, function (workflow, i) {
                 TaskCount = 0
                 TaskRemaining = 0;
                 _.each(this.collection.optionsArray, function(wfId){
-                    if (wfId.id == workflow._id) {
-                            TaskCount = wfId.namberOfTasks;
-                            TaskRemaining = wfId.remainingOfTasks;
+                    if (wfId._id == workflow._id) {
+                            TaskCount = wfId.count;
+                            TaskRemaining = wfId.remaining;
                     }
                 });
                 var column = this.$(".column").eq(i);

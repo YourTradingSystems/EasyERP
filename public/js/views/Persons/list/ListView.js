@@ -56,7 +56,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
 		},
 
         render: function () {
-			var self=this;
+			var self = this;
             console.log('Persons render');
 			var p = this.collection.toJSON();
             $('.ui-dialog ').remove();
@@ -70,46 +70,8 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
-            $("#pageList").empty();
-            if (this.defaultItemsNumber) {
-                var itemsNumber = this.defaultItemsNumber;
-                this.defaultItemsNumber = false;
-                $("#itemsNumber").text(itemsNumber);
-            } else {
-                var itemsNumber = $("#itemsNumber").text();
-            }
-            $("#currentShowPage").val(1);
-            var pageNumber = Math.ceil(this.collection.listLength/itemsNumber);
-            for (var i=1;i<=pageNumber;i++) {
-                $("#pageList").append('<li class="showPage">'+ i +'</li>')
-            }
 
-            $("#lastPage").text(pageNumber);
-            $("#previousPage").prop("disabled",true);
 
-            if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
-                $("#grid-start").text(0);
-                $("#nextPage").prop("disabled",true);
-            } else {
-                $("#grid-start").text(1);
-            }
-
-            if (this.collection.listLength) {
-                if (this.collection.listLength <= itemsNumber) {
-                    $("#grid-end").text(this.collection.listLength - this.deleteCounter );
-                } else {
-                    $("#grid-end").text(itemsNumber - this.deleteCounter);
-                }
-                $("#grid-count").text(this.collection.listLength);
-            } else {
-                $("#grid-end").text(0);
-                $("#grid-count").text(0);
-            }
-
-            if (pageNumber <= 1) {
-                $("#nextPage").prop("disabled",true);
-            }
-            this.deleteCounter = 0;
 			$(document).on("click",function(){
 				self.hideItemsNumber();
 			});
@@ -118,6 +80,50 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
 				self.alphabeticArray = arr;
 				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 			});
+            common.buildPagination(this.collection,function(listLength){
+                self.collection.listLength = listLength;
+
+                $("#pageList").empty();
+                if (self.defaultItemsNumber) {
+                    var itemsNumber = self.defaultItemsNumber;
+                    this.defaultItemsNumber = false;
+                    $("#itemsNumber").text(itemsNumber);
+                } else {
+                    var itemsNumber = $("#itemsNumber").text();
+                }
+                $("#currentShowPage").val(1);
+                var pageNumber = Math.ceil(self.collection.listLength/itemsNumber);
+                for (var i=1;i<=pageNumber;i++) {
+                    $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                }
+
+                $("#lastPage").text(pageNumber);
+                $("#previousPage").prop("disabled",true);
+
+                if ((self.collection.listLength == 0) || self.collection.listLength == undefined) {
+                    $("#grid-start").text(0);
+                    $("#nextPage").prop("disabled",true);
+                } else {
+                    $("#grid-start").text(1);
+                }
+
+                if (self.collection.listLength) {
+                    if (self.collection.listLength <= itemsNumber) {
+                        $("#grid-end").text(self.collection.listLength - self.deleteCounter );
+                    } else {
+                        $("#grid-end").text(itemsNumber - self.deleteCounter);
+                    }
+                    $("#grid-count").text(self.collection.listLength);
+                } else {
+                    $("#grid-end").text(0);
+                    $("#grid-count").text(0);
+                }
+
+                if (pageNumber <= 1) {
+                    $("#nextPage").prop("disabled",true);
+                }
+                self.deleteCounter = 0;
+            });
 
 
         },
@@ -140,11 +146,11 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
                 $("#grid-end").text(page*itemsNumber);
             }
             $("#grid-count").text(this.collection.listLength);
-
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page,letter:this.selectedLetter});
             $("#nextPage").prop("disabled",false);
             $("#nextPage").removeClass("disabled");
+            _.bind(this.collection.showMore, this.collection);
+            this.collection.showMore({count: itemsNumber, page: page,letter:this.selectedLetter});
+
         },
 
         nextPage: function (event) {
@@ -165,11 +171,11 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
                 $("#grid-end").text(page*itemsNumber);
             }
             $("#grid-count").text(this.collection.listLength);
-
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
             $("#previousPage").prop("disabled",false);
-			$("#previousPage").removeClass("disabled");
+            $("#previousPage").removeClass("disabled");
+            _.bind(this.collection.showMore, this.collection);
+            this.collection.showMore({count: itemsNumber, page: page, letter: this.selectedLetter});
+
         },
 
         switchPageCounter: function (event) {
@@ -246,80 +252,53 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
         },
 
         showMoreContent: function (newModels) {
+            var self = this;
             $("#listTable").empty();
             new ListItemView({ collection: newModels }).render();
-            $("#pageList").empty();
-            var itemsNumber = $("#itemsNumber").text();
-            var pageNumber;
+            common.buildPagination(this.collection,function(listLength){
+                    self.collection.listLength = listLength;
+                    $("#pageList").empty();
+                    var itemsNumber = $("#itemsNumber").text();
+                    var pageNumber;
 
-            if (this.collection.listLength) {
-                pageNumber = Math.ceil(this.collection.listLength/itemsNumber);
-            } else {
-                pageNumber = 0;
-            }
+                    if (self.collection.listLength) {
+                        pageNumber = Math.ceil(self.collection.listLength/itemsNumber);
+                    } else {
+                        pageNumber = 0;
+                    }
 
-            var currentPage = $("#currentShowPage").val();
-            for (var i=currentPage;i<=pageNumber;i++) {
-                $("#pageList").append('<li class="showPage">'+ i +'</li>')
-            }
-            $("#lastPage").text(pageNumber);
+                    var currentPage = $("#currentShowPage").val();
+                    for (var i=currentPage;i<=pageNumber;i++) {
+                        $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                    }
+                    $("#lastPage").text(pageNumber);
 
-            if (currentPage <= 1) {
-                $("#previousPage").prop("disabled",true);
-				$("#previousPage").addClass("disabled");
-            } else {
-                $("#previousPage").prop("disabled",false);
-				$("#previousPage").removeClass("disabled");
-            }
+                    if (currentPage <= 1) {
+                        $("#previousPage").prop("disabled",true);
+                        $("#previousPage").addClass("disabled");
+                    } else {
+                        $("#previousPage").prop("disabled",false);
+                        $("#previousPage").removeClass("disabled");
+                    }
 
-            if ((currentPage == pageNumber) || (pageNumber <= 1)) {
-                $("#nextPage").prop("disabled",true);
-				$("#nextPage").addClass("disabled");
+                    if ((currentPage == pageNumber) || (pageNumber <= 1)) {
+                        $("#nextPage").prop("disabled",true);
+                        $("#nextPage").addClass("disabled");
 
-            } else {
-                $("#nextPage").prop("disabled",false);
-				$("#nextPage").removeClass("disabled");
-            }
-            $("#pageList").empty();
-            if (this.defaultItemsNumber) {
-                var itemsNumber = this.defaultItemsNumber;
-                this.defaultItemsNumber = false;
-                $("#itemsNumber").text(itemsNumber);
-            } else {
-                var itemsNumber = $("#itemsNumber").text();
-            }
-            $("#currentShowPage").val(1);
-            var pageNumber = Math.ceil(this.collection.listLength/itemsNumber);
-            for (var i=1;i<=pageNumber;i++) {
-                $("#pageList").append('<li class="showPage">'+ i +'</li>')
-            }
+                    } else {
+                        $("#nextPage").prop("disabled",false);
+                        $("#nextPage").removeClass("disabled");
 
-            $("#lastPage").text(pageNumber);
-            $("#previousPage").prop("disabled",true);
+                    }
 
-            if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
-                $("#grid-start").text(0);
-                $("#nextPage").prop("disabled",true);
-            } else {
-                $("#grid-start").text(1);
-            }
 
-            if (this.collection.listLength) {
-                if (this.collection.listLength <= itemsNumber) {
-                    $("#grid-end").text(this.collection.listLength - this.deleteCounter );
-                } else {
-                    $("#grid-end").text(itemsNumber - this.deleteCounter);
-                }
-                $("#grid-count").text(this.collection.listLength);
-            } else {
-                $("#grid-end").text(0);
-                $("#grid-count").text(0);
-            }
+                    if ((self.collection.listLength == 0) || self.collection.listLength == undefined) {
+                        $("#grid-start").text(0);
+                        $("#nextPage").prop("disabled",true);
+                    }
 
-            if (pageNumber <= 1) {
-                $("#nextPage").prop("disabled",true);
-            }
-            this.deleteCounter = 0;
+                    self.deleteCounter = 0;
+            });
 
         },
         gotoForm: function (e) {
