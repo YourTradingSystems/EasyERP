@@ -742,6 +742,14 @@ var Project = function (logWriter, mongoose, department, models) {
             delete data._id;
             delete data.createdBy;
             delete data.task;
+			if (data.workflowForList){
+				data={
+					$set:{
+						workflow:data.workflow
+					}
+				}
+			}
+
             models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
