@@ -592,7 +592,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             isCustomer: true,
                             salesPerson: data.salesPerson
                         },
-                        type: ''
+                        type: 'Person'
                     }
                     models.get(req.session.lastDb - 1, "Customers", customer.customerSchema).find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
                         if (err) {
@@ -695,7 +695,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                         })
                                     }
                                 } else {
-                                    var _Company = new customer.customer(_company);
+                                    var _Company = new models.get(req.session.lastDb - 1, 'Customers', customer.customerSchema)(_company);
                                     _Company.save(function (err, _res) {
                                         if (err) {
                                             console.log(err);
