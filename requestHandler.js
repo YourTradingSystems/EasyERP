@@ -439,6 +439,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getProjectsForList(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectsForList(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
     function getProjectsById(req, res, data) {
         console.log(data);
@@ -1950,6 +1965,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonAlphabet: getPersonAlphabet,
 
         getProjects: getProjects,
+		getProjectsForList:getProjectsForList,
         getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,

@@ -442,6 +442,89 @@ var Project = function (logWriter, mongoose, department, models) {
             }
         });
     };
+    function getProjectsForList(req, data, response) {
+        var res = {};
+        res['data'] = [];
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                        {
+                            $match: {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress ").
+									populate('createdBy.user', 'login').
+									populate('editedBy.user', 'login').
+									populate('projectmanager', 'name').
+									populate('customer', 'name').
+									skip((data.page - 1) * data.count).
+									limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        res['listLength'] = _res.length;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+                } else {
+                    console.log(err);
+                }
+            });
+    }
 
     function get(req, data, response) {
         var res = {};
@@ -1496,6 +1579,7 @@ var Project = function (logWriter, mongoose, department, models) {
         create: create,//End create
         getForDd: getForDd,
         get: get,
+		getProjectsForList:getProjectsForList,
         getById: getById,
         update: update,
         remove: remove,

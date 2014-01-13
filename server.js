@@ -513,6 +513,9 @@ app.get('/Projects/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getProjectsById(req, res, data);
             break;
+        case "list": requestHandler.getProjectsForList(req, res, data);
+            break;
+
         default: requestHandler.getProjects(req, res, data);
             break;
     }
