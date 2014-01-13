@@ -42,18 +42,7 @@ function (ProjectsListTemplate, common) {
 			$(e.target).parents("td").find(".current-selected").text($(e.target).text());
 			var id=$(e.target).parents("td").find("select").attr("id").replace("stage","");
 			var obj = this.collection.get(id);
-			var usersId = $.map(obj.toJSON().groups.users,function(item){
-				return item._id;
-			});
-			var groupId = $.map(obj.toJSON().groups.group,function(item){
-				return item._id;
-			});
-			var groups ={
-				users:usersId,
-				group:groupId,
-				users:obj.toJSON().groups.owner
-			}
-			obj.set({workflow: $(e.target).parents("td").find("select option").eq(k).data("id"),groups:groups,projectmanager:(obj.toJSON().projectmanager)?obj.toJSON().projectmanager._id:obj.toJSON().projectmanager})
+			obj.set({workflow: $(e.target).parents("td").find("select option").eq(k).data("id"), workflowForList:true})
             obj.save({}, {
                 headers: {
                     mid: 39

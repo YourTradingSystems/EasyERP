@@ -1124,8 +1124,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 	};
 
     function getApplicationsForKanban(req, data, response) {
-		var res = {};
+        var res = {};
         res['data'] = [];
+        res['options'] = [];
+        var optionsArray = [];
+        var showMore = false;
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
                 $match: {
@@ -1179,52 +1182,70 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         },
                         {
                             $project: {
-                                _id: 1
+                                _id: 1,
+                                workflow: 1
                             }
                         },
-                        function (err, result) {
-                            if (!err) {
-								var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find().where('_id').in(result);
-
-                                if (data && data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
-								query.select('_id name proposedSalary jobPosition nextAction workflow attachments').
-									populate('jobPosition','name').
-									populate('workflow').
-                                    exec(function (error, _res) {
-                                        if (!error) {
-                                            res['data'] = _res;
-                                            getEmployees(res['data'], data);
-
-                                        } else {
-                                            console.log(error);
-                                        }
-                                    });
-                            } else {
-                                console.log(err);
+                        {
+                            $group: {
+                                _id: "$workflow",
+                                opportunitieId: { $push: "$_id" },
+                                count: { $sum: 1 }
                             }
-                        }
-                    );
-                } else {
+                        },
+                        function (err, responseApplications) {
+                            if (!err) {
+                                console.log(responseApplications);
+                                var responseApplicationsArray = [];
+                                var columnValue = data.count;
+                                var page = data.page;
+                                var startIndex, endIndex;
+                                showMore = responseApplications.getShowmore(page * columnValue);
+                                responseApplications.forEach(function (value) {
+                                    if ((data.page - 1) * data.count > value.opportunitieId.length) {
+                                        startIndex = value.count;
+                                    } else {
+                                        startIndex = (data.page - 1) * data.count;
+                                    }
 
+                                    if (data.page * data.count > value.count) {
+                                        endIndex = value.count;
+                                    } else {
+                                        endIndex = data.page * data.count;
+                                    }
+
+                                    for (var k = startIndex; k < endIndex; k++) {
+                                        responseApplicationsArray.push(value.opportunitieId[k]);
+                                    }
+                                    optionsArray.push(value);
+                                });
+                                models.get(req.session.lastDb - 1, "Employees", employeeSchema).find().
+                                where('_id').in(responseApplicationsArray).
+								select("_id name proposedSalary jobPosition nextAction workflow editedBy.date").
+								populate('jobPosition','name').
+                                populate('workflow','_id').
+								sort({ 'editedBy.date': -1 }).
+                                exec(function (err, result) {
+                                    if (!err) {
+                                        res['showMore'] = showMore;
+                                        res['options'] = optionsArray;
+                                        res['data'] = result;
+                                        response.send(res);
+                                    } else {
+                                        logWriter.log("application.js getApplicationForKanban opportunitie.find" + err);
+                                        response.send(500, { error: "Can't find application" });
+                                    }
+                                })
+                            } else {
+                                logWriter.log("application.js getApplicationForKanban task.find " + err);
+                                response.send(500, { error: "Can't group application" });
+                            }
+                        });
+                } else {
+                    console.log(err);
                 }
             });
-
-
-        var getEmployees = function (employeesArray, data) {
-
-            var employeesArrayForSending = [];
-            for (var k = (data.page - 1) * data.count; k < (data.page * data.count) ; k++) {
-                if (k < employeesArray.length) {
-                    employeesArrayForSending.push(employeesArray[k]);
-                }
-
-            }
-            res['listLength'] = employeesArray.length;
-            res['data'] = employeesArrayForSending;
-            response.send(res);
-        }
-	};
+    };
 
    /* function getApplicationsForList(req, data, response) {
         var res = {}

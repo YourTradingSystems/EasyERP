@@ -41,7 +41,7 @@
 				   $(e.target).parents("td").find(".current-selected").text($(e.target).text());
 				   var id=$(e.target).parents("td").find("select").attr("id").replace("stage","");
 				   var obj = this.collection.get(id);
-				   obj.set({workflow: $(e.target).parents("td").find("select option").eq(k).data("id")})
+				   obj.set({workflow: $(e.target).parents("td").find("select option").eq(k).data("id"),workflowForList:true})
                    obj.save({}, {
                        headers: {
                            mid: 39
@@ -67,11 +67,11 @@
 				   this.$el.append(_.template(ListTemplate, { leadsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
 				   var leadsCollection=this.collection.toJSON();
 				   for (var i=0;i<leadsCollection.length;i++){
-					   var item = leadsCollection[i];
-					   var id="#stage"+item._id;
-					   common.populateWorkflows("Lead", id, "", "/Workflows", item,function(id){
-						   self.styleSelect(id);
-					   });
+				       var item = leadsCollection[i];
+				       var id="#stage"+item._id;
+				       common.populateWorkflows("Lead", id, "", "/Workflows", item,function(id){
+				    	   self.styleSelect(id);
+				       });
 					   
 				   }
 			   }

@@ -520,6 +520,9 @@ app.get('/Projects/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getProjectsById(req, res, data);
             break;
+        case "list": requestHandler.getProjectsForList(req, res, data);
+            break;
+
         default: requestHandler.getProjects(req, res, data);
             break;
     }
@@ -552,6 +555,8 @@ app.get('/Tasks/:viewType', function (req, res) {
         case "form": requestHandler.getTaskById(req, res, data);
             break;
         case "list": requestHandler.getTasksForList(req, res, data);
+            break;
+        case "kanban": requestHandler.getTasksForKanban(req, res, data);
             break;
         default: requestHandler.getTasksByProjectId(req, res, data);
             break;
@@ -704,6 +709,8 @@ app.get('/Companies/:viewType', function (req, res) {
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
+            break;
+        case "list": requestHandler.getFilterCompaniesForList(req, res, data);
             break;
         default: requestHandler.getFilterCompanies(req, res, data);
             break;
@@ -1196,6 +1203,8 @@ app.get('/Leads/:viewType', function (req, res) {
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
+            break;
+        case "list": requestHandler.getLeadsForList(req, res, data);
             break;
         default: requestHandler.getLeadsCustom(req, res, data);
             break;

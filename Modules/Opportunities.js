@@ -579,6 +579,95 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
             });
     };
+    function getLeadsForList(req, data, response) {
+        var res = {};
+        res['data'] = [];
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isOpportunitie: false
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.select("_id createdBy editedBy name workflow contactName phones campaign source email").
+								populate('company', 'name').
+                                populate('createdBy.user', 'login').
+                                populate('editedBy.user', 'login').
+                                skip((data.page - 1) * data.count).
+                                limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        res['listLength'] = _res.length;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+                } else {
+                    console.log(err);
+                }
+            });
+    };
 
     function update(req, _id, data, res) {
         function updateOpp() {
@@ -592,7 +681,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             isCustomer: true,
                             salesPerson: data.salesPerson
                         },
-                        type: ''
+                        type: 'Person'
                     }
                     models.get(req.session.lastDb - 1, "Customers", customer.customerSchema).find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
                         if (err) {
@@ -645,17 +734,24 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             if (data.workflow && data.workflow._id) {
                 data.workflow = data.workflow._id;
             }
-            if (data.groups.group) {
+            if (data.groups&&data.groups.group) {
                 data.groups.group.forEach(function (group, index) {
                     if (group._id) data.groups.group[index] = newObjectId(group._id.toString());
                 });
             }
-            if (data.groups.users) {
+            if (data.groups&&data.groups.users) {
                 data.groups.users.forEach(function (user, index) {
                     if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
                 });
             }
 
+			if (data.workflowForList){
+				data={
+					$set:{
+						workflow:data.workflow
+					}
+				}
+			}
 
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
                 console.log(data);
@@ -695,7 +791,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                         })
                                     }
                                 } else {
-                                    var _Company = new customer.customer(_company);
+                                    var _Company = new models.get(req.session.lastDb - 1, 'Customers', customer.customerSchema)(_company);
                                     _Company.save(function (err, _res) {
                                         if (err) {
                                             console.log(err);
@@ -931,17 +1027,18 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 });
                                 models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().
                                 where('_id').in(responseOpportunitiesArray).
+								select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue").
                                 //populate('relatedUser').
-                                populate('customer','name').
+								populate('customer','name').
                                 //populate('department').
                                 //populate('jobPosition').
                                 populate('salesPerson','name').
-                                populate('workflow','_id name').
-                                sort({ 'editedBy.date': -1 }).
-                                populate('createdBy.user','login').
-                                populate('editedBy.user','login').
-                                populate('groups.users','_id login').
-                                populate('groups.group', '_id departmentName').
+                                populate('workflow','_id').
+								sort({ 'editedBy.date': -1 }).
+								//populate('createdBy.user','login').
+                                //populate('editedBy.user','login').
+                                //populate('groups.users','_id login').
+                                //populate('groups.group', '_id departmentName').
                                 exec(function (err, result) {
                                     if (!err) {
                                         res['showMore'] = showMore;
@@ -990,6 +1087,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         getLeads: getLeads,
 
         getLeadsForChart: getLeadsForChart,
+
+		getLeadsForList: getLeadsForList,
 
         getLeadsCustom: getLeadsCustom,
 
