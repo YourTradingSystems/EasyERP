@@ -21,7 +21,7 @@ define([
             "easyErp/:contentType/form/:modelId": "goToForm",
             "easyErp/:contentType/list(/:parrentContentId)": "goToList",
             "easyErp/Profiles": "goToProfiles",
-            "easyErp/UsersPages": "goToUserPages",
+            "easyErp/myProfile": "goToUserPages",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
             "easyErp/:contentType": "getList",
@@ -86,7 +86,7 @@ define([
 
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
-                    var url = '#easyErp/UsersPages';
+                    var url = '#easyErp/myProfile';
                     Backbone.history.navigate(url, { replace: true });
                 }
             });
