@@ -34,7 +34,12 @@ define([
                                 isOpportunitie: true,
                                 isConverted: true,
 								convertedDate:new Date(),
-                                createCustomer: createCustomer
+                                createCustomer: createCustomer,
+                                expectedRevenue: {
+                                    currency: null,
+                                    progress: null,
+                                    value: null
+                                }
                             }, {
                                 headers: {
                                     mid: 39

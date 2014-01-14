@@ -22,8 +22,8 @@
 		</dl>
 	  </div>
 	  <div class="half-block left">
-        <dl class="person-info">			
-		  <dt>Next Action </dt><dd><span><%=nextAction.date%> - <%=nextAction.desc%></span></dd>
+        <dl class="person-info">
+          <dt>Next Action </dt><dd><span><%(nextAction && nextAction.date) ? nextAction.date : ''%> - <%(nextAction && nextAction.desc) ? nextAction.desc : ''%></span></dd>
 		  <dt>Expected Closing </dt><dd><span><%=expectedClosing%></span></dd>
 		  <dt>Priority </dt><dd><span><%=priority%></span></dd>
 		</dl>

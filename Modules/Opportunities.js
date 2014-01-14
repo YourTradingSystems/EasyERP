@@ -747,7 +747,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 });
             }
 
-			if (data.workflowForList){
+			if (data.workflowForList || data.workflowForKanban){
 				data={
 					$set:{
 						workflow:data.workflow
