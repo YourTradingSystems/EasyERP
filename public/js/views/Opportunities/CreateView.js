@@ -371,8 +371,8 @@ define([
                     }
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
 
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
@@ -381,7 +381,7 @@ define([
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons);
                 common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam);
                 common.populatePriority(App.ID.priorityDd, App.URL.priorities);
-                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows');
+                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/WorkflowsForDd');
                 this.delegateEvents(this.events);
                 return this;
             }

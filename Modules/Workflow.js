@@ -86,7 +86,7 @@ var Workflow = function (logWriter, mongoose, models) {
             res['data'] = [];
             //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             var query = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ wId: data.type.id });
-            query.sort({ 'sequence': 1 });
+            query.select('name wName');
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -128,10 +128,11 @@ var Workflow = function (logWriter, mongoose, models) {
             }
         },
 
-        getRelatedStatus: function (req, response) {
+        getRelatedStatus: function (req, response, data) {
             try {
                 var res = {};
                 res['data'] = [];
+                var queryObj = {type:null};
                 models.get(req.session.lastDb - 1, "relatedStatus", relatedStatusSchema).find({}, function (err, _statuses) {
                     if (err) {
                         console.log(err);

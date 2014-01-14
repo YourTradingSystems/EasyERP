@@ -155,6 +155,24 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
         });
     }
 
+    function getJobPositionForDd(req, response) {
+        var res = {};
+        res['data'] = [];
+        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
+        query.select('_id name');
+        query.exec(function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log('JobPosition.js get job.find' + err);
+                response.send(500, { error: "Can't find JobPosition" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    }; 
+
+
     function get(req, response) {
         var res = {};
         res['data'] = [];
@@ -573,6 +591,8 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
             update: update,
 
             remove: remove,
+
+			getJobPositionForDd:getJobPositionForDd,
 
             jobPositionSchema: jobPositionSchema
         };

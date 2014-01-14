@@ -1,19 +1,20 @@
 define(function () {
-    var WorkflowModel = Backbone.Model.extend({
+    var relatedStatusModel = Backbone.Model.extend({
         idAttribute: '_id'
     });
 
-    var WorkflowsCollection = Backbone.Collection.extend({
-        model: WorkflowModel,
+    var relatedStatusesCollection = Backbone.Collection.extend({
+        model: relatedStatusModel,
         url: function () {
             var mid = 39,
                 url = "/relatedStatus?mid=" + mid;
             return url;
         },
 
-        initialize: function () {
+        initialize: function (options) {
             console.log("RelatedStatuses Collection Init");
             this.fetch({
+                type: (options && options.type) ? options.type : '',
                 type: 'GET',
                 reset: true,
                 success: this.fetchSuccess,
@@ -36,5 +37,5 @@ define(function () {
 
     });
 
-    return WorkflowsCollection;
+    return relatedStatusesCollection;
 });

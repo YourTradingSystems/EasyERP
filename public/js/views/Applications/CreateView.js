@@ -448,15 +448,15 @@ define([
                     }
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.relatedUsersDd, "/getForDdByRelatedUser", null, function () { self.styleSelect(App.ID.relatedUsersDd); });
 //                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
-                common.populateDepartments(App.ID.departmentDd, "/Departments",null,function(){self.styleSelect(App.ID.departmentDd);});
-                common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition",null,function(){self.styleSelect(App.ID.jobPositionDd);});
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd",null,function(){self.styleSelect(App.ID.departmentDd);});
+//                common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd",null,function(){self.styleSelect(App.ID.jobPositionDd);});
 				self.styleSelect("#sourceDd");
 				self.styleSelect("#jobtapeDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);

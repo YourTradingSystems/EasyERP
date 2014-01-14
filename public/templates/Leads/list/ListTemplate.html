@@ -8,10 +8,9 @@
     <td class = "notForm"><a href="skype:<%=lead.phones.phone%>?call"><%=lead.phones.phone%></a></td>
     <td><%=lead.campaign%></td>
     <td><%=lead.source%></td>
-  <td class="withSelect">
-	  <select id='stage<%=lead._id%>'>
-	  </select>
-	  </td>
+    <td id='<%=lead._id%>'>
+        <a href="javascript:;" class="stageSelect"><%=(lead.workflow) ? lead.workflow.name : ''%></a>
+    </td>
     <td><%=(lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
     <td><%=(lead.editedBy.user) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
 </tr>

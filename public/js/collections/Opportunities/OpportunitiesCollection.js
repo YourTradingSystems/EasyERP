@@ -30,8 +30,9 @@ define([
                 if (response.data) {
                     _.map(response.data, function (opportunity) {
                         opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
-                        opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
-                        opportunity.nextAction.date = common.utcDateToLocaleDate(opportunity.nextAction.date);
+						opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
+						if (opportunity.nextAction)
+							opportunity.nextAction.date = common.utcDateToLocaleDate(opportunity.nextAction.date);
                         return opportunity;
                     });
                 }

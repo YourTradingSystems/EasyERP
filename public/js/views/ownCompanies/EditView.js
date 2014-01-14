@@ -370,11 +370,11 @@ define([
                 });
 			    $('#text').datepicker({ dateFormat: "d M, yy" });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
-			    common.populateEmployeesDd(App.ID.employeesDd, "/Employees", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.employeesDd); });
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
+			    common.populateEmployeesDd(App.ID.employeesDd, "/getSalesPerson", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.employeesDd); });
 			    this.styleSelect('#language');
 			    this.delegateEvents(this.events);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

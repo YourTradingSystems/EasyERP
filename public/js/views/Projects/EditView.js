@@ -343,12 +343,12 @@ define([
                     }
                 });
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-				common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
+				common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
-                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON());
+                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON());
 				var model = this.currentModel.toJSON();
 				if (model.groups)
 					if (model.groups.users.length>0||model.groups.group.length){
