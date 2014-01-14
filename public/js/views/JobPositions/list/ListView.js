@@ -2,10 +2,11 @@ define([
     'text!templates/JobPositions/list/ListHeader.html',
     'views/JobPositions/CreateView',
     'views/JobPositions/list/ListItemView',
-    'views/JobPositions/EditView'
+    'views/JobPositions/EditView',
+    'models/JobPositionsModel'
 ],
 
-    function (ListTemplate, CreateView, ListItemView, EditView) {
+    function (ListTemplate, CreateView, ListItemView, EditView,CurrentModel) {
         var JobPositionsListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -34,7 +35,17 @@ define([
                 //create editView in dialog here
                 App.ownContentType = true;
                 var id = $(e.target).closest("tr").data("id");
-                new EditView({myModel:this.collection.get(id)});
+				var model = new CurrentModel();
+				model.urlRoot = '/JobPositions/form';
+				model.fetch({
+					data: { id: id },
+					success: function (model, response, options) {
+						new EditView({ model: model });
+					},
+					error: function () { alert('Please refresh browser'); }
+				});
+
+//                new EditView({myModel:this.collection.get(id)});
     			return false;
             },
  			hideItemsNumber:function(e){

@@ -442,6 +442,89 @@ var Project = function (logWriter, mongoose, department, models) {
             }
         });
     };
+    function getProjectsForList(req, data, response) {
+        var res = {};
+        res['data'] = [];
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                        {
+                            $match: {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress ").
+									populate('createdBy.user', 'login').
+									populate('editedBy.user', 'login').
+									populate('projectmanager', 'name').
+									populate('customer', 'name').
+									skip((data.page - 1) * data.count).
+									limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        res['listLength'] = _res.length;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+                } else {
+                    console.log(err);
+                }
+            });
+    }
 
     function get(req, data, response) {
         var res = {};
@@ -659,6 +742,14 @@ var Project = function (logWriter, mongoose, department, models) {
             delete data._id;
             delete data.createdBy;
             delete data.task;
+			if (data.workflowForList){
+				data={
+					$set:{
+						workflow:data.workflow
+					}
+				}
+			}
+
             models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
@@ -1194,6 +1285,137 @@ var Project = function (logWriter, mongoose, department, models) {
         });
     };
 
+    function getTasksForKanban(req, data, response) {
+        var res = {};
+        res['data'] = [];
+        res['options'] = [];
+        var optionsArray = [];
+        var showMore = false;
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                        {
+                            $match: {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id:1
+                            }
+                        },
+                        function (err, responseApplications) {
+                            if (!err) {
+								responseApplicationsArray = []
+								responseApplications.forEach(function(item){
+									responseApplicationsArray.push(item._id)
+								})
+                                models.get(req.session.lastDb - 1, "Task", TasksSchema).aggregate(
+									{
+										$match: {"project":{$in:responseApplicationsArray}}
+										
+									},
+									{
+										$group: {
+											_id: "$workflow",
+											opportunitieId: { $push: "$_id" },
+											count: { $sum: 1 },
+											remaining:{$sum: "$remaining"}
+										}
+									}
+								).
+									exec(function (err, responseApplications) {
+
+										var responseApplicationsArray = [];
+										var columnValue = data.count;
+										var page = data.page;
+										var startIndex, endIndex;
+										showMore = responseApplications.getShowmore(page * columnValue);
+										responseApplications.forEach(function (value) {
+											if ((data.page - 1) * data.count > value.opportunitieId.length) {
+												startIndex = value.count;
+											} else {
+												startIndex = (data.page - 1) * data.count;
+											}
+
+											if (data.page * data.count > value.count) {
+												endIndex = value.count;
+											} else {
+												endIndex = data.page * data.count;
+											}
+
+											for (var k = startIndex; k < endIndex; k++) {
+												responseApplicationsArray.push(value.opportunitieId[k]);
+											}
+											optionsArray.push(value);
+										});
+										models.get(req.session.lastDb - 1, "Task", TasksSchema).find().
+											where('_id').in(responseApplicationsArray).
+											select("_id assignedTo workflow editedBy.date deadline project taskCount summary type").
+											populate('assignedTo','name imageSrc').
+											populate('project','projectShortDesc').
+											populate('workflow','_id').
+											sort({ 'editedBy.date': -1 }).
+											exec(function (err, result) {
+												if (!err) {
+													res['showMore'] = showMore;
+													res['options'] = optionsArray;
+													res['data'] = result;
+													response.send(res);
+												} else {
+													logWriter.log("application.js getTaskForKanban opportunitie.find" + err);
+													response.send(500, { error: "Can't find task" });
+												}
+											})
+									})
+                            } else {
+                                logWriter.log("application.js getTaskForKanban task.find " + err);
+                                response.send(500, { error: "Can't group task" });
+                            }
+                        });
+                } else {
+                    console.log(err);
+                }
+            });
+    };
+
+
     function getTasksForList(req, data, response) {
         var res = {};
         res['data'] = [];
@@ -1365,6 +1587,7 @@ var Project = function (logWriter, mongoose, department, models) {
         create: create,//End create
         getForDd: getForDd,
         get: get,
+		getProjectsForList:getProjectsForList,
         getById: getById,
         update: update,
         remove: remove,
@@ -1375,6 +1598,7 @@ var Project = function (logWriter, mongoose, department, models) {
         getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,
         getTasksForList: getTasksForList,
+		getTasksForKanban:getTasksForKanban,
         getTasksPriority: getTasksPriority,
         ProjectSchema: ProjectSchema,
         TasksSchema: TasksSchema

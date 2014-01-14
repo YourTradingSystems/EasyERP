@@ -111,8 +111,10 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (lead) {
-                        lead.createdBy.date = common.utcDateToLocaleDateTime(lead.createdBy.date);
-                        lead.editedBy.date = common.utcDateToLocaleDateTime(lead.editedBy.date);
+						if(lead.createdBy)
+							lead.createdBy.date = common.utcDateToLocaleDateTime(lead.createdBy.date);
+						if(lead.editedBy)
+							lead.editedBy.date = common.utcDateToLocaleDateTime(lead.editedBy.date);
                         return lead;
                     });
                 }

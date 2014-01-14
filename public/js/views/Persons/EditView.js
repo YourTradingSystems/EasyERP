@@ -191,7 +191,7 @@ define([
                 var company = $('#companiesDd option:selected').val();
                 company = (company) ? company : null;
 
-                var department = $("#department option:selected").val();
+                var department = $("#departmentDd option:selected").val();
                 department = (department) ? department : null;
 
                 var jobPosition = $.trim(this.$el.find('#jobPositionInput').val());
@@ -350,10 +350,10 @@ define([
                     maxDate: '-18y'
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
-                common.populateCompanies(App.ID.companiesDd, "/Companies", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
-                common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
+                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+                common.populateCompanies(App.ID.companiesDd, "/CompaniesForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
                 this.styleSelect(App.ID.titleDd);
                 this.styleSelect(App.ID.tagsDd);
                 //                this.populateDropDown("company", App.ID.companiesDd, "/Companies");

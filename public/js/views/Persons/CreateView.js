@@ -1,12 +1,11 @@
 define([
     "text!templates/Persons/CreateTemplate.html",
-    "collections/Companies/CompaniesCollection",
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
     "models/PersonsModel",
     "common"
 ],
-    function (CreateTemplate, CompaniesCollection, PersonsCollection, DepartmentsCollection, PersonModel, common) {
+    function (CreateTemplate, PersonsCollection, DepartmentsCollection, PersonModel, common) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -303,8 +302,8 @@ define([
                 });
                 var personModel = new PersonModel();
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 //common.contentHolderHeightFixer();
                 this.$el.find('.dateBirth').datepicker({
@@ -314,8 +313,8 @@ define([
                     yearRange: '-100y:c+nn',
                     maxDate: '-18y'
                 });
-                common.populateCompanies(App.ID.companiesDd, "/Companies", this.models);
-                common.populateDepartments(App.ID.departmentDd, "/Departments");
+                common.populateCompanies(App.ID.companiesDd, "/CompaniesForDd", this.models);
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd");
                 this.delegateEvents(this.events);
                 return this;
             }

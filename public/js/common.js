@@ -381,7 +381,7 @@
                 var options = [];
                 if (model && (model.department || (model.salesPurchases && model.salesPurchases.salesTeam) || model.salesTeam || model.parentDepartment)) {
                     options = $.map(response.data, function (item) {
-                        return ((model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment === item._id)) ?
+                        return ((model.department === item._id) || (model.department && model.department._id === item._id) || (model.salesPurchases && model.salesPurchases.salesTeam && model.salesPurchases.salesTeam._id === item._id) || (model.salesTeam === item._id) || (model.parentDepartment && model.parentDepartment === item._id)) ?
                             $('<option/>').val(item._id).text(item.departmentName).attr('selected', 'selected').attr('data-level', item.nestingLevel) :
                             $('<option/>').val(item._id).text(item.departmentName).attr('data-level', item.nestingLevel);
                     });
@@ -669,7 +669,7 @@
             selectList.empty();
             selectList.next(".userPagination").remove();
             var self = this;
-            dataService.getData('/Users', { mid: 39, page: page, count: 20 }, function (response) {
+            dataService.getData('/UsersForDd', { mid: 39, page: page, count: 20 }, function (response) {
                 var options = [];
                 if (model) {
                     var users = [];
@@ -779,7 +779,6 @@
                         if (b && $.isNumeric(item._id.toUpperCase())) {
                             b = false;
                             return "0-9"
-
                         }
                         return item._id.toUpperCase();
                     });
@@ -788,6 +787,12 @@
                     if (callback) callback(letterArr);
                 });
             }
+            return [];
+        }
+        var buildPagination = function (collection, callback) {
+                collection.getListLength(function (listLength) {
+                    callback(listLength);
+                });
             return [];
         }
         var buildAllAphabeticArray = function () {
@@ -812,6 +817,7 @@
             populateProfilesDd: populateProfilesDd,
             buildAllAphabeticArray: buildAllAphabeticArray,
             buildAphabeticArray: buildAphabeticArray,
+            buildPagination: buildPagination,
             populateDegrees: populateDegrees,
             populateSourceApplicants: populateSourceApplicants,
             populateJobPositions: populateJobPositions,

@@ -79,8 +79,10 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (jopPosition) {
-                        jopPosition.createdBy.date = common.utcDateToLocaleDateTime(jopPosition.createdBy.date);
-                        jopPosition.editedBy.date = common.utcDateToLocaleDateTime(jopPosition.editedBy.date);
+						if (jopPosition.createdBy)
+							jopPosition.createdBy.date = common.utcDateToLocaleDateTime(jopPosition.createdBy.date);
+						if (jopPosition.editedBy)
+							jopPosition.editedBy.date = common.utcDateToLocaleDateTime(jopPosition.editedBy.date);
                         return jopPosition;
                     });
                 }
