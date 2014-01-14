@@ -87,6 +87,7 @@ define([
                    this.$el.html(this.template());
                    this.renderPopulate();
                    this.renderPopulateSource();
+				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 
                },
                renderPopulateSource: function () {
