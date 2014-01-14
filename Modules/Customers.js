@@ -488,6 +488,101 @@
                     }
                 });
         },
+        getFilterPersonsForList: function (req, data, response) {
+            var res = {};
+            res['data'] = [];
+
+            var aggObject = {};
+            if (data.letter) {
+                aggObject['type'] = 'Person';
+                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+            } else {
+                aggObject['type'] = 'Person';
+            };
+
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        aggObject,
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+                                    if (data && data.status && data.status.length > 0)
+                                        query.where('workflow').in(data.status);
+                                    query.select("_id createdBy editedBy address.country email name phones.phone").
+                                        populate('createdBy.user','login').
+                                        populate('editedBy.user','login').
+                                        skip((data.page-1)*data.count).
+                                        limit(data.count).
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                res['data'] = _res;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                } else {
+                                    console.log(err);
+                                }
+                            }
+                        );
+
+                    } else {
+                        console.log(err);
+                    }
+                });
+        },
 
         getPersonAlphabet: function (req, response) {
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -784,6 +879,104 @@
                                         populate('salesPurchases.salesTeam', '_id departmentName').
                                         populate('createdBy.user').
                                         populate('editedBy.user').
+                                        skip((data.page-1)*data.count).
+                                        limit(data.count).
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                res['data'] = _res;
+                                                res['listLength'] = _res.length;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                } else {
+                                    console.log(err);
+                                }
+                            }
+                        );
+                    } else {
+                        console.log(err);
+                    }
+                });
+
+        },
+        getFilterCompaniesForList: function (req, data, response) {
+            var res = {};
+            res['data'] = [];
+
+            var aggObject = {};
+            if (data.letter) {
+                aggObject['type'] = 'Company';
+                aggObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+            } else {
+                aggObject['type'] = 'Company';
+            };
+
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        console.log(arrOfObjectId);
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        aggObject,
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+                                    if (data && data.status && data.status.length > 0)
+                                        query.where('workflow').in(data.status);
+                                    query.select("_id editedBy createdBy salesPurchases name email phones.phone address.country").
+										populate('salesPurchases.salesPerson', '_id name').
+                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                        populate('createdBy.user','login').
+                                        populate('editedBy.user','login').
                                         skip((data.page-1)*data.count).
                                         limit(data.count).
                                         exec(function (error, _res) {

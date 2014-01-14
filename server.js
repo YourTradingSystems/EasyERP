@@ -421,6 +421,8 @@ app.get('/Persons/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getPersonById(req, res, data);
             break;
+        case "list": requestHandler.getFilterPersonsForList(req, res, data);
+            break;
         default: requestHandler.getFilterPersons(req, res, data);
             break;
     }

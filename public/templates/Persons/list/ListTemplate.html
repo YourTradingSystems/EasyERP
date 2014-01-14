@@ -7,7 +7,7 @@
     <td><%=person.email%></td>
     <td class = "notForm"><a href="skype:<%=person.phones.phone%>?call"><%=person.phones.phone%></a></td>
     <td><%=person.address.country%></td>
-    <td><%=person.createdBy.date + ' (' + person.createdBy.user.login + ')'%></td>
-    <td><%=(person.editedBy.user) ? person.editedBy.date + ' (' + person.editedBy.user.login + ')' : ''%></td>
+    <td><%=(person.createdBy)?(person.createdBy.date + ' (' + person.createdBy.user.login + ')'):''%></td>
+    <td><%=(person.editedBy)?((person.editedBy.user) ? person.editedBy.date + ' (' + person.editedBy.user.login + ')' : ''):''%></td>
 </tr>
 <% }) %>
