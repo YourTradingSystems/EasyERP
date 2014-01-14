@@ -612,7 +612,7 @@
                     }
                 } else {
                     options = $.map(response.data, function (item) {
-                        return "<li><input type='checkbox' value='" + item._id + "'" + "/><span>" + item.name + "</span></li>"
+                        return "<li><input type='checkbox' checked='checked' value='" + item._id + "'" + "/><span>" + item.name + "</span></li>"
 
                     });
                 }

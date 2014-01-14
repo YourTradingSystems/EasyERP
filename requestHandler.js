@@ -351,6 +351,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
         // console.log("Requst getPersons is success");
     };
+    function getFilterPersonsForList(req, res, data) {
+        console.log("Requst getPersons is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 49, function (access) {
+                console.log(access);
+                if (access) {
+                    customer.getFilterPersonsForList(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+        // console.log("Requst getPersons is success");
+    };
 
     function getPersonById(req, res, data) {
         console.log("Requst getPersons is success");
@@ -2001,6 +2018,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getCustomer: getCustomer,
         getFilterPersons: getFilterPersons,
         getPersonAlphabet: getPersonAlphabet,
+		getFilterPersonsForList:getFilterPersonsForList,
 
         getProjects: getProjects,
 		getProjectsForList:getProjectsForList,

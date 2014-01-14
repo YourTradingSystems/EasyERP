@@ -643,8 +643,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id createdBy editedBy name workflow contactName phones campaign source email nextAction").
+                                query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
 								populate('company', 'name').
+								populate('workflow',"name").
                                 populate('createdBy.user', 'login').
                                 populate('editedBy.user', 'login').
                                 skip((data.page - 1) * data.count).
@@ -670,7 +671,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     };
 
     function update(req, _id, data, res) {
-
         function updateOpp() {
             var createPersonCustomer = function (company) {
                 if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
@@ -711,6 +711,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }                                              //����� �������� Person
             };
 
+
+            console.log(_id);
+            console.log(data.groups);
+
+
             if (data.company && data.company._id) {
                 data.company = data.company._id;
             } else if (data.company) {
@@ -742,13 +747,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 });
             }
 
-			if (data.workflowForList || data.workflowForKanban){
-                data = {
-                    $set:{
-                        workflow:data.workflow
-                    }
-                }
-            }
+			if (data.workflowForList){
+				data={
+					$set:{
+						workflow:data.workflow
+					}
+				}
+			}
 
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
                 console.log(data);

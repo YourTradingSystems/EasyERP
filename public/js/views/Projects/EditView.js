@@ -178,7 +178,6 @@ define([
                 $('.edit-project-dialog').remove();
 				$(".add-group-dialog").remove();
 				$(".add-user-dialog").remove();
-                Backbone.history.navigate("home/content-" + 'Projects');
             },
 
             changeWorkflow: function (e) {
@@ -322,7 +321,7 @@ define([
                     resizable: false,
                     title: "Edit Project",
                     dialogClass: "edit-project-dialog",
-                    width: "950px",
+                    width: "900px",
                     //height: 225,
                     buttons:{
                         save:{

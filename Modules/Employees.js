@@ -1084,13 +1084,13 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-								query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow').
+								query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow email department').
 									populate('manager','name').
 									populate('jobPosition','name').
 									populate('createdBy.user','login').
 									populate('department','departmentName').
 									populate('editedBy.user','login').
-									populate('workflow','wId').
+									populate('workflow','name').
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;

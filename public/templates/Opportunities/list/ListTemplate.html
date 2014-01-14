@@ -9,9 +9,8 @@
             <td><%=(opportunity.customer) ? opportunity.customer.name.first + ' ' + opportunity.customer.name.last : ''%></td>
             <td><%=(opportunity.nextAction) ? opportunity.nextAction.date : ''%></td>
             <td><%=(opportunity.nextAction) ? opportunity.nextAction.desc : ''%></td>
-            <td class="withSelect">
-			  <select id='stage<%=opportunity._id%>'>
-			  </select>
+            <td  id='<%=opportunity._id%>'>
+			  <a href="javascript:;" class="stageSelect"><%=(opportunity.workflow) ? opportunity.workflow.name : ''%></a>
 			</td>
             <td><%=(opportunity.salesPerson && opportunity.salesPerson.name) ? opportunity.salesPerson.name.first + ' ' + opportunity.salesPerson.name.last : ''%></td>
             <td><%=(opportunity.createdBy.user) ? opportunity.createdBy.user.login + " (" + opportunity.createdBy.date +  ")" : ''%></td>

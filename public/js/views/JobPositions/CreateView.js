@@ -258,7 +258,7 @@ define([
                     resizable:true,
                     dialogClass:"create-dialog",
                     title: "Edit Job position",
-                    width:"80%",
+                    width:"1200",
                     height:460,
                     buttons: [
                         {
