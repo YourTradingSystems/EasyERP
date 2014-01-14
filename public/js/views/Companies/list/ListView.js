@@ -133,7 +133,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common) {
 				$(document).on("click",function(){
 					self.hideItemsNumber();
 				});
-				
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             },
 
             previousPage: function (event) {

@@ -172,6 +172,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                     }
                 }
             }).disableSelection();
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             return this;
         }
     });

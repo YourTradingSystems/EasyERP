@@ -9,7 +9,8 @@
             page: 1,
             count: 13,
 
-            initialize: function (options) {
+            initialize: function (options) {				
+				this.startTime = new Date();
                 this.namberToShow = options.count;
                 this.count = options.count;
                 var that = this;

@@ -140,7 +140,7 @@ define([
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);
                 });
-
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             },
 
             previousPage: function (event) {

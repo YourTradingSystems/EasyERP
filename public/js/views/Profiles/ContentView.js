@@ -10,6 +10,7 @@ define([
             contentType: "Profiles",
             actionType:"Content",
             initialize: function (options) {
+				this.startTime = new Date();
                 this.profilesCollection = options.collection;
                 this.profilesCollection.bind('add', _.bind(this.render, this));
                 this.profilesCollection.bind('reset', _.bind(this.render, this));
@@ -236,6 +237,7 @@ define([
                     { profilesCollection:this.profilesCollection.toJSON(),
                         contentType: this.contentType
                     }));
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
                 return this;
             }
         });

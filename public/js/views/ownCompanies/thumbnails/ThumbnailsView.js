@@ -44,6 +44,7 @@ function (OwnCompaniesThumbnailsItemView, Custom, common, EditView, CreateView) 
             if (arrayOfOwnCcompanies.length > 0) {
                 this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             }
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             return this;
         },
 

@@ -85,6 +85,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
         },
 
         showMore: function () {

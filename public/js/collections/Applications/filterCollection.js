@@ -10,6 +10,7 @@
             count: 13,
 
             initialize: function (options) {
+				this.startTime = new Date();
                 this.status = [];
                 this.status = options.status;
                 this.count = options.count;

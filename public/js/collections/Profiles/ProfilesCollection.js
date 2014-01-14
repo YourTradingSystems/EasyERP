@@ -8,6 +8,7 @@ define([
                 return "/Profiles";
             },
             initialize: function () {
+				this.startTime = new Date();
                 mid = 39;
 
                 this.fetch({

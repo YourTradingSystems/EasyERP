@@ -10,6 +10,7 @@ define([
                template: _.template(DashboardTemplate),
                el: '#content-holder',
                initialize: function () {
+				   this.startTime = new Date();
                    this.dateRange = 30;
                    this.dateRangeSource = 30;
                    this.dateItem = "D";
@@ -86,6 +87,7 @@ define([
                    this.$el.html(this.template());
                    this.renderPopulate();
                    this.renderPopulateSource();
+
                },
                renderPopulateSource: function () {
                    var self = this;

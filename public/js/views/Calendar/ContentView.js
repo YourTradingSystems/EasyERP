@@ -438,6 +438,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);
             Calendar.initMiniCalendar("miniCalendar");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             return this;
         }
     });

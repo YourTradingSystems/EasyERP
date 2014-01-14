@@ -12,6 +12,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
+			this.startTime = new Date();
             _.bindAll(this, "saveStatus", "render");
             this.relatedStatusesCollection = new RelatedStatusesCollection();
             this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));
@@ -237,6 +238,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
             var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName'), false);
             this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds }));
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         },
 

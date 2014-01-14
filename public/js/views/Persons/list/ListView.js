@@ -125,7 +125,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
                 self.deleteCounter = 0;
             });
 
-
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
         },
 
         previousPage: function (event) {

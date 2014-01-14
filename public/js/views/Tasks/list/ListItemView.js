@@ -36,7 +36,7 @@
 	               var obj = this.collection.get(id);
 	               obj.set({ workflow: $(e.target).attr("id"), workflowForList:true});
 	               obj.save({}, {
-	                   headers: {
+	                   headerse: {
 	                       mid: 39
 	                   },
 	                   success: function () {

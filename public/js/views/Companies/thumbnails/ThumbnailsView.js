@@ -65,7 +65,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
 				self.alphabeticArray = arr;
 				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 			});
-
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             return this;
         },
 

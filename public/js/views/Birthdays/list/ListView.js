@@ -19,6 +19,8 @@ function (ListTemplate, ListItemView, common, Custom) {
             var list = this.$el.find('#birthdaysList');
             list.find("#weekList").append(new ListItemView({ collection: this.employeesCollection.weekly }).render().el);
             list.find("#monthList").append(new ListItemView({ collection: this.employeesCollection.monthly }).render().el);
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+
         }
     });
     return ContentView;

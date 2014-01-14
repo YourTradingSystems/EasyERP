@@ -69,8 +69,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
 				return item._id;
 			});
 			common.getEmployeesImages(ids);
-
-
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
             return this;
         },
 
