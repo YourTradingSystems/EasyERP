@@ -627,7 +627,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getRelatedStatus(req, res, data) {
         console.log("Requst getRelatedStatus is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            workflow.getRelatedStatus(req, res);
+            workflow.getRelatedStatus(req, res, data);
         } else {
             res.send(401);
         }

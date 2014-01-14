@@ -625,7 +625,8 @@
                 });
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
-                if (callback) callback(selectId);
+                //if (callback) callback(selectId);
+                if (callback) callback(response.data);
             });
         }
 

@@ -555,7 +555,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
                                 query.populate('customer', 'name').
-                                populate('workflow', 'name').
+                                populate('workflow', '_id name').
                                 populate('createdBy.user', 'login').
                                 populate('editedBy.user', 'login').
                                 skip((data.page - 1) * data.count).

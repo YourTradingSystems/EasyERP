@@ -128,10 +128,11 @@ var Workflow = function (logWriter, mongoose, models) {
             }
         },
 
-        getRelatedStatus: function (req, response) {
+        getRelatedStatus: function (req, response, data) {
             try {
                 var res = {};
                 res['data'] = [];
+                var queryObj = {type:null};
                 models.get(req.session.lastDb - 1, "relatedStatus", relatedStatusSchema).find({}, function (err, _statuses) {
                     if (err) {
                         console.log(err);

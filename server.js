@@ -599,6 +599,7 @@ app.delete('/Tasks/:contentType/:_id', function (req, res) {
 app.get('/relatedStatus', function (req, res) {
     data = {};
     data.mid = req.param('mid');
+    data.type = req.param('type');
     requestHandler.getRelatedStatus(req, res, data);
 });
 
