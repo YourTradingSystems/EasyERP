@@ -144,6 +144,7 @@ define([
                 }
             });
         },
+
         buildCollectionRoute: function (contentType) {
             if (!contentType) {
                 throw new Error("Error building collection route. ContentType is undefined");
