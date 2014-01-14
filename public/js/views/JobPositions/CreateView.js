@@ -273,11 +273,11 @@ define([
 
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
                 common.populateDepartments(App.ID.departmentDd, "/Departments");
-                common.populateWorkflows("Jobposition", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+                common.populateWorkflows("Jobposition", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd");
                 this.delegateEvents(this.events);
                 return this;
             }

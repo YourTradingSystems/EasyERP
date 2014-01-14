@@ -330,6 +330,15 @@ app.get('/Profiles', function (req, res) {
     requestHandler.getProfile(req, res);
 });
 
+app.get('/ProfilesForDd', function (req, res) {
+    console.log('---------SERVER----getProfiles-------------------------------');
+    data = {};
+    data.mid = req.param('mid');
+    console.log(data);
+    console.log('--------END SERVER-----getProfiles-------------------------------');
+    requestHandler.getProfileForDd(req, res);
+});
+
 app.put('/Profiles/:_id', function (req, res) {
     console.log(req.body);
     data = {};

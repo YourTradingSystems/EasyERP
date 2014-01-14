@@ -115,6 +115,24 @@ var Profile = function (logWriter, mongoose, models) {
             }
         });
     };
+    function getProfileForDd(req, response) {
+        var res = {};
+        res['data'] = [];
+        var query = models.get(req.session.lastDb - 1, "Profile", ProfileSchema).find({});
+        query.select("_id profileName");
+        query.exec(function (err, result) {
+            if (err || result.length == 0) {
+                if (err) {
+                    console.log(err);
+                    logWriter.log("Profile.js getProfiles profile.find " + err);
+                }
+                response.send(404, { error: "Can't find Profile" });
+            } else {
+                res['data'] = result;
+                response.send(res);
+            }
+        });
+    };
 
     function updateProfile(req, _id, data, res) {
         try {
@@ -155,6 +173,8 @@ var Profile = function (logWriter, mongoose, models) {
         createProfile: createProfile,
         
         getProfile: getProfile,
+
+		getProfileForDd: getProfileForDd,
         
         updateProfile: updateProfile,
         
