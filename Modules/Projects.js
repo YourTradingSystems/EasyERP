@@ -1568,6 +1568,7 @@ var Project = function (logWriter, mongoose, department, models) {
                 populate('assignedTo', 'name').
                 populate('editedBy.user','login').
                 populate('createdBy.user','login').
+                populate('workflow','name').
                 skip((data.page - 1) * data.count).limit(data.count).
                 sort({ 'name.first': 1 }).
                 exec(function (err, returnTasks) {

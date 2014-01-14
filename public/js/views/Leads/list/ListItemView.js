@@ -34,7 +34,7 @@
 	               var targetElement = $(e.target).parents("td");
 	               var id = targetElement.attr("id");
 	               var obj = this.collection.get(id);
-	               obj.set({ workflow: $(e.target).attr("id") });
+	               obj.set({ workflow: $(e.target).attr("id"), workflowForList:true});
 	               obj.save({}, {
 	                   headers: {
 	                       mid: 39
@@ -55,6 +55,9 @@
 	           render: function () {
 	               var self = this;
 	               this.$el.append(_.template(ListTemplate, { leadsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
+				   $(document).on("click",function(){
+					   self.hideNewSelect();
+				   });
 	           }
 	       });
 

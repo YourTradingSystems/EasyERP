@@ -11,6 +11,7 @@ define([
             
             initialize: function (options) {
                 this.collection = options.collection;
+				this.stages = [];
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
@@ -132,6 +133,7 @@ define([
                     $("#nextPage").prop("disabled", true);
                 }
                 common.populateWorkflowsList("Lead", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+					self.stages = stages;
                     itemView.trigger('incomingSatges', stages);
                 });
                 this.deleteCounter = 0;
@@ -259,8 +261,12 @@ define([
             },
 
             showMoreContent: function (newModels) {
+				var self = this;
                 $("#listTable").empty();
-                new ListItemView({ collection: newModels }).render();
+                var itemView = new ListItemView({ collection: newModels });
+				itemView.render();
+				itemView.undelegateEvents();
+                itemView.trigger('incomingSatges', self.stages);
                 $("#pageList").empty();
                 var itemsNumber = $("#itemsNumber").text();
                 var pageNumber;

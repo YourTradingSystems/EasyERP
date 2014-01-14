@@ -11,6 +11,7 @@ define([
 
             initialize: function (options) {
                 this.collection = options.collection;
+				this.stages = [];
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
@@ -61,7 +62,9 @@ define([
                 console.log('Applications render');
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
-                this.$el.append(new ListItemView({ collection: this.collection}).render());
+                var itemView = new ListItemView({ collection: this.collection });
+                itemView.bind('incomingSatges', itemView.pushStages, itemView);
+                this.$el.append(itemView.render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -109,8 +112,10 @@ define([
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
                 }
-                common.populateWorkflowsList("Application", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows",null);
-				
+                common.populateWorkflowsList("Application", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+					self.stages = stages;
+                    itemView.trigger('incomingSatges', stages);
+                });
                 this.deleteCounter = 0;
 				$(document).on("click",function(e){
 					self.hideItemsNumber(e);
@@ -242,7 +247,10 @@ define([
 
             showMoreContent: function (newModels) {
                 $("#listTable").empty();
-                new ListItemView({ collection: newModels }).render();
+                var itemView = new ListItemView({ collection: newModels });
+				itemView.render();
+				itemView.undelegateEvents();
+                itemView.trigger('incomingSatges', self.stages);
                 $("#pageList").empty();
                 var itemsNumber = $("#itemsNumber").text();
                 var pageNumber;

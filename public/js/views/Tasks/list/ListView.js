@@ -1,15 +1,17 @@
 define([
     'text!templates/Tasks/list/ListHeader.html',
     'views/Tasks/CreateView',
-    'views/Tasks/list/ListItemView'
+    'views/Tasks/list/ListItemView',
+	'common'
 ],
 
-    function (ListTemplate, CreateView, ListItemView) {
+    function (ListTemplate, CreateView, ListItemView, common) {
         var TasksListView = Backbone.View.extend({
             el: '#content-holder',
 
             initialize: function (options) {
                 this.collection = options.collection;
+				this.stages = [];
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
@@ -41,7 +43,9 @@ define([
                 console.log('Tasks render');
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
-                this.$el.append(new ListItemView({ collection: this.collection}).render());
+                var itemView = new ListItemView({ collection: this.collection });
+                itemView.bind('incomingSatges', itemView.pushStages, itemView);
+                this.$el.append(itemView.render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -89,6 +93,11 @@ define([
                 if (pageNumber <= 1) {
                     $("#nextPage").prop("disabled",true);
                 }
+                common.populateWorkflowsList("Task", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+					self.stages = stages;
+                    itemView.trigger('incomingSatges', stages);
+                });
+
                 this.deleteCounter = 0;
 				$(document).on("click",function(){
 					self.hideItemsNumber();
@@ -215,7 +224,10 @@ define([
 
             showMoreContent: function (newModels) {
                 $("#listTable").empty();
-                new ListItemView({ collection: newModels }).render();
+                var itemView = new ListItemView({ collection: newModels });
+				itemView.render();
+				itemView.undelegateEvents();
+                itemView.trigger('incomingSatges', self.stages);
                 $("#pageList").empty();
                 var itemsNumber = $("#itemsNumber").text();
                 var pageNumber;

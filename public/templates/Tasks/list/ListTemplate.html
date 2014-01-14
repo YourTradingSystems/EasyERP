@@ -4,9 +4,9 @@
   <td><%=index + 1%></td>
   <td><%=(task.project) ? task.project.projectShortDesc : ''%><%=task.taskCount%></td>
   <td><%=task.summary%></td>
-  <td class="withSelect">
-	<select id='stage<%=task._id%>'>
-	</select>
+  <td id='<%=task._id%>'>
+      <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : ''%></a>
+  </td>
   </td>
   <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
   <td><%=task.estimated%></td>
