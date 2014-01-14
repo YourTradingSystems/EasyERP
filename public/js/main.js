@@ -62,10 +62,10 @@ var App = App ||
     },
     URL: {
         customers: "/Customer",
-        salesPersons: "/Employees",
-        salesTeam: "/Departments",
+        salesPersons: "/getSalesPerson",
+        salesTeam: "/DepartmentsForDd",
         priorities: "/Priority",
-        workflows: "/Workflows?id=Lead"
+        workflows: "/WorkflowsForDd?id=Lead"
     },
     File:{
         MAXSIZE: 3145728,  //size in kilobytes  = 3 MB

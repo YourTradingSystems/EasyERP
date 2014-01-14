@@ -394,8 +394,8 @@
                 var model = this.currentModel.toJSON();
 
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);

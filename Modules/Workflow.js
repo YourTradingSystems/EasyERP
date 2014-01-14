@@ -86,7 +86,7 @@ var Workflow = function (logWriter, mongoose, models) {
             res['data'] = [];
             //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             var query = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ wId: data.type.id });
-            query.sort({ 'sequence': 1 });
+            query.select('name wName');
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);

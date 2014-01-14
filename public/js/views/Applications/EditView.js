@@ -501,14 +501,14 @@
                     }
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.jobPositionDd);});
-                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.jobPositionDd);});
+                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.relatedUsersDd);});
-                common.populateDepartments(App.ID.departmentDd, "/Departments", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentDd);});
-                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentDd);});
+//                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
 				   self.styleSelect("#sourceDd");
 				   self.styleSelect("#jobtapeDd");
 

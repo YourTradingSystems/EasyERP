@@ -181,7 +181,7 @@ define([
                     }
                 });
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model, function () { self.styleSelect(App.ID.projectDd); });
-                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows", null, function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
+                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", null, function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", null, function () { self.styleSelect(App.ID.assignedToDd); });
                 common.populatePriority(App.ID.priorityDd, "/Priority", model, function () { self.styleSelect(App.ID.priorityDd); });
                 this.styleSelect("#type");

@@ -327,12 +327,12 @@ define([
                     }
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateUsers(App.ID.relatedUsersDd, "/Users");
-                common.populateDepartments(App.ID.departmentsDd, "/Departments");
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition");
+                common.populateUsers(App.ID.relatedUsersDd, "/UsersForDd");
+                common.populateDepartments(App.ID.departmentsDd, "/DepartmentsForDd");
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd");
                 common.populateEmployeesDd(App.ID.coachDd, "/getPersonsForDd");
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);

@@ -330,6 +330,15 @@ app.get('/Profiles', function (req, res) {
     requestHandler.getProfile(req, res);
 });
 
+app.get('/ProfilesForDd', function (req, res) {
+    console.log('---------SERVER----getProfiles-------------------------------');
+    data = {};
+    data.mid = req.param('mid');
+    console.log(data);
+    console.log('--------END SERVER-----getProfiles-------------------------------');
+    requestHandler.getProfileForDd(req, res);
+});
+
 app.put('/Profiles/:_id', function (req, res) {
     console.log(req.body);
     data = {};
@@ -628,6 +637,17 @@ app.get('/Workflows', function (req, res) {
     requestHandler.getWorkflow(req, res, data);
 });
 
+app.get('/WorkflowsForDd', function (req, res) {
+    data = {};
+    type = {};
+    //data.id = req.param('id');
+    data.mid = req.param('mid');
+    //type.name = 'task';
+    type.id = req.param('id');
+    data.type = type;
+    console.log(data);
+    requestHandler.getWorkflowsForDd(req, res, data);
+});
 
 app.get('/taskWorkflows', function (req, res) {
     data = {};
@@ -842,6 +862,12 @@ app.get('/JobPosition', function (req, res) {
     //data._id = req.param('_id');
     console.log(data);
     requestHandler.getJobPosition(req, res, data);
+});
+app.get('/JobPositionForDd', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    //data._id = req.param('_id');
+    requestHandler.getJobPositionForDd(req, res, data);
 });
 
 app.get('/JobPositions/:viewType', function (req, res) {

@@ -192,6 +192,19 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             console.log("requestHandler.js  " + Exception);
         }
     };
+    function getProfileForDd(req, res) {
+        try {
+            console.log("Requst getProfile is success");
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                profile.getProfileForDd(req, res);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            console.log("requestHandler.js  " + Exception);
+        }
+    };
 
     function updateProfile(req, res, id, data) {
         console.log("Requst updateProfile is success");
@@ -938,6 +951,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     res.send(403);
                 }
             });
+        } else {
+            res.send(401);
+        }
+    };
+    function getJobPositionForDd(req, res, data) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            jobPosition.getJobPositionForDd(req, res);
         } else {
             res.send(401);
         }
@@ -1965,6 +1985,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeUser: removeUser,
 
         getProfile: getProfile,
+		getProfileForDd:getProfileForDd,
         createProfile: createProfile,
         updateProfile: updateProfile,
         removeProfile: removeProfile,
@@ -2021,6 +2042,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateJobPosition: updateJobPosition,
         removeJobPosition: removeJobPosition,
         getJobPositionById: getJobPositionById,
+		getJobPositionForDd:getJobPositionForDd,
 
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,

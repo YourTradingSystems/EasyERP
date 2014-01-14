@@ -275,9 +275,9 @@ define([
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.populateCustomers(App.ID.customerDd, "/Customer");
 				common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
-                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/Workflows");
+                common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd");
                 this.delegateEvents(this.events);
                 return this;
             }
