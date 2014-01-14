@@ -627,6 +627,17 @@ app.get('/Workflows', function (req, res) {
     requestHandler.getWorkflow(req, res, data);
 });
 
+app.get('/WorkflowsForDd', function (req, res) {
+    data = {};
+    type = {};
+    //data.id = req.param('id');
+    data.mid = req.param('mid');
+    //type.name = 'task';
+    type.id = req.param('id');
+    data.type = type;
+    console.log(data);
+    requestHandler.getWorkflowsForDd(req, res, data);
+});
 
 app.get('/taskWorkflows', function (req, res) {
     data = {};
