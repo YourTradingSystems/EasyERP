@@ -144,7 +144,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
-                        model.set({ workflow: column.data('id') });
+                        model.set({ workflow: column.data('id'), workflowForKanban: true });
                         model.save({});
 
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);

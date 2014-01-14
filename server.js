@@ -1256,6 +1256,7 @@ app.delete('/Leads/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
 });
+
 //---------------------Opportunities---------------------
 app.post('/Opportunities', function (req, res) {
     data = {};
@@ -1303,6 +1304,13 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Opportunities/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeOpportunitie(req, res, id, data);
+});
+
+app.delete('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
