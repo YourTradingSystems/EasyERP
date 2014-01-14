@@ -310,7 +310,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "edit-dialog",
-                    width: "70%",
+                    width: "1200",
                     height: 513,
                     title: "Edit Job Position",
                     buttons: [ 

@@ -353,7 +353,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: "50%",
+                    width: "900",
                     title: "Create Opportunity",
                     buttons: {
                         save: {

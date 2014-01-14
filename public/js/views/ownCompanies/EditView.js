@@ -345,7 +345,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "edit-companies-dialog",
-                    width: "55%",
+                    width: "800",
                     //height: 513,
                     title: 'Edit Company',
                     buttons: {
