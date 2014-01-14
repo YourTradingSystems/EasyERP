@@ -681,7 +681,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             isCustomer: true,
                             salesPerson: data.salesPerson
                         },
-                        type: 'Person'
+                        type: 'Person',
+                        createdBy: { user: req.session.uId }
                     }
                     models.get(req.session.lastDb - 1, "Customers", customer.customerSchema).find({ $and: [{ 'name.first': data.contactName.first }, { 'name.last': data.contactName.last }] }, function (err, _persons) {
                         if (err) {
@@ -775,7 +776,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     isCustomer: true,
                                     salesPerson: data.salesPerson
                                 },
-                                type: 'Company'
+                                type: 'Company',
+                                createdBy: { user: req.session.uId }
                             };
                             console.log(_company);
                             models.get(req.session.lastDb - 1, 'Customers', customer.customerSchema).find({ 'name.first': data.tempCompanyField }, function (err, companies) {
