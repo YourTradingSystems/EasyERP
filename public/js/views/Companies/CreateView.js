@@ -335,11 +335,11 @@ define([
 
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateUsers("#allUsers", "/Users",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",null,this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateDepartments(App.ID.departmentDd, "/Departments");
-                common.populateEmployeesDd(App.ID.employeesDd, "/Employees");
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd");
+                common.populateEmployeesDd(App.ID.employeesDd, "/getSalesPerson");
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
                 this.$el.find('#date').datepicker({
                     dateFormat: "d M, yy",
