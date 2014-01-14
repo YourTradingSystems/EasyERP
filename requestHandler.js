@@ -942,6 +942,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getJobPositionForDd(req, res, data) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            jobPosition.getJobPositionForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    };
 
     function getCustomJobPosition(req, res, data) {
         console.log("Requst getCustomJobPosition is success");
@@ -2021,6 +2028,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateJobPosition: updateJobPosition,
         removeJobPosition: removeJobPosition,
         getJobPositionById: getJobPositionById,
+		getJobPositionForDd:getJobPositionForDd,
 
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,

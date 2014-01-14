@@ -853,6 +853,12 @@ app.get('/JobPosition', function (req, res) {
     console.log(data);
     requestHandler.getJobPosition(req, res, data);
 });
+app.get('/JobPositionForDd', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    //data._id = req.param('_id');
+    requestHandler.getJobPositionForDd(req, res, data);
+});
 
 app.get('/JobPositions/:viewType', function (req, res) {
     var data = {};

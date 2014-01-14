@@ -370,12 +370,12 @@ define([
                     }
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/Users",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/Departments",this.currentModel.toJSON(),this.pageG);
+                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                common.populateUsers(App.ID.relatedUsersDd, "/Users", this.currentModel.toJSON());
-                common.populateDepartments(App.ID.departmentsDd, "/Departments",this.currentModel.toJSON());
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPosition", this.currentModel.toJSON());
+                common.populateUsers(App.ID.relatedUsersDd, "/UsersForDd", this.currentModel.toJSON());
+                common.populateDepartments(App.ID.departmentsDd, "/DepartmentsForDd",this.currentModel.toJSON());
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd", this.currentModel.toJSON());
                 common.populateCoachDd(App.ID.coachDd, "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
