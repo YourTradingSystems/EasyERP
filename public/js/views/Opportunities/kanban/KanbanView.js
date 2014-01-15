@@ -4,12 +4,11 @@
         'views/Opportunities/kanban/KanbanItemView',
         'views/Opportunities/EditView',
         'views/Opportunities/CreateView',
-        'collections/Companies/CompaniesCollection',
         'collections/Opportunities/OpportunitiesCollection',
         'models/OpportunitiesModel',
         'dataService'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, CompaniesCollection, OpportunitiesCollection, CurrentModel, dataService) {
+function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, OpportunitiesCollection, CurrentModel, dataService) {
     var OpportunitiesKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -52,7 +51,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             var contentCollection = new OpportunitiesCollection(response.data);
             var kanbanItemView;
             var column = this.$("[data-id='" + response.workflowId + "']");
-            //var column = this.$(".column").eq(0);
+            column.find(".counter").html(contentCollection.models.length);
             _.each(contentCollection.models, function (wfModel) {
                 kanbanItemView = new KanbanItemView({ model: wfModel });
                 var curEl = kanbanItemView.render().el;
@@ -106,18 +105,9 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
             var OpportunitieCount;
-            // var OpportunitieRemaining;
-
             _.each(workflows, function (workflow, i) {
                 OpportunitieCount = 0
                 var column = this.$(".column").eq(i);
-                var kanbanItemView;
-                //var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
-
-                //_.each(modelByWorkflows, function (wfModel) {
-                //    kanbanItemView = new KanbanItemView({ model: wfModel});
-                //    column.append(kanbanItemView.render().el);
-                //}, this);
                 var count = " <span>(<span class='counter'>" + OpportunitieCount + "</span>)</span>";
                 column.find(".columnNameDiv h2").append(count);
 
@@ -134,14 +124,9 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
-                    var id = ui.item.context.id;
-                    var model = that.collection.get(id);
-                    if (model) {
-                        column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                        //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) - (model.get("estimated") - model.get("logged")));
-                    }
-
+                    column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                 },
+                
                 stop: function (event, ui) {
                     var id = ui.item.context.id;
                     //var id = ui.item.attr('data-id');
