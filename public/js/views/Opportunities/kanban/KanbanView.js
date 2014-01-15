@@ -16,7 +16,11 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             "dblclick .item": "gotoEditForm",
             "click .item": "selectItem"
         },
+
+        collection: null,
+
         initialize: function (options) {
+            this.collection = new OpportunitiesCollection();
             this.workflowsCollection = options.workflowCollection;
             this.render();
             this.asyncFetc(options.workflowCollection);
@@ -49,6 +53,11 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
         asyncRender: function (response) {
             var contentCollection = new OpportunitiesCollection(response.data);
+            if (this.collection) {
+                this.collection.add(contentCollection.models);
+            } else {
+                this.collection = new OpportunitiesCollection(response.data);
+            }
             var kanbanItemView;
             var column = this.$("[data-id='" + response.workflowId + "']");
             column.find(".counter").html(contentCollection.models.length);

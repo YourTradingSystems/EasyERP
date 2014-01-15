@@ -1132,7 +1132,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         function (err, responseOpportunities) {
                             if (!err) {
                                 console.log(responseOpportunities.length);
-                                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().
+                                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).
                                 where('_id').in(responseOpportunities).
 								select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue").
                                 populate('customer', 'name').
