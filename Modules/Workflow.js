@@ -107,6 +107,35 @@ var Workflow = function (logWriter, mongoose, models) {
                 res['data'] = [];
                 if (data) {
                     var query = (data.id) ? { wId: data.id } : {};
+                    if (data.name) query['name'] = data.name
+                    var query2 = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find(query);
+                    query2.sort({ 'sequence': 1 });
+                    query2.exec(query, function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log('WorkFlow.js create workflow.find ' + err);
+                            response.send(500, { error: "Can't find Workflow" });
+                        } else {
+                            res['data'] = result;
+                            response.send(res);
+                        }
+                    });
+                }
+            }
+            catch (exception) {
+                console.log(exception);
+                logWriter.log("Workflow.js  create " + exception);
+                response.send(500, { error: "Can't find Workflow" });
+            }
+        },
+
+        getContractEnd: function (req, data, response) {
+            try {
+                var res = {};
+                res['data'] = [];
+                if (data) {
+                    var query = (data.id) ? { wId: data.id } : {};
+                    if (data.name) query['name'] = data.name
                     var query2 = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find(query);
                     query2.sort({ 'sequence': 1 });
                     query2.exec(query, function (err, result) {

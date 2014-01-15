@@ -720,9 +720,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getWorkflow(req, res, data) {
         console.log("Requst getWorkflow is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            console.log('>>>>>>>>>>>');
-            console.log(data);
-            console.log('<<<<<<<<<<<');
             access.getReadAccess(req, req.session.uId, 44, function (access) {
                 if (access) {
                     workflow.get(req, data, res);
