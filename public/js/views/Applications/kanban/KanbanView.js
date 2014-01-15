@@ -15,6 +15,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
             "click .application-header, .application-content": "selectItem"
         },
         initialize: function (options) {
+			this.startTime = options.startTime;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
             this.workflowsCollection.bind('reset', this.render, this);
             this.collection = options.collection;
@@ -172,6 +173,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                     }
                 }
             }).disableSelection();
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         }
     });

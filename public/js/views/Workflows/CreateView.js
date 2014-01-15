@@ -91,7 +91,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: "80%",
+                    width: "800",
                     title: "Create Workflows",
                     buttons: {
                         save: {

@@ -82,8 +82,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             size: Number,
             uploaderName: { type: String, default: '' },
             uploadDate: { type: Date, default: Date.now }
-        }]
-
+        }],
+        contractEnd: {
+            reason: {type: String, default: '' },
+            date: { type: Date, default: Date.now }
+        }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -1081,13 +1084,13 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-								query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow').
+								query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow email department').
 									populate('manager','name').
 									populate('jobPosition','name').
 									populate('createdBy.user','login').
 									populate('department','departmentName').
 									populate('editedBy.user','login').
-									populate('workflow','wId').
+									populate('workflow','name').
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
@@ -1494,7 +1497,18 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 				}
 			}
 
-            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, function (err, result) {
+            if (data.workflowContractEnd){
+                data = {
+                    $set:{
+                        workflow: data.workflow,
+                        'contractEnd.reason' : data.contractEndReason,
+                        'contractEnd.date' : new Date(),
+                        isEmployee: false
+                    }
+                }
+            }
+
+            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);

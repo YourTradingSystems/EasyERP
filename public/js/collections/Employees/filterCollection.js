@@ -9,6 +9,7 @@
             url: "/Employees/",
             page: 1,
             initialize: function (options) {
+				this.startTime = new Date();
                 var that = this;
                 this.namberToShow = options.count;
                 if (options && options.viewType) {

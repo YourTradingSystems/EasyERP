@@ -11,6 +11,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common) {
             el: '#content-holder',
 
             initialize: function (options) {
+				this.startTime = options.startTime;
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
@@ -133,7 +134,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common) {
 				$(document).on("click",function(){
 					self.hideItemsNumber();
 				});
-				
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },
 
             previousPage: function (event) {

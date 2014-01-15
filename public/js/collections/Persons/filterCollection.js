@@ -9,6 +9,7 @@
             url: "/Persons/",
             page: 1,
             initialize: function (options) {
+				this.startTime = new Date();
                 var that = this;
                 this.namberToShow = options.count;
                 if (options && options.viewType) {
@@ -126,8 +127,10 @@
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (person) {
-                        person.createdBy.date = common.utcDateToLocaleDateTime(person.createdBy.date);
-                        person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.editedBy.date) : null;
+						if (person.createdBy)
+							person.createdBy.date = common.utcDateToLocaleDateTime(person.createdBy.date);
+						if (person.editedBy)
+							person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.editedBy.date) : null;
                         person.dateBirth = common.utcDateToLocaleDate(person.dateBirth);
                         if (person.notes) {
                             _.map(person.notes, function (note) {

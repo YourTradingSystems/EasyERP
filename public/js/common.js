@@ -612,7 +612,7 @@
                     }
                 } else {
                     options = $.map(response.data, function (item) {
-                        return "<li><input type='checkbox' value='" + item._id + "'" + "/><span>" + item.name + "</span></li>"
+                        return "<li><input type='checkbox' checked='checked' value='" + item._id + "'" + "/><span>" + item.name + "</span></li>"
 
                     });
                 }
@@ -626,6 +626,12 @@
                 workflowNamesDd.append(wfNamesOption);
                 selectList.append(options);
                 //if (callback) callback(selectId);
+                if (callback) callback(response.data);
+            });
+        }
+
+        var getWorkflowContractEnd = function (workflowType, selectId, workflowNamesDd, url, model, wfNmae, callback) {
+            dataService.getData(url, { mid: 39, id: workflowType, name: wfNmae}, function (response) {
                 if (callback) callback(response.data);
             });
         }
@@ -831,6 +837,7 @@
             populateCompanies: populateCompanies,
             populateWorkflows: populateWorkflows,
             populateWorkflowsList: populateWorkflowsList,
+            getWorkflowContractEnd: getWorkflowContractEnd,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,

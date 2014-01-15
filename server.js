@@ -63,6 +63,12 @@ mainDb.once('open', function callback() {
 
 var express = require('express');
 var app = express();
+//var countResponseSize = require('count-response-size-middleware');
+//app.use(countResponseSize());
+//app.use(function (req, res, next) {
+//	console.log('!!!!!!!!!!!!!!<<<<<<<<<<<<>>>>>>>>>>>>>>>>response is  ' + res._sent + ' bytes');
+//	next();
+//});
 
 var MemoryStore = require('connect-mongo')(express);
 
@@ -104,17 +110,19 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: { 
+        //cookie: {
         //    maxAge: 600 * 1000 //1 minute
         //},
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
-
     app.use(app.router);
+
 });
+
 console.log(dbsArray);
 var requestHandler = require("./requestHandler.js")(fs, mongoose, event, dbsArray);
+
 
 
 app.get('/', function (req, res) {
@@ -421,6 +429,8 @@ app.get('/Persons/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getPersonById(req, res, data);
             break;
+        case "list": requestHandler.getFilterPersonsForList(req, res, data);
+            break;
         default: requestHandler.getFilterPersons(req, res, data);
             break;
     }
@@ -630,11 +640,19 @@ app.get('/relatedStatus', function (req, res) {
 
 app.get('/Workflows', function (req, res) {
     data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getWorkflow(req, res, data);
+});
+
+app.get('/WorkflowContractEnd', function (req, res) {
+    data = {};
     data.id = req.param('id');
     //console.log(req.body);
     data.mid = req.param('mid');
     console.log(data);
-    requestHandler.getWorkflow(req, res, data);
+    requestHandler.getWorkflowContractEnd(req, res, data);
 });
 
 app.get('/WorkflowsForDd', function (req, res) {
@@ -1283,6 +1301,7 @@ app.delete('/Leads/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
 });
+
 //---------------------Opportunities---------------------
 app.post('/Opportunities', function (req, res) {
     data = {};
@@ -1330,6 +1349,13 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Opportunities/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeOpportunitie(req, res, id, data);
+});
+
+app.delete('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

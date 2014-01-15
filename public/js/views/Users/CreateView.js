@@ -69,7 +69,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: "50%",
+                    width: "800",
                     title: "Create User",
                     buttons:{
                         save:{

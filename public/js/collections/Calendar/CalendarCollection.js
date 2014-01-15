@@ -10,6 +10,7 @@ define([
             url: "/Calendars",
 
             initialize: function () {
+				this.startTime = new Date();
                 var mid = 39;
 
                 this.fetch({

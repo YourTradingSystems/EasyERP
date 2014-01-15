@@ -8,6 +8,7 @@
             url: "/Opportunities/",
             page: 1,
             initialize: function (options) {
+				this.startTime = new Date();
                 var that = this;
                 this.status = [];
                 this.status = options.status;

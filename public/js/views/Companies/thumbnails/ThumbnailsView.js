@@ -12,6 +12,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
         el: '#content-holder',
 
         initialize: function (options) {
+			this.startTime = options.startTime;
             this.collection = options.collection;
             arrayOfcompanies = [];
             dataIndexCounter = 0;
@@ -65,7 +66,7 @@ function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTem
 				self.alphabeticArray = arr;
 				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 			});
-
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         },
 

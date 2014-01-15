@@ -643,8 +643,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id createdBy editedBy name workflow contactName phones campaign source email").
+                                query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
 								populate('company', 'name').
+								populate('workflow',"name").
                                 populate('createdBy.user', 'login').
                                 populate('editedBy.user', 'login').
                                 skip((data.page - 1) * data.count).
@@ -746,7 +747,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 });
             }
 
-			if (data.workflowForList){
+			if (data.workflowForList || data.workflowForKanban){
 				data={
 					$set:{
 						workflow:data.workflow

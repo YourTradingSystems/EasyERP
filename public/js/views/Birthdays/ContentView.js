@@ -65,6 +65,7 @@ function (ListTemplate, ListItemView, common, Custom) {
             _.each(monthModels, function (model) {
                 list.find("#monthList").append(new ListItemView({ model: model }).render().el);
             }, this);
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
         }
     });
     return ContentView;

@@ -1,17 +1,33 @@
 define([
     'text!templates/Employees/form/FormTemplate.html',
-    'views/Employees/EditView'
+    'views/Employees/EditView',
+    "common"
 ],
 
-    function (EmployeesFormTemplate, EditView) {
+    function (EmployeesFormTemplate, EditView, common) {
         var FormEmployeesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 this.formModel = options.model;
             },
 			events:{
-				   'click .chart-tabs a': 'changeTab'
+                   'click .chart-tabs a': 'changeTab',
+				   'click .endContractReasonList a': 'endContract'
                },
+            endContract: function(e) {
+                e.preventDefault();
+                var wfId = $('.endContractReasonList').attr('data-id');
+                var contractEndReason = $(e.target).text();
+                this.formModel.set({ workflow: wfId,contractEndReason: contractEndReason, workflowContractEnd: true });
+                this.formModel.save({},{
+                    success: function () {
+                        Backbone.history.navigate("easyErp/Employees", { trigger: true });
+                    },
+                    error: function () {
+                        Backbone.history.navigate("home", { trigger: true });
+                    }
+                });
+            },
 			changeTab:function(e){
 				$(e.target).closest(".chart-tabs").find("a.active").removeClass("active");
 				$(e.target).addClass("active");
@@ -22,6 +38,10 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
+                common.getWorkflowContractEnd("Application", null, null, "/Workflows", null, "Contract End", function(workflow) {
+                    console.log(workflow[0]._id);
+                    $('.endContractReasonList').attr('data-id',workflow[0]._id);
+                });
                 this.$el.html(_.template(EmployeesFormTemplate, formModel));
                 return this;
             },

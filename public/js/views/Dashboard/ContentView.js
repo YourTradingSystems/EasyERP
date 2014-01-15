@@ -9,7 +9,9 @@ define([
 			   actionType: "Content",
                template: _.template(DashboardTemplate),
                el: '#content-holder',
-               initialize: function () {
+               initialize: function (options) {
+				   this.startTime = options.startTime;
+				   this.startTime = new Date();
                    this.dateRange = 30;
                    this.dateRangeSource = 30;
                    this.dateItem = "D";
@@ -86,6 +88,8 @@ define([
                    this.$el.html(this.template());
                    this.renderPopulate();
                    this.renderPopulateSource();
+				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+
                },
                renderPopulateSource: function () {
                    var self = this;

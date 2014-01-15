@@ -13,6 +13,7 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
 
         initialize: function (options) {
 			var self = this;
+			this.startTime = options.startTime;
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
             arrayOfPersons = [];
@@ -68,6 +69,7 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
 				self.alphabeticArray = arr;
 				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 			});
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         },
 

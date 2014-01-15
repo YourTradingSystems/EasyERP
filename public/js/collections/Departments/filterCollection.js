@@ -8,6 +8,7 @@
             url: "/Departments/",
             page: 1,
             initialize: function (options) {
+				this.startTime = new Date();
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;

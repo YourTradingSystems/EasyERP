@@ -381,7 +381,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-leads-dialog",
-                    width: 900,
+                    width: 800,
                     buttons: {
                         save: {
                             text: "Save",

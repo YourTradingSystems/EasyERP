@@ -10,7 +10,9 @@ define([
             el: '#content-holder',
             
             initialize: function (options) {
+				this.startTime = options.startTime;
                 this.collection = options.collection;
+				this.stages = [];
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
@@ -132,13 +134,14 @@ define([
                     $("#nextPage").prop("disabled", true);
                 }
                 common.populateWorkflowsList("Lead", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+					self.stages = stages;
                     itemView.trigger('incomingSatges', stages);
                 });
                 this.deleteCounter = 0;
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);
                 });
-
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },
 
             previousPage: function (event) {
@@ -259,8 +262,12 @@ define([
             },
 
             showMoreContent: function (newModels) {
+				var self = this;
                 $("#listTable").empty();
-                new ListItemView({ collection: newModels }).render();
+                var itemView = new ListItemView({ collection: newModels });
+				itemView.render();
+				itemView.undelegateEvents();
+                itemView.trigger('incomingSatges', self.stages);
                 $("#pageList").empty();
                 var itemsNumber = $("#itemsNumber").text();
                 var pageNumber;

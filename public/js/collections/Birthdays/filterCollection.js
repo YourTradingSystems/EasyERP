@@ -7,6 +7,7 @@
             model: EmployeeModel,
             url: "/Birthdays",
             initialize: function (options) {
+				this.startTime = new Date();
                 this.fetch({
                     reset: true,
                     success: function() {

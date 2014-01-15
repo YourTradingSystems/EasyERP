@@ -98,7 +98,7 @@
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: 600,
+                    width: 800,
                     title: "Edit User",
                     buttons:{
                         save:{

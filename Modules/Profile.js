@@ -72,7 +72,7 @@ var Profile = function (logWriter, mongoose, models) {
                             }
                             if (result) {
                                 console.log("Data Profile saved success");
-                                res.send(201, {success:"Profile Saved"});
+                                res.send(201, {success:"Profile Saved",data:result});
                             }
                         }
                         catch (error) {
