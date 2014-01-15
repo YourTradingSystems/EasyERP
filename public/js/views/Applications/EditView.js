@@ -345,6 +345,10 @@
                 var self = this;
                 var mid = 39;
 
+                var gender = $("#genderDd option:selected").val();
+                gender = gender ? gender : null;
+                var martial = $("#martialDd option:selected").val();
+                martial = martial ? martial : null;
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
@@ -376,6 +380,8 @@
                         first: this.$el.find("#first").val(),
                         last: this.$el.find("#last").val()
                     },
+                    gender: gender,
+                    martial: martial,
                     personalEmail: $.trim(this.$el.find("#wemail").val()),
                     workPhones: {
                         phone: $.trim(this.$el.find("#phone").val()),

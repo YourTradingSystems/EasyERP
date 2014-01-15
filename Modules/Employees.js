@@ -86,7 +86,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         contractEnd: {
             reason: {type: String, default: '' },
             date: { type: Date, default: Date.now }
-        }
+        },
+        matrial: { type: String, default: '' },
+        gender: { type: String, default: 'male' }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -157,6 +159,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         if (data.name.last) {
                             _employee.name.last = data.name.last;
                         }
+                    }
+                    if (data.gender) {
+                        _employee.gender = data.gender;
+                    }
+                    if (data.matrial) {
+                        _employee.gendermartial = data.martial;
                     }
                     if (data.attachments) {
                         if (data.attachments.id) {
