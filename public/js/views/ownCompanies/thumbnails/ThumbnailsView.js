@@ -11,6 +11,7 @@ function (OwnCompaniesThumbnailsItemView, Custom, common, EditView, CreateView) 
         el: '#content-holder',
 
         initialize: function (options) {
+			this.startTime = options.startTime;
             this.collection = options.collection;
             arrayOfOwnCcompanies = [];
             dataIndexCounter = 0;
@@ -44,7 +45,7 @@ function (OwnCompaniesThumbnailsItemView, Custom, common, EditView, CreateView) 
             if (arrayOfOwnCcompanies.length > 0) {
                 this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             }
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         },
 

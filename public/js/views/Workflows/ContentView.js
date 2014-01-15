@@ -12,7 +12,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
-			this.startTime = new Date();
+			this.startTime = options.startTime;
             _.bindAll(this, "saveStatus", "render");
             this.relatedStatusesCollection = new RelatedStatusesCollection();
             this.relatedStatusesCollection.bind('reset', _.bind(this.render, this));

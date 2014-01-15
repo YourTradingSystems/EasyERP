@@ -931,6 +931,9 @@ h3 {
 }
 .profile-create {
 	.dl-auto(250px,50%);
+	input[type='text']{
+		width:95% !important;
+	}
 }
 
 .company-info {
@@ -2512,7 +2515,7 @@ button {
         width: 95%;
 }
 
-    #createApplicationForm {
+    #createApplicationForm, #createEmployeeForm {
 		#otherInfo {
 			margin-top: 13px;
 			width: 316px;
@@ -2654,7 +2657,8 @@ button {
         border-right: 1px solid #ddd;
         height: 40px;
         line-height: 40px;
-
+		overflow:hidden;
+		text-overflow:ellipsis;
         &:hover:not(.quickEdit) {
             background-color: #EEE;
 

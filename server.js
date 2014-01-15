@@ -63,6 +63,12 @@ mainDb.once('open', function callback() {
 
 var express = require('express');
 var app = express();
+//var countResponseSize = require('count-response-size-middleware');
+//app.use(countResponseSize());
+//app.use(function (req, res, next) {
+//	console.log('!!!!!!!!!!!!!!<<<<<<<<<<<<>>>>>>>>>>>>>>>>response is  ' + res._sent + ' bytes');
+//	next();
+//});
 
 var MemoryStore = require('connect-mongo')(express);
 
@@ -104,17 +110,19 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: { 
+        //cookie: {
         //    maxAge: 600 * 1000 //1 minute
         //},
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
-
     app.use(app.router);
+
 });
+
 console.log(dbsArray);
 var requestHandler = require("./requestHandler.js")(fs, mongoose, event, dbsArray);
+
 
 
 app.get('/', function (req, res) {
@@ -210,7 +218,7 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     var files = [];
-    if (!req.files && !req.files.attachfile.length) {
+    if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
     console.log(req.files.attachfile);
@@ -231,6 +239,36 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
                     console.log(files);
                     console.log(req.files.attachfile.length);
                     requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                }
+            });
+        });
+    })
+});
+app.post('/uploadEmployeesFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    var files = [];
+    if (req.files && !req.files.attachfile.length) {
+        req.files.attachfile = [req.files.attachfile];
+    }
+    console.log(req.files.attachfile);
+    req.files.attachfile.forEach(function (item) {
+
+        fs.readFile(item.path, function (err, data) {
+            var path = __dirname + "\\uploads\\" + item.name;
+            fs.writeFile(path, data, function (err) {
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
+                file.name = item.name;
+                file.path = path;
+                file.size = item.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                files.push(file);
+                if (files.length == req.files.attachfile.length) {
+                    console.log(files);
+                    console.log(req.files.attachfile.length);
+                    requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
                 }
             });
         });

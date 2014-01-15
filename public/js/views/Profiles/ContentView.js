@@ -10,7 +10,7 @@ define([
             contentType: "Profiles",
             actionType:"Content",
             initialize: function (options) {
-				this.startTime = new Date();
+				this.startTime = options.startTime;
                 this.profilesCollection = options.collection;
                 this.profilesCollection.bind('add', _.bind(this.render, this));
                 this.profilesCollection.bind('reset', _.bind(this.render, this));

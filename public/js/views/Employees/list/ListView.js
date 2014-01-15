@@ -12,6 +12,7 @@ define([
             el: '#content-holder',
 
             initialize: function (options) {
+				this.startTime = options.startTime;
                 var that = this;
                 this.collection = options.collection;
                 this.collection.bind('reset', _.bind(this.render, this));
@@ -155,7 +156,7 @@ define([
 					self.alphabeticArray = arr;
 					self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 				});
-				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 
             },
 

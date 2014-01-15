@@ -9,7 +9,8 @@ define([
 			   actionType: "Content",
                template: _.template(DashboardTemplate),
                el: '#content-holder',
-               initialize: function () {
+               initialize: function (options) {
+				   this.startTime = options.startTime;
 				   this.startTime = new Date();
                    this.dateRange = 30;
                    this.dateRangeSource = 30;

@@ -34,7 +34,6 @@
                 "click": "hideNewSelect",
                 "click .deleteAttach": "deleteAttach",
                 "change .inputAttach": "addAttach",
-
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -212,6 +211,7 @@
                         
                         success: function (data) {
                             var attachments = currentModel.get('attachments');
+							attachment.length = 0;
 							$('.attachContainer').empty();
 							data.data.attachments.forEach(function(item){
 								var date = common.utcDateToLocaleDate(item.uploadDate);
@@ -231,17 +231,6 @@
 				addFrmAttach.submit();
 				addFrmAttach.off('submit');
 			},
-/*
-			addAttach: function (event) {
-				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
-				$(".attachContainer").append('<li class="attachFile">'+
-											 '<a href="javascript:;">'+s+'</a>'+
-											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
-											);
-				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
-				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
-			},
-*/
 				deleteAttach: function (e) {
 					if ($(e.target).closest("li").hasClass("attachFile")){
 						$(e.target).closest(".attachFile").remove();

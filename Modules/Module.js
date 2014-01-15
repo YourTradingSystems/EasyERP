@@ -63,7 +63,6 @@ var Module = function (logWriter, mongoose, profile, models) {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log(result);
                         models.get(0, "modules", moduleSchema).find().
                             where('_id').in(result).
                             where({ visible: true }).

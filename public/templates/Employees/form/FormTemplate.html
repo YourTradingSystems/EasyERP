@@ -21,6 +21,8 @@
 		<dt>First Name </dt><dd><%=name.first%></dd>
 		<dt>Last Name </dt><dd><%=name.last%></dd>
 		<dt>Tags </dt><dd><span><%=tags%></span></dd>
+        <dt>Gender</dt><dd><span><%=gender%></span></dd>
+        <dt>Martial status</dt><dd><span><%=martial%></span></dd>
         <dt>Created By </dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
 		<dt>Edited By </dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
 	  </dl>
