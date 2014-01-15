@@ -1515,7 +1515,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                 }
             }
-
+			console.log(data);
             models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
                 try {
                     if (err) {

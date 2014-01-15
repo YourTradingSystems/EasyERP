@@ -18,7 +18,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         syncDilalogTpl: _.template(SyncDialog),
         createDlgTpl: _.template(AddCalendarDialogTemplate),
 
-        initialize: function () {
+        initialize: function (options) {
 			this.startTime = options.startTime;
             _.bindAll(this, 'syncDlgSubmitBtnClickHandler', 'displayEventsOnCalendar', 'createNewCalendar');
             this.eventsCollection = new EventsCollection({ idArray: ['52a866f518e8955b08b6e611'] });

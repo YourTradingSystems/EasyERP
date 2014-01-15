@@ -218,7 +218,7 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     var files = [];
-    if (!req.files && !req.files.attachfile.length) {
+    if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
     console.log(req.files.attachfile);
@@ -239,6 +239,36 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
                     console.log(files);
                     console.log(req.files.attachfile.length);
                     requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                }
+            });
+        });
+    })
+});
+app.post('/uploadEmployeesFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    var files = [];
+    if (req.files && !req.files.attachfile.length) {
+        req.files.attachfile = [req.files.attachfile];
+    }
+    console.log(req.files.attachfile);
+    req.files.attachfile.forEach(function (item) {
+
+        fs.readFile(item.path, function (err, data) {
+            var path = __dirname + "\\uploads\\" + item.name;
+            fs.writeFile(path, data, function (err) {
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
+                file.name = item.name;
+                file.path = path;
+                file.size = item.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                files.push(file);
+                if (files.length == req.files.attachfile.length) {
+                    console.log(files);
+                    console.log(req.files.attachfile.length);
+                    requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
                 }
             });
         });
