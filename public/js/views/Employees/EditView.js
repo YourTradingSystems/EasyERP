@@ -1,5 +1,6 @@
 define([
     "text!templates/Employees/EditTemplate.html",
+    'text!templates/Notes/AddAttachments.html',
     "collections/Employees/EmployeesCollection",
     "collections/JobPositions/JobPositionsCollection",
     "collections/Departments/DepartmentsCollection",
@@ -7,9 +8,9 @@ define([
     "collections/Users/UsersCollection",
     "common",
     "custom",
-    "dataService"
+    "dataService",
 ],
-    function (EditTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common, Custom, dataService) {
+    function (EditTemplate, addAttachTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common, Custom, dataService) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -36,7 +37,8 @@ define([
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
                 'keydown': 'keydownHandler',
-
+                "click .deleteAttach": "deleteAttach",
+                "change .inputAttach": "addAttach",
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -45,6 +47,94 @@ define([
                 'click #addUsers':'addUsers',
                 'click #removeUsers':'removeUsers'
             },
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
+            addAttach: function (event) {
+                event.preventDefault();
+                var currentModel = this.currentModel;
+                var currentModelID = currentModel["id"];
+                var addFrmAttach = $("#editEmployeeForm");
+                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
+                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                    return;
+                }
+                addFrmAttach.submit(function (e) {
+                    var bar = $('.bar');
+                    var status = $('.status');
+                    var formURL = "http://" + window.location.host + "/uploadEmployeesFiles";
+                    e.preventDefault();
+                    addFrmAttach.ajaxSubmit({
+                        url: formURL,
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: [addInptAttach],
+
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("id", currentModelID);
+                            status.show();
+                            var statusVal = '0%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+                        
+                        uploadProgress: function(event, position, total, statusComplete) {
+                            var statusVal = statusComplete + '%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+                        
+                        success: function (data) {
+                            var attachments = currentModel.get('attachments');
+  							attachments.length=0;
+							$('.attachContainer').empty();
+							data.data.attachments.forEach(function(item){
+								var date = common.utcDateToLocaleDate(item.uploadDate);
+								attachments.push(item);
+								$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+});
+                            console.log('Attach file');
+                            addFrmAttach[0].reset();
+                            status.hide();
+                        },
+
+                        error: function () {
+                            console.log("Attach file error");
+                        }
+                    });
+				})
+				addFrmAttach.submit();
+				addFrmAttach.off('submit');
+			},
+				deleteAttach: function (e) {
+					if ($(e.target).closest("li").hasClass("attachFile")){
+						$(e.target).closest(".attachFile").remove();
+					}
+					else{
+						var id = e.target.id;
+						var currentModel = this.currentModel;
+						var attachments = currentModel.get('attachments');
+						var new_attachments = _.filter(attachments, function (attach) {
+							if (attach._id != id) {
+								return attach;
+							}
+						});
+						currentModel.set('attachments', new_attachments);
+						currentModel.save({},
+										  {
+											  headers: {
+												  mid: 39
+											  },
+
+											  success: function (model, response, options) {
+												  $('.attachFile_' + id).remove();
+											  }
+										  });
+					}
+				},
 
             changeTab:function(e){
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
