@@ -756,9 +756,9 @@
                 if (callback) callback();
             });
         };
-        var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, callback) {
+        var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, onlyCount, callback) {
             var self = this;
-            dataService.getData(url, { person:personId,company:companyId, page:page,count:count }, function (response) {
+            dataService.getData(url, { person:personId,company:companyId, page:page,count:count,onlyCount:onlyCount }, function (response) {
                 if (callback) callback(response);
             });
         };

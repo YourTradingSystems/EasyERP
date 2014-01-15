@@ -1007,22 +1007,39 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
-                                if (data && data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
-								query.select("_id name expectedRevenue.currency expectedRevenue.value nextAction.date workflow");
+								if (data.onlyCount.toString().toLowerCase()=="true"){
 
-                                query.populate('workflow', 'name').
-                                skip((data.page - 1) * data.count).
-                                limit(data.count).
-                                exec(function (error, _res) {
-                                    if (!error) {
-                                        res['data'] = _res;
-                                        res['listLength'] = _res.length;
-                                        response.send(res);
-                                    } else {
-                                        console.log(error);
-                                    }
-                                });
+									query.count(function(error,_res){
+										if (!error) {
+											res['listLength'] = _res;
+											response.send(res);
+										} else {
+											console.log(error);
+										}
+									})
+								}else{
+
+									if (data && data.status && data.status.length > 0)
+										query.where('workflow').in(data.status);
+									query.select("_id name expectedRevenue.currency expectedRevenue.value nextAction.date workflow");
+
+									query.populate('workflow', 'name').
+										skip((data.page - 1) * data.count).
+										limit(data.count)
+
+									query.exec(function (error, _res) {
+										if (!error) {
+											res['data'] = _res;
+											res['listLength'] = _res.length;
+											response.send(res);
+										} else {
+											console.log(error);
+										}
+									});
+									
+								}
+									
+
                             } else {
                                 console.log(err);
                             }

@@ -43,7 +43,20 @@
 	  <div class="chart-tabs-item active">
 		<div class="half-block left withPaddingLeft">
 		  <dl class="person-info">
-			<dt>Work Address </dt>
+			<dt>Work Email </dt><dd><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></dd>
+			<dt>Personal Email </dt><dd><a href="mailto:<%=personalEmail%>" target="_blank"><%=personalEmail%></a></dd>
+			<dt>Skype </dt><dd><a href="skype:<%=skype%>?call"><%=skype%></a></dd>
+			<dt>Work Phone </dt><dd><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.phone%></a></dd>
+			<dt>Work Mobile </dt><dd><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.mobile%></a></dd>
+			<dt>Department </dt><dd><%=(department) ? department.departmentName : ''%></dd>
+			<dt>Job </dt><dd><%=(jobPosition) ? jobPosition.name : ''%></dd>
+			<dt>Manager </dt><dd><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></dd>
+			<dt>Coach </dt><dd><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></dd>
+		  </dl>
+		</div>
+		<div class="half-block left withPaddingLeft">
+		  <dl class="person-info">
+<!--			<dt>Work Address </dt>
 			<% if(workAddress.street){%>
 			<dd><%=workAddress.street%></dd>
 			<dt>&nbsp;</dt>
@@ -60,25 +73,12 @@
 			<dd><%=workAddress.zip%></dd>
 			<dt>&nbsp;</dt>
 			<%}%>
-			<dd><%=workAddress.country%></dd>
+			<dd><%=workAddress.country%></dd>-->
 			<dt>Related User </dt><dd><%=(relatedUser) ? relatedUser.login : ''%></dd>
-			<dt>Visibility </dt><dd><%=visibility%></dd>
+<!--			<dt>Visibility </dt><dd><%=visibility%></dd>-->
 		  </dl>
 		</div>
-		<div class="half-block left withPaddingLeft">
-		  <dl class="person-info">
-			<dt>Work Email </dt><dd><a href="mailto:<%=workEmail%>" target="_blank"><%=workEmail%></a></dd>
-			<dt>Personal Email </dt><dd><a href="mailto:<%=personalEmail%>" target="_blank"><%=personalEmail%></a></dd>
-			<dt>Skype </dt><dd><a href="skype:<%=skype%>?call"><%=skype%></a></dd>
-			<dt>Work Phone </dt><dd><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.phone%></a></dd>
-			<dt>Work Mobile </dt><dd><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.mobile%></a></dd>
-			<dt>Office Location </dt><dd><%=officeLocation%></dd>
-			<dt>Department </dt><dd><%=(department) ? department.departmentName : ''%></dd>
-			<dt>Job </dt><dd><%=(jobPosition) ? jobPosition.name : ''%></dd>
-			<dt>Manager </dt><dd><%=(manager) ? manager.name.first + " " + manager.name.last : ''%></dd>
-			<dt>Coach </dt><dd><%=(coach) ? coach.name.first + " " + coach.name.last : ''%></dd>
-		  </dl>
-		</div>
+
 	  </div>
 	  <div class="chart-tabs-item">
 		

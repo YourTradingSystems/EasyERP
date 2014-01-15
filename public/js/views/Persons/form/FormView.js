@@ -17,6 +17,19 @@ define([
                 this.formModel = options.model;
 				this.pageMini = 1;
 				this.pageCount = 4;
+				this.allMiniOpp =0;
+				this.allPages =0;
+				var self = this;
+				var formModel = this.formModel.toJSON();
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,true,function(count){
+					self.allMiniOpp = count.listLength;
+					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
+					if (self.allPages == self.pageMini){
+						$(".miniPagination .next").addClass("not-active");
+						$(".miniPagination .last").addClass("not-active");
+					}
+				});
+
             },
 
             events: {
@@ -38,8 +51,10 @@ define([
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
                 "change .sale-purchase input": "saveCheckboxChange",
-                "click .miniPagination .next": "nextMiniPage",
-                "click .miniPagination .prev": "prevMiniPage"
+                "click .miniPagination .next:not(.not-active)": "nextMiniPage",
+                "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
+                "click .miniPagination .first:not(.not-active)": "firstMiniPage",
+                "click .miniPagination .last:not(.not-active)": "lastMiniPage"
             },
 			nextMiniPage:function(){
 				this.pageMini +=1;
@@ -50,15 +65,26 @@ define([
 				this.renderMiniOpp();
 			},
 
+			firstMiniPage:function(){
+				this.pageMini=1;
+				this.renderMiniOpp();
+			},
+			lastMiniPage:function(){
+				this.pageMini = this.allPages;
+				this.renderMiniOpp();
+			},
+
 			renderMiniOpp:function(){
 				var self = this;
             	var formModel = this.formModel.toJSON();
-				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,function(collection){
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,false,function(collection){
+					console.log(collection);
 					self.$el.find('.formRightColumn').empty();
+					var isLast = self.pageMini==self.allPages?true:false
 					self.$el.find('.formRightColumn').append(
                         new opportunitiesCompactContentView({
                             collection: collection.data,
-                        }).render({first:true,last:false}).el
+                        }).render({first:self.pageMini==1?true:false,last:isLast}).el
                     );
 					
 				});
