@@ -14,6 +14,22 @@
                             <dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" required maxlength="32"/></dd>
                             <dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" required maxlength="32"/></dd>
                             <dt><label for="tags">Tags</label></dt><dd><input type="text" class="blueback" id="tags" maxlength="32"/></dd>
+                            <dt><label for="genderDd">Gender</label>
+                              <dd>
+                                  <select id="genderDd">
+                                      <option value="male">male</option>
+                                      <option value="female">female</option>
+                                  </select>
+                              </dd>
+                            </dt>
+                            <dt><label for="martialDd">Martial status</label>
+                              <dd>
+                                  <select id="martialDd">
+                                      <option value="married">married</option>
+                                      <option value="unmarried">unmarried</option>
+                                  </select>
+                              </dd>
+                            </dt>
                           </dl>
                         </div>
                         <div class="half-block left">
@@ -181,6 +197,25 @@
                                   <dt><label for="active">Active </label></dt><dd><input type="checkbox" name="active" id="active" /></dd>
                               </div>
                           </dl>
+                  <div class="clearfix"></div>
+                    <label>Attachments</label>
+
+                      <div id="attachBody">
+                        <ul class="attachContainer">
+                        </ul>
+                      </div>
+                      <div class="clearfix">
+                      </div>
+                      <div class="input-file">
+                        Attach
+                        <input type="file" value="Choose File" class="inputAttach" name="attachfile">
+
+                      </div>
+                      <div class="progress" style="float:left;">
+                        <div class="bar">
+                          <span class="status"></span>
+                        </div>
+                      </div>
                          <div class="cropImages form" style="display:none;">
                             <div class="formTitle">
                                 <h3 class="left">Crop Images</h3>

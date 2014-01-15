@@ -40,6 +40,8 @@
                 first: '',
                 last: ''
             },
+            gender: '',
+            martial: '',
             tags: [],
             workAddress: {
                 street: '',

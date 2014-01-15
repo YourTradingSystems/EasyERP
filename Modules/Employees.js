@@ -86,7 +86,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         contractEnd: {
             reason: {type: String, default: '' },
             date: { type: Date, default: Date.now }
-        }
+        },
+        martial: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
+        gender: { type: String, enum:['male','female'], default: 'male' }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -157,6 +159,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         if (data.name.last) {
                             _employee.name.last = data.name.last;
                         }
+                    }
+                    if (data.gender) {
+                        _employee.gender = data.gender;
+                    }
+                    if (data.martial) {
+                        _employee.martial = data.martial;
                     }
                     if (data.attachments) {
                         if (data.attachments.id) {
@@ -1507,7 +1515,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                 }
             }
-
+			console.log(data);
             models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
                 try {
                     if (err) {

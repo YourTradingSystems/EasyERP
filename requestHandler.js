@@ -1088,6 +1088,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+    function uploadEmployeesFile(req, res, id, file) {
+        console.log("File Uploading to app");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+                if (access) {
+					console.log(file);
+                    employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+
     function getEmployeesForList(req, res, data) {
         console.log("Requst getEmployeesCustom is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1362,7 +1379,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
     function removeApplication(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -2105,6 +2121,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getFilterApplications: getFilterApplications,
         getApplicationsForList: getApplicationsForList,
 		getEmployeesForThumbnails: getEmployeesForThumbnails,
+		uploadEmployeesFile:uploadEmployeesFile,
         getApplicationById: getApplicationById,
 		getApplicationsForKanban: getApplicationsForKanban,
 

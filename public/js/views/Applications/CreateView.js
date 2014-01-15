@@ -28,7 +28,6 @@ define([
                 "click": "hideNewSelect",
                 "change .inputAttach": "addAttach",
 				"click .deleteAttach":"deleteAttach",
-
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',

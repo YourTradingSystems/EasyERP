@@ -24,7 +24,8 @@ define([
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
                 'keydown': 'keydownHandler',
-
+                "change .inputAttach": "addAttach",
+				"click .deleteAttach":"deleteAttach",
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -32,7 +33,18 @@ define([
                 "click .prevUserList":"prevUserList",
                 "click .nextUserList":"nextUserList"
             },
-
+            addAttach: function (event) {
+				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
+				$(".attachContainer").append('<li class="attachFile">'+
+											 '<a href="javascript:;">'+s+'</a>'+
+											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
+											 );
+				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
+				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
+			},
+			deleteAttach:function(e){
+				$(e.target).closest(".attachFile").remove();
+			},
             changeTab:function(e){
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
                 $(e.target).addClass("active");
@@ -192,6 +204,11 @@ define([
                 }, 250);
 
             },
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
+            },
+
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -227,6 +244,9 @@ define([
                     mobile: mobile
                 };
 
+
+                var gender = $("#genderDd option:selected").val();
+                var martial = $("#martialDd option:selected").val();
                 var officeLocation = $.trim($("#officeLocation").val());
                 var relatedUser = $("#relatedUsersDd option:selected").val();
                 var department = $("#departmentsDd option:selected").val();
@@ -263,6 +283,8 @@ define([
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 employeeModel.save({
                     name: name,
+                    gender: gender ? gender : "",
+                    martial: martial ? martial : "",
                     imageSrc: this.imageSrc,
                     workAddress: workAddress,
                     workEmail: workEmail,
@@ -294,9 +316,71 @@ define([
                     },
                     wait: true,
                     success: function (model) {
-                        self.hideDialog();
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-            },
+						var currentModel = model.changed.result;
+						var currentModelID = currentModel["_id"];
+						var addFrmAttach = $("#createEmployeeForm");
+						var fileArr= [];
+						var addInptAttach = '';
+						$("li .inputAttach").each(function(){
+							addInptAttach = $(this)[0].files[0];
+							fileArr.push(addInptAttach);
+							if(!self.fileSizeIsAcceptable(addInptAttach)){
+								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+								return;
+							}
+						});
+							addFrmAttach.submit(function (e) {
+								var bar = $('.bar');
+								var status = $('.status');
+								
+								var formURL = "http://" + window.location.host + "/uploadEmployeesFiles";
+								e.preventDefault();
+								addFrmAttach.ajaxSubmit({
+									url: formURL,
+									type: "POST",
+									processData: false,
+									contentType: false,
+												   data: [fileArr],
+
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader("id", currentModelID);
+										status.show();
+										var statusVal = '0%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									uploadProgress: function(event, position, total, statusComplete) {
+										var statusVal = statusComplete + '%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									success: function (data) {
+										console.log('Attach file');
+										addFrmAttach[0].reset();
+										status.hide();
+										self.hideDialog();
+										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+									},
+
+									error: function () {
+										console.log("Attach file error");
+									}
+								});
+							});
+						if(fileArr.length>0){
+							addFrmAttach.submit();
+						}
+						else{
+							self.hideDialog();
+							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+
+						}
+						addFrmAttach.off('submit');
+
+                    },
+
                     error: function () {
                         self.hideDialog();
                         Backbone.history.navigate("home", { trigger: true });
