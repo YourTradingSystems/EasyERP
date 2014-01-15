@@ -242,33 +242,62 @@ define([
                 });
         },
 
+        //goToKanban: function (contentType, parrentContentId) {
+        //    if (this.mainView == null) this.main(contentType);
+        //    var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
+        //        TopBarViewUrl = "views/" + contentType + "/TopBarView",
+        //        CollectionUrl = this.buildCollectionRoute(contentType);
+
+        //    self = this;
+        //    Custom.setCurrentVT('kanban');
+        //    require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
+        //        var collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
+        //        collection.bind('reset', _.bind(createViews, self));
+        //        function createViews() {
+        //            collection.unbind('reset');
+        //            var contentView = new ContentView({ collection: collection });
+        //            var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+
+        //            topBarView.bind('createEvent', contentView.createItem, contentView);
+        //            topBarView.bind('editEvent', contentView.editItem, contentView);
+
+        //            collection.bind('showmore', contentView.showMoreContent, contentView);
+        //            this.changeView(contentView);
+        //            this.changeTopBarView(topBarView);
+        //            var url = 'easyErp/' + contentType + '/kanban';
+        //            if (parrentContentId) {
+        //                url += '/' + parrentContentId;
+        //            }
+        //            Backbone.history.navigate(url, { replace:true});
+        //        }
+        //    });
+        //},
+
         goToKanban: function (contentType, parrentContentId) {
             if (this.mainView == null) this.main(contentType);
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
-                CollectionUrl = this.buildCollectionRoute(contentType);
+                CollectionUrl = "collections/Workflows/WorkflowsCollection";
 
             self = this;
             Custom.setCurrentVT('kanban');
-            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection({ viewType: 'kanban', page: 1, count: 10, parrentContentId: parrentContentId });
+            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, WorkflowsCollection) {
+                var collection = new WorkflowsCollection({ id: contentType });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
-                    var topBarView = new TopBarView({ actionType: "Content", collection: collection });
+                    var contentView = new ContentView({ workflowCollection: collection });
+                    var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
-
-                    collection.bind('showmore', contentView.showMoreContent, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
                     var url = 'easyErp/' + contentType + '/kanban';
                     if (parrentContentId) {
                         url += '/' + parrentContentId;
                     }
-                    Backbone.history.navigate(url, { replace:true});
+                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },

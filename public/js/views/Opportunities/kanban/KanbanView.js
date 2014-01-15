@@ -5,9 +5,11 @@
         'views/Opportunities/EditView',
         'views/Opportunities/CreateView',
         'collections/Companies/CompaniesCollection',
-        'models/OpportunitiesModel'
+        'collections/Opportunities/OpportunitiesCollection',
+        'models/OpportunitiesModel',
+        'dataService'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, CompaniesCollection, CurrentModel) {
+function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, CompaniesCollection, OpportunitiesCollection, CurrentModel, dataService) {
     var OpportunitiesKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -16,17 +18,14 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             "click .item": "selectItem"
         },
         initialize: function (options) {
-        	//this.render = _.after(2, this.render);
-        	this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
-            this.workflowsCollection.bind('reset', this.render, this);
-            //this.companiesCollection = new CompaniesCollection();
-            //this.companiesCollection.bind('reset', _.bind(this.render, this));
-            this.collection = options.collection;
+            this.workflowsCollection = options.workflowCollection;
+            this.render();
+            this.asyncFetc(options.workflowCollection);
         },
-        
+
         selectItem: function (e) {
-			$(e.target).parents(".item").parents("table").find(".active").removeClass("active");
-			$(e.target).parents(".item").addClass("active");
+            $(e.target).parents(".item").parents("table").find(".active").removeClass("active");
+            $(e.target).parents(".item").addClass("active");
         },
 
         gotoEditForm: function (e) {
@@ -42,7 +41,25 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 error: function () { alert('Please refresh browser'); }
             });
         },
-        
+
+        asyncFetc: function (workflows) {
+            _.each(workflows.toJSON(), function (wfModel) {
+                dataService.getData('/Opportunities/kanban', { workflowId: wfModel._id }, this.asyncRender);
+            }, this);
+        },
+
+        asyncRender: function (response) {
+            var contentCollection = new OpportunitiesCollection(response.data);
+            var kanbanItemView;
+            var column = this.$("[data-id='" + response.workflowId + "']");
+            //var column = this.$(".column").eq(0);
+            _.each(contentCollection.models, function (wfModel) {
+                kanbanItemView = new KanbanItemView({ model: wfModel });
+                var curEl = kanbanItemView.render().el;
+                column.append(curEl);
+            }, this);
+        },
+
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
             this.collection.showMore();
@@ -62,7 +79,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     if (this.collection.get(model_id) === undefined) {
                         column.append(kanbanItemView.render().el);
                     } else {
-                        $( "#"+ wfModel.get('_id')).hide();
+                        $("#" + wfModel.get('_id')).hide();
                         column.append(kanbanItemView.render().el);
                     }
                 }, this);
@@ -89,36 +106,23 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
             var OpportunitieCount;
-           // var OpportunitieRemaining;
+            // var OpportunitieRemaining;
 
             _.each(workflows, function (workflow, i) {
                 OpportunitieCount = 0
-                //OpportunitieRemaining = 0;
-                _.each(this.collection.optionsArray, function(wfId){
-                    if (wfId._id == workflow._id) {
-                        OpportunitieCount = wfId.count;
-                        //OpportunitieRemaining = wfId.remainingOfOpportunitie;
-                    }
-                });
                 var column = this.$(".column").eq(i);
                 var kanbanItemView;
-                var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
+                //var modelByWorkflows = this.collection.filterByWorkflow(workflow._id);
 
-                _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new KanbanItemView({ model: wfModel});
-                    column.append(kanbanItemView.render().el);
-                }, this);
+                //_.each(modelByWorkflows, function (wfModel) {
+                //    kanbanItemView = new KanbanItemView({ model: wfModel});
+                //    column.append(kanbanItemView.render().el);
+                //}, this);
                 var count = " <span>(<span class='counter'>" + OpportunitieCount + "</span>)</span>";
-                /*var content = "<p class='remaining'>Remaining time: <span>" + remaining + "</span></p>";*/
                 column.find(".columnNameDiv h2").append(count);
-                //column.find(".columnNameDiv").append(content);
+
             }, this);
             var that = this;
-
-            if (this.collection.showMoreButton) {
-                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
-
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",
@@ -127,7 +131,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 opacity: 0.7,
                 revert: true,
                 helper: 'clone',
-                
+
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
                     var id = ui.item.context.id;
@@ -139,7 +143,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
                 },
                 stop: function (event, ui) {
-                	var id = ui.item.context.id;
+                    var id = ui.item.context.id;
                     //var id = ui.item.attr('data-id');
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");

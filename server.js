@@ -1296,7 +1296,7 @@ app.get('/Opportunities/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(req.params);
+    console.log(data);
     viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getOpportunityById(req, res, data);
