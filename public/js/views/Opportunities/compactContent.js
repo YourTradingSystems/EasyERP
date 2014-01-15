@@ -24,17 +24,9 @@
             },
 
             render: function (options) {
-                if (options) {
-                	var company = this.model.toJSON();
-                	var personsCollection = null;
-                } else {
-                    company = this.model.toJSON();
-                    personsCollection = this.personsCollection.toJSON();
-                }
                 this.$el.html(this.template({
-                    collection: this.collection.toJSON(),
-                    company: company,
-                    personsCollection:personsCollection
+                    collection: this.collection,
+					options: options
                 }));
                 return this;
                 

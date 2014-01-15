@@ -756,6 +756,12 @@
                 if (callback) callback();
             });
         };
+        var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, callback) {
+            var self = this;
+            dataService.getData(url, { person:personId,company:companyId, page:page,count:count }, function (response) {
+                if (callback) callback(response);
+            });
+        };
 
         var populateSourceApplicants = function (selectId, url, model) {
             var selectList = $(selectId);
@@ -855,6 +861,7 @@
             populateParentDepartments: populateParentDepartments,
             populateDepartmentsList: populateDepartmentsList,
             getLeadsForChart: getLeadsForChart,
-            getEmployeesImages: getEmployeesImages
+            getEmployeesImages: getEmployeesImages,
+			populateOpportunitiesForMiniView:populateOpportunitiesForMiniView
         }
     });

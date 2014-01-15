@@ -5,19 +5,18 @@ define([
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
     'text!templates/Notes/AddAttachments.html',
-    'collections/Opportunities/OpportunitiesCollection',
     'views/Opportunities/CreateView',
     'common'
 ],
 
-    function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, OpportunitiesCollection, CreateViewOpportunities, common) {
+    function (PersonFormTemplate, EditView, opportunitiesCompactContentView, noteView, addNoteTemplate, addAttachTemplate, CreateViewOpportunities, common) {
         var PersonTasksView = Backbone.View.extend({
             el: '#content-holder',
 
             initialize: function (options) {
                 this.formModel = options.model;
-                this.opportunitiesCollection = new OpportunitiesCollection();
-                this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
+				this.pageMini = 1;
+				this.pageCount = 4;
             },
 
             events: {
@@ -38,9 +37,34 @@ define([
                 "click #cancelSpan": "cancelClick",
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
-                "change .sale-purchase input": "saveCheckboxChange"
+                "change .sale-purchase input": "saveCheckboxChange",
+                "click .miniPagination .next": "nextMiniPage",
+                "click .miniPagination .prev": "prevMiniPage"
             },
+			nextMiniPage:function(){
+				this.pageMini +=1;
+				this.renderMiniOpp();
+			},
+			prevMiniPage:function(){
+				this.pageMini -=1;
+				this.renderMiniOpp();
+			},
 
+			renderMiniOpp:function(){
+				var self = this;
+            	var formModel = this.formModel.toJSON();
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,function(collection){
+					self.$el.find('.formRightColumn').empty();
+					self.$el.find('.formRightColumn').append(
+                        new opportunitiesCompactContentView({
+                            collection: collection.data,
+                        }).render({first:true,last:false}).el
+                    );
+					
+				});
+
+
+			},
             addOpportunities: function (e) {
             	e.preventDefault();
             	var model = this.formModel.toJSON();
@@ -425,16 +449,11 @@ define([
             },
 
             render: function () {
+				var self = this;
                 var formModel = this.formModel.toJSON();
                 
                 this.$el.html(_.template(PersonFormTemplate, formModel));
-                this.$el.find('.formRightColumn').append(
-                                new opportunitiesCompactContentView({
-                                    collection: this.opportunitiesCollection,
-                                    model: this.formModel
-                                }).render(true).el
-                            );
-
+				this.renderMiniOpp();
                 this.$el.find('.formLeftColumn').append(
                     new noteView({
                         model: this.formModel
