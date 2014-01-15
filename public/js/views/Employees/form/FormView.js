@@ -16,13 +16,12 @@ define([
                },
             endContract: function(e) {
                 e.preventDefault();
-                //TODO wfId hardcode
-                var wfId = '52d2c1369b57890814000005';
+                var wfId = $('.endContractReasonList').attr('data-id');
                 var contractEndReason = $(e.target).text();
                 this.formModel.set({ workflow: wfId,contractEndReason: contractEndReason, workflowContractEnd: true });
                 this.formModel.save({},{
                     success: function () {
-                        //Backbone.history.navigate("easyErp/Employees", { trigger: true });
+                        Backbone.history.navigate("easyErp/Employees", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
@@ -39,12 +38,10 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                //TODO
-              //  common.getWorkflowContractEnd("Application", null, null, "/Workflows", null, function(workflows) {
-               //     console.log('-----------------------workflows--------------------');
-              //      console.log(workflows);
-              //      alert('bot');
-              //  });
+                common.getWorkflowContractEnd("Application", null, null, "/Workflows", null, "Contract End", function(workflow) {
+                    console.log(workflow[0]._id);
+                    $('.endContractReasonList').attr('data-id',workflow[0]._id);
+                });
                 this.$el.html(_.template(EmployeesFormTemplate, formModel));
                 return this;
             },

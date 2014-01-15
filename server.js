@@ -632,11 +632,19 @@ app.get('/relatedStatus', function (req, res) {
 
 app.get('/Workflows', function (req, res) {
     data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getWorkflow(req, res, data);
+});
+
+app.get('/WorkflowContractEnd', function (req, res) {
+    data = {};
     data.id = req.param('id');
     //console.log(req.body);
     data.mid = req.param('mid');
     console.log(data);
-    requestHandler.getWorkflow(req, res, data);
+    requestHandler.getWorkflowContractEnd(req, res, data);
 });
 
 app.get('/WorkflowsForDd', function (req, res) {

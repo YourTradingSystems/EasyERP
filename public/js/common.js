@@ -630,6 +630,12 @@
             });
         }
 
+        var getWorkflowContractEnd = function (workflowType, selectId, workflowNamesDd, url, model, wfNmae, callback) {
+            dataService.getData(url, { mid: 39, id: workflowType, name: wfNmae}, function (response) {
+                if (callback) callback(response.data);
+            });
+        }
+
         var populateUsers = function (selectId, url, model, callback, removeSelect) {
             var selectList = $(selectId);
             var self = this;
@@ -831,6 +837,7 @@
             populateCompanies: populateCompanies,
             populateWorkflows: populateWorkflows,
             populateWorkflowsList: populateWorkflowsList,
+            getWorkflowContractEnd: getWorkflowContractEnd,
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
