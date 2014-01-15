@@ -198,6 +198,7 @@ define([
         },
 
         goToForm: function (contentType, modelId) {
+			var startTime = new Date();
             if (this.mainView == null) this.main(contentType);
             //console.log(contentType + "Model");
             if (contentType !== 'ownCompanies') {
