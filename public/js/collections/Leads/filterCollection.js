@@ -55,7 +55,7 @@
                         that.page += addPage;
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
-
+                        that.add(newCollection.toJSON());
                     },
                     error: this.fetchError
                 });
