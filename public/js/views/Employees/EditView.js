@@ -301,7 +301,12 @@ define([
             },
 
             saveItem: function () {
-                 
+                
+                var gender = $("#genderDd option:selected").val();
+                gender = gender ? gender : null;
+                var martial = $("#martialDd option:selected").val();
+                martial = martial ? martial : null;
+
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
@@ -352,6 +357,8 @@ define([
                         first: $.trim(this.$el.find("#first").val()),
                         last: $.trim(this.$el.find("#last").val())
                     },
+                    gender: gender,
+                    martial: martial,
                     workAddress: {
                         street:$.trim( this.$el.find('#street').val()),
                         city: $.trim(this.$el.find('#city').val()),

@@ -244,6 +244,9 @@ define([
                     mobile: mobile
                 };
 
+
+                var gender = $("#genderDd option:selected").val();
+                var martial = $("#martialDd option:selected").val();
                 var officeLocation = $.trim($("#officeLocation").val());
                 var relatedUser = $("#relatedUsersDd option:selected").val();
                 var department = $("#departmentsDd option:selected").val();
@@ -280,6 +283,8 @@ define([
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 employeeModel.save({
                     name: name,
+                    gender: gender ? gender : "",
+                    martial: martial ? martial : "",
                     imageSrc: this.imageSrc,
                     workAddress: workAddress,
                     workEmail: workEmail,
