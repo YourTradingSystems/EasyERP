@@ -12,6 +12,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
         el: '#content-holder',
 
         initialize: function (options) {
+			this.startTime = options.startTime;
             this.collection = options.collection;
             arrayOfEmployees = [];
             dataIndexCounter = 0;
@@ -69,7 +70,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
 				return item._id;
 			});
 			common.getEmployeesImages(ids);
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         },
 

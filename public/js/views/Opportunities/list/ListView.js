@@ -10,6 +10,7 @@ define([
             el: '#content-holder',
 
             initialize: function (options) {
+				this.startTime = options.startTime;
                 this.collection = options.collection;
 				this.stages = [];
                 this.collection.bind('reset', _.bind(this.render, this));
@@ -134,7 +135,7 @@ define([
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);
                 });
-				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },
 
             previousPage: function (event) {

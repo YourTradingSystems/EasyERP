@@ -11,6 +11,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
         el: '#content-holder',
 
         initialize: function (options) {
+			this.startTime = options.startTime;
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
 			var self = this;
@@ -125,7 +126,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
                 self.deleteCounter = 0;
             });
 
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
         },
 
         previousPage: function (event) {

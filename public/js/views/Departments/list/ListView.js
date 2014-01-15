@@ -10,6 +10,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
         el: '#content-holder',
 
         initialize: function (options) {
+			this.startTime = options.startTime;
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
             this.startNumber = 0;
@@ -85,7 +86,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
                 else
                     $("#top-bar-deleteBtn").hide();
             });
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
         },
 
         showMore: function () {

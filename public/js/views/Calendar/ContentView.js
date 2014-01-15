@@ -19,6 +19,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
         createDlgTpl: _.template(AddCalendarDialogTemplate),
 
         initialize: function () {
+			this.startTime = options.startTime;
             _.bindAll(this, 'syncDlgSubmitBtnClickHandler', 'displayEventsOnCalendar', 'createNewCalendar');
             this.eventsCollection = new EventsCollection({ idArray: ['52a866f518e8955b08b6e611'] });
             this.calendarsCollection = new CalendarsCollection();
@@ -438,7 +439,7 @@ function (CalendarTemplate, AddCalendarDialogTemplate, SyncDialog, Calendar, Eve
 
             Calendar.initCalendar("schedulerDiv", this.eventsCollection);
             Calendar.initMiniCalendar("miniCalendar");
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         }
     });

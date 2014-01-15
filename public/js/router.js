@@ -29,6 +29,7 @@ define([
         },
 
         goToProfiles: function () {
+			var startTime = new  Date();
             if (this.mainView == null) this.main("Profiles");
 
             var ContentViewUrl = "views/Profiles/ContentView",
@@ -44,7 +45,7 @@ define([
                 Custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+                    var contentView = new ContentView({ collection: collection, startTime:startTime });
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -61,6 +62,7 @@ define([
         },
         
         goToUserPages: function () {
+			var startTime = new  Date();
             if (this.mainView == null) this.main("UsersPages");
 
             var ContentViewUrl = "views/UsersPages/ContentView",
@@ -76,7 +78,7 @@ define([
                 Custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+                    var contentView = new ContentView({ collection: collection, startTime:startTime});
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -93,6 +95,7 @@ define([
         },
 
         goToDashboard: function () {
+			var startTime = new  Date();
             if (this.mainView == null) this.main("Dashboard");
 
             var ContentViewUrl = "views/Dashboard/ContentView",
@@ -103,7 +106,7 @@ define([
                
                 Custom.setCurrentVT('list');
                
-                    var contentView = new ContentView();
+                    var contentView = new ContentView({startTime:startTime});
                     var topBarView = new TopBarView({ actionType: "Content" });
                     self.changeView(contentView);
                     self.changeTopBarView(topBarView);
@@ -113,6 +116,7 @@ define([
         },
 
         goToWorkflows: function () {
+			var startTime = new  Date();
             if (this.mainView == null) this.main("Workflows");
 
             var ContentViewUrl = "views/Workflows/ContentView",
@@ -129,7 +133,7 @@ define([
 
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+                    var contentView = new ContentView({ collection: collection, startTime:startTime });
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -160,6 +164,7 @@ define([
         },
 
         goToList: function (contentType, parrentContentId) {
+			var startTime = new Date();
             // console.API.clear();
             if (this.mainView == null) this.main(contentType);
 
@@ -176,7 +181,7 @@ define([
                 Custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+                    var contentView = new ContentView({ collection: collection, startTime:startTime });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -214,7 +219,7 @@ define([
                     success: function (model, response, options) {
                         self.convertModelDates(model);
                         var topBarView = new TopBarView({ actionType: "Content" });
-                        var contentView = new ContentFormView({ model: model });
+                        var contentView = new ContentFormView({ model: model, startTime:startTime});
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
@@ -243,6 +248,7 @@ define([
         },
 
         goToKanban: function (contentType, parrentContentId) {
+			var startTime = new  Date();
             if (this.mainView == null) this.main(contentType);
             var ContentViewUrl = "views/" + contentType + "/kanban/KanbanView",
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -255,7 +261,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+                    var contentView = new ContentView({ collection: collection, startTime:startTime});
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -274,6 +280,7 @@ define([
         },
 
         goToThumbnails: function (contentType, parrentContentId) {
+			var startTime = new  Date();
             //console.API.clear();
             if (this.mainView == null) this.main(contentType);
             var ContentViewUrl,
@@ -294,7 +301,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection });
+                    var contentView = new ContentView({ collection: collection, startTime:startTime });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);

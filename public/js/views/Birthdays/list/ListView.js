@@ -8,6 +8,7 @@ function (ListTemplate, ListItemView, common, Custom) {
     var ContentView = Backbone.View.extend({
         el: '#content-holder',
         initialize: function (options) {
+			this.startTime = options.startTime;
             console.log('Init Employees View');
             this.employeesCollection = options.collection.toJSON()[0];
             this.render();
@@ -19,7 +20,7 @@ function (ListTemplate, ListItemView, common, Custom) {
             var list = this.$el.find('#birthdaysList');
             list.find("#weekList").append(new ListItemView({ collection: this.employeesCollection.weekly }).render().el);
             list.find("#monthList").append(new ListItemView({ collection: this.employeesCollection.monthly }).render().el);
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.collection.startTime)+" ms</div>");
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 
         }
     });
