@@ -63,6 +63,12 @@ mainDb.once('open', function callback() {
 
 var express = require('express');
 var app = express();
+//var countResponseSize = require('count-response-size-middleware');
+//app.use(countResponseSize());
+//app.use(function (req, res, next) {
+//	console.log('!!!!!!!!!!!!!!<<<<<<<<<<<<>>>>>>>>>>>>>>>>response is  ' + res._sent + ' bytes');
+//	next();
+//});
 
 var MemoryStore = require('connect-mongo')(express);
 
@@ -104,17 +110,19 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: { 
+        //cookie: {
         //    maxAge: 600 * 1000 //1 minute
         //},
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
-
     app.use(app.router);
+
 });
+
 console.log(dbsArray);
 var requestHandler = require("./requestHandler.js")(fs, mongoose, event, dbsArray);
+
 
 
 app.get('/', function (req, res) {

@@ -17,6 +17,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         },
         initialize: function (options) {
         	//this.render = _.after(2, this.render);
+			this.startTime = options.startTime;
         	this.workflowsCollection = new WorkflowsCollection({ id: 'Opportunity' });
             this.workflowsCollection.bind('reset', this.render, this);
             //this.companiesCollection = new CompaniesCollection();
@@ -152,6 +153,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     }
                 }
             }).disableSelection();
+			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         }
     });
