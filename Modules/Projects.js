@@ -788,7 +788,7 @@ var Project = function (logWriter, mongoose, department, models) {
                 logWriter.log("Project.js remove project.remove " + err);
                 res.send(500, { error: "Can't remove Project" });
             } else {
-                removeTasksByPorjectID(_id);
+                removeTasksByPorjectID(req,_id);
                 res.send(200, { success: 'Remove all tasks Starting...' });
             }
         });

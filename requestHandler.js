@@ -1071,6 +1071,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getEmployeesListLength(req, res, data) {
+        console.log("Requst getEmployeesListLength is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            employee.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     // Custom function for list
     function getEmployeesCustom(req, res, data) {
         console.log("Requst getEmployeesCustom is success");
@@ -1747,6 +1756,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getFilterOpportunitiesForMiniView(req, res, data) {
+        console.log("Requst getFilterOpportunities is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getReadAccess(req, req.session.uId, 25, function (access) {
+                if (access) {
+                    opportunities.getFilterOpportunitiesForMiniView(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
+
     function getFilterOpportunitiesForKanban(req, res, data) {
         console.log("Requst getFilterOpportunities is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -2078,6 +2103,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,
         getEmployees: getEmployees,
+        getEmployeesListLength: getEmployeesListLength,
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
 		getEmployeesForList:getEmployeesForList,
@@ -2134,6 +2160,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
+		getFilterOpportunitiesForMiniView:getFilterOpportunitiesForMiniView,
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
         getOpportunities: getOpportunities,
         getOpportunityById: getOpportunityById,

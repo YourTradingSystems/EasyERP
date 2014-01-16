@@ -84,13 +84,14 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
             var thumbnailsItemView;
             var counter = 0;
             var namberOfemployees = this.collection.namberToShow;
-
+			var addedNow = [];
             if (arrayOfEmployees.length > 0) {
                 for (var i = 0; i < arrayOfEmployees.length; i++) {
                     if (counter < namberOfemployees) {
                         counter++;
                         dataIndexCounter++;
                         thumbnailsItemView = new EmployeesThumbnailsItemView({ model: arrayOfEmployees[i], dataIndex: dataIndexCounter });
+						addedNow.push(arrayOfEmployees[i]);
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                         holder.before(thumbnailsItemView.render().el);
                         arrayOfEmployees.splice(i, 1);
@@ -104,12 +105,17 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
                         counter++;
                         dataIndexCounter++;
                     thumbnailsItemView = new EmployeesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
+						addedNow.push(model);
                         thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
                         $(holder).before(thumbnailsItemView.render().el);
                     } else {
                         arrayOfEmployees.push(model);
                     }
             }, this);
+			var ids = _.map(addedNow,function(item){
+				return item.get("_id");
+			});
+			common.getEmployeesImages(ids);
 
             if (arrayOfEmployees.length == 0) {
                 this.$el.find('#showMoreDiv').hide();
@@ -138,7 +144,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
                     }
                 }
 
-            }
+1            }
             _.each(newModels.models, function (model) {
                 if (counter < namberOfemployees) {
                     counter++;

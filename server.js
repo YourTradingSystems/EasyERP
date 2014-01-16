@@ -1037,6 +1037,14 @@ app.get('/getDepartmentsForEditDd', function (req, res) {
 
 
 //------------------Employee---------------------------------------------------
+app.get('/EmployeesListLength', function (req, res) {
+    data = {};
+    //data.mid = req.param('mid');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getEmployeesListLength(req, res, data);
+});
 
 app.get('/Employees', function (req, res) {
     data = {};
@@ -1232,6 +1240,7 @@ app.delete('/Degrees/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeDegree(req, res, id, data);
 });
+
 //----------------------SourcesOfApplicants----------------------------------------------------------------
 app.get('/SourcesOfApplicants', function (req, res) {
     data = {};
@@ -1354,6 +1363,15 @@ app.get('/Opportunities/:viewType', function (req, res) {
             break;
         default: requestHandler.getFilterOpportunities(req, res, data);
     }
+});
+
+app.get('/OpportunitiesForMiniView', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+	requestHandler.getFilterOpportunitiesForMiniView(req, res, data);
+
 });
 
 app.get('/Opportunities', function (req, res) {

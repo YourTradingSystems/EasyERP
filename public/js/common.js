@@ -756,6 +756,12 @@
                 if (callback) callback();
             });
         };
+        var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, onlyCount, callback) {
+            var self = this;
+            dataService.getData(url, { person:personId,company:companyId, page:page,count:count,onlyCount:onlyCount }, function (response) {
+                if (callback) callback(response);
+            });
+        };
 
         var populateSourceApplicants = function (selectId, url, model) {
             var selectList = $(selectId);
@@ -801,6 +807,14 @@
                 });
             return [];
         }
+
+        var getListLength = function (workflowType, filterLetter, filterArray, url, callback) {
+            dataService.getData(url, { mid: 39, type: workflowType, letter: filterLetter, status: filterArray }, function (response) {
+                if (callback) callback(response);
+            });
+        }
+
+
         var buildAllAphabeticArray = function () {
             var associateArray = ["All", "0-9"]
             for (i = 65; i <= 90; i++) {
@@ -824,6 +838,7 @@
             buildAllAphabeticArray: buildAllAphabeticArray,
             buildAphabeticArray: buildAphabeticArray,
             buildPagination: buildPagination,
+            getListLength: getListLength,
             populateDegrees: populateDegrees,
             populateSourceApplicants: populateSourceApplicants,
             populateJobPositions: populateJobPositions,
@@ -855,6 +870,7 @@
             populateParentDepartments: populateParentDepartments,
             populateDepartmentsList: populateDepartmentsList,
             getLeadsForChart: getLeadsForChart,
-            getEmployeesImages: getEmployeesImages
+            getEmployeesImages: getEmployeesImages,
+			populateOpportunitiesForMiniView:populateOpportunitiesForMiniView
         }
     });
