@@ -10,7 +10,7 @@ define([
             initialize: function (options) {
                 this.startTime = new Date();
                 var that = this;
-                this.page = options.page;
+                if (options) this.page = options.page;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     var viewType = options.viewType;

@@ -1714,6 +1714,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
     //-------------------Opportunities---------------------------
+    function getOpportunitiesLengthByWorkflows(req, res) {
+        opportunities.getCollectionLengthByWorkflows(req, res);
+    }
+
     function createOpportunitie(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.opportunitie.uId = req.session.uId;
@@ -2144,7 +2148,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getLeadsForChart: getLeadsForChart,
 		getLeadsForList:getLeadsForList,
 
-        createOpportunitie: createOpportunitie,
+		getOpportunitiesLengthByWorkflows: getOpportunitiesLengthByWorkflows,
+		createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
         getOpportunities: getOpportunities,

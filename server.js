@@ -1371,6 +1371,10 @@ app.get('/Opportunities', function (req, res) {
     requestHandler.getOpportunities(req, res, data);
 });
 
+app.get('/getLengthByWorkflows', function (req, res) {
+    requestHandler.getOpportunitiesLengthByWorkflows(req, res);
+});
+
 app.put('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

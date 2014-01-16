@@ -24,6 +24,13 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             this.workflowsCollection = options.workflowCollection;
             this.render();
             this.asyncFetc(options.workflowCollection);
+            this.getCollectionLengthByWorkflows();
+        },
+
+        getCollectionLengthByWorkflows: function () {
+            dataService.getData('/getLengthByWorkflows', {}, function (arrayOfObjects) {
+                console.log(arrayOfObjects);
+            });
         },
 
         selectItem: function (e) {
