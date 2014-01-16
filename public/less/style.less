@@ -4662,3 +4662,42 @@ h3.dashboard{
 	clear:both;
 	text-align:center;
 }
+.miniPagination{
+	@width:60px;
+	@height:20px;
+	width:@width*4;
+	margin:0 auto;
+	text-align:center;
+	height:@height;
+	>div{
+		cursor:pointer;
+		margin-top:3px;
+		height:@height;
+		line-height:@height;
+		float:left;
+		border:@thin-border silver;
+		border-right:none;
+		&:hover{
+			background-color:rgba(0,0,0,0.1);
+		}
+		&.not-active{
+			color:silver;
+			background-color:none;
+			cursor:default;
+			&:hover{
+				background:none;
+			}
+		}
+	}
+	div:last-child{
+		border-right:@thin-border silver;
+	}
+
+	.first, .last{
+		width:@width/3*2;
+	}
+	.prev, .next{
+		width:@width;
+	}
+
+}

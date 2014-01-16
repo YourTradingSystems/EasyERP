@@ -1,7 +1,6 @@
 define([
     'text!templates/Companies/form/FormTemplate.html',
     'views/Companies/EditView',
-    'collections/Opportunities/OpportunitiesCollection',
     'collections/Persons/PersonsCollection',
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
@@ -14,17 +13,31 @@ define([
     'text!templates/Notes/AddAttachments.html'
 ],
 
-    function (CompaniesFormTemplate, EditView, OpportunitiesCollection, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
+    function (CompaniesFormTemplate, EditView, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 _.bindAll(this, 'render');
                 this.formModel = options.model;
-                this.render = _.after(2, this.render);
-                this.opportunitiesCollection = new OpportunitiesCollection();
-                this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
                 this.personsCollection = new PersonsCollection();
-                this.personsCollection.bind('reset', _.bind(this.render, this));
+				this.pageMini = 1;
+				this.pageCount = 4;
+				this.allMiniOpp =0;
+				this.allPages =0;
+
+				var self = this;
+				var formModel = this.formModel.toJSON();
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel._id,this.pageMini,this.pageCount,true,function(count){
+					self.allMiniOpp = count.listLength;
+					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
+					if (self.allPages == self.pageMini){
+						$(".miniPagination .next").addClass("not-active");
+						$(".miniPagination .last").addClass("not-active");
+					}
+				});
+
+
+//                this.personsCollection.bind('reset', _.bind(this.render, this));
             },
             flag: true,
             events: {
@@ -44,24 +57,65 @@ define([
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
                 "click .btnHolder .add.persons": "addPersons",
-                "change .person-info.company.long input": "saveCheckboxChange"
+                "change .person-info.company.long input": "saveCheckboxChange",
+                "click .miniPagination .next:not(.not-active)": "nextMiniPage",
+                "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
+                "click .miniPagination .first:not(.not-active)": "firstMiniPage",
+                "click .miniPagination .last:not(.not-active)": "lastMiniPage"
+
             },
-            
+			nextMiniPage:function(){
+				this.pageMini +=1;
+				this.renderMiniOpp();
+			},
+			prevMiniPage:function(){
+				this.pageMini -=1;
+				this.renderMiniOpp();
+			},
+
+			firstMiniPage:function(){
+				this.pageMini=1;
+				this.renderMiniOpp();
+			},
+			lastMiniPage:function(){
+				this.pageMini = this.allPages;
+				this.renderMiniOpp();
+			},
+
+			renderMiniOpp:function(){
+				var self = this;
+            	var formModel = this.formModel.toJSON();
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel._id,this.pageMini,this.pageCount,false,function(collection){
+					console.log(collection);
+					self.$el.find('.formRightColumn').empty();
+					var isLast = self.pageMini==self.allPages?true:false
+					self.$el.find('.formRightColumn').append(
+                        new opportunitiesCompactContentView({
+                            collection: collection.data,
+                        }).render({first:self.pageMini==1?true:false,last:isLast}).el
+                    );
+					self.$el.find('.formRightColumn').append(                                
+						new personsCompactContentView({
+                            collection: this.personsCollection,
+                            model: this.formModel
+                        }).render().el);
+					
+				});
+
+
+			},            
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-                this.$el.find('.formRightColumn').append(
+				this.renderMiniOpp();
+/*                this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
                                     personsCollection: this.personsCollection,
                                     model: this.formModel
                                 }).render().el,
-                                new personsCompactContentView({
-                                    collection: this.personsCollection,
-                                    model: this.formModel
-                                }).render().el
-                            );
+                            );*/
                 this.$el.find('.formLeftColumn').append(
                         new noteView({
                             model: this.formModel

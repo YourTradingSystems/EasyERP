@@ -1365,6 +1365,15 @@ app.get('/Opportunities/:viewType', function (req, res) {
     }
 });
 
+app.get('/OpportunitiesForMiniView', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+	requestHandler.getFilterOpportunitiesForMiniView(req, res, data);
+
+});
+
 app.get('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');
