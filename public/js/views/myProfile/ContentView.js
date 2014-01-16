@@ -1,18 +1,19 @@
 define([
-    "text!templates/UsersPages/UsersPagesTemplate.html",
-    "text!templates/UsersPages/ChangePassword.html",
+    "text!templates/myProfile/UsersPagesTemplate.html",
+    "text!templates/myProfile/ChangePassword.html",
     'common'
 ],
-    function (UsersPagesTemplate, ChangePassword, common) {
+    function (UsersPagesTemplate, ChangePassword,UsersCollection, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
-            contentType: "UserPages",
+            contentType: "myProfile",
             actionType:"Content",
             template: _.template(ChangePassword),
+            
             initialize: function (options) {
-                this.usersCollection = options.collection;
-                this.usersCollection.bind('add', _.bind(this.render, this));
-                this.usersCollection.bind('reset', _.bind(this.render, this));
+                this.collection = options.collection;
+                //this.collection.bind('reset', _.bind(this.render, this));
+                //console.log(this.collection.models);
                 this.render();
             },
             events:{
@@ -45,11 +46,12 @@ define([
             },
 
             render: function () {
+            	var collection = this.collection.toJSON();
                 this.$el.html(_.template(UsersPagesTemplate,
-                    { usersCollection:this.usersCollection.toJSON(),
+                    { myProfileModel:this.UsersCollection,
                         contentType: this.contentType
                     }));
-                console.log(this.usersCollection.toJSON());
+                console.log(this.collection.models);
                 return this;
             }
         });

@@ -155,6 +155,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     //---------END------Users--------------------------------
+    //User Pages
+    function getMyProfile(req, res, data) {
+        console.log("Request getMyProfile is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+        	
+        	access.getReadAccess(req, req.session.uId, 7, function (access) {
+                if (access) {
+                    users.getMyProfile(req, data.id, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    
     //---------------------Profile--------------------------------
     function createProfile(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -2038,6 +2055,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
+        getMyProfile:getMyProfile,
 
         getProfile: getProfile,
 		getProfileForDd:getProfileForDd,

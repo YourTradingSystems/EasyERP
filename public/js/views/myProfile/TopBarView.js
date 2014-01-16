@@ -1,5 +1,5 @@
 define([
-    'text!templates/UsersPages/TopBarTemplate.html',
+    'text!templates/myProfile/TopBarTemplate.html',
     'custom',
     "common"
 ],

@@ -69,34 +69,25 @@ define([
         
         goToUserPages: function () {
 			var startTime = new  Date();
-            if (this.mainView == null) this.main("UsersPages");
+            if (this.mainView == null) this.main("myProfile");
 
-            var ContentViewUrl = "views/UsersPages/ContentView",
-                TopBarViewUrl = "views/UsersPages/TopBarView",
-                CollectionUrl = "collections/Users/UsersCollection";
-
+            var ContentViewUrl = "views/myProfile/ContentView",
+                TopBarViewUrl = "views/myProfile/TopBarView";
+                CollectionUrl = "collections/myProfile/UsersCollection";
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
                 var collection = new ContentCollection();
-
-                collection.bind('reset', _.bind(createViews, self));
+                collection.bind('reset');
                 Custom.setCurrentVT('list');
-                function createViews() {
-                    collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection, startTime:startTime});
+                	
+                    var contentView = new ContentView({collection:collection, startTime:startTime});
                     var topBarView = new TopBarView({ actionType: "Content" });
 
-                    topBarView.bind('createEvent', contentView.createItem, contentView);
-                    topBarView.bind('editEvent', contentView.editProfileDetails, contentView);
-                    topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
-                    topBarView.bind('saveEvent', contentView.saveProfile, contentView);
-
-                    this.changeView(contentView);
-                    this.changeTopBarView(topBarView);
-                    var url = '#easyErp/myProfile';
-                    Backbone.history.navigate(url, { replace: true });
-                }
+                    self.changeView(contentView);
+                    self.changeTopBarView(topBarView);
+                    //var url = '#easyErp/myProfile';
+                    //Backbone.history.navigate(url, { replace: true });
             });
         },
 
