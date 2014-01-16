@@ -44,7 +44,8 @@ define([
 				$(e.target).parent().find(".current").removeClass("current");
 				$(e.target).addClass("current");
 				var itemsNumber = $("#itemsNumber").text();
-				var page =  parseInt($("#currentShowPage").val());
+				//var page =  parseInt($("#currentShowPage").val());
+                var page =  1;
 				_.bind(this.collection.showMore, this.collection);
 				this.selectedLetter=$(e.target).text();
 				if ($(e.target).text()=="All"){
@@ -120,12 +121,10 @@ define([
                     if ((deletePage == 1) && (pageNumber > 1)) {
                         deletePage = 1
                     }
-                    if ((deletePage == 1) && (pageNumber == 1)) {
+                    if (((deletePage == 1) && (pageNumber == 0)) || (deletePage == 0)) {
                         deletePage = 0
                     }
-                    if (deletePage == 0) {
-                        deletePage = 0
-                    }
+
                     if (deletePage == 0) {
                         $("#grid-start").text(0);
                         $("#grid-end").text(0);
