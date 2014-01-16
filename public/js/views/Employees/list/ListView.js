@@ -15,7 +15,7 @@ define([
 				this.startTime = options.startTime;
                 var that = this;
                 this.collection = options.collection;
-                this.collection.bind('reset', _.bind(this.render, this));
+                //this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
                 this.deleteCounter = 0;
 				this.allAlphabeticArray = common.buildAllAphabeticArray();
@@ -39,6 +39,7 @@ define([
 
             },
 			alpabeticalRender:function(e){
+                this.startTime = new Date();
                 var self = this;
 				$(e.target).parent().find(".current").removeClass("current");
 				$(e.target).addClass("current");
@@ -49,6 +50,8 @@ define([
 				if ($(e.target).text()=="All"){
 					this.selectedLetter="";
 				}
+                this.deleteCounter = 0;
+                this.deletePage = 0;
                 common.getListLength('Employees', this.selectedLetter, null, '/EmployeesListLength', function(response){
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
@@ -60,7 +63,6 @@ define([
                         $("#pageList").empty();
                         $("#currentShowPage").val(0);
                         $("#lastPage").text(0);
-                        $("#pageList").empty();
                     } else {
                         $("#grid-start").text(1);
                         if (self.listLength <= itemsNumber) {
@@ -92,11 +94,122 @@ define([
 				return false;
 			},
 
+            deleteItemsRender: function (deleteCounter, deletePage) {
+                this.startTime = new Date();
+                var self = this;
+                if (this.selectedLetter == 'All') {
+                    var letter = null;
+                } else {
+                    var letter = this.selectedLetter;
+                }
+                $(':checkbox').prop('checked', false);
+
+                if (this.defaultItemsNumber) {
+                    var itemsNumber = self.defaultItemsNumber;
+                    this.defaultItemsNumber = false;
+                    $("#itemsNumber").text(itemsNumber);
+                } else {
+                    var itemsNumber = $("#itemsNumber").text();
+                }
+
+                if (deleteCounter == this.collectionLength) {
+                    var pageNumber = Math.ceil(this.listLength/itemsNumber);
+                    if (deletePage > 1) {
+                        deletePage = deletePage - 1;
+                    }
+                    if ((deletePage == 1) && (pageNumber > 1)) {
+                        deletePage = 1
+                    }
+                    if ((deletePage == 1) && (pageNumber == 1)) {
+                        deletePage = 0
+                    }
+                    if (deletePage == 0) {
+                        deletePage = 0
+                    }
+                    if (deletePage == 0) {
+                        $("#grid-start").text(0);
+                        $("#grid-end").text(0);
+                        $("#grid-count").text(0);
+                        $("#previousPage").prop("disabled",true);
+                        $("#nextPage").prop("disabled",true);
+                        $("#currentShowPage").val(0);
+                        $("#lastPage").text(0);
+                        $("#pageList").empty();
+                        $("#listTable").empty();
+                    } else {
+                        $("#grid-start").text((deletePage-1)*itemsNumber + 1);
+                        $("#grid-end").text(deletePage*itemsNumber);
+                        $("#grid-count").text(this.listLength);
+                        $("#currentShowPage").val(deletePage);
+                        $("#pageList").empty();
+
+                        for (var i=1;i<=pageNumber;i++) {
+                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                        }
+                        $("#lastPage").text(pageNumber);
+
+                        if (deletePage <= 1 ) {
+                            $("#previousPage").prop("disabled",true);
+                            $("#nextPage").prop("disabled",false);
+                        }
+                        if (deletePage >= pageNumber) {
+                            $("#nextPage").prop("disabled",true);
+                            $("#previousPage").prop("disabled",false);
+                        }
+                        if ((1 < deletePage) && (deletePage < pageNumber)) {
+                            $("#nextPage").prop("disabled",false);
+                            $("#previousPage").prop("disabled",false);
+                        }
+                        if ((deletePage == pageNumber) && (pageNumber == 1) ) {
+                            $("#previousPage").prop("disabled",true);
+                            $("#nextPage").prop("disabled",true);
+                        }
+
+                        _.bind(this.collection.showMore, this.collection);
+                        this.collection.showMore({count: itemsNumber, page: deletePage, letter: letter});
+                    }
+                } else {
+                    $("#listTable").empty()
+                    //new ListItemView({ collection: self.collection }).render();
+                    this.$el.append(new ListItemView({ collection: this.collection}).render());
+
+                    $("#grid-start").text((deletePage-1)*itemsNumber + 1);
+                    $("#grid-end").text(deletePage*itemsNumber - deleteCounter);
+                    $("#grid-count").text(this.listLength);
+                    $("#currentShowPage").val(deletePage);
+
+                    $("#pageList").empty();
+                    var pageNumber = Math.ceil(this.listLength/itemsNumber);
+                    for (var i=1;i<=pageNumber;i++) {
+                        $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                    }
+                    $("#lastPage").text(pageNumber);
+
+                    if (deletePage <= 1 ) {
+                        $("#previousPage").prop("disabled",true);
+                        $("#nextPage").prop("disabled",false);
+                    }
+                    if (deletePage >= pageNumber) {
+                        $("#nextPage").prop("disabled",true);
+                        $("#previousPage").prop("disabled",false);
+                    }
+                    if ((1 < deletePage) && (deletePage < pageNumber)) {
+                        $("#nextPage").prop("disabled",false);
+                        $("#previousPage").prop("disabled",false);
+                    }
+                    if ((deletePage == pageNumber) && (pageNumber == 1) ) {
+                        $("#previousPage").prop("disabled",true);
+                        $("#nextPage").prop("disabled",true);
+                    }
+                    $('#timeRecivingDataFromServer').remove();
+                    this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+                }
+            },
+
             render: function () {
                 var self = this;
                 $('.ui-dialog ').remove();
                 this.$el.html('');
-                $('#listTableAndPagination').empty();
                 this.$el.append(_.template(ListTemplate));
                 this.$el.append(new ListItemView({ collection: self.collection}).render());
                 $('#check_all').click(function () {
@@ -125,13 +238,12 @@ define([
                         $("#pageList").empty();
                         $("#currentShowPage").val(0);
                         $("#lastPage").text(0);
-                        $("#pageList").empty();
                     } else {
                         $("#grid-start").text(1);
                         if (self.listLength <= itemsNumber) {
-                            $("#grid-end").text(self.listLength - self.deleteCounter );
+                            $("#grid-end").text(self.listLength);
                         } else {
-                            $("#grid-end").text(itemsNumber - self.deleteCounter);
+                            $("#grid-end").text(itemsNumber);
                         }
                         $("#grid-count").text(self.listLength);
                         $("#pageList").empty();
@@ -139,13 +251,14 @@ define([
                         for (var i=1;i<=pageNumber;i++) {
                             $("#pageList").append('<li class="showPage">'+ i +'</li>')
                         }
-                        $("#currentShowPage").val(1);
                         $("#lastPage").text(pageNumber);
+                        $("#currentShowPage").val(1);
                         $("#previousPage").prop("disabled",true);
                         if (pageNumber <= 1) {
                             $("#nextPage").prop("disabled",true);
+                        } else {
+                            $("#nextPage").prop("disabled",false);
                         }
-                        self.deleteCounter = 0;
                     }
                     $(document).on("click",function(){
                         self.hideItemsNumber();
@@ -161,12 +274,13 @@ define([
             },
 
             previousPage: function (event) {
+                this.startTime = new Date();
+                event.preventDefault();
                 if (this.selectedLetter == 'All') {
                     var letter = null;
                 } else {
                     var letter = this.selectedLetter;
                 }
-                event.preventDefault();
                 var itemsNumber = $("#itemsNumber").text();
                 var page =  parseInt($("#currentShowPage").val()) - 1;
                 $("#currentShowPage").val(page);
@@ -180,17 +294,19 @@ define([
                     $("#grid-end").text(page*itemsNumber);
                 }
                 $("#nextPage").prop("disabled",false);
+                $(':checkbox').prop('checked', false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
             },
 
             nextPage: function (event) {
+                this.startTime = new Date();
+                event.preventDefault();
                 if (this.selectedLetter == 'All') {
                     var letter = null;
                 } else {
                     var letter = this.selectedLetter;
                 }
-                event.preventDefault();
                 var itemsNumber = $("#itemsNumber").text();
                 var page =  parseInt($("#currentShowPage").val()) + 1;
                 $("#currentShowPage").val(page);
@@ -202,20 +318,24 @@ define([
                     $("#grid-end").text(page*itemsNumber);
                 }
                 $("#previousPage").prop("disabled",false);
+                $(':checkbox').prop('checked', false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
 
             },
 
             switchPageCounter: function (event) {
+                this.startTime = new Date();
                 var self = this;
+
                 event.preventDefault();
+
                 if (this.selectedLetter == 'All') {
                     var letter = null;
                 } else {
                     var letter = this.selectedLetter;
                 }
-
+                $(':checkbox').prop('checked', false);
                 var itemsNumber = event.target.textContent;
                 common.getListLength('Employees', letter, null, '/EmployeesListLength', function(response){
                     self.listLength = response.listLength;
@@ -256,13 +376,14 @@ define([
             },
 
             showPage: function (event) {
+                this.startTime = new Date();
                 event.preventDefault();
                 if (this.selectedLetter == 'All') {
                     var letter = null;
                 } else {
                     var letter = this.selectedLetter;
                 }
-
+                $(':checkbox').prop('checked', false);
                 if (this.listLength == 0) {
                     $("#currentShowPage").val(0);
                 } else {
@@ -308,8 +429,10 @@ define([
             },
 
             showMoreContent: function (newModels) {
-                $("#listTable").empty()
-                new ListItemView({ collection: newModels }).render();
+                $("#listTable").empty();
+                this.$el.append(new ListItemView({ collection: newModels }).render());
+                $('#timeRecivingDataFromServer').remove();
+                this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },
             gotoForm: function (e) {
                 App.ownContentType = true;
@@ -339,6 +462,7 @@ define([
                     mid = 39,
                     model;
                 var localCounter = 0;
+                this.collectionLength = this.collection.length;
                 $.each($("tbody input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
@@ -346,13 +470,13 @@ define([
                             mid: mid
                         }
                     });
-                    that.collection.listLength--;
+                    that.listLength--;
                     localCounter++
                 });
-                $("#grid-count").text(this.collection.listLength);
                 this.defaultItemsNumber = $("#itemsNumber").text();
                 this.deleteCounter = localCounter;
-                this.collection.trigger('reset');
+                this.deletePage = $("#currentShowPage").val();
+                this.deleteItemsRender(this.deleteCounter, this.deletePage);
             }
 
         });
