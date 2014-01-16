@@ -5,5 +5,6 @@
             <td><%=user.login%></td>
             <td><%=user.email%></td>
             <td><%=user.profile.profileName%></td>
+            <td><%=(user.lastAccess) ? user.lastAccess : ''%></td>
         </tr>
     <% }) %>
