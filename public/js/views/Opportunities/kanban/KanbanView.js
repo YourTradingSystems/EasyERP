@@ -17,9 +17,13 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             "click .item": "selectItem"
         },
 
+        page: null,
         collection: null,
+        columnTotalLength: null,
+        showMoreButton: true,
 
         initialize: function (options) {
+            this.page = 1;
             this.collection = new OpportunitiesCollection();
             this.workflowsCollection = options.workflowCollection;
             this.render();
@@ -29,7 +33,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
         getCollectionLengthByWorkflows: function () {
             dataService.getData('/getLengthByWorkflows', {}, function (arrayOfObjects) {
-                console.log(arrayOfObjects);
+                columnTotalLength = arrayOfObjects;
             });
         },
 
@@ -128,6 +132,11 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 column.find(".columnNameDiv h2").append(count);
 
             }, this);
+
+            if (this.showMoreButton) {
+                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+            }
+
             var that = this;
             this.$(".column").sortable({
                 connectWith: ".column",
