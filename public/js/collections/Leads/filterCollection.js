@@ -55,7 +55,6 @@
                         that.page += addPage;
                         that.showMoreButton = response.showMore;
                         that.optionsArray = response.options;
-                        that.add(newCollection.toJSON());
                     },
                     error: this.fetchError
                 });
@@ -101,6 +100,7 @@
                         that.page += 1;
                         that.listLength = response.listLength;
                         that.trigger('showmore', models);
+                        that.add(newCollection.toJSON());
                     },
                     error: function() {
                         alert('Some Error');

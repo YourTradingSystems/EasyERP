@@ -13,7 +13,8 @@ var Users = function (logWriter, mongoose, models) {
             refresh_token: { type: String, default: '' },
             access_token: { type: String, default: '' }
         },
-        profile: { type: Number, ref: "Profile" }
+        profile: { type: Number, ref: "Profile" },
+        lastAccess: { type: Date}
     }, { collection: 'Users' });
 
     mongoose.model('Users', userSchema);
@@ -112,7 +113,7 @@ var Users = function (logWriter, mongoose, models) {
                 if (data.login || data.email) {
                     models.get(req.session.lastDb - 1, 'Users', userSchema).find({ $or: [{ login: data.login }, { email: data.email }] }, function (err, _users) {
                         try {
-							if (_users && _users.length !== 0) {
+                            if (_users && _users.length !== 0) {
                                 var shaSum = crypto.createHash('sha256');
                                 shaSum.update(data.pass);
                                 if (((_users[0].login == data.login) || (_users[0].email == data.login)) && (_users[0].pass == shaSum.digest('hex'))) {
@@ -120,6 +121,14 @@ var Users = function (logWriter, mongoose, models) {
                                     req.session.uId = _users[0]._id;
                                     req.session.uName = _users[0].login;
                                     res.cookie('lastDb', data.dbId);
+                                    var lastAccess = new Date();
+                                    req.session.lastAccess = lastAccess;
+                                    models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_users[0]._id, { $set: { lastAccess: lastAccess } }, function (err, result) {
+                                        if (err) {
+                                            logWriter.log("User.js. login User.findByIdAndUpdate " + err);
+                                            console.log(err);
+                                        }
+                                    });
                                     res.send(200);
                                 } else {
                                     res.send(400);
@@ -127,7 +136,7 @@ var Users = function (logWriter, mongoose, models) {
                             } else {
                                 if (err) {
                                     console.log(err);
-									logWriter.log("User.js. login User.find " + err);
+                                    logWriter.log("User.js. login User.find " + err);
                                 }
                                 res.send(500);
                             }
@@ -157,9 +166,9 @@ var Users = function (logWriter, mongoose, models) {
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         query.populate('profile');
         query.sort({ login: 1 });
-		if (data.page&&data.count){
-			query.skip((data.page-1)*data.count).limit(data.count);
-		}
+        if (data.page && data.count) {
+            query.skip((data.page - 1) * data.count).limit(data.count);
+        }
         query.exec(function (err, result) {
             if (err) {
                 //func();
@@ -179,9 +188,9 @@ var Users = function (logWriter, mongoose, models) {
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find();
         query.select("_id login");
         query.sort({ login: 1 });
-		if (data.page&&data.count){
-			query.skip((data.page-1)*data.count).limit(data.count);
-		}
+        if (data.page && data.count) {
+            query.skip((data.page - 1) * data.count).limit(data.count);
+        }
         query.exec(function (err, result) {
             if (err) {
                 //func();
@@ -281,7 +290,7 @@ var Users = function (logWriter, mongoose, models) {
         getUsers: getUsers,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
-		getUsersForDd:getUsersForDd,
+        getUsersForDd: getUsersForDd,
         updateUser: updateUser,
         removeUser: removeUser,
         schema: userSchema

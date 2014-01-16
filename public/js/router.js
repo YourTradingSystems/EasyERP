@@ -28,6 +28,12 @@ define([
             "*eny": "main"
         },
 
+        initialize: function () {
+            this.on('all', function (routeEvent) {
+                $(".ui-dialog").remove();
+            });
+        },
+
         goToProfiles: function () {
 			var startTime = new  Date();
             if (this.mainView == null) this.main("Profiles");

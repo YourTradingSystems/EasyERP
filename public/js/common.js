@@ -80,13 +80,6 @@
                 fr.onload = function () {
                     var src = "data:image/jpeg;base64," + btoa(fr.result);
                     $('.image_input').html(['<img src="', src, '"/>'].join(''));
-                    var imgc = $('.image_input img')[0];
-                    var canvasContent = document.createElement('canvas');
-                    canvasContent.width = canvasContent.height = 650;
-                    var ctx = canvasContent.getContext('2d');
-                    ctx.drawImage(imgc, 0, 0, canvasContent.width, canvasContent.height);
-                    console.log(canvasContent.toDataURL());
-
                     $('.image_input img').Jcrop({
                         bgColor: 'white',
                         bgOpacity: .6,
@@ -96,14 +89,29 @@
                         onChange: imgSelect,
                         boxWidth: 650,
                         boxHeight: 650,
-                        minSize: [50, 50]
+                        minSize: [10, 10],
+                    	//maxSize: [140, 140]
                     });
 
                     function imgSelect(sellictions) {
                         if (parseInt(sellictions.w) > 0) {
                             var img = $('.image_input img')[0];
                             var canvasCrop = document.createElement('canvas');
-                            canvasCrop.width = canvasCrop.height = 140;
+                            var heightImg = $('.image_input img').height();
+                            var widthImg = $('.image_input img').width();
+                            if (heightImg > 140) {
+                            	canvasCrop.height = 140;
+                            }
+                            else {
+                            	canvasCrop.height = heightImg;
+                            }
+                            
+                            if (widthImg > 140) {
+                            	canvasCrop.width  = 140;
+                            }
+                            else {
+                            	canvasCrop.width = widthImg;
+                            }
                             var ctx = canvasCrop.getContext('2d');
                             ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
                             $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
@@ -825,9 +833,11 @@
 
         var getEmployeesImages = function (ids, callback) {
             dataService.getData("/getEmployeesImages", { ids: ids }, function (response) {
-                response.data.forEach(function (item) {
-                    $("#" + item._id + " .inner .avatar img").attr("src", item.imageSrc);
-                });
+                if (response.data !== undefined) {
+                    response.data.forEach(function (item) {
+                        $("#" + item._id + " .inner .avatar img").attr("src", item.imageSrc);
+                    });
+                }
                 if (callback) callback();
             });
         };
