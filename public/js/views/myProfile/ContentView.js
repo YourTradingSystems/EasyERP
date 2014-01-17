@@ -71,8 +71,7 @@ define([
                     { model:model[0],
                         contentType: this.contentType
                     }));
-                //common.canvasDraw({ model: model[0] }, this);
-                console.log(this.UsersCollection);
+                common.canvasDraw({ model: model[0] }, this);
                 return this;
             }
         });
