@@ -380,24 +380,28 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             }
         },
         
-        saveAll:function(e){
-            e.preventDefault();
+        saveAll:function(e, options){  	
+        	e.preventDefault();
             var mid = 39;
             var targetInput = $(e.target).parent();
             var wName = targetInput.closest("li").find("a.workflow-sub").text();
             this.collection.url = "/Workflows";
             _.each(this.collection.models, function (model) {
-                    if ((model.get('wName')) == wName){
+            		if ((model.get('wName')) == wName){
                     	var new_wname = $(".wNameEdit").val();
-                    	model.set('wName', new_wname, {validate : true});
-                    	model.save({},{
-                             headers: {
-                                 mid: mid
-                             },
-                             success: function (model) {
-                                 common.checkBackboneFragment("easyErp/Workflows");
-                             }
-                        });
+                    	if(new_wname != "") {
+	                    	model.set('wName', new_wname, {validate : true});
+	                    	model.save({},{
+	                             headers: {
+	                                 mid: mid
+	                             },
+	                             success: function (model) {
+	                                 common.checkBackboneFragment("easyErp/Workflows");
+	                             }
+	                        });
+	                    }else {
+	                    	alert("field can not be empty");
+	                    }
                     }
             }, this);
         }
