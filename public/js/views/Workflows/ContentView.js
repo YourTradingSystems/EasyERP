@@ -386,22 +386,20 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             var targetInput = $(e.target).parent();
             var wName = targetInput.closest("li").find("a.workflow-sub").text();
             this.collection.url = "/Workflows";
+            var model = new WorkflowsModel();
             _.each(this.collection.models, function (model) {
             		if ((model.get('wName')) == wName){
                     	var new_wname = $(".wNameEdit").val();
-                    	if(new_wname != "") {
+                    		
 	                    	model.set('wName', new_wname, {validate : true});
 	                    	model.save({},{
 	                             headers: {
 	                                 mid: mid
 	                             },
-	                             success: function (model) {
+	                             success: function (model, response, options) {
 	                                 common.checkBackboneFragment("easyErp/Workflows");
 	                             }
 	                        });
-	                    }else {
-	                    	alert("field can not be empty");
-	                    }
                     }
             }, this);
         }

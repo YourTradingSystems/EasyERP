@@ -1,6 +1,7 @@
 define([
     "text!templates/myProfile/UsersPagesTemplate.html",
     "text!templates/myProfile/ChangePassword.html",
+    "collections/myProfile/UsersCollection",
     'common'
 ],
     function (UsersPagesTemplate, ChangePassword,UsersCollection, common) {
@@ -11,9 +12,8 @@ define([
             template: _.template(ChangePassword),
             
             initialize: function (options) {
-                this.collection = options.collection;
-                //this.collection.bind('reset', _.bind(this.render, this));
-                //console.log(this.collection.models);
+            	this.UsersCollection = new UsersCollection();
+                this.UsersCollection.bind('reset', _.bind(this.render, this));
                 this.render();
             },
             events:{
@@ -46,12 +46,12 @@ define([
             },
 
             render: function () {
-            	var collection = this.collection.toJSON();
+            	
                 this.$el.html(_.template(UsersPagesTemplate,
                     { myProfileModel:this.UsersCollection,
                         contentType: this.contentType
                     }));
-                console.log(this.collection.models);
+                console.log(this.UsersCollection.toJSON());
                 return this;
             }
         });

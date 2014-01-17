@@ -73,15 +73,13 @@ define([
 
             var ContentViewUrl = "views/myProfile/ContentView",
                 TopBarViewUrl = "views/myProfile/TopBarView";
-                CollectionUrl = "collections/myProfile/UsersCollection";
             var self = this;
 
-            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection();
-                collection.bind('reset');
+            require([ContentViewUrl, TopBarViewUrl], function (ContentView, TopBarView) {
+
                 Custom.setCurrentVT('list');
                 	
-                    var contentView = new ContentView({collection:collection, startTime:startTime});
+                    var contentView = new ContentView({startTime:startTime});
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     self.changeView(contentView);
