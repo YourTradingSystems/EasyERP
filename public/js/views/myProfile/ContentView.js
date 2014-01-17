@@ -17,7 +17,9 @@ define([
                 this.render();
             },
             events:{
-            	"click .changePassword":"changePassword"
+            	"click .changePassword":"changePassword",
+                "mouseenter .avatar": "showEdit",
+                "mouseleave .avatar": "hideEdit",
             },
             
             changePassword: function (e){
@@ -25,7 +27,7 @@ define([
             	var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "edit-dialog",
+                    dialogClass: "change-password-dialog",
                     width: "80%",
                     title: "Change Password",
                     buttons:{
@@ -44,14 +46,33 @@ define([
                     }
                 });
             },
+            
+            showEdit: function () {
+                $(".upload").animate({
+                    height: "20px",
+                    display: "block"
+                }, 250);
 
+            },
+            hideEdit: function () {
+                $(".upload").animate({
+                    height: "0px",
+                    display: "block"
+                }, 250);
+
+            },
+            
+            hideDialog: function () {
+                $(".change-password-dialog").remove();
+            },
             render: function () {
-            	
+            	var model = this.UsersCollection.toJSON();
                 this.$el.html(_.template(UsersPagesTemplate,
-                    { myProfileModel:this.UsersCollection,
+                    { model:model[0],
                         contentType: this.contentType
                     }));
-                console.log(this.UsersCollection.toJSON());
+                //common.canvasDraw({ model: model[0] }, this);
+                console.log(this.UsersCollection);
                 return this;
             }
         });

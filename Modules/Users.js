@@ -286,16 +286,15 @@ var Users = function (logWriter, mongoose, models) {
     
     function getMyProfile(req,data, response) {
         var res = {};
-        res['data'] = [];
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(req.session.uId);
+        query.populate('profile');
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Users.js get User.find " + err);
                 response.send(500, { error: 'User get DB error' });
             } else {
-                res['data'] = result;
-                response.send(res);
+            	response.send(result);
             }
         });
     }
