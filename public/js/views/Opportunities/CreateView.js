@@ -381,7 +381,7 @@ define([
                 common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons);
                 common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam);
                 common.populatePriority(App.ID.priorityDd, App.URL.priorities);
-                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/WorkflowsForDd');
+                common.populateWorkflows('Opportunities', '#workflowDd', App.ID.workflowNamesDd, '/WorkflowsForDd');
                 this.delegateEvents(this.events);
                 return this;
             }

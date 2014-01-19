@@ -161,6 +161,19 @@ require(['app'], function (app) {
         }
 
     };
+    //Backbone.View.prototype.getShowMore = function (inputArrayOfCollectionsLength) {
+    //    if (this.page && this.countPerPage) {
+    //        for (var i = 0; i < inputArrayOfCollectionsLength.length; i++) {
+    //            if (typeof inputArrayOfCollectionsLength[i] == 'object' && inputArrayOfCollectionsLength[i].hasOwnProperty('count')) {
+    //                if (inputArrayOfCollectionsLength[i].count > this.page * this.countPerPage) {
+    //                   return true;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    return false;
+    //};
+
     app.initialize();
     app.applyDefaults();
 });

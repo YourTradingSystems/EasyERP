@@ -6,7 +6,7 @@ define([
     'models/JobPositionsModel'
 ],
 
-    function (ListTemplate, CreateView, ListItemView, EditView,CurrentModel) {
+    function (ListTemplate, CreateView, ListItemView, EditView, CurrentModel) {
         var JobPositionsListView = Backbone.View.extend({
             el: '#content-holder',
 
@@ -36,14 +36,17 @@ define([
                 //create editView in dialog here
                 App.ownContentType = true;
                 var id = $(e.target).closest("tr").data("id");
-				var model = new CurrentModel();
+                var model = new CurrentModel({validate:false});
 				model.urlRoot = '/JobPositions/form';
 				model.fetch({
-					data: { id: id },
+				    data: { id: id },
+                    waite:true,
 					success: function (model, response, options) {
 						new EditView({ model: model });
 					},
-					error: function () { alert('Please refresh browser'); }
+					error: function (model, xhr, options) {
+					    alert('Please refresh browser');
+					}
 				});
 
 //                new EditView({myModel:this.collection.get(id)});

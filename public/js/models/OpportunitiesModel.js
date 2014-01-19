@@ -5,9 +5,9 @@
 function (common, Validation) {
     var OpportunityModel = Backbone.Model.extend({
         idAttribute: "_id",
-        initialize: function(){
-            this.on('invalid', function(model, errors){
-                if(errors.length > 0){
+        initialize: function () {
+            this.on('invalid', function (model, errors) {
+                if (errors.length > 0) {
                     var msg = errors.join('\n');
                     alert(msg);
                 }
@@ -17,22 +17,22 @@ function (common, Validation) {
         parse: true,
 
         parse: function (response) {
-	           if (response && response.nextAction) {
-	            	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
-	            	response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
-	            	response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
-	           }
-	           return response;
+            if (response && response.nextAction) {
+                response.creationDate = common.utcDateToLocaleDate(response.creationDate);
+                response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
+                response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
+            }
+            return response;
         },
 
-        validate: function(attrs){
+        validate: function (attrs) {
             var errors = [];
 
             Validation.checkNameField(errors, true, attrs.name, "Subject");
-            if(attrs.expectedClosing && attrs.nextAction)
+            if (attrs.expectedClosing && attrs.nextAction)
                 Validation.checkFirstDateIsGreater(errors, attrs.expectedClosing, "expected closing date", attrs.nextAction.date, "Next action date");
             Validation.checkMoneyField(errors, false, attrs.expectedRevenue.value, "Expected revenue");
-            if(errors.length > 0)
+            if (errors.length > 0)
                 return errors;
         },
 
@@ -69,16 +69,10 @@ function (common, Validation) {
                 phone: '',
                 fax: ''
             },
-           
+
             func: '',
-            salesPerson: {
-                id: '',
-                name: ''
-            },
-            salesTeam: {
-                id: '',
-                name: ''
-            },
+            salesPerson: null,
+            salesTeam: null,
             internalNotes: '',
             nextAction: {
                 date: null,

@@ -9,31 +9,33 @@
         'dataService'
 ],
 function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, OpportunitiesCollection, CurrentModel, dataService) {
+    var collection = new OpportunitiesCollection();
     var OpportunitiesKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
-            "click #showMore": "showMore",
             "dblclick .item": "gotoEditForm",
             "click .item": "selectItem"
         },
 
-        page: null,
-        collection: null,
         columnTotalLength: null,
-        showMoreButton: true,
 
         initialize: function (options) {
             this.page = 1;
-            this.collection = new OpportunitiesCollection();
             this.workflowsCollection = options.workflowCollection;
             this.render();
             this.asyncFetc(options.workflowCollection);
-            this.getCollectionLengthByWorkflows();
+            this.getCollectionLengthByWorkflows(this);
         },
 
-        getCollectionLengthByWorkflows: function () {
-            dataService.getData('/getLengthByWorkflows', {}, function (arrayOfObjects) {
-                columnTotalLength = arrayOfObjects;
+        getCollectionLengthByWorkflows: function (context) {
+            dataService.getData('/getLengthByWorkflows', {}, function (data) {
+                data.arrayOfObjects.forEach(function (object) {
+                    var column = context.$("[data-id='" + object._id + "']");
+                    column.find('.totalCount').text(object.count);
+                });
+                if (data.showMore) {
+                    context.$el.append('<div id="showMoreDiv" title="To show mor ellements per column, please change kanban settings">And More</div>');
+                }
             });
         },
 
@@ -58,56 +60,27 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
 
         asyncFetc: function (workflows) {
             _.each(workflows.toJSON(), function (wfModel) {
-                dataService.getData('/Opportunities/kanban', { workflowId: wfModel._id }, this.asyncRender);
+                dataService.getData('/Opportunities/kanban', { workflowId: wfModel._id }, this.asyncRender, this);
             }, this);
         },
 
-        asyncRender: function (response) {
-            var contentCollection = new OpportunitiesCollection(response.data);
-            if (this.collection) {
-                this.collection.add(contentCollection.models);
+        asyncRender: function (response, context) {
+            var contentCollection = new OpportunitiesCollection();
+            contentCollection.set(contentCollection.parse(response));
+            if (collection) {
+                collection.add(contentCollection.models);
             } else {
-                this.collection = new OpportunitiesCollection(response.data);
+                collection = new OpportunitiesCollection();
+                collection.set(collection.parse(response));
             }
             var kanbanItemView;
             var column = this.$("[data-id='" + response.workflowId + "']");
-            column.find(".counter").html(contentCollection.models.length);
+            column.find(".counter").html(parseInt(column.find(".counter").html()) + contentCollection.models.length);
             _.each(contentCollection.models, function (wfModel) {
                 kanbanItemView = new KanbanItemView({ model: wfModel });
                 var curEl = kanbanItemView.render().el;
                 column.append(curEl);
             }, this);
-        },
-
-        showMore: function () {
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore();
-        },
-
-        showMoreContent: function (newModels) {
-            var workflows = this.workflowsCollection.toJSON();
-
-            $(".column").last().addClass("lastColumn");
-            _.each(workflows, function (workflow, i) {
-                var column = this.$(".column").eq(i);
-                var kanbanItemView;
-                var modelByWorkflows = newModels.filterByWorkflow(workflow._id);
-                _.each(modelByWorkflows, function (wfModel) {
-                    kanbanItemView = new KanbanItemView({ model: wfModel });
-                    var model_id = wfModel.get('_id');
-                    if (this.collection.get(model_id) === undefined) {
-                        column.append(kanbanItemView.render().el);
-                    } else {
-                        $("#" + wfModel.get('_id')).hide();
-                        column.append(kanbanItemView.render().el);
-                    }
-                }, this);
-            }, this);
-            this.collection.add(newModels.models);
-
-            if (!this.collection.showMoreButton) {
-                $('#showMoreDiv').hide();
-            }
         },
 
         editItem: function () {
@@ -128,16 +101,11 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
             _.each(workflows, function (workflow, i) {
                 OpportunitieCount = 0
                 var column = this.$(".column").eq(i);
-                var count = " <span>(<span class='counter'>" + OpportunitieCount + "</span>)</span>";
-                column.find(".columnNameDiv h2").append(count);
-
+                var count = " <span>(<span class='counter'>" + OpportunitieCount + "</span> / </span>";
+                var total = " <span><span class='totalCount'>" + OpportunitieCount + "</span> )</span>";
+                column.find(".columnNameDiv h2").append(count).append(total);
             }, this);
-
-            if (this.showMoreButton) {
-                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
-
-            var that = this;
+            
             this.$(".column").sortable({
                 connectWith: ".column",
                 cancel: "h2",
@@ -150,19 +118,18 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                 start: function (event, ui) {
                     var column = ui.item.closest(".column");
                     column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                    column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) - 1);
                 },
-                
+
                 stop: function (event, ui) {
                     var id = ui.item.context.id;
-                    //var id = ui.item.attr('data-id');
-                    var model = that.collection.get(id);
+                    var model = collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
                         model.set({ workflow: column.data('id') });
                         model.save({});
-
                         column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
-                        //column.find(".remaining span").html(parseInt(column.find(".remaining span").html()) + (model.get("estimated") - model.get("logged")));
+                        column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
                     }
                 }
             }).disableSelection();

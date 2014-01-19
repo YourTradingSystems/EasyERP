@@ -924,7 +924,9 @@ app.get('/JobPositions/:viewType', function (req, res) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
+    console.log('----------------getJobPos-----------------' + viewType);
     console.log(data);
+    console.log('----------------getJobPos-----------------' + viewType);
     switch (viewType) {
         case "form": requestHandler.getJobPositionById(req, res, data);
             break;

@@ -14,7 +14,18 @@ var Users = function (logWriter, mongoose, models) {
             access_token: { type: String, default: '' }
         },
         profile: { type: Number, ref: "Profile" },
-        lastAccess: { type: Date}
+        lastAccess: { type: Date },
+        kanbanSettings: {
+            opportunities: {
+                counPerPage: {type: Number, default: 10}
+            },
+            applications: {
+                counPerPage: { type: Number, default: 10 }
+            },
+            tasks: {
+                counPerPage: { type: Number, default: 10 }
+            },
+        }
     }, { collection: 'Users' });
 
     mongoose.model('Users', userSchema);
@@ -120,6 +131,7 @@ var Users = function (logWriter, mongoose, models) {
                                     req.session.loggedIn = true;
                                     req.session.uId = _users[0]._id;
                                     req.session.uName = _users[0].login;
+                                    req.session.kanbanSettings = _users[0].kanbanSettings;
                                     res.cookie('lastDb', data.dbId);
                                     var lastAccess = new Date();
                                     req.session.lastAccess = lastAccess;

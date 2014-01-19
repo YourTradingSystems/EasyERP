@@ -144,13 +144,15 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                            logWriter.log('JobPosition.js getJobPositionById aggregate ' + err);
                            res.send(500, {error:"Cant't find an JobPosition"});
                        } else {
+                           console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
                            response.numberOfEmployees = result.length;
                            response.totalForecastedEmployees = response.expectedRecruitment + result.length;
                            res.send(response);
+                           console.log(response);
                        }
                    }
                );
-                res.send(response);
+                //res.send(response);
             }
         });
     }

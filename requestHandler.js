@@ -27,7 +27,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
         return _arrayOfID;
     };
-
+    
     Array.prototype.getShowmore = function (countPerPage) {
         var showMore = false;
         for (var i = 0; i < this.length; i++) {
@@ -1652,13 +1652,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log(data);
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             data.lead.uId = req.session.uId;
-            //access.getEditWritAccess(req, req.session.uId, 24, function (access) {
-            //    if (access) {
-            //        opportunities.create(req, data.lead, res);
-            //    } else {
-            //        res.send(403);
-            //    }
-            //});
+            access.getEditWritAccess(req, req.session.uId, 24, function (access) {
+                if (access) {
+                    opportunities.create(req, data.lead, res);
+                } else {
+                    res.send(403);
+                }
+            });
 
         } else {
             res.send(401);
