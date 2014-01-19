@@ -14,7 +14,6 @@ define([
 				this.currentRoot = options.currentRoot;
                 this.leftMenu = options.leftMenu;
                 this.render();
-
                 _.bindAll(this, 'render', 'clickItem');
 
             },
@@ -27,11 +26,11 @@ define([
             clickItem: function (event) {
                 this.unbind('mouseOver');
                 event.preventDefault();
-              
                 this.selectedModule = $(event.target).text();
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
-                this.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
+                this.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu,menuID:menuID });
+                
             },
 
             mouseOver: function (event) {

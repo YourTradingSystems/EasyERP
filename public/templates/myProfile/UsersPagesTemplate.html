@@ -1,5 +1,10 @@
 <div class="form-holder">
+<div class="formLeftColumn">
 	<form method="post" action="" id="createUserForm" class="form">
+      <div class="formTitle withMargin">
+        <h3 class="left">Details</h3>  
+        <div class="clearfix"></div>
+      </div>
         <div class="avatar right" style="margin-right:20px">
             <div class="upload">
                 Edit
@@ -18,15 +23,38 @@
 					 <option>English</option>
 				</select>
 				</dd>
-				
-				<dt><label for="login">Password</label></dt><dd></dd>
 				<dt><label for="email">Email </label></dt><dd><input type="text" name="email" id="email" value="<%=(model) ? model.email : ''%>" required maxlength="48"/></dd>
-				<dt><label for="profilesDd">Profile</label></dt><dd><%=(model) ? model.profile.profileName : ''%></dd>
-				<dt><label for="profilesDd">Status</label></dt><dd><%=(model) ? model.profile.profileName : ''%></dd>
-				<dt><label for="profilesDd">Related Employee</label></dt><dd><%=(model) ? model.profile.profileName : ''%></dd>
+				<dt><label for="profilesName">Profile</label></dt><dd><%=(model) ? model.profile.profileName : ''%></dd>
+				<dt><label for="status">Status</label></dt><dd><%=(model && model.profile.profileName == "baned") ? "baned" : 'active'%></dd>
 		  	</dl>
 	  </div>
 	  <div class="clearfix"></div>
+	  	<div class="buttons" style="width: 100%;">
+	     	<input type="button" id="saveBtn" class="btn" value="Save"/>
+	     	<input type="button" id="resetBtn" class="btn" value="Reset"/>
+	  	</div>
+	  	</form>
+
+</div>
+
+<div class="formRightColumn">
+  	<div class="form">
+  	<div class="formTitle">
+    	<h3 class="left">Related Employee</h3>
+    	<div class="clearfix"></div>
+	</div>
+
+	<div id="RelatedEmployee">
+    	<ul class="compactList">
+	     	<li class="inner"> 
+	     	      Related Employee
+	     	</li>
+    </ul>
+    <div class="clearfix"></div>
+	</div>
+</div>
+</div>
+      
       <div class="cropImages form" style="display:none;">
 	     	<div class="formTitle">
 			<h3 class="left">Crop Images</h3>
@@ -36,9 +64,4 @@
 	      	<img class="image_output" />
 	      	<div class="clearfix"></div>
       </div>
-	  <div class="buttons">
-	     <input type="button" id="saveBtn" class="btn" value="Save"/>
-	     <input type="button" id="cancelBtn" class="btn" value="Reset"/>
-	  </div>
-	</form>
 </div>

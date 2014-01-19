@@ -69,7 +69,8 @@ define([
         
         goToUserPages: function () {
 			var startTime = new  Date();
-            if (this.mainView == null) this.main("myProfile");
+
+            if (this.mainView == null) this.main("Profiles");
 
             var ContentViewUrl = "views/myProfile/ContentView",
                 TopBarViewUrl = "views/myProfile/TopBarView";
@@ -84,8 +85,6 @@ define([
 
                     self.changeView(contentView);
                     self.changeTopBarView(topBarView);
-                    //var url = '#easyErp/myProfile';
-                    //Backbone.history.navigate(url, { replace: true });
             });
         },
 

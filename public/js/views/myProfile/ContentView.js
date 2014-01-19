@@ -4,7 +4,7 @@ define([
     "collections/myProfile/UsersCollection",
     'common'
 ],
-    function (UsersPagesTemplate, ChangePassword,UsersCollection, common) {
+    function (UsersPagesTemplate, ChangePassword, UsersCollection, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "myProfile",
@@ -12,14 +12,16 @@ define([
             template: _.template(ChangePassword),
             
             initialize: function (options) {
+            	this.startTime = options.startTime;
             	this.UsersCollection = new UsersCollection();
                 this.UsersCollection.bind('reset', _.bind(this.render, this));
-                this.render();
+                
             },
             events:{
             	"click .changePassword":"changePassword",
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
+                "click #resetBtn":"resetForm",
             },
             
             changePassword: function (e){
@@ -47,6 +49,14 @@ define([
                 });
             },
             
+            resetForm: function (e){
+            	e.preventDefault();                
+            	$(':input','#createUserForm')
+            	 .not(':button, :submit, :reset, :hidden')
+            	 .val('')
+            	 .removeAttr('checked')
+            },
+            
             showEdit: function () {
                 $(".upload").animate({
                     height: "20px",
@@ -66,12 +76,13 @@ define([
                 $(".change-password-dialog").remove();
             },
             render: function () {
-            	var model = this.UsersCollection.toJSON();
+            	var model = this.UsersCollection.toJSON()[0];
                 this.$el.html(_.template(UsersPagesTemplate,
-                    { model:model[0],
+                    { model:model,
                         contentType: this.contentType
                     }));
-                common.canvasDraw({ model: model[0] }, this);
+                common.canvasDraw({ model: model }, this);
+                this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
                 return this;
             }
         });
