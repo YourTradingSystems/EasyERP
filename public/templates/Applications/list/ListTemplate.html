@@ -13,7 +13,7 @@
 			  <a href="javascript:;" class="stageSelect"><%=(application.workflow) ? application.workflow.name : ''%></a>
 			</td>
             <td><%=(application.relatedUser) ? application.relatedUser.login : ''%></td>
-            <td><%=(application.createdBy.user) ? application.createdBy.user.login + " (" + application.createdBy.date + ")" : ''%></td>
+            <td><%=(application.createdBy && application.createdBy.user) ? application.createdBy.user.login + " (" + application.createdBy.date + ")" : ''%></td>
             <td><%=(application.editedBy.user) ? application.editedBy.user.login + " (" + application.editedBy.date + ")" : ''%></td>
         </tr>
     <% }) %>
