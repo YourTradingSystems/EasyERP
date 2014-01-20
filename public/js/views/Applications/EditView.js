@@ -500,13 +500,12 @@
 //                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
 				   self.styleSelect("#sourceDd");
 				   self.styleSelect("#jobtapeDd");
-
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
                     changeYear: true,
-                    minDate: new Date()
+                    minDate: this.currentModel.toJSON().creationDate
                 });
 
                 var model = this.currentModel.toJSON();

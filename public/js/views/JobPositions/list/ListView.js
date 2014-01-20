@@ -43,7 +43,9 @@ define([
 					success: function (model, response, options) {
 						new EditView({ model: model });
 					},
-					error: function () { alert('Please refresh browser'); }
+					error: function (model, xhr, options) { 
+						alert('Please refresh browser'); 
+						}
 				});
 
 //                new EditView({myModel:this.collection.get(id)});

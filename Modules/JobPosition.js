@@ -150,7 +150,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                        }
                    }
                );
-                res.send(response);
+                //res.send(response);
             }
         });
     }

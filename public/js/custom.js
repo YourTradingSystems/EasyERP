@@ -164,6 +164,9 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
                     case 'LeadsWorkflow':
                         App.currentViewType = "list";
                         break;
+                    case 'myProfile':
+                        App.currentViewType = "list";
+                        break;
                     default:
                         App.currentViewType = "thumbnails";
                         break;

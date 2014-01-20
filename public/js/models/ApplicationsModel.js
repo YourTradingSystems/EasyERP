@@ -17,6 +17,7 @@ function (common, Validation) {
         parse: function (response) {
             if (response) {
             	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
+            	response.nextAction = common.utcDateToLocaleDate(response.nextAction);
             }
             return response;
         },
