@@ -63,11 +63,8 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
                 status: status,
                 sequence: sequence
             };
-            $("span").removeClass("hidden");
-            $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
-            $(".edit").removeClass("hidden");
-            $(".delete").removeClass("hidden");
-            model.set(obj);
+
+            model.set(obj, {validate : true});
             model.save({}, {
                 headers: {
                     mid: mid
@@ -266,7 +263,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             var mid = 39;
             e.preventDefault();
             $("#addNewStatus").hide();
-            $("#workflows").append("<tr class='addnew'><td><input type='text' class='nameStatus' maxlength='32' /></td><td><select id='statusesDd'></select></td></tr><tr class='SaveCancel'><td><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></td></tr>");
+            $("#workflows").append("<tr class='addnew'><td><input type='text' class='nameStatus' maxlength='32' required /></td><td><select id='statusesDd'></select></td></tr><tr class='SaveCancel'><td><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></td></tr>");
             var targetParent = $(e.target).parent();
             var target = $(e.target);
             var td = target.parent();
@@ -298,11 +295,6 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             for (var i = 0; i < names.length; i++) {
                 value.push({ name: names[i], status: statuses[i], sequence: i });
             }
-            $(".addnew, .SaveCancel").remove();
-            $("span").removeClass("hidden");
-            $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
-            $(".edit").removeClass("hidden");
-            $(".delete").removeClass("hidden");
             workflowsModel.save({
                 wId: wId,
                 name: name,
@@ -315,6 +307,11 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
                 wait: true,
                 success: function (model) {
                     common.checkBackboneFragment("easyErp/Workflows");
+                    $(".addnew, .SaveCancel").remove();
+                    $("span").removeClass("hidden");
+                    $("input, select, a:contains('Cancel'), a:contains('Save')").remove();
+                    $(".edit").removeClass("hidden");
+                    $(".delete").removeClass("hidden");
                 },
                 error: function () {
                     Backbone.history.navigate("easyErp", { trigger: true });
@@ -341,7 +338,7 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             targetInput.closest("li").addClass("quickEdit")
             targetInput.closest("li").find("span").hide();
             targetInput.closest("li").append(
-                    $("<input class='wNameEdit' type='text' value = '"+text+"'>")
+                    $("<input class='wNameEdit' type='text' value = '"+text+"' required />")
             );
             targetInput.closest("li").append("<span class='save-status'><a href='#' class='saveAll'>Save</a> <a href='#' class='cancelAll'>Cancel</a></span>");
             
@@ -383,24 +380,26 @@ function (ListTemplate, ListItemView, FormTemplate, RelatedStatusesCollection, C
             }
         },
         
-        saveAll:function(e){
-            e.preventDefault();
+        saveAll:function(e, options){  	
+        	e.preventDefault();
             var mid = 39;
             var targetInput = $(e.target).parent();
             var wName = targetInput.closest("li").find("a.workflow-sub").text();
             this.collection.url = "/Workflows";
+            var model = new WorkflowsModel();
             _.each(this.collection.models, function (model) {
-                    if ((model.get('wName')) == wName){
+            		if ((model.get('wName')) == wName){
                     	var new_wname = $(".wNameEdit").val();
-                    	model.set('wName', new_wname);
-                    	model.save({}, {
-                             headers: {
-                                 mid: mid
-                             },
-                             success: function (model) {
-                                 common.checkBackboneFragment("easyErp/Workflows");
-                             }
-                        });
+                    		
+	                    	model.set('wName', new_wname, {validate : true});
+	                    	model.save({},{
+	                             headers: {
+	                                 mid: mid
+	                             },
+	                             success: function (model, response, options) {
+	                                 common.checkBackboneFragment("easyErp/Workflows");
+	                             }
+	                        });
                     }
             }, this);
         }

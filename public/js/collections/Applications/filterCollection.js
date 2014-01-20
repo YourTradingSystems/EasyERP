@@ -74,37 +74,53 @@
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['status'] = [];
                 filterObject['status'] = (options && options.status) ? options.status: this.status;
-                var NewCollection = Backbone.Collection.extend({
-                    model: ApplicationModel,
-                    url: that.url,
-                    parse: true,
-                    parse: function(response) {
-                        return response.data;
-                    },
-                    page: that.page,
+                if (options.viewType && options.viewType == 'list') {
+                    this.fetch({
+                        data: filterObject,
+                        waite: true,
+                        success: function (models, response) {
+                            that.showMoreButton = response.showMore;
+                            that.optionsArray = response.options;
+                            that.page += 1;
+                            that.trigger('showmore', models);
+                        },
+                        error: function() {
+                            alert('Some Error');
+                        }
+                    });
+                } else {
+                    var NewCollection = Backbone.Collection.extend({
+                        model: ApplicationModel,
+                        url: that.url,
+                        parse: true,
+                        parse: function(response) {
+                            return response.data;
+                        },
+                        page: that.page,
 
-                    filterByWorkflow: function (id) {
-                        return this.filter(function (data) {
-                            return data.get("workflow")._id == id;
-                        });
-                    }
-                });
-                var newCollection = new NewCollection();
+                        filterByWorkflow: function (id) {
+                            return this.filter(function (data) {
+                                return data.get("workflow")._id == id;
+                            });
+                        }
+                    });
+                    var newCollection = new NewCollection();
 
-                newCollection.fetch({
-                    data: filterObject,
-                    waite: true,
-                    success: function (models, response) {
-                        that.showMoreButton = response.showMore;
-                        that.optionsArray = response.options;
-                        that.page += 1;
-                        that.listLength = response.listLength;
-                        that.trigger('showmore', models);
-                    },
-                    error: function() {
-                        alert('Some Error');
-                    }
-                });
+                    newCollection.fetch({
+                        data: filterObject,
+                        waite: true,
+                        success: function (models, response) {
+                            that.showMoreButton = response.showMore;
+                            that.optionsArray = response.options;
+                            that.page += 1;
+                            that.trigger('showmore', models);
+                        },
+                        error: function() {
+                            alert('Some Error');
+                        }
+                    });
+                }
+
             },
 
             parse: true,

@@ -78,6 +78,14 @@
 
             parse: true,
             parse: function (response) {
+                if (response.data) {
+                    _.map(response.data, function (user) {
+                    	if (user.lastAccess)
+                    	user.lastAccess = common.utcDateToLocaleDate(user.lastAccess);
+
+                        return user;
+                    });
+                }
                 this.listLength = response.listLength;
                 return response.data;
             }

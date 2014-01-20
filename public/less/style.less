@@ -1983,32 +1983,26 @@ input, textarea, select {
 }
 
 .thumbnailcusomers {
-    display: block;
+ display: block;
     position: relative;
     float: left;
-    width: 312px;
+    width: 180px;
+	min-height:200px;
     margin-left: 7px;
     margin-top: 7px;
     border: @thin-border transparent;
     .border-radius;
     background: transparent !important;
 
-    .avatar {
-        img {
-            width: 100%;
-        }
-    }
-
     .title {
-        color: #4D5A75 !important;
+        color: #36A9E1 !important;
         font-size: 13px;
         font-weight: bold;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-        line-height: 20px;
-
-        a {
-            font-weight: bold;
-        }
+        line-height: 18px;
+        font-family: @lucida-font;
+		overflow: hidden;
+		text-overflow: ellipsis;
     }
 
     .inner {
@@ -2016,25 +2010,25 @@ input, textarea, select {
 
         .info {
 			float:left;
-			width:222px;
-			height:80px;
-            div {
+			width:160px;
+			div{
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align:center;
+			}
+            P {
                 font-family: @lucida-font;
                 color: #000;
                 font-size: 13px;
                 font-weight: 200 !important;
-                line-height: 20px;
-				text-overflow:ellipsis;
+                line-height: 16px;
+				text-align:center;
 
-                a,p {
-					width:222px;
-					display:block;
-					overflow:hidden;
-					text-overflow:ellipsis;
-					line-height:20px;
-                    .bold {
-                        font-weight: bold;
-                    }
+                a {
+                    word-break: break-all;
+                    //text-decoration: none;
+                    word-wrap: break-word;
+                    //color: #7c7bad;
                 }
             }
         }
@@ -2044,22 +2038,18 @@ input, textarea, select {
     }
 
     .avatar {
-        float: left;
         display: block;
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
         overflow: hidden;
-        margin-bottom: 10px;
         .border-radius(3px);
-        -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-        margin-right: 10px;
-
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
+		margin:0 auto;
         img {
+            width: 100%;
             vertical-align: auto;
             margin: auto 0;
-            display: block;
+
         }
     }
 }
@@ -2131,7 +2121,7 @@ input, textarea, select {
             width: 100%;
             vertical-align: auto;
             margin: auto 0;
-            display: block;
+
         }
     }
 }

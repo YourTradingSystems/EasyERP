@@ -69,34 +69,22 @@ define([
         
         goToUserPages: function () {
 			var startTime = new  Date();
-            if (this.mainView == null) this.main("UsersPages");
 
-            var ContentViewUrl = "views/UsersPages/ContentView",
-                TopBarViewUrl = "views/UsersPages/TopBarView",
-                CollectionUrl = "collections/Users/UsersCollection";
+            if (this.mainView == null) this.main("Persons");
 
+            var ContentViewUrl = "views/myProfile/ContentView",
+                TopBarViewUrl = "views/myProfile/TopBarView";
             var self = this;
 
-            require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection();
+            require([ContentViewUrl, TopBarViewUrl], function (ContentView, TopBarView) {
 
-                collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
-                function createViews() {
-                    collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection, startTime:startTime});
+                	
+                    var contentView = new ContentView({startTime:startTime});
                     var topBarView = new TopBarView({ actionType: "Content" });
 
-                    topBarView.bind('createEvent', contentView.createItem, contentView);
-                    topBarView.bind('editEvent', contentView.editProfileDetails, contentView);
-                    topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
-                    topBarView.bind('saveEvent', contentView.saveProfile, contentView);
-
-                    this.changeView(contentView);
-                    this.changeTopBarView(topBarView);
-                    var url = '#easyErp/myProfile';
-                    Backbone.history.navigate(url, { replace: true });
-                }
+                    self.changeView(contentView);
+                    self.changeTopBarView(topBarView);
             });
         },
 
