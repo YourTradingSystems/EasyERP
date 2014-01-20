@@ -1738,6 +1738,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
     //-------------------Opportunities---------------------------
+    function getOpportunitiesListLength(req, res, data) {
+        console.log("Requst getEmployeesListLength is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            opportunities.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getOpportunitiesLengthByWorkflows(req, res) {
         opportunities.getCollectionLengthByWorkflows(req, res);
     }
@@ -2190,6 +2199,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getLeadsForChart: getLeadsForChart,
         getLeadsForList: getLeadsForList,
 
+        getOpportunitiesListLength: getOpportunitiesListLength,
         getOpportunitiesLengthByWorkflows: getOpportunitiesLengthByWorkflows,
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
