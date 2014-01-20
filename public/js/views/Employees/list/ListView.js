@@ -13,7 +13,6 @@ define([
 
             initialize: function (options) {
 				this.startTime = options.startTime;
-                var that = this;
                 this.collection = options.collection;
                 //this.collection.bind('reset', _.bind(this.render, this));
                 this.defaultItemsNumber = this.collection.namberToShow;
@@ -44,15 +43,11 @@ define([
 				$(e.target).parent().find(".current").removeClass("current");
 				$(e.target).addClass("current");
 				var itemsNumber = $("#itemsNumber").text();
-				//var page =  parseInt($("#currentShowPage").val());
-                var page =  1;
 				_.bind(this.collection.showMore, this.collection);
 				this.selectedLetter=$(e.target).text();
 				if ($(e.target).text()=="All"){
 					this.selectedLetter="";
 				}
-                this.deleteCounter = 0;
-                this.deletePage = 0;
                 common.getListLength('Employees', this.selectedLetter, null, '/EmployeesListLength', function(response){
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
@@ -85,7 +80,7 @@ define([
                         }
                     }
                 });
-				this.collection.showMore({count: itemsNumber, page: page, letter: this.selectedLetter});
+				this.collection.showMore({count: itemsNumber, page: 1, letter: this.selectedLetter});
 			},
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
@@ -103,7 +98,7 @@ define([
                 } else {
                     var letter = this.selectedLetter;
                 }
-                $(':checkbox').prop('checked', false);
+                $('.task-list').find("input").prop("checked",false);
 
                 if (this.defaultItemsNumber) {
                     var itemsNumber = self.defaultItemsNumber;
@@ -173,7 +168,7 @@ define([
                     this.$el.append(new ListItemView({ collection: this.collection}).render());
 
                     $("#grid-start").text((deletePage-1)*itemsNumber + 1);
-                    $("#grid-end").text(deletePage*itemsNumber - deleteCounter);
+                    $("#grid-end").text((deletePage-1)*itemsNumber + this.collectionLength - deleteCounter);
                     $("#grid-count").text(this.listLength);
                     $("#currentShowPage").val(deletePage);
 
@@ -259,15 +254,15 @@ define([
                             $("#nextPage").prop("disabled",false);
                         }
                     }
-                    $(document).on("click",function(){
-                        self.hideItemsNumber();
-                    });
                 });
 				common.buildAphabeticArray(this.collection,function(arr){
 					$(".startLetter").remove();
 					self.alphabeticArray = arr;
 					self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
 				});
+                $(document).on("click",function(){
+                    self.hideItemsNumber();
+                });
 				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 
             },
@@ -281,7 +276,7 @@ define([
                     var letter = this.selectedLetter;
                 }
                 var itemsNumber = $("#itemsNumber").text();
-                var page =  parseInt($("#currentShowPage").val()) - 1;
+                var page = parseInt($("#currentShowPage").val()) - 1;
                 $("#currentShowPage").val(page);
                 if (page == 1) {
                     $("#previousPage").prop("disabled",true);
@@ -293,7 +288,7 @@ define([
                     $("#grid-end").text(page*itemsNumber);
                 }
                 $("#nextPage").prop("disabled",false);
-                $(':checkbox').prop('checked', false);
+                $('.task-list').find("input").prop("checked",false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
             },
@@ -317,7 +312,7 @@ define([
                     $("#grid-end").text(page*itemsNumber);
                 }
                 $("#previousPage").prop("disabled",false);
-                $(':checkbox').prop('checked', false);
+                $('.task-list').find("input").prop("checked",false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
 
@@ -334,7 +329,7 @@ define([
                 } else {
                     var letter = this.selectedLetter;
                 }
-                $(':checkbox').prop('checked', false);
+                $('.task-list').find("input").prop("checked",false);
                 var itemsNumber = event.target.textContent;
                 common.getListLength('Employees', letter, null, '/EmployeesListLength', function(response){
                     self.listLength = response.listLength;
@@ -347,7 +342,6 @@ define([
                         $("#pageList").empty();
                         $("#currentShowPage").val(0);
                         $("#lastPage").text(0);
-                        $("#pageList").empty();
                     } else {
                         $("#grid-start").text(1);
                         if (self.listLength <= itemsNumber) {
@@ -382,7 +376,7 @@ define([
                 } else {
                     var letter = this.selectedLetter;
                 }
-                $(':checkbox').prop('checked', false);
+                $('.task-list').find("input").prop("checked",false);
                 if (this.listLength == 0) {
                     $("#currentShowPage").val(0);
                 } else {
