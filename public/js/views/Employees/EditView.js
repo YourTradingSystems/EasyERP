@@ -304,8 +304,8 @@ define([
                 
                 var gender = $("#genderDd option:selected").val();
                 gender = gender ? gender : null;
-                var martial = $("#martialDd option:selected").val();
-                martial = martial ? martial : null;
+                var marital = $("#maritalDd option:selected").val();
+                marital = marital ? marital : null;
 
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
@@ -358,7 +358,7 @@ define([
                         last: $.trim(this.$el.find("#last").val())
                     },
                     gender: gender,
-                    martial: martial,
+                    marital: marital,
                     workAddress: {
                         street:$.trim( this.$el.find('#street').val()),
                         city: $.trim(this.$el.find('#city').val()),
