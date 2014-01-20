@@ -29,7 +29,7 @@ define([
                 this.selectedModule = $(event.target).text();
                 this.trigger('changeSelection', this.selectedModule);
                 this.render();
-                this.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu,menuID:menuID });
+                this.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
                 
             },
 

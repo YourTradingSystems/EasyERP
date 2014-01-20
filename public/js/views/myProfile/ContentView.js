@@ -2,16 +2,18 @@ define([
     "text!templates/myProfile/UsersPagesTemplate.html",
     "text!templates/myProfile/ChangePassword.html",
     "collections/myProfile/UsersCollection",
-    'common'
+    'common',
+    'dataService'
 ],
-    function (UsersPagesTemplate, ChangePassword, UsersCollection, common) {
+    function (UsersPagesTemplate, ChangePassword, UsersCollection, common, dataService) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "myProfile",
             actionType:"Content",
             template: _.template(ChangePassword),
-            
+            imageSrc: '',
             initialize: function (options) {
+            	
             	this.startTime = options.startTime;
             	this.UsersCollection = new UsersCollection();
                 this.UsersCollection.bind('reset', _.bind(this.render, this));
@@ -22,6 +24,7 @@ define([
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
                 "click #resetBtn":"resetForm",
+                "click #saveBtn":"save",
             },
             
             changePassword: function (e){
@@ -47,6 +50,14 @@ define([
                         }
                     }
                 });
+            },
+            
+            save: function (e){
+            	e.preventDefault();                
+            	var username = $.trim($("#login").val());
+            	var email = $.trim($("#email").val());
+            	var imageSrc = this.imageSrc;
+            	console.log(imageSrc);
             },
             
             resetForm: function (e){

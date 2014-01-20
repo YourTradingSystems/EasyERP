@@ -70,7 +70,7 @@ define([
         goToUserPages: function () {
 			var startTime = new  Date();
 
-            if (this.mainView == null) this.main("Profiles");
+            if (this.mainView == null) this.main("Persons");
 
             var ContentViewUrl = "views/myProfile/ContentView",
                 TopBarViewUrl = "views/myProfile/TopBarView";
