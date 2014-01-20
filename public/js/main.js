@@ -79,13 +79,13 @@ var App = App ||
 
 require.config({
     paths: {
-        jQuery: './libs/jquery',
+        jQuery: './libs/jquery-2.0.3.min.map',
         ajaxForm: './libs/jquery.form',
         imageCrop: './libs/jquery.Jcrop.min',
-        jqueryui: './libs/jquery-ui-1.10.3.custom.min',
-        Underscore: './libs/underscore_1.5.2',
-        Backbone: './libs/backbone v_1_1',
-        less: './libs/less-1.4.1.min',
+        jqueryui: './libs/jquery-ui.min',
+        Underscore: './libs/underscore-min.map',
+        Backbone: './libs/backbone-min.map',
+        less: './libs/less.min',
         templates: '../templates',
         text: './libs/text',
         common: 'common',
@@ -161,18 +161,6 @@ require(['app'], function (app) {
         }
 
     };
-    //Backbone.View.prototype.getShowMore = function (inputArrayOfCollectionsLength) {
-    //    if (this.page && this.countPerPage) {
-    //        for (var i = 0; i < inputArrayOfCollectionsLength.length; i++) {
-    //            if (typeof inputArrayOfCollectionsLength[i] == 'object' && inputArrayOfCollectionsLength[i].hasOwnProperty('count')) {
-    //                if (inputArrayOfCollectionsLength[i].count > this.page * this.countPerPage) {
-    //                   return true;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //};
 
     app.initialize();
     app.applyDefaults();

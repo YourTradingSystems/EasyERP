@@ -1289,6 +1289,10 @@ app.delete('/SourcesOfApplicants/:_id', function (req, res) {
     requestHandler.removeSourcesOfApplicant(req, res, id, data);
 });
 
+app.get('/sources', function (req, res) {
+    requestHandler.getSources(req, res);
+});
+
 //----------------------Leads----------------------------------------------------------------
 app.get('/LeadsForChart', function (req, res) {
     data = {};
