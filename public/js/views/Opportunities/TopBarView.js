@@ -7,8 +7,6 @@ define([
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Opportunities",
-            actionType: null,
-            collectionLength: 0,
             template: _.template(ContentTopBarTemplate),
 
             events: {
@@ -18,7 +16,8 @@ define([
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
                 "click #top-bar-editBtn": "editEvent",
-                "click #top-bar-createBtn": "createEvent"
+                "click #top-bar-createBtn": "createEvent",
+                "click #kanban-settings-Btn": "editKanban"
             },
 
             changeContentViewType: function (e) {
@@ -72,6 +71,10 @@ define([
                 event.preventDefault();
                 $('#content-holder').html('');
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+            },
+            editKanban: function (event) {
+                event.preventDefault();
+                this.trigger('editKanban');
             }
 
         });

@@ -7,8 +7,16 @@ define(function () {
         });
     }
     var postData = function(url, data, callback){
-        $.post(url, data,function(resp){
-            callback(resp);
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            success: function (response) {
+                callback(response, null)
+            },
+            error: function (jxhr) {
+                callback(null, jxhr)
+            }
         });
     }
     return {

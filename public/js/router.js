@@ -293,16 +293,19 @@ define([
 
             self = this;
             Custom.setCurrentVT('kanban');
+
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, WorkflowsCollection) {
+                var startTime = new Date();
                 var collection = new WorkflowsCollection({ id: contentType });
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ workflowCollection: collection });
+                    var contentView = new ContentView({ workflowCollection: collection, startTime: startTime });
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
                     topBarView.bind('editEvent', contentView.editItem, contentView);
+                    topBarView.bind('editKanban', contentView.editKanban, contentView);
                     this.changeView(contentView);
                     this.changeTopBarView(topBarView);
                     var url = 'easyErp/' + contentType + '/kanban';

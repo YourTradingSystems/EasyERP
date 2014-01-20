@@ -307,6 +307,16 @@ app.get('/Users', function (req, res) {
     data.count = req.param('count');
     requestHandler.getUsers(req, res, data);
 });
+
+app.get('/currentUser', function (req, res) {
+    requestHandler.currentUser(req, res);
+});
+
+app.post('/currentUser', function (req, res) {
+    console.log(req.body);
+    requestHandler.updateCurrentUser(req, res);
+});
+
 app.get('/UsersForDd', function (req, res) {
     console.log('---------------------getUsers-------------');
     requestHandler.getUsersForDd(req, res, data);

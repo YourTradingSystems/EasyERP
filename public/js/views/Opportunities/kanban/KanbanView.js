@@ -1,5 +1,6 @@
 ﻿define([
-        'text!templates/Tasks/kanban/WorkflowsTemplate.html',
+        'text!templates/Opportunities/kanban/WorkflowsTemplate.html',
+        'text!templates/Opportunities/kanbanSettings.html',
         'collections/Workflows/WorkflowsCollection',
         'views/Opportunities/kanban/KanbanItemView',
         'views/Opportunities/EditView',
@@ -8,7 +9,7 @@
         'models/OpportunitiesModel',
         'dataService'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, OpportunitiesCollection, CurrentModel, dataService) {
+function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, OpportunitiesCollection, CurrentModel, dataService) {
     var collection = new OpportunitiesCollection();
     var OpportunitiesKanbanView = Backbone.View.extend({
         el: '#content-holder',
@@ -18,13 +19,53 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         },
 
         columnTotalLength: null,
-
+        
         initialize: function (options) {
-            this.page = 1;
+            this.startTime = options.startTime;
             this.workflowsCollection = options.workflowCollection;
             this.render();
             this.asyncFetc(options.workflowCollection);
             this.getCollectionLengthByWorkflows(this);
+        },
+
+        saveKanbanSettings: function () {
+            var countPerPage = $(this).find('#cPerPage').val();
+            dataService.postData('/currentUser', { 'kanbanSettings.opportunities.countPerPage': countPerPage }, function (seccess, error) {
+                if (seccess) {
+                    $(".edit-dialog").remove();
+                    Backbone.history.fragment = '';
+                    Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
+                }
+            });
+        },
+
+        hideDialog: function () {
+            $(".edit-dialog").remove();
+        },
+
+        editKanban: function(e){
+            dataService.getData('/currentUser', null, function (user, context) {
+                var tempDom = _.template(kanbanSettingsTemplate, { opportunities: user.kanbanSettings.opportunities });
+                context.$el = $(tempDom).dialog({
+                    dialogClass: "edit-dialog",
+                    width: "900",
+                    title: "Edit Kanban Settings",
+                    buttons: {
+                        save: {
+                            text: "Save",
+                            class: "btn",
+                            click: context.saveKanbanSettings
+                        },
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: function () {
+                                context.hideDialog();
+                            }
+                        }
+                    }
+                });
+            }, this);
         },
 
         getCollectionLengthByWorkflows: function (context) {
@@ -65,6 +106,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
         },
 
         asyncRender: function (response, context) {
+            console.log(response.time);
             var contentCollection = new OpportunitiesCollection();
             contentCollection.set(contentCollection.parse(response));
             if (collection) {
@@ -133,6 +175,7 @@ function (WorkflowsTemplate, WorkflowsCollection, KanbanItemView, EditView, Crea
                     }
                 }
             }).disableSelection();
+            this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             return this;
         }
     });

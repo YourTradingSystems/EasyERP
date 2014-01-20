@@ -70,8 +70,9 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             }
             if (collection) collection.setElement(id);
         } else {
-            var model = collection.getElement();
-            if (viewtype == "form" && model) {
+            
+            if (viewtype == "form" && collection) {
+                var model = collection.getElement();
                 url += "/" + model.attributes._id;
             }
         }

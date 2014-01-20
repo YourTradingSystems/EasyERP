@@ -1018,6 +1018,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             var count = (data.options.count) ? data.options.count : null;
         }
         var res = {};
+        var startTime = new Date();
         res['data'] = [];
         res['workflowId'] = data.workflowId;
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1089,10 +1090,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 populate('salesPerson', 'name').
                                 populate('workflow', '_id').
 								sort({ 'editedBy.date': -1 }).
-                                limit(req.session.kanbanSettings.opportunities.counPerPage).
+                                limit(req.session.kanbanSettings.opportunities.countPerPage).
                                 exec(function (err, result) {
                                     if (!err) {
                                         res['data'] = result;
+                                        res['time'] = (new Date() - startTime);
                                         response.send(res);
                                     } else {
                                         logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
@@ -1180,7 +1182,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                         if (!err) {
                                             console.log(responseOpportunities);
                                             responseOpportunities.forEach(function (object) {
-                                                if (object.count > req.session.kanbanSettings.opportunities.counPerPage) data['showMore'] = true;
+                                                if (object.count > req.session.kanbanSettings.opportunities.countPerPage) data['showMore'] = true;
                                             });
                                             data['arrayOfObjects'] = responseOpportunities;
                                             res.send(data);

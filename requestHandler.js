@@ -18,7 +18,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
-    Array.prototype.objectID = function() {
+    Array.prototype.objectID = function () {
         var _arrayOfID = [];
         for (var i = 0; i < this.length; i++) {
             if (typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
@@ -27,7 +27,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
         return _arrayOfID;
     };
-    
+
     Array.prototype.getShowmore = function (countPerPage) {
         var showMore = false;
         for (var i = 0; i < this.length; i++) {
@@ -76,11 +76,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getUsers(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-			users.getUsers(req, res, data);
+            users.getUsers(req, res, data);
         } else {
             res.send(401);
         }
     };
+
+    function currentUser(req, res) {
+        console.log("Requst currentUser is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            users.getUserById(req, req.session.uId, res);
+        } else {
+            res.send(401);
+        }
+    };
+
     function getUsersForDd(req, res, data) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -122,6 +132,20 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
         // console.log("Requst getPersons is success");
+    };
+    function updateCurrentUser(req, res, data) {
+        console.log("Requst updateCurrentUser is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            access.getEditWritAccess(req, req.session.uId, 7, function (access) {
+                if (access) {
+                    users.updateUser(req, req.session.uId, req.body, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
     };
 
     function updateUser(req, res, id, data) {
@@ -775,7 +799,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-    
+
     function removeWorkflow(req, res, _id, data) {
         console.log("Requst removeWorkflow is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1102,7 +1126,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
-					console.log(file);
+                    console.log(file);
                     employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -1378,7 +1402,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
-					console.log(file);
+                    console.log(file);
                     employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -2039,14 +2063,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         login: login,
         createUser: createUser,
         getUsers: getUsers,
-		getUsersForDd:getUsersForDd,
+        getUsersForDd: getUsersForDd,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
         updateUser: updateUser,
         removeUser: removeUser,
+        currentUser: currentUser,
+        updateCurrentUser: updateCurrentUser,
 
         getProfile: getProfile,
-		getProfileForDd:getProfileForDd,
+        getProfileForDd: getProfileForDd,
         createProfile: createProfile,
         updateProfile: updateProfile,
         removeProfile: removeProfile,
@@ -2062,10 +2088,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getCustomer: getCustomer,
         getFilterPersons: getFilterPersons,
         getPersonAlphabet: getPersonAlphabet,
-		getFilterPersonsForList:getFilterPersonsForList,
+        getFilterPersonsForList: getFilterPersonsForList,
 
         getProjects: getProjects,
-		getProjectsForList:getProjectsForList,
+        getProjectsForList: getProjectsForList,
         getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
@@ -2089,7 +2115,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createCompany: createCompany,
         updateCompany: updateCompany,
         getFilterCompanies: getFilterCompanies,
-		getFilterCompaniesForList:getFilterCompaniesForList,
+        getFilterCompaniesForList: getFilterCompaniesForList,
         getCompaniesAlphabet: getCompaniesAlphabet,
 
         getRelatedStatus: getRelatedStatus,
@@ -2104,7 +2130,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateJobPosition: updateJobPosition,
         removeJobPosition: removeJobPosition,
         getJobPositionById: getJobPositionById,
-		getJobPositionForDd:getJobPositionForDd,
+        getJobPositionForDd: getJobPositionForDd,
 
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,
@@ -2112,14 +2138,14 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getEmployeesListLength: getEmployeesListLength,
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
-		getEmployeesForList:getEmployeesForList,
-		getEmployeesForThumbnails:getEmployeesForThumbnails,
+        getEmployeesForList: getEmployeesForList,
+        getEmployeesForThumbnails: getEmployeesForThumbnails,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
         getEmployeesAlphabet: getEmployeesAlphabet,
-		getEmployeesImages:getEmployeesImages,
-		
+        getEmployeesImages: getEmployeesImages,
+
         Birthdays: Birthdays,
 
         getPersonsForDd: getPersonsForDd,
@@ -2150,10 +2176,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeSourcesOfApplicant: removeSourcesOfApplicant,
         getFilterApplications: getFilterApplications,
         getApplicationsForList: getApplicationsForList,
-		getEmployeesForThumbnails: getEmployeesForThumbnails,
-		uploadEmployeesFile:uploadEmployeesFile,
+        getEmployeesForThumbnails: getEmployeesForThumbnails,
+        uploadEmployeesFile: uploadEmployeesFile,
         getApplicationById: getApplicationById,
-		getApplicationsForKanban: getApplicationsForKanban,
+        getApplicationsForKanban: getApplicationsForKanban,
 
         createLead: createLead,
         getLeads: getLeads,
@@ -2162,12 +2188,12 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeLead: removeLead,
         getLeadsById: getLeadsById,
         getLeadsForChart: getLeadsForChart,
-		getLeadsForList:getLeadsForList,
+        getLeadsForList: getLeadsForList,
 
-		getOpportunitiesLengthByWorkflows: getOpportunitiesLengthByWorkflows,
-		createOpportunitie: createOpportunitie,
+        getOpportunitiesLengthByWorkflows: getOpportunitiesLengthByWorkflows,
+        createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
-		getFilterOpportunitiesForMiniView:getFilterOpportunitiesForMiniView,
+        getFilterOpportunitiesForMiniView: getFilterOpportunitiesForMiniView,
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
         getOpportunities: getOpportunities,
         getOpportunityById: getOpportunityById,
