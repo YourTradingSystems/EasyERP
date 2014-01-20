@@ -246,7 +246,7 @@ define([
 
 
                 var gender = $("#genderDd option:selected").val();
-                var martial = $("#martialDd option:selected").val();
+                var marital = $("#maritalDd option:selected").val();
                 var officeLocation = $.trim($("#officeLocation").val());
                 var relatedUser = $("#relatedUsersDd option:selected").val();
                 var department = $("#departmentsDd option:selected").val();
@@ -284,7 +284,7 @@ define([
                 employeeModel.save({
                     name: name,
                     gender: gender ? gender : "",
-                    martial: martial ? martial : "",
+                    marital: marital ? marital : "",
                     imageSrc: this.imageSrc,
                     workAddress: workAddress,
                     workEmail: workEmail,

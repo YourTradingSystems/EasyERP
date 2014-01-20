@@ -87,7 +87,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             reason: {type: String, default: '' },
             date: { type: Date, default: Date.now }
         },
-        martial: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
+        marital: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
         gender: { type: String, enum:['male','female'], default: 'male' }
     }, { collection: 'Employees' });
 
@@ -163,8 +163,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     if (data.gender) {
                         _employee.gender = data.gender;
                     }
-                    if (data.martial) {
-                        _employee.martial = data.martial;
+                    if (data.marital) {
+                        _employee.marital = data.marital;
                     }
                     if (data.attachments) {
                         if (data.attachments.id) {
