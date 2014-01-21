@@ -5,7 +5,7 @@
 
     }, { collection: 'jobType' });
 
-    mongoose.model('jobType', SourceSchema);
+    mongoose.model('jobType', jobTypeSchema);
 
     function getForDd(req, response) {
         var res = {};
