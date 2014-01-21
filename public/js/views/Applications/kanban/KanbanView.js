@@ -163,7 +163,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
-                        model.save({workflow: column.data('id')}, {
+                        model.save({workflow: column.data('id')},{validate:false},{
                             //headers: {
                             //    mid: mid
                             //}

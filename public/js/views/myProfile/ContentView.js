@@ -13,8 +13,6 @@ define([
             imageSrc: '',
             initialize: function (options) {       	
             	this.startTime = options.startTime;
-
-  
             	this.render();
             },
             events:{
@@ -54,10 +52,9 @@ define([
             ChangePassword: function (e){
             	e.preventDefault();
                 dataService.postData('/currentUser', {
-              	  imageSrc: imageSrc,
               	  	oldpass:$.trim($('#old_password').val()),
               	  	pass: $.trim($('#new_password').val()),
-              	    confirmpass: $.trim($('#confirm_new_password').val())
+              	  	confirmPass: $.trim($('#confirm_new_password').val())
               },
               
               function (seccess, error) {
@@ -122,10 +119,18 @@ define([
             render: function () {
                 dataService.getData('/currentUser', null, function (response, context) {
                 	dataService.getData('/getForDdByRelatedUser', null, function (RelatedEmployee){
-	                	var model = response;
+
+                		var date =  new Date();
+                		var minutes = date.getTimezoneOffset();
+                		if (minutes < 0)
+                			var timezone = ("UTC " +  minutes / 60);
+                		else
+                			var timezone = ("UTC " + minutes / 60);
+                		var model = response;
 	                	context.$el.html(_.template(UsersPagesTemplate,
 	                            { model:model,
 	                			 RelatedEmployee:RelatedEmployee.data,
+	                			 timezone:timezone
 	                            }));
 	                        common.canvasDraw({ model: model }, this);
 	                     
