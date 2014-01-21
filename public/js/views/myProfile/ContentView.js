@@ -1,23 +1,21 @@
 define([
     "text!templates/myProfile/UsersPagesTemplate.html",
     "text!templates/myProfile/ChangePassword.html",
-    "collections/myProfile/UsersCollection",
     'common',
     'dataService'
 ],
-    function (UsersPagesTemplate, ChangePassword, UsersCollection, common, dataService) {
+    function (UsersPagesTemplate, ChangePassword, common, dataService) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "myProfile",
             actionType:"Content",
             template: _.template(ChangePassword),
             imageSrc: '',
-            initialize: function (options) {
-            	
+            initialize: function (options) {       	
             	this.startTime = options.startTime;
-            	this.UsersCollection = new UsersCollection();
-                this.UsersCollection.bind('reset', _.bind(this.render, this));
-                
+
+  
+            	this.render();
             },
             events:{
             	"click .changePassword":"changePassword",
@@ -25,6 +23,7 @@ define([
                 "mouseleave .avatar": "hideEdit",
                 "click #resetBtn":"resetForm",
                 "click #saveBtn":"save",
+                "click #RelatedEmployee li > a": "gotoEmployeesForm"
             },
             
             changePassword: function (e){
@@ -39,7 +38,7 @@ define([
                         save:{
                             text:"Save",
                             class:"btn",
-                            click: self.saveItem
+                            click: self.ChangePassword
                         },
                         cancel:{
                             text:"Cancel",
@@ -52,12 +51,39 @@ define([
                 });
             },
             
+            ChangePassword: function (e){
+            	e.preventDefault();
+                dataService.postData('/currentUser', {
+              	  imageSrc: imageSrc,
+              	  	oldpass:$.trim($('#old_password').val()),
+              	  	pass: $.trim($('#new_password').val()),
+              	    confirmpass: $.trim($('#confirm_new_password').val())
+              },
+              
+              function (seccess, error) {
+                  if (seccess) {
+                      Backbone.history.fragment = '';
+                      Backbone.history.navigate("easyErp/myProfile", { trigger: true });
+                  }
+              });
+            },
+            
             save: function (e){
-            	e.preventDefault();                
-            	var username = $.trim($("#login").val());
-            	var email = $.trim($("#email").val());
-            	var imageSrc = this.imageSrc;
-            	console.log(imageSrc);
+            	e.preventDefault();
+                dataService.postData('/currentUser', {
+                	  imageSrc: imageSrc,
+                      email: $.trim($("#email").val()),
+                      login: $.trim($("#login").val()),
+                      RelatedEmployee:$("input[type='radio']:checked").attr("data-id")
+                },
+                
+                function (seccess, error) {
+                    if (seccess) {
+                        Backbone.history.fragment = '';
+                        Backbone.history.navigate("easyErp/myProfile", { trigger: true });
+                    }
+                });
+                
             },
             
             resetForm: function (e){
@@ -86,14 +112,33 @@ define([
             hideDialog: function () {
                 $(".change-password-dialog").remove();
             },
+            
+            gotoEmployeesForm: function (e) {
+                e.preventDefault();
+                var itemIndex = $(e.target).closest("a").attr("id");
+                window.location.hash = "#easyErp/Employees/form/" + itemIndex;
+            },
+            
             render: function () {
-            	var model = this.UsersCollection.toJSON()[0];
-                this.$el.html(_.template(UsersPagesTemplate,
-                    { model:model,
-                        contentType: this.contentType
-                    }));
-                common.canvasDraw({ model: model }, this);
-                this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+                dataService.getData('/currentUser', null, function (response, context) {
+                	dataService.getData('/getForDdByRelatedUser', null, function (RelatedEmployee){
+	                	var model = response;
+	                	context.$el.html(_.template(UsersPagesTemplate,
+	                            { model:model,
+	                			 RelatedEmployee:RelatedEmployee.data,
+	                            }));
+	                        common.canvasDraw({ model: model }, this);
+	                     
+	                       if(response.RelatedEmployee){
+	                        	$("input[type='radio'][value="+response.RelatedEmployee+"]").attr("checked",true);
+	                        }
+	                       else {
+	                    	   $("input[type='radio']:first").attr("checked",true);
+	                       }
+	                        context.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-context.startTime)+" ms</div>");
+                	},this);
+        		},this);
+                
                 return this;
             }
         });

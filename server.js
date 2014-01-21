@@ -362,13 +362,6 @@ app.delete('/Users/:viewType/:_id', function (req, res) {
     requestHandler.removeUser(req, res, id);
 });
 
-app.get('/myProfile', function (req, res) {
-    console.log('---------------------getProfiles-------------');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getMyProfile(req, res, data);
-});
-
 app.post('/Profiles', function (req, res) {
     data = {};
     data.mid = req.headers.mid;

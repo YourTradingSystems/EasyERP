@@ -1,6 +1,6 @@
 // JavaScript source code
 var Users = function (logWriter, mongoose, models) {
-
+	var ObjectId = mongoose.Schema.Types.ObjectId;
     var crypto = require('crypto');
     var collection = 'Users';
 
@@ -25,7 +25,8 @@ var Users = function (logWriter, mongoose, models) {
             tasks: {
                 countPerPage: { type: Number, default: 10 }
             }
-        }
+        },
+        RelatedEmployee: { type: ObjectId, ref: 'Employees', default: null }
     }, { collection: 'Users' });
 
     mongoose.model('Users', userSchema);
@@ -296,21 +297,6 @@ var Users = function (logWriter, mongoose, models) {
             }
         });
     }
-    
-    function getMyProfile(req,data, response) {
-        var res = {};
-        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(req.session.uId);
-        query.populate('profile');
-        query.exec(function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Users.js get User.find " + err);
-                response.send(500, { error: 'User get DB error' });
-            } else {
-            	response.send(result);
-            }
-        });
-    }
 
     return {
         createUser: createUser,
@@ -321,8 +307,7 @@ var Users = function (logWriter, mongoose, models) {
         getUsersForDd: getUsersForDd,
         updateUser: updateUser,
         removeUser: removeUser,
-        schema: userSchema,
-        getMyProfile:getMyProfile
+        schema: userSchema
     };
 };
 
