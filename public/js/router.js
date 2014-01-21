@@ -395,5 +395,6 @@ define([
             
         }
     });
+
     return AppRouter;
 });

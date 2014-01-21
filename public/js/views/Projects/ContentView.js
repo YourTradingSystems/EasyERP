@@ -4,11 +4,10 @@ define([
     'views/Projects/thumbnails/ThumbnailsItemView',
     'views/Projects/EditView',
     'custom',
-    "GanttChart",
     'common',
     'views/Projects/CreateView'
 ],
-    function (ListTemplate, FormTemplate, ThumbnailsItemView, EditView, Custom, GanttChart, common, CreateView) {
+    function (ListTemplate, FormTemplate, ThumbnailsItemView, EditView, Custom, common, CreateView) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -82,15 +81,6 @@ define([
 
                                 this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
                             }
-
-                            break;
-                        }
-                    case "gantt":
-                        {
-                            this.$el.html('<div style=" height:570px; position:relative;" id="GanttDiv"></div>');
-                            GanttChart.create("GanttDiv");
-                            if (this.collection.length > 0)
-                                GanttChart.parseProjects(this.collection);
 
                             break;
                         }

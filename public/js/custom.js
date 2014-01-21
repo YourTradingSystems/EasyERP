@@ -1,4 +1,5 @@
 define(['libs/date.format', 'common'], function (dateformat, common) {
+
     var runApplication = function (success, description) {
         if (!Backbone.history.fragment)
             Backbone.history.start({ silent: true });
@@ -36,7 +37,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             }
             if (collection) collection.setElement(id);
         } else {
-            
+
             if (viewtype == "form" && collection) {
                 var model = collection.getElement();
                 url += "/" + model.attributes._id;
@@ -183,7 +184,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
             }
         }
 
-        var viewVariants = ["kanban", "list", "form", "thumbnails", "gantt"];
+        var viewVariants = ["kanban", "list", "form", "thumbnails"];
 
         if ($.inArray(App.currentViewType, viewVariants) == -1) {
             App.currentViewType = "thumbnails";
@@ -195,7 +196,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     };
 
     var setCurrentVT = function (viewType) {
-        var viewVariants = ["kanban", "list", "form", "thumbnails", "gantt"];
+        var viewVariants = ["kanban", "list", "form", "thumbnails"];
 
         if ($.inArray(viewType, viewVariants) != -1) {
             App.currentViewType = viewType;
@@ -232,115 +233,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
 
         return length;
     };
-    var calculateHours = function (startDate, endDate) {
-        var hours = 0;
-        if (!startDate || !endDate) {
-            throw new Error("CalculateTaskHours: Start or end date is undefined");
-        }
-        if (startDate > endDate) {
-            throw new Error("CalculateTaskHours: Start date can not be greater that end date");
-        }
-        try {
-            var delta = new Date(endDate) - new Date(startDate);
-            hours = Math.floor(((delta / 1000) / 60) / 60);
-        } catch (error) {
-            throw new Error(error.message);
-        }
-        return hours;
-    };
 
-    var convertProjectsCollectionForGantt = function (collection) {
-        var anyProjectHasTasks = false;
-        var duration = 0;
-        var jsonCollection = collection.toJSON();
-        for (var i = 0; i < jsonCollection.length; i++) {
-            if (jsonCollection[i].task.tasks.length > 0) {
-                anyProjectHasTasks = true;
-                duration += parseInt(jsonCollection[i].estimated);
-            }
-        }
-        //if we have no projects with tasks then exit
-        if (!anyProjectHasTasks)
-            return {
-                data: []
-            };
-
-        //else add parent holder for projects "Gantt View"
-        var projects = [];
-        var minDate;
-        (jsonCollection && jsonCollection.length > 0 && jsonCollection[0].info.StartDate) ?
-            minDate = dateFormat(new Date(jsonCollection[0].info.StartDate), "dd-mm-yyyy") :
-            minDate = dateFormat(new Date(), "dd-mm-yyyy");
-
-        projects.push({
-            'id': 1,
-            'text': "Gantt View",
-            'assignedTo': "Gantt View",
-            'start_date': minDate,
-            'duration': 0,
-            'progress': duration / 100,
-            'open': true
-        });
-
-        jsonCollection.forEach(function (project) {
-            if (project.task.tasks.length > 0) {
-                projects.push({
-                    'id': project._id || project.id,
-                    'assignedTo': project.projectmanager.name,
-                    'text': project.projectName,
-                    'start_date': new Date(jsonCollection[0].info.StartDate),
-                    'duration': project.estimated,
-                    'progress': project.progress / 100,
-                    'open': true,
-                    'parent': 1
-                });
-            }
-        });
-
-
-        return {
-            data: projects
-        };
-    };
-
-    var convertTasksCollectionForGantt = function (collection) {
-        var jsonCollection = collection.toJSON();
-        //collection.length > 0 ? jsonCollection = collection.toJSON() : jsonCollection = [];
-        var projects = [];
-
-        for (var i = 0; i < jsonCollection.length; i++) {
-            if (jsonCollection[i].task.tasks.length > 0) {
-                var project = jsonCollection[i];
-                projects.push({
-                    'id': project._id || project.id,
-                    'text': project.projectName + " / " + project.projectmanager.name || "Nobody",
-                    'start_date': new Date(project.info.StartDate),
-                    'duration': project.info.duration,
-                    'assignedTo': project.projectName + ' / ' + project.projectmanager.name || "Nobody",
-                    //'duration': project.info.duration,
-                    'progress': project.progress / 100,
-                    'open': true
-                });
-
-                for (var j = 0, len = jsonCollection[i].task.tasks.length; j < len; j++) {
-                    var task = jsonCollection[i].task.tasks[j];
-                    projects.push({
-                        'id': task.id || task._id,
-                        'text': task.summary,
-                        'start_date': new Date(task.extrainfo.StartDate),
-                        'duration': task.extrainfo.duration,
-                        'progress': task.progress / 100,
-                        'assignedTo': task.assignedTo.name || "Nobody",
-                        'parent': jsonCollection[i].id || jsonCollection[i]._id
-                    });
-                }
-            }
-        }
-
-        return {
-            data: projects
-        };
-    };
 
     function applyDefaultSettings(chartControl) {
         chartControl.setImagePath("/crm_backbone_repo/images/");
@@ -352,18 +245,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     }
 
     return {
-        convertTasksCollectionForGantt: convertTasksCollectionForGantt,
-        convertProjectsCollectionForGantt: convertProjectsCollectionForGantt,
-
-        calculateHours: calculateHours,
-
-        ////getElement: getElement,
-        ////setElement: setElement,
-        ////next: next,
-        ////prev: prev,
-
         runApplication: runApplication,
-        //changeItemIndex: changeItemIndex,
         changeContentViewType: changeContentViewType,
         getCurrentII: getCurrentII,
         setCurrentII: setCurrentII,

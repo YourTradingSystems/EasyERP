@@ -13,8 +13,6 @@ var App = App ||
         rightBtn: "rightBtn",
         listBtn: "listBtn",
         thumbBtn: "thumbBtn",
-        ganttBtn: "ganttBtn",
-        ganttViewHolder: "GanttViewHolder",
         formBtn: "formBtn",
         userPanel: "loginPanel",
         changeCVClass: "changeContentView",
