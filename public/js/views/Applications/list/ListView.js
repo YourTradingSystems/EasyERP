@@ -219,7 +219,7 @@ define([
                         }
                     }
                 });
-                common.populateWorkflowsList("Application", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+                common.populateWorkflowsList("Applications", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
 					self.stages = stages;
                     itemView.trigger('incomingSatges', stages);
                 });

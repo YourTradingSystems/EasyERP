@@ -140,7 +140,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 7, function (access) {
                 if (access) {
-                    users.updateUser(req, req.session.uId, req.body, res, option);
+                    users.updateUser(req, req.session.uId, req.body, res, data);
                 } else {
                     res.send(403);
                 }
@@ -1304,25 +1304,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-
-
-    function getFilterApplications(req, res, data) {
-        console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
-                if (access) {
-                    employee.getFilterApplications(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
     function getApplicationsForList(req, res, data) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -2204,7 +2185,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getSourcesOfApplicants: getSourcesOfApplicants,
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
-        getFilterApplications: getFilterApplications,
         getApplicationsForList: getApplicationsForList,
         getEmployeesForThumbnails: getEmployeesForThumbnails,
         uploadEmployeesFile: uploadEmployeesFile,

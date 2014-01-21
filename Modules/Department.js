@@ -110,10 +110,11 @@ var Department = function (logWriter, mongoose, models) {
         });
     }
 
+
     function getForDd(req, response) {
         var res = {};
-        res['data'] = [];
-        var query = models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({});
+        res['data'] = [ ];
+        var query = models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find();
         query.select('_id departmentName nestingLevel');
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
@@ -123,7 +124,6 @@ var Department = function (logWriter, mongoose, models) {
                 response.send(500, { error: "Can't find Department" });
             } else {
                 res['data'] = departments;
-                console.log(departments);
                 response.send(res);
             }
         });

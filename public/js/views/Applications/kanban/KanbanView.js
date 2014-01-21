@@ -1,4 +1,4 @@
-﻿﻿define([
+﻿define([
     'text!templates/Applications/kanban/WorkflowsTemplate.html',
     'text!templates/Applications/kanbanSettings.html',
     'collections/Workflows/WorkflowsCollection',
@@ -35,6 +35,8 @@
                         $(".edit-dialog").remove();
                         Backbone.history.fragment = '';
                         Backbone.history.navigate("easyErp/Applications", { trigger: true });
+                    } else {
+                        Backbone.history.navigate("easyErp", { trigger: true });
                     }
                 });
             },
@@ -69,7 +71,7 @@
             },
 
             getCollectionLengthByWorkflows: function (context) {
-                dataService.getData('/getLengthByWorkflows', {}, function (data) {
+                dataService.getData('/getApplicationsLengthByWorkflows', {}, function (data) {
                     data.arrayOfObjects.forEach(function (object) {
                         var column = context.$("[data-id='" + object._id + "']");
                         column.find('.totalCount').text(object.count);
@@ -168,8 +170,8 @@
                         var model = collection.get(id);
                         var column = ui.item.closest(".column");
                         if (model) {
-                            model.set({ workflow: column.data('id') });
-                            model.save({});
+                            model.set({ workflow: column.data('id'), workflowForKanban: true });
+                            model.save({},{validate: false});
                             column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                             column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
                         }
