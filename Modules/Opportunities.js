@@ -1118,6 +1118,138 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             });
     }
 
+    //function getFilterOpportunitiesForKanban(req, data, response) {
+    //    var res = {};
+    //    res['data'] = [];
+    //    res['options'] = [];
+    //    var optionsArray = [];
+    //    var showMore = false;
+    //    models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+    //        {
+    //            $match: {
+    //                users: newObjectId(req.session.uId)
+    //            }
+    //        }, {
+    //            $project: {
+    //                _id: 1
+    //            }
+    //        },
+    //        function (err, deps) {
+    //            if (!err) {
+    //                var arrOfObjectId = deps.objectID();
+    //                console.log(arrOfObjectId);
+    //                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
+    //                    {
+    //                        $match: {
+    //                            $and: [
+    //                                {
+    //                                    isOpportunitie: true
+    //                                },
+    //                                {
+    //                                    $or: [
+    //                                        {
+    //                                            $or: [
+    //                                                {
+    //                                                    $and: [
+    //                                                        { whoCanRW: 'group' },
+    //                                                        { 'groups.users': newObjectId(req.session.uId) }
+    //                                                    ]
+    //                                                },
+    //                                                {
+    //                                                    $and: [
+    //                                                        { whoCanRW: 'group' },
+    //                                                        { 'groups.group': { $in: arrOfObjectId } }
+    //                                                    ]
+    //                                                }
+    //                                            ]
+    //                                        },
+    //                                        {
+    //                                            $and: [
+    //                                                { whoCanRW: 'owner' },
+    //                                                { 'groups.owner': newObjectId(req.session.uId) }
+    //                                            ]
+    //                                        },
+    //                                        { whoCanRW: "everyOne" }
+    //                                    ]
+    //                                }
+    //                            ]
+    //                        }
+    //                    },
+    //                    {
+    //                        $project: {
+    //                            _id: 1,
+    //                            workflow: 1
+    //                        }
+    //                    },
+    //                    {
+    //                        $group: {
+    //                            _id: "$workflow",
+    //                            opportunitieId: { $push: "$_id" },
+    //                            count: { $sum: 1 }
+    //                        }
+    //                    },
+    //                    function (err, responseOpportunities) {
+    //                        if (!err) {
+    //                            console.log(responseOpportunities);
+    //                            var responseOpportunitiesArray = [];
+    //                            var columnValue = data.count;
+    //                            var page = data.page;
+    //                            var startIndex, endIndex;
+    //                            showMore = responseOpportunities.getShowmore(page * columnValue);
+    //                            responseOpportunities.forEach(function (value) {
+    //                                if ((data.page - 1) * data.count > value.opportunitieId.length) {
+    //                                    startIndex = value.count;
+    //                                } else {
+    //                                    startIndex = (data.page - 1) * data.count;
+    //                                }
+
+    //                                if (data.page * data.count > value.count) {
+    //                                    endIndex = value.count;
+    //                                } else {
+    //                                    endIndex = data.page * data.count;
+    //                                }
+
+    //                                for (var k = startIndex; k < endIndex; k++) {
+    //                                    responseOpportunitiesArray.push(value.opportunitieId[k]);
+    //                                }
+    //                                optionsArray.push(value);
+    //                            });
+    //                            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().
+    //                            where('_id').in(responseOpportunitiesArray).
+	//							select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue").
+    //                            //populate('relatedUser').
+	//							populate('customer', 'name').
+    //                            //populate('department').
+    //                            //populate('jobPosition').
+    //                            populate('salesPerson', 'name').
+    //                            populate('workflow', '_id').
+	//							sort({ 'editedBy.date': -1 }).
+	//							//populate('createdBy.user','login').
+    //                            //populate('editedBy.user','login').
+    //                            //populate('groups.users','_id login').
+    //                            //populate('groups.group', '_id departmentName').
+    //                            exec(function (err, result) {
+    //                                if (!err) {
+    //                                    res['showMore'] = showMore;
+    //                                    res['options'] = optionsArray;
+    //                                    res['data'] = result;
+    //                                    response.send(res);
+    //                                } else {
+    //                                    logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
+    //                                    response.send(500, { error: "Can't find Opportunitie" });
+    //                                }
+    //                            })
+    //                        } else {
+    //                            logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban task.find " + err);
+    //                            response.send(500, { error: "Can't group Opportunitie" });
+    //                        }
+    //                    });
+    //            } else {
+    //                console.log(err);
+    //            }
+    //        });
+    //};
+
     function getFilterOpportunitiesForKanban(req, data, response) {
         if (data.options) {
             var page = (data.options.page) ? data.options.page : null;
