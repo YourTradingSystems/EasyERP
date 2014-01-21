@@ -1002,6 +1002,7 @@ app.get('/Departments', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartment(req, res, data);
 });
+
 app.get('/DepartmentsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1170,6 +1171,10 @@ app.get('/getEmployeesImages', function (req, res) {
 
 //------------------Applications---------------------------------------------------
 
+app.get('/getApplicationsLengthByWorkflows', function (req, res) {
+    requestHandler.getApplicationsLengthByWorkflows(req, res);
+});
+
 app.get('/Applications', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1189,8 +1194,6 @@ app.get('/Applications/:viewType', function (req, res) {
         case "list": requestHandler.getApplicationsForList(req, res, data);
             break;
         case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
-            break;
-        default: requestHandler.getFilterApplications(req, res, data);
             break;
     }
 

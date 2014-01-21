@@ -139,12 +139,12 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             var workflows = this.workflowsCollection.toJSON();
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
-            var OpportunitieCount;
+            var itemCount;
             _.each(workflows, function (workflow, i) {
-                OpportunitieCount = 0
+                itemCount = 0
                 var column = this.$(".column").eq(i);
-                var count = " <span>(<span class='counter'>" + OpportunitieCount + "</span> / </span>";
-                var total = " <span><span class='totalCount'>" + OpportunitieCount + "</span> )</span>";
+                var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
+                var total = " <span><span class='totalCount'>" + itemCount + "</span> )</span>";
                 column.find(".columnNameDiv h2").append(count).append(total);
             }, this);
             
