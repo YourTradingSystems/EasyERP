@@ -142,7 +142,6 @@ define([
                     if (!option.data.mouseOver) {
                         $(clickEl).closest('li').addClass('selected');
                         clickEl.click();
-                        //console.log(clickEl);
                     }
                 });
                 if (!this.currentChildren) {
