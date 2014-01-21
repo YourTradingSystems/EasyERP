@@ -15,6 +15,7 @@ define(['Validation'],function (Validation) {
                     name:""
                 }
             },
+            RelatedEmployee:null,
         },
         initialize: function(){
             this.on('invalid', function(model, errors){

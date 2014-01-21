@@ -38,7 +38,7 @@
 </div>
 
 <div class="formRightColumn">
-  	<div class="form">
+ <div class="form">
   	<div class="formTitle">
     	<h3 class="left">Related Employee</h3>
     	<div class="clearfix"></div>
@@ -46,10 +46,10 @@
 
 	<div id="RelatedEmployee">
     	<ul class="compactList">
-	     	<li class="inner"> 
-	     	      Related Employee
-	     	</li>
-    </ul>
+	    	<% _.each(RelatedEmployee, function(reletedEmployees){ %>
+	    		<li class='inner'><input type="radio" class="inptReletedEmployees" title="Related Employee checked defaults" name="reletedEmployees"  data-id="<%=reletedEmployees._id%>" id="<%=reletedEmployees._id%>" value="<%=reletedEmployees._id%>" /><a class='reletedEmployees' id="<%=reletedEmployees._id %>" data-id="<%=reletedEmployees._id%>" href='javascript:;'> <%=reletedEmployees.name.first%> &nbsp;<%=reletedEmployees.name.last%></a></li>
+	    	<% }); %>
+    	</ul>
     <div class="clearfix"></div>
 	</div>
 </div>

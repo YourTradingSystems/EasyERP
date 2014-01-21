@@ -50,6 +50,7 @@
                     </p>
                     <p><label>Created By</label></p>
                     <p><label>Edited By</label></p>
+                    <p><label>Source</label></p>
                 </div>
                 <div class="half-block left">
                     <p>
@@ -78,6 +79,7 @@
                     <p><span><%=(salesTeam) ? salesTeam.departmentName : ''%></span></p>
                     <p><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></p>
                     <p><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></p>
+                    <p><span><%=(source) ? source : ''%></span></p>
                 </div>
             </div>
             <div class="half-block left">

@@ -791,6 +791,27 @@
                 selectList.append(options);
             });
         }
+        var populateSourceDd = function (selectId, url, listName, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            selectList.append($("<option/>").val('').text('Select...'));
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (listName) {
+                    options = $.map(response.data, function (item) {
+                        return (listName === item.name) ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+            
+        }
         var buildAphabeticArray = function (collection, callback) {
             if (collection) {
                 collection.getAlphabet(function (arr) {
@@ -851,6 +872,7 @@
             getListLength: getListLength,
             populateDegrees: populateDegrees,
             populateSourceApplicants: populateSourceApplicants,
+            populateSourceDd: populateSourceDd,
             populateJobPositions: populateJobPositions,
             populateUsers: populateUsers,
             utcDateToLocaleFullDateTime: utcDateToLocaleFullDateTime,
