@@ -812,6 +812,29 @@
             });
             
         }
+
+        var populateJobTypeDd = function (selectId, url, model, callback) {
+            var selectList = $(selectId);
+            var self = this;
+            dataService.getData(url, { mid: 39 }, function (response) {
+                var options = [];
+                if (model && model.jobType) {
+                    console.log(model.jobType);
+                    options = $.map(response.data, function (item) {
+                        return (model.jobType === item.name) ?
+                            $('<option/>').val(item._id).text(item.name).attr('selected', 'selected') :
+                            $('<option/>').val(item._id).text(item.name);
+                    });
+                } else {
+                    options = $.map(response.data, function (item) {
+                        return $('<option/>').val(item._id).text(item.name);
+                    });
+                }
+                selectList.append(options);
+                if (callback) callback();
+            });
+
+        }
         var buildAphabeticArray = function (collection, callback) {
             if (collection) {
                 collection.getAlphabet(function (arr) {
@@ -873,6 +896,7 @@
             populateDegrees: populateDegrees,
             populateSourceApplicants: populateSourceApplicants,
             populateSourceDd: populateSourceDd,
+            populateJobTypeDd: populateJobTypeDd,
             populateJobPositions: populateJobPositions,
             populateUsers: populateUsers,
             utcDateToLocaleFullDateTime: utcDateToLocaleFullDateTime,
