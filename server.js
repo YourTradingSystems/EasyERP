@@ -314,7 +314,11 @@ app.get('/currentUser', function (req, res) {
 
 app.post('/currentUser', function (req, res) {
     console.log(req.body);
-    requestHandler.updateCurrentUser(req, res);
+    var data = {};
+    if (req.body.oldpass && req.body.pass) {
+        data.changePass = true;
+    }
+    requestHandler.updateCurrentUser(req, res, data);
 });
 
 app.get('/UsersForDd', function (req, res) {

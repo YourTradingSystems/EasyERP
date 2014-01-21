@@ -139,7 +139,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             access.getEditWritAccess(req, req.session.uId, 7, function (access) {
                 if (access) {
-                    users.updateUser(req, req.session.uId, req.body, res);
+                    users.updateUser(req, req.session.uId, req.body, res, option);
                 } else {
                     res.send(403);
                 }
