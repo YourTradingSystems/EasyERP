@@ -1215,7 +1215,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
                 });
             }
-			if (data.workflowForList){
+            if (data.workflowForList || data.workflowForKanban) {
 				data={
 					$set:{
 						workflow:data.workflow
@@ -1233,6 +1233,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                 }
             }
+
 
 
 			models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
