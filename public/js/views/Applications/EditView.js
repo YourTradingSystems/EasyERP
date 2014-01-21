@@ -1,4 +1,4 @@
-﻿define([
+﻿﻿define([
     "text!templates/Applications/EditTemplate.html",
     'text!templates/Notes/AddAttachments.html',
     "common",
@@ -16,8 +16,8 @@
                 _.bindAll(this, "render", "deleteItem");
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
-                this.page=1;
-                this.pageG=1;
+                this.page = 1;
+                this.pageG = 1;
                 this.render();
             },
 
@@ -39,92 +39,92 @@
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
-                'click #addUsers':'addUsers',
-                'click #removeUsers':'removeUsers'
+                'click #addUsers': 'addUsers',
+                'click #removeUsers': 'removeUsers'
             },
 
-            changeTab:function(e){
+            changeTab: function (e) {
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
                 $(e.target).addClass("active");
-                var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
                 $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
                 $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
-            addUser:function(e){
+            addUser: function (e) {
                 var self = this;
                 $(".addUserDialog").dialog({
                     dialogClass: "add-user-dialog",
                     width: "900px",
-                    buttons:{
-                        save:{
-                            text:"Choose",
-                            class:"btn",
+                    buttons: {
+                        save: {
+                            text: "Choose",
+                            class: "btn",
 
-                            click: function(){
+                            click: function () {
                                 click: self.addUserToTable("#targetUsers")
-                                $( this ).dialog( "close" );
+                                $(this).dialog("close");
                             }
 
                         },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
-                                $( this ).dialog( "close" );
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: function () {
+                                $(this).dialog("close");
                             }
                         }
                     }
 
                 });
-                $("#targetUsers").unbind().on("click","li",this.removeUsers);
-                $("#sourceUsers").unbind().on("click","li",this.addUsers);
+                $("#targetUsers").unbind().on("click", "li", this.removeUsers);
+                $("#sourceUsers").unbind().on("click", "li", this.addUsers);
                 var self = this;
-                $(document).on("click",".nextUserList",function(e){
-                    self.page+=1
-                    self.nextUserList(e,self.page)
+                $(document).on("click", ".nextUserList", function (e) {
+                    self.page += 1
+                    self.nextUserList(e, self.page)
                 });
-                $(document).on("click",".prevUserList",function(e){
-                    self.page-=1
-                    self.prevUserList(e,self.page)
+                $(document).on("click", ".prevUserList", function (e) {
+                    self.page -= 1
+                    self.prevUserList(e, self.page)
                 });
 
             },
 
-            addGroup:function(e){
+            addGroup: function (e) {
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
                     width: "900px",
-                    buttons:{
-                        save:{
-                            text:"Choose",
-                            class:"btn",
-                            click: function(){
+                    buttons: {
+                        save: {
+                            text: "Choose",
+                            class: "btn",
+                            click: function () {
                                 self.addUserToTable("#targetGroups")
-                                $( this ).dialog( "close" );
+                                $(this).dialog("close");
                             }
                         },
-                        cancel:{
-                            text:"Cancel",
-                            class:"btn",
-                            click: function(){
-                                $( this ).dialog( "close" );
+                        cancel: {
+                            text: "Cancel",
+                            class: "btn",
+                            click: function () {
+                                $(this).dialog("close");
                             }
                         }
                     }
 
                 });
-                $("#targetGroups").unbind().on("click","li",this.removeUsers);
-                $("#sourceGroups").unbind().on("click","li",this.addUsers);
+                $("#targetGroups").unbind().on("click", "li", this.removeUsers);
+                $("#sourceGroups").unbind().on("click", "li", this.addUsers);
                 var self = this;
-                $(document).unbind().on("click",".nextGroupList",function(e){
-                    self.pageG+=1
-                    self.nextUserList(e,self.pageG)
+                $(document).unbind().on("click", ".nextGroupList", function (e) {
+                    self.pageG += 1
+                    self.nextUserList(e, self.pageG)
                 });
-                $(document).unbind().on("click",".prevGroupList",function(e){
-                    self.pageG-=1
-                    self.prevUserList(e,self.pageG)
+                $(document).unbind().on("click", ".prevGroupList", function (e) {
+                    self.pageG -= 1
+                    self.prevUserList(e, self.pageG)
                 });
             },
 
@@ -139,38 +139,38 @@
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
 
-            unassign:function(e){
-                var id=$(e.target).closest("tr").data("id");
-                var type=$(e.target).closest("tr").data("type");
-                var text=$(e.target).closest("tr").find("td").eq(0).text();
-                $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
+            unassign: function (e) {
+                var id = $(e.target).closest("tr").data("id");
+                var type = $(e.target).closest("tr").data("type");
+                var text = $(e.target).closest("tr").find("td").eq(0).text();
+                $("#" + type).append("<option value='" + id + "'>" + text + "</option>");
                 $(e.target).closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length==1){
+                if ($(".groupsAndUser").find("tr").length == 1) {
                     $(".groupsAndUser").hide();
                 }
 
             },
 
-            chooseUser:function(e){
+            chooseUser: function (e) {
                 $(e.target).toggleClass("choosen");
             },
 
-            addUserToTable:function(id){
+            addUserToTable: function (id) {
                 $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function(){
-                    if ($(this).data("type")==id.replace("#","")){
+                $(".groupsAndUser tr").each(function () {
+                    if ($(this).data("type") == id.replace("#", "")) {
                         $(this).remove();
                     }
                 });
-                $(id).find("li").each(function(){
-                    $(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                $(id).find("li").each(function () {
+                    $(".groupsAndUser").append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length<2){
+                if ($(".groupsAndUser tr").length < 2) {
                     $(".groupsAndUser").hide();
                 }
             },
-            fileSizeIsAcceptable: function(file){
-                if(!file){return false;}
+            fileSizeIsAcceptable: function (file) {
+                if (!file) { return false; }
                 return file.size < App.File.MAXSIZE;
             },
             addAttach: function (event) {
@@ -179,7 +179,7 @@
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#createApplicationForm");
                 var addInptAttach = $(".input-file .inputAttach")[0].files[0];
-                if(!this.fileSizeIsAcceptable(addInptAttach)){
+                if (!this.fileSizeIsAcceptable(addInptAttach)) {
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
                 }
@@ -202,22 +202,22 @@
                             bar.width(statusVal);
                             status.html(statusVal);
                         },
-                        
-                        uploadProgress: function(event, position, total, statusComplete) {
+
+                        uploadProgress: function (event, position, total, statusComplete) {
                             var statusVal = statusComplete + '%';
                             bar.width(statusVal);
                             status.html(statusVal);
                         },
-                        
+
                         success: function (data) {
                             var attachments = currentModel.get('attachments');
-							attachment.length = 0;
-							$('.attachContainer').empty();
-							data.data.attachments.forEach(function(item){
-								var date = common.utcDateToLocaleDate(item.uploadDate);
-								attachments.push(item);
-								$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
-});
+                            attachment.length = 0;
+                            $('.attachContainer').empty();
+                            data.data.attachments.forEach(function (item) {
+                                var date = common.utcDateToLocaleDate(item.uploadDate);
+                                attachments.push(item);
+                                $('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+                            });
                             console.log('Attach file');
                             addFrmAttach[0].reset();
                             status.hide();
@@ -227,36 +227,36 @@
                             console.log("Attach file error");
                         }
                     });
-				})
-				addFrmAttach.submit();
-				addFrmAttach.off('submit');
-			},
-				deleteAttach: function (e) {
-					if ($(e.target).closest("li").hasClass("attachFile")){
-						$(e.target).closest(".attachFile").remove();
-					}
-					else{
-						var id = e.target.id;
-						var currentModel = this.currentModel;
-						var attachments = currentModel.get('attachments');
-						var new_attachments = _.filter(attachments, function (attach) {
-							if (attach._id != id) {
-								return attach;
-							}
-						});
-						currentModel.set('attachments', new_attachments);
-						currentModel.save({},
-										  {
-											  headers: {
-												  mid: 39
-											  },
+                })
+                addFrmAttach.submit();
+                addFrmAttach.off('submit');
+            },
+            deleteAttach: function (e) {
+                if ($(e.target).closest("li").hasClass("attachFile")) {
+                    $(e.target).closest(".attachFile").remove();
+                }
+                else {
+                    var id = e.target.id;
+                    var currentModel = this.currentModel;
+                    var attachments = currentModel.get('attachments');
+                    var new_attachments = _.filter(attachments, function (attach) {
+                        if (attach._id != id) {
+                            return attach;
+                        }
+                    });
+                    currentModel.set('attachments', new_attachments);
+                    currentModel.save({},
+                                      {
+                                          headers: {
+                                              mid: 39
+                                          },
 
-											  success: function (model, response, options) {
-												  $('.attachFile_' + id).remove();
-											  }
-										  });
-					}
-				},
+                                          success: function (model, response, options) {
+                                              $('.attachFile_' + id).remove();
+                                          }
+                                      });
+                }
+            },
 
 
             changeWorkflows: function () {
@@ -346,13 +346,13 @@
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
                 }*/
                 var jobPositionId = this.$el.find("#jobPositionDd option:selected").val() ? this.$el.find("#jobPositionDd option:selected").val() : null;
-                var usersId=[];
-                var groupsId=[];
-                $(".groupsAndUser tr").each(function(){
-                    if ($(this).data("type")=="targetUsers"){
+                var usersId = [];
+                var groupsId = [];
+                $(".groupsAndUser tr").each(function () {
+                    if ($(this).data("type") == "targetUsers") {
                         usersId.push($(this).data("id"));
                     }
-                    if ($(this).data("type")=="targetGroups"){
+                    if ($(this).data("type") == "targetGroups") {
                         groupsId.push($(this).data("id"));
                     }
 
@@ -371,7 +371,7 @@
                         mobile: $.trim(this.$el.find("#mobile").val())
                     },
                     degree: this.$el.find("#degreesDd option:selected").val(),
-                    relatedUser:relatedUser,
+                    relatedUser: relatedUser,
                     nextAction: nextAction,
                     source: {
                         id: this.$el.find("#sourceDd option:selected").val()
@@ -408,60 +408,60 @@
                 });
 
             },
-            deleteItem: function(event) {
+            deleteItem: function (event) {
                 var mid = 39;
                 event.preventDefault();
                 var self = this;
-                    var answer = confirm("Realy DELETE items ?!");
-                    if (answer == true) {
-                        this.currentModel.destroy({
-                            headers: {
-                                mid: mid
-                            },
-                            success: function () {
-                                $('.applications-edit-dialog').remove();
-                                Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
-                            },
-                            error: function () {
-                                $('.applications-edit-dialog').remove();
-                                Backbone.history.navigate("home", { trigger: true });
-                            }
-                        });
+                var answer = confirm("Realy DELETE items ?!");
+                if (answer == true) {
+                    this.currentModel.destroy({
+                        headers: {
+                            mid: mid
+                        },
+                        success: function () {
+                            $('.applications-edit-dialog').remove();
+                            Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        },
+                        error: function () {
+                            $('.applications-edit-dialog').remove();
+                            Backbone.history.navigate("home", { trigger: true });
+                        }
+                    });
                 }
             },
-			hideNewSelect:function(e){
-				$(".newSelectList").remove();;
-			},
-			showNewSelect:function(e){
-				if ($(".newSelectList").length){
-					this.hideNewSelect();
-					return false;
-				}else{
-					var s="<ul class='newSelectList'>";
-					$(e.target).parent().find("select option").each(function(){
-						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-					});
-					s+="</ul>";
-					$(e.target).parent().append(s);
-					return false;
-				}
-				
-			},
+            hideNewSelect: function (e) {
+                $(".newSelectList").remove();;
+            },
+            showNewSelect: function (e) {
+                if ($(".newSelectList").length) {
+                    this.hideNewSelect();
+                    return false;
+                } else {
+                    var s = "<ul class='newSelectList'>";
+                    $(e.target).parent().find("select option").each(function () {
+                        s += "<li class=" + $(this).text().toLowerCase() + ">" + $(this).text() + "</li>";
+                    });
+                    s += "</ul>";
+                    $(e.target).parent().append(s);
+                    return false;
+                }
 
-			chooseOption:function(e){
-				   var k = $(e.target).parent().find("li").index($(e.target));
-				   $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-				   $(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
-				   $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-			   },
+            },
 
-			   styleSelect:function(id){
-				   var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
-				   $(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
-				   $(id).hide();
-			   },
+            chooseOption: function (e) {
+                var k = $(e.target).parent().find("li").index($(e.target));
+                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
+                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+            },
 
-    
+            styleSelect: function (id) {
+                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
+                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
+                $(id).hide();
+            },
+
+
             render: function () {
                 var formString = this.template({
                     model: this.currentModel.toJSON()
@@ -471,35 +471,35 @@
                     dialogClass: "applications-edit-dialog",
                     width: 690,
                     title: "Edit Application",
-                    buttons:{
-                        save:{
+                    buttons: {
+                        save: {
                             text: "Save",
                             class: "btn",
                             click: self.saveItem
                         },
-                        cancel:{
+                        cancel: {
                             text: "Cancel",
                             class: "btn",
                             click: self.hideDialog
                         },
-                        delete:{
+                        delete: {
                             text: "Delete",
                             class: "btn",
                             click: self.deleteItem
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
-                common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
+                common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
+                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
 
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.jobPositionDd);});
-                common.populateWorkflows("Applications", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.relatedUsersDd);});
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.departmentDd);});
-//                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
-				   self.styleSelect("#sourceDd");
-				   self.styleSelect("#jobtapeDd");
+                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.jobPositionDd); });
+                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
+                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.relatedUsersDd); });
+                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
+                //                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
+                self.styleSelect("#sourceDd");
+                self.styleSelect("#jobtapeDd");
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",
@@ -510,15 +510,15 @@
 
                 var model = this.currentModel.toJSON();
                 if (model.groups)
-                    if (model.groups.users.length>0||model.groups.group.length){
+                    if (model.groups.users.length > 0 || model.groups.group.length) {
                         $(".groupsAndUser").show();
-                        model.groups.group.forEach(function(item){
-                            $(".groupsAndUser").append("<tr data-type='targetGroups' data-id='"+ item._id+"'><td>"+item.departmentName+"</td><td class='text-right'></td></tr>");
-                            $("#targetGroups").append("<li id='"+item._id+"'>"+item.departmentName+"</li>");
+                        model.groups.group.forEach(function (item) {
+                            $(".groupsAndUser").append("<tr data-type='targetGroups' data-id='" + item._id + "'><td>" + item.departmentName + "</td><td class='text-right'></td></tr>");
+                            $("#targetGroups").append("<li id='" + item._id + "'>" + item.departmentName + "</li>");
                         });
-                        model.groups.users.forEach(function(item){
-                            $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
-                            $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
+                        model.groups.users.forEach(function (item) {
+                            $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='" + item._id + "'><td>" + item.login + "</td><td class='text-right'></td></tr>");
+                            $("#targetUsers").append("<li id='" + item._id + "'>" + item.login + "</li>");
                         })
 
                     }

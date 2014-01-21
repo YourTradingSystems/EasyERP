@@ -304,6 +304,10 @@ define([
                 
                 var gender = $("#genderDd option:selected").val();
                 gender = gender ? gender : null;
+
+                var jobType = $("#jobTypeDd option:selected").text();
+                jobType = jobType ? jobType : null;
+
                 var marital = $("#maritalDd option:selected").val();
                 marital = marital ? marital : null;
 
@@ -358,6 +362,7 @@ define([
                         last: $.trim(this.$el.find("#last").val())
                     },
                     gender: gender,
+                    jobType: jobType,
                     marital: marital,
                     workAddress: {
                         street:$.trim( this.$el.find('#street').val()),
@@ -469,7 +474,7 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-
+                common.populateJobTypeDd("#jobTypeDd", "/jobType", this.currentModel.toJSON());
                 common.populateUsers(App.ID.relatedUsersDd, "/UsersForDd", this.currentModel.toJSON());
                 common.populateDepartments(App.ID.departmentsDd, "/DepartmentsForDd",this.currentModel.toJSON());
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd", this.currentModel.toJSON());

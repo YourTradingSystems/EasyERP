@@ -314,7 +314,11 @@ app.get('/currentUser', function (req, res) {
 
 app.post('/currentUser', function (req, res) {
     console.log(req.body);
-    requestHandler.updateCurrentUser(req, res);
+    var data = {};
+    if (req.body.oldpass && req.body.pass) {
+        data.changePass = true;
+    }
+    requestHandler.updateCurrentUser(req, res, data);
 });
 
 app.get('/UsersForDd', function (req, res) {
@@ -906,6 +910,14 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 
 
 //------------------JobPositions---------------------------------------------------
+
+app.get('/jobType', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    //data._id = req.param('_id');
+    console.log(data);
+    requestHandler.getJobType(req, res, data);
+});
 
 app.post('/JobPositions', function (req, res) {
     data = {};

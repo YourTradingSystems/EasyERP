@@ -1,6 +1,6 @@
 // JavaScript source code
 var Users = function (logWriter, mongoose, models) {
-	var ObjectId = mongoose.Schema.Types.ObjectId;
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var crypto = require('crypto');
     var collection = 'Users';
 
@@ -17,7 +17,7 @@ var Users = function (logWriter, mongoose, models) {
         lastAccess: { type: Date },
         kanbanSettings: {
             opportunities: {
-                countPerPage: {type: Number, default: 10}
+                countPerPage: { type: Number, default: 10 }
             },
             applications: {
                 countPerPage: { type: Number, default: 10 }
@@ -30,12 +30,6 @@ var Users = function (logWriter, mongoose, models) {
     }, { collection: 'Users' });
 
     mongoose.model('Users', userSchema);
-    //var User = mongoose.model(collection, schema);
-    //var User = loadDb();
-
-    //function loadDb(db, collection, schema) {
-    //    return db.model(collection, schema);
-    //};
 
     function createUser(req, data, result) {
         try {
@@ -257,16 +251,23 @@ var Users = function (logWriter, mongoose, models) {
         });
     }
 
-    function updateUser(req, _id, data, res) {
+    function updateUser(req, _id, data, res, options) {
         try {
             delete data._id;
+            if (data.oldpass) delete data.oldpass;
             var updateFields = {};
             for (var i in data) {
                 if (data[i]) {
                     updateFields[i] = data[i];
                 }
             };
-            var _object = { $set: updateFields }
+            if (options && options.changePass) {
+                var shaSum = crypto.createHash('sha256');
+                shaSum.update(data.pass);
+                updateFields.pass = shaSum.digest('hex');
+            }
+            var _object = { $set: updateFields };
+            
             models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, _object, function (err, result) {
 
                 if (err) {

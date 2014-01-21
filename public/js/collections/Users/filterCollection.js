@@ -81,7 +81,7 @@
                 if (response.data) {
                     _.map(response.data, function (user) {
                     	if (user.lastAccess)
-                    	user.lastAccess = common.utcDateToLocaleDate(user.lastAccess);
+                    	    user.lastAccess = common.utcDateToLocaleDateTime(user.lastAccess);
 
                         return user;
                     });

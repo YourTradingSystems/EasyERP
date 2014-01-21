@@ -83,7 +83,7 @@
                             that.page += 1;
                             that.listLength = response.listLength;
                             that.trigger('showmore', models);
-                            that.add(newCollection.toJSON());
+                           // that.add(newCollection.toJSON());
                         },
                         error: function() {
                             alert('Some Error');

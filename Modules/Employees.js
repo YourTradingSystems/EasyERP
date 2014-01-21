@@ -88,7 +88,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             date: { type: Date, default: Date.now }
         },
         marital: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
-        gender: { type: String, enum:['male','female'], default: 'male' }
+        gender: { type: String, enum: ['male', 'female'], default: 'male' },
+        jobType: { type: String, default: '' }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -323,6 +324,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                     if (data.imageSrc) {
                         _employee.imageSrc = data.imageSrc;
+                    }
+                    if (data.jobType) {
+                        _employee.jobType = data.jobType;
                     }
                     ///////////////////////////////////////////////////
                     _employee.save(function (err, result) {
@@ -1295,7 +1299,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
                 });
             }
-			if (data.workflowForList){
+            if (data.workflowForList || data.workflowForKanban) {
 				data={
 					$set:{
 						workflow:data.workflow
@@ -1313,8 +1317,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                 }
             }
-			console.log(data);
-            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
+
+
+
+			models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);

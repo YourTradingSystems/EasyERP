@@ -1,4 +1,4 @@
-﻿define([
+﻿﻿define([
     'text!templates/Applications/kanban/WorkflowsTemplate.html',
     'text!templates/Applications/kanbanSettings.html',
     'collections/Workflows/WorkflowsCollection',
