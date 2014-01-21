@@ -16,43 +16,9 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
         }
     };
 
-    //var changeItemIndex = function (event, actionType, contentType, collection) {
-    //    event.preventDefault();
-    //    if (!this.actionType || !this.contentType) {
-    //        this.actionType = actionType;
-    //        this.contentType = contentType;
-    //    }
-    //    var shift = $(event.target).attr('data-shift');
-    //    itemIndex = getCurrentII(),
-    //    viewType = getCurrentVT();
-
-    //    switch (shift) {
-    //        case "left":
-    //            {
-    //                collection.prev();
-    //                break;
-    //            }
-    //        case "right":
-    //            {
-    //                collection.next();
-    //                break;
-    //            }
-    //    }
-
-    //    id = collection.getElement().attributes._id;
-
-    //    if (this.actionType == 'Content') {
-    //        window.location.hash = "#home/content-" + this.contentType + "/" + viewType + "/" + id;
-
-    //    } else if (this.actionType == 'Edit') {
-    //        window.location.hash = "#home/action-" + this.contentType + "/" + this.actionType + "/" + id;
-    //    }
-    //};
-
     var changeContentViewType = function (event, contentType, collection) {
 
         event.preventDefault();
-        //var itemIndex = getCurrentII();
         if (contentType) {
             this.contentType = contentType;
         }
@@ -76,10 +42,6 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
                 url += "/" + model.attributes._id;
             }
         }
-
-        //if (viewtype == "form") {
-        //    url += "/" + itemIndex;
-        //}
 
         App.ownContentType = true;
 
