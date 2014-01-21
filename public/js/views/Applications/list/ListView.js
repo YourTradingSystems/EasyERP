@@ -63,6 +63,7 @@ define([
                 var self = this;
 
                 $('.task-list').find("input").prop("checked",false);
+                $("#top-bar-deleteBtn").hide();
 
                 if (this.defaultItemsNumber) {
                     var itemsNumber = self.defaultItemsNumber;
@@ -177,7 +178,7 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-                common.getListLength('Application', null, null, '/EmployeesListLength', function(response){
+                common.getListLength('Application', null, null, '/EmployeesListLength', null, function(response){
                     self.listLength = response.listLength;
                     if (self.defaultItemsNumber) {
                         var itemsNumber = self.defaultItemsNumber;
@@ -256,8 +257,8 @@ define([
                 var page =  parseInt($("#currentShowPage").val()) + 1;
                 $("#currentShowPage").val(page);
                 $("#grid-start").text((page - 1)*itemsNumber+1);
-                if (this.collection.listLength <= page*itemsNumber ) {
-                    $("#grid-end").text(this.collection.listLength);
+                if (this.listLength <= page*itemsNumber ) {
+                    $("#grid-end").text(this.listLength);
                     $("#nextPage").prop("disabled",true);
                 } else {
                     $("#grid-end").text(page*itemsNumber);
@@ -274,7 +275,7 @@ define([
                 event.preventDefault();
                 $('.task-list').find("input").prop("checked",false);
                 var itemsNumber = event.target.textContent;
-                common.getListLength('Application', null, this.wfStatus, '/EmployeesListLength', function(response){
+                common.getListLength('Application', null, this.wfStatus, '/EmployeesListLength', null, function(response){
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
@@ -369,7 +370,7 @@ define([
                 this.wfStatus = workflowIdArray;
 
                 var itemsNumber = $("#itemsNumber").text();
-                common.getListLength('Application', null, this.wfStatus, '/EmployeesListLength', function(response){
+                common.getListLength('Application', null, this.wfStatus, '/EmployeesListLength', null, function(response){
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);

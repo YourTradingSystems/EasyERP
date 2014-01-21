@@ -816,8 +816,8 @@
             return [];
         }
 
-        var getListLength = function (workflowType, filterLetter, filterArray, url, callback) {
-            dataService.getData(url, { mid: 39, type: workflowType, letter: filterLetter, status: filterArray }, function (response) {
+        var getListLength = function (workflowType, filterLetter, filterArray, url, isConverted, callback) {
+            dataService.getData(url, { mid: 39, type: workflowType, letter: filterLetter, status: filterArray, isConverted: isConverted }, function (response) {
                 if (callback) callback(response);
             });
         }

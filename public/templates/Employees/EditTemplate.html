@@ -18,23 +18,6 @@
                         <dt><label for="first">First Name</label></dt><dd><input type="text" class="blueback" id="first" value="<%=model.name.first%>" required maxlength="32"/></dd>
                         <dt><label for="last">Last Name</label></dt><dd><input type="text" class="blueback" id="last" value="<%=model.name.last%>" required maxlength="32"/></dd>
                         <dt><label for="tags">Tags</label></dt><dd><input type="text" id="tags" value="<%=model.tags%>" maxlength="32"/></dd>
-                          <dt><label for="genderDd">Gender</label>
-                          <dd>
-                              <select id="genderDd">
-                                  <option value="male">male</option>
-                                  <option value="female">female</option>
-                              </select>
-                          </dd>
-                          </dt>
-                          <dt><label for="martialDd">Martial status</label>
-                          <dd>
-                              <select id="martialDd">
-                                  <option value="married">married</option>
-                                  <option value="unmarried">unmarried</option>
-                              </select>
-                          </dd>
-                          </dt>
-                      
                       </dl>
                     </div>
                     <div class="half-block left">
@@ -162,18 +145,22 @@
                       </div>
 
                       <dl class="person-info">
-                        <dt><label for="gender">Gender</label></dt>
-                        <dd>
-                          <select id="gender">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-                        </dd>
-                        <dt><label for="maritalStatus">Marital Status</label></dt>
-                        <dd>
-                          <select id="maritalStatus">
-                            <option selected="selected" value="0">Select...</option>
-                          </select>
-                        </dd>
+                          <dt><label for="genderDd">Gender</label>
+                          <dd>
+                              <select id="genderDd">
+                                  <option value="male">male</option>
+                                  <option value="female" <%=(model.gender=="female")? 'selected="selected"' :'' %>>female</option>
+                              </select>
+                          </dd>
+                          </dt>
+                          <dt><label for="maritalDd">Marital status</label>
+                          <dd>
+                              <select id="maritalDd">
+                                  <option value="married">married</option>
+                                  <option value="unmarried"<%=(model.marital=="unmarried")? 'selected="selected"' :'' %>>unmarried</option>
+                              </select>
+                          </dd>
+                          </dt>
                       </dl>
                     </div>
                     <div class="half-block left withPaddingLeft">

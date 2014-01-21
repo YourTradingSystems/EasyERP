@@ -1282,6 +1282,10 @@ app.delete('/SourcesOfApplicants/:_id', function (req, res) {
     requestHandler.removeSourcesOfApplicant(req, res, id, data);
 });
 
+app.get('/sources', function (req, res) {
+    requestHandler.getSources(req, res);
+});
+
 //----------------------Leads----------------------------------------------------------------
 app.get('/LeadsForChart', function (req, res) {
     data = {};
@@ -1303,6 +1307,8 @@ app.get('/Leads/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
+    console.log('============== /Leads/:viewType=================');
+    console.log(data);
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
@@ -1354,6 +1360,15 @@ app.delete('/Leads/:_id', function (req, res) {
 });
 
 //---------------------Opportunities---------------------
+app.get('/OpportunitiesListLength', function (req, res) {
+    data = {};
+    //data.mid = req.param('mid');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getOpportunitiesListLength(req, res, data);
+});
+
 app.post('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');

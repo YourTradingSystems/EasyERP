@@ -41,7 +41,7 @@
                 last: ''
             },
             gender: '',
-            martial: '',
+            marital: '',
             tags: [],
             workAddress: {
                 street: '',
