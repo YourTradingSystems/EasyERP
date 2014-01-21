@@ -1,4 +1,4 @@
-﻿var Department = function (logWriter, mongoose, models) {
+﻿var Source = function (logWriter, mongoose, models) {
     var SourceSchema = mongoose.Schema({
         _id: String,
         neme: String
@@ -29,4 +29,4 @@
     };
 };
 
-module.exports = Department;
+module.exports = Source;

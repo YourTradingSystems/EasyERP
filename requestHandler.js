@@ -17,6 +17,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
+        jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
     Array.prototype.objectID = function () {
@@ -980,6 +981,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getJobType(req, res) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            jobType.getForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    }
 
     function getJobPosition(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -994,6 +1002,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
     function getJobPositionForDd(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             jobPosition.getJobPositionForDd(req, res);

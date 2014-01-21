@@ -911,6 +911,14 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 
 //------------------JobPositions---------------------------------------------------
 
+app.get('/jobType', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    //data._id = req.param('_id');
+    console.log(data);
+    requestHandler.getJobType(req, res, data);
+});
+
 app.post('/JobPositions', function (req, res) {
     data = {};
     data.mid = req.headers.mid;

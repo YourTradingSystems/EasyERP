@@ -6,7 +6,7 @@
         'views/Applications/CreateView',
         'models/ApplicationsModel'
 ],
-function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, EditView, CreateView,CurrentModel) {
+function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, EditView, CreateView, CurrentModel) {
     var ApplicationKanbanView = Backbone.View.extend({
         el: '#content-holder',
         events: {
@@ -15,7 +15,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
             "click .application-header, .application-content": "selectItem"
         },
         initialize: function (options) {
-			this.startTime = options.startTime;
+            this.startTime = options.startTime;
             this.workflowsCollection = new WorkflowsCollection({ id: 'Application' });
             this.workflowsCollection.bind('reset', this.render, this);
             this.collection = options.collection;
@@ -29,7 +29,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
         gotoEditForm: function (e) {
             e.preventDefault();
             var id = $(e.target).closest(".inner").data("id");
-//            var model = this.collection.getElement(id);
+            //            var model = this.collection.getElement(id);
             var model = new CurrentModel();
             model.urlRoot = '/Applications/form';
             model.fetch({
@@ -40,14 +40,14 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                 error: function () { alert('Please refresh browser'); }
             });
 
-//            new EditView({ model: model, collection: this.collection });
+            //            new EditView({ model: model, collection: this.collection });
         },
-        
-       /* filterByWorkflow: function (models, id) {
-            return _.filter(models, function (data) {
-                return data.attributes["workflow"]._id == id;
-            });
-        },*/
+
+        /* filterByWorkflow: function (models, id) {
+             return _.filter(models, function (data) {
+                 return data.attributes["workflow"]._id == id;
+             });
+         },*/
 
         showMore: function () {
             _.bind(this.collection.showMore, this.collection);
@@ -85,7 +85,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                     if (this.collection.get(model_id) === undefined) {
                         column.append(kanbanItemView.render().el);
                     } else {
-                        $( "#"+ wfModel.get('_id')).hide();
+                        $("#" + wfModel.get('_id')).hide();
                         column.append(kanbanItemView.render().el);
                     }
                     column.append(kanbanItemView.render().el);
@@ -118,7 +118,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
             _.each(workflows, function (workflow, i) {
                 ApplicationCount = 0
                 ApplicationRemaining = 0;
-                _.each(this.collection.optionsArray, function(wfId){
+                _.each(this.collection.optionsArray, function (wfId) {
                     if (wfId._id == workflow._id) {
                         ApplicationCount = wfId.count;
                     }
@@ -159,11 +159,11 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
 
                 },
                 stop: function (event, ui) {
-                	var id = ui.item.context.id;
+                    var id = ui.item.context.id;
                     var model = that.collection.get(id);
                     var column = ui.item.closest(".column");
                     if (model) {
-                        model.save({workflow: column.data('id')},{validate:false},{
+                        model.save({ workflow: column.data('id') }, { validate: false }, {
                             //headers: {
                             //    mid: mid
                             //}
@@ -173,7 +173,7 @@ function (WorkflowsTemplate, WorkflowsCollection, ApplicationKanbanItemView, Edi
                     }
                 }
             }).disableSelection();
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+            this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             return this;
         }
     });

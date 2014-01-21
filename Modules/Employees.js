@@ -88,7 +88,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             date: { type: Date, default: Date.now }
         },
         marital: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
-        gender: { type: String, enum:['male','female'], default: 'male' }
+        gender: { type: String, enum: ['male', 'female'], default: 'male' },
+        jobType: { type: String, default: '' }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -323,6 +324,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                     if (data.imageSrc) {
                         _employee.imageSrc = data.imageSrc;
+                    }
+                    if (data.jobType) {
+                        _employee.jobType = data.jobType;
                     }
                     ///////////////////////////////////////////////////
                     _employee.save(function (err, result) {
