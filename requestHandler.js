@@ -2243,7 +2243,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         sendToGoogleCalendar: sendToGoogleCalendar,
         changeSyncCalendar: changeSyncCalendar,
 
-        getSources: getSources
+        getSources: getSources,
+        getJobType: getJobType
     }
 }
 //---------EXPORTS----------------------------------------
