@@ -362,13 +362,6 @@ app.delete('/Users/:viewType/:_id', function (req, res) {
     requestHandler.removeUser(req, res, id);
 });
 
-app.get('/myProfile', function (req, res) {
-    console.log('---------------------getProfiles-------------');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getMyProfile(req, res, data);
-});
-
 app.post('/Profiles', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -1314,6 +1307,8 @@ app.get('/Leads/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
+    console.log('============== /Leads/:viewType=================');
+    console.log(data);
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
@@ -1365,6 +1360,15 @@ app.delete('/Leads/:_id', function (req, res) {
 });
 
 //---------------------Opportunities---------------------
+app.get('/OpportunitiesListLength', function (req, res) {
+    data = {};
+    //data.mid = req.param('mid');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getOpportunitiesListLength(req, res, data);
+});
+
 app.post('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');

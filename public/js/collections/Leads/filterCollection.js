@@ -13,7 +13,6 @@
                 this.status = options.status;
                 this.count = options.count;
                 this.page = options.page;
-                this.isConverted = false;
                 this.namberToShow = options.count;
 
                 var that = this;
@@ -37,7 +36,6 @@
                         filterObject['page'] = 1;
                         filterObject['status'] = [];
                         filterObject['status'] = options.status;
-                        filterObject['isConverted'] = false;
 
                         var addPage = 0;
                         break;
@@ -74,38 +72,58 @@
                 filterObject['status'] = [];
                 filterObject['status'] = (options && options.status) ? options.status: this.status;
                 filterObject['isConverted'] = (options && options.isConverted) ? options.isConverted: this.isConverted;
-                var NewCollection = Backbone.Collection.extend({
-                    model: CompanyModel,
-                    url: that.url,
-                    parse: true,
-                    parse: function(response) {
-                        return response.data;
-                    },
-                    page: that.page,
 
-                    filterByWorkflow: function (id) {
-                        return this.filter(function (data) {
-                            return data.get("workflow")._id == id;
-                        });
-                    }
-                });
-                var newCollection = new NewCollection();
+                if (options.viewType && options.viewType == 'list') {
+                    this.fetch({
+                        data: filterObject,
+                        waite: true,
+                        success: function (models, response) {
+                            that.showMoreButton = response.showMore;
+                            that.optionsArray = response.options;
+                            that.page += 1;
+                            that.listLength = response.listLength;
+                            that.trigger('showmore', models);
+                            that.add(newCollection.toJSON());
+                        },
+                        error: function() {
+                            alert('Some Error');
+                        }
+                    });
+                } else {
+                    var NewCollection = Backbone.Collection.extend({
+                        model: CompanyModel,
+                        url: that.url,
+                        parse: true,
+                        parse: function(response) {
+                            return response.data;
+                        },
+                        page: that.page,
 
-                newCollection.fetch({
-                    data: filterObject,
-                    waite: true,
-                    success: function (models, response) {
-                        that.showMoreButton = response.showMore;
-                        that.optionsArray = response.options;
-                        that.page += 1;
-                        that.listLength = response.listLength;
-                        that.trigger('showmore', models);
-                        that.add(newCollection.toJSON());
-                    },
-                    error: function() {
-                        alert('Some Error');
-                    }
-                });
+                        filterByWorkflow: function (id) {
+                            return this.filter(function (data) {
+                                return data.get("workflow")._id == id;
+                            });
+                        }
+                    });
+
+                    var newCollection = new NewCollection();
+
+                    newCollection.fetch({
+                        data: filterObject,
+                        waite: true,
+                        success: function (models, response) {
+                            that.showMoreButton = response.showMore;
+                            that.optionsArray = response.options;
+                            that.page += 1;
+                            that.listLength = response.listLength;
+                            that.trigger('showmore', models);
+                            that.add(newCollection.toJSON());
+                        },
+                        error: function() {
+                            alert('Some Error');
+                        }
+                    });
+                }
             },
 
             parse: true,

@@ -27,8 +27,8 @@ var App = App ||
         projectForm: "#createProjectForm",
         privacyDD: "#privacyDD",
         managerSelect: "#projectManagerDD",
-        assignedToDd:"#assignedToDd",
-        projectDd:"#projectDd",
+        assignedToDd: "#assignedToDd",
+        projectDd: "#projectDd",
         priorityDd: "#priorityDd",
         workflowDd: "#workflowsDd",
         workflowNamesDd: "#workflowNamesDd",
@@ -49,16 +49,16 @@ var App = App ||
         salesPersonDd: "#salesPersonDd",
         salesTeamDd: "#salesTeamDd",
         priority: "#priority",
-		employeesDd:"#employeesDd",
-		departmentManager: "#departmentManager",
-		parentDepartment: "#parentDepartment",
-		visibilityDd: "#visibilityDd",
-		genres: "#genresDd",
+        employeesDd: "#employeesDd",
+        departmentManager: "#departmentManager",
+        parentDepartment: "#parentDepartment",
+        visibilityDd: "#visibilityDd",
+        genres: "#genresDd",
         degreesDd: "#degreesDd",
         sourceDd: "#sourceDd",
         profilesDd: "#profilesDd",
         statusesDd: "#statusesDd"
-        
+
     },
     URL: {
         customers: "/Customer",
@@ -67,25 +67,25 @@ var App = App ||
         priorities: "/Priority",
         workflows: "/WorkflowsForDd?id=Lead"
     },
-    File:{
+    File: {
         MAXSIZE: 3145728,  //size in kilobytes  = 3 MB
         MaxFileSizeDisplay: "3 MB"
     },
     requestedURL: null,
-    Calendar:{
-        currentCalendarId:""
+    Calendar: {
+        currentCalendarId: ""
     }
 };
 
 require.config({
     paths: {
-        jQuery: './libs/jquery',
+        jQuery: './libs/jquery-2.0.3.min.map',
         ajaxForm: './libs/jquery.form',
         imageCrop: './libs/jquery.Jcrop.min',
-        jqueryui: './libs/jquery-ui-1.10.3.custom.min',
-        Underscore: './libs/underscore_1.5.2',
-        Backbone: './libs/backbone v_1_1',
-        less: './libs/less-1.4.1.min',
+        jqueryui: './libs/jquery-ui.min',
+        Underscore: './libs/underscore-min.map',
+        Backbone: './libs/backbone-min.map',
+        less: './libs/less.min',
         templates: '../templates',
         text: './libs/text',
         common: 'common',
@@ -95,36 +95,36 @@ require.config({
         minical: './libs/dhtmlxscheduler_minical',
         multiselect: './libs/dhtmlxscheduler_multiselect',
         mvc: './libs/dhtmlxscheduler_mvc',
-		d3: './libs/d3.v3.min'
+        d3: './libs/d3.v3.min'
     },
     shim: {
         'jqueryui': ['jQuery'],
         'ajaxForm': ['jQuery'],
-        'imageCrop':['jQuery'],
+        'imageCrop': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm','imageCrop'],
+        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm', 'imageCrop'],
         'chosen': {
             exports: 'chosen'
         },
         'minical': {
             exports: 'minical'
         },
-        'multiselect':{
+        'multiselect': {
             exports: 'multiselect'
         },
-        'mvc':{
+        'mvc': {
             exports: 'mvc'
         },
         'scheduler': {
             exports: 'scheduler'
         },
-		'd3': {
+        'd3': {
             exports: 'd3'
         },
         'mvc': ['scheduler'],
         'multiselect': ['scheduler'],
         'minical': ['scheduler'],
-        'Calendar': ['chosen', 'scheduler', 'mvc', 'minical','multiselect'],
+        'Calendar': ['chosen', 'scheduler', 'mvc', 'minical', 'multiselect'],
         'dateFormat': {
             exports: 'dateFormat'
         }
@@ -136,7 +136,7 @@ require(['app'], function (app) {
         this.setElement(this.at(this.indexOf(this.getElement()) + 1));
         return this;
     };
-    Backbone.Collection.prototype.prev = function() {
+    Backbone.Collection.prototype.prev = function () {
         this.setElement(this.at(this.indexOf(this.getElement()) - 1));
         return this;
     };
@@ -161,18 +161,6 @@ require(['app'], function (app) {
         }
 
     };
-    //Backbone.View.prototype.getShowMore = function (inputArrayOfCollectionsLength) {
-    //    if (this.page && this.countPerPage) {
-    //        for (var i = 0; i < inputArrayOfCollectionsLength.length; i++) {
-    //            if (typeof inputArrayOfCollectionsLength[i] == 'object' && inputArrayOfCollectionsLength[i].hasOwnProperty('count')) {
-    //                if (inputArrayOfCollectionsLength[i].count > this.page * this.countPerPage) {
-    //                   return true;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //};
 
     app.initialize();
     app.applyDefaults();

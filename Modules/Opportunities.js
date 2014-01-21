@@ -429,6 +429,106 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         });
     };
 
+    function getListLength(req, data, response) {
+        console.log('---------------getListLength---------------');
+        console.log(data);
+        var res = {};
+        if (data.type == "Opportunitie") {
+            var isOpportunitie = true;
+        } else {
+            var isOpportunitie = false;
+        }
+
+        var aggObject = {};
+        aggObject['isOpportunitie'] = isOpportunitie;
+
+        if (data.isConverted) {
+            aggObject['isConverted'] = true;
+        }
+
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    aggObject,
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.select("_id").
+                                    exec(function (error, _res) {
+                                        if (!error) {
+                                            res['listLength'] = _res.length;
+                                            console.log(res['listLength']);
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
+
+                                    });
+                            } else {
+                                console.log(err);
+                            }
+
+                        }
+                    );
+
+                } else {
+                    console.log(err);
+                }
+            });
+    };
+
     function getLeads(req, response) {
         //var res = {};
         //res['data'] = [];
@@ -540,9 +640,18 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
             });
     };
+
     function getLeadsForList(req, data, response) {
         var res = {};
         res['data'] = [];
+
+        var aggObject = {};
+        aggObject['isOpportunitie'] = false;
+
+        if (data.isConverted) {
+            aggObject['isConverted'] = true;
+            aggObject['isOpportunitie'] = true;
+        }
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
                 $match: {
@@ -561,9 +670,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         {
                             $match: {
                                 $and: [
-                                    {
-                                        isOpportunitie: false
-                                    },
+                                    aggObject,
                                     {
                                         $or: [
                                             {
@@ -614,7 +721,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 exec(function (error, _res) {
                                     if (!error) {
                                         res['data'] = _res;
-                                        res['listLength'] = _res.length;
                                         response.send(res);
                                     } else {
                                         console.log(error);
@@ -1216,6 +1322,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         getCollectionLengthByWorkflows: getCollectionLengthByWorkflows,
 
         getById: getById,
+
+        getListLength: getListLength,
 
         getFilterOpportunities: getFilterOpportunities,
 
