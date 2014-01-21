@@ -25,7 +25,7 @@
 
     return {
         getForDd: getForDd,
-        SourceSchema: SourceSchema
+        jobTypeSchema: jobTypeSchema
     };
 };
 
