@@ -408,7 +408,10 @@ define([
                 common.populateEmployeesDd(App.ID.salesPerson, "/getForDdByRelatedUser", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.salesPerson); });
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.priorityDd);});
                 common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-				this.styleSelect("#sourceDd");
+                common.populateSourceDd("#sourceDd", "/sources", this.currentModel.get("source"), function () {
+                    self.styleSelect("#sourceDd");
+                });
+             
 				this.styleSelect("#campaignDd");
                 this.delegateEvents(this.events);
                 $('#campaignDd').val(this.currentModel.get('campaign'));
