@@ -430,10 +430,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     };
 
     function getListLength(req, data, response) {
-        console.log('---------------getListLength---------------');
-        console.log(data);
         var res = {};
-        if (data.type == "Opportunitie") {
+        if (data.type == "Opportunity") {
             var isOpportunitie = true;
         } else {
             var isOpportunitie = false;
@@ -982,7 +980,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 exec(function (error, _res) {
                                     if (!error) {
                                         res['data'] = _res;
-                                        res['listLength'] = _res.length;
                                         response.send(res);
                                     } else {
                                         console.log(error);
