@@ -58,7 +58,6 @@ var App = App ||
         sourceDd: "#sourceDd",
         profilesDd: "#profilesDd",
         statusesDd: "#statusesDd"
-
     },
     URL: {
         customers: "/Customer",

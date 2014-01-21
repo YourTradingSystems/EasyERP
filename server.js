@@ -921,6 +921,14 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 
 //------------------JobPositions---------------------------------------------------
 
+app.get('/jobType', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    //data._id = req.param('_id');
+    console.log(data);
+    requestHandler.getJobType(req, res, data);
+});
+
 app.post('/JobPositions', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -1004,6 +1012,7 @@ app.get('/Departments', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartment(req, res, data);
 });
+
 app.get('/DepartmentsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1172,6 +1181,10 @@ app.get('/getEmployeesImages', function (req, res) {
 
 //------------------Applications---------------------------------------------------
 
+app.get('/getApplicationsLengthByWorkflows', function (req, res) {
+    requestHandler.getApplicationsLengthByWorkflows(req, res);
+});
+
 app.get('/Applications', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1191,8 +1204,6 @@ app.get('/Applications/:viewType', function (req, res) {
         case "list": requestHandler.getApplicationsForList(req, res, data);
             break;
         case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
-            break;
-        default: requestHandler.getFilterApplications(req, res, data);
             break;
     }
 

@@ -88,7 +88,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             date: { type: Date, default: Date.now }
         },
         marital: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
-        gender: { type: String, enum:['male','female'], default: 'male' }
+        gender: { type: String, enum: ['male', 'female'], default: 'male' },
+        jobType: { type: String, default: '' }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -324,6 +325,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     if (data.imageSrc) {
                         _employee.imageSrc = data.imageSrc;
                     }
+                    if (data.jobType) {
+                        _employee.jobType = data.jobType;
+                    }
                     ///////////////////////////////////////////////////
                     _employee.save(function (err, result) {
                         try {
@@ -375,6 +379,89 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             }
         });
     };
+
+    function getCollectionLengthByWorkflows(req, res) {
+        data = {};
+        data['showMore'] = false;
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isEmployee: false
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1,
+                                workflow:1
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$workflow",
+                                count: { $sum: 1 }
+                            }
+                        },
+                        function (err, responseOpportunities) {
+                            if (!err) {
+                                responseOpportunities.forEach(function (object) {
+                                    if (object.count > req.session.kanbanSettings.applications.countPerPage) data['showMore'] = true;
+                                });
+                                data['arrayOfObjects'] = responseOpportunities;
+                                res.send(data);
+                            } else {
+                                console.log(err);
+                            }
+                        });
+                } else {
+                    console.log(err);
+                }
+            });
+    }
 
     function getListLength(req, data, response) {
         var res = {};
@@ -1027,7 +1114,103 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 	};
 
     function getApplicationsForKanban(req, data, response) {
+        if (data.options) {
+            var page = (data.options.page) ? data.options.page : null;
+            var count = (data.options.count) ? data.options.count : null;
+        }
         var res = {};
+        var startTime = new Date();
+        res['data'] = [];
+        res['workflowId'] = data.workflowId;
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isEmployee: false
+                                    },
+                                    {
+                                        workflow: newObjectId(data.workflowId)
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, responseOpportunities) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).
+                                    where('_id').in(responseOpportunities).
+                                    select("_id name proposedSalary jobPosition nextAction workflow editedBy.date").
+                                    populate('jobPosition','name').
+                                    populate('workflow','_id').
+                                    sort({ 'editedBy.date': -1 }).
+                                    limit(req.session.kanbanSettings.applications.countPerPage).
+                                    exec(function (err, result) {
+                                        if (!err) {
+                                            res['data'] = result;
+                                            res['time'] = (new Date() - startTime);
+                                            response.send(res);
+                                        } else {
+                                            logWriter.log("Opportunitie.js getApplicationsForKanban opportunitie.find" + err);
+                                            response.send(500, { error: "Can't find Applications" });
+                                        }
+                                    })
+                            } else {
+                                logWriter.log("Opportunitie.js getApplicationsForKanban task.find " + err);
+                                response.send(500, { error: "Can't group Applications" });
+                            }
+                        });
+                } else {
+                    console.log(err);
+                }
+            });
+        //=========================
+     /*   var res = {};
         res['data'] = [];
         res['options'] = [];
         var optionsArray = [];
@@ -1147,7 +1330,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 } else {
                     console.log(err);
                 }
-            });
+            });*/
     };
     //end getById
 
@@ -1211,7 +1394,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     if (user._id) data.groups.users[index] = newObjectId(user._id.toString());
                 });
             }
-			if (data.workflowForList){
+
+            if (data.workflowForList || data.workflowForKanban) {
 				data={
 					$set:{
 						workflow:data.workflow
@@ -1229,8 +1413,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                 }
             }
-			console.log(data);
-            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
+
+
+
+			models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
@@ -1268,259 +1454,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         });
     };// end remove
 
-    function getFilterApplications(req, data, response) {
-        var res = {};
-        res['data'] = [];
-        res['options'] = [];
-        var optionsArray = [];
-        var showMore = false;
-
-        var i = 0;
-        var qeryEveryOne = function (arrayOfId, n) {
-            if (data.letter) {
-                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-            } else {
-                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false });
-            }
-            query.where('_id').in(arrayOfId).
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        res['data'] = res['data'].concat(_res);
-                        if (i == n) {
-                            qeryGetApplications(res['data'], data);
-                        }
-                    }
-                });
-        };
-
-        var qeryOwner = function (arrayOfId, n) {
-            if (data.letter) {
-                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-            } else {
-                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false });
-            }
-            query.where('_id').in(arrayOfId).
-                where({ 'groups.owner': data.uId }).
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        res['data'] = res['data'].concat(_res);
-                        if (i == n) {
-                            qeryGetApplications(res['data'], data);
-                        }
-                    } else {
-                        console.log(error);
-                    }
-                });
-        };
-
-        var qeryByGroup = function (arrayOfId, n) {
-            if (data.letter) {
-                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-            } else {
-                var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false });
-            }
-            query.where({ 'groups.users': data.uId }).
-                exec(function (error, _res1) {
-                    if (!error) {
-                        department.department.find({ users: data.uId }, { _id: 1 },
-                            function (err, deps) {
-                                if (!err) {
-                                    if (data.letter) {
-                                        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false, 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
-                                    } else {
-                                        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false });
-                                    }
-                                    query.where('_id').in(arrayOfId).
-                                        where('groups.group').in(deps).
-                                        exec(function (error, _res) {
-                                            if (!error) {
-                                                i++;
-                                                res['data'] = res['data'].concat(_res1);
-                                                res['data'] = res['data'].concat(_res);
-                                                if (i == n) {
-                                                    qeryGetApplications(res['data'], data);
-                                                }
-                                            } else {
-                                                console.log(error);
-                                            }
-                                        });
-                                }
-                            });
-                    } else {
-                        console.log(error);
-                    }
-                });
-        };
-
-        models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
-            {
-                $group: {
-                    _id: "$whoCanRW",
-                    ID: { $push: "$_id" },
-                    groupId: { $push: "$groups.group" }
-                }
-            },
-            function (err, result) {
-                if (!err) {
-                    if (result.length != 0) {
-                        result.forEach(function (_project) {
-                            switch (_project._id) {
-                                case "everyOne":
-                                    {
-                                        qeryEveryOne(_project.ID, result.length);
-                                    }
-                                    break;
-                                case "owner":
-                                    {
-                                        qeryOwner(_project.ID, result.length);
-                                    }
-                                    break;
-                                case "group":
-                                    {
-                                        qeryByGroup(_project.ID, result.length);
-                                    }
-                                    break;
-                            }
-                        });
-                    } else {
-                        response.send(res);
-                    }
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-
-        var qeryGetApplications = function (applicationsArray, data) {
-
-            for (var k = 0; k < applicationsArray.length; k++) {
-                applicationsArray[k] = new newObjectId(applicationsArray[k]._id.toString());
-            }
-
-            var queryAggregate = models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate({ $match: { _id: { $in: applicationsArray } } }, { $group: { _id: "$workflow", applicationId: { $push: "$_id" } } });
-            queryAggregate.exec(
-                function (err, responseApplications) {
-                    if (!err) {
-                        var responseApplicationsArray = [];
-                        var columnValue = data.count;
-                        var page = data.page;
-                        var startIndex, endIndex;
-
-                        responseApplications.forEach(function (value) {
-                            if ((data.page - 1) * data.count > value.applicationId.length) {
-                                startIndex = value.applicationId.length;
-                            } else {
-                                startIndex = (data.page - 1) * data.count;
-                            }
-
-                            if (data.page * data.count > value.applicationId.length) {
-                                endIndex = value.applicationId.length;
-                            } else {
-                                endIndex = data.page * data.count;
-                            }
-
-                            for (var k = startIndex; k < endIndex; k++) {
-                                responseApplicationsArray.push(value.applicationId[k]);
-                            }
-                            var myObj = {
-                                id: value._id,
-                                namberOfApplications: value.applicationId.length
-                            };
-                            optionsArray.push(myObj);
-                            if (value.applicationId.length > (page * columnValue)) {
-                                showMore = true;
-                            }
-                        });
-                        models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: false }).
-                            where('_id').in(responseApplicationsArray).
-							sort({ 'editedBy.date': -1 }).
-                            populate('relatedUser department jobPosition workflow').
-                            populate('createdBy.user').
-                            populate('editedBy.user').
-                            populate('groups.users').
-                            populate('groups.group').
-                            exec(function (err, result) {
-                                if (!err) {
-                                    res['showMore'] = showMore;
-                                    res['options'] = optionsArray;
-                                    res['data'] = result;
-                                    response.send(res);
-                                } else {
-                                    logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
-                                    response.send(500, { error: "Can't find Opportunitie" });
-                                }
-                            })
-                    } else {
-                        logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban task.find " + err);
-                        response.send(500, { error: "Can't group Opportunitie" });
-                    }
-                });
-
-        }
-        //--------------------------------------
-        /* var res = {};
-         res['data'] = [];
-         res['showMore'] = [];
-         res['options'] = [];
-         var optionsArray = [];
-         var showMore = false;
- 
-         var queryAggregate =  models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
-             {
-                 $match:
-                     { isEmployee: false }
-             },
-             {
-                 $group: { _id: "$workflow", taskId: { $push: "$_id" } }
-             });
-         queryAggregate.exec(
-             function (err, responseTasks) {
-                 if (!err) {
- 
-                     var responseTasksArray = [];
-                     var columnValue = data.count;
-                     var page = data.page;
- 
-                     responseTasks.forEach(function (value) {
-                         value.taskId.forEach(function (idTask, taskIndex) {
-                             if (((page - 1) * columnValue <= taskIndex) && (taskIndex < (page - 1) * columnValue + columnValue)) {
-                                 responseTasksArray.push(idTask);
-                             }
-                         });
-                         var myObj = {
-                             id: value._id,
-                             namberOfApplications: value.taskId.length
-                         };
-                         optionsArray.push(myObj);
-                         if (value.taskId.length > ((page - 1) * columnValue + columnValue)) {
-                             showMore = true;
-                         }
-                     });
-                      models.get(req.session.lastDb - 1, "Employees", employeeSchema).find()
-                         .where('_id').in(responseTasksArray)
-                         .populate('relatedUser department jobPosition workflow')
-                         .populate('createdBy.user')
-                         .populate('editedBy.user')
-                         .exec(function (err, resalt) {
-                             if (!err) {
-                                 res['showMore'] = showMore;
-                                 res['options'] = optionsArray;
-                                 res['data'] = resalt;
-                                 response.send(res);
-                             } else {
-                                 logWriter.log("Employee.js getFilterApplications employee.find " + err);
-                                 response.send(500, { error: "Can't find Application" });
-                             }
-                         })
-                 } else {
-                     logWriter.log("Employee.js getFilterApplications employee.find " + err);
-                     response.send(500, { error: "Can't group Application" });
-                 }
-             });*/
-
-    };
 	function getEmployeesImages(req, data, res){
         var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
         query.where('_id').in(data.ids).
@@ -1534,6 +1467,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         create: create,
 
         get: get,
+
+        getCollectionLengthByWorkflows: getCollectionLengthByWorkflows,
 
         getListLength: getListLength,
 
@@ -1560,8 +1495,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 		getEmployeeForCustom: getEmployeeForCustom,
 
 		getEmployeesImages: getEmployeesImages,
-
-        getFilterApplications: getFilterApplications,
 
         employeeSchema: employeeSchema,
 

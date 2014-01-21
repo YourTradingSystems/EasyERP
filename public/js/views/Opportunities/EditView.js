@@ -398,10 +398,11 @@
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
                 common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
-                common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);
+                //common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);
+                common.populateEmployeesDd(App.ID.salesPersonDd, "/getForDdByRelatedUser", model);
                 common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, model);
                 common.populatePriority(App.ID.priorityDd, App.URL.priorities, model);
-                common.populateWorkflows('Opportunity', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', model);
+                common.populateWorkflows('Opportunities', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', model);
 
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){

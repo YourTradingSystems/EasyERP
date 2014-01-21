@@ -246,6 +246,7 @@ define([
 
 
                 var gender = $("#genderDd option:selected").val();
+                var jobType = $("#jobTypeDd option:selected").text();
                 var marital = $("#maritalDd option:selected").val();
                 var officeLocation = $.trim($("#officeLocation").val());
                 var relatedUser = $("#relatedUsersDd option:selected").val();
@@ -284,6 +285,7 @@ define([
                 employeeModel.save({
                     name: name,
                     gender: gender ? gender : "",
+                    jobType: jobType ? jobType : "",
                     marital: marital ? marital : "",
                     imageSrc: this.imageSrc,
                     workAddress: workAddress,
@@ -417,6 +419,8 @@ define([
                 common.populateUsers(App.ID.relatedUsersDd, "/UsersForDd");
                 common.populateDepartments(App.ID.departmentsDd, "/DepartmentsForDd");
                 common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd");
+                common.populateJobTypeDd("#jobTypeDd", "/jobType");
+                console.log(this.model.toJSON());
                 common.populateEmployeesDd(App.ID.coachDd, "/getPersonsForDd");
                 common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);

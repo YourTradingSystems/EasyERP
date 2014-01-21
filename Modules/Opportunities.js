@@ -1031,7 +1031,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 											{
 											    company:newObjectId(data.company)
 											}
-                                        ],
+                                        ]
                                     },
                                     {
                                         $or: [

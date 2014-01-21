@@ -17,6 +17,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
+        jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
     Array.prototype.objectID = function () {
@@ -980,6 +981,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function getJobType(req, res) {
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            jobType.getForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    }
 
     function getJobPosition(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -994,6 +1002,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
     function getJobPositionForDd(req, res, data) {
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             jobPosition.getJobPositionForDd(req, res);
@@ -1230,6 +1239,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     //---------END------Employees-----------------------------------
 
     //---------------------Application--------------------------------
+    function getApplicationsLengthByWorkflows(req, res) {
+        employee.getCollectionLengthByWorkflows(req, res);
+    }
+
     function createApplication(req, res, data) {
         console.log("Requst createEmployee is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -1281,25 +1294,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 console.log(access);
                 if (access) {
                     employee.getById(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
-
-
-    function getFilterApplications(req, res, data) {
-        console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
-                if (access) {
-                    employee.getFilterApplications(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -2167,6 +2161,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonsForDd: getPersonsForDd,
         getDepartmentForDd: getDepartmentForDd,
 
+        getApplicationsLengthByWorkflows: getApplicationsLengthByWorkflows,
         createApplication: createApplication,
         getApplications: getApplications,
         getApplicationsCustom: getApplicationsCustom,
@@ -2190,7 +2185,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getSourcesOfApplicants: getSourcesOfApplicants,
         updateSourcesOfApplicant: updateSourcesOfApplicant,
         removeSourcesOfApplicant: removeSourcesOfApplicant,
-        getFilterApplications: getFilterApplications,
         getApplicationsForList: getApplicationsForList,
         getEmployeesForThumbnails: getEmployeesForThumbnails,
         uploadEmployeesFile: uploadEmployeesFile,
@@ -2234,7 +2228,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         sendToGoogleCalendar: sendToGoogleCalendar,
         changeSyncCalendar: changeSyncCalendar,
 
-        getSources: getSources
+        getSources: getSources,
+        getJobType: getJobType
     }
 }
 //---------EXPORTS----------------------------------------
