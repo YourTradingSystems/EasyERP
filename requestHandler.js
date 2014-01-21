@@ -1230,6 +1230,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     //---------END------Employees-----------------------------------
 
     //---------------------Application--------------------------------
+    function getApplicationsLengthByWorkflows(req, res) {
+        employee.getCollectionLengthByWorkflows(req, res);
+    }
+
     function createApplication(req, res, data) {
         console.log("Requst createEmployee is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -2167,6 +2171,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonsForDd: getPersonsForDd,
         getDepartmentForDd: getDepartmentForDd,
 
+        getApplicationsLengthByWorkflows: getApplicationsLengthByWorkflows,
         createApplication: createApplication,
         getApplications: getApplications,
         getApplicationsCustom: getApplicationsCustom,

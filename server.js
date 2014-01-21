@@ -1158,6 +1158,10 @@ app.get('/getEmployeesImages', function (req, res) {
 
 //------------------Applications---------------------------------------------------
 
+app.get('/getApplicationsLengthByWorkflows', function (req, res) {
+    requestHandler.getApplicationsLengthByWorkflows(req, res);
+});
+
 app.get('/Applications', function (req, res) {
     data = {};
     data.mid = req.param('mid');

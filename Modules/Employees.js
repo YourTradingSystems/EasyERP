@@ -376,6 +376,90 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         });
     };
 
+    function getCollectionLengthByWorkflows(req, res) {
+        data = {};
+        data['showMore'] = false;
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        isEmployee: true
+                                    },
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1,
+                                workflow:1
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$workflow",
+                                count: { $sum: 1 }
+                            }
+                        },
+                        function (err, responseOpportunities) {
+                            if (!err) {
+                                console.log(responseOpportunities);
+                                responseOpportunities.forEach(function (object) {
+                                    if (object.count > req.session.kanbanSettings.opportunities.countPerPage) data['showMore'] = true;
+                                });
+                                data['arrayOfObjects'] = responseOpportunities;
+                                res.send(data);
+                            } else {
+                                console.log(err);
+                            }
+                        });
+                } else {
+                    console.log(err);
+                }
+            });
+    }
+
     function getListLength(req, data, response) {
         var res = {};
         if (data.type == "Employees") {
@@ -1534,6 +1618,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         create: create,
 
         get: get,
+
+        getCollectionLengthByWorkflows: getCollectionLengthByWorkflows,
 
         getListLength: getListLength,
 
