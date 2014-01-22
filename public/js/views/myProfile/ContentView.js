@@ -156,9 +156,9 @@ define([
                         var date = new Date();
                         var minutes = date.getTimezoneOffset();
                         if (minutes < 0)
-                            var timezone = ("UTC " + minutes / 60);
+                            var timezone = ("UTC +" + (minutes / 60)*(-1));
                         else
-                            var timezone = ("UTC " + minutes / 60);
+                            var timezone = ("UTC -" + (minutes / 60)*(-1));
                         var model = response;
                         context.$el.html(_.template(UsersPagesTemplate,
 	                            {
