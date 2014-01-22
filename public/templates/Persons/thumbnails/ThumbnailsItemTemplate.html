@@ -1,25 +1,25 @@
 <div class="inner">
     <div class="dropDown">
-        <a href="#">
-            <a class = "gotoForm" href="#"></a>
+        <a href="javascript;">
+            <a class = "gotoForm" href="javascript;"></a>
         </a>
         <ul class="dropDownOpened" hidden="hidden">
             <li>
-                <a href="#" id="edit">Edit...</a>
+                <a href="javascript;" id="edit">Edit...</a>
             </li>
             <li>
-                <a href="#" id="delete">Delete</a>
+                <a href="javascript;" id="delete">Delete</a>
             </li>           
         </ul>
     </div>
     <div class="avatar" style="line-height: 140px;>
-    	<a class = "gotoForm" href="#" title="<%=name.first%> <%=name.last%>"> <img src="<%=imageSrc%>" /></a>
+    	<a class = "gotoForm" href="javascript;" title="<%=name.first%> <%=name.last%>"> <img src="<%=imageSrc%>" /></a>
 	</div>
     <div class="info">
 	  <div>
-        <a class = "gotoForm title" href="#" title="<%=name.first%> <%=name.last%>"><span><%=name.first%> <%=name.last%></span></a></div>
+        <a class = "gotoForm title" href="javascript;" title="<%=name.first%> <%=name.last%>"><span><%=name.first%> <%=name.last%></span></a></div>
 	  
-      <% if (company){%><div><a class="company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="#"><%=company.name.first%></a></div><%}%>
+      <% if (company){%><div><a class="company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="javascript;"><%=company.name.first%></a></div><%}%>
       <div><a href="mailto:<%=email%>" target="_blank" title="<%=email%>"><%=email%></a></div>
     </div>
 </div>

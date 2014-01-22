@@ -7,21 +7,21 @@
 	<div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
 	<div class="taskSelect left"><select id="priority<%=model._id%>" class="my"></select></div></div>
     <div class="dropDown">
-        <a href="#">
+        <a href="javascript;">
             <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
         </a>
         <ul class="dropDownOpened" hidden="hidden">
             <li>
-                <a href="#" id="edit">Edit...</a>
+                <a href="javascript;" id="edit">Edit...</a>
             </li>
             <li>
-                <a href="#" id="delete">Delete</a>
+                <a href="javascript;" id="delete">Delete</a>
             </li>
             <li>
                 <ul class="colorPicker">
                     <% colors.forEach(function(color, index){ %>
                         <li>
-                            <a href="#" data-color="<%=color.dataColor%>" class="<%= color.className %>"></a>
+                            <a href="javascript;" data-color="<%=color.dataColor%>" class="<%= color.className %>"></a>
                         </li>
                     <% }) %>
                 </ul>
