@@ -42,7 +42,6 @@
 
             currentEmployees.monthly = arrayOfEmployees.map(function (employee) {
                 if (employee.dateBirth) {
-                    //employee.age = getAge(employee.dateBirth);
                     employee.daysForBirth = getDaysToBirthday(employee.dateBirth);
                 }
                 return employee;

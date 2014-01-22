@@ -7,7 +7,6 @@ define([
         var TopBarView = Backbone.View.extend({
             el: '#top-bar',
             contentType: "Persons",
-            //actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
 
             events: {
@@ -55,11 +54,6 @@ define([
             saveEvent: function (event) {
                 event.preventDefault();
                 this.trigger('saveEvent');
-            },
-
-            discardEvent: function (event) {
-                event.preventDefault();
-                Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
             }
         });
 
