@@ -140,7 +140,7 @@ define([
                     }
                     if (!option.data.mouseOver) {
                         $(clickEl).closest('li').addClass('selected');
-                        clickEl.click();
+                        window.location.href = $(clickEl).attr('href');
                     }
                 });
 				if (!this.currentChildren){
