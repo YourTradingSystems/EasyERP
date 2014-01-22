@@ -9,33 +9,26 @@
             url: "/Persons/",
             page: 1,
             initialize: function (options) {
-                this.startTime = new Date();
                 var that = this;
+                var addPage;
+                
+                this.startTime = new Date();
                 this.namberToShow = options.count;
+
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     var viewType = options.viewType;
                     delete options.viewType;
                 }
-                //var filterObject = {};
-                //for (var i in options) {
-                //    filterObject[i] = options[i];
-                //};
 
                 switch (viewType) {
                     case 'thumbnails': {
-                        //filterObject['count'] = filterObject['count']*2;
-                        options.count *= 2;
-                        var addPage = 2;
+                        addPage = 1;
                         break;
                     }
                     case 'list': {
-                        filterObject['page'] = 1;
-                        var addPage = 0;
+                        addPage = 0;
                         break;
-                    }
-                    default: {
-                        var addPage = 1;
                     }
                 }
                 if (options && !options.notFetch) {
@@ -43,10 +36,9 @@
                         data: options,
                         reset: true,
                         success: function () {
-                            console.log("Persons fetchSuccess");
                             that.page += addPage;
                         },
-                        error: function (models, xhr, options) {
+                        error: function (models, xhr) {
                             if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
                         }
                     });

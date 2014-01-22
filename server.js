@@ -117,7 +117,6 @@ app.configure(function () {
         //store: new MemoryStore()
     }));
     app.use(app.router);
-
 });
 
 console.log(dbsArray);
@@ -443,7 +442,7 @@ app.get('/getPersonsForDd', function (req, res) {
     requestHandler.getPersonsForDd(req, res, data);
 });
 app.get('/getPersonAlphabet', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
+    console.log('------getPersonAlphabet-----------------');
     data = {};
     //data.ownUser = true;
     data.mid = req.param('mid');

@@ -163,7 +163,7 @@ define([
             if (this.mainView == null) this.main(contentType);
 
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
-                var collection = new contentCollection({ viewType: 'list', page: 1, count: 50, status: [], parrentContentId: parrentContentId });
+                var collection = new contentCollection({ viewType: 'list', page: 1, count: 50, status: [], parrentContentId: parrentContentId });//status - to filter by workflows
 
                 collection.bind('reset', _.bind(createViews, self));
                 custom.setCurrentVT('list');

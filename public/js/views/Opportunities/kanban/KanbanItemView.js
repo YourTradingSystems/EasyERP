@@ -2,9 +2,10 @@ define([
         "text!templates/Opportunities/kanban/KanbanItemTemplate.html",
         "common"
 ],
-    function (KanbanItemTemplate, common) {
+    function (KanbanItemTemplate) {
         var OpportunitiesItemView = Backbone.View.extend({
             className: "item",
+            
             id: function () {
                 return this.model.get("_id");
             },
@@ -15,7 +16,7 @@ define([
 
             template: _.template(KanbanItemTemplate),
 
-            render: function (options) {
+            render: function () {
                 this.$el.html(this.template({ model: this.model.toJSON()}));
                 return this;
             }
