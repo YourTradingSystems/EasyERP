@@ -5,6 +5,9 @@ define([
     function (KanbanItemTemplate, common) {
         var TasksItemView = Backbone.View.extend({
             className: "item",
+            id: function () {
+                return this.model.get("_id");
+            },
 
             colors:[
                 {dataColor: "#1ABC9C", className: "color_0"},
@@ -16,8 +19,7 @@ define([
                 {dataColor: "#F39C12", className: "color_6"},
                 {dataColor: "#E74C3C", className: "color_7"},
                 {dataColor: "#27AE60", className: "color_8"},
-                {dataColor: "#2980B9", className: "color_9"},
-
+                {dataColor: "#2980B9", className: "color_9"}
             ],
 
             initialize: function () {
@@ -31,7 +33,7 @@ define([
                 //"click .task-content": "gotoForm",
                 //"click #edit": "gotoEditForm",
                 "click .current-selected": "showNewSelect",
-                "click .newSelectList li": "chooseOption",
+                "click .newSelectList li": "chooseOption"
 
             },
 			   hideNewSelect:function(e){

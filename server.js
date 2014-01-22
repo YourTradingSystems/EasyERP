@@ -607,6 +607,13 @@ app.get('/Projects/:viewType', function (req, res) {
 
 
 //--------------Tasks----------------------------------------------------------
+app.get('/getTasksLengthByWorkflows', function (req, res) {
+    var options = {};
+    for (var i in req.query) {
+        options[i] = req.query[i];
+    }
+    requestHandler.getTasksLengthByWorkflows(req, options, res);
+});
 
 app.post('/Tasks', function (req, res) {
     data = {};

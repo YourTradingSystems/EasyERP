@@ -101,7 +101,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 
         asyncFetc: function (workflows) {
             _.each(workflows.toJSON(), function (wfModel) {
-                dataService.getData('/Opportunities/kanban', { workflowId: wfModel._id }, this.asyncRender, this);
+                dataService.getData('/Tasks/kanban', { workflowId: wfModel._id }, this.asyncRender, this);
             }, this);
         },
 

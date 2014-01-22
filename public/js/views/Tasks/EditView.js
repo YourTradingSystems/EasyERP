@@ -1,6 +1,6 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "common",
+    "common"
 ],
     function (EditTemplate, common) {
 
@@ -76,7 +76,6 @@
                     headers: {
                         mid: mid
                     }
-
                 });
 
             },
@@ -134,7 +133,7 @@
                         StartDate: $.trim(this.$el.find("#StartDate").val())
                     },
                     estimated: estimated,
-                    logged: logged,
+                    logged: logged
                 };
 
 
@@ -260,7 +259,7 @@
                     }
                 });
                 common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.projectDd);});
-                common.populateWorkflows("Task", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateWorkflows("Tasks", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.assignedToDd);});
                 common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
 				this.styleSelect("#type");
