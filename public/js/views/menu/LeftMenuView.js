@@ -13,7 +13,6 @@ define([
 
             events: {
                 "click a": "selectMenuItem",
-                //                "click a": "hoverItem",
                 "mouseover a": "hoverItem",
                 "mouseleave a": "mouseLeave"
             },
@@ -41,7 +40,6 @@ define([
                 if (options.currentRoot)
                     this.currentSection = options.currentRoot[0].get('mname')
                 this.currentChildren = options.currentChildren;
-                _.bindAll(this, 'render');
                 if (this.currentChildren && this.currentChildren.length > 0) {
                     this.render(null, this.currentChildren[0].get("_id"));
                 } else {
@@ -49,6 +47,7 @@ define([
                 }
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.mouseLeave = _.debounce(this.mouseLeaveEl, 2000);
+                _.bindAll(this, 'render');
             },
 
             render: function (onMouseOver, selectedId) {
@@ -101,13 +100,11 @@ define([
                     if (selectSection === section) {
                         return;
                     } else {
-                        //that.selectedId = $('#submenu-holder .selected > a').data('module-id');
                         that.mouseOver(selectSection, that.selectedId);
                         $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
                     }
                 };
                 unSelect(option);
-                //_.delay(unSelect, 1000, option);
             },
             mouseLeave: function (event) {
                 this.mouseLeaveEl = _.bind(this.mouseLeaveEl, this, this.currentSection);
@@ -132,25 +129,19 @@ define([
                 }
                 var _el = $('.selected > a').text();
                 var that = this;
-
-                //$(clickEl).click({ mouseOver: onMouseOver }, function (option) {
                 $(clickEl).on("click", { mouseOver: onMouseOver }, function (option) {
                     if (_el == that.currentSection) {
                         $(clickEl).closest('li').addClass('selected');
                     }
                     if (!option.data.mouseOver) {
                         $(clickEl).closest('li').addClass('selected');
-                        clickEl.click();
+                        window.location.href = $(clickEl).attr('href');
                     }
                 });
                 if (!this.currentChildren) {
-                   $(clickEl).click();
+                    $(clickEl).click();
                 }
                 this.currentChildren = null;
-                //var myEl = $('#submenu-holder li > a').filter(function() {
-                //     return $(this).data("module-id") == selectedId
-                //});
-                //myEl.addClass('selected');
                 return $dom;
             },
 
