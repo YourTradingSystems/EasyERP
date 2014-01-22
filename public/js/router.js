@@ -264,7 +264,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
 
                 function createViews() {
-                    var contentview = new contentView({ workflowCollection: collection, startTime: startTime });
+                    var contentview = new contentView({ workflowCollection: collection, startTime: startTime, parrentContentId: parrentContentId });
                     var topbarView = new topBarView({ actionType: "Content" });
 
                     collection.unbind('reset');
