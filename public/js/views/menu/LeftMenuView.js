@@ -10,10 +10,9 @@ define([
             el: '#submenu-holder nav',
             currentSection: null,
             selectedId: null,
-            
+
             events: {
                 "click a": "selectMenuItem",
-//                "click a": "hoverItem",
                 "mouseover a": "hoverItem",
                 "mouseleave a": "mouseLeave"
             },
@@ -30,7 +29,7 @@ define([
                 } else {
                     this.currentSection = section;
                     this.render(true, selectedId);
-					
+
                 }
             },
 
@@ -38,17 +37,17 @@ define([
                 console.log("init MenuView");
                 if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
-				if (options.currentRoot)
-					this.currentSection=options.currentRoot[0].get('mname')
-				this.currentChildren = options.currentChildren;
-                _.bindAll(this, 'render');
-				if (this.currentChildren&&this.currentChildren.length>0){
-					this.render(null,this.currentChildren[0].get("_id"));
-				}else{
-					this.render();
-				}
+                if (options.currentRoot)
+                    this.currentSection = options.currentRoot[0].get('mname')
+                this.currentChildren = options.currentChildren;
+                if (this.currentChildren && this.currentChildren.length > 0) {
+                    this.render(null, this.currentChildren[0].get("_id"));
+                } else {
+                    this.render();
+                }
                 this.collection.bind('reset', _.bind(this.render, this));
                 this.mouseLeave = _.debounce(this.mouseLeaveEl, 2000);
+                _.bindAll(this, 'render');
             },
 
             render: function (onMouseOver, selectedId) {
@@ -69,12 +68,11 @@ define([
                 if (currentModule == null) currentModule = root[0];
                 var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
                 var currentSelElem = document.getElementById(selectedId);
-				if($(currentSelElem).length==0){
-					currentSelElem = document.getElementById(this.lastClickedLeftMenuItem);
-				}
-				$(currentSelElem).closest("ul").find(".selected").removeClass("selected");
+                if ($(currentSelElem).length == 0) {
+                    currentSelElem = document.getElementById(this.lastClickedLeftMenuItem);
+                }
+                $(currentSelElem).closest("ul").find(".selected").removeClass("selected");
                 $(currentSelElem).addClass('selected');
-
                 return this;
             },
 
@@ -85,7 +83,7 @@ define([
             selectMenuItem: function (e) {
                 this.selectedId = $(e.target).data('module-id');
                 this.$('li.selected').removeClass('selected');
-				this.lastClickedLeftMenuItem=$(e.target).data('module-id');
+                this.lastClickedLeftMenuItem = $(e.target).data('module-id');
                 $(e.target).closest('li').addClass('selected');
                 var root = this.collection.root();
                 for (var i = 0; i < root.length; i++) {
@@ -97,18 +95,16 @@ define([
             },
             mouseLeaveEl: function (option) {
                 var that = this;
-                var unSelect = function(section) {
+                var unSelect = function (section) {
                     var selectSection = $('#mainmenu-holder .selected > a').text();
                     if (selectSection === section) {
                         return;
                     } else {
-                        //that.selectedId = $('#submenu-holder .selected > a').data('module-id');
                         that.mouseOver(selectSection, that.selectedId);
                         $('#mainmenu-holder .hover').not('.selected').removeClass('hover');
                     }
                 };
                 unSelect(option);
-                //_.delay(unSelect, 1000, option);
             },
             mouseLeave: function (event) {
                 this.mouseLeaveEl = _.bind(this.mouseLeaveEl, this, this.currentSection);
@@ -128,29 +124,24 @@ define([
                     $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
                 }, this);
                 var clickEl = $dom.find('a')[0];
-				if (this.currentChildren){
-					clickEl = $dom.find('li#'+this.currentChildren[0].get("_id")+" a")[0];	
-				}
+                if (this.currentChildren) {
+                    clickEl = $dom.find('li#' + this.currentChildren[0].get("_id") + " a")[0];
+                }
                 var _el = $('.selected > a').text();
                 var that = this;
-                
-                $(clickEl).click({ mouseOver: onMouseOver }, function (option) {
+                $(clickEl).on("click", { mouseOver: onMouseOver }, function (option) {
                     if (_el == that.currentSection) {
                         $(clickEl).closest('li').addClass('selected');
                     }
                     if (!option.data.mouseOver) {
                         $(clickEl).closest('li').addClass('selected');
-                        clickEl.click();
+                        window.location.href = $(clickEl).attr('href');
                     }
                 });
-				if (!this.currentChildren){
-					$(clickEl).click();
-				}
-				this.currentChildren = null;
-                //var myEl = $('#submenu-holder li > a').filter(function() {
-                //     return $(this).data("module-id") == selectedId
-                //});
-                //myEl.addClass('selected');
+                if (!this.currentChildren) {
+                    $(clickEl).click();
+                }
+                this.currentChildren = null;
                 return $dom;
             },
 

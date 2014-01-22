@@ -11,7 +11,11 @@
             <div class="top">
                 <a data-id="<%=model._id%>"><%=model.name.first%> <%=model.name.last%></a>
             </div>
-            <img class="ava" alt="" width="100" src="<%=model.imageSrc%>" />
+            
+	            <div id="<%=model._id%>">
+	            		<img class="ava" alt="" width="100" src="<%=model.imageSrc%>" />
+	            </div>
+            
             <div class=" text">
                 <div class="half-block left">
                     <dl class="person-info">
@@ -25,7 +29,7 @@
                 </div>
             </div>
             <br />
-            <a href="#" class="readMore" data-id="<%=model._id%>">
+            <a href="javascript;" class="readMore" data-id="<%=model._id%>">
                 Read more <i></i>
             </a>
         </div>

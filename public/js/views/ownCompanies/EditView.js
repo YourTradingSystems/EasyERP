@@ -276,7 +276,8 @@ define([
                     wait: true,
                     success: function (model) {
                         self.hideDialog();
-                        Backbone.history.navigate("easyErp/ownCompanies", { trigger: true });
+                        Backbone.history.fragment = "";
+                        Backbone.history.navigate("#easyErp/ownCompanies/form/" + model.id, { trigger: true });
                     },
                     error: function (models, xhr) {
                         self.hideDialog();

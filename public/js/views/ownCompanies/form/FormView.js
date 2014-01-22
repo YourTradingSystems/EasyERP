@@ -218,7 +218,6 @@ define([
                                         remove: true
                                     },
                                     success: function (model, response, options) {
-                                        console.log(response);
                                         $('#' + id_int).remove();
                                     }
                                 });

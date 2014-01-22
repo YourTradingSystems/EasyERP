@@ -42,7 +42,6 @@
 
             currentEmployees.monthly = arrayOfEmployees.map(function (employee) {
                 if (employee.dateBirth) {
-                    //employee.age = getAge(employee.dateBirth);
                     employee.daysForBirth = getDaysToBirthday(employee.dateBirth);
                 }
                 return employee;
@@ -109,7 +108,10 @@
         models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).aggregate(
             {
                 $match: {
-                    dateBirth: { $ne: null }
+                    $and: [
+                        { dateBirth: { $ne: null } },
+                        {isEmployee: true}
+                    ]
                 }
             },
             {
@@ -128,9 +130,9 @@
                 } else {
                     var query = models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).find();
                     query.where('_id').in(res).
-                        populate('relatedUser department jobPosition manager coach').
-                        populate('createdBy.user').
-                        populate('editedBy.user').
+	                    select('_id name dateBirth age jobPosition workPhones.mobile department').
+	                	populate('jobPosition','name').
+						populate('department','departmentName').
                         exec(function (error, ress) {
                             if (error) {
                                 console.log(error);

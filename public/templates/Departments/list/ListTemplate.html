@@ -5,6 +5,6 @@
         <td><%=index +1 %></td>
         <td><%=department.departmentName%></td>
         <td><%= (department.departmentManager) ? department.departmentManager.name.first + ' ' + department.departmentManager.name.last : '' %></td>
-        <td><a href="#"><%=department.users.length  %></a></td>
+        <td><a href="javascript;"><%=department.users.length  %></a></td>
     </tr>
 <% }) %> 
