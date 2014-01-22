@@ -42,7 +42,6 @@
 
             currentEmployees.monthly = arrayOfEmployees.map(function (employee) {
                 if (employee.dateBirth) {
-                    //employee.age = getAge(employee.dateBirth);
                     employee.daysForBirth = getDaysToBirthday(employee.dateBirth);
                 }
                 return employee;
@@ -109,7 +108,10 @@
         models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).aggregate(
             {
                 $match: {
-                    dateBirth: { $ne: null }
+                    $and: [
+                        { dateBirth: { $ne: null } },
+                        {isEmployee: true}
+                    ]
                 }
             },
             {

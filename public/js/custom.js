@@ -198,7 +198,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     var setCurrentVT = function (viewType) {
         var viewVariants = ["kanban", "list", "form", "thumbnails"];
 
-        if ($.inArray(viewType, viewVariants) != -1) {
+        if (viewVariants.indexOf(viewType) != -1) {
             App.currentViewType = viewType;
         } else {
             viewType = "thumbnails";

@@ -12,7 +12,6 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
         el: '#content-holder',
 
         initialize: function (options) {
-			var self = this;
 			this.startTime = options.startTime;
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
