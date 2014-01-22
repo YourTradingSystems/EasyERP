@@ -1,44 +1,46 @@
-<div class="task-header">
-    <div class="right">        
-	  <p class="right bold"><%=model.deadline%></p>
-	</div>
+<div class="inner" id="<%=model._id%>" data-id="<%=model._id%>">
+    <div class="task-header">
+        <div class="right">
+          <p class="right bold"><%=model.deadline%></p>
+        </div>
 
-  <div class="left">
-	<div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
-	<div class="taskSelect left"><select id="priority<%=model._id%>" class="my"></select></div></div>
-    <div class="dropDown">
-        <a href="#">
-            <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
-        </a>
-        <ul class="dropDownOpened" hidden="hidden">
-            <li>
-                <a href="#" id="edit">Edit...</a>
-            </li>
-            <li>
-                <a href="#" id="delete">Delete</a>
-            </li>
-            <li>
-                <ul class="colorPicker">
-                    <% colors.forEach(function(color, index){ %>
-                        <li>
-                            <a href="#" data-color="<%=color.dataColor%>" class="<%= color.className %>"></a>
-                        </li>
-                    <% }) %>
-                </ul>
-            </li>
-        </ul>
+      <div class="left">
+        <div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
+        <div class="taskSelect left"><select id="priority<%=model._id%>" class="my"></select></div></div>
+        <div class="dropDown">
+            <a href="#">
+                <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
+            </a>
+            <ul class="dropDownOpened" hidden="hidden">
+                <li>
+                    <a href="#" id="edit">Edit...</a>
+                </li>
+                <li>
+                    <a href="#" id="delete">Delete</a>
+                </li>
+                <li>
+                    <ul class="colorPicker">
+                        <% colors.forEach(function(color, index){ %>
+                            <li>
+                                <a href="#" data-color="<%=color.dataColor%>" class="<%= color.className %>"></a>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
     </div>
-    <div class="clearfix"></div>
-</div>
-<div class="task-content">
-    <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
-    <div class="info">
-        <p><%=model.summary%></p>
-        <% _.each(model.tags,function(tag){ %>
-        <% });%>
-		<br/>
-        <p class="left bold"><%=model.type%></p>
-        <div class="clearfix">
+    <div class="task-content">
+        <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
+        <div class="info">
+            <p><%=model.summary%></p>
+            <% _.each(model.tags,function(tag){ %>
+            <% });%>
+            <br/>
+            <p class="left bold"><%=model.type%></p>
+            <div class="clearfix">
+            </div>
         </div>
     </div>
 </div>

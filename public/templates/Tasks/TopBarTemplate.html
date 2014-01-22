@@ -5,8 +5,11 @@
     <a href="#home/action-<%=contentType%>/Remove" class="icon-img remove left" id="top-bar-deleteBtn" title="Remove"></a>
 </div>
 
-<div id="template-switcher" class="right">
+<div id="kanbanSettings">
+    <a id="kanban-settings-Btn" class="icon-img edit left" title="Kanban Settings"></a>
+</div>
 
+<div id="template-switcher" class="right">
     <ul class="btn-list">
         <li><a href="#" class="changeContentView icon3 icon-btn dark <%= (viewType == 'kanban') ? 'selected' : ''%>" data-view-type="kanban" id="kanbanBtn">&reg;</a></li>
         <li><a href="#" class="changeContentView icon icon-btn dark <%= (viewType == 'list') ? 'selected' : ''%>" data-view-type="list" id="listBtn">i</a></li>

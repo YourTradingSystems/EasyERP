@@ -10,7 +10,7 @@ define([
             },
 
             initialize: function () {
-                var mid = 39;
+              /*  var mid = 39;
 
                 this.fetch({
                     data: $.param({
@@ -20,7 +20,9 @@ define([
                     reset: true,
                     success: this.fetchSuccess,
                     error: this.fetchError
-                });
+
+              });
+              */
             },
 
             parse: true,
@@ -42,9 +44,12 @@ define([
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (task) {
-                        task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        task.deadline = common.utcDateToLocaleDate(task.deadline);
+                        if (task.extrainfo) {
+                            task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
+                            task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
+                        }
+                        if (task.deadline)
+                            task.deadline = common.utcDateToLocaleDate(task.deadline);
                         return task;
                     });
                 }
