@@ -35,7 +35,7 @@ define([
         },
 
         goToProfiles: function () {
-			var startTime = new  Date();
+            var startTime = new Date();
             if (this.mainView == null) this.main("Profiles");
 
             var ContentViewUrl = "views/Profiles/ContentView",
@@ -51,7 +51,7 @@ define([
                 Custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection, startTime:startTime });
+                    var contentView = new ContentView({ collection: collection, startTime: startTime });
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -66,9 +66,9 @@ define([
                 }
             });
         },
-        
+
         goToUserPages: function () {
-			var startTime = new  Date();
+            var startTime = new Date();
 
             if (this.mainView == null) this.main("Persons");
 
@@ -79,17 +79,17 @@ define([
             require([ContentViewUrl, TopBarViewUrl], function (ContentView, TopBarView) {
 
                 Custom.setCurrentVT('list');
-                	
-                    var contentView = new ContentView({startTime:startTime});
-                    var topBarView = new TopBarView({ actionType: "Content" });
 
-                    self.changeView(contentView);
-                    self.changeTopBarView(topBarView);
+                var contentView = new ContentView({ startTime: startTime });
+                var topBarView = new TopBarView({ actionType: "Content" });
+
+                self.changeView(contentView);
+                self.changeTopBarView(topBarView);
             });
         },
 
         goToDashboard: function () {
-			var startTime = new  Date();
+            var startTime = new Date();
             if (this.mainView == null) this.main("Dashboard");
 
             var ContentViewUrl = "views/Dashboard/ContentView",
@@ -97,20 +97,20 @@ define([
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl], function (ContentView, TopBarView) {
-               
+
                 Custom.setCurrentVT('list');
-               
-                    var contentView = new ContentView({startTime:startTime});
-                    var topBarView = new TopBarView({ actionType: "Content" });
-                    self.changeView(contentView);
-                    self.changeTopBarView(topBarView);
-                    //var url = '#easyErp/' + contentType + '/list';
-                    //Backbone.history.navigate(url, { replace: true });
+
+                var contentView = new ContentView({ startTime: startTime });
+                var topBarView = new TopBarView({ actionType: "Content" });
+                self.changeView(contentView);
+                self.changeTopBarView(topBarView);
+                //var url = '#easyErp/' + contentType + '/list';
+                //Backbone.history.navigate(url, { replace: true });
             });
         },
 
         goToWorkflows: function () {
-			var startTime = new  Date();
+            var startTime = new Date();
             if (this.mainView == null) this.main("Workflows");
 
             var ContentViewUrl = "views/Workflows/ContentView",
@@ -127,7 +127,7 @@ define([
 
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection, startTime:startTime });
+                    var contentView = new ContentView({ collection: collection, startTime: startTime });
                     var topBarView = new TopBarView({ actionType: "Content" });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -150,7 +150,6 @@ define([
             }
             switch (contentType) {
                 case 'Birthdays':
-                    //return "collections/Employees/EmployeesCollection";
                     return "collections/" + contentType + "/filterCollection";
                 default:
                     return "collections/" + contentType + "/filterCollection";
@@ -158,7 +157,7 @@ define([
         },
 
         goToList: function (contentType, parrentContentId) {
-			var startTime = new Date();
+            var startTime = new Date();
             // console.API.clear();
             if (this.mainView == null) this.main(contentType);
 
@@ -169,13 +168,13 @@ define([
             var self = this;
 
             require([ContentViewUrl, TopBarViewUrl, CollectionUrl], function (ContentView, TopBarView, ContentCollection) {
-                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50, status: [], parrentContentId: parrentContentId  });
+                var collection = new ContentCollection({ viewType: 'list', page: 1, count: 50, status: [], parrentContentId: parrentContentId });
 
                 collection.bind('reset', _.bind(createViews, self));
                 Custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection, startTime:startTime });
+                    var contentView = new ContentView({ collection: collection, startTime: startTime });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -192,7 +191,7 @@ define([
         },
 
         goToForm: function (contentType, modelId) {
-			var startTime = new Date();
+            var startTime = new Date();
             if (this.mainView == null) this.main(contentType);
             //console.log(contentType + "Model");
             if (contentType !== 'ownCompanies') {
@@ -214,7 +213,7 @@ define([
                     success: function (model, response, options) {
                         self.convertModelDates(model);
                         var topBarView = new TopBarView({ actionType: "Content" });
-                        var contentView = new ContentFormView({ model: model, startTime:startTime});
+                        var contentView = new ContentFormView({ model: model, startTime: startTime });
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
                         topBarView.bind('editEvent', contentView.editItem, contentView);
                         topBarView.bind('deleteEvent', contentView.deleteItems, contentView);
@@ -275,7 +274,7 @@ define([
         },
 
         goToThumbnails: function (contentType, parrentContentId) {
-			var startTime = new  Date();
+            var startTime = new Date();
             if (this.mainView == null) this.main(contentType);
             var ContentViewUrl,
                 TopBarViewUrl = "views/" + contentType + "/TopBarView",
@@ -295,7 +294,7 @@ define([
                 collection.bind('reset', _.bind(createViews, self));
                 function createViews() {
                     collection.unbind('reset');
-                    var contentView = new ContentView({ collection: collection, startTime:startTime });
+                    var contentView = new ContentView({ collection: collection, startTime: startTime });
                     var topBarView = new TopBarView({ actionType: "Content", collection: collection });
 
                     topBarView.bind('createEvent', contentView.createItem, contentView);
@@ -342,7 +341,7 @@ define([
         },
 
         main: function (contentType) {
-            this.mainView = new MainView({contentType:contentType});
+            this.mainView = new MainView({ contentType: contentType });
             this.changeWrapperView(this.mainView);
         },
 
@@ -360,7 +359,7 @@ define([
                     that.changeWrapperView(new LoginView());
                 }
             });
-            
+
         }
     });
 

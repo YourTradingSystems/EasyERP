@@ -195,7 +195,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
         return viewType;
     };
 
-    var setCurrentVT = function (viewType) {
+    var setCurrentVT = function (viewType) {Ô 
         var viewVariants = ["kanban", "list", "form", "thumbnails"];
 
         if ($.inArray(viewType, viewVariants) != -1) {

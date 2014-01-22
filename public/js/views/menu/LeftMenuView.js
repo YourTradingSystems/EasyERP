@@ -82,7 +82,6 @@ define([
                 $(e.target).closest('li').addClass('hover');
             },
             selectMenuItem: function (e) {
-                debugger;
                 this.selectedId = $(e.target).data('module-id');
                 this.$('li.selected').removeClass('selected');
                 this.lastClickedLeftMenuItem = $(e.target).data('module-id');
