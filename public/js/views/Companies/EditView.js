@@ -291,7 +291,8 @@ define([
                     wait: true,
                     success: function (model) {
                         $(".edit-companies-dialog").remove();
-                        Backbone.history.navigate("easyErp/Companies", { trigger: true });
+                        Backbone.history.fragment = "";
+                        Backbone.history.navigate("#easyErp/Companies/form/" + model.id, { trigger: true });
                     },
                     error: function () {
                         $(".edit-companies-dialog").remove();

@@ -879,7 +879,8 @@
             dataService.getData("/getEmployeesImages", { ids: ids }, function (response) {
                 if (response.data !== undefined) {
                     response.data.forEach(function (item) {
-                        $("#" + item._id + " .inner .avatar img").attr("src", item.imageSrc);
+                        $("#" + item._id + " img").attr("src", item.imageSrc);
+                        $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
                     });
                 }
                 if (callback) callback();
