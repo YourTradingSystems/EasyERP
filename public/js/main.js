@@ -13,8 +13,6 @@ var App = App ||
         rightBtn: "rightBtn",
         listBtn: "listBtn",
         thumbBtn: "thumbBtn",
-        ganttBtn: "ganttBtn",
-        ganttViewHolder: "GanttViewHolder",
         formBtn: "formBtn",
         userPanel: "loginPanel",
         changeCVClass: "changeContentView",
@@ -58,7 +56,6 @@ var App = App ||
         sourceDd: "#sourceDd",
         profilesDd: "#profilesDd",
         statusesDd: "#statusesDd"
-
     },
     URL: {
         customers: "/Customer",

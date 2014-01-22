@@ -450,7 +450,7 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateWorkflows("Application", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateWorkflows("Applications", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
                 common.populateEmployeesDd(App.ID.relatedUsersDd, "/getForDdByRelatedUser", null, function () { self.styleSelect(App.ID.relatedUsersDd); });
 //                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
                 common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd",null,function(){self.styleSelect(App.ID.departmentDd);});

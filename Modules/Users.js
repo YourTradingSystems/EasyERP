@@ -254,31 +254,54 @@ var Users = function (logWriter, mongoose, models) {
     function updateUser(req, _id, data, res, options) {
         try {
             delete data._id;
-            if (data.oldpass) delete data.oldpass;
             var updateFields = {};
-            for (var i in data) {
-                if (data[i]) {
-                    updateFields[i] = data[i];
-                }
-            };
+            
             if (options && options.changePass) {
                 var shaSum = crypto.createHash('sha256');
                 shaSum.update(data.pass);
-                updateFields.pass = shaSum.digest('hex');
-            }
-            var _object = { $set: updateFields };
-            
-            models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, _object, function (err, result) {
+                data.pass = shaSum.digest('hex');
+                models.get(req.session.lastDb - 1, 'Users', userSchema).findById(_id, function (err, result) {
 
-                if (err) {
-                    console.log(err);
-                    logWriter.log("User.js update profile.update" + err);
-                    res.send(500, { error: 'User.update BD error' });
-                } else {
-                    req.session.kanbanSettings = result.kanbanSettings
-                    res.send(200, { success: 'User updated success' });
-                }
-            });
+                    if (err) {
+                        console.log(err);
+                        logWriter.log("User.js update profile.update" + err);
+                        res.send(500, { error: 'User.update BD error' });
+                    } else {
+                        var shaSum = crypto.createHash('sha256');
+                        shaSum.update(data.oldpass);
+                        var _oldPass = shaSum.digest('hex');
+                        if (result.pass == _oldPass) {
+                            delete data.oldpass;
+                            updateUser();
+                        } else {
+                            logWriter.log("User.js update Incorect Old Pass");
+                            res.send(500, { error: 'Incorect Old Pass' });
+                        }
+                    }
+                });
+            } else updateUser();
+
+            
+
+            function updateUser() {
+                for (var i in data) {
+                    if (data[i]) {
+                        updateFields[i] = data[i];
+                    }
+                };
+                var _object = { $set: updateFields };
+                models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, _object, function (err, result) {
+
+                    if (err) {
+                        console.log(err);
+                        logWriter.log("User.js update profile.update" + err);
+                        res.send(500, { error: 'User.update BD error' });
+                    } else {
+                        req.session.kanbanSettings = result.kanbanSettings
+                        res.send(200, { success: 'User updated success' });
+                    }
+                });
+            }
         }
         catch (exception) {
             console.log(exception);

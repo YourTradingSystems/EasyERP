@@ -321,6 +321,16 @@ app.post('/currentUser', function (req, res) {
     requestHandler.updateCurrentUser(req, res, data);
 });
 
+app.put('/currentUser/:id', function (req, res) {
+    console.log(req.body);
+    var data = {};
+    var id = req.param('id');
+    if (req.body.oldpass && req.body.pass) {
+        data.changePass = true;
+    }
+    requestHandler.updateCurrentUser(req, res, data);
+});
+
 app.get('/UsersForDd', function (req, res) {
     console.log('---------------------getUsers-------------');
     requestHandler.getUsersForDd(req, res, data);
@@ -1002,6 +1012,7 @@ app.get('/Departments', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartment(req, res, data);
 });
+
 app.get('/DepartmentsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1170,6 +1181,10 @@ app.get('/getEmployeesImages', function (req, res) {
 
 //------------------Applications---------------------------------------------------
 
+app.get('/getApplicationsLengthByWorkflows', function (req, res) {
+    requestHandler.getApplicationsLengthByWorkflows(req, res);
+});
+
 app.get('/Applications', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1189,8 +1204,6 @@ app.get('/Applications/:viewType', function (req, res) {
         case "list": requestHandler.getApplicationsForList(req, res, data);
             break;
         case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
-            break;
-        default: requestHandler.getFilterApplications(req, res, data);
             break;
     }
 

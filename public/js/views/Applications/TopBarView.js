@@ -18,7 +18,8 @@ define([
                 "click #top-bar-saveBtn": "saveEvent",
                 "click #top-bar-discardBtn": "discardEvent",
                 "click #top-bar-editBtn": "editEvent",
-                "click #top-bar-createBtn": "createEvent"
+                "click #top-bar-createBtn": "createEvent",
+                "click #kanban-settings-Btn": "editKanban"
             },
 
             editEvent: function (event) {
@@ -73,6 +74,10 @@ define([
             discardEvent: function (event) {
                 event.preventDefault();
                 Backbone.history.navigate("home/content-" + this.contentType, { trigger: true });
+            },
+            editKanban: function (event) {
+                event.preventDefault();
+                this.trigger('editKanban');
             }
 
         });
