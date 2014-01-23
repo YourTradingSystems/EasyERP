@@ -18,7 +18,7 @@ define([
 				this.pageMini = 1;
 				this.pageCount = 4;
 				this.allMiniOpp =0;
-				this.allPages =0;
+				this.allPages = 2;
 				var self = this;
 				var formModel = this.formModel.toJSON();
 				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,true,function(count){
@@ -84,7 +84,7 @@ define([
 					self.$el.find('.formRightColumn').append(
                         new opportunitiesCompactContentView({
                             collection: collection.data,
-                        }).render({first:self.pageMini==1?true:false,last:isLast}).el
+                        }).render({first:self.pageMini==1?true:false,last:isLast,all:self.allPages}).el
                     );
 					
 				});
