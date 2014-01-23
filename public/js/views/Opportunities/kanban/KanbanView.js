@@ -49,7 +49,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                 var tempDom = _.template(kanbanSettingsTemplate, { opportunities: user.kanbanSettings.opportunities });
                 context.$el = $(tempDom).dialog({
                     dialogClass: "edit-dialog",
-                    width: "900",
+                    width: "400",
                     title: "Edit Kanban Settings",
                     buttons: {
                         save: {
