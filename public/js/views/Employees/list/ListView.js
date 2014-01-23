@@ -316,7 +316,6 @@ define([
                 $('.task-list').find("input").prop("checked",false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
-
             },
 
             switchPageCounter: function (event) {
@@ -419,7 +418,6 @@ define([
                     _.bind(this.collection.showMore, this.collection);
                     this.collection.showMore({count: itemsNumber, page: page, letter: letter});
                 }
-
             },
 
             showMoreContent: function (newModels) {

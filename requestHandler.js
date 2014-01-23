@@ -487,6 +487,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //---------END------Persons--------------------------------
     //---------------------Project--------------------------------
+
+    function getProjectsListLength(req, res, data) {
+        console.log("Requst getEmployeesListLength is success");
+        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            project.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function createProject(req, res, data) {
         console.log("Requst createProject is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -618,22 +628,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getTasks is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
             project.getTasks(req, res);
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getTasksByProjectId(req, res, data) {
-        console.log("Requst getTasksByProjectId is success");
-        if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
-            access.getReadAccess(req, req.session.uId, 40, function (access) {
-                if (access) {
-                    project.getTasksByProjectId(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
         } else {
             res.send(401);
         }
@@ -2104,6 +2098,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getFilterPersonsForList: getFilterPersonsForList,
 
         getProjects: getProjects,
+        getProjectsListLength: getProjectsListLength,
         getProjectsForList: getProjectsForList,
         getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
@@ -2114,7 +2109,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,
         getTasks: getTasks,
-        getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,
         getTasksForList: getTasksForList,
         getTasksForKanban: getTasksForKanban,
