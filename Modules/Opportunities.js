@@ -292,7 +292,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
     function getLeadsForChart(req, response, data) {
         var res = {};
-        console.log(data);
         if (!data.dataRange) data.dataRange = 365;
         if (!data.dataItem) data.dataItem = "M";
         switch (data.dataItem) {
@@ -380,7 +379,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 			        response.send(500, { error: "Can't get chart" });
 			    } else {
 			        res['data'] = result;
-			        console.log(result);
 			        response.send(res);
 			    }
 
@@ -1253,7 +1251,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             var count = (data.options.count) ? data.options.count : null;
         }
         var res = {};
-        var startTime = new Date();
         res['data'] = [];
         res['workflowId'] = data.workflowId;
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1329,7 +1326,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 exec(function (err, result) {
                                     if (!err) {
                                         res['data'] = result;
-                                        res['time'] = (new Date() - startTime);
                                         response.send(res);
                                     } else {
                                         logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);

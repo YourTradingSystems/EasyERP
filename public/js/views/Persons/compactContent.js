@@ -11,7 +11,7 @@
                 "click #persons p > a": "gotoPersonsForm"
             },
 
-            initialize: function () {
+            initialize: function (options) {
                 
             },
 
@@ -23,12 +23,10 @@
                 window.location.hash = "#easyErp/Persons/form/" + itemIndex;
             },
 
-            render: function () {
-                var collection = this.collection.toJSON();
-                var company = this.model.toJSON();
+            render: function (options) {
                 this.$el.html(this.template({
-                    collection: collection,
-                    company: company
+                    collection: this.collection,
+					options: options
                 }));
                 return this;
             }
