@@ -319,6 +319,7 @@ define([
                             count: 50,
                             parrentContentId: parrentContentId
                         })
+
                     : new contentCollection();
 
                 collection.bind('reset', _.bind(createViews, self));
