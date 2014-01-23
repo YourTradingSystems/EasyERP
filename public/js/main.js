@@ -99,7 +99,7 @@ require.config({
         'ajaxForm': ['jQuery'],
         'imageCrop': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
-        //'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm', 'imageCrop'],
+        'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm', 'imageCrop'],
         'chosen': {
             exports: 'chosen'
         },
