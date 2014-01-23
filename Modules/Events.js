@@ -372,6 +372,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
     };//Saving Calendar to Db With Checking it's events
 
     function getCalendars(req, response) {
+        var startTime = new Date();
         var res = {}
         var description = "";
         res['data'] = [];
@@ -384,6 +385,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                 response.send(500, { error: "Can't find Calendars" });
             } else {
                 res['data'] = result;
+                res['time'] = (new Date() - startTime);
                 response.send(res);
             }
         });

@@ -50,7 +50,7 @@
                     var tempDom = _.template(kanbanSettingsTemplate, { applications: user.kanbanSettings.applications });
                     context.$el = $(tempDom).dialog({
                         dialogClass: "edit-dialog",
-                        width: "900",
+                        width: "400",
                         title: "Edit Kanban Settings",
                         buttons: {
                             save: {

@@ -308,6 +308,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             errorLog("requestHandler.js  " + Exception);
         }
     };
+    function getFilterPersonsForMiniView(req, res, data) {
+        try {
+            console.log("Requst getPersonsForDd is success");
+            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+                customer.getFilterPersonsForMiniView(req, res, data);
+            } else {
+                res.send(401);
+            }
+        }
+        catch (Exception) {
+            errorLog("requestHandler.js  " + Exception);
+        }
+    };
+
+	 
+
     function getPersonAlphabet(req, res, data) {
         try {
             console.log("Requst getPersonAlphabet is success");
@@ -2104,6 +2120,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getFilterPersons: getFilterPersons,
         getPersonAlphabet: getPersonAlphabet,
         getFilterPersonsForList: getFilterPersonsForList,
+		getFilterPersonsForMiniView:getFilterPersonsForMiniView,
 
         getProjects: getProjects,
         getProjectsForList: getProjectsForList,
