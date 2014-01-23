@@ -134,7 +134,7 @@ var Department = function (logWriter, mongoose, models) {
             if (result.length != 0) {
                 result.forEach(function (item) {
                     callback(item._id);
-                    getAllChildIds(item._id, callback, function () {
+                    getAllChildIds(req, item._id, callback, function () {
                         n++;
                         if (n == result.length) {
                             trueCallback();

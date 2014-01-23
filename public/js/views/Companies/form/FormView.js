@@ -1,7 +1,6 @@
 define([
     'text!templates/Companies/form/FormTemplate.html',
     'views/Companies/EditView',
-    'collections/Persons/PersonsCollection',
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
     'custom',
@@ -14,13 +13,12 @@ define([
     'text!templates/Notes/AddAttachments.html'
 ],
 
-    function (CompaniesFormTemplate, EditView, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, dataService, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
+    function (CompaniesFormTemplate, EditView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, dataService, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
                 _.bindAll(this, 'render');
                 this.formModel = options.model;
-                this.personsCollection = new PersonsCollection();
 				this.pageMini = 1;
 				this.pageCount = 4;
 				this.allMiniOpp =0;
