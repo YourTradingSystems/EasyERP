@@ -4648,11 +4648,11 @@ h3.dashboard{
 		}
 	}
 }
-#timeRecivingDataFromServer{
+#timeRecivingDataFromServer, #timeBuildingDataFromServer{
 	clear:both;
 	text-align:center;
 }
-.miniPagination{
+.miniPagination,.miniPaginationPersons{
 	@width:60px;
 	@height:20px;
 	width:@width*4;
@@ -4683,10 +4683,10 @@ h3.dashboard{
 		border-right:@thin-border silver;
 	}
 
-	.first, .last{
+	.first, .last, .firstPersons, .lastPersons{
 		width:@width/3*2;
 	}
-	.prev, .next{
+	.prev, .next, .prevPersons, .nextPersons{
 		width:@width;
 	}
 

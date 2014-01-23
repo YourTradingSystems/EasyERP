@@ -6,10 +6,9 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<div id="persons" class="scroll">
+<div id="persons">
     <ul class="compactList">
         <% _.each(collection, function(model, index){ %>
-        <% if (model.company && (model.company.name.first == company.name.first)) { %>
         <li class="inner">
            
              
@@ -30,14 +29,25 @@
                     </div>
                 
                 <div class="clearfix"></div>
-        
-          
-           
-           
-           
         </li>
-        <% }%>
         <% });%>
     </ul>
     <div class="clearfix"></div>
+	<%if (options&&options.all>1){%>
+	<div class="miniPaginationPersons">
+    <div class="firstPersons<%if (options&&options.first){%> not-active<%}%>">
+	  &lt;&lt;
+    </div>
+    <div class="prevPersons<%if (options&&options.first){%> not-active<%}%>">
+	  &lt;
+    </div>
+    <div class="nextPersons<%if (options&&options.last){%> not-active<%}%>">
+	  &gt;
+    </div>
+    <div class="lastPersons<%if (options&&options.last){%> not-active<%}%>"">
+	  &gt;&gt;
+    </div>
+	</div>
+<%}%>
+
 </div>

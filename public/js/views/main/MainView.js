@@ -3,7 +3,8 @@ define([
         'views/menu/LeftMenuView',
         'collections/menu/MenuItems',
         'views/menu/TopMenuView',
-    ], function(MainTemplate, LeftMenuView, MenuItemsCollection, TopMenuView) {
+        'dataService'
+    ], function(MainTemplate, LeftMenuView, MenuItemsCollection, TopMenuView,dataService) {
 
         var MainView = Backbone.View.extend({
             el: '#wrapper',
@@ -51,8 +52,9 @@ define([
             },
             render: function() {
                 console.log('Render Main View');
-                this.$el.html(MainTemplate);
-
+                dataService.getData('/currentUser', null, function (response, context) {
+                		context.$el.html(_.template(MainTemplate,{model: response}));
+                }, this);
                 return this;
             }
         });

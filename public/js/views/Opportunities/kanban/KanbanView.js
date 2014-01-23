@@ -22,6 +22,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         
         initialize: function (options) {
             this.startTime = options.startTime;
+            this.buildTime = 0;
             this.workflowsCollection = options.workflowCollection;
             this.render();
             this.asyncFetc(options.workflowCollection);
@@ -92,7 +93,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             model.urlRoot = '/Opportunities/form';
             model.fetch({
                 data: { id: id },
-                success: function (model, response, options) {
+                success: function (model) {
                     new EditView({ model: model });
                 },
                 error: function () { alert('Please refresh browser'); }
@@ -106,7 +107,6 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         },
 
         asyncRender: function (response, context) {
-            console.log(response.time);
             var contentCollection = new OpportunitiesCollection();
             contentCollection.set(contentCollection.parse(response));
             if (collection) {

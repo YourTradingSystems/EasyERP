@@ -12,6 +12,7 @@ define([
                initialize: function (options) {
 				   this.startTime = options.startTime;
 				   this.startTime = new Date();
+				   this.buildTime = 0;
                    this.dateRange = 30;
                    this.dateRangeSource = 30;
                    this.dateItem = "D";
@@ -86,15 +87,17 @@ define([
 
                render: function () {
                    this.$el.html(this.template());
-                   this.renderPopulate();
+				   this.renderPopulate();
                    this.renderPopulateSource();
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
-
                },
                renderPopulateSource: function () {
+				   
                    var self = this;
                    $(".chart").empty();
                    common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
+					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
+					   
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
 					   width = $(document).width() - margin.left - margin.right,
 					   height = 600 - margin.top - margin.bottom;
@@ -178,10 +181,12 @@ define([
                    });
                },
                renderPopulate: function () {
+
                    var self = this;
+
                    $(".leadChart").empty();
                    common.getLeadsForChart(null, this.dateRange, this.dateItem, function (data) {
-                       console.log(data);
+					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
                        var margin = { top: 20, right: 160, bottom: 190, left: 160 },
 					   width = $(document).width() - margin.left - margin.right,
 					   height = 500 - margin.top - margin.bottom;

@@ -14,8 +14,7 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
 			this.startTime = options.startTime;
             this.collection = options.collection;
             this.collection.bind('reset', _.bind(this.render, this));
-			var self = this;
-            this.allAlphabeticArray = common.buildAllAphabeticArray();
+			this.allAlphabeticArray = common.buildAllAphabeticArray();
 			this.selectedLetter="";
             this.defaultItemsNumber = this.collection.namberToShow;
             this.deleteCounter = 0;

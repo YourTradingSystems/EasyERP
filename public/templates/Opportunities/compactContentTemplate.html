@@ -34,6 +34,7 @@
         <% });%>
     </ul>
     <div class="clearfix"></div>
+	<%if (options&&options.all>1){%>
 	<div class="miniPagination">
     <div class="first<%if (options&&options.first){%> not-active<%}%>">
 	  &lt;&lt;
@@ -48,4 +49,5 @@
 	  &gt;&gt;
     </div>
 	</div>
+<%}%>
 </div>
