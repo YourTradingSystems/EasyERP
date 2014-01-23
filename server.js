@@ -23,12 +23,12 @@ var dbsNames = [];
 var events = require('events');
 var event = new events.EventEmitter();
 
-var mainDb = mongoose.createConnection('localhost', 'maineDB');
+var mainDb = mongoose.createConnection('localhost', 'mainDB');
 
 mainDb.on('error', console.error.bind(console, 'connection error:'));
 mainDb.once('open', function callback() {
-    console.log("Connection to maineDB is success");
-    maineDBSchema = mongoose.Schema({
+    console.log("Connection to mainDB is success");
+    mainDBSchema = mongoose.Schema({
         _id: Number,
         url: { type: String, default: 'localhost' },
         DBname: { type: String, default: '' },
@@ -36,8 +36,8 @@ mainDb.once('open', function callback() {
         user: { type: String, default: '' }
     }, { collection: 'easyErpDBS' });
 
-    var maine = mainDb.model('easyErpDBS', maineDBSchema);
-    maine.find().exec(function(err, result) {
+    var main = mainDb.model('easyErpDBS', mainDBSchema);
+    main.find().exec(function (err, result) {
         if (!err) {
             console.log(result);
             result.forEach(function (_db, index) {
@@ -81,31 +81,34 @@ var config = {
 };
 
 var allowCrossDomain = function (req, res, next) {
-    //var allowedHost = [
-    //    'http://backbonetutorials.com',
-    //    'http://localhost'
-    //];
-    //if(allowedHost.indexOf(req.headers.origin) !== -1) {
-    //res.setHeader('Content-Type', 'text/html');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Allow Cross Site Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Request-Headers", "*");
-    res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
-    next();
-    //} else {
-    //    res.send(401);
-    //}
+    console.log(req.headers.host);
+
+    var allowedHost = [
+        '185.2.100.192:8088',
+        'localhost:8088',
+        '192.168.88.13:8088'
+    ];
+    if (allowedHost.indexOf(req.headers.host) !== -1) {
+        res.setHeader('Content-Type', 'text/html');
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Allow Cross Site Origin", "*");
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header("Access-Control-Request-Headers", "*");
+        res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
+        next();
+    } else {
+        res.send(401);
+    }
 };
 app.configure(function () {
     app.set('view engine', 'jade');
     app.use(express.static(__dirname + '/public'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(allowCrossDomain);
+    //app.use(allowCrossDomain);
     app.use(express.cookieParser("CRMkey"));
     app.use(express.session({
         key: 'crm',
@@ -1436,7 +1439,7 @@ app.get('/OpportunitiesForMiniView', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-	requestHandler.getFilterOpportunitiesForMiniView(req, res, data);
+    requestHandler.getFilterOpportunitiesForMiniView(req, res, data);
 
 });
 
