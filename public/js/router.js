@@ -85,6 +85,8 @@ define([
 
                 self.changeView(contentview);
                 self.changeTopBarView(topbarView);
+                var url = '#easyErp/myProfile';
+                Backbone.history.navigate(url, { replace: true });
             });
         },
 

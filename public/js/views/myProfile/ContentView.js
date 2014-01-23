@@ -69,6 +69,7 @@ define([
 	                    wait: true,
 	                    success: function () {
 	                        $(".change-password-dialog").remove();
+	                        Backbone.history.fragment = "";
 	                        Backbone.history.navigate("easyErp/myProfile", { trigger: true });
 	                    },
 	                    error: function () {
@@ -106,11 +107,11 @@ define([
 	                    },
 	                    wait: true,
 	                    success: function () {
-	                        $(".change-password-dialog").remove();
+	                        Backbone.history.fragment = "";
 	                        Backbone.history.navigate("easyErp/myProfile", { trigger: true });
 	                    },
 	                    error: function () {
-	                        Backbone.history.navigate("home", { trigger: true });
+	                        Backbone.history.navigate("easyErp", { trigger: true });
 	                    },
 	                    editMode: true
 	                });
@@ -169,7 +170,7 @@ define([
                         common.canvasDraw({ model: model }, this);
 
                         if (response.RelatedEmployee) {
-                            $("input[type='radio'][value=" + response.RelatedEmployee + "]").attr("checked", true);
+                            $("input[type='radio'][value=" + response.RelatedEmployee._id + "]").attr("checked", true);
                         }
                         else {
                             $("input[type='radio']:first").attr("checked", true);
