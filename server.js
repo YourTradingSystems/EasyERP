@@ -114,9 +114,9 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: {
-        //    maxAge: 600 * 1000 //1 minute
-        //},
+        cookie: {
+            maxAge: 600 * 1000 //1 minute
+        },
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
@@ -140,7 +140,8 @@ app.get('/getDBS', function (req, res) {
 app.get('/account/authenticated', function (req, res, next) {
     console.log('>>>>>>>>>>>>>>>>Request authenticate<<<<<<<<<<<<<<<<<<');
     //console.log(req);
-    if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
+    //if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
+    if (req.session && req.session.loggedIn) {
         console.log(req.cookies);
         console.log(req.session.lastDb);
         res.send(200);
