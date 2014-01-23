@@ -393,10 +393,10 @@
         },
 
         getFilterPersons: function (req, data, response) {
+            console.log('------------get filter Persons-------------------');
             var res = {};
-            res['data'] = [];
-
             var aggObject = {};
+            res['data'] = [];
             if (data.letter) {
                 aggObject['type'] = 'Person';
                 aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
@@ -417,7 +417,6 @@
                 function (err, deps) {
                     if (!err) {
                         var arrOfObjectId = deps.objectID();
-                        console.log(arrOfObjectId);
                         models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
                             {
                                 $match: {
@@ -463,12 +462,13 @@
                                     var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
                                     if (data && data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status);
-                                    query.populate('company', '_id name').
+                                        query.populate('company', '_id name').
                                         populate('department', '_id departmentName').
                                         populate('createdBy.user').
                                         populate('editedBy.user').
                                         skip((data.page-1)*data.count).
                                         limit(data.count).
+                                        sort({ "name.first": 1 }).
                                         exec(function (error, _res) {
                                             if (!error) {
                                                 res['data'] = _res;

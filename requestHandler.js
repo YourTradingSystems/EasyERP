@@ -594,7 +594,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //---------------END----Project-------------------------------
     //---------------------Tasks-------------------------------
-
     function createTask(req, res, data) {
         console.log("Requst createTask is success");
         if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
@@ -610,6 +609,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+    function getTasksLengthByWorkflows(req, options, res) {
+        project.getCollectionLengthByWorkflows(req, options, res);
+    }
 
     function getTasks(req, res, data) {
         console.log("Requst getTasks is success");
@@ -2109,6 +2112,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeProject: removeProject,
 
         createTask: createTask,
+        getTasksLengthByWorkflows: getTasksLengthByWorkflows,
         getTasks: getTasks,
         getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,

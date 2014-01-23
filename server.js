@@ -117,7 +117,6 @@ app.configure(function () {
         //store: new MemoryStore()
     }));
     app.use(app.router);
-
 });
 
 console.log(dbsArray);
@@ -443,7 +442,7 @@ app.get('/getPersonsForDd', function (req, res) {
     requestHandler.getPersonsForDd(req, res, data);
 });
 app.get('/getPersonAlphabet', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
+    console.log('------getPersonAlphabet-----------------');
     data = {};
     //data.ownUser = true;
     data.mid = req.param('mid');
@@ -608,6 +607,13 @@ app.get('/Projects/:viewType', function (req, res) {
 
 
 //--------------Tasks----------------------------------------------------------
+app.get('/getTasksLengthByWorkflows', function (req, res) {
+    var options = {};
+    for (var i in req.query) {
+        options[i] = req.query[i];
+    }
+    requestHandler.getTasksLengthByWorkflows(req, options, res);
+});
 
 app.post('/Tasks', function (req, res) {
     data = {};

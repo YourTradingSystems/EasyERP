@@ -92,7 +92,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             model.urlRoot = '/Opportunities/form';
             model.fetch({
                 data: { id: id },
-                success: function (model, response, options) {
+                success: function (model) {
                     new EditView({ model: model });
                 },
                 error: function () { alert('Please refresh browser'); }

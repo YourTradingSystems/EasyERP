@@ -58,10 +58,10 @@
                             return true;
                         }
                     }
-                    
+
                 }
             });
-            currentEmployees.monthly.sort(function(a, b) {
+            currentEmployees.monthly.sort(function (a, b) {
                 if (a.daysForBirth > b.daysForBirth)
                     return 1
                 if (a.daysForBirth < b.daysForBirth)
@@ -110,7 +110,7 @@
                 $match: {
                     $and: [
                         { dateBirth: { $ne: null } },
-                        {isEmployee: true}
+                        { isEmployee: true }
                     ]
                 }
             },
@@ -131,8 +131,8 @@
                     var query = models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).find();
                     query.where('_id').in(res).
 	                    select('_id name dateBirth age jobPosition workPhones.mobile department').
-	                	populate('jobPosition','name').
-						populate('department','departmentName').
+	                	populate('jobPosition', 'name').
+						populate('department', 'departmentName').
                         exec(function (error, ress) {
                             if (error) {
                                 console.log(error);
@@ -148,7 +148,6 @@
 
 
     var set = function (req, currentEmployees, response) {
-        var withResponse = (arguments.length == 2) ? true : false;
         var res = {};
         var data = {};
         var now = new Date();
