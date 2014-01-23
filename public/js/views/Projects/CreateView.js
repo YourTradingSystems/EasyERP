@@ -278,6 +278,14 @@ define([
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
                 common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
                 common.populateWorkflows("Project", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd");
+                
+                $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
+                $('#EndDate').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 this.delegateEvents(this.events);
                 return this;
             }
