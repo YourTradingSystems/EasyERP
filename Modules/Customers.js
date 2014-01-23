@@ -488,6 +488,116 @@
                     }
                 });
         },
+		getFilterPersonsForMiniView: function (req, response, data ) {
+            console.log('------------get filter Persons-------------------');
+            var res = {};
+            var aggObject = {};
+            res['data'] = [];
+            if (data.letter) {
+                aggObject['type'] = 'Person';
+                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+            } else {
+                aggObject['type'] = 'Person';
+            };
+
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        aggObject,
+										{
+											company:newObjectId(data.companyId)
+										},
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+
+                                if (data.onlyCount.toString().toLowerCase()=="true"){
+
+                                    query.count(function(error,_res){
+                                        if (!error) {
+                                            res['listLength'] = _res;
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
+                                    })
+                                }else{
+
+                                    if (data && data.status && data.status.length > 0)
+                                        query.where('workflow').in(data.status);
+                                    query.select("_id name email phones.mobile").
+                                        skip((data.page-1)*data.count).
+                                        limit(data.count).
+                                        sort({ "name.first": 1 }).
+                                        exec(function (error, _res) {
+                                            if (!error) {
+                                                res['data'] = _res;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+								}
+                                } else {
+                                    console.log(err);
+                                }
+                            }
+                        );
+
+                    } else {
+                        console.log(err);
+                    }
+                });
+        },
         getFilterPersonsForList: function (req, data, response) {
             var res = {};
             res['data'] = [];

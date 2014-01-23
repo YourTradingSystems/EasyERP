@@ -451,6 +451,14 @@ app.get('/getPersonAlphabet', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getPersonAlphabet(req, res, data);
 });
+app.get('/getPersonsForMiniView', function (req, res) {
+    data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+	requestHandler.getFilterPersonsForMiniView(req, res, data);
+
+});
 
 
 

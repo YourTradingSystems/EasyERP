@@ -6,6 +6,7 @@ define([
     'views/Persons/compactContent',
     'custom',
     'common',
+    "dataService",
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
     'views/Opportunities/CreateView',
@@ -13,7 +14,7 @@ define([
     'text!templates/Notes/AddAttachments.html'
 ],
 
-    function (CompaniesFormTemplate, EditView, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
+    function (CompaniesFormTemplate, EditView, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, dataService, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
@@ -25,12 +26,25 @@ define([
 				this.allMiniOpp =0;
 				this.allPages =0;
 
+				this.pageMiniPersons = 1;
+				this.pageCountPersons = 4;
+				this.allMiniPersons =0;
+				this.allPagesPersons =0;
+
 				var self = this;
 				var formModel = this.formModel.toJSON();
 				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel._id,this.pageMini,this.pageCount,true,function(count){
 					self.allMiniOpp = count.listLength;
 					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
 					if (self.allPages == self.pageMini){
+						$(".miniPagination .next").addClass("not-active");
+						$(".miniPagination .last").addClass("not-active");
+					}
+				});
+				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,true,function(count){
+					self.allMiniPersons = count.listLength;
+					self.allPagesPersons = Math.ceil(self.allMiniPersons/self.pageCountPersons);
+					if (self.allPagesPersons == self.pageMiniPersons){
 						$(".miniPagination .next").addClass("not-active");
 						$(".miniPagination .last").addClass("not-active");
 					}
@@ -61,9 +75,31 @@ define([
                 "click .miniPagination .next:not(.not-active)": "nextMiniPage",
                 "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
                 "click .miniPagination .first:not(.not-active)": "firstMiniPage",
-                "click .miniPagination .last:not(.not-active)": "lastMiniPage"
+                "click .miniPagination .last:not(.not-active)": "lastMiniPage",
+
+                "click .miniPaginationPersons .nextPersons:not(.not-active)": "nextMiniPagePersons",
+                "click .miniPaginationPersons .prevPersons:not(.not-active)": "prevMiniPagePersons",
+                "click .miniPaginationPersons .firstPersons:not(.not-active)": "firstMiniPagePersons",
+                "click .miniPaginationPersons .lastPersons:not(.not-active)": "lastMiniPagePersons"
 
             },
+			nextMiniPagePersons:function(){
+				this.pageMiniPersons +=1;
+				this.renderMiniPersons();
+			},
+			prevMiniPagePersons:function(){
+				this.pageMiniPersons -=1;
+				this.renderMiniPersons();
+			},
+			firstMiniPagePersons:function(){
+				this.pageMiniPersons=1;
+				this.renderMiniPersons();
+			},
+			lastMiniPagePersons:function(){
+				this.pageMiniPersons = this.allPagesPersons;
+				this.renderMiniPersons();
+			},
+
 			nextMiniPage:function(){
 				this.pageMini +=1;
 				this.renderMiniOpp();
@@ -72,7 +108,6 @@ define([
 				this.pageMini -=1;
 				this.renderMiniOpp();
 			},
-
 			firstMiniPage:function(){
 				this.pageMini=1;
 				this.renderMiniOpp();
@@ -81,33 +116,44 @@ define([
 				this.pageMini = this.allPages;
 				this.renderMiniOpp();
 			},
-
+			populatePersonsForMiniView:function (url, companyId, page, count, onlyCount, callback) {
+				var self = this;
+				dataService.getData(url, {companyId:companyId, page:page,count:count,onlyCount:onlyCount }, function (response) {
+					if (callback) callback(response);
+				});
+			},
+			renderMiniPersons:function(){
+				var self = this;
+            	var formModel = this.formModel.toJSON();
+				$("#persons").closest(".form").remove();
+				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,false,function(collection){
+					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false
+					self.$el.find('.formRightColumn').append(
+                        new personsCompactContentView({
+                            collection: collection.data,
+                        }).render({first:self.pageMiniPersons==1?true:false,last:isLast,all:self.allPagesPersons}).el
+                    );
+				});
+			},           
 			renderMiniOpp:function(){
 				var self = this;
             	var formModel = this.formModel.toJSON();
+				$("#opportunities").closest(".form").remove();
 				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel._id,this.pageMini,this.pageCount,false,function(collection){
-					console.log(collection);
-					self.$el.find('.formRightColumn').empty();
 					var isLast = self.pageMini==self.allPages?true:false
-					self.$el.find('.formRightColumn').append(
+					self.$el.find('.formRightColumn').prepend(
                         new opportunitiesCompactContentView({
                             collection: collection.data,
-                        }).render({first:self.pageMini==1?true:false,last:isLast}).el
+                        }).render({first:self.pageMini==1?true:false,last:isLast,all:self.allPages}).el
                     );
-					self.$el.find('.formRightColumn').append(                                
-						new personsCompactContentView({
-                            collection: this.personsCollection,
-                            model: this.formModel
-                        }).render().el);
-					
 				});
-
-
 			},            
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
+				this.$el.find('.formRightColumn').empty();
 				this.renderMiniOpp();
+				this.renderMiniPersons();
 /*                this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
