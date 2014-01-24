@@ -767,7 +767,10 @@
         var populateOpportunitiesForMiniView = function (url, personId, companyId, page, count, onlyCount, callback) {
             var self = this;
             dataService.getData(url, { person:personId,company:companyId, page:page,count:count,onlyCount:onlyCount }, function (response) {
-                if (callback) callback(response);
+	          	  options = $.map(response.data, function (item) {
+	                  item.nextAction.date = utcDateToLocaleDate(item.nextAction.date);
+	              });
+            	if (callback) callback(response);
             });
         };
 
