@@ -8,9 +8,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
         google = require("./Modules/Google.js")(users, models),
         events = require("./Modules/Events.js")(logWriter, mongoose, google, models),
-        project = require("./Modules/Projects.js")(logWriter, mongoose, department, models),
         customer = require("./Modules/Customers.js")(logWriter, mongoose, models, department),
         workflow = require("./Modules/Workflow.js")(logWriter, mongoose, models),
+        project = require("./Modules/Projects.js")(logWriter, mongoose, department, models, workflow),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, department, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
         sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose, models),
@@ -537,6 +537,36 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 if (access) {
                     data.uId = req.session.uId;
                     project.get(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+	function getProjectPMForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectPMForDashboard(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+	function getProjectStatusCountForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectStatusCountForDashboard(req, res);
                 } else {
                     res.send(403);
                 }
@@ -2139,6 +2169,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createProject: createProject,
         updateProject: updateProject,
         removeProject: removeProject,
+		getProjectPMForDashboard: getProjectPMForDashboard,
+		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
 
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,

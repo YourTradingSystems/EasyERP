@@ -218,6 +218,11 @@ app.post('/uploadFiles', function (req, res, next) {
         });
     });
 });
+app.get('/download/:name', function (req, res) {
+    var name = req.param('name');
+	res.download(__dirname + "\\uploads\\" + name);
+});
+
 app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
@@ -566,6 +571,16 @@ app.get('/getProjectsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectsForDd(req, res, data);
+});
+app.get('/getProjectPMForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectPMForDashboard(req, res, data);
+});
+app.get('/getProjectStatusCountForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectStatusCountForDashboard(req, res, data);
 });
 
 app.post('/Projects', function (req, res) {
