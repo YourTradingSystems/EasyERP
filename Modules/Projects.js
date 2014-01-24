@@ -1,4 +1,4 @@
-var Project = function (logWriter, mongoose, department, models) {
+var Project = function (logWriter, mongoose, department, models, workflow) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var ProjectSchema = mongoose.Schema({
@@ -424,7 +424,10 @@ var Project = function (logWriter, mongoose, department, models) {
             res.send(500, { error: 'Project.save  error' });
         }
     };
-
+    function getForDashboard(req, response) {
+	
+	};
+		
     function getForDd(req, response) {
         var res = {};
         res['data'] = [];

@@ -211,7 +211,7 @@
 
                         success: function (data) {
                             var attachments = currentModel.get('attachments');
-                            attachment.length = 0;
+                            attachments.length = 0;
                             $('.attachContainer').empty();
                             data.data.attachments.forEach(function (item) {
                                 var date = common.utcDateToLocaleDate(item.uploadDate);
