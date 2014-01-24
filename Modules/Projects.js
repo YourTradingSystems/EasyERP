@@ -856,6 +856,8 @@ var Project = function (logWriter, mongoose, department, models) {
                             }
                         },
                         function (err, projectsId) {
+                            console.log('============ projectsId ===================');
+                            console.log(projectsId);
                             if (!err) {
                                 if (data.type == 'Tasks') {
                                     models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).

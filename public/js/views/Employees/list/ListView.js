@@ -82,9 +82,11 @@ define([
                 });
 				this.collection.showMore({count: itemsNumber, page: 1, letter: this.selectedLetter});
 			},
+
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
 			},
+
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
 				return false;

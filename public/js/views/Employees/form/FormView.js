@@ -38,8 +38,8 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                common.getWorkflowContractEnd("Application", null, null, "/Workflows", null, "Contract End", function(workflow) {
-                    console.log(workflow[0]._id);
+                common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function(workflow) {
+                    console.log(workflow);
                     $('.endContractReasonList').attr('data-id',workflow[0]._id);
                 });
                 this.$el.html(_.template(EmployeesFormTemplate, formModel));

@@ -49,7 +49,7 @@
                         console.log("Tasks fetchSuccess");
                         that.page += addPage;
                         that.showMoreButton = response.showMore;
-                        that.optionsArray = response.options;
+                        //that.optionsArray = response.options;
                     },
                     error: this.fetchError
                 });
