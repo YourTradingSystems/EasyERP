@@ -83,13 +83,11 @@
 }
 
 a {
-    //color: @lightmagenta;
     color: #4D5A75;
     text-decoration: none;
 
     &:hover {
         text-decoration: underline;
-        //color: @lightmagenta - #333333;
     }
 
     &:focus {
@@ -102,7 +100,6 @@ body {
     font-size: 12px;
     height: 100%;
     overflow: hidden;
-    //background: rgba(0, 0, 0, 0.05);
 }
 
 html {
@@ -176,7 +173,6 @@ article {
 
 .weekend {
     background: #f4f7f4 !important;
-    //width: 50px !important;
 }
 
 .left {
@@ -192,7 +188,7 @@ article {
 }
 
 .border-right {
-    border-right: 1px solid #dddddd;
+    border-right: @thin-border #dddddd;
     border-spacing: 2px;
 }
 
@@ -265,7 +261,7 @@ article {
     background: #fff;
     height: @height;
     .no-marpad;
-    border-bottom: 1px solid #4D5A75;
+    border-bottom: @thin-border #4D5A75;
 
     nav {
         .left;
@@ -291,7 +287,7 @@ article {
                     font-size: 14px;
                     font-size: 0.75rem;
                     letter-spacing: 1.5px;
-                    color: #fff; //@defaultColor;
+                    color: #fff;
                     font-size: 14px;
                     font-size: 0.75rem;
                     text-decoration: none;
@@ -356,7 +352,6 @@ article {
 
 
             li {
-                // top: -1px;
                 list-style: none;
                 width: auto;
                 font-size: 14px;
@@ -394,25 +389,17 @@ article {
                     height: @height;
                     line-height: @height;
                     width: 100x;
-                    /*border-top: 1px solid @bg;
-                    border-left: 1px solid @bg;
-                    border-right: 1px solid @bg;*/
                     a {
                         line-height: @height;
                         height: @height;
                         text-decoration: underline;
                     }
 
-                    &.hover {
-                        a {
-                            //text-decoration: none;
                         }
                     }
                 }
             }
         }
-    }
-}
 
 #submenu-holder {
     .submenu;
@@ -436,13 +423,9 @@ article {
     display: block;
     width: auto;
     height: 30px;
-    border-bottom: 1px solid #ababab;
+    border-bottom: @thin-border #ababab;
     background: #fff;
     clear: both;
-    /*.gradient(#ededed);
-    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);*/
     h3 {
         margin-top: 6px;
         padding: 0px 10px;
@@ -712,7 +695,7 @@ h3 {
     border-radius: 0 !important;
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
-    border: 1px solid #DDD !important;
+    border: @thin-border #DDD !important;
 
     .ui-widget-header {
         border: 0;
@@ -843,9 +826,6 @@ h3 {
         float: left;
         width: 100%-@with-dt;
 
-        &.with-checkbox {
-            //            margin-top: 15px !important;
-        }
 
         a.formLink {
             line-height: 0px;
@@ -976,7 +956,6 @@ h3 {
         margin-right: 10px;
         padding-left: 20px;
         padding-bottom: 20px;
-        //border-top: 1px solid rgba(0,0,0,0);
         display: none;
         font-family: 'Segoe UI', sans-serif;
         font-size: 13px;
@@ -991,7 +970,6 @@ h3 {
     &.workflow-details {
         display: block;
         padding-top: 0px;
-        //border: 1px solid rgba(0,0,0,0);
     }
 }
 
@@ -1211,7 +1189,6 @@ h3 {
         background: transparent;
         border: none;
         position: relative;
-        /*top: -3px;*/
         box-sizing: border-box;
         box-shadow: none;
         padding: 0px;
@@ -1237,7 +1214,6 @@ h3 {
     span {
         display: block;
         line-height: 30px;
-        //  color: #333;
     }
 
     &:hover {
@@ -1300,7 +1276,7 @@ h3 {
     height: 24px;
     float: left;
     margin: 0 12px;
-    border: 1px solid #ababab;
+    border: @thin-border #ababab;
     border-right: 0;
     border-bottom: 0;
     position: absolute;
@@ -1308,7 +1284,7 @@ h3 {
     right: 5px;
 
     li {
-        border-right: 1px solid #ababab;
+        border-right: @thin-border #ababab;
         margin: 0;
         padding: 0;
         display: block;
@@ -1324,10 +1300,6 @@ h3 {
     }
 
     .selected {
-        /*background: #999999;
-        -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;*/
         border-bottom: 1px solid white;
 
         a {
@@ -1336,13 +1308,7 @@ h3 {
         }
     }
 
-    &:first-child {
     }
-
-    li:last-child {
-        //        border-right: 0;
-    }
-}
 
 .light {
     color: white;
@@ -1359,9 +1325,6 @@ h3 {
 }
 
 .task-list {
-    tr, th {
-    }
-
     tr {
         &:nth-child(odd) {
             background-color: #F5F5F5;
@@ -1421,7 +1384,6 @@ h3 {
             td {
                 cursor: pointer;
                 padding: 4px 5px;
-                // white-space: pre-line;
                 line-height: 18px;
                 font-size: 11px;
                 text-align: left;
@@ -1433,7 +1395,6 @@ h3 {
                 }
 
                 &.withSelect {
-                    //					width:170px;
                     position: relative;
                 }
 
@@ -1451,12 +1412,10 @@ h3 {
 
                     progress::-webkit-progress-bar {
                         background-color: #F5F5F5;
-                        /* style rules */
                     }
 
                     progress::-webkit-progress-value {
                         background-color: #57B5E3;
-                        /* style rules */
                     }
 
                 &:first-of-type {
@@ -1802,14 +1761,12 @@ h3 {
 }
 
 .form-holder {
-    /*background: url("@{imagesfolder}/form_sheetbg.png");*/
     padding: 20px 0px;
-    /*border-bottom: 1px solid #dddddd;*/
 }
 
 input, textarea, select {
     padding: 2px 4px;
-    border: 1px solid #cccccc;
+    border: @thin-border #cccccc;
     background: white;
 }
 
@@ -1828,7 +1785,7 @@ input, textarea, select {
 
     label {
         margin-right: 10px;
-        border-right: 1px solid #dddddd;
+        border-right: @thin-border #dddddd;
     }
 
     &.marginLeft {
@@ -1925,7 +1882,7 @@ input, textarea, select {
     position: relative;
     display: block;
     background: white !important;
-    border: 1px solid @taskBorderColor;
+    border: @thin-border @taskBorderColor;
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
     width: 280px;
@@ -1976,7 +1933,6 @@ input, textarea, select {
     }
 
     a.tasksByProject {
-        //color: #7c7bad;
         cursor: pointer;
         text-decoration: none;
 
@@ -2069,9 +2025,7 @@ input, textarea, select {
 
                 a {
                     word-break: break-all;
-                    //text-decoration: none;
                     word-wrap: break-word;
-                    //color: #7c7bad;
                 }
             }
         }
@@ -2143,9 +2097,7 @@ input, textarea, select {
 
                 a {
                     word-break: break-all;
-                    //text-decoration: none;
                     word-wrap: break-word;
-                    //color: #7c7bad;
                 }
             }
         }
@@ -2172,7 +2124,7 @@ input, textarea, select {
 }
 
 .btn {
-    border: 1px solid rgba(0, 0, 0, 0.4);
+    border: @thin-border rgba(0, 0, 0, 0.4);
     color: #4c4c4c;
     margin: 0;
     padding: 2px 6px;
@@ -2229,7 +2181,7 @@ button {
         float: left;
         display: block;
         padding: 4px;
-        border: 1px solid transparent;
+        border: @thin-border transparent;
         border-bottom: none;
         text-decoration: none;
         border-radius: 0 0;
@@ -2238,12 +2190,12 @@ button {
         &:hover {
             color: #4c4c4c;
             background-color: #e1e1e1;
-            border: 1px solid #e1e1e1;
+            border: @thin-border #e1e1e1;
             border-bottom: none;
         }
 
         &.selected {
-            border: 1px solid @tabColor;
+            border: @thin-border @tabColor;
             border-top: 3px solid @blue;
             border-bottom: none;
             background: #fff;
@@ -2257,7 +2209,7 @@ button {
 .tab {
     margin-top: 13px;
     padding: 16px;
-    border-top: 1px solid @tabColor;
+    border-top: @thin-border @tabColor;
 
     & ~ & {
         display: none;
@@ -2314,7 +2266,7 @@ button {
 
             .ui-button {
                 color: #36A9E1 !important;
-                border: 1px solid #DDD;
+                border: @thin-border #DDD;
                 .border-radius(0);
 
                 .ui-button-text {
@@ -2343,7 +2295,7 @@ button {
 
         .ui-dialog-titlebar {
             .ui-dialog-title {
-                border-bottom: 1px solid #C8C8D3;
+                border-bottom: @thin-border #C8C8D3;
                 color: #333 !important;
                 margin: 0;
                 font-family: Title;
@@ -2375,14 +2327,14 @@ button {
                     font-family: Tahoma,Arial,Helvetica,sans-serif;
                     text-shadow: 0 1px 0 #FFF;
                     color: #222 !important;
-                    border: 1px solid #C3C3C3 !important;
+                    border: @thin-border #C3C3C3 !important;
 
                     .ui-button-text {
                         padding: .4em 1.3em !important;
                     }
 
                     &:hover {
-                        border: 1px solid #888 !important;
+                        border: @thin-border #888 !important;
                         color: #222 !important;
                     }
 
@@ -2406,17 +2358,17 @@ button {
         font-family: Tahoma,Arial,Helvetica,sans-serif;
         text-shadow: 0 1px 0 #FFF;
         color: #222 !important;
-        border: 1px solid #C3C3C3 !important;
+        border: @thin-border #C3C3C3 !important;
         padding: 5px 15px;
 
         &:hover {
-            border: 1px solid #888 !important;
+            border: @thin-border #888 !important;
             color: #222 !important;
         }
     }
 }
 
-#createProjectForm,
+/*#createProjectForm,
 #createTaskForm,
 #createEmployeeForm,
 #editEmployeeForm,
@@ -2429,7 +2381,8 @@ button {
 #createProfileForm,
 #leadForm,
 #createDepartmentForm,
-#createUserForm {
+#createUserForm */
+.form-holder form{ 
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2479,8 +2432,8 @@ button {
         font-size: 12px;
         max-width: 290px;
         width: 71%;
-        border: 1px solid #E2E9EF;
-        border-top: 1px solid #CBD3E2;
+        border: @thin-border #E2E9EF;
+        border-top-color:#CBD3E2;
         color: #262626;
         padding: 0;
         height: 25px;
@@ -2498,8 +2451,8 @@ button {
     input[type='email'],
     input[type='number'] {
         .border-radius(0px);
-        border: 1px solid #E2E9EF;
-        border-top: 1px solid #CBD3E2;
+        border: @thin-border #E2E9EF;
+        border-top-color: #CBD3E2;
         max-width: 280px;
         width: 60%;
         height: 18px;
@@ -2512,16 +2465,18 @@ button {
         &:focus {
             .box-shadow(0,0,5px,rgba(82, 168, 236, 0.5));
             outline: medium none;
-            border: 1px solid rgba(121, 187, 238, 0.75) !important;
+            border: @thin-border rgba(121, 187, 238, 0.75) !important;
         }
+        }
+	&#leadForm {
+		input[type='email'],input[type='text'] {
+			width: 71%;
     }
+		textarea {
+			margin-top: 10px;
 }
-
-.notDialog .inner .avatar {
-    margin-top: 8px;
 }
-
-#createProfileForm {
+	&#createProfileForm {
     input[type='text'] {
         width: 100%;
     }
@@ -2530,29 +2485,11 @@ button {
         width: 100%;
     }
 }
-
-#createProjectForm .project-owner-info {
-    .dl-auto(90px);
-}
-
-#leadForm input[type='email'],
-#leadForm input[type='text'] {
-    width: 71%;
-}
-
-#leadForm dd.withCheckbox {
-    margin-top: 0;
-}
-
-#leadForm textarea {
-    margin-top: 10px;
-}
-
-#createTaskForm input[type='text'] {
+	&#createTaskForm input[type='text'] {
     width: 95%;
 }
-
-#createApplicationForm, #createEmployeeForm {
+	&#createApplicationForm, 
+	&#createEmployeeForm {
     #otherInfo {
         margin-top: 13px;
         width: 316px;
@@ -2566,22 +2503,19 @@ button {
         margin-top: 5px;
     }
 }
-
-#createJobPositionForm #description,
-#editJobPositionForm #description {
+	&#createJobPositionForm,
+	&#editJobPositionForm {
+		#description {
     margin-top: 0;
 }
-
-#createProjectForm {
-    dl {
-        dt {
+	}
+	&#createProjectForm {
+		dl, dt {
             max-width: 200px;
         }
     }
-}
-
-#createEmployeeForm,
-#editEmployeeForm {
+	&#createEmployeeForm,
+	&#editEmployeeForm {
     textarea {
         margin-top: 10px;
     }
@@ -2593,15 +2527,20 @@ button {
     .textarea-wrapper {
         margin-left: 10px;
     }
-}
-
-    #createEmployeeForm.notDialog {
+		&.notDialog {
         dl {
             dt, dd {
                 line-height: 17px;
             }
         }
     }
+	}
+
+}
+
+.notDialog .inner .avatar {
+    margin-top: 8px;
+}
 
 .edit-dialog {
     dt {
@@ -2621,7 +2560,7 @@ button {
             &:focus {
                 .box-shadow(0,0,5px,rgba(82, 168, 236, 0.5));
                 outline: medium none;
-                border: 1px solid rgba(121, 187, 238, 0.75) !important;
+                border: @thin-border rgba(121, 187, 238, 0.75) !important;
             }
         }
 
@@ -2650,7 +2589,7 @@ button {
                 &:focus {
                     .box-shadow(0,0,5px,rgba(82, 168, 236, 0.5));
                     outline: medium none;
-                    border: 1px solid rgba(121, 187, 238, 0.75) !important;
+                    border: @thin-border rgba(121, 187, 238, 0.75) !important;
                 }
             }
 
@@ -2717,8 +2656,8 @@ button {
         height: 40px;
         line-height: 40px;
         background-color: #F5F5F5;
-        border: 1px solid #DDD;
-        border-top: 1px solid rgba(0, 0, 0, 0);
+        border: @thin-border #DDD;
+        border-top-color: rgba(0, 0, 0, 0);
 
         a {
             padding-left: 20px;
@@ -2735,7 +2674,7 @@ button {
 
 #workflowSubNames {
     .cathegory {
-        border-top: 1px solid #DDD;
+        border-top: @thin-border #DDD;
     }
 }
 
@@ -2751,8 +2690,8 @@ button {
     font-size: 13px;
 
     li {
-        border: 1px solid rgba(0, 0, 0, 0);
-        border-right: 1px solid #ddd;
+        border: @thin-border rgba(0, 0, 0, 0);
+        border-right-color: #ddd;
         height: 40px;
         line-height: 40px;
         overflow: hidden;
@@ -2767,11 +2706,11 @@ button {
         }
 
         &.active {
-            border: 1px solid #ddd;
+            border: @thin-border #ddd;
             border-right: none;
 
             &.first {
-                border-top: 1px solid rgba(0, 0, 0, 0);
+                border-top-color: rgba(0, 0, 0, 0);
             }
 
             &:hover {
@@ -2866,7 +2805,7 @@ button {
     border-radius: 0 !important;
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
-    border: 1px solid #DDD !important;
+    border: @thin-border #DDD !important;
 
     .ui-widget-header {
         border: 0;
@@ -2981,11 +2920,6 @@ button {
 ////////////////////////Review Code/////////////////////
 ////////////////////////////////////////////////////////
 // kanban styles
-&.scroll-x {
-    /*overflow-x: auto;
-    overflow-y: hidden;
-    height: auto;*/
-}
 
 
 .kanban {
@@ -3039,7 +2973,7 @@ button {
             width: 95%;
             min-height: 40px;
             text-align: left;
-            border: 1px solid @taskBorderColor;
+            border: @thin-border @taskBorderColor;
             background-color: #fff;
             color: #2C3E50;
             cursor: move;
@@ -3263,7 +3197,7 @@ button {
 .tag {
     margin: 0 0 3px 1px;
     display: inline-block;
-    border: 1px solid #afafb6;
+    border: @thin-border #afafb6;
     font-size: 10px;
     padding: 0 2px;
     .border-radius(3px);
@@ -3298,7 +3232,7 @@ button {
     margin: 4px;
     background-color: #f0eeee;
     border-radius: 3px;
-    border: 1px solid #afafb6;
+    border: @thin-border #afafb6;
     visibility: visible !important;
     height: 10% !important;
 }
@@ -3315,7 +3249,7 @@ button {
 .dropDownMenu {
     background-color: #fff;
     list-style: none;
-    border: 1px solid #BDC3C7;
+    border: @thin-border #BDC3C7;
     cursor: pointer;
     padding-left: 0;
     transition: background-color 1s ease;
@@ -3351,12 +3285,12 @@ button {
     padding-left: 0;
 
     & > li {
-        border: 1px solid #fff;
+        border: @thin-border #fff;
         float: left;
     }
 
         & > li:hover {
-            border: 1px solid #95A5A6;
+            border-color: #95A5A6;
         }
 
         & > li > a {
@@ -3409,7 +3343,7 @@ button {
 
 
 .formHeader {
-    border-bottom: 1px solid #ddd;
+    border-bottom: @thin-border #ddd;
     height: 33px;
 
     .breadcrumb {
@@ -3458,8 +3392,7 @@ button {
                 margin-left: 0px;
 
                 a {
-                    border-left: 1px solid;
-                    border-left-color: #dddddd;
+                    border-left: @thin-border #ddd; 
                     background-position: -20px 0px;
                     margin-left: 0px;
                     padding-left: 20px;
@@ -3501,8 +3434,8 @@ button {
     table {
         width: 95%;
         margin: auto;
-        border-left: 1px solid #CACACA;
-        border-right: 1px solid #CACACA;
+        border-left: @thin-border #CACACA;
+        border-right: @thin-border #CACACA;
 
         thead {
             th:first-of-type {
@@ -3601,7 +3534,7 @@ button {
 
             &:focus {
                 .box-shadow(0,0,5px,rgba(82,168,236,0.5));
-                border: 1px solid rgba(121, 187, 238, 0.75);
+                border: @thin-border rgba(121, 187, 238, 0.75);
             }
         }
 
@@ -3639,7 +3572,7 @@ button {
 
                 &:focus {
                     .box-shadow(0,0,5px,rgba(82,168,236,0.5));
-                    border: 1px solid rgba(121, 187, 238, 0.75);
+                    border: @thin-border rgba(121, 187, 238, 0.75);
                 }
             }
 
@@ -3653,7 +3586,7 @@ button {
     #noteBody {
         .noteContainer {
             padding: 10px 0;
-            border-bottom: 1px dotted #EEE;
+            border-bottom: @thin-border #EEE;
 
             .name {
                 margin-right: 15px;
@@ -3745,7 +3678,7 @@ table#workflows {
     margin: 0px;
     padding: 5px 0;
     text-align: center;
-    border-bottom: 1px solid #D5D5D5;
+    border-bottom: @thin-border #D5D5D5;
 
     .letter {
         padding: 5px 10px;
@@ -3826,10 +3759,7 @@ table#workflows {
         width: auto;
     }
 
-    .newSelectList {
-        //        margin-left: -100px;
     }
-}
 
 .newSelectList {
     position: absolute;
@@ -3915,7 +3845,7 @@ table#workflows {
     position: absolute;
     width: 240px;
     background-color: white;
-    border: 1px solid silver;
+    border: @thin-border silver;
     margin-left: -105px;
     color: black;
 
@@ -3926,7 +3856,7 @@ table#workflows {
             text-align: center;
             cursor: pointer;
             line-height: 20px;
-            border: 1px solid #a0a0a0;
+            border: @thin-border #a0a0a0;
             border-top: none;
             border-left: none;
             background-color: #f0f0f0;
@@ -3978,7 +3908,7 @@ table#workflows {
     margin-right: 10px;
     text-align: center;
     padding: 2px 4px;
-    border: 1px solid #ccc;
+    border: @thin-border #ccc;
     line-height: 15px;
     height: 15px;
     cursor: pointer;
@@ -3999,7 +3929,7 @@ table#workflows {
 .calendarList {
     width: 200px;
     float: left;
-    border: 1px solid silver;
+    border: @thin-border silver;
     margin-left: 10px;
 
     li {
@@ -4020,7 +3950,7 @@ table#workflows {
             right: 5px;
             top: 5px;
             background-color: white;
-            border: 1px solid black;
+            border: @thin-border black;
 
             &:hover {
                 background-color: #EEE;
@@ -4031,7 +3961,7 @@ table#workflows {
             display: none;
             position: absolute;
             z-index: 100;
-            border: 1px solid black;
+            border: @thin-border black;
             width: 185px;
             background-color: white;
             padding-left: 5px;
@@ -4042,7 +3972,7 @@ table#workflows {
             left: 5px;
             top: 5px;
             background-color: white;
-            border: 1px solid black;
+            border: @thin-border black;
             width: 12px;
             height: 12px;
         }
@@ -4077,7 +4007,7 @@ table#workflows {
 #loginSelect {
     position: relative;
     z-index: 2000;
-    border: 1px solid silver;
+    border: @thin-border silver;
     background-color: white;
 
     li {
@@ -4098,7 +4028,6 @@ a.current-selected {
     font-size: 12px;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 21px !important;
-    //	width:165px;
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -4121,7 +4050,7 @@ a.current-selected {
 
 .tabs(@marginTop: 0px, @marginLeft: -20px) {
     height: 35px;
-    border-bottom: 1px solid #DDD;
+    border-bottom: @thin-border #DDD;
     margin: @marginTop -20px 0 @marginLeft;
     padding: 0 20px;
 
@@ -4129,7 +4058,7 @@ a.current-selected {
         float: left;
 
         a {
-            border: 1px solid rgba(0, 0, 0, 0);
+            border: @thin-border rgba(0, 0, 0, 0);
             display: block;
             float: left;
             padding-left: 20px;
@@ -4143,7 +4072,7 @@ a.current-selected {
             &.active {
                 height: 36px;
                 line-height: 34px;
-                border: 1px solid #DDD;
+                border: @thin-border #DDD;
                 border-bottom: none;
                 background-color: white;
             }
@@ -4374,7 +4303,7 @@ ul.chart-tabs {
 .groupsAndUser {
     display: none;
     width: 100%;
-    border: 1px solid #CCC;
+    border: @thin-border #CCC;
     margin: 10px 0 30px 0;
 
     tr {
@@ -4602,7 +4531,7 @@ ul.chart-tabs {
 
 .filterButton {
     background-color: #FFF;
-    border: 1px solid #ABABAB;
+    border: @thin-border #ABABAB;
     position: absolute;
     right: 118px;
     top: -26px;
@@ -4647,7 +4576,7 @@ ul.chart-tabs {
     right: 118px;
     width: 150px;
     background-color: white;
-    border: 1px solid silver;
+    border: @thin-border silver;
     top: -1px;
     z-index: 1000;
 
@@ -4676,35 +4605,43 @@ ul.chart-tabs {
     stroke-width: 3px;
 }
 
-.chart rect {
+.chart {
+	rect {
     fill: steelblue;
-}
-
-    .chart rect.bar2 {
+		&.bar2{
         fill: #6ec262;
         opacity: 0.3;
     }
-
-    .chart rect.bar {
+		&.bar{
         fill: #6ec262;
     }
 
-.chart text {
+	}
+	text {
     fill: black;
     font: 18px sans-serif;
     text-anchor: end;
     font-weight: bold;
 }
-
-.axis text {
-    font: 10px sans-serif;
+	.x .tick line {
+		stroke: #f2f2f2;
+	}
 }
 
-.axis path,
-.axis line {
+
+.axis {
+	text {
+		font: 14px sans-serif;
+
+}
+	path, line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
+}
+	.domain {
+		stroke: #fff;
+	}
 }
 
 .bar {
@@ -4719,47 +4656,29 @@ ul.chart-tabs {
     fill: #fff;
 }
 
-.axis text {
-    font: 14px sans-serif;
-}
-
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}
-
 .x.axis path {
     display: none;
 }
 
-.y.label {
+.y{
+	.tick line {
+		stroke: #f2f2f2;
+	}
+	&.label {
     fill: #57D0b5;
     font: 18px sans-serif;
     font-weight: bold;
 }
-
-.y2.label {
+}
+.y2{
+	&.label {
     fill: #26a7dd;
     font: 18px sans-serif;
     font-weight: bold;
 }
-
-.y .tick line {
-    stroke: #f2f2f2;
-}
-
-.y2 .tick line {
+	.tick line {
     stroke: #fff;
 }
-
-.axis .domain {
-    stroke: #fff;
-}
-
-.chart .x .tick line {
-    stroke: #f2f2f2;
 }
 
 .legend {
@@ -4880,12 +4799,11 @@ h3.dashboard {
             text-align: center;
         }
     }
-
+}
     #timeRecivingDataFromServer, #timeBuildingDataFromServer {
         clear: both;
         text-align: center;
     }
-}
 
 .miniPagination, .miniPaginationPersons {
     @width: 60px;
@@ -4920,7 +4838,7 @@ h3.dashboard {
         }
     }
 
-    .last {
+    .last,.lastPersons{
         border-right:@thin-border silver !important;
     }
 

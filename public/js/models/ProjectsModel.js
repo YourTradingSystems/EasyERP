@@ -1,5 +1,5 @@
-define(['Validation'],
-    function (Validation) {
+define(['Validation','common'],
+    function (Validation,common) {
     var ProjectModel = Backbone.Model.extend({
         idAttribute: "_id",
 
@@ -47,6 +47,14 @@ define(['Validation'],
 
         urlRoot: function () {
             return "/Projects";
+        },
+        parse: true,
+        parse: function (response) {
+            if (response.info.StartDate) {
+            	response.info.StartDate = common.utcDateToLocaleDate(response.info.StartDate);
+            	response.info.EndDate = common.utcDateToLocaleDate(response.info.EndDate);
+            }
+            return response;
         }
     });
 

@@ -557,7 +557,7 @@ var Project = function (logWriter, mongoose, department, models) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress ").
+                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress info").
 									populate('createdBy.user', 'login').
 									populate('editedBy.user', 'login').
 									populate('projectmanager', 'name').
