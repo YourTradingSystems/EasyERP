@@ -564,6 +564,16 @@ app.get('/getProjectsForDd', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getProjectsForDd(req, res, data);
 });
+app.get('/getProjectPMForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectPMForDashboard(req, res, data);
+});
+app.get('/getProjectStatusCountForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectStatusCountForDashboard(req, res, data);
+});
 
 app.post('/Projects', function (req, res) {
     data = {};

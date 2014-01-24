@@ -536,6 +536,36 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+	function getProjectPMForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectPMForDashboard(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+	function getProjectStatusCountForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectStatusCountForDashboard(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
     function getProjectsForList(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -2129,6 +2159,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createProject: createProject,
         updateProject: updateProject,
         removeProject: removeProject,
+		getProjectPMForDashboard: getProjectPMForDashboard,
+		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
 
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,
