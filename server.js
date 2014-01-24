@@ -89,7 +89,7 @@ var allowCrossDomain = function (req, res, next) {
         '192.168.88.13:8088'
     ];
     if (allowedHost.indexOf(req.headers.host) !== -1) {
-        res.setHeader('Content-Type', 'text/html');
+        //res.setHeader('Content-Type', 'text/html');
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -106,16 +106,17 @@ var allowCrossDomain = function (req, res, next) {
 app.configure(function () {
     app.set('view engine', 'jade');
     app.use(express.static(__dirname + '/public'));
+    //app.use(express.compress());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    //app.use(allowCrossDomain);
+    app.use(allowCrossDomain);
     app.use(express.cookieParser("CRMkey"));
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: {
-        //    maxAge: 600 * 1000 //1 minute
-        //},
+        cookie: {
+            maxAge: 600 * 1000 //1 minute
+        },
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
@@ -139,7 +140,8 @@ app.get('/getDBS', function (req, res) {
 app.get('/account/authenticated', function (req, res, next) {
     console.log('>>>>>>>>>>>>>>>>Request authenticate<<<<<<<<<<<<<<<<<<');
     //console.log(req);
-    if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
+    //if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
+    if (req.session && req.session.loggedIn) {
         console.log(req.cookies);
         console.log(req.session.lastDb);
         res.send(200);
