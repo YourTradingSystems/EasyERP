@@ -24,6 +24,7 @@ define([
             "easyErp/myProfile": "goToUserPages",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
+            "easyErp/projectDashboard": "goToProjectDashboard",
             "easyErp/:contentType": "getList",
             "*eny": "main"
         },
@@ -108,6 +109,24 @@ define([
                 self.changeTopBarView(topbarView);
             });
         },
+        goToProjectDashboard: function () {
+            var startTime = new Date();
+            var contentViewUrl = "views/projectDashboard/ContentView";
+            var topBarViewUrl = "views/projectDashboard/TopBarView";
+            var self = this;
+
+            if (this.mainView == null) this.main("projectDashboard");
+
+            require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
+
+                custom.setCurrentVT('list');
+
+                var contentview = new contentView({ startTime: startTime });
+                var topbarView = new topBarView({ actionType: "Content" });
+                self.changeView(contentview);
+                self.changeTopBarView(topbarView);
+            });
+        },
 
         goToWorkflows: function () {
             var startTime = new Date();
@@ -181,7 +200,12 @@ define([
                     collection.bind('showmore', contentview.showMoreContent, contentview);
                     this.changeView(contentview);
                     this.changeTopBarView(topbarView);
-                    var url = '#easyErp/' + contentType + '/list';
+                    var url;
+                    if (parrentContentId) {
+                         url = '#easyErp/' + contentType + '/list/' + parrentContentId;
+                    } else {
+                         url = '#easyErp/' + contentType + '/list';
+                    }
 
                     Backbone.history.navigate(url, { replace: true });
                 }
@@ -311,9 +335,10 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 50,
+                            count: 5,
                             parrentContentId: parrentContentId
                         })
+
                     : new contentCollection();
 
                 collection.bind('reset', _.bind(createViews, self));

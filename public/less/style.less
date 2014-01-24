@@ -129,33 +129,22 @@ dl {
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
-.gradient2(@startcolor,@endcolor) {
-    background-color: @endcolor;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(@startcolor), to(@endcolor));
-    background-image: -webkit-linear-gradient(top, @startcolor, @endcolor);
-    background-image: -moz-linear-gradient(top, @startcolor, @endcolor);
-    background-image: -ms-linear-gradient(top, @startcolor, @endcolor);
-    background-image: -o-linear-gradient(top, @startcolor, @endcolor);
-    background-image: linear-gradient(to bottom, @startcolor, @endcolor);
-}
-
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15), @inset: '') {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
 }
-
+.border-radius(@radius: 4px) {
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+    border-radius: @radius;
+}
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
 }
 
-.border-radius(@radius: 4px) {
-    -moz-border-radius: @radius;
-    -webkit-border-radius: @radius;
-    border-radius: @radius;
-}
 
 
 article {
@@ -1793,7 +1782,7 @@ input, textarea, select {
 
     label {
         margin-right: 10px;
-        border-right: @thin-border #dddddd;
+        /*border-right: @thin-border #dddddd;*/
     }
 
     &.marginLeft {
@@ -1903,7 +1892,7 @@ input, textarea, select {
 
     .bottom {
         width: 100%;
-        height: 20px;
+        /*height: 20px;*/
         position: absolute;
         bottom: 0px;
         left: 0px;
@@ -1973,7 +1962,7 @@ input, textarea, select {
     }
 
     .avatar {
-        .avatar(64px, 5px, 20px, 5px, 5px);
+        .avatar(44px, 0px, 5px, 5px, 0px);
     }
 
     .project-text {
@@ -4860,4 +4849,31 @@ h3.dashboard {
     .prev, .next {
         width: @width;
     }
+}
+#projectPM{
+	width:400px;
+	h2{
+		text-align:center;
+		font-weight:bold;
+		font-size:18px;
+	}
+	table{
+		width:100%;
+		border:@thin-border silver;
+		margin-left:10px;
+		tr{
+			th{
+				text-align:left;
+				font-weight:bold;
+				padding-left:3px;
+				background-color:silver;
+				line-height:15px;
+			}		
+			td{
+				padding-left:3px;
+				line-height:15px;
+				
+			}
+		}
+	}
 }

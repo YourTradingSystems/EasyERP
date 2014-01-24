@@ -544,6 +544,14 @@ app.get('/getPersonListLength', function (req, res) {
 });
 
 //---------------------------Projects--------------------------------------------------------
+app.get('/ProjectsListLength', function (req, res) {
+    data = {};
+    //data.mid = req.param('mid');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getProjectsListLength(req, res, data);
+});
 
 app.get('/Projects', function (req, res) {
     console.log('Get Projects');
@@ -563,6 +571,16 @@ app.get('/getProjectsForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectsForDd(req, res, data);
+});
+app.get('/getProjectPMForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectPMForDashboard(req, res, data);
+});
+app.get('/getProjectStatusCountForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectStatusCountForDashboard(req, res, data);
 });
 
 app.post('/Projects', function (req, res) {
@@ -658,8 +676,6 @@ app.get('/Tasks/:viewType', function (req, res) {
         case "list": requestHandler.getTasksForList(req, res, data);
             break;
         case "kanban": requestHandler.getTasksForKanban(req, res, data);
-            break;
-        default: requestHandler.getTasksByProjectId(req, res, data);
             break;
     }
 
@@ -942,7 +958,6 @@ app.get('/getCompaniesAlphabet', function (req, res) {
     requestHandler.getCompaniesAlphabet(req, res, data);
 });
 
-
 //------------------JobPositions---------------------------------------------------
 
 app.get('/jobType', function (req, res) {
@@ -967,6 +982,7 @@ app.get('/JobPosition', function (req, res) {
     console.log(data);
     requestHandler.getJobPosition(req, res, data);
 });
+
 app.get('/JobPositionForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1042,7 +1058,6 @@ app.get('/DepartmentsForDd', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getDepartmentForDd(req, res, data);
 });
-
 
 app.post('/Departments', function (req, res) {
     data = {};

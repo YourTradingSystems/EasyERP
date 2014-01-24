@@ -521,6 +521,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getProjectsListLength(req, res, data) {
+        console.log("Requst getProjectsListLength is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            project.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getProjects(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -528,6 +537,36 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 if (access) {
                     data.uId = req.session.uId;
                     project.get(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+	function getProjectPMForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectPMForDashboard(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+	function getProjectStatusCountForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectStatusCountForDashboard(req, res);
                 } else {
                     res.send(403);
                 }
@@ -2123,12 +2162,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 		getFilterPersonsForMiniView:getFilterPersonsForMiniView,
 
         getProjects: getProjects,
+        getProjectsListLength: getProjectsListLength,
         getProjectsForList: getProjectsForList,
         getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
         updateProject: updateProject,
         removeProject: removeProject,
+		getProjectPMForDashboard: getProjectPMForDashboard,
+		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
 
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,
