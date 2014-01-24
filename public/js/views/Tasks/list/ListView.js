@@ -12,7 +12,6 @@ define([
             parrentContentId: '10',
 
             initialize: function (options) {
-                debugger;
 				this.startTime = options.startTime;
                 this.collection = options.collection;
                 this.parrentContentId = options.collection.parrentContentId;
@@ -254,7 +253,6 @@ define([
             },
 
             switchPageCounter: function (event) {
-                debugger;
                 this.startTime = new Date();
                 var self = this;
                 event.preventDefault();

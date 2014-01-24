@@ -15,7 +15,6 @@ define([
 				   'change .endContractReasonList': 'endContract'
                },
             endContract: function(e) {
-                debugger;
                 e.preventDefault();
                 var wfId = $('.endContractReasonList').attr('data-id');
                 var contractEndReason = $(e.target).text();
