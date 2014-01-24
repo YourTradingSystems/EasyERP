@@ -2382,7 +2382,7 @@ button {
 #leadForm,
 #createDepartmentForm,
 #createUserForm */
-.ui-dialog .form-holder form{ 
+.form-holder form{ 
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2468,95 +2468,79 @@ button {
             border: @thin-border rgba(121, 187, 238, 0.75) !important;
         }
     }
+	&#leadForm {
+		input[type='email'],input[type='text'] {
+			width: 71%;
+		}
+		textarea {
+			margin-top: 10px;
+		}
+	}
+	&#createProfileForm {
+		input[type='text'] {
+			width: 100%;
+		}
+
+		select {
+			width: 100%;
+		}
+	}
+	&#createTaskForm input[type='text'] {
+		width: 95%;
+	}
+	&#createApplicationForm, 
+	&#createEmployeeForm {
+		#otherInfo {
+			margin-top: 13px;
+			width: 316px;
+			height: 113px;
+			min-height: initial;
+		}
+
+		.input-file {
+			padding: 2px 8px;
+			width: auto;
+			margin-top: 5px;
+		}
+	}
+	&#createJobPositionForm,
+	&#editJobPositionForm {
+		#description {
+			margin-top: 0;
+		}
+	}
+	&#createProjectForm {
+		dl, dt {
+				max-width: 200px;
+		}
+	}
+	&#createEmployeeForm,
+	&#editEmployeeForm {
+		textarea {
+			margin-top: 10px;
+		}
+
+		#addContact {
+			margin-top: 10px;
+		}
+
+		.textarea-wrapper {
+			margin-left: 10px;
+		}
+		&.notDialog {
+			dl {
+				dt, dd {
+					line-height: 17px;
+				}
+			}
+		}
+	}
+
 }
 
 .notDialog .inner .avatar {
     margin-top: 8px;
 }
-
-#createProfileForm {
-    input[type='text'] {
-        width: 100%;
-    }
-
-    select {
-        width: 100%;
-    }
-}
-
-#createProjectForm .project-owner-info {
-    .dl-auto(90px);
-}
-
-#leadForm input[type='email'],
-#leadForm input[type='text'] {
-    width: 71%;
-}
-
-#leadForm dd.withCheckbox {
-    margin-top: 0;
-}
-
-#leadForm textarea {
-    margin-top: 10px;
-}
-
-#createTaskForm input[type='text'] {
-    width: 95%;
-}
-
-#createApplicationForm, #createEmployeeForm {
-    #otherInfo {
-        margin-top: 13px;
-        width: 316px;
-        height: 113px;
-        min-height: initial;
-    }
-
-    .input-file {
-        padding: 2px 8px;
-        width: auto;
-        margin-top: 5px;
-    }
-}
-
-#createJobPositionForm,
- #editJobPositionForm {
-	#description {
-		margin-top: 0;
-	}
-}
-
-#createProjectForm {
-    dl {
-        dt {
-            max-width: 200px;
-        }
-    }
-}
-
-#createEmployeeForm,
-#editEmployeeForm {
-    textarea {
-        margin-top: 10px;
-    }
-
-    #addContact {
-        margin-top: 10px;
-    }
-
-    .textarea-wrapper {
-        margin-left: 10px;
-    }
-}
-
-    #createEmployeeForm.notDialog {
-        dl {
-            dt, dd {
-                line-height: 17px;
-            }
-        }
-    }
 
 .edit-dialog {
     dt {
@@ -4638,19 +4622,26 @@ ul.chart-tabs {
 		  font: 18px sans-serif;
 		  text-anchor: end;
 		  font-weight: bold;
-		 }
+	}
+	.x .tick line {
+		stroke: #f2f2f2;
+	}
 }
 
 
-.axis text {
-    font: 10px sans-serif;
-}
+.axis {
+	text {
+		font: 14px sans-serif;
 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
+	}
+	path, line {
+		fill: none;
+		stroke: #000;
+		shape-rendering: crispEdges;
+	}	
+	.domain {
+		stroke: #fff;
+	}
 }
 
 .bar {
@@ -4665,47 +4656,29 @@ ul.chart-tabs {
     fill: #fff;
 }
 
-.axis text {
-    font: 14px sans-serif;
-}
-
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}
-
 .x.axis path {
     display: none;
 }
 
-.y.label {
-    fill: #57D0b5;
-    font: 18px sans-serif;
-    font-weight: bold;
+.y{
+	.tick line {
+		stroke: #f2f2f2;
+	}
+	&.label {
+		fill: #57D0b5;
+		font: 18px sans-serif;
+		font-weight: bold;
+	}
 }
-
-.y2.label {
-    fill: #26a7dd;
-    font: 18px sans-serif;
-    font-weight: bold;
-}
-
-.y .tick line {
-    stroke: #f2f2f2;
-}
-
-.y2 .tick line {
-    stroke: #fff;
-}
-
-.axis .domain {
-    stroke: #fff;
-}
-
-.chart .x .tick line {
-    stroke: #f2f2f2;
+.y2{
+	&.label {
+		fill: #26a7dd;
+		font: 18px sans-serif;
+		font-weight: bold;
+	}
+	.tick line {
+		stroke: #fff;
+	}
 }
 
 .legend {
