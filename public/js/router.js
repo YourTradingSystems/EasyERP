@@ -24,6 +24,7 @@ define([
             "easyErp/myProfile": "goToUserPages",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
+            "easyErp/projectDashboard": "goToProjectDashboard",
             "easyErp/:contentType": "getList",
             "*eny": "main"
         },
@@ -97,6 +98,24 @@ define([
             var self = this;
 
             if (this.mainView == null) this.main("Dashboard");
+
+            require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
+
+                custom.setCurrentVT('list');
+
+                var contentview = new contentView({ startTime: startTime });
+                var topbarView = new topBarView({ actionType: "Content" });
+                self.changeView(contentview);
+                self.changeTopBarView(topbarView);
+            });
+        },
+        goToProjectDashboard: function () {
+            var startTime = new Date();
+            var contentViewUrl = "views/projectDashboard/ContentView";
+            var topBarViewUrl = "views/projectDashboard/TopBarView";
+            var self = this;
+
+            if (this.mainView == null) this.main("projectDashboard");
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
