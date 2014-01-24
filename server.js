@@ -218,6 +218,11 @@ app.post('/uploadFiles', function (req, res, next) {
         });
     });
 });
+app.get('/download/:name', function (req, res) {
+    var name = req.param('name');
+	res.download(__dirname + "\\uploads\\" + name);
+});
+
 app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
