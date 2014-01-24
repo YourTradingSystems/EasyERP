@@ -79,7 +79,6 @@
 
             showMoreAlphabet: function (options) {
                 var that = this;
-
                 var filterObject = {};
                 if (options) {
                     for (var i in options) {
