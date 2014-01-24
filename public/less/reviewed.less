@@ -1,4 +1,4 @@
-﻿/*Optimize Fonts  (Remove Extra Fonts) */
+﻿/*Optimize Fonts to Remove */
 
 @font-face {
     font-family: 'Segoe UI';
@@ -43,8 +43,8 @@
     font-weight: 400;
     src: local('Open Sans'), local('OpenSans'), url(../font/Open-Sans.woff) format('woff');
 }
-/*------------------------Constants-----------------------------*/
 
+/*------------------------Constants-----------------------------*/
 @imagesfolder: '../images';
 @body-font: "Segoe UI", sans-serif;
 @lucida-font: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
@@ -64,4 +64,162 @@
 @tabColor: #BDC3C7;
 @birthdayColor: #555;
 
-/*----------------------------Functions------------------------------*/
+/*------------------------Functions-----------------------------*/
+.border-radius(@radius: 4px) {
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+    border-radius: @radius;
+}
+.box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
+    box-shadow: @arguments;
+    -moz-box-shadow: @arguments;
+    -webkit-box-shadow: @arguments;
+}
+.margin(@margin: 5px) {
+    margin: @margin;
+}
+.mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 30px) {
+    display: block;
+    float: none;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    height: @height;
+    .no-marpad;
+    border-bottom: @thin-border #4D5A75;
+
+    nav {
+        .left;
+        background: #4D5A75;
+
+        ul {
+            .no-marpad;
+            display: block;
+            height: @height;
+
+            li {
+                height: @height;
+                width: 100px;
+                text-align: center;
+                color: #fff;
+                line-height: @height;
+                overflow: hidden;
+                .left;
+                position: relative;
+                cursor: pointer;
+
+                a {
+                    font-size: 14px;
+                    font-size: 0.75rem;
+                    letter-spacing: 1.5px;
+                    color: #fff;
+                    font-size: 14px;
+                    font-size: 0.75rem;
+                    text-decoration: none;
+                    display: block;
+                    .fullsize;
+                    line-height: @height - 2px;
+                    font-weight: 400;
+                    text-transform: uppercase;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                &.hover {
+                    height: @height;
+
+                    a {
+                        text-decoration: underline;
+                        display: block;
+                    }
+                }
+
+                &.selected {
+                    background-color: @activeColor;
+                    height: @height;
+                    border: 0;
+                    -webkit-transition: all ease .5s;
+                    -moz-transition: all ease .5s;
+                    transition: all ease .5s;
+
+                    a {
+                        font-size: 14px;
+                        font-size: 0.75rem;
+                        color: #fff;
+                        text-decoration: none;
+                        display: block;
+                        letter-spacing: 1.5px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
+    display: block;
+    position: relative;
+    height: @height;
+    width: auto;
+
+
+    nav {
+        height: @height;
+
+        ul {
+            height: @height;
+
+
+            li {
+                list-style: none;
+                width: auto;
+                font-size: 14px;
+                color: @bg;
+                line-height: @height;
+                float: left;
+                display: block;
+                width: 100px;
+                height: @height;
+                text-align: center;
+                background: @defaultColor;
+
+
+                &.hover {
+                    height: @height;
+                    line-height: @height;
+
+                    a {
+                        color: @bg;
+                        text-decoration: underline;
+                    }
+                }
+
+                a {
+                    font-family: 'Lato',Helvetica,Arial,sans-serif;
+                    color: @bg;
+                    font-size: 12px;
+                    line-height: @height;
+                    display: block;
+                    .fullsize;
+                }
+
+                &.selected {
+                    position: relative;
+                    height: @height;
+                    line-height: @height;
+                    width: 100x;
+                    a {
+                        line-height: @height;
+                        height: @height;
+                        text-decoration: underline;
+                    }
+
+                        }
+                    }
+                }
+            }
+        }

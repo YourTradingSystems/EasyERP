@@ -13,7 +13,7 @@ function (ProjectsListTemplate, common) {
         },
         events: {
             "click .current-selected": "showNewSelect",
-            "click .newSelectList li": "chooseOption",
+            "click .newSelectList li": "chooseOption"
         },
 
 		hideNewSelect:function(e){
