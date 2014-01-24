@@ -129,33 +129,22 @@ dl {
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
-.gradient2(@startcolor,@endcolor) {
-    background-color: @endcolor;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(@startcolor), to(@endcolor));
-    background-image: -webkit-linear-gradient(top, @startcolor, @endcolor);
-    background-image: -moz-linear-gradient(top, @startcolor, @endcolor);
-    background-image: -ms-linear-gradient(top, @startcolor, @endcolor);
-    background-image: -o-linear-gradient(top, @startcolor, @endcolor);
-    background-image: linear-gradient(to bottom, @startcolor, @endcolor);
-}
-
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15), @inset: '') {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
 }
-
+.border-radius(@radius: 4px) {
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+    border-radius: @radius;
+}
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
 }
 
-.border-radius(@radius: 4px) {
-    -moz-border-radius: @radius;
-    -webkit-border-radius: @radius;
-    border-radius: @radius;
-}
 
 
 article {
