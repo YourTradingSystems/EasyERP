@@ -1901,8 +1901,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                             }
                         },
                         function (err, projectsId) {
-                            console.log('-------++++++++++++++++-----------------');
-                            console.log(projectsId);
                             if (!err) {
                                 models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                     where('project').in(projectsId.objectID()).
@@ -1929,12 +1927,10 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 response.send(500, { error: "Can't find Projects" });
                             }
                         });
+
                     } else {
-                        response.send(res);
+                        console.log(err);
                     }
-                } else {
-                    console.log(err);
-                }
             }
         );
 

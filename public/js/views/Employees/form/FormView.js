@@ -12,9 +12,10 @@ define([
             },
 			events:{
                    'click .chart-tabs a': 'changeTab',
-				   'click .endContractReasonList a': 'endContract'
+				   'change .endContractReasonList': 'endContract'
                },
             endContract: function(e) {
+                debugger;
                 e.preventDefault();
                 var wfId = $('.endContractReasonList').attr('data-id');
                 var contractEndReason = $(e.target).text();
