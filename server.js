@@ -831,6 +831,15 @@ app.get('/CompaniesForDd', function (req, res) {
     requestHandler.getCompaniesForDd(req, res, data);
 });
 
+app.get('/ownCompaniesListLength', function (req, res) {
+    data = {};
+    //data.mid = req.param('mid');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getOwnCompaniesListLength(req, res, data);
+});
+
 app.get('/ownCompanies', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -959,6 +968,14 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 });
 
 //------------------JobPositions---------------------------------------------------
+app.get('/JobPositionsListLength', function (req, res) {
+    data = {};
+    //data.mid = req.param('mid');
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
+    requestHandler.getJobPositionsListLength(req, res, data);
+});
 
 app.get('/jobType', function (req, res) {
     data = {};

@@ -907,6 +907,14 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getOwnCompaniesListLength(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            customer.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getOwnCompanies(req, res, data) {
         console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -1041,6 +1049,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+    function getJobPositionsListLength(req, res, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            jobPosition.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getJobType(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             jobType.getForDd(req, res);
@@ -2185,6 +2202,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         getCompaniesForDd: getCompaniesForDd,
         getCompanyById: getCompanyById,
+        getOwnCompaniesListLength: getOwnCompaniesListLength,
         getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,
         createCompany: createCompany,
@@ -2200,6 +2218,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getWorkflowsForDd: getWorkflowsForDd,
         removeWorkflow: removeWorkflow,
 
+        getJobPositionsListLength: getJobPositionsListLength,
         getJobPosition: getJobPosition,
         createJobPosition: createJobPosition,
         updateJobPosition: updateJobPosition,

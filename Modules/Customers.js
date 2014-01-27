@@ -373,12 +373,12 @@
                                     if (data && data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status)
                                     query.exec(function (error, _res) {
-                                            if (!error) {
-                                                res['listLength'] = _res.length;
-                                                response.send(res);
-                                            } else {
-                                                console.log(error);
-                                            }
+                                        if (!error) {
+                                            res['listLength'] = _res.length;
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
                                     });
                                 } else {
                                     console.log(err);
