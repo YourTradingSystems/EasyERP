@@ -163,7 +163,23 @@
         }
     }
 }
-
+.top-bar(@defaultHeight: 30px, @defaultBackground:#fff, @defaultBorderColor: #ababab, @defaultH3Color:#333, @defaultMargin:6px 0 0 0, @defaultPadding: 0 10px,) {
+    position: relative;
+    display: block;
+    width: auto;
+    height: @defaultHeight;
+    border-bottom: @thin-border @defaultBorderColor;
+    background: @defaultBackground;
+    clear: both;
+    h3 {
+        margin:@defaultMargin;
+        padding: @defaultPadding;
+        color: @defaultH3Color !important;
+        font-family: @title-font;
+        font-weight: normal;
+        float: left;
+    }
+}
 .submenu(@defaultColor: #FFF,@activeColor: #FFF, @height: 30px, @bg: #4D5A75) {
     display: block;
     position: relative;
@@ -226,8 +242,259 @@
         }
     }
 }
+.loginForm(@defaultWidth:360px, @defaultMargin:130px auto, @defaultMinHeight:150px, @defaultBgColor:#fff, @defaultPadding:20px 0 13px, @font-size:24px) {
+    display: block;
+    width: @defaultWidth;
+    margin: @defaultMargin;
+    min-height: @defaultMinHeight;
+    background: @defaultBgColor;
+    border: @thin-border #ccc;
+    padding: @defaultPadding;
+    font-family: 'Open Sans', sans-serif;
+	.loginImage(@x: 0, @y:0){
+        background-image: url("@{imagesfolder}/login-sprite.png");
+        background-repeat: no-repeat;
+		background-position: @x @y;
+	}
+    .error {
+        padding-left: 30px;
+        line-height: 30px;
+        display: none;
+        color: red;
+    }
+
+    h2 {
+        font-weight: 300 !important;
+        font-size: @font-size;
+        margin: 25px 0 35px 30px;
+    }
+
+    .icon-pass,
+    .icon-login {
+        border: @thin-border #e5e5e5;
+        border-left: 2px solid #35aa74;
+        margin: 0 30px;
+
+        .icon {
+            margin: 8px 0 0 5px;
+            display: block;
+            float: left;
+            width: 25px;
+            height: 19px;
+            margin-top: 10px;
+			.loginImage;
+        }
+
+        &.active {
+            border-color: #999;
+            border-left: 2px solid #35aa74;
+        }
+    }
+
+    &.notRegister {
+        .error {
+            display: block;
+        }
+
+        .icon-pass,
+        .icon-login {
+            border: @thin-border red;
+        }
+    }
+
+    .icon-login {
+        .icon {
+            background-position: 50% -48px;
+            height: 14px;
+        }
+    }
+
+    .icon-pass {
+        margin-bottom: 30px;
+
+        .icon {
+            background-position: 2px -62px;
+            height: 13px;
+        }
+    }
+
+    #urem {
+        display: none;
+    }
+
+    p {
+        margin: 10px 0px;
+    }
+
+    h3 {
+        font-weight: 300 !important;
+        font-size: @font-size - 6;
+        color: #555;
+        margin-left: 30px;
+        padding: 20px 0 0;
+    }
+
+    span.text {
+        line-height: 40px;
+        margin: 0 30px;
+        font-size: @font-size/2;
+
+        a {
+            font-size: @font-size/2;
+		}
+    }
+
+    .dotted-line {
+        margin: 0 30px 5px 30px;
+        border-top: 1px dotted #eee;
+    }
+
+    .login-button {
+        background-color: #35aa47;
+        padding: 11px 14px 11px 14px;
+        font-size: @font-size/2+2;
+        color: white;
+        float: right;
+        margin: -9px 30px 0 0;
+
+        &:hover {
+			text-decoration:none;
+            background-color: #1d943b;
+            color: white;
+        }
+
+        i {
+            display: inline-block;
+            float: right;
+            margin-left: 5px;
+            width: 14px;
+            height: 14px;
+			.loginImage(0, -81px);
+        }
+    }
+
+    .remember-me {
+        position: relative;
+        float: left;
+        padding-left: 25px;
+        margin-left: 30px;
+        font-size: @font-size/2+2;
+        line-height: 19px;
+        color: black;
+		.loginImage(0, 1px);
+
+        &:hover {
+            color: black;
+            background-position: 0 -20px;
+        }
+
+        .check {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: none;
+            float: left;
+            width: 9px;
+            height: 8px;
+            z-index: 1000;
+			.loginImage(50%, -40px);
+        }
+
+        &.active {
+            .check {
+                display: block;
+            }
+        }
+    }
+
+    .line {
+        height: 17px;
+        border-bottom: @thin-border #eee;
+        clear: both;
+    }
+
+    input {
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 400;
+        color: #333;
+        padding-left: 0;
+        border: 0;
+        width: 260px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    input[type="submit"] {
+		display:none;
+    }
+
+}
 
 /*-----------------------------Styles--------------------------------*/
+/*-----------------------------All--------------------------------*/
+@-moz-document url-prefix() {
+    body {
+        font: size:10px;
+    }
+
+    .form {
+        p {
+            label {
+                line-height: 30px;
+            }
+        }
+    }
+}
+a {
+    color: @blue;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:focus {
+        outline: 0;
+    }
+}
+
+
+h3 {
+    color: @blue;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+body {
+    font-family: @body-font;
+    font-size: 12px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.clear {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+
+.clearfix {
+    zoom: 1;
+    clear: both;
+
+    &:before {
+        .clear;
+    }
+
+    &:after {
+        .clear;
+        clear: both;
+    }
+}
+
 .pull-left {
     float: left;
 }
@@ -245,7 +512,39 @@
     width: 100%;
     height: 100%;
 }
+#wrapper {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+	#content-holder {
+		position: inherit;
+		height: auto;
+		display: block;
+		background: #fff;
+		clear: both;
+		width: 100%;
+	}
+}
 
+/*----------------------------- Main menu --------------------------------*/
+#mainmenu-holder {
+    .mainmenu;
+}
+#submenu-holder {
+    .submenu;
+}
+/*----------------------------- Top Bar --------------------------------*/
+#top-bar {
+	.top-bar;
+}
+
+/*----------------------------- Login Form --------------------------------*/
+#loginForm{
+	.loginForm;
+}
+
+
+/*----------------------------- Persons --------------------------------*/
 #Persons {
     .list-holder {
     }
