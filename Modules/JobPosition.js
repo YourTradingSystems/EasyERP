@@ -172,8 +172,90 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                 response.send(res);
             }
         });
-    }; 
+    };
 
+    function getListLength(req, data, response) {
+        var res = {};
+
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).find().where('_id').in(result);
+                                query.select("_id").
+                                    exec(function (error, _res) {
+                                        if (!error) {
+                                            res['listLength'] = _res.length;
+                                            console.log(res['listLength']);
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
+
+                                    });
+                            } else {
+                                console.log(err);
+                            }
+
+                        }
+                    );
+
+                } else {
+                    console.log(err);
+                }
+            });
+    };
 
     function get(req, response) {
         var res = {};
@@ -585,6 +667,8 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
             getCustom: getCustom,
 
             create: create,
+
+            getListLength: getListLength,
 
             get: get,
 

@@ -1,4 +1,4 @@
-<div class="startLetter">
+<div id="startLetter">
   <% allAlphabeticArray.forEach(function(letter, index){ %>
   <a href="javascript:;" class="letter<%=(letter==selectedLetter)?' current':''%><%=alphabeticArray.indexOf(letter)==-1?' empty':''%>"><%=letter%></a>
   <% }) %>

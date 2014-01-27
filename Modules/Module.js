@@ -10,8 +10,6 @@ var Module = function (logWriter, mongoose, profile, models) {
         visible: Boolean
     }, { collection: 'modules' });
     
-    var ObjectId = mongoose.Schema.Types.ObjectId;
-    
     mongoose.model('modules', moduleSchema);
 
     return {
@@ -36,7 +34,6 @@ var Module = function (logWriter, mongoose, profile, models) {
 
         get: function (req, id, response) {
            
-            var res = [];
             models.get(req.session.lastDb - 1, "Profile", profile.schema).aggregate(
                 {
                     $project: {
