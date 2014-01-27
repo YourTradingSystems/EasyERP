@@ -9,8 +9,9 @@
             page: 1,
             count: 13,
 
-            initialize: function (options) {				
+            initialize: function (options) {
 				this.startTime = new Date();
+                this.parrentContentId = options.parrentContentId;
                 this.namberToShow = options.count;
                 this.count = options.count;
                 var that = this;
@@ -48,7 +49,7 @@
                         console.log("Tasks fetchSuccess");
                         that.page += addPage;
                         that.showMoreButton = response.showMore;
-                        that.optionsArray = response.options;
+                        //that.optionsArray = response.options;
                     },
                     error: this.fetchError
                 });
@@ -65,24 +66,9 @@
                 var filterObject = {};
                 filterObject['page'] = (options && options.page) ? options.page : this.page;
                 filterObject['count'] = (options && options.count) ? options.count : this.count;
-                var NewCollection = Backbone.Collection.extend({
-                    model: TaskModel,
-                    url: that.url,
-                    parse: true,
-                    parse: function(response) {
-                        return response.data;
-                    },
-                    page: that.page,
+                filterObject['parrentContentId'] = (options && options.parrentContentId) ? options.parrentContentId : this.parrentContentId;
 
-                    filterByWorkflow: function (id) {
-                        return this.filter(function (data) {
-                            return data.get("workflow")._id == id;
-                        });
-                    }
-                });
-                var newCollection = new NewCollection();
-
-                newCollection.fetch({
+                this.fetch({
                     data: filterObject,
                     waite: true,
                     success: function (models, response) {
@@ -111,7 +97,6 @@
                         return task;
                     });
                 }
-                this.listLength = response.listLength;
                 return response.data;
             }
 

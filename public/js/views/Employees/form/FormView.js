@@ -12,7 +12,7 @@ define([
             },
 			events:{
                    'click .chart-tabs a': 'changeTab',
-				   'click .endContractReasonList a': 'endContract'
+				   'change .endContractReasonList': 'endContract'
                },
             endContract: function(e) {
                 e.preventDefault();
@@ -21,7 +21,7 @@ define([
                 this.formModel.set({ workflow: wfId,contractEndReason: contractEndReason, workflowContractEnd: true });
                 this.formModel.save({},{
                     success: function () {
-                        Backbone.history.navigate("easyErp/Employees", { trigger: true });
+                        Backbone.history.navigate("easyErp/Applications/kanban", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
@@ -38,8 +38,8 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                common.getWorkflowContractEnd("Application", null, null, "/Workflows", null, "Contract End", function(workflow) {
-                    console.log(workflow[0]._id);
+                common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function(workflow) {
+                    console.log(workflow);
                     $('.endContractReasonList').attr('data-id',workflow[0]._id);
                 });
                 this.$el.html(_.template(EmployeesFormTemplate, formModel));

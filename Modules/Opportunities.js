@@ -455,7 +455,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                         {
                             $match: {

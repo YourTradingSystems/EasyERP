@@ -21,6 +21,7 @@ function (common, Validation) {
                 response.creationDate = common.utcDateToLocaleDate(response.creationDate);
                 response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
                 response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
+                response.convertedDate = common.utcDateToLocaleDate(response.convertedDate);
             }
             return response;
         },

@@ -3,20 +3,23 @@ define([
     'views/Employees/CreateView',
     'views/Employees/list/ListItemView',
     'common',
-    'text!templates/Alpabet/AphabeticTemplate.html'
+    'text!templates/Alpabet/AphabeticTemplate.html',
+    'dataService'
 
 ],
 
-    function (ListTemplate, CreateView, ListItemView, common, AphabeticTemplate) {
+    function (ListTemplate, CreateView, ListItemView, common, AphabeticTemplate, dataService) {
         var EmployeesListView = Backbone.View.extend({
             el: '#content-holder',
+            defaultItemsNumber : 50,
+            selectedLetter: "All",
 
             initialize: function (options) {
 				this.startTime = options.startTime;
                 this.collection = options.collection;
                 //this.collection.bind('reset', _.bind(this.render, this));
-                this.defaultItemsNumber = this.collection.namberToShow;
-                this.deleteCounter = 0;
+                if (this.collection.namberToShow)
+                    this.defaultItemsNumber = this.collection.namberToShow;
 				this.allAlphabeticArray = common.buildAllAphabeticArray();
 				this.selectedLetter = "All";
 				this.collection.bind('reset', _.bind(this.render, this));
@@ -82,9 +85,11 @@ define([
                 });
 				this.collection.showMore({count: itemsNumber, page: 1, letter: this.selectedLetter});
 			},
+
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
 			},
+
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
 				return false;
@@ -100,14 +105,7 @@ define([
                 }
                 $('.task-list').find("input").prop("checked",false);
                 $("#top-bar-deleteBtn").hide();
-
-                if (this.defaultItemsNumber) {
-                    var itemsNumber = self.defaultItemsNumber;
-                    this.defaultItemsNumber = false;
-                    $("#itemsNumber").text(itemsNumber);
-                } else {
-                    var itemsNumber = $("#itemsNumber").text();
-                }
+                var itemsNumber = parseInt($("#itemsNumber").text());
 
                 if (deleteCounter == this.collectionLength) {
                     var pageNumber = Math.ceil(this.listLength/itemsNumber);
@@ -214,16 +212,10 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-
-                common.getListLength('Employees', null, null, '/EmployeesListLength', null, function(response){
+                dataService.getData('/EmployeesListLength', { mid: 39, type: 'Employees' }, function (response) {
                     self.listLength = response.listLength;
-                    if (self.defaultItemsNumber) {
-                        var itemsNumber = self.defaultItemsNumber;
-                        this.defaultItemsNumber = false;
-                        $("#itemsNumber").text(itemsNumber);
-                    } else {
-                        var itemsNumber = $("#itemsNumber").text();
-                    }
+                    var itemsNumber = self.defaultItemsNumber;
+                    $("#itemsNumber").text(itemsNumber);
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
                         $("#grid-end").text(0);
@@ -316,7 +308,6 @@ define([
                 $('.task-list').find("input").prop("checked",false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
-
             },
 
             switchPageCounter: function (event) {
@@ -332,7 +323,8 @@ define([
                 }
                 $('.task-list').find("input").prop("checked",false);
                 var itemsNumber = event.target.textContent;
-                common.getListLength('Employees', letter, null, '/EmployeesListLength', null, function(response){
+
+                dataService.getData('/EmployeesListLength', { mid: 39, type: 'Employees', letter: letter }, function (response) {
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
@@ -381,7 +373,7 @@ define([
                 if (this.listLength == 0) {
                     $("#currentShowPage").val(0);
                 } else {
-                    var itemsNumber = $("#itemsNumber").text();
+                    var itemsNumber = parseInt($("#itemsNumber").text());
                     var page = event.target.textContent;
                     if (!page) {
                         page = $(event.target).val();
@@ -419,7 +411,6 @@ define([
                     _.bind(this.collection.showMore, this.collection);
                     this.collection.showMore({count: itemsNumber, page: page, letter: letter});
                 }
-
             },
 
             showMoreContent: function (newModels) {
@@ -467,7 +458,6 @@ define([
                     that.listLength--;
                     localCounter++
                 });
-                this.defaultItemsNumber = $("#itemsNumber").text();
                 this.deleteCounter = localCounter;
                 this.deletePage = $("#currentShowPage").val();
                 this.deleteItemsRender(this.deleteCounter, this.deletePage);

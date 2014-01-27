@@ -2,13 +2,17 @@ define([
     'text!templates/Leads/list/ListHeader.html',
     'views/Leads/CreateView',
     'views/Leads/list/ListItemView',
-	'common'
+	'common',
+    'dataService'
 ],
 
-    function (ListTemplate, CreateView, ListItemView, common) {
+    function (ListTemplate, CreateView, ListItemView, common, dataService) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             wfStatus: [],
+            defaultItemsNumber : 50,
+            convertedStatus : null,
+
             initialize: function (options) {
 				this.startTime = options.startTime;
                 this.collection = options.collection;
@@ -16,8 +20,8 @@ define([
                 this.wfStatus = [];
                 this.convertedStatus = null;
                 //this.collection.bind('reset', _.bind(this.render, this));
-                this.defaultItemsNumber = this.collection.namberToShow;
-                this.deleteCounter = 0;
+                if (this.collection.namberToShow)
+                    this.defaultItemsNumber = this.collection.namberToShow;
                 this.render();
             },
 
@@ -59,7 +63,7 @@ define([
                 this.wfStatus = workflowIdArray;
 
                 var itemsNumber = $("#itemsNumber").text();
-                common.getListLength('Leads', null, this.wfStatus, '/OpportunitiesListLength', isConverted, function(response){
+                dataService.getData('/OpportunitiesListLength', { mid: 39, type: 'Leads', status: this.wfStatus, isConverted: isConverted }, function (response) {
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
@@ -124,14 +128,7 @@ define([
 
                 $('.task-list').find("input").prop("checked",false);
                 $("#top-bar-deleteBtn").hide();
-
-                if (this.defaultItemsNumber) {
-                    var itemsNumber = self.defaultItemsNumber;
-                    this.defaultItemsNumber = false;
-                    $("#itemsNumber").text(itemsNumber);
-                } else {
-                    var itemsNumber = $("#itemsNumber").text();
-                }
+                var itemsNumber = parseInt($("#itemsNumber").text());
 
                 if (deleteCounter == this.collectionLength) {
                     var pageNumber = Math.ceil(this.listLength/itemsNumber);
@@ -238,15 +235,10 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-                common.getListLength('Leads', null, null, '/OpportunitiesListLength', null, function(response){
+                dataService.getData('/OpportunitiesListLength', { mid: 39, type: 'Leads'}, function (response) {
                     self.listLength = response.listLength;
-                    if (self.defaultItemsNumber) {
-                        var itemsNumber = self.defaultItemsNumber;
-                        this.defaultItemsNumber = false;
-                        $("#itemsNumber").text(itemsNumber);
-                    } else {
-                        var itemsNumber = $("#itemsNumber").text();
-                    }
+                    var itemsNumber = self.defaultItemsNumber;
+                    $("#itemsNumber").text(itemsNumber);
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
                         $("#grid-end").text(0);
@@ -337,7 +329,7 @@ define([
                 event.preventDefault();
                 $('.task-list').find("input").prop("checked",false);
                 var itemsNumber = event.target.textContent;
-                common.getListLength('Leads', null, this.wfStatus, '/OpportunitiesListLength', this.convertedStatus, function(response){
+                dataService.getData('/OpportunitiesListLength', { mid: 39, type: 'Leads', isConverted: this.convertedStatus, status: this.wfStatus}, function (response) {
                     self.listLength = response.listLength;
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
@@ -466,7 +458,6 @@ define([
                     that.listLength--;
                     localCounter++
                 });
-                this.defaultItemsNumber = $("#itemsNumber").text();
                 this.deleteCounter = localCounter;
                 this.deletePage = $("#currentShowPage").val();
                 this.deleteItemsRender(this.deleteCounter, this.deletePage);
