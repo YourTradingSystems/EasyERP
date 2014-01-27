@@ -384,8 +384,8 @@
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
-.list {
-    color: #000 !important;
+.list(@defaultColor:#000, @font-size:13px, @defaultBgColorOdd:#f9f9f9, @defaultBgColorHover:#f5f5f5, @defaultProgressColor: #f5f5f5){
+    color: @defaultColor !important;
     font-family: @lucida-font;
     width: 100%;
 
@@ -400,7 +400,7 @@
             padding: 3px 6px;
             line-height: 18px;
             font-weight: bold;
-            font-size: 13px;
+            font-size: @font-size;
             text-align: left;
             text-shadow: 0 1px 1px rgba(222, 222, 222, 0.5);
 
@@ -432,7 +432,7 @@
                 cursor: pointer;
                 padding: 4px 5px;
                 line-height: 18px;
-                font-size: 11px;
+                font-size: @font-size - 2;
                 text-align: left;
                 .text-overflow;
 
@@ -453,16 +453,14 @@
                 }
 
                 progress {
-                    background-color: #F5F5F5;
+                    background-color: @defaultProgressColor;
                 }
-
-                    progress::-webkit-progress-bar {
-                        background-color: #F5F5F5;
-                    }
-
-                    progress::-webkit-progress-value {
-                        background-color: #57B5E3;
-                    }
+                progress::-webkit-progress-bar {
+                    background-color: @defaultProgressColor;
+                }
+                progress::-webkit-progress-value {
+                    background-color: #57B5E3;
+                }
 
                 &:first-of-type {
                     padding-left: 7px;
@@ -476,11 +474,11 @@
     }
 
     tr:nth-child(odd) {
-        background-color: #F9F9F9;
+        background-color: @defaultBgColorOdd;
     }
 
     tr:hover {
-        background-color: #F5F5F5;
+        background-color: @defaultBgColorHover;
     }
 }
 
@@ -673,7 +671,7 @@
         font-weight: 300 !important;
         font-size: @font-size;
         margin: 25px 0 35px 30px;
-                }
+    }
 
     .icon-pass,
     .icon-login {
@@ -684,12 +682,12 @@
         .icon {
             margin: 8px 0 0 5px;
             display: block;
-            float: left;
             width: 25px;
             height: 19px;
             margin-top: 10px;
 			.loginImage;
-            }
+            .pull-left;
+        }
 
         &.active {
             border-color: #999;
@@ -771,22 +769,22 @@
 
         i {
             display: inline-block;
-            float: right;
             margin-left: 5px;
             width: 14px;
             height: 14px;
+			.pull-right;
 			.loginImage(0, -81px);
         }
     }
 
     .remember-me {
         position: relative;
-        float: left;
         padding-left: 25px;
         margin-left: 30px;
         font-size: @font-size/2+2;
         line-height: 19px;
         color: black;
+		.pull-left;
 		.loginImage(0, 1px);
 
         &:hover {
@@ -799,10 +797,10 @@
             top: 5px;
             left: 5px;
             display: none;
-            float: left;
             width: 9px;
             height: 8px;
             z-index: 1000;
+			.pull-left;
 			.loginImage(50%, -40px);
         }
 
@@ -834,6 +832,180 @@
 		display:none;
     }
 
+}
+
+.thumbnailwithavatar(@defaultWidth:180px, @minHeight:200px, @font-size: 13px, @defaultMargin:7px 0 0 7px) {
+    display: block;
+    position: relative;
+    width: @defaultWidth;
+    min-height: @minHeight;
+    margin:@defaultMargin;
+    border: @thin-border transparent;
+    background: transparent !important;
+    .border-radius;
+	.pull-left;
+
+    .title {
+        color: #36A9E1 !important;
+        font-size: @font-size;
+        font-weight: bold;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+        line-height: 18px;
+        font-family: @lucida-font;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .inner {
+        padding: 10px;
+
+        .info {
+            float: left;
+            width: @defaultWidth - 20;
+
+            div {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+            }
+
+            P {
+                font-family: @lucida-font;
+                color: #000;
+                font-size: @font-size;
+                font-weight: 200 !important;
+                line-height: 16px;
+                text-align: center;
+
+                a {
+                    word-break: break-all;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+
+    .avatar {
+        display: block;
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        margin: 0 auto;
+        .border-radius(3px);
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
+
+        img {
+            width: 100%;
+            vertical-align: auto;
+            margin: auto 0;
+        }
+    }
+}
+.thumbnail-text(@defaultColor:#4c4c4c, @font-size:13px){
+    color: @defaultColor;
+    font-size: @font-size;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.thumbnail(@defaultWidth:280px){
+    margin-top: 4px;
+    margin-left: 4px;
+    position: relative;
+    display: block;
+    background: white !important;
+    border: @thin-border @taskBorderColor;
+    border-bottom-color: rgba(0, 0, 0, 0.3);
+    -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
+    width: @defaultWidth;
+    min-height: 130px;
+    cursor: pointer;
+	.pull-left;
+	
+    .inner {
+        padding: 5px;
+    }
+
+    .bottom {
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+
+        .half-block {
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+
+    span {
+        font-family: @lucida-font;
+        position: relative;
+        z-index: 2;
+        .thumbnail-text;
+
+        &.status {
+            &.pending {
+                color: #EAE874;
+            }
+
+            &.inprogress {
+                color: #67C2EF;
+            }
+
+            &.done {
+                color: #BDEA74;
+            }
+
+            &.cancelled {
+                color: #FF5454;
+            }
+        }
+    }
+
+    a.tasksByProject {
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    p {
+        font-family: @lucida-font;
+        .thumbnail-text;
+
+        span {
+            font-weight: normal !important;
+        }
+    }
+
+    h2 {
+        font-family: @lucida-font;
+        margin: 0 0 8px;
+        .thumbnail-text;
+        .bold;
+    }
+
+    &:hover {
+        border: @thin-border #7c7bad;
+		.box-shadow(0,0,4px, #7c7bad);
+    }
+
+    .avatar {
+        .avatar(44px, 0px, 5px, 5px, 0px);
+    }
+
+    .project-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: @defaultWidth - 100;
+
+        span {
+            font-weight: bold;
+        }
+    }
 }
 
 /*-----------------------------Styles--------------------------------*/
@@ -909,7 +1081,7 @@ body {
 }
 
 .pull-right {
-    float: left;
+    float: right;
 }
 
 .noPaddingMargin {
@@ -928,9 +1100,8 @@ body {
     height: 100%;
 }
 #wrapper {
-    width: 100%;
+	.fullsize;
     position: absolute;
-    height: 100%;
 	#content-holder {
 		position: inherit;
 		height: auto;
@@ -960,13 +1131,15 @@ body {
 
 
 /*----------------------------- Persons --------------------------------*/
+.thumbnailwithavatar{
+	.thumbnailwithavatar;
+}
+.list{
+	.list;
+}
+
+.thumbnail{
+	.thumbnail;
+}
 #Persons {
-    .list-holder {
-    }
-
-    .thumbnail-holder {
-    }
-
-    .form-holder {
-    }
 }
