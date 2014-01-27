@@ -10,17 +10,19 @@ define([
         var TasksListView = Backbone.View.extend({
             el: '#content-holder',
             parrentContentId: '10',
+            defaultItemsNumber : 50,
 
             initialize: function (options) {
 				this.startTime = options.startTime;
                 this.collection = options.collection;
                 this.parrentContentId = options.collection.parrentContentId;
 				this.stages = [];
-                this.collection.bind('reset', _.bind(this.render, this));
-                this.defaultItemsNumber = this.collection.namberToShow;
-                this.deleteCounter = 0;
+                //this.collection.bind('reset', _.bind(this.render, this));
+                if (this.collection.namberToShow)
+                    this.defaultItemsNumber = this.collection.namberToShow;
                 this.render();
             },
+
             events: {
                 "click .itemsNumber": "switchPageCounter",
                 "click .showPage": "showPage",
@@ -33,9 +35,11 @@ define([
 				"click .currentPageList": "itemsNumber",
 				"click":"hideItemsNumber"
             },
+
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
 			},
+
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
 				return false;
@@ -46,14 +50,7 @@ define([
                 var self = this;
                 $('.task-list').find("input").prop("checked",false);
                 $("#top-bar-deleteBtn").hide();
-
-                if (this.defaultItemsNumber) {
-                    var itemsNumber = self.defaultItemsNumber;
-                    this.defaultItemsNumber = false;
-                    $("#itemsNumber").text(itemsNumber);
-                } else {
-                    var itemsNumber = $("#itemsNumber").text();
-                }
+                var itemsNumber = parseInt($("#itemsNumber").text());
 
                 if (deleteCounter == this.collectionLength) {
                     var pageNumber = Math.ceil(this.listLength/itemsNumber);
@@ -162,13 +159,8 @@ define([
                 });
                 dataService.getData('/ProjectsListLength', { mid: 39, type: 'Tasks', parrentContentId: this.parrentContentId }, function (response) {
                     self.listLength = response.listLength;
-                    if (self.defaultItemsNumber) {
-                        var itemsNumber = self.defaultItemsNumber;
-                        this.defaultItemsNumber = false;
-                        $("#itemsNumber").text(itemsNumber);
-                    } else {
-                        var itemsNumber = $("#itemsNumber").text();
-                    }
+                    var itemsNumber = self.defaultItemsNumber;
+                    $("#itemsNumber").text(itemsNumber);
                     if ((self.listLength == 0) || self.listLength == undefined) {
                         $("#grid-start").text(0);
                         $("#grid-end").text(0);
@@ -349,6 +341,7 @@ define([
                 $('#timeRecivingDataFromServer').remove();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },
+
             gotoForm: function (e) {
                 App.ownContentType = true;
                 var id = $(e.target).closest("tr").data("id");
@@ -388,7 +381,6 @@ define([
                     that.listLength--;
                     localCounter++
                 });
-                this.defaultItemsNumber = $("#itemsNumber").text();
                 this.deleteCounter = localCounter;
                 this.deletePage = $("#currentShowPage").val();
                 this.deleteItemsRender(this.deleteCounter, this.deletePage);

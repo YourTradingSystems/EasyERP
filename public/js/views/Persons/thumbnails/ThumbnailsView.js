@@ -1,74 +1,95 @@
 ﻿define([
-   'views/Persons/thumbnails/ThumbnailsItemView',
-    'custom',
     'common',
     'views/Persons/EditView',
     'views/Persons/CreateView',
-    'text!templates/Alpabet/AphabeticTemplate.html'
+    'text!templates/Alpabet/AphabeticTemplate.html',
+    "text!templates/Persons/thumbnails/ThumbnailsItemTemplate.html",
+    'dataService'
 ],
 
-function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTemplate) {
+function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplate, dataService) {
     var PersonsThumbnalView = Backbone.View.extend({
         el: '#content-holder',
-
+        countPerPage: 0,
+        template: _.template(ThumbnailsItemTemplate),
+        
         initialize: function (options) {
             this.startTime = options.startTime;
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
-            arrayOfPersons = [];
-            dataIndexCounter = 0;
             this.allAlphabeticArray = common.buildAllAphabeticArray();
             this.selectedLetter = "";
             _.bind(this.collection.showMoreAlphabet, this.collection);
+            this.countPerPage = options.collection.length;
+            this.getTotalLength(this.countPerPage);
             this.render();
         },
 
         events: {
             "click #showMore": "showMore",
-            "click .letter:not(.empty)": "alpabeticalRender"
+            "click .letter:not(.empty)": "alpabeticalRender",
+            "click .gotoForm": "gotoForm",
+            "click .company": "gotoCompanyForm"
+        },
+
+        getTotalLength: function(currentNumber) {
+            dataService.getData('/totalCollectionLength/Persons', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
+                var showMore = context.$el.find('#showMoreDiv');
+                if (response.showMore) {
+                    if (showMore.length === 0) {
+                        context.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+                    } else {
+                        showMore.show();
+                    }
+                } else {
+                    showMore.hide();
+                }
+            }, this);
         },
 
         alpabeticalRender: function (e) {
-            $(e.target).parent().find(".current").removeClass("current");
-            $(e.target).addClass("current");
-            this.selectedLetter = $(e.target).text();
-            if ($(e.target).text() == "All") {
+            var target = $(e.target);
+            target.parent().find(".current").removeClass("current");
+            target.addClass("current");
+            this.selectedLetter = target.text();
+            if (target.text() == "All") {
                 this.selectedLetter = "";
             }
             this.collection.showMoreAlphabet({ count: 50, page: 1, letter: this.selectedLetter });
         },
+        gotoForm: function (e) {
+            e.preventDefault();
+            App.ownContentType = true;
+            var id = $(e.target).closest("a").data("id");
+            window.location.hash = "#easyErp/Persons/form/" + id;
+        },
+
+        gotoCompanyForm: function (e) {
+            e.preventDefault();
+            var id = $(e.target).closest("a").data("id");
+            window.location.hash = "#easyErp/Companies/form/" + id;
+        },
         render: function () {
             var self = this;
-            var namberOfpersons = this.collection.namberToShow;
-            $('.ui-dialog ').remove();
-            console.log('Person render');
+            var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
+            
             this.$el.html('');
             if (this.collection.length > 0) {
-                var holder = this.$el;
-                var thumbnailsItemView;
-                _.each(this.collection.models, function (model, index) {
-                    if (index < namberOfpersons) {
-                        dataIndexCounter++;
-                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).append(thumbnailsItemView.render().el);
-                    } else {
-                        arrayOfPersons.push(model);
-                    }
-                }, this);
+                this.$el.append(this.template({ collection: this.collection.toJSON() }));
             } else {
                 this.$el.html('<h2>No persons found</h2>');
             }
 
-            if (arrayOfPersons.length > 0) {
-                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
             common.buildAphabeticArray(this.collection, function (arr) {
-                $(".startLetter").remove();
+                $("#startLetter").remove();
                 self.alphabeticArray = arr;
-                self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
+                self.$el.prepend(_.template(AphabeticTemplate, {
+                    alphabeticArray: self.alphabeticArray,
+                    selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter),
+                    allAlphabeticArray: self.allAlphabeticArray
+                }));
             });
-            this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+     
+            this.$el.append(createdInTag);
             return this;
         },
 
@@ -78,99 +99,45 @@ function (PersonsThumbnailsItemView, Custom, common, EditView, CreateView, Aphab
         },
 
         showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
-            var thumbnailsItemView;
-            var counter = 0;
-            var namberOfPersons = this.collection.namberToShow;
-
-            if (arrayOfPersons.length > 0) {
-                for (var i = 0; i < arrayOfPersons.length; i++) {
-                    if (counter < namberOfPersons) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[i], dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
-                        arrayOfPersons.splice(i, 1);
-                        i--;
-                    }
-                }
-
-            }
-            _.each(newModels.models, function (model) {
-                if (counter < namberOfPersons) {
-                    counter++;
-                    dataIndexCounter++;
-                    thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
-                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    holder.before(thumbnailsItemView.render().el);
-                } else {
-                    arrayOfPersons.push(model);
-                }
-            }, this);
-
-            if (arrayOfPersons.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
+            this.countPerPage += newModels.length;
+            var showMore = this.$el.find('#showMoreDiv');
+            this.getTotalLength(this.countPerPage);
+            showMore.before(this.template({ collection: this.collection.toJSON() }));
         },
+        
         showMoreAlphabet: function (newModels) {
-            arrayOfPersons = [];
-            var alphaBet = this.$el.find('#content-holder .startLetter');
-            var created = this.$el.find('#timeRecivingDataFromServer');
             var holder = this.$el;
-            $("#content-holder .thumbnailwithavatar").remove();
-            var thumbnailsItemView;
-            var counter = 0;
-            var namberOfPersons = this.collection.namberToShow;
+            var alphaBet = holder.find('#startLetter');
+            var created = holder.find('#timeRecivingDataFromServer');
+            var showMore = holder.find('#showMoreDiv');
+            var content = holder.find(".thumbnailwithavatar");
+            var countPerPage = this.countPerPage = newModels.length;
 
-            if (arrayOfPersons.length > 0) {
-                for (var i = 0; i < arrayOfPersons.length; i++) {
-                    if (counter < namberOfPersons) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new PersonsThumbnailsItemView({ model: arrayOfPersons[arrayOfPersons.length - i - 1], dataIndex: dataIndexCounter });
-                        holder.append(thumbnailsItemView.render().el);
-                        arrayOfPersons.splice(arrayOfPersons.length - i - 1, 1);
-                        i--;
-                    }
-                }
+            content.remove();
+            
+            holder.append(this.template({ collection: newModels.toJSON() }));
 
-            }
-            _.each(newModels.models, function (model) {
-                if (counter < namberOfPersons) {
-                    counter++;
-                    dataIndexCounter++;
-                    thumbnailsItemView = new PersonsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
-                    holder.append(thumbnailsItemView.render().el);
-                } else {
-                    arrayOfPersons.push(model);
-                }
-            }, this);
+            this.getTotalLength(countPerPage);
 
-            if (arrayOfPersons.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
-            else {
-                this.$el.find('#showMoreDiv').show();
-            }
             holder.prepend(alphaBet);
             holder.append(created);
+            created.before(showMore);
         },
 
         createItem: function () {
             //create editView in dialog here
-            new CreateView();
+            new createView();
         },
 
         editItem: function () {
             //create editView in dialog here
-            new EditView({ collection: this.collection });
+            new editView({ collection: this.collection });
         },
 
         deleteItems: function () {
-            var that = this,
-        		mid = 39,
-                model;
+            var mid = 39;
+            var model;
+            
             model = this.collection.get(this.$el.attr("id"));
             this.$el.fadeToggle(200, function () {
                 model.destroy({
