@@ -335,7 +335,7 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 5,
+                            count: 50,
                             parrentContentId: parrentContentId
                         })
 
