@@ -54,6 +54,7 @@
 @title-font: Title;
 @metroicon-font: "Metrize-Icons";
 @blue: #4d5a75;
+@defaultBorderColor: #ababab;
 @lightmagenta: #7c7bad;
 @lightgrey: #c8c8d3;
 @lightblue: #008bbf;
@@ -384,6 +385,12 @@
     background-image: linear-gradient(to bottom, @startcolor, @endcolor);
 }
 
+.position(@type:absolute, @x:0, @y:0) {
+    position:@type;
+    left:@x;
+    top:@y;
+}
+
 .list {
     color: #000 !important;
     font-family: @lucida-font;
@@ -399,7 +406,7 @@
         th {
             padding: 3px 6px;
             line-height: 18px;
-            font-weight: bold;
+            .bold;
             font-size: 13px;
             text-align: left;
             text-shadow: 0 1px 1px rgba(222, 222, 222, 0.5);
@@ -422,10 +429,10 @@
 
         tr {
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
-            border-top: @thin-border #ababab;
+            border-top: @thin-border @defaultBorderColor;
 
             &:last-child {
-                border-bottom:@thin-border #ababab;
+                border-bottom:@thin-border @defaultBorderColor;
             }
 
             td {
@@ -484,16 +491,14 @@
     }
 }
 
-.margin(@margin: 5px) {
-    margin: @margin;
+.margin(@t: 5px, @r: 5px, @b: 5px, @l: 5px) {
+    margin: @arguments;
 }
 
 .mainmenu(@defaultColor: #333,@activeColor: #36a9e1, @height: 30px) {
     display: block;
     float: none;
-    position: relative;
-    top: 0;
-    left: 0;
+    .position(relative);
     width: 100%;
     background: #fff;
     height: @height;
@@ -592,7 +597,6 @@
     height: @height;
     width: auto;
 
-
     nav {
         height: @height;
 
@@ -612,7 +616,6 @@
                 height: @height;
                 text-align: center;
                 background: @defaultColor;
-
 
                 &.hover {
                     height: @height;
@@ -724,10 +727,6 @@
         }
     }
 
-    #urem {
-        display: none;
-    }
-
     p {
         margin: 10px 0px;
     }
@@ -771,7 +770,7 @@
 
         i {
             display: inline-block;
-            float: right;
+            .pull-right;
             margin-left: 5px;
             width: 14px;
             height: 14px;
@@ -781,7 +780,7 @@
 
     .remember-me {
         position: relative;
-        float: left;
+        .pull-left;
         padding-left: 25px;
         margin-left: 30px;
         font-size: @font-size/2+2;
@@ -795,11 +794,9 @@
         }
 
         .check {
-            position: absolute;
-            top: 5px;
-            left: 5px;
+           .position(absolute,5px,5px);
             display: none;
-            float: left;
+           .pull-left;
             width: 9px;
             height: 8px;
             z-index: 1000;
@@ -835,12 +832,386 @@
     }
 
 }
+.thumbnail-text {
+    color: #4c4c4c;
+    font-size: 13px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+.thumbnail {
+    .pull-left;
+    margin-top: 4px;
+    margin-left: 4px;
+    position: relative;
+    display: block;
+    background: white !important;
+    border: @thin-border @taskBorderColor;
+    border-bottom-color: rgba(0, 0, 0, 0.3);
+    -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
+    width: 280px;
+    min-height: 130px;
+    cursor: pointer;
 
+    .inner {
+        padding: 5px;
+    }
+
+    .bottom {
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+
+        .half-block {
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+
+    span {
+        font-family: @lucida-font;
+        position: relative;
+        z-index: 2;
+        .thumbnail-text;
+
+        &.status {
+            &.pending {
+                color: #EAE874;
+            }
+
+            &.inprogress {
+                color: #67C2EF;
+            }
+
+            &.done {
+                color: #BDEA74;
+            }
+
+            &.cancelled {
+                color: #FF5454;
+            }
+        }
+    }
+
+    a.tasksByProject {
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    p {
+        font-family: @lucida-font;
+        .thumbnail-text;
+
+        span {
+            font-weight: normal !important;
+        }
+    }
+
+    h2 {
+        font-family: @lucida-font;
+        .thumbnail-text;
+        .bold;
+        margin: 0 0 8px;
+    }
+
+    &:hover {
+        border: 1px solid #7c7bad;
+        .box-shadow(0, 0, 4px, #7c7bad)
+    }
+
+    .avatar {
+        .avatar(44px, 0px, 5px, 5px, 0px);
+    }
+
+    .project-text {
+        .text-overflow;
+        width: 180px;
+
+        span {
+            .bold;
+        }
+    }
+}
+.thumbnailwithavatar {
+    display: block;
+    position: relative;
+    .pull-left;
+    width: 180px;
+    min-height: 200px;
+    margin-left: 7px;
+    margin-top: 7px;
+    border: @thin-border transparent;
+    .border-radius;
+    background: transparent !important;
+    text-align:center;
+    .title {
+        color: #36A9E1 !important;
+        font-size: 13px;
+       .bold;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+        line-height: 18px;
+        font-family: @lucida-font;
+        .text-overflow;
+    }
+
+    .inner {
+        padding: 10px;
+
+        .info {
+          .pull-left;
+            width: 160px;
+
+            div {
+                .text-overflow;
+            }
+
+            P {
+                font-family: @lucida-font;
+                color: #000;
+                font-size: 13px;
+                font-weight: 200 !important;
+                line-height: 16px;
+                text-align: center;
+
+                a {
+                    word-break: break-all;
+                    word-wrap: break-word;
+                }
+            }
+        }
+
+        &:hover {
+        }
+    }
+    .avatar {
+       .avatar(100px,0, auto, 0, auto);
+       overflow: hidden;
+       .border-radius(3px);
+       .box-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
+    
+    }
+}
+.kanban {
+    .noPaddingMargin;
+    width: 100%;
+    table-layout: fixed;
+
+    tbody {
+        width: 100%;
+    }
+
+    .opportunity-header {
+        margin-bottom: 7px;
+
+        h3 {
+            text-align: right;
+        }
+    }
+
+    .opportunity-content {
+        margin-top: -7px;
+        margin-bottom: -3px;
+
+        p {
+            display: block;
+            line-height: 18px;
+            clear: left;
+        }
+    }
+
+    tr {
+        &:last-child {
+            border-right: 10px solid white;
+        }
+    }
+
+    .column {
+        border-left: 10px solid #fff;
+        vertical-align: text-top;
+        min-height: 100%;
+        width: auto;
+        min-width: 150px;
+        height: auto;
+        background: url("@{imagesfolder}/form_sheetbg.png");
+
+        .item {
+            word-wrap: break-word;
+            margin: 5px auto;
+            width: 95%;
+            min-height: 40px;
+            text-align: left;
+            border: @thin-border @taskBorderColor;
+            background-color: #fff;
+            color: #2C3E50;
+            cursor: move;
+            min-width: 150px;
+            transition: box-shadow 1s ease;
+            transition: border-color 1s ease;
+            .border-radius(0px);
+
+            &.active {
+                .box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
+                 transition: box-shadow 1s ease;
+            transition: border-color 1s ease;
+            }
+
+            .inner {
+                padding: 5px;
+            }
+
+            .task-header {
+                p.right {
+                    text-align: right;
+                }
+            }
+
+            .task-content {
+                .info {
+                    padding: 5px;
+                    padding-bottom: 2px;
+
+                    p.bold {
+                       .bold;
+                    }
+                }
+            }
+        }
+
+        h2 {
+            width: auto;
+            padding: 4px;
+            text-align: left;
+            color: #333333;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 1px 0 white;
+            white-space: nowrap;
+
+            span {
+                font-weight: normal;
+                line-height: 13px;
+                font-size: 13px;
+
+                span {
+                    font-weight: normal;
+                    line-height: 13px;
+                    font-size: 13px;
+                }
+            }
+        }
+
+        .columnNameDiv {
+            background: #fff;
+            height: 35px;
+
+            &.task {
+                height: 42px;
+            }
+
+            .remaining, .revenue {
+                border-bottom: 2px solid #e88f04;
+                padding-bottom: 5px;
+                margin-bottom: 5px;
+            }
+
+            &.cancelled .remaining {
+                border-bottom: 2px solid #FF5454;
+            }
+
+            &.done .remaining {
+                border-bottom: 2px solid #BDEA74;
+            }
+
+            &.testing .remaining {
+                border-bottom: 2px solid #D9FFC8;
+            }
+
+            &.merge .remaining {
+                border-bottom: 2px solid #FFEA73;
+            }
+
+            &.development .remaining {
+                border-bottom: 2px solid #67C2EF;
+            }
+
+            &.specification .remaining {
+                border-bottom: 2px solid #EAE874;
+            }
+
+            &.analysis .remaining {
+                border-bottom: 2px solid #808080;
+            }
+
+            &:hover .foldUnfold img, &.selected .foldUnfold img {
+                margin: -20px 6px 3px 0;
+                width: 13px;
+                display: block;
+                float: right;
+                cursor: pointer;
+            }
+        }
+
+
+
+        .remaining, .revenue {
+            margin-left: 3px;
+            font-size: 13px;
+            color: #4c4c4c;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        &.rotate h2 {
+            position: relative;
+            display: inline-block;
+            top: 60px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: normal;
+            color: grey;
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+
+        &.rotate .dropDownMenu {
+            top: 21px;
+        }
+
+        &.lastColumn .dropDownOpened {
+            right: 0;
+        }
+    }
+
+
+
+    .dropDownMenu {
+        height: 10px;
+        width: 10px;
+        float: right;
+        margin: 5px;
+        padding: 3px 5px !important;
+        position: absolute;
+        top: 16px;
+        right: 0;
+        z-index: 1;
+
+        & > li > a {
+            text-decoration: none;
+            text-align: left;
+            color: #34495E;
+        }
+    }
+}
 /*-----------------------------Styles--------------------------------*/
 /*-----------------------------All--------------------------------*/
 @-moz-document url-prefix() {
     body {
-        font: size:10px;
+        font-size:10px;
     }
 
     .form {
@@ -864,13 +1235,10 @@ a {
     }
 }
 
-
 h3 {
     color: @blue;
     font-size: 18px;
-    font-weight: bold;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    .text-overflow;
 }
 
 body {
@@ -909,7 +1277,7 @@ body {
 }
 
 .pull-right {
-    float: left;
+    float: right;
 }
 
 .noPaddingMargin {
@@ -928,9 +1296,9 @@ body {
     height: 100%;
 }
 #wrapper {
-    width: 100%;
+   
     position: absolute;
-    height: 100%;
+    .fullsize;
 	#content-holder {
 		position: inherit;
 		height: auto;
@@ -940,7 +1308,37 @@ body {
 		width: 100%;
 	}
 }
+/*----------------------------- Attachmetns ------------------------------*/
+.attachContainer {
+    li {
+        border-bottom: dashed 1px @lightgrey;
+        line-height: 24px;
 
+        .deleteAttach {
+            .pull-right;
+            display: none;
+        }
+
+        &:before {
+            //.icon3;
+            content: 'H';
+            line-height: 30px;
+            font-size: 30px;
+            .bold;
+        }
+
+        &:hover {
+            background-color: #f1f1f1;
+
+            .deleteAttach {
+                .pull-right;
+                display: block;
+                line-height: 30px;
+                padding-right: 10px;
+            }
+        }
+    }
+}
 /*----------------------------- Main menu --------------------------------*/
 #mainmenu-holder {
     .mainmenu;
