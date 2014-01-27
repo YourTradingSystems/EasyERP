@@ -21,7 +21,7 @@ define([
                 this.formModel.set({ workflow: wfId,contractEndReason: contractEndReason, workflowContractEnd: true });
                 this.formModel.save({},{
                     success: function () {
-                        Backbone.history.navigate("easyErp/Employees", { trigger: true });
+                        Backbone.history.navigate("easyErp/Applications/kanban", { trigger: true });
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });

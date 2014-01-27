@@ -76,7 +76,7 @@ define([
                 this.$el.html(this.template(this.model.toJSON()));
                 this.$el.attr("data-index", this.dataIndex);
                 this.$el.attr("id", this.model.get('_id'));
-                this.changeColor(this.model.get('color'));
+//                this.changeColor(this.model.get('color'));
                 return this;
             }
         });

@@ -1,4 +1,4 @@
-﻿define(['Validation'],function (Validation) {
+﻿define(['Validation','common'],function (Validation,common) {
     var EmployeeModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
@@ -10,6 +10,19 @@
                     }
                 }
             });
+        },
+        
+        parse: true,
+        parse: function (response) {
+            if (response) {
+                if (response.attachments) {
+                    _.map(response.attachments, function (attachment) {
+                        attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                        return attachment;
+                    });
+                }
+            }
+            return response;
         },
         
         validate: function(attrs){

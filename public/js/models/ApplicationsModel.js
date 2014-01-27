@@ -18,6 +18,13 @@ function (common, Validation) {
             if (response) {
             	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
             	response.nextAction = common.utcDateToLocaleDate(response.nextAction);
+            	
+                if (response.attachments) {
+                    _.map(response.attachments, function (attachment) {
+                        attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                        return attachment;
+                    });
+                }
             }
             return response;
         },
