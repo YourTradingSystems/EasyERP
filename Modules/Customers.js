@@ -402,12 +402,12 @@
 
         getPersonsListLength: function (req, response, data) {
             var res = {};
-            var aggObject = {};
+            var optionsObject = {};
             if (data.letter) {
-                aggObject['type'] = 'Person';
-                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                optionsObject['type'] = 'Person';
+                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
-                aggObject['type'] = 'Person';
+                optionsObject['type'] = 'Person';
             };
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                 {
@@ -427,7 +427,7 @@
                             {
                                 $match: {
                                     $and: [
-                                        aggObject,
+                                        optionsObject,
                                         {
                                             $or: [
                                                 {
@@ -493,14 +493,13 @@
         getFilterPersons: function (req, data, response) {
             console.log('------------get filter Persons-------------------');
             var res = {};
-            var aggObject = {};
+            var optionsObject = {};
+            
             res['data'] = [];
-            if (data.letter) {
-                aggObject['type'] = 'Person';
-                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
-            } else {
-                aggObject['type'] = 'Person';
-            };
+            optionsObject['type'] = 'Person';
+            
+            if (data.letter) 
+                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                 {
@@ -519,7 +518,7 @@
                             {
                                 $match: {
                                     $and: [
-                                        aggObject,
+                                        optionsObject,
                                         {
                                             $or: [
                                                 {
@@ -586,16 +585,17 @@
                     }
                 });
         },
+        
         getFilterPersonsForMiniView: function (req, response, data) {
             console.log('------------get filter Persons-------------------');
             var res = {};
-            var aggObject = {};
+            var optionsObject = {};
             res['data'] = [];
             if (data.letter) {
-                aggObject['type'] = 'Person';
-                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                optionsObject['type'] = 'Person';
+                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
-                aggObject['type'] = 'Person';
+                optionsObject['type'] = 'Person';
             };
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -615,7 +615,7 @@
                             {
                                 $match: {
                                     $and: [
-                                        aggObject,
+                                        optionsObject,
 										{
 										    company: newObjectId(data.companyId)
 										},
@@ -696,16 +696,17 @@
                     }
                 });
         },
+        
         getFilterPersonsForList: function (req, data, response) {
             var res = {};
             res['data'] = [];
 
-            var aggObject = {};
+            var optionsObject = {};
             if (data.letter) {
-                aggObject['type'] = 'Person';
-                aggObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                optionsObject['type'] = 'Person';
+                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
-                aggObject['type'] = 'Person';
+                optionsObject['type'] = 'Person';
             };
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -726,7 +727,7 @@
                             {
                                 $match: {
                                     $and: [
-                                        aggObject,
+                                        optionsObject,
                                         {
                                             $or: [
                                                 {
@@ -1016,12 +1017,12 @@
             var res = {};
             res['data'] = [];
 
-            var aggObject = {};
+            var optionsObject = {};
             if (data.letter) {
-                aggObject['type'] = 'Company';
-                aggObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                optionsObject['type'] = 'Company';
+                optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
-                aggObject['type'] = 'Company';
+                optionsObject['type'] = 'Company';
             };
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1042,7 +1043,7 @@
                             {
                                 $match: {
                                     $and: [
-                                        aggObject,
+                                        optionsObject,
                                         {
                                             $or: [
                                                 {
@@ -1113,12 +1114,12 @@
             var res = {};
             res['data'] = [];
 
-            var aggObject = {};
+            var optionsObject = {};
             if (data.letter) {
-                aggObject['type'] = 'Company';
-                aggObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                optionsObject['type'] = 'Company';
+                optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
             } else {
-                aggObject['type'] = 'Company';
+                optionsObject['type'] = 'Company';
             };
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1139,7 +1140,7 @@
                             {
                                 $match: {
                                     $and: [
-                                        aggObject,
+                                        optionsObject,
                                         {
                                             $or: [
                                                 {
