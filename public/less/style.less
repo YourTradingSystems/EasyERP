@@ -145,8 +145,6 @@ dl {
     -webkit-box-shadow: @arguments;
 }
 
-
-
 article {
     .box-shadow(2px, 5px);
 }
@@ -1300,8 +1298,7 @@ h3 {
             text-shadow: 0px 1px 2px black;
         }
     }
-
-    }
+}
 
 .light {
     color: white;
@@ -1320,7 +1317,6 @@ h3 {
 .task-list {
     tr {
         &:nth-child(odd) {
-            background-color: #F5F5F5;
             background-color: #F9F9F9;
         }
 
@@ -1330,106 +1326,7 @@ h3 {
     }
 }
 
-.list {
-    color: #000 !important;
-    font-family: @lucida-font;
-    width: 100%;
 
-    thead {
-        tr {
-            border-top: 0px;
-            background: #fff !important;
-            vertical-align: top;
-        }
-
-        th {
-            padding: 3px 6px;
-            line-height: 18px;
-            font-weight: bold;
-            font-size: 13px;
-            text-align: left;
-            text-shadow: 0 1px 1px rgba(222, 222, 222, 0.5);
-
-            input[type="checkbox"] {
-                margin-top: 2.5px;
-            }
-
-            &:first-of-type {
-                width: 12px;
-
-                input {
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-
-    tbody {
-
-        tr {
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
-            border-top: 1px solid #ababab;
-
-            &:last-child {
-                border-bottom: 1px solid #ababab;
-            }
-
-            td {
-                cursor: pointer;
-                padding: 4px 5px;
-                line-height: 18px;
-                font-size: 11px;
-                text-align: left;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-
-                &:nth-child(2) {
-                    text-align: left;
-                }
-
-                &.withSelect {
-                    position: relative;
-                }
-
-                progress {
-                    width: 100%;
-                }
-
-                a {
-                    color: #1E8FC6 !important;
-                }
-
-                progress {
-                    background-color: #F5F5F5;
-                }
-
-                    progress::-webkit-progress-bar {
-                        background-color: #F5F5F5;
-                    }
-
-                    progress::-webkit-progress-value {
-                        background-color: #57B5E3;
-                    }
-
-                &:first-of-type {
-                    padding-left: 7px;
-
-                    input {
-                        cursor: pointer;
-                    }
-                }
-            }
-        }
-    }
-
-    tr:nth-child(odd) {
-        background-color: #F9F9F9;
-    }
-
-    tr:hover {
-        background-color: #F5F5F5;
-    }
-}
 
 .form(@width: 860px, @border: 1px) {
     background-color: #fff;
@@ -1441,7 +1338,6 @@ h3 {
     display: block;
     position: relative;
     border: @border solid #c8c8d3;
-
 
     .compactList {
 
@@ -1892,7 +1788,6 @@ input, textarea, select {
 
     .bottom {
         width: 100%;
-        /*height: 20px;*/
         position: absolute;
         bottom: 0px;
         left: 0px;
