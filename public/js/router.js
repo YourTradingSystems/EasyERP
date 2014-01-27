@@ -200,7 +200,12 @@ define([
                     collection.bind('showmore', contentview.showMoreContent, contentview);
                     this.changeView(contentview);
                     this.changeTopBarView(topbarView);
-                    var url = '#easyErp/' + contentType + '/list';
+                    var url;
+                    if (parrentContentId) {
+                         url = '#easyErp/' + contentType + '/list/' + parrentContentId;
+                    } else {
+                         url = '#easyErp/' + contentType + '/list';
+                    }
 
                     Backbone.history.navigate(url, { replace: true });
                 }
@@ -333,6 +338,7 @@ define([
                             count: 50,
                             parrentContentId: parrentContentId
                         })
+
                     : new contentCollection();
 
                 collection.bind('reset', _.bind(createViews, self));

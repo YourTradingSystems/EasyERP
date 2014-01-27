@@ -82,9 +82,11 @@ define([
                 });
 				this.collection.showMore({count: itemsNumber, page: 1, letter: this.selectedLetter});
 			},
+
  			hideItemsNumber:function(e){
 				$(".allNumberPerPage").hide();
 			},
+
 			itemsNumber:function(e){
 				$(e.target).closest("button").next("ul").toggle();
 				return false;
@@ -316,7 +318,6 @@ define([
                 $('.task-list').find("input").prop("checked",false);
                 _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: page, letter: letter});
-
             },
 
             switchPageCounter: function (event) {
@@ -419,7 +420,6 @@ define([
                     _.bind(this.collection.showMore, this.collection);
                     this.collection.showMore({count: itemsNumber, page: page, letter: letter});
                 }
-
             },
 
             showMoreContent: function (newModels) {

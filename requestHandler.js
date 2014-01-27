@@ -521,6 +521,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    function getProjectsListLength(req, res, data) {
+        console.log("Requst getProjectsListLength is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            project.getListLength(req, data, res);
+        } else {
+            res.send(401);
+        }
+    }
+
     function getProjects(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -2153,6 +2162,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 		getFilterPersonsForMiniView:getFilterPersonsForMiniView,
 
         getProjects: getProjects,
+        getProjectsListLength: getProjectsListLength,
         getProjectsForList: getProjectsForList,
         getProjectsById: getProjectsById,
         getProjectsForDd: getProjectsForDd,
