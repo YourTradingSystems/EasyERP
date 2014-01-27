@@ -311,7 +311,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getFilterPersonsForMiniView(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
-            if (req.session && req.session.loggedIn && (req.session.lastDb == req.cookies.lastDb)) {
+            if (req.session && req.session.loggedIn && req.session.lastDb) {
                 customer.getFilterPersonsForMiniView(req, res, data);
             } else {
                 res.send(401);
@@ -2085,6 +2085,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+    
+    function personsTotalCollectionLength(req, res) {
+        customer.getTotalCount(req, res, 'Person');
+    }
     //---------END------Events----------------------------------
     return {
 
@@ -2252,7 +2256,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         changeSyncCalendar: changeSyncCalendar,
 
         getSources: getSources,
-        getJobType: getJobType
+        getJobType: getJobType,
+        personsTotalCollectionLength: personsTotalCollectionLength
     }
 }
 //---------EXPORTS----------------------------------------

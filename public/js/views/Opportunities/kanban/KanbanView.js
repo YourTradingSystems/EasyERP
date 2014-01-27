@@ -106,7 +106,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             }, this);
         },
 
-        asyncRender: function (response, context) {
+        asyncRender: function (response) {
             var contentCollection = new OpportunitiesCollection();
             contentCollection.set(contentCollection.parse(response));
             if (collection) {

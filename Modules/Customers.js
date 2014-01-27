@@ -70,6 +70,104 @@
     mongoose.model('Customers', customerSchema);
 
     return {
+        
+        getTotalCount: function (req, response, content) {
+            var res = {};
+            var data = {};
+            for (var i in req.query) {
+                data[i] = req.query[i];
+            }
+            res['showMore'] = false;
+
+            var optionsObject = {};
+            optionsObject['type'] = content;
+
+            if (data.letter)
+                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+
+            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+                {
+                    $match: {
+                        users: newObjectId(req.session.uId)
+                    }
+                }, {
+                    $project: {
+                        _id: 1
+                    }
+                },
+                function (err, deps) {
+                    if (!err) {
+                        var arrOfObjectId = deps.objectID();
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
+                            {
+                                $match: {
+                                    $and: [
+                                        optionsObject,
+                                        {
+                                            $or: [
+                                                {
+                                                    $or: [
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.users': newObjectId(req.session.uId) }
+                                                            ]
+                                                        },
+                                                        {
+                                                            $and: [
+                                                                { whoCanRW: 'group' },
+                                                                { 'groups.group': { $in: arrOfObjectId } }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    $and: [
+                                                        { whoCanRW: 'owner' },
+                                                        { 'groups.owner': newObjectId(req.session.uId) }
+                                                    ]
+                                                },
+                                                { whoCanRW: "everyOne" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                            function (err, result) {
+                                if (!err) {
+                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
+                                    query.count(function (error, count) {
+                                        if (!error) {
+                                            if (data.currentNumber && data.currentNumber < count) {
+                                                res['showMore'] = true;
+                                                console.log('***************************************************************');
+                                                console.log(count);
+                                                console.log('***************************************************************');
+                                            }
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
+                                    });
+                                } else {
+                                    console.log(err);
+                                    response.send(500, { error: 'Server Eroor' });
+                                }
+                            }
+                        );
+
+                    } else {
+                        console.log(err);
+                        response.send(500, {error: 'Server Eroor'});
+                    }
+                });
+        },
+
         create: function (req, data, res) {
             try {
                 if (!data) {
@@ -302,7 +400,7 @@
             });
         },
 
-        getPersonsListLength : function (req, response, data) {
+        getPersonsListLength: function (req, response, data) {
             var res = {};
             var aggObject = {};
             if (data.letter) {
@@ -373,12 +471,12 @@
                                     if (data && data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status)
                                     query.exec(function (error, _res) {
-                                            if (!error) {
-                                                res['listLength'] = _res.length;
-                                                response.send(res);
-                                            } else {
-                                                console.log(error);
-                                            }
+                                        if (!error) {
+                                            res['listLength'] = _res.length;
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
                                     });
                                 } else {
                                     console.log(err);
@@ -462,21 +560,21 @@
                                     var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
                                     if (data && data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status);
-                                        query.populate('company', '_id name').
-                                        populate('department', '_id departmentName').
-                                        populate('createdBy.user').
-                                        populate('editedBy.user').
-                                        skip((data.page-1)*data.count).
-                                        limit(data.count).
-                                        sort({ "name.first": 1 }).
-                                        exec(function (error, _res) {
-                                            if (!error) {
-                                                res['data'] = _res;
-                                                response.send(res);
-                                            } else {
-                                                console.log(error);
-                                            }
-                                        });
+                                    query.populate('company', '_id name').
+                                    populate('department', '_id departmentName').
+                                    populate('createdBy.user').
+                                    populate('editedBy.user').
+                                    skip((data.page - 1) * data.count).
+                                    limit(data.count).
+                                    sort({ "name.first": 1 }).
+                                    exec(function (error, _res) {
+                                        if (!error) {
+                                            res['data'] = _res;
+                                            response.send(res);
+                                        } else {
+                                            console.log(error);
+                                        }
+                                    });
                                 } else {
                                     console.log(err);
                                 }
@@ -488,7 +586,7 @@
                     }
                 });
         },
-		getFilterPersonsForMiniView: function (req, response, data ) {
+        getFilterPersonsForMiniView: function (req, response, data) {
             console.log('------------get filter Persons-------------------');
             var res = {};
             var aggObject = {};
@@ -519,7 +617,7 @@
                                     $and: [
                                         aggObject,
 										{
-											company:newObjectId(data.companyId)
+										    company: newObjectId(data.companyId)
 										},
                                         {
                                             $or: [
@@ -560,33 +658,33 @@
                                 if (!err) {
                                     var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
 
-                                if (data.onlyCount.toString().toLowerCase()=="true"){
+                                    if (data.onlyCount.toString().toLowerCase() == "true") {
 
-                                    query.count(function(error,_res){
-                                        if (!error) {
-                                            res['listLength'] = _res;
-                                            response.send(res);
-                                        } else {
-                                            console.log(error);
-                                        }
-                                    })
-                                }else{
-
-                                    if (data && data.status && data.status.length > 0)
-                                        query.where('workflow').in(data.status);
-                                    query.select("_id name email phones.mobile").
-                                        skip((data.page-1)*data.count).
-                                        limit(data.count).
-                                        sort({ "name.first": 1 }).
-                                        exec(function (error, _res) {
+                                        query.count(function (error, _res) {
                                             if (!error) {
-                                                res['data'] = _res;
+                                                res['listLength'] = _res;
                                                 response.send(res);
                                             } else {
                                                 console.log(error);
                                             }
-                                        });
-								}
+                                        })
+                                    } else {
+
+                                        if (data && data.status && data.status.length > 0)
+                                            query.where('workflow').in(data.status);
+                                        query.select("_id name email phones.mobile").
+                                            skip((data.page - 1) * data.count).
+                                            limit(data.count).
+                                            sort({ "name.first": 1 }).
+                                            exec(function (error, _res) {
+                                                if (!error) {
+                                                    res['data'] = _res;
+                                                    response.send(res);
+                                                } else {
+                                                    console.log(error);
+                                                }
+                                            });
+                                    }
                                 } else {
                                     console.log(err);
                                 }
@@ -670,9 +768,9 @@
                                     if (data && data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status);
                                     query.select("_id createdBy editedBy address.country email name phones.phone").
-                                        populate('createdBy.user','login').
-                                        populate('editedBy.user','login').
-                                        skip((data.page-1)*data.count).
+                                        populate('createdBy.user', 'login').
+                                        populate('editedBy.user', 'login').
+                                        skip((data.page - 1) * data.count).
                                         limit(data.count).
                                         exec(function (error, _res) {
                                             if (!error) {
@@ -893,14 +991,14 @@
             var res = {};
             res['data'] = [];
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ type: 'Company' });
-/*            query.populate('salesPurchases.salesPerson', '_id name').
-                  populate('salesPurchases.salesTeam', '_id departmentName').
-                  populate('createdBy.user').
-                  populate('editedBy.user').
-                  populate('groups.users').
-                  populate('groups.group');
-*/
-			query.select("_id name.first")
+            /*            query.populate('salesPurchases.salesPerson', '_id name').
+                              populate('salesPurchases.salesTeam', '_id departmentName').
+                              populate('createdBy.user').
+                              populate('editedBy.user').
+                              populate('groups.users').
+                              populate('groups.group');
+            */
+            query.select("_id name.first")
             query.sort({ "name.first": 1 });
             query.exec(function (err, result) {
                 if (err) {
@@ -989,7 +1087,7 @@
                                         populate('salesPurchases.salesTeam', '_id departmentName').
                                         populate('createdBy.user').
                                         populate('editedBy.user').
-                                        skip((data.page-1)*data.count).
+                                        skip((data.page - 1) * data.count).
                                         limit(data.count).
                                         exec(function (error, _res) {
                                             if (!error) {
@@ -1085,9 +1183,9 @@
                                     query.select("_id editedBy createdBy salesPurchases name email phones.phone address.country").
 										populate('salesPurchases.salesPerson', '_id name').
                                         populate('salesPurchases.salesTeam', '_id departmentName').
-                                        populate('createdBy.user','login').
-                                        populate('editedBy.user','login').
-                                        skip((data.page-1)*data.count).
+                                        populate('createdBy.user', 'login').
+                                        populate('editedBy.user', 'login').
+                                        skip((data.page - 1) * data.count).
                                         limit(data.count).
                                         exec(function (error, _res) {
                                             if (!error) {
@@ -1120,7 +1218,7 @@
                 if (data.letter) {
                     var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }], 'name.last': new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*') });
                 } else {
-                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }]});
+                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ $and: [{ type: 'Company' }, { isOwn: true }] });
                 }
 
                 if (workflowsId && workflowsId.length > 0)
@@ -1236,19 +1334,19 @@
                             result.forEach(function (_project) {
                                 switch (_project._id) {
                                     case "everyOne":
-                                    {
-                                         qeryEveryOne(_project.ID, result.length, workflowsId);
-                                    }
+                                        {
+                                            qeryEveryOne(_project.ID, result.length, workflowsId);
+                                        }
                                         break;
                                     case "owner":
-                                    {
-                                        qeryOwner(_project.ID, result.length, workflowsId);
-                                    }
+                                        {
+                                            qeryOwner(_project.ID, result.length, workflowsId);
+                                        }
                                         break;
                                     case "group":
-                                    {
-                                        qeryByGroup(_project.ID, result.length, workflowsId);
-                                    }
+                                        {
+                                            qeryByGroup(_project.ID, result.length, workflowsId);
+                                        }
                                         break;
                                 }
                             });

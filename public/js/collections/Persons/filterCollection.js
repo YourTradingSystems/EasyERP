@@ -10,48 +10,27 @@
             page: 1,
             initialize: function (options) {
                 var that = this;
-                var addPage;
-                
+               
                 this.startTime = new Date();
                 this.namberToShow = options.count;
 
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    var viewType = options.viewType;
                     delete options.viewType;
                 }
 
-                switch (viewType) {
-                    case 'thumbnails': {
-                        addPage = 1;
-                        break;
+                this.fetch({
+                    data: options,
+                    reset: true,
+                    success: function () {
+                        that.page++;
+                    },
+                    error: function (models, xhr) {
+                        if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
                     }
-                    case 'list': {
-                        addPage = 0;
-                        break;
-                    }
-                }
-                if (options && !options.notFetch) {
-                    this.fetch({
-                        data: options,
-                        reset: true,
-                        success: function () {
-                            that.page += addPage;
-                        },
-                        error: function (models, xhr) {
-                            if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
-                        }
-                    });
-                } else {
-                    if (options)
-                        that.set(options.models);
-                }
-            },
-            filterByWorkflow: function (id) {
-                return this.filter(function (data) {
-                    return data.get("workflow")._id == id;
                 });
             },
+
             showMore: function (options) {
                 var that = this;
 
@@ -79,12 +58,7 @@
 
             showMoreAlphabet: function (options) {
                 var that = this;
-                var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
+                var filterObject = options || {};
                 that.page = 1;
                 filterObject['page'] = (options && options.page) ? options.page : this.page;
                 filterObject['count'] = (options && options.count) ? options.count * 2 : this.namberToShow;
@@ -110,7 +84,7 @@
                 });
             },
             getListLength: function (callback) {
-                dataService.getData("/getPersonListLength", { mid: 39 }, function (response) {
+                dataService.getData("/getPersonListLength", {}, function (response) {
                     console.log(response);
                     callback(response.listLength);
                 });

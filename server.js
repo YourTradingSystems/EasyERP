@@ -3,17 +3,6 @@ var http = require('http'),
     url = require('url'),
     fs = require("fs");
 
-process.on('exit', function () {
-    setTimeout(function () {
-        console.log('This will not run  ');
-    }, 0);
-    console.log('About to exit.');
-});
-
-process.on('SIGINT', function () {
-    console.log('Got SIGINT.  Press Control-D to exit.');
-    process.exit();
-});
 
 var mongoose = require('mongoose');
 var Admin = mongoose.mongo.Admin;
@@ -63,12 +52,6 @@ mainDb.once('open', function callback() {
 
 var express = require('express');
 var app = express();
-//var countResponseSize = require('count-response-size-middleware');
-//app.use(countResponseSize());
-//app.use(function (req, res, next) {
-//	console.log('!!!!!!!!!!!!!!<<<<<<<<<<<<>>>>>>>>>>>>>>>>response is  ' + res._sent + ' bytes');
-//	next();
-//});
 
 var MemoryStore = require('connect-mongo')(express);
 
@@ -106,17 +89,17 @@ var allowCrossDomain = function (req, res, next) {
 app.configure(function () {
     app.set('view engine', 'jade');
     app.use(express.static(__dirname + '/public'));
-    //app.use(express.compress());
+    app.use(express.compress());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(allowCrossDomain);
+    //app.use(allowCrossDomain);
     app.use(express.cookieParser("CRMkey"));
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        cookie: {
-            maxAge: 600 * 1000 //1 minute
-        },
+        //cookie: {
+        //    maxAge: 600 * 1000 //1 minute
+        //},
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
@@ -151,48 +134,6 @@ app.get('/account/authenticated', function (req, res, next) {
 });
 app.get('/getGoogleToken', function (req, res) {
     requestHandler.getToken(req, res);
-    //googleapis
-    //    .discover('calendar', 'v3')
-    //    .execute(function (err, client) {
-    //        if (err) console.log(err);
-    //        client.calendar.calendarList.list().withAuthClient(oauth2Client).execute(
-    //            function (err, result) {
-    //                if (result) {
-    //                    var calendars = [];
-    //                    for (var i in result.items) {
-    //                        calendars.push({
-    //                            id: result.items[i].id,
-    //                            summary: result.items[i].summary
-    //                        });
-    //                    }
-    //                    console.log(calendars);
-    //                } else {
-    //                    console.log(err);
-    //                }
-    //                var event = {
-    //                    "summary": "rrrrrrrrrr",
-    //                    'start': {
-    //                        "date": "2013-12-6"
-    //                    },
-    //                    'end': {
-    //                        "date": "2013-12-6"
-    //                    }
-
-    //                };
-    //                //client.calendar.events.insert({ calendarId: calendars[1].id }, event)
-    //                //    .withAuthClient(oauth2Client).execute(
-    //                //    function (err, result) {
-    //                //        if (result) {
-    //                //            console.log(result);
-    //                //        } else {
-    //                //            console.log(err);
-    //                //        }
-    //                //        ;
-    //                //    });
-    //            });
-    //        res.redirect('/#easyErp/Calendar');
-    //    });
-
 });
 //---------------------Users--and Profiles------------------------------------------------
 
@@ -426,6 +367,17 @@ app.delete('/Profiles/:_id', function (req, res) {
 //-----------------END----Users--and Profiles-----------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////
 
+//-----------------------------getTotalLength---------------------------------------------
+app.get('/totalCollectionLength/:contentType', function (req, res, next) {
+    switch(req.params.contentType) {
+        case ('Persons'): requestHandler.personsTotalCollectionLength(req, res);
+            break;
+        default: next();
+    }
+    
+});
+//------------------------END--getTotalLength---------------------------------------------
+
 app.get('/getNewModules', function (req, res) {
     //console.log(req.body);
     //console.log(req.session);
@@ -458,7 +410,7 @@ app.get('/getPersonsForMiniView', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-	requestHandler.getFilterPersonsForMiniView(req, res, data);
+    requestHandler.getFilterPersonsForMiniView(req, res, data);
 
 });
 

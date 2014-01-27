@@ -10,8 +10,6 @@ var Module = function (logWriter, mongoose, profile, models) {
         visible: Boolean
     }, { collection: 'modules' });
     
-    var ObjectId = mongoose.Schema.Types.ObjectId;
-    
     mongoose.model('modules', moduleSchema);
 
     return {
@@ -36,7 +34,6 @@ var Module = function (logWriter, mongoose, profile, models) {
 
         get: function (req, id, response) {
            
-            var res = [];
             models.get(req.session.lastDb - 1, "Profile", profile.schema).aggregate(
                 {
                     $project: {
@@ -63,7 +60,7 @@ var Module = function (logWriter, mongoose, profile, models) {
                     if (err) {
                         console.log(err);
                     } else {
-                        models.get(0, "modules", moduleSchema).find().
+                        models.get(req.session.lastDb - 1, "modules", moduleSchema).find().
                             where('_id').in(result).
                             where({ visible: true }).
                             sort({ sequence: 1 }).
