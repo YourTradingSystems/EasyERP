@@ -1007,7 +1007,145 @@
         }
     }
 }
-
+.ui-datepicker(){
+	padding: .2em .2em 0;
+	background-color:white;
+	.ui-datepicker-header{
+		.ui-datepicker-prev,
+		.ui-datepicker-next{
+			position: absolute;
+			top: 2px;
+			width: 1.8em;
+			height: 1.8em;
+			
+			span{
+				background-image: url("http://localhost:8088/images/datepicker-sprite.png");
+				width: 6px;
+				height: 7px;
+				margin-top: -4px;
+				margin-left: -3px;
+				text-indent: -99999px;
+				overflow: hidden;
+				background-repeat: no-repeat;
+				display: block;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				cursor:pointer;
+			}
+		}
+		.ui-datepicker-prev{
+			left:2px;
+			span{
+				background-position: -6px -7px;
+			}
+		}
+		.ui-datepicker-next{
+			right:2px;
+			span{
+				background-position: 0px -7px;
+			}
+		}
+		.ui-datepicker-title{
+			margin: 0 2.3em;
+			line-height: 1.8em;
+			text-align: center;
+			select{
+				width:49%;
+			}
+		}
+	}
+	table.ui-datepicker-calendar{
+		tr{
+			th{
+				padding: .7em .3em;
+				text-align: center;
+			}
+			td{
+				width: 15px;
+				height: 20px;
+				padding:1px;
+				a,span{
+					margin: 0 auto;
+					width: 20px;
+					display: block;
+					padding: .4em;
+					&:hover{
+						text-decoration:none;
+					}
+				}
+				&:hover{
+					background-color: #EEE;
+				}
+				&.ui-state-disabled{
+					opacity: .35;
+					span{
+						
+					}
+				}
+			}
+		}
+	}
+}
+.ui-dialog(){
+	border: 1px solid #AAA;
+	background-color: #FFF;
+	color: #222;
+	z-index:1000;
+	.form-holder{
+		position:relative;
+		padding: .5em 1em;
+		clear:both;
+	}
+	.ui-dialog-buttonpane{
+		border: 1px solid #AAA;
+		background-color: #FFF;
+		color: #222;
+		text-align: left;
+		border-width: 1px 0 0;
+		background-image: none;
+		margin:0 1em;
+		margin-top: .7em;
+		padding: .3em 1em .5em .4em;
+		&:before{
+			content: "";
+			display: table;
+			border-collapse: collapse;
+		}
+		&:after{
+			clear:both;
+			content: "";
+			display: table;
+			border-collapse: collapse;
+		}
+		.ui-dialog-buttonset{
+			text-align:center;
+			button{
+				background-image:none;
+				color: #36A9E1;
+				border: @thin-border #DDD;
+				margin: .5em .4em .5em 0;
+				cursor: pointer;
+				background-color: #E6E6E6;
+				font-size: 1.2em;
+				display: inline-block;
+				position: relative;
+				padding: 0;
+				line-height: normal;
+				vertical-align: middle;
+				text-align: center;
+				overflow: visible;
+				span{
+					display:block;
+					line-height: normal;
+					background-color:#fff;
+					padding: .4em 1em;	
+					color: #36A9E1;
+				}
+			}
+		}
+	}
+}
 /*-----------------------------Styles--------------------------------*/
 /*-----------------------------All--------------------------------*/
 @-moz-document url-prefix() {
@@ -1140,6 +1278,12 @@ body {
 
 .thumbnail{
 	.thumbnail;
+}
+.ui-datepicker{
+	.ui-datepicker;
+}
+.ui-dialog{
+	.ui-dialog();
 }
 #Persons {
 }
