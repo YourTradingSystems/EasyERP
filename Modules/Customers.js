@@ -145,10 +145,8 @@
                                         if (!error) {
                                             if (data.currentNumber && data.currentNumber < count) {
                                                 res['showMore'] = true;
-                                                console.log('***************************************************************');
-                                                console.log(count);
-                                                console.log('***************************************************************');
                                             }
+                                            res['count'] = count;
                                             response.send(res);
                                         } else {
                                             console.log(error);

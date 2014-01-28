@@ -97,9 +97,9 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: {
-        //    maxAge: 600 * 1000 //1 minute
-        //},
+        cookie: {
+            maxAge: 10000 * 60 * 1000 //1 minute
+        },
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
