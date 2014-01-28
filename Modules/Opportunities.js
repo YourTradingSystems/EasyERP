@@ -1009,7 +1009,15 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+					var arrOr = []
+ 					if (data.person){
+						arrOr.push({"customer":newObjectId(data.person)});
+					}
+ 					if (data.company){
+						arrOr.push({"customer":newObjectId(data.company)});
+						arrOr.push({"company":newObjectId(data.company)});
+					}
+
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                         {
                             $match: {
@@ -1018,17 +1026,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 									    isOpportunitie: true
 									},
                                     {
-                                        $or:[
-											{
-											    customer:newObjectId(data.person)
-											},
-											{
-											    customer:newObjectId(data.company)
-											},
-											{
-											    company:newObjectId(data.company)
-											}
-                                        ]
+                                        $or:arrOr
                                     },
                                     {
                                         $or: [

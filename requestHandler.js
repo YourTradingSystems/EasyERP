@@ -560,6 +560,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+	function getProjectByEndDateForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectByEndDateForDashboard(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
 	function getProjectStatusCountForDashboard(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -2192,6 +2209,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeProject: removeProject,
 		getProjectPMForDashboard: getProjectPMForDashboard,
 		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
+		getProjectByEndDateForDashboard:getProjectByEndDateForDashboard,
 
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,

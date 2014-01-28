@@ -424,6 +424,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             res.send(500, { error: 'Project.save  error' });
         }
     };
+
     function getProjectPMForDashboard(req, response) {
         models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).findOne({status:"In Progress","wId":"Project"}).exec(function (error, res) {
 			if (!error){
@@ -510,7 +511,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
 	};
     function getProjectStatusCountForDashboard(req, response) {
-        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({"wId":"Project"}).exec(function (error, resWorkflow) {
+        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({"wId":"Project"}).select("_id status").exec(function (error, resWorkflow) {
 			if (!error){
 				models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
 					{
@@ -524,14 +525,10 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 					},
 					function (err, deps) {
 						if (!err) {
-							
 							var arrOfObjectId = deps.objectID();
-							console.log(arrOfObjectId);
 							models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
 								{
 									$match: {
-										$and: [
-											{
 												$or: [
 													{
 														$or: [
@@ -557,8 +554,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 													},
 													{ whoCanRW: "everyOne" }
 												]
-											}
-										]
 									}
 								},
 								{
@@ -567,13 +562,15 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 									}
 								},
 								function (err, result) {
-									console.log(result);
 									if (!err) {
+										var result1 = result.map(function(item){
+											return item._id
+										});
 										var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
 											{
 												$match:{
 													"_id" :{
-														$in:result
+														$in:result1
 													}
 												}
 											},
@@ -590,7 +587,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 												if (!error) {
 													res={}
 													res['data'] = _res;
-													console.log(_res);
 													res['workflow'] = resWorkflow;
 													response.send(res);
 												} else {
@@ -731,6 +727,96 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                             },
                                             { whoCanRW: "everyOne" }
                                         ]
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1
+                            }
+                        },
+                        function (err, result) {
+                            if (!err) {
+                                var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
+                                if (data && data.status && data.status.length > 0)
+                                    query.where('workflow').in(data.status);
+                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress info").
+									populate('createdBy.user', 'login').
+									populate('editedBy.user', 'login').
+									populate('projectmanager', 'name').
+									populate('customer', 'name').
+									skip((data.page - 1) * data.count).
+									limit(data.count).
+                                exec(function (error, _res) {
+                                    if (!error) {
+                                        res['data'] = _res;
+                                        res['listLength'] = _res.length;
+                                        response.send(res);
+                                    } else {
+                                        console.log(error);
+                                    }
+                                });
+                            } else {
+                                console.log(err);
+                            }
+                        }
+                    );
+                } else {
+                    console.log(err);
+                }
+            });
+    }
+    function getProjectByEndDateForDashboard(req, data, response) {
+        var res = {};
+        res['data'] = [];
+        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+            {
+                $match: {
+                    users: newObjectId(req.session.uId)
+                }
+            }, {
+                $project: {
+                    _id: 1
+                }
+            },
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
+                    console.log(arrOfObjectId);
+                    models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                        {
+                            $match: {
+                                $and: [
+                                    {'info.EndDate':{$gte: new Date(data.startDate)}},
+                                    {'info.EndDate':{$lte: new Date(data.endDate)}},
+                                    {
+
+                                        $or: [
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.users': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'group' },
+                                                            { 'groups.group': { $in: arrOfObjectId } }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                $and: [
+                                                    { whoCanRW: 'owner' },
+                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                ]
+                                            },
+                                            { whoCanRW: "everyOne" }
+                                        ]
+									}
+								]
                             }
                         },
                         {
@@ -2002,6 +2088,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 		getProjectPMForDashboard:getProjectPMForDashboard,
         
 		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
+
+		getProjectByEndDateForDashboard:getProjectByEndDateForDashboard,
         
         getById: getById,
 
