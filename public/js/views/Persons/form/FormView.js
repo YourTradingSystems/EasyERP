@@ -21,7 +21,7 @@ define([
 				this.allPages = 2;
 				var self = this;
 				var formModel = this.formModel.toJSON();
-				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,true,function(count){
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company?formModel.company._id:null,this.pageMini,this.pageCount,true,function(count){
 					self.allMiniOpp = count.listLength;
 					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
 					if (self.allPages == self.pageMini){
@@ -77,7 +77,7 @@ define([
 			renderMiniOpp:function(){
 				var self = this;
             	var formModel = this.formModel.toJSON();
-				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company._id,this.pageMini,this.pageCount,false,function(collection){
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",formModel._id, formModel.company?formModel.company._id:null,this.pageMini,this.pageCount,false,function(collection){
 					console.log(collection);
 					self.$el.find('.formRightColumn').empty();
 					var isLast = self.pageMini==self.allPages?true:false
@@ -157,7 +157,7 @@ define([
              
                 if (parent[0].id== 'dateBirth'){
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left has-datepicker"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" readonly class="left has-datepicker"/>');
                     $('.has-datepicker').datepicker({
                         dateFormat: "d M, yy",
                         changeMonth: true,
