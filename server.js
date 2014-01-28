@@ -538,7 +538,7 @@ app.get('/getProjectStatusCountForDashboard', function (req, res) {
 app.get('/getProjectByEndDateForDashboard', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getProjectStatusCountForDashboard(req, res, data);
+    requestHandler.getProjectByEndDateForDashboard(req, res, data);
 });
 
 app.post('/Projects', function (req, res) {

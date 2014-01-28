@@ -768,6 +768,14 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
     function getProjectByEndDateForDashboard(req, data, response) {
         var res = {};
         res['data'] = [];
+		var startDate = new Date();
+		startDate.setDate(startDate.getDate() - startDate.getDay() + 1);
+		startDate.setHours(0,0,0,0);
+
+		var endDate = new Date();
+		endDate.setDate(endDate.getDate() - endDate.getDay() + 28);
+		endDate.setHours(24,59,59,0);
+
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
                 $match: {
@@ -786,8 +794,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         {
                             $match: {
                                 $and: [
-                                    {'info.EndDate':{$gte: new Date(data.startDate)}},
-                                    {'info.EndDate':{$lte: new Date(data.endDate)}},
+                                    {'info.EndDate':{$gte: startDate}},
+                                    {'info.EndDate':{$lte: endDate}},
                                     {
 
                                         $or: [
@@ -829,17 +837,38 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress info").
-									populate('createdBy.user', 'login').
-									populate('editedBy.user', 'login').
-									populate('projectmanager', 'name').
-									populate('customer', 'name').
-									skip((data.page - 1) * data.count).
-									limit(data.count).
+                                query.select("_id info.EndDate").
                                 exec(function (error, _res) {
                                     if (!error) {
-                                        res['data'] = _res;
-                                        res['listLength'] = _res.length;
+										var endThisWeek = new Date();
+										endThisWeek.setDate(endThisWeek.getDate() - endThisWeek.getDay()+7);
+										endThisWeek.setHours(24,59,59,0);
+
+										var endNextWeek = new Date();
+										endNextWeek.setDate(endNextWeek.getDate() - endNextWeek.getDay()+14);
+										endNextWeek.setHours(24,59,59,0);
+
+										var n = _res.length;
+										ret={"This":0, "Next":0, "Next2":0}
+										for (var i=0;i<_res.length;i++){
+											var d = new Date(_res[i].info.EndDate);
+											endDate.setDate(endDate.getDate() - endDate.getDay()+7);
+											if (d<endThisWeek){
+												ret.This+=1;
+											}
+											else{
+												if (d<endNextWeek){
+													ret.Next+=1;
+												}
+												else{
+													ret.Next2+=1;
+												}
+												
+											}
+											
+										}
+										
+                                        res['data'] = ret;
                                         response.send(res);
                                     } else {
                                         console.log(error);

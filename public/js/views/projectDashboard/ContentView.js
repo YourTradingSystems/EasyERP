@@ -25,8 +25,10 @@ define([
 				var self = this;
 				this.populateProjectForDashboard("/getProjectPMForDashboard",function(collection){
 					collection = collection.data;
+					var k=0;
 					collection.forEach(function(item){
-						$("#ProjectPMContent").append("<tr><td>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</td><td>"+item.projectName+"</td></tr>");
+						k++;
+						$("#ProjectPMContent").append("<tr><td>"+k+"</td><td>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</td><td>"+item.projectName+"</td><td class='health'><div class='green'></div></td></tr>");
 					});
 				});
 			},     
@@ -53,20 +55,20 @@ define([
 
 				});
 			},     
+			renderProjectEnd:function(){
+				var self = this;
+				this.populateProjectForDashboard("/getProjectByEndDateForDashboard",function(data){
+					data= data.data;
+					$("#projectEnd").append("<tr><td>"+data.This+"</td><td>"+data.Next+"</td><td>"+data.Next2+"</td></tr>");
+
+				});
+			},     
       
                render: function () {
                    this.$el.html(this.template());
 				   this.renderProjectPM();
 				   this.renderProjectStatus();
-				   var sat = new Date();
-				   sat.setDate(sat.getDate() - sat.getDay() - 1);
-	
-				   var sat2 = new Date();
-				   sat2.setDate(sat2.getDate() +(6 - sat2.getDay()));
-				   sat.setHours(0,0,0,0);
-				   sat2.setHours(0,0,0,0);
-				   alert(sat);
-				   alert(sat2);
+				   this.renderProjectEnd();
                }
 		   });
            return ContentView;
