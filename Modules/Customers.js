@@ -71,7 +71,7 @@
 
     return {
         
-        getTotalCount: function (req, response, content) {
+        getTotalCount: function (req, response) {
             var res = {};
             var data = {};
             for (var i in req.query) {
@@ -79,11 +79,34 @@
             }
             res['showMore'] = false;
 
-            var optionsObject = {};
-            optionsObject['type'] = content;
+            console.log('================= getTotalCount ================');
+            console.log(data);
 
-            if (data.letter)
-                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+            var  contentType = req.params.contentType;
+            console.log(contentType);
+            var optionsObject = {};
+            switch(contentType) {
+                case ('Persons'): {
+                    optionsObject['type'] = 'Person';
+                    if (data.letter)
+                        optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                }
+                    break;
+                case ('Companies'): {
+                    optionsObject['type'] = 'Company';
+                    if (data.letter)
+                        optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                }
+                    break;
+                case ('ownCompanies'): {
+                    optionsObject['type'] = 'Company';
+                    optionsObject['isOwn'] = true;
+                    if (data.letter)
+                        optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                }
+                    break;
+            }
+
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                 {
@@ -146,6 +169,7 @@
                                             if (data.currentNumber && data.currentNumber < count) {
                                                 res['showMore'] = true;
                                             }
+                                            console.log('count : '+count);
                                             res['count'] = count;
                                             response.send(res);
                                         } else {
@@ -471,102 +495,6 @@
                                     query.exec(function (error, _res) {
                                         if (!error) {
                                             res['listLength'] = _res.length;
-                                            response.send(res);
-                                        } else {
-                                            console.log(error);
-                                        }
-                                    });
-                                } else {
-                                    console.log(err);
-                                }
-                            }
-                        );
-
-                    } else {
-                        console.log(err);
-                    }
-                });
-        },
-
-        getFilterPersons: function (req, data, response) {
-            console.log('------------get filter Persons-------------------');
-            var res = {};
-            var optionsObject = {};
-            
-            res['data'] = [];
-            optionsObject['type'] = 'Person';
-            
-            if (data.letter) 
-                optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
-
-            models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
-                {
-                    $match: {
-                        users: newObjectId(req.session.uId)
-                    }
-                }, {
-                    $project: {
-                        _id: 1
-                    }
-                },
-                function (err, deps) {
-                    if (!err) {
-                        var arrOfObjectId = deps.objectID();
-                        models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
-                            {
-                                $match: {
-                                    $and: [
-                                        optionsObject,
-                                        {
-                                            $or: [
-                                                {
-                                                    $or: [
-                                                        {
-                                                            $and: [
-                                                                { whoCanRW: 'group' },
-                                                                { 'groups.users': newObjectId(req.session.uId) }
-                                                            ]
-                                                        },
-                                                        {
-                                                            $and: [
-                                                                { whoCanRW: 'group' },
-                                                                { 'groups.group': { $in: arrOfObjectId } }
-                                                            ]
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    $and: [
-                                                        { whoCanRW: 'owner' },
-                                                        { 'groups.owner': newObjectId(req.session.uId) }
-                                                    ]
-                                                },
-                                                { whoCanRW: "everyOne" }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                $project: {
-                                    _id: 1
-                                }
-                            },
-                            function (err, result) {
-                                if (!err) {
-                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
-                                    if (data && data.status && data.status.length > 0)
-                                        query.where('workflow').in(data.status);
-                                    query.populate('company', '_id name').
-                                    populate('department', '_id departmentName').
-                                    populate('createdBy.user').
-                                    populate('editedBy.user').
-                                    skip((data.page - 1) * data.count).
-                                    limit(data.count).
-                                    sort({ "name.first": 1 }).
-                                    exec(function (error, _res) {
-                                        if (!error) {
-                                            res['data'] = _res;
                                             response.send(res);
                                         } else {
                                             console.log(error);
@@ -1011,17 +939,39 @@
             });
         },
 
-        getFilterCompanies: function (req, data, response) {
+        getFilterCustomers: function (req, response) {
+            var data = {};
+            for (var i in req.query) {
+                data[i] = req.query[i];
+            }
+            console.log('=========================  getFilterCustomers  ==================');
+            console.log(data);
+            var viewType = data.viewType;
+            var contentType = data.contentType;
             var res = {};
             res['data'] = [];
-
             var optionsObject = {};
-            if (data.letter) {
-                optionsObject['type'] = 'Company';
-                optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
-            } else {
-                optionsObject['type'] = 'Company';
-            };
+            switch(contentType) {
+                case ('Persons'): {
+                    optionsObject['type'] = 'Person';
+                    if (data.letter)
+                        optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                }
+                    break;
+                case ('Companies'): {
+                    optionsObject['type'] = 'Company';
+                    if (data.letter)
+                        optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                }
+                    break;
+                case ('ownCompanies'): {
+                    optionsObject['type'] = 'Company';
+                    optionsObject['isOwn'] = true;
+                    if (data.letter)
+                        optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                }
+                    break;
+            }
 
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                 {
@@ -1080,18 +1030,73 @@
                             function (err, result) {
                                 if (!err) {
                                     var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
-                                    if (data && data.status && data.status.length > 0)
+                                    if (data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status);
-                                    query.populate('salesPurchases.salesPerson', '_id name').
-                                        populate('salesPurchases.salesTeam', '_id departmentName').
-                                        populate('createdBy.user').
-                                        populate('editedBy.user').
-                                        skip((data.page - 1) * data.count).
+
+                                    switch (contentType) {
+                                        case ('Persons'):
+                                            switch (viewType) {
+                                                case ('list'): {
+                                                    query.select("_id createdBy editedBy address.country email name phones.phone").
+                                                        populate('createdBy.user', 'login').
+                                                        populate('editedBy.user', 'login');
+                                                }
+                                                    break;
+                                                case ('thumbnails'): {
+                                                    query.populate('company', '_id name').
+                                                        populate('department', '_id departmentName').
+                                                        populate('createdBy.user').
+                                                        populate('editedBy.user');
+                                                }
+                                                    break;
+
+                                            }
+                                            break;
+                                        case ('Companies'):
+                                            switch (viewType) {
+                                                case ('list'): {
+                                                    query.select("_id editedBy createdBy salesPurchases name email phones.phone address.country").
+                                                        populate('salesPurchases.salesPerson', '_id name').
+                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                        populate('createdBy.user', 'login').
+                                                        populate('editedBy.user', 'login');
+                                                }
+                                                    break;
+                                                case ('thumbnails'): {
+                                                    query.populate('salesPurchases.salesPerson', '_id name').
+                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                        populate('createdBy.user').
+                                                        populate('editedBy.user');
+                                                }
+                                                    break;
+
+                                            }
+                                            break;
+                                        case ('ownCompanies'):
+                                            switch (viewType) {
+                                                case ('list'): {
+                                                    query.populate('salesPurchases.salesPerson', '_id name').
+                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                        populate('createdBy.user').
+                                                        populate('editedBy.user');
+                                                }
+                                                    break;
+                                                case ('thumbnails'): {
+                                                    query.populate('salesPurchases.salesPerson', '_id name').
+                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                        populate('createdBy.user').
+                                                        populate('editedBy.user');
+                                                }
+                                                    break;
+                                            }
+                                            break;
+                                    }
+
+                                    query.skip((data.page - 1) * data.count).
                                         limit(data.count).
                                         exec(function (error, _res) {
                                             if (!error) {
                                                 res['data'] = _res;
-                                                res['listLength'] = _res.length;
                                                 response.send(res);
                                             } else {
                                                 console.log(error);
@@ -1108,6 +1113,7 @@
                 });
 
         },
+
         getFilterCompaniesForList: function (req, data, response) {
             var res = {};
             res['data'] = [];

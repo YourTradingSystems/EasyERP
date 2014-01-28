@@ -55,7 +55,7 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             if (target.text() == "All") {
                 this.selectedLetter = "";
             }
-            this.collection.showMoreAlphabet({ count: 50, page: 1, letter: this.selectedLetter });
+            this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
         },
         gotoForm: function (e) {
             e.preventDefault();
@@ -70,6 +70,8 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             window.location.hash = "#easyErp/Companies/form/" + id;
         },
         render: function () {
+            console.log(' ======= ==== ====  ');
+            console.log(this.collection.toJSON());
             var self = this;
             var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
             var currentEl = this.$el;

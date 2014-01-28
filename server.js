@@ -375,7 +375,11 @@ app.delete('/Profiles/:_id', function (req, res) {
 //-----------------------------getTotalLength---------------------------------------------
 app.get('/totalCollectionLength/:contentType', function (req, res, next) {
     switch(req.params.contentType) {
-        case ('Persons'): requestHandler.personsTotalCollectionLength(req, res);
+        case ('Persons'): requestHandler.customerTotalCollectionLength(req, res);
+            break;
+        case ('Companies'): requestHandler.customerTotalCollectionLength(req, res);
+            break;
+        case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
             break;
         default: next();
     }
@@ -454,7 +458,7 @@ app.get('/Persons/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getFilterPersonsForList(req, res, data);
             break;
-        default: requestHandler.getFilterPersons(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -808,7 +812,7 @@ app.get('/Companies/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getFilterCompaniesForList(req, res, data);
             break;
-        default: requestHandler.getFilterCompanies(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -822,7 +826,7 @@ app.get('/ownCompanies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        default: requestHandler.getOwnCompanies(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
