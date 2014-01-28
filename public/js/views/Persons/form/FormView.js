@@ -157,7 +157,7 @@ define([
              
                 if (parent[0].id== 'dateBirth'){
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left has-datepicker"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" readonly class="left has-datepicker"/>');
                     $('.has-datepicker').datepicker({
                         dateFormat: "d M, yy",
                         changeMonth: true,

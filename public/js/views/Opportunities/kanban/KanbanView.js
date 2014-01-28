@@ -15,7 +15,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         el: '#content-holder',
         events: {
             "dblclick .item": "gotoEditForm",
-            "click .item": "selectItem"
+            "click .item": "selectItem",
         },
 
         columnTotalLength: null,
@@ -28,6 +28,13 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             this.asyncFetc(options.workflowCollection);
             this.getCollectionLengthByWorkflows(this);
         },
+
+		isNumberKey: function(evt){
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57))
+				return false;
+			return true;
+		},
 
         saveKanbanSettings: function () {
             var countPerPage = $(this).find('#cPerPage').val();
@@ -176,6 +183,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                 }
             }).disableSelection();
             this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+			$(document).on("keypress","#cPerPage",this.isNumberKey);
             return this;
         }
     });
