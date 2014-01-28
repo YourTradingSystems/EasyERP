@@ -159,6 +159,44 @@ require(['app'], function (app) {
 
     };
 
+    Backbone.View.prototype.pageElementRender = function (totalCount) {
+        var itemsNumber = this.defaultItemsNumber;
+
+        $("#itemsNumber").text(itemsNumber);
+
+        if (totalCount == 0 || totalCount == undefined) {
+            $("#grid-start").text(0);
+            $("#grid-end").text(0);
+            $("#grid-count").text(0);
+            $("#previousPage").prop("disabled", true);
+            $("#nextPage").prop("disabled", true);
+            $("#pageList").empty();
+            $("#currentShowPage").val(0);
+            $("#lastPage").text(0);
+        } else {
+            $("#grid-start").text(1);
+            if (totalCount <= itemsNumber) {
+                $("#grid-end").text(totalCount);
+            } else {
+                $("#grid-end").text(itemsNumber);
+            }
+            $("#grid-count").text(totalCount);
+            $("#pageList").empty();
+            var pageNumber = Math.ceil(totalCount / itemsNumber);
+            for (var i = 1; i <= pageNumber; i++) {
+                $("#pageList").append('<li class="showPage">' + i + '</li>')
+            }
+            $("#lastPage").text(pageNumber);
+            $("#currentShowPage").val(1);
+            $("#previousPage").prop("disabled", true);
+            if (pageNumber <= 1) {
+                $("#nextPage").prop("disabled", true);
+            } else {
+                $("#nextPage").prop("disabled", false);
+            }
+        }
+    };
+
     app.initialize();
     app.applyDefaults();
 });

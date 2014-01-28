@@ -8,6 +8,8 @@
             model: PersonModel,
             url: "/Persons/",
             page: 1,
+            namberToShow: null,
+            
             initialize: function (options) {
                 var that = this;
                

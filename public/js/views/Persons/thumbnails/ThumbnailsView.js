@@ -36,7 +36,8 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
                 var showMore = context.$el.find('#showMoreDiv');
                 if (response.showMore) {
                     if (showMore.length === 0) {
-                        context.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+                        var created = context.$el.find('#timeRecivingDataFromServer');
+                        created.before('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
                     } else {
                         showMore.show();
                     }
@@ -71,25 +72,26 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
         render: function () {
             var self = this;
             var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
-            
-            this.$el.html('');
+            var currentEl = this.$el;
+
+            currentEl.html('');
             if (this.collection.length > 0) {
-                this.$el.append(this.template({ collection: this.collection.toJSON() }));
+                currentEl.append(this.template({ collection: this.collection.toJSON() }));
             } else {
-                this.$el.html('<h2>No persons found</h2>');
+                currentEl.html('<h2>No persons found</h2>');
             }
 
             common.buildAphabeticArray(this.collection, function (arr) {
                 $("#startLetter").remove();
                 self.alphabeticArray = arr;
-                self.$el.prepend(_.template(AphabeticTemplate, {
+                currentEl.prepend(_.template(AphabeticTemplate, {
                     alphabeticArray: self.alphabeticArray,
                     selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter),
                     allAlphabeticArray: self.allAlphabeticArray
                 }));
             });
      
-            this.$el.append(createdInTag);
+            currentEl.append(createdInTag);
             return this;
         },
 
@@ -99,10 +101,13 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
         },
 
         showMoreContent: function (newModels) {
+            var holder = this.$el;
             this.countPerPage += newModels.length;
-            var showMore = this.$el.find('#showMoreDiv');
+            var showMore = holder.find('#showMoreDiv');
+            var created = holder.find('#timeRecivingDataFromServer');
             this.getTotalLength(this.countPerPage);
             showMore.before(this.template({ collection: this.collection.toJSON() }));
+            showMore.after(created);
         },
         
         showMoreAlphabet: function (newModels) {
