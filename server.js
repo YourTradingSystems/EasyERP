@@ -1458,6 +1458,7 @@ app.put('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });
@@ -1466,6 +1467,7 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });

@@ -1,11 +1,9 @@
 ﻿define([
-    "text!templates/Opportunities/compactContentTemplate.html",
-    "common"
+    "text!templates/Opportunities/compactContentTemplate.html"
 ],
-    function (compactContentTemplate, common) {
+    function (compactContentTemplate) {
         var compactContentView = Backbone.View.extend({
-
-            className: "form",
+            el: "#opportunities",
 
             initialize: function (options) {
             	this.personsCollection = (options && options.personsCollection) ? options.personsCollection : null;
