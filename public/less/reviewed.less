@@ -824,6 +824,11 @@
         height: 30px;
         font-size: 14px;
     }
+
+    input[type="submit"] {
+		display:none;
+    }
+
 }
 .thumbnail-text {
     color: #4c4c4c;
@@ -995,8 +1000,6 @@
 
             .inner {
                 padding: 5px;
-				padding-bottom:0;
-				padding-left:0;
             }
 
             .task-header {
@@ -1006,17 +1009,14 @@
             }
 
             .task-content {
-				position:relative;
                 .info {
                     padding: 5px;
                     padding-bottom: 2px;
+
                     p.bold {
                        .bold;
                     }
                 }
-				.taskType{
-					line-height:20px;
-				}
             }
         }
 

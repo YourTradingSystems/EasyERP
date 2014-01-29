@@ -21,15 +21,10 @@ define([
                 "click #deadline": "showDatePicker",
                 "change #workflowNames": "changeWorkflows",
                 "click .current-selected": "showNewSelect",
-                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
-                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",
                 'keydown': 'keydownHandler'
             },
-			notHide:function(e){
-				return false;
-			},
-
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -128,24 +123,13 @@ define([
                 });
             },
 			showNewSelect:function(e){
-				var currentPage = 1;
-				if ($(e.target).parent().find(".newSelectList").is(":visible")){
-					self.hideNewSelect();
-					return;
-				}
-				if ($(e.target).parent().find(".newSelectList").length){
-					currentPage = $(e.target).parent().find(".newSelectList").data("page");
-					$(e.target).parent().find(".newSelectList").remove();
+				if ($(".newSelectList").length){
+				this.hideNewSelect();
 				}else{
-					var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-					var start = (currentPage-1)*25;
-					var end = Math.min(currentPage*25,$(e.target).parent().find("select option").length);
-					value
-					for (var i = start; i<end;i++){
-						s+="<li class="+$($(e.target).parent().find("select option")[i]).text().toLowerCase()+">"+$($(e.target).parent().find("select option")[i]).text()+"</li>";						
-					}
-					if ($(e.target).parent().find("select option").length>25)
-						s+="<li class='miniStylePagination'><a class='prev' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+$(e.target).parent().find("select option").length+"</span><a class='next' href='javascript:;'>Next&gt;</a></li>";
+					var s="<ul class='newSelectList'>";
+					$(e.target).parent().find("select option").each(function(){
+						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
+					});
 					s+="</ul>";
 					$(e.target).parent().append(s);
 					return false;
@@ -153,7 +137,7 @@ define([
 				
 			},
             hideNewSelect: function (e) {
-                $(".newSelectList").hide();;
+                $(".newSelectList").remove();;
             },
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));

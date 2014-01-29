@@ -28,6 +28,13 @@
                 this.getCollectionLengthByWorkflows(this);
             },
 
+			isNumberKey: function(evt){
+				var charCode = (evt.which) ? evt.which : event.keyCode
+				if (charCode > 31 && (charCode < 48 || charCode > 57))
+					return false;
+				return true;
+			},
+
             saveKanbanSettings: function () {
                 var countPerPage = $(this).find('#cPerPage').val();
                 dataService.postData('/currentUser', { 'kanbanSettings.applications.countPerPage': countPerPage }, function (seccess, error) {
@@ -178,6 +185,7 @@
                     }
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+			$(document).on("keypress","#cPerPage",this.isNumberKey);
                 return this;
             }
         });
