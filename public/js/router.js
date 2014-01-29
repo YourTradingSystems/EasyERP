@@ -366,8 +366,6 @@ define([
                     this.changeView(contentview);
                     this.changeTopBarView(topbarView);
 
-                    url = (parrentContentId) ? url + '/' + parrentContentId : url;
-
                     Backbone.history.navigate(url, { replace: true });
                 }
             });

@@ -87,11 +87,6 @@ require.config({
         text: './libs/text',
         common: 'common',
         dateFormat: './libs/date.format',
-        chosen: './libs/chosen.jquery.min',
-        scheduler: './libs/dhtmlxscheduler',
-        minical: './libs/dhtmlxscheduler_minical',
-        multiselect: './libs/dhtmlxscheduler_multiselect',
-        mvc: './libs/dhtmlxscheduler_mvc',
         d3: './libs/d3.v3.min'
     },
     shim: {
@@ -100,28 +95,9 @@ require.config({
         'imageCrop': ['jQuery'],
         'Backbone': ['Underscore', 'jQuery'],
         'app': ['Backbone', 'less', 'jqueryui', 'ajaxForm', 'imageCrop'],
-        'chosen': {
-            exports: 'chosen'
-        },
-        'minical': {
-            exports: 'minical'
-        },
-        'multiselect': {
-            exports: 'multiselect'
-        },
-        'mvc': {
-            exports: 'mvc'
-        },
-        'scheduler': {
-            exports: 'scheduler'
-        },
         'd3': {
             exports: 'd3'
         },
-        'mvc': ['scheduler'],
-        'multiselect': ['scheduler'],
-        'minical': ['scheduler'],
-        'Calendar': ['chosen', 'scheduler', 'mvc', 'minical', 'multiselect'],
         'dateFormat': {
             exports: 'dateFormat'
         }
