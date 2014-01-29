@@ -364,7 +364,6 @@ define([
                     }
                 });
 
-                _.bind(this.collection.showMore, this.collection);
                 this.collection.showMore({count: itemsNumber, page: 1, status: this.wfStatus, viewType: 'list', isConverted: this.convertedStatus});
             },
 
@@ -410,7 +409,6 @@ define([
                         $("#nextPage").prop("disabled",true);
                     }
 
-                    _.bind(this.collection.showMore, this.collection);
                     this.collection.showMore({count: itemsNumber, page: page, status: this.wfStatus, viewType: 'list', isConverted: this.convertedStatus});
                 }
             },

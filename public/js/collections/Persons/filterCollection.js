@@ -9,10 +9,10 @@
             url: "/Persons/",
             page: 1,
             namberToShow: null,
-            
+
             initialize: function (options) {
                 var that = this;
-               
+
                 this.startTime = new Date();
                 this.namberToShow = options.count;
 
@@ -85,12 +85,6 @@
                     }
                 });
             },
-            getListLength: function (callback) {
-                dataService.getData("/getPersonListLength", {}, function (response) {
-                    console.log(response);
-                    callback(response.listLength);
-                });
-            },
             parse: true,
             parse: function (response) {
                 if (response.data) {
@@ -116,7 +110,6 @@
                         return person;
                     });
                 }
-                this.listLength = response.listLength;
                 return response.data;
             }
 
