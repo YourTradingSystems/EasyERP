@@ -1638,8 +1638,8 @@ h3 {
     float: left;
     display: block;
 
-    .form {
-        .form(98%, 0px);
+    &.form {
+        .form(40%, 0px);
         margin-bottom: 10px;
     }
 }
@@ -3385,7 +3385,7 @@ table#workflows {
     }
 }
 
-.startLetter {
+#startLetter {
     margin: 0px;
     padding: 5px 0;
     text-align: center;
@@ -4565,30 +4565,29 @@ h3.dashboard {
         width: @width;
     }
 }
-#projectPM{
-	width:400px;
-	h2{
+.newSelectList{
+	.miniStylePagination{
+		position:relative;
 		text-align:center;
-		font-weight:bold;
-		font-size:18px;
-	}
-	table{
-		width:100%;
-		border:@thin-border silver;
-		margin-left:10px;
-		tr{
-			th{
-				text-align:left;
-				font-weight:bold;
-				padding-left:3px;
-				background-color:silver;
-				line-height:15px;
-			}		
-			td{
-				padding-left:3px;
-				line-height:15px;
-				
+		min-width:160px;
+		&:hover{
+			background-color:white;
+		}
+		.next, .prev{
+			position:absolute;
+			top:4px;
+			&.disabled{
+				display:none;
 			}
+		}
+		.next{
+			right:5px;
+		}
+		.prev{
+			left:5px;
+		}
+		span{
+			padding:0;
 		}
 	}
 }

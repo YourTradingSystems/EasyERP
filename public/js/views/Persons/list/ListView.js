@@ -3,22 +3,25 @@ define([
     'views/Persons/CreateView',
     'views/Persons/list/ListItemView',
     'text!templates/Alpabet/AphabeticTemplate.html',
-	'common'
+	'common',
+    'dataService'
 ],
 
-function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
+function (listTemplate, createView, listItemView, aphabeticTemplate, common, dataService) {
     var PersonsListView = Backbone.View.extend({
         el: '#content-holder',
-
+        defaultItemsNumber: null,
+        listLength: null,
+        
         initialize: function (options) {
-			this.startTime = options.startTime;
+            this.startTime = options.startTime;
             this.collection = options.collection;
-            this.collection.bind('reset', _.bind(this.render, this));
-			this.allAlphabeticArray = common.buildAllAphabeticArray();
-			this.selectedLetter="";
-            this.defaultItemsNumber = this.collection.namberToShow;
+            this.allAlphabeticArray = common.buildAllAphabeticArray();
+            this.selectedLetter = "";
+            this.defaultItemsNumber = this.collection.namberToShow || 50;
             this.deleteCounter = 0;
             this.render();
+            this.getTotalLength(null, this.defaultItemsNumber);
         },
 
         events: {
@@ -31,38 +34,49 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             "click  .list td:not(.notForm)": "gotoForm",
             "click #itemsButton": "itemsNumber",
             "click .currentPageList": "itemsNumber",
-			"click":"hideItemsNumber",
+            "click": "hideItemsNumber",
             "click .letter:not(.empty)": "alpabeticalRender"
         },
-		alpabeticalRender:function(e){
-			$(e.target).parent().find(".current").removeClass("current");
-			$(e.target).addClass("current");
+
+        alpabeticalRender: function (e) {
+            this.startTime = new Date();
+            $(e.target).parent().find(".current").removeClass("current");
+            $(e.target).addClass("current");
             var itemsNumber = $("#itemsNumber").text();
-            var page =  parseInt($("#currentShowPage").val());
-            _.bind(this.collection.showMore, this.collection);
-			this.selectedLetter=$(e.target).text();
-			if ($(e.target).text()=="All"){
-				this.selectedLetter="";
-			}
-            this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
-		},
+            var page = parseInt($("#currentShowPage").val());
+            this.selectedLetter = $(e.target).text();
+            if ($(e.target).text() == "All") {
+                this.selectedLetter = "";
+            }
+            this.collection.showMore({ count: itemsNumber, page: page, letter: this.selectedLetter });
+            this.getTotalLength(null, itemsNumber);
+        },
 
-		hideItemsNumber:function(e){
-			$(".allNumberPerPage").hide();
-		},
-		itemsNumber:function(e){
-			$(e.target).closest("button").next("ul").toggle();
-			return false;
-		},
+        hideItemsNumber: function (e) {
+            $(".allNumberPerPage").hide();
+        },
 
+        itemsNumber: function (e) {
+            $(e.target).closest("button").next("ul").toggle();
+            return false;
+        },
+
+        getTotalLength: function (currentNumber, itemsNumber) {
+            dataService.getData('/totalCollectionLength/Persons', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
+                context.listLength = response.count || 0;
+                context.pageElementRender(response.count, itemsNumber);//prototype in main.js
+            }, this);
+        },
+        
         render: function () {
-			var self = this;
-            console.log('Persons render');
-			var p = this.collection.toJSON();
             $('.ui-dialog ').remove();
-			this.$el.html('');
-            this.$el.append(_.template(ListTemplate));
-            this.$el.append(new ListItemView({ collection: this.collection}).render());
+            var self = this;
+            var currentEl = this.$el;
+
+            currentEl.html('');
+            currentEl.append(_.template(listTemplate));
+            currentEl.append(new listItemView({ collection: this.collection }).render());
+
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
                 if ($("input.checkbox:checked").length > 0)
@@ -72,235 +86,57 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
             });
 
 
-			$(document).on("click",function(){
-				self.hideItemsNumber();
-			});
-			common.buildAphabeticArray(this.collection,function(arr){
-				$(".startLetter").remove();
-				self.alphabeticArray = arr;
-				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
-			});
-            common.buildPagination(this.collection,function(listLength){
-                self.collection.listLength = listLength;
-
-                $("#pageList").empty();
-                if (self.defaultItemsNumber) {
-                    var itemsNumber = self.defaultItemsNumber;
-                    this.defaultItemsNumber = false;
-                    $("#itemsNumber").text(itemsNumber);
-                } else {
-                    var itemsNumber = $("#itemsNumber").text();
-                }
-                $("#currentShowPage").val(1);
-                var pageNumber = Math.ceil(self.collection.listLength/itemsNumber);
-                for (var i=1;i<=pageNumber;i++) {
-                    $("#pageList").append('<li class="showPage">'+ i +'</li>')
-                }
-
-                $("#lastPage").text(pageNumber);
-                $("#previousPage").prop("disabled",true);
-
-                if ((self.collection.listLength == 0) || self.collection.listLength == undefined) {
-                    $("#grid-start").text(0);
-                    $("#nextPage").prop("disabled",true);
-                } else {
-                    $("#grid-start").text(1);
-                }
-
-                if (self.collection.listLength) {
-                    if (self.collection.listLength <= itemsNumber) {
-                        $("#grid-end").text(self.collection.listLength - self.deleteCounter );
-                    } else {
-                        $("#grid-end").text(itemsNumber - self.deleteCounter);
-                    }
-                    $("#grid-count").text(self.collection.listLength);
-                } else {
-                    $("#grid-end").text(0);
-                    $("#grid-count").text(0);
-                }
-
-                if (pageNumber <= 1) {
-                    $("#nextPage").prop("disabled",true);
-                }
-                self.deleteCounter = 0;
+            $(document).on("click", function () {
+                self.hideItemsNumber();
             });
 
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+            common.buildAphabeticArray(this.collection, function (arr) {
+                $("#startLetter").remove();
+                self.alphabeticArray = arr;
+                currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
+            });
+
+            currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
 
         previousPage: function (event) {
             event.preventDefault();
-            var itemsNumber = $("#itemsNumber").text();
-            var page = parseInt($("#currentShowPage").val()) - 1;
-            $("#currentShowPage").val(page);
-
-            if (this.collection.listLength == 0) {
-                $("#grid-start").text((page - 1)*itemsNumber);
-            } else {
-                $("#grid-start").text((page - 1)*itemsNumber+1);
-            }
-
-            if (this.collection.listLength <= page*itemsNumber ) {
-                $("#grid-end").text(this.collection.listLength);
-            } else {
-                $("#grid-end").text(page*itemsNumber);
-            }
-            $("#grid-count").text(this.collection.listLength);
-            $("#nextPage").prop("disabled",false);
-            $("#nextPage").removeClass("disabled");
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page,letter:this.selectedLetter});
-
+            this.prevP();
+            dataService.getData('/totalCollectionLength/Persons', null, function (response, context) {
+                context.listLength = response.count || 0;
+            }, this);
         },
 
         nextPage: function (event) {
             event.preventDefault();
-            var itemsNumber = $("#itemsNumber").text();
-            var page =  parseInt($("#currentShowPage").val()) + 1;
-            $("#currentShowPage").val(page);
-
-            if (this.collection.listLength == 0) {
-                $("#grid-start").text((page - 1)*itemsNumber);
-            } else {
-                $("#grid-start").text((page - 1)*itemsNumber+1);
-            }
-
-            if (this.collection.listLength <= page*itemsNumber ) {
-                $("#grid-end").text(this.collection.listLength);
-            } else {
-                $("#grid-end").text(page*itemsNumber);
-            }
-            $("#grid-count").text(this.collection.listLength);
-            $("#previousPage").prop("disabled",false);
-            $("#previousPage").removeClass("disabled");
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page, letter: this.selectedLetter});
-
+            this.nextP();
+            dataService.getData('/totalCollectionLength/Persons', null, function (response, context) {
+                context.listLength = response.count || 0;
+            }, this);
         },
 
         switchPageCounter: function (event) {
             event.preventDefault();
-            $("#previousPage").prop("disabled",true);
-			$("#previousPage").addClass("disabled");
+            this.startTime = new Date();
             var itemsNumber = event.target.textContent;
-            $("#itemsNumber").text(itemsNumber);
-            $("#currentShowPage").val(1);
+            this.getTotalLength(null, itemsNumber);
 
-            if ((this.collection.listLength == 0) || this.collection.listLength == undefined) {
-                $("#grid-start").text(0);
-                $("#nextPage").prop("disabled",true);
-            } else {
-                $("#grid-start").text(1);
-            }
-
-            if (this.collection.listLength) {
-                if (this.collection.listLength <= itemsNumber) {
-                    $("#grid-end").text(this.collection.listLength);
-                    $("#nextPage").prop("disabled",true);
-					$("#nextPage").addClass("disabled");
-                } else {
-                    $("#grid-end").text(itemsNumber);
-                    $("#nextPage").prop("disabled",false);
-					$("#nextPage").removeClass("disabled");
-                }
-            } else {
-                $("#grid-end").text(0);
-                $("#nextPage").prop("disabled",true);
-				$("#nextPage").addClass("disabled");
-            }
-
-            $("#grid-count").text(this.collection.listLength);
-
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: 1, letter:this.selectedLetter});
+            this.collection.showMore({ count: itemsNumber, page: 1, letter: this.selectedLetter });
         },
 
         showPage: function (event) {
             event.preventDefault();
-            var itemsNumber = $("#itemsNumber").text();
-            var page = event.target.textContent;
-            if (!page) {
-                page = $(event.target).val();
-            }
-            var adr = /^\d+$/;
-            var lastPage = $('#lastPage').text();
-
-            if (!adr.test(page) || (parseInt(page) <= 0) || (parseInt(page) > parseInt(lastPage))) {
-                page = 1;
-            }
-
-            $("#itemsNumber").text(itemsNumber);
-            $("#currentShowPage").val(page);
-
-            if (this.collection.listLength == 0) {
-                $("#grid-start").text((page - 1)*itemsNumber);
-
-            } else {
-                $("#grid-start").text((page - 1)*itemsNumber+1);
-            }
-
-            if (this.collection.listLength <= page*itemsNumber ) {
-                $("#grid-end").text(this.collection.listLength);
-            } else {
-                $("#grid-end").text(page*itemsNumber);
-            }
-
-            $("#grid-count").text(this.collection.listLength);
-
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore({count: itemsNumber, page: page, letter:this.selectedLetter});
+            this.showP(event);
         },
 
         showMoreContent: function (newModels) {
-            var self = this;
-            $("#listTable").empty();
-            new ListItemView({ collection: newModels }).render();
-            common.buildPagination(this.collection,function(listLength){
-                    self.collection.listLength = listLength;
-                    $("#pageList").empty();
-                    var itemsNumber = $("#itemsNumber").text();
-                    var pageNumber;
-
-                    if (self.collection.listLength) {
-                        pageNumber = Math.ceil(self.collection.listLength/itemsNumber);
-                    } else {
-                        pageNumber = 0;
-                    }
-
-                    var currentPage = $("#currentShowPage").val();
-                    for (var i=currentPage;i<=pageNumber;i++) {
-                        $("#pageList").append('<li class="showPage">'+ i +'</li>')
-                    }
-                    $("#lastPage").text(pageNumber);
-
-                    if (currentPage <= 1) {
-                        $("#previousPage").prop("disabled",true);
-                        $("#previousPage").addClass("disabled");
-                    } else {
-                        $("#previousPage").prop("disabled",false);
-                        $("#previousPage").removeClass("disabled");
-                    }
-
-                    if ((currentPage == pageNumber) || (pageNumber <= 1)) {
-                        $("#nextPage").prop("disabled",true);
-                        $("#nextPage").addClass("disabled");
-
-                    } else {
-                        $("#nextPage").prop("disabled",false);
-                        $("#nextPage").removeClass("disabled");
-
-                    }
-
-
-                    if ((self.collection.listLength == 0) || self.collection.listLength == undefined) {
-                        $("#grid-start").text(0);
-                        $("#nextPage").prop("disabled",true);
-                    }
-
-                    self.deleteCounter = 0;
-            });
-
+            var holder = this.$el;
+            holder.find("#listTable").empty();
+            holder.append(new listItemView({ collection: newModels }).render());
+            holder.find('#timeRecivingDataFromServer').remove();
+            holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
+        
         gotoForm: function (e) {
             App.ownContentType = true;
             var id = $(e.target).closest("tr").data("id");
@@ -309,40 +145,46 @@ function (ListTemplate, CreateView, ListItemView,AphabeticTemplate,common) {
 
         createItem: function () {
             //create editView in dialog here
-            new CreateView();
+            new createView();
         },
 
         checked: function () {
             if (this.collection.length > 0) {
                 if ($("input.checkbox:checked").length > 0)
                     $("#top-bar-deleteBtn").show();
-                else
-                {
+                else {
                     $("#top-bar-deleteBtn").hide();
                     $('#check_all').prop('checked', false);
                 }
             }
         },
-
+        deleteItemsRender: function (deleteCounter, deletePage) {
+            this.deleteRender(deleteCounter, deletePage);
+            if (deleteCounter !== this.collectionLength) {
+                var holder = this.$el;
+                var created = holder.find('#timeRecivingDataFromServer');
+                created.before(new listItemView({ collection: this.collection }).render());
+            }
+        },
         deleteItems: function () {
             var that = this,
-        		mid = 39,
-                model;
+                     mid = 39,
+                     model;
             var localCounter = 0;
-            $.each($("tbody input:checked"), function (index, checkbox) {
+            this.collectionLength = this.collection.length;
+            $.each($("#listTable input:checked"), function (index, checkbox) {
                 model = that.collection.get(checkbox.value);
                 model.destroy({
                     headers: {
                         mid: mid
                     }
                 });
-                that.collection.listLength--;
-                localCounter++
+                that.listLength--;
+                localCounter++;
             });
-            $("#grid-count").text(this.collection.listLength);
-            this.defaultItemsNumber = $("#itemsNumber").text();
             this.deleteCounter = localCounter;
-            this.collection.trigger('reset');
+            this.deletePage = $("#currentShowPage").val();
+            this.deleteItemsRender(this.deleteCounter, this.deletePage);
         }
 
     });

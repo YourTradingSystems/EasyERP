@@ -280,7 +280,7 @@ define([
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
                 var itemView = new ListItemView({ collection: this.collection });
-                itemView.bind('incomingSatges', itemView.pushStages, itemView);
+                itemView.bind('incomingStages', itemView.pushStages, itemView);
                 this.$el.append(itemView.render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);

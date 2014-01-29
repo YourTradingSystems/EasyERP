@@ -25,13 +25,15 @@
 
                 </div>
                 <div class="mainInfo">
-                 <h3>
-                            <span title='<%=name.first%> <%=name.last%>'><%=(name.first.length>16)?(name.first.substring(0,16)+"..."):name.first%> <%=(name.last.length>16)?(name.last.substring(0,16)+"..."):name.last%>
-                            <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="javascript;"><%=company.name.first%></a><%}%></span>
-                        </h3>
+                    <h3>
+                        <span title='<%=name.first%> <%=name.last%>'>
+                            <%=(name.first.length>16)?(name.first.substring(0,16)+"..."):name.first%> <%=(name.last.length>16)?(name.last.substring(0,16)+"..."):name.last%>
+                            <% if (company){%>at <a class="bold company" title="<%=company.name.first%>" data-id="<%=company._id%>" href="javascript;"><%=company.name.first%></a><%}%>
+                        </span>
+                    </h3>
                     <div class="half-block left">
-                       
-            <dl class="customer-info">
+
+                        <dl class="customer-info">
                             <dt>Position </dt>
                             <dd id="jobPosition" class="editable" title="<%=jobPosition%>"><%=jobPosition%></dd>
                             <dt>Birthday </dt>
@@ -42,12 +44,12 @@
                             <dd id="skype" class="editable" title="<%=skype%>"><a href="skype:<%=skype%>?call"><%=skype%></a></dd>
                             <dt>Phone </dt>
                             <dd id="phones_phone" class="editable" title="<%=phones.phone%>"><a href="skype:<%=phones.phone%>?call"><%=phones.phone%></a></dd>
-                          </dl>
-                       
+                        </dl>
+
                     </div>
                     <div class="half-block left">
-          
-            <dl class="customer-info">
+
+                        <dl class="customer-info">
                             <dt>Street </dt>
                             <dd id="address_street" class="editable" title="<%=address.street%>"> <%=address.street%></dd>
 
@@ -65,10 +67,10 @@
                         </dl>
                     </div>
                     <div class="clearfix"></div>
-                    
+
                 </div>
-                <div class = "edited-block"> 
-                  <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span></p>
+                <div class="edited-block">
+                    <p style="text-align:center;"><%if(editedBy.date){%><span style="font-style: italic;">Last Edited <%=editedBy.date%> by <%=editedBy.user ?  editedBy.user.login:""%></span>| <%}%><span style="font-style: italic;">Created On <%=createdBy.date %> by <%=createdBy.user ? createdBy.user.login:""%></span></p>
                 </div>
                 <div class="clearfix"></div>
                 <div class="details right person">...</div>
@@ -77,7 +79,7 @@
                 <div class="clearfix"></div>
                 <div id="details" class="person-details">
                     <div class="half-block left">
-            <dl class="customer-info">
+                        <dl class="customer-info">
                             <dt>Website </dt>
                             <dd id="website" class="editable" title="<%=website%>"><%=website%></dd>
                             <dt>Mobile </dt>
@@ -91,18 +93,18 @@
                     <div class="half-block left">
                         <div class="sale-purchase">
                             <span>Sales & Purchases</span>
-              <dl class="customer-info">
+                            <dl class="customer-info">
                                 <dt>Customer </dt>
                                 <dd id="salesPurchases_isCustomer" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
+                                    <input class="left" type="checkbox"><%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
                                 </dd>
                                 <dt>Supplier </dt>
                                 <dd id="salesPurchases_isSupplier" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
+                                    <input class="left" type="checkbox"><%=((salesPurchases.isSupplier)? 'checked' : '') %>/>
                                 </dd>
                                 <dt>Active </dt>
                                 <dd id="salesPurchases_active" class="with-checkbox">
-                                    <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
+                                    <input class="left" type="checkbox"><%=((salesPurchases.active)? 'checked' : '') %> />
                                 </dd>
                             </dl>
                         </div>
@@ -112,7 +114,15 @@
             </div>
         </form>
     </div>
-    <div class="formRightColumn">
+    <div class="formRightColumn form">
+        <div class="formTitle">
+            <h3 class="left">Opportunities</h3>
+            <div class="btnHolder">
+                <a href="javascript;" class="icon-img add opportunities" title="Add"></a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div id="opportunities"></div>
     </div>
 
     <div class="clearfix"></div>

@@ -97,9 +97,9 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: {
-        //    maxAge: 600 * 1000 //1 minute
-        //},
+        cookie: {
+            maxAge: 10000 * 60 * 1000 //1 minute
+        },
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
@@ -438,7 +438,11 @@ app.delete('/Profiles/:_id', function (req, res) {
 //-----------------------------getTotalLength---------------------------------------------
 app.get('/totalCollectionLength/:contentType', function (req, res, next) {
     switch(req.params.contentType) {
-        case ('Persons'): requestHandler.personsTotalCollectionLength(req, res);
+        case ('Persons'): requestHandler.customerTotalCollectionLength(req, res);
+            break;
+        case ('Companies'): requestHandler.customerTotalCollectionLength(req, res);
+            break;
+        case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
             break;
         default: next();
     }
@@ -467,11 +471,7 @@ app.get('/getPersonsForDd', function (req, res) {
     requestHandler.getPersonsForDd(req, res, data);
 });
 app.get('/getPersonAlphabet', function (req, res) {
-    console.log('------getPersonAlphabet-----------------');
-    data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getPersonAlphabet(req, res, data);
+    requestHandler.getCustomersAlphabet(req, res);
 });
 app.get('/getPersonsForMiniView', function (req, res) {
     data = {};
@@ -515,9 +515,7 @@ app.get('/Persons/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getPersonById(req, res, data);
             break;
-        case "list": requestHandler.getFilterPersonsForList(req, res, data);
-            break;
-        default: requestHandler.getFilterPersons(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -596,6 +594,12 @@ app.get('/getProjectStatusCountForDashboard', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectStatusCountForDashboard(req, res, data);
+});
+
+app.get('/getProjectByEndDateForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectByEndDateForDashboard(req, res, data);
 });
 
 app.post('/Projects', function (req, res) {
@@ -873,9 +877,7 @@ app.get('/Companies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        case "list": requestHandler.getFilterCompaniesForList(req, res, data);
-            break;
-        default: requestHandler.getFilterCompanies(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -889,7 +891,7 @@ app.get('/ownCompanies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        default: requestHandler.getOwnCompanies(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -979,11 +981,11 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
 });
 
 app.get('/getCompaniesAlphabet', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
-    data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getCompaniesAlphabet(req, res, data);
+    requestHandler.getCustomersAlphabet(req, res);
+});
+
+app.get('/getownCompaniesAlphabet', function (req, res) {
+    requestHandler.getCustomersAlphabet(req, res);
 });
 
 //------------------JobPositions---------------------------------------------------
@@ -1515,6 +1517,7 @@ app.put('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });
@@ -1523,6 +1526,7 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });
