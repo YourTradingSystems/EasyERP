@@ -137,7 +137,6 @@ require(['app'], function (app) {
 
     Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber) {
         //var itemsNumber = this.defaultItemsNumber;
-
         $("#itemsNumber").text(itemsNumber);
 
         if (totalCount == 0 || totalCount == undefined) {
@@ -174,7 +173,7 @@ require(['app'], function (app) {
     };
     
     Backbone.View.prototype.prevP = function (dataObject) {
-        
+        this.startTime = new Date();
         var itemsNumber = $("#itemsNumber").text();
         var currentShowPage = $("#currentShowPage");
         var page = parseInt(currentShowPage.val()) - 1;
@@ -202,6 +201,7 @@ require(['app'], function (app) {
     };
 
     Backbone.View.prototype.nextP = function (dataObject) {
+        this.startTime = new Date();
         var itemsNumber = $("#itemsNumber").text();
         var page = parseInt($("#currentShowPage").val()) + 1;
 
@@ -225,7 +225,7 @@ require(['app'], function (app) {
         this.collection.showMore(serchObject);
     };
 
-    Backbone.View.prototype.showP = function (dataObject) {
+    Backbone.View.prototype.showP = function (event, dataObject) {
         this.startTime = new Date();
         if (this.listLength == 0) {
             $("#currentShowPage").val(0);
@@ -301,6 +301,7 @@ require(['app'], function (app) {
                 $("#lastPage").text(0);
                 $("#pageList").empty();
                 $("#listTable").empty();
+                $("#startLetter .current").removeClass("current").addClass("empty");
             } else {
                 $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
                 $("#grid-end").text(deletePage * itemsNumber);

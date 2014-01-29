@@ -39,6 +39,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
         },
 
         alpabeticalRender: function (e) {
+            this.startTime = new Date();
             $(e.target).parent().find(".current").removeClass("current");
             $(e.target).addClass("current");
             var itemsNumber = $("#itemsNumber").text();
@@ -48,6 +49,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 this.selectedLetter = "";
             }
             this.collection.showMore({ count: itemsNumber, page: page, letter: this.selectedLetter });
+            this.getTotalLength(null, itemsNumber);
         },
 
         hideItemsNumber: function (e) {
@@ -124,7 +126,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 
         showPage: function (event) {
             event.preventDefault();
-            this.showP();
+            this.showP(event);
         },
 
         showMoreContent: function (newModels) {
