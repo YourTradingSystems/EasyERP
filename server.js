@@ -408,11 +408,7 @@ app.get('/getPersonsForDd', function (req, res) {
     requestHandler.getPersonsForDd(req, res, data);
 });
 app.get('/getPersonAlphabet', function (req, res) {
-    console.log('------getPersonAlphabet-----------------');
-    data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getPersonAlphabet(req, res, data);
+    requestHandler.getCustomersAlphabet(req, res);
 });
 app.get('/getPersonsForMiniView', function (req, res) {
     data = {};
@@ -455,8 +451,6 @@ app.get('/Persons/:viewType', function (req, res) {
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getPersonById(req, res, data);
-            break;
-        case "list": requestHandler.getFilterPersonsForList(req, res, data);
             break;
         default: requestHandler.getFilterCustomers(req, res);
             break;
@@ -816,8 +810,6 @@ app.get('/Companies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        case "list": requestHandler.getFilterCompaniesForList(req, res, data);
-            break;
         default: requestHandler.getFilterCustomers(req, res);
             break;
     }
@@ -922,11 +914,11 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
 });
 
 app.get('/getCompaniesAlphabet', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
-    data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getCompaniesAlphabet(req, res, data);
+    requestHandler.getCustomersAlphabet(req, res);
+});
+
+app.get('/getownCompaniesAlphabet', function (req, res) {
+    requestHandler.getCustomersAlphabet(req, res);
 });
 
 //------------------JobPositions---------------------------------------------------

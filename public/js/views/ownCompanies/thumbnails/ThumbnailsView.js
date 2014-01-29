@@ -16,6 +16,9 @@
             initialize: function (options) {
                 this.startTime = options.startTime;
                 this.collection = options.collection;
+                this.allAlphabeticArray = common.buildAllAphabeticArray();
+                this.selectedLetter = "";
+                _.bind(this.collection.showMoreAlphabet, this.collection);
                 this.countPerPage = options.collection.length;
                 this.getTotalLength(this.countPerPage);
                 this.render();
@@ -29,7 +32,7 @@
             },
 
             getTotalLength: function(currentNumber) {
-                dataService.getData('/totalCollectionLength/ownCompanies', { currentNumber: currentNumber}, function (response, context) {
+                dataService.getData('/totalCollectionLength/ownCompanies', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
                     var showMore = context.$el.find('#showMoreDiv');
                     if (response.showMore) {
                         if (showMore.length === 0) {
@@ -42,6 +45,17 @@
                         showMore.hide();
                     }
                 }, this);
+            },
+
+            alpabeticalRender: function (e) {
+                var target = $(e.target);
+                target.parent().find(".current").removeClass("current");
+                target.addClass("current");
+                this.selectedLetter = target.text();
+                if (target.text() == "All") {
+                    this.selectedLetter = "";
+                }
+                this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
             },
             gotoForm: function (e) {
                 e.preventDefault();
@@ -56,8 +70,6 @@
                 window.location.hash = "#easyErp/ownCompanies/form/" + id;
             },
             render: function () {
-                console.log(' ======= ==== ====  ');
-                console.log(this.collection.toJSON());
                 var self = this;
                 var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
                 var currentEl = this.$el;
@@ -68,13 +80,24 @@
                 } else {
                     currentEl.html('<h2>No ownCompanies found</h2>');
                 }
+
+                common.buildAphabeticArray(this.collection, function (arr) {
+                    $("#startLetter").remove();
+                    self.alphabeticArray = arr;
+                    currentEl.prepend(_.template(AphabeticTemplate, {
+                        alphabeticArray: self.alphabeticArray,
+                        selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter),
+                        allAlphabeticArray: self.allAlphabeticArray
+                    }));
+                });
+
                 currentEl.append(createdInTag);
                 return this;
             },
 
             showMore: function () {
                 _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({});
+                this.collection.showMore({ letter: this.selectedLetter  });
             },
 
             showMoreContent: function (newModels) {
@@ -85,6 +108,25 @@
                 this.getTotalLength(this.countPerPage);
                 showMore.before(this.template({ collection: this.collection.toJSON() }));
                 showMore.after(created);
+            },
+
+            showMoreAlphabet: function (newModels) {
+                var holder = this.$el;
+                var alphaBet = holder.find('#startLetter');
+                var created = holder.find('#timeRecivingDataFromServer');
+                var showMore = holder.find('#showMoreDiv');
+                var content = holder.find(".thumbnailwithavatar");
+                var countPerPage = this.countPerPage = newModels.length;
+
+                content.remove();
+
+                holder.append(this.template({ collection: newModels.toJSON() }));
+
+                this.getTotalLength(countPerPage);
+
+                holder.prepend(alphaBet);
+                holder.append(created);
+                created.before(showMore);
             },
 
             createItem: function () {

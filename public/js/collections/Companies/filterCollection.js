@@ -45,13 +45,9 @@
 
             showMore: function (options) {
                 var that = this;
-                
-                var filterObject = {};
-                    if (options) {
-                        for (var i in options) {
-                            filterObject[i] = options[i];
-                        }
-                }
+
+                var filterObject = options || {};
+
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
@@ -71,7 +67,6 @@
             },
 
             showMoreAlphabet: function (options) {
-                debugger;
                 var that = this;
                 var filterObject = options || {};
 				that.page = 1;
@@ -93,7 +88,7 @@
             },
 
             getAlphabet: function (callback) {
-				dataService.getData("/getCompaniesAlphabet", { mid: 39 }, function (response) {
+				dataService.getData("/getCompaniesAlphabet", { mid: 39, contentType: this.contentType }, function (response) {
 					if (callback){
 						callback(response.data);
 					}
