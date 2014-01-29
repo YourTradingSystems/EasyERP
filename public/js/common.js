@@ -84,7 +84,7 @@
                         bgColor: 'white',
                         bgOpacity: .6,
                         setSelect: [0, 0, 100, 100],
-                        aspectRatio: 0,
+                        aspectRatio: 1,
                         onSelect: imgSelect,
                         onChange: imgSelect,
                         boxWidth: 650,

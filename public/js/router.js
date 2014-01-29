@@ -189,7 +189,8 @@ define([
                     page: 1,
                     count: 50,
                     status: [],
-                    parrentContentId: parrentContentId
+                    parrentContentId: parrentContentId,
+                    contentType: contentType
                 });//status - to filter by workflows
 
                 collection.bind('reset', _.bind(createViews, self));

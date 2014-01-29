@@ -26,13 +26,33 @@ define([
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "change .inputAttach": "addAttach",
+    			"click .deleteAttach":"deleteAttach",
             },
+                
+           addAttach: function (event) {
+    				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
+    				$(".attachContainer").append('<li class="attachFile">'+
+    											 '<a href="javascript:;">'+s+'</a>'+
+    											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
+    											 );
+    				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
+    				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
+    		},
+  			deleteAttach:function(e){
+    				$(e.target).closest(".attachFile").remove();
+   			},
+   			
+   			fileSizeIsAcceptable: function(file){
+   				if(!file){return false;}
+   				return file.size < App.File.MAXSIZE;
+   			},
+   			
 
             notHide: function (e) {
 				return false;
             },
-			
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -75,6 +95,7 @@ define([
             hideDialog: function () {
                 $(".edit-dialog").remove();
             },
+            
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -115,18 +136,75 @@ define([
                         mid: mid
                     },
                     wait: true,
-                    success: function (model, res) {
-                        model = model.toJSON();
-                        self.hideDialog();
-                        if (!model.project) {
-                            Backbone.history.navigate("#easyErp/Tasks", { trigger: true });
+                    success: function (model) {
+						var currentModel = model.changed.task;
+						var currentModelID = currentModel["_id"];
+						var addFrmAttach = $("#createTaskForm");
+						var fileArr= [];
+						var addInptAttach = '';
+						$("li .inputAttach").each(function(){
+							addInptAttach = $(this)[0].files[0];
+							fileArr.push(addInptAttach);
+							if(!self.fileSizeIsAcceptable(addInptAttach)){
+								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+								return;
+							}
+						});
+							addFrmAttach.submit(function (e) {
+								var bar = $('.bar');
+								var status = $('.status');
+								
+								var formURL = "http://" + window.location.host + "/uploadTasksFiles";
+								e.preventDefault();
+								addFrmAttach.ajaxSubmit({
+									url: formURL,
+									type: "POST",
+									processData: false,
+									contentType: false,
+												   data: [fileArr],
 
-                        } else {
-                            common.checkBackboneFragment("easyErp/Tasks/kanban/" + model.project);
-                        }
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader("id", currentModelID);
+										status.show();
+										var statusVal = '0%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									uploadProgress: function(event, position, total, statusComplete) {
+										var statusVal = statusComplete + '%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									success: function (data) {
+										console.log('Attach file');
+										addFrmAttach[0].reset();
+										status.hide();
+										self.hideDialog();
+										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+									},
+
+									error: function () {
+										console.log("Attach file error");
+									}
+								});
+							});
+						if(fileArr.length>0){
+							addFrmAttach.submit();
+						}
+						else{
+							self.hideDialog();
+							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+
+						}
+						addFrmAttach.off('submit');
+
                     },
-                    error: function (model, xhr, options) {
-                        Backbone.history.navigate("easyErp", { trigger: true });
+
+                    error: function () {
+                        self.hideDialog();
+                        Backbone.history.navigate("home", { trigger: true });
                     }
                 });
             },

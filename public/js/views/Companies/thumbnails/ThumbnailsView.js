@@ -48,7 +48,6 @@
             },
 
             alpabeticalRender: function (e) {
-                debugger;
                 var target = $(e.target);
                 target.parent().find(".current").removeClass("current");
                 target.addClass("current");
@@ -71,8 +70,6 @@
                 window.location.hash = "#easyErp/Companies/form/" + id;
             },
             render: function () {
-                console.log(' ======= ==== ====  ');
-                console.log(this.collection.toJSON());
                 var self = this;
                 var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
                 var currentEl = this.$el;
