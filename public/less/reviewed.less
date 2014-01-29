@@ -824,11 +824,6 @@
         height: 30px;
         font-size: 14px;
     }
-
-    input[type="submit"] {
-		display:none;
-    }
-
 }
 .thumbnail-text {
     color: #4c4c4c;
@@ -1000,6 +995,8 @@
 
             .inner {
                 padding: 5px;
+				padding-bottom:0;
+				padding-left:0;
             }
 
             .task-header {
@@ -1009,14 +1006,17 @@
             }
 
             .task-content {
+				position:relative;
                 .info {
                     padding: 5px;
                     padding-bottom: 2px;
-
                     p.bold {
                        .bold;
                     }
                 }
+				.taskType{
+					line-height:20px;
+				}
             }
         }
 
@@ -1626,4 +1626,58 @@ body {
 	.ui-dialog();
     }
 #Persons {
+}
+
+/*----------------------------- Dashboard --------------------------------*/
+#projectPM{
+	>div{
+		float:left;
+		width:33%;
+
+		>div{
+			padding: 0 20px;
+		}
+	}
+	h2{
+		text-align:center;
+		font-weight:bold;
+		font-size:18px;
+		color:@lightblue;
+		line-height:40px;
+	}
+	table{
+		width:100%;
+		tr{
+			th{
+				text-align:left;
+				font-weight:bold;
+				padding-left:3px;
+				line-height:25px;
+				border-bottom:2px solid #d6d6d6;
+				height:25px;
+				&.center{
+					text-align:center;
+				}
+
+			}		
+			td{
+				height:25px;
+				padding-left:3px;
+				line-height:25px;
+				border-bottom:2px solid #e7e7e7;
+				@width:10px;
+				.green{
+					width:@width;
+					height:@width;
+					margin:0 auto;
+					border-radius:@width;
+					background-color:green;
+				}
+				
+			}
+			&:first-child{
+			}
+		}
+		
+	}
 }
