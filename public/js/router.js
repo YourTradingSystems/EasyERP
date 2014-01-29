@@ -17,7 +17,7 @@ define([
             "home": "main",
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
-            "easyErp/:contentType/thumbnails": "goToThumbnails",
+            "easyErp/:contentType/thumbnails(/:parrentContentId)": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
             "easyErp/:contentType/list(/:parrentContentId)": "goToList",
             "easyErp/Profiles": "goToProfiles",
@@ -311,7 +311,7 @@ define([
             });
         },
 
-        goToThumbnails: function (contentType) {
+        goToThumbnails: function (contentType, parrentContentId) {
             custom.setCurrentVT('thumbnails');
 
             var startTime = new Date();
@@ -335,8 +335,8 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 2,
-                            contentType: contentType
+                            count: 3,
+                            parrentContentId: parrentContentId
                         })
 
                     : new contentCollection();

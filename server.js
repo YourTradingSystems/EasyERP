@@ -375,11 +375,7 @@ app.delete('/Profiles/:_id', function (req, res) {
 //-----------------------------getTotalLength---------------------------------------------
 app.get('/totalCollectionLength/:contentType', function (req, res, next) {
     switch(req.params.contentType) {
-        case ('Persons'): requestHandler.customerTotalCollectionLength(req, res);
-            break;
-        case ('Companies'): requestHandler.customerTotalCollectionLength(req, res);
-            break;
-        case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
+        case ('Persons'): requestHandler.personsTotalCollectionLength(req, res);
             break;
         default: next();
     }
@@ -458,7 +454,7 @@ app.get('/Persons/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getFilterPersonsForList(req, res, data);
             break;
-        default: requestHandler.getFilterCustomers(req, res);
+        default: requestHandler.getFilterPersons(req, res, data);
             break;
     }
 });
@@ -537,12 +533,6 @@ app.get('/getProjectStatusCountForDashboard', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectStatusCountForDashboard(req, res, data);
-});
-
-app.get('/getProjectByEndDateForDashboard', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getProjectByEndDateForDashboard(req, res, data);
 });
 
 app.post('/Projects', function (req, res) {
@@ -818,7 +808,7 @@ app.get('/Companies/:viewType', function (req, res) {
             break;
         case "list": requestHandler.getFilterCompaniesForList(req, res, data);
             break;
-        default: requestHandler.getFilterCustomers(req, res);
+        default: requestHandler.getFilterCompanies(req, res, data);
             break;
     }
 });
@@ -832,7 +822,7 @@ app.get('/ownCompanies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        default: requestHandler.getFilterCustomers(req, res);
+        default: requestHandler.getOwnCompanies(req, res, data);
             break;
     }
 });
