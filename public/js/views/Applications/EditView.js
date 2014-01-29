@@ -30,7 +30,6 @@
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
                 "click .current-selected": "showNewSelect",
-                "click .newSelectList li": "chooseOption",
                 "click": "hideNewSelect",
                 "click .deleteAttach": "deleteAttach",
                 "change .inputAttach": "addAttach",
@@ -40,9 +39,22 @@
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
                 'click #addUsers': 'addUsers',
-                'click #removeUsers': 'removeUsers'
+                'click #removeUsers': 'removeUsers',
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+            },
+            notHide: function (e) {
+				return false;
             },
 
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true)
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false)
+			},
             changeTab: function (e) {
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
                 $(e.target).addClass("active");
@@ -430,23 +442,43 @@
                 }
             },
             hideNewSelect: function (e) {
-                $(".newSelectList").remove();;
+                $(".newSelectList").hide();;
             },
-            showNewSelect: function (e) {
-                if ($(".newSelectList").length) {
-                    this.hideNewSelect();
-                    return false;
-                } else {
-                    var s = "<ul class='newSelectList'>";
-                    $(e.target).parent().find("select option").each(function () {
-                        s += "<li class=" + $(this).text().toLowerCase() + ">" + $(this).text() + "</li>";
-                    });
-                    s += "</ul>";
-                    $(e.target).parent().append(s);
-                    return false;
-                }
+              showNewSelect:function(e,prev,next){
+				var elementVisible = 25;
+				var newSel = $(e.target).parent().find(".newSelectList")
+				if (prev||next){
+					newSel = $(e.target).closest(".newSelectList")
+				}
+				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
+                var currentPage = 1;
+                if (newSel.is(":visible")&&!prev&&!next){
+                    newSel.hide();
+					return;
+				}
 
+                if (newSel.length){
+                    currentPage = newSel.data("page");
+                    newSel.remove();
+                }
+				if (prev)currentPage--;
+				if (next)currentPage++;
+                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
+                var start = (currentPage-1)*elementVisible;
+				var options = parent.find("select option");
+                var end = Math.min(currentPage*elementVisible,options.length);
+                for (var i = start; i<end;i++){
+                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
+                }
+				var allPages  = Math.ceil(options.length/elementVisible)
+                if (options.length>elementVisible)
+                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
+                s+="</ul>";
+                parent.append(s);
+                return false;
+                
             },
+
 
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));

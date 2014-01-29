@@ -4565,3 +4565,29 @@ h3.dashboard {
         width: @width;
     }
 }
+.newSelectList{
+	.miniStylePagination{
+		position:relative;
+		text-align:center;
+		min-width:160px;
+		&:hover{
+			background-color:white;
+		}
+		.next, .prev{
+			position:absolute;
+			top:4px;
+			&.disabled{
+				display:none;
+			}
+		}
+		.next{
+			right:5px;
+		}
+		.prev{
+			left:5px;
+		}
+		span{
+			padding:0;
+		}
+	}
+}
