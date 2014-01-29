@@ -137,6 +137,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
         // console.log("Requst getPersons is success");
     };
+
     function updateCurrentUser(req, res, data) {
         console.log("Requst updateCurrentUser is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -220,6 +221,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             console.log("requestHandler.js  " + Exception);
         }
     };
+
     function getProfileForDd(req, res) {
         try {
             console.log("Requst getProfile is success");
@@ -308,6 +310,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             errorLog("requestHandler.js  " + Exception);
         }
     };
+
     function getFilterPersonsForMiniView(req, res, data) {
         try {
             console.log("Requst getPersonsForDd is success");
@@ -378,23 +381,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         // console.log("Requst getPersons is success");
     };
 
-    function getFilterPersons(req, res, data) {
-        console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb ) {
-            access.getReadAccess(req, req.session.uId, 49, function (access) {
-                console.log(access);
-                if (access) {
-                    customer.getFilterPersons(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-        // console.log("Requst getPersons is success");
-    };
     function getFilterPersonsForList(req, res, data) {
         console.log("Requst getPersons is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -560,6 +546,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
+	function getProjectByEndDateForDashboard(req, res, data) {
+        console.log("Requst getProjects is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    data.uId = req.session.uId;
+                    project.getProjectByEndDateForDashboard(req, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+
 	function getProjectStatusCountForDashboard(req, res, data) {
         console.log("Requst getProjects is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -985,13 +988,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
 
-    function getFilterCompanies(req, res, data) {
+    function getFilterCustomers(req, res) {
         console.log("Requst getFilterCompanies is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             //company.get(res);
             access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
-                    customer.getFilterCompanies(req, data, res);
+                    customer.getFilterCustomers(req, res);
                 } else {
                     res.send(403);
                 }
@@ -2142,8 +2145,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
     
-    function personsTotalCollectionLength(req, res) {
-        customer.getTotalCount(req, res, 'Person');
+    function customerTotalCollectionLength(req, res) {
+        customer.getTotalCount(req, res);
     }
     //---------END------Events----------------------------------
     return {
@@ -2177,7 +2180,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,
-        getFilterPersons: getFilterPersons,
         getPersonAlphabet: getPersonAlphabet,
         getFilterPersonsForList: getFilterPersonsForList,
 		getFilterPersonsForMiniView:getFilterPersonsForMiniView,
@@ -2192,6 +2194,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeProject: removeProject,
 		getProjectPMForDashboard: getProjectPMForDashboard,
 		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
+		getProjectByEndDateForDashboard:getProjectByEndDateForDashboard,
 
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,
@@ -2211,7 +2214,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
-        getFilterCompanies: getFilterCompanies,
+        getFilterCustomers: getFilterCustomers,
         getFilterCompaniesForList: getFilterCompaniesForList,
         getCompaniesAlphabet: getCompaniesAlphabet,
 
@@ -2318,7 +2321,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         getSources: getSources,
         getJobType: getJobType,
-        personsTotalCollectionLength: personsTotalCollectionLength
+        customerTotalCollectionLength: customerTotalCollectionLength
     }
 }
 //---------EXPORTS----------------------------------------
