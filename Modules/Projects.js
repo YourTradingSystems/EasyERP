@@ -426,7 +426,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
     };
 
     function getProjectPMForDashboard(req, response) {
-        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).findOne({status:"In Progress","wId":"Project"}).exec(function (error, res) {
+        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).findOne({status:"In Progress","wId":"Projects"}).exec(function (error, res) {
 			if (!error){
 				models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
 					{
@@ -511,7 +511,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
 	};
     function getProjectStatusCountForDashboard(req, response) {
-        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({"wId":"Project"}).select("_id status").exec(function (error, resWorkflow) {
+        models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({"wId":"Projects"}).select("_id status").exec(function (error, resWorkflow) {
 			if (!error){
 				models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
 					{
