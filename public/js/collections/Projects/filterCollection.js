@@ -84,9 +84,22 @@
                     _.map(response.data, function (project) {
                         project.createdBy.date = common.utcDateToLocaleDateTime(project.createdBy.date);
                         project.editedBy.date = common.utcDateToLocaleDateTime(project.editedBy.date);
-                        //project.info.StartDate = common.utcDateToLocaleDate(project.info.StartDate);
-                        //project.info.EndDate = common.utcDateToLocaleDate(project.info.EndDate);
-                      //  project.deadline = common.utcDateToLocaleDate(project.deadline);
+                        project.info.StartDate = common.utcDateToLocaleDate(project.info.StartDate);
+                        project.info.EndDate = common.utcDateToLocaleDate(project.info.EndDate);
+                        //project.deadline = common.utcDateToLocaleDate(project.deadline);
+                            if (project.notes) {
+                                _.map(project.notes, function (note) {
+                                	note.date = common.utcDateToLocaleDate(note.date);
+                                    return note;
+                                });
+                            }
+                          
+                            if (project.attachments) {
+                                _.map(project.attachments, function (attachment) {
+                                	attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                                    return attachment;
+                                });
+                            }
                         return project;
                     });
                 }

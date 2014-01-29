@@ -615,7 +615,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function updateProject(req, res, id, data) {
+    function updateProject(req, res, id, data,remove) {
         console.log("Requst updateProject is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getEditWritAccess(req, req.session.uId, 39, function (access) {
@@ -624,7 +624,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                         user: req.session.uId,
                         date: new Date().toISOString()
                     }
-                    project.update(req, id, data.project, res);
+                    project.update(req, id, data.project, res,remove);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    
+    function uploadProjectsFiles(req, res, id, file) {
+        console.log("File Uploading to Project");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getEditWritAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    console.log(file);
+                    project.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
                 }
@@ -762,7 +778,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function updateTask(req, res, id, data) {
+    function updateTask(req, res, id, data,remove) {
         console.log("Requst updateTask is success");
         var date = Date.now();
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -772,7 +788,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                         user: req.session.uId,
                         date: date
                     };
-                    project.updateTask(req, id, data.task, res);
+                    project.updateTask(req, id, data.task, res,remove);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    
+    function uploadTasksFiles(req, res, id, file) {
+        console.log("File Uploading to app");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getEditWritAccess(req, req.session.uId, 40, function (access) {
+                if (access) {
+                    console.log(file);
+                    project.updateTask(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
                 }
@@ -2189,6 +2221,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
         updateProject: updateProject,
+        uploadProjectsFiles:uploadProjectsFiles,
         removeProject: removeProject,
 		getProjectPMForDashboard: getProjectPMForDashboard,
 		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
@@ -2201,6 +2234,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getTasksForList: getTasksForList,
         getTasksForKanban: getTasksForKanban,
         updateTask: updateTask,
+        uploadTasksFiles:uploadTasksFiles,
         removeTask: removeTask,
         getTasksPriority: getTasksPriority,
 

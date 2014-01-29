@@ -26,8 +26,26 @@ define([
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
-                'click .unassign': 'unassign'
-
+                'click .unassign': 'unassign',
+                "change .inputAttach": "addAttach",
+    			"click .deleteAttach":"deleteAttach",
+             },
+                
+             addAttach: function (event) {
+    				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
+    				$(".attachContainer").append('<li class="attachFile">'+
+    											 '<a href="javascript:;">'+s+'</a>'+
+    											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
+    											 );
+    				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
+    				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
+    		},
+    		deleteAttach:function(e){
+    				$(e.target).closest(".attachFile").remove();
+    		},
+            fileSizeIsAcceptable: function(file){
+                if(!file){return false;}
+                return file.size < App.File.MAXSIZE;
             },
 			nextUserList:function(e,page){
 				var self= this;
@@ -195,6 +213,7 @@ define([
                 var mid = 39;
                 var customer = this.$el.find("#customerDd option:selected").val();
                 var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
+                var projecttype = this.$el.find("#projectTypeDD option:selected").val();
                 var workflow = this.$el.find("#workflowsDd option:selected").data("id");
                 var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
                 console.log(workflow);
@@ -222,6 +241,7 @@ define([
                     customer: customer ? customer : "",
                     projectmanager: projectmanager ? projectmanager : "",
                     workflow: workflow ? workflow : "",
+                    projecttype:projecttype ? projecttype : "",
                     groups: {
 						owner: $("#allUsers").val(),
 						users: usersId,
@@ -233,12 +253,75 @@ define([
                     headers: {
                         mid: mid
                     },
-                    //wait: true,
+                    wait: true,
                     success: function (model) {
-                        self.hideDialog();
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+						var currentModel = model.changed.result;
+						var currentModelID = currentModel["_id"];
+						var addFrmAttach = $("#createProjectForm");
+						var fileArr= [];
+						var addInptAttach = '';
+						$("li .inputAttach").each(function(){
+							addInptAttach = $(this)[0].files[0];
+							fileArr.push(addInptAttach);
+							if(!self.fileSizeIsAcceptable(addInptAttach)){
+								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+								return;
+							}
+						});
+							addFrmAttach.submit(function (e) {
+								var bar = $('.bar');
+								var status = $('.status');
+								
+								var formURL = "http://" + window.location.host + "/uploadProjectsFiles";
+								e.preventDefault();
+								addFrmAttach.ajaxSubmit({
+									url: formURL,
+									type: "POST",
+									processData: false,
+									contentType: false,
+									data: [fileArr],
+
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader("id", currentModelID);
+										status.show();
+										var statusVal = '0%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									uploadProgress: function(event, position, total, statusComplete) {
+										var statusVal = statusComplete + '%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									success: function (data) {
+										console.log('Attach file');
+										addFrmAttach[0].reset();
+										status.hide();
+										self.hideDialog();
+										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+									},
+
+									error: function () {
+										console.log("Attach file error");
+									}
+								});
+							});
+						if(fileArr.length>0){
+							addFrmAttach.submit();
+						}
+						else{
+							self.hideDialog();
+							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+
+						}
+						addFrmAttach.off('submit');
+
                     },
-                    error: function (model, statusText, xhr) {
+
+                    error: function () {
+                        self.hideDialog();
                         Backbone.history.navigate("home", { trigger: true });
                     }
                 });

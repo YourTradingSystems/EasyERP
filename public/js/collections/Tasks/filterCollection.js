@@ -94,6 +94,19 @@
                        // task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
                        // task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
                        // task.deadline = common.utcDateToLocaleDate(task.deadline);
+                        if (task.notes) {
+                            _.map(task.notes, function (note) {
+                            	note.date = common.utcDateToLocaleDate(note.date);
+                                return note;
+                            });
+                        }
+                      
+                        if (task.attachments) {
+                            _.map(task.attachments, function (attachment) {
+                            	attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                                return attachment;
+                            });
+                        }
                         return task;
                     });
                 }
