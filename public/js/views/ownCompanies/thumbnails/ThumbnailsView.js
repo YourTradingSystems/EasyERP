@@ -1,119 +1,117 @@
 ﻿define([
-   'views/ownCompanies/thumbnails/ThumbnailsItemView',
-    'custom',
     'common',
     'views/ownCompanies/EditView',
-    'views/ownCompanies/CreateView'
+    'views/ownCompanies/CreateView',
+    'text!templates/Alpabet/AphabeticTemplate.html',
+    "text!templates/ownCompanies/thumbnails/ThumbnailsItemTemplate.html",
+    'dataService'
 ],
 
-function (OwnCompaniesThumbnailsItemView, Custom, common, EditView, CreateView) {
-    var CompanyThumbnalView = Backbone.View.extend({
-        el: '#content-holder',
+    function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplate, dataService) {
+        var OwnCompaniesThumbnalView = Backbone.View.extend({
+            el: '#content-holder',
+            countPerPage: 0,
+            template: _.template(ThumbnailsItemTemplate),
 
-        initialize: function (options) {
-			this.startTime = options.startTime;
-            this.collection = options.collection;
-            arrayOfOwnCcompanies = [];
-            dataIndexCounter = 0;
-            this.render();
-        },
+            initialize: function (options) {
+                this.startTime = options.startTime;
+                this.collection = options.collection;
+                this.countPerPage = options.collection.length;
+                this.getTotalLength(this.countPerPage);
+                this.render();
+            },
 
-        events: {
-            "click #showMore": "showMore"
-        },
+            events: {
+                "click #showMore": "showMore",
+                "click .letter:not(.empty)": "alpabeticalRender",
+                "click .gotoForm": "gotoForm",
+                "click .company": "gotoCompanyForm"
+            },
 
-        render: function () {
-            var namberOfOwnCompanies = this.collection.namberToShow;
-            console.log('Company render');
-            this.$el.html('');
-            if (this.collection.length > 0) {
-                var holder = this.$el;
-                var thumbnailsItemView;
-                _.each(this.collection.models, function (model, index) {
-                    if (index < namberOfOwnCompanies) {
-                        dataIndexCounter++;
-                        thumbnailsItemView = new OwnCompaniesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).append(thumbnailsItemView.render().el);
+            getTotalLength: function(currentNumber) {
+                dataService.getData('/totalCollectionLength/ownCompanies', { currentNumber: currentNumber}, function (response, context) {
+                    var showMore = context.$el.find('#showMoreDiv');
+                    if (response.showMore) {
+                        if (showMore.length === 0) {
+                            var created = context.$el.find('#timeRecivingDataFromServer');
+                            created.before('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+                        } else {
+                            showMore.show();
+                        }
                     } else {
-                        arrayOfOwnCcompanies.push(model);
+                        showMore.hide();
                     }
                 }, this);
-            } else {
-                this.$el.html('<h2>No Companies found</h2>');
-            }
-            if (arrayOfOwnCcompanies.length > 0) {
-                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
-            return this;
-        },
+            },
+            gotoForm: function (e) {
+                e.preventDefault();
+                App.ownContentType = true;
+                var id = $(e.target).closest("a").data("id");
+                window.location.hash = "#easyErp/ownCompanies/form/" + id;
+            },
 
-        showMore: function () {
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore();
-        },
+            gotoCompanyForm: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest("a").data("id");
+                window.location.hash = "#easyErp/ownCompanies/form/" + id;
+            },
+            render: function () {
+                console.log(' ======= ==== ====  ');
+                console.log(this.collection.toJSON());
+                var self = this;
+                var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
+                var currentEl = this.$el;
 
-        showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
-            var thumbnailsItemView;
-            var counter =0;
-            var namberOfOwnCompanies = this.collection.namberToShow;
-
-            if (arrayOfOwnCcompanies.length > 0) {
-                for (var i=0; i<arrayOfOwnCcompanies.length; i++) {
-                    if (counter < namberOfOwnCompanies ) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new OwnCompaniesThumbnailsItemView({ model: arrayOfOwnCcompanies[i], dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
-                        arrayOfOwnCcompanies.splice(i,1);
-                        i--;
-                    }
+                currentEl.html('');
+                if (this.collection.length > 0) {
+                    currentEl.append(this.template({ collection: this.collection.toJSON() }));
+                } else {
+                    currentEl.html('<h2>No ownCompanies found</h2>');
                 }
-            }
-            _.each(newModels.models, function (model) {
-                    if (counter < namberOfOwnCompanies) {
-                        dataIndexCounter++;
-                        thumbnailsItemView = new OwnCompaniesThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).prepend(thumbnailsItemView.render().el);
-                    } else {
-                        arrayOfOwnCcompanies.push(model);
-                    }
-            }, this);
+                currentEl.append(createdInTag);
+                return this;
+            },
 
-            if (arrayOfOwnCcompanies.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
-        },
+            showMore: function () {
+                _.bind(this.collection.showMore, this.collection);
+                this.collection.showMore({});
+            },
 
-        createItem: function () {
-            //create editView in dialog here
-            new CreateView();
-        },
+            showMoreContent: function (newModels) {
+                var holder = this.$el;
+                this.countPerPage += newModels.length;
+                var showMore = holder.find('#showMoreDiv');
+                var created = holder.find('#timeRecivingDataFromServer');
+                this.getTotalLength(this.countPerPage);
+                showMore.before(this.template({ collection: this.collection.toJSON() }));
+                showMore.after(created);
+            },
 
-        editItem: function () {
-            //create editView in dialog here
-            new EditView({ collection: this.collection });
-        },
+            createItem: function () {
+                //create editView in dialog here
+                new createView();
+            },
 
-        deleteItems: function () {
-            var that = this,
-        		mid = 39,
-                model;
-            model = this.collection.get(this.$el.attr("id"));
-            this.$el.fadeToggle(200, function () {
-                model.destroy({
-                    headers: {
-                        mid: mid
-                    }
+            editItem: function () {
+                //create editView in dialog here
+                new editView({ collection: this.collection });
+            },
+
+            deleteItems: function () {
+                var mid = 39;
+                var model;
+
+                model = this.collection.get(this.$el.attr("id"));
+                this.$el.fadeToggle(200, function () {
+                    model.destroy({
+                        headers: {
+                            mid: mid
+                        }
+                    });
+                    $(this).remove();
                 });
-                $(this).remove();
-            });
-        }
-    });
+            }
+        });
 
-    return CompanyThumbnalView;
-});
+        return OwnCompaniesThumbnalView;
+    });
