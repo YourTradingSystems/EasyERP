@@ -383,8 +383,8 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
-			    common.populateEmployeesDd(App.ID.employeesDd, "/getSalesPerson", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.employeesDd); });
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#departmentDd"); });
+			    common.populateEmployeesDd("#employeesDd", "/getSalesPerson", this.currentModel.toJSON(), function () { self.styleSelect("#employeesDd"); });
 			    this.styleSelect('#language');
 			    this.delegateEvents(this.events);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

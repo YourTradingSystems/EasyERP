@@ -275,10 +275,10 @@
                         }
                     }
                 });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.projectDd);});
-                common.populateWorkflows("Tasks", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.assignedToDd);});
-                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
+                common.populateProjectsDd("#projectDd", "/getProjectsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#projectDd");});
+                common.populateWorkflows("Tasks", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#workflowsDd");self.styleSelect("#workflowNamesDd");});
+                common.populateEmployeesDd("#assignedToDd", "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#assignedToDd");});
+                common.populatePriority("#priorityDd", "/Priority", this.currentModel.toJSON(), function(){self.styleSelect("#priorityDd");});
 				this.styleSelect("#type");
                 this.delegateEvents(this.events);
                 $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });

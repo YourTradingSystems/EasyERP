@@ -436,11 +436,11 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-                common.populateCustomers(App.ID.customerDd, "/Customer", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.customerDd);});
-                common.populateDepartments(App.ID.salesTeam, "/DepartmentsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.salesTeam);});
-                common.populateEmployeesDd(App.ID.salesPerson, "/getForDdByRelatedUser", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.salesPerson); });
-                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.priorityDd);});
-                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
+                common.populateCustomers("#customerDd", "/Customer", this.currentModel.toJSON(),function(){self.styleSelect("#customerDd");});
+                common.populateDepartments("#salesTeam", "/DepartmentsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#salesTeam");});
+                common.populateEmployeesDd("#salesPerson", "/getForDdByRelatedUser", this.currentModel.toJSON(), function () { self.styleSelect("#salesPerson"); });
+                common.populatePriority("#priorityDd", "/Priority", this.currentModel.toJSON(),function(){self.styleSelect("#priorityDd");});
+                common.populateWorkflows("Lead", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#workflowsDd");self.styleSelect("#workflowNamesDd");});
                 common.populateSourceDd("#sourceDd", "/sources", this.currentModel.get("source"), function () {
                     self.styleSelect("#sourceDd");
                 });

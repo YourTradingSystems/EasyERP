@@ -482,12 +482,12 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateWorkflows("Applications", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getForDdByRelatedUser", null, function () { self.styleSelect(App.ID.relatedUsersDd); });
-//                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd",null,function(){self.styleSelect(App.ID.departmentDd);});
-//                common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd",null,function(){self.styleSelect(App.ID.jobPositionDd);});
+                common.populateWorkflows("Applications", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd",null,function(){self.styleSelect("#workflowsDd");self.styleSelect("#workflowNamesDd");});
+                common.populateEmployeesDd("#relatedUsersDd", "/getForDdByRelatedUser", null, function () { self.styleSelect("#relatedUsersDd"); });
+//                common.populateSourceApplicants("#sourceDd", "/SourcesOfApplicants");
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd",null,function(){self.styleSelect("#departmentDd");});
+//                common.populateDegrees("#degreesDd", "/Degrees",null,function(){self.styleSelect("#degreesDd");});
+                common.populateJobPositions("#jobPositionDd", "/JobPositionForDd",null,function(){self.styleSelect("#jobPositionDd");});
 				self.styleSelect("#sourceDd");
 				self.styleSelect("#jobtapeDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);

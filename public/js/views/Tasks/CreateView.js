@@ -215,10 +215,10 @@ define([
                         }
                     }
                 });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", model, function () { self.styleSelect(App.ID.projectDd); });
-                common.populateWorkflows("Tasks", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", null, function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
-                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", null, function () { self.styleSelect(App.ID.assignedToDd); });
-                common.populatePriority(App.ID.priorityDd, "/Priority", model, function () { self.styleSelect(App.ID.priorityDd); });
+                common.populateProjectsDd("#projectDd", "/getProjectsForDd", model, function () { self.styleSelect("#projectDd"); });
+                common.populateWorkflows("Tasks", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", null, function () { self.styleSelect("#workflowsDd"); self.styleSelect("#workflowNamesDd"); });
+                common.populateEmployeesDd("#assignedToDd", "/getPersonsForDd", null, function () { self.styleSelect("#assignedToDd"); });
+                common.populatePriority("#priorityDd", "/Priority", model, function () { self.styleSelect("#priorityDd"); });
                 this.styleSelect("#type");
                 $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#deadline').datepicker({

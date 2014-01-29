@@ -525,11 +525,11 @@
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
 
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.jobPositionDd); });
-                common.populateWorkflows("Applications", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.workflowDd); self.styleSelect(App.ID.workflowNamesDd); });
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getPersonsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.relatedUsersDd); });
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
-                //                common.populateDegrees(App.ID.degreesDd, "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.degreesDd);});
+                common.populateJobPositions("#jobPositionDd", "/JobPositionForDd", this.currentModel.toJSON(), function () { self.styleSelect("#jobPositionDd"); });
+                common.populateWorkflows("Applications", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#workflowsDd"); self.styleSelect("#workflowNamesDd"); });
+                common.populateEmployeesDd("#relatedUsersDd", "/getPersonsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#relatedUsersDd"); });
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#departmentDd"); });
+                //                common.populateDegrees("#degreesDd", "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect("#degreesDd");});
                 self.styleSelect("#sourceDd");
                 self.styleSelect("#jobtapeDd");
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

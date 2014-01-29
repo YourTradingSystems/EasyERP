@@ -272,12 +272,12 @@ define([
                     }
                 });
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
-                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
-                common.populateCustomers(App.ID.customerDd, "/Customer");
+                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd");
+                common.populateCustomers("#customerDd", "/Customer");
 				common.populateUsers("#allUsers", "/Users",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
-                common.populateEmployeesDd(App.ID.userEditDd, "/getPersonsForDd");
-                common.populateWorkflows("Projects", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd");
+                common.populateEmployeesDd("#userEditDd", "/getPersonsForDd");
+                common.populateWorkflows("Projects", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
                 
                 $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#EndDate').datepicker({

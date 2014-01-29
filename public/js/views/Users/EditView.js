@@ -121,7 +121,7 @@
                     }
                 });
 				var p=this.currentModel.toJSON()
-                common.populateProfilesDd(App.ID.profilesDd, "/ProfilesForDd", this.currentModel.toJSON());
+                common.populateProfilesDd("#profilesDd", "/ProfilesForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }

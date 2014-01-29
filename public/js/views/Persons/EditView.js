@@ -389,12 +389,12 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-                common.populateCompanies(App.ID.companiesDd, "/CompaniesForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
-                this.styleSelect(App.ID.titleDd);
-                this.styleSelect(App.ID.tagsDd);
-                //                this.populateDropDown("company", App.ID.companiesDd, "/Companies");
-                //this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
+                common.populateCompanies("#companiesDd", "/CompaniesForDd", this.currentModel.toJSON(), function () { self.styleSelect("#companiesDd"); });
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#departmentDd"); });
+                this.styleSelect("#titleDd");
+                this.styleSelect("#tagsDd");
+                //                this.populateDropDown("company", "#companiesDd", "/Companies");
+                //this.populateDropDown("person", "#assignedToDd", "/getPersonsForDd");
                 this.styleSelect("#type");
                 this.delegateEvents(this.events);
 

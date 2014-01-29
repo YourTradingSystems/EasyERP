@@ -245,7 +245,7 @@
                         expectedClosing = $.trim($("#expectedClosing").val());
                     };*/
 
-                    var priority = $(App.ID.priorityDd).val();
+                    var priority = $("#priorityDd").val();
 
                     var internalNotes = $.trim($("#internalNotes").val());
 
@@ -397,12 +397,12 @@
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                common.populateCustomers(App.ID.customerDd, App.URL.customers, model);
-                //common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons, model);
-                common.populateEmployeesDd(App.ID.salesPersonDd, "/getForDdByRelatedUser", model);
-                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam, model);
-                common.populatePriority(App.ID.priorityDd, App.URL.priorities, model);
-                common.populateWorkflows('Opportunities', '#workflowDd', App.ID.workflowNamesDd, '/Workflows', model);
+                common.populateCustomers("#customerDd", "/Customer", model);
+                //common.populateEmployeesDd("#salesPerson"Dd, "/getSalesPerson", model);
+                common.populateEmployeesDd("#salesPersonDd", "/getForDdByRelatedUser", model);
+                common.populateDepartments("#salesTeamDd", "/DepartmentsForDd", model);
+                common.populatePriority("#priorityDd", "/Priority", model);
+                common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/Workflows', model);
 
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){

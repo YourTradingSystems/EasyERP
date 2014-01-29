@@ -192,8 +192,8 @@ define([
 						}]
 
                 });
-                common.populateDepartments(App.ID.parentDepartment, "/getSalesTeam",null,function(){self.styleSelect(App.ID.parentDepartment);});
-				common.populateEmployeesDd(App.ID.departmentManager, "/getPersonsForDd",null,function(){self.styleSelect(App.ID.departmentManager);});
+                common.populateDepartments("#parentDepartment", "/getSalesTeam",null,function(){self.styleSelect("#parentDepartment");});
+				common.populateEmployeesDd("#departmentManager", "/getPersonsForDd",null,function(){self.styleSelect("#departmentManager");});
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 return this;
             }

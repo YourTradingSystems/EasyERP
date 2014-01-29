@@ -106,7 +106,7 @@ define([
                         }
                     }
                 });
-                common.populateRelatedStatuses(App.ID.statusesDd, "/relatedStatus");
+                common.populateRelatedStatuses("#statusesDd", "/relatedStatus");
                 
                 return this;
             }
