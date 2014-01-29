@@ -2,7 +2,7 @@
     'text!templates/Persons/list/ListTemplate.html'
 ],
 
-function (ListTemplate) {
+function (listTemplate) {
     var PersonsListItemView = Backbone.View.extend({
         el: '#listTable',
 
@@ -11,7 +11,7 @@ function (ListTemplate) {
             this.startNumber = options.startNumber;
         },
         render: function() {
-            this.$el.append(_.template(ListTemplate, { personsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
+            this.$el.append(_.template(listTemplate, { personsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
         }
     });
 

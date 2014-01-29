@@ -7,7 +7,7 @@ define([
     'dataService'
 ],
 
-function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common, dataService) {
+function (listTemplate, createView, listItemView, aphabeticTemplate, common, dataService) {
     var PersonsListView = Backbone.View.extend({
         el: '#content-holder',
         defaultItemsNumber: null,
@@ -72,8 +72,8 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common, dat
             var currentEl = this.$el;
 
             currentEl.html('');
-            currentEl.append(_.template(ListTemplate));
-            currentEl.append(new ListItemView({ collection: this.collection }).render());
+            currentEl.append(_.template(listTemplate));
+            currentEl.append(new listItemView({ collection: this.collection }).render());
 
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
@@ -91,7 +91,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common, dat
             common.buildAphabeticArray(this.collection, function (arr) {
                 $("#startLetter").remove();
                 self.alphabeticArray = arr;
-                currentEl.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
+                currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
             });
 
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
@@ -130,7 +130,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common, dat
         showMoreContent: function (newModels) {
             var holder = this.$el;
             holder.find("#listTable").empty();
-            holder.append(new ListItemView({ collection: newModels }).render());
+            holder.append(new listItemView({ collection: newModels }).render());
             holder.find('#timeRecivingDataFromServer').remove();
             holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
@@ -143,7 +143,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common, dat
 
         createItem: function () {
             //create editView in dialog here
-            new CreateView();
+            new createView();
         },
 
         checked: function () {
@@ -161,7 +161,7 @@ function (ListTemplate, CreateView, ListItemView, AphabeticTemplate, common, dat
             if (deleteCounter !== this.collectionLength) {
                 var holder = this.$el;
                 var created = holder.find('#timeRecivingDataFromServer');
-                created.before(new ListItemView({ collection: this.collection }).render());
+                created.before(new listItemView({ collection: this.collection }).render());
             }
         },
         deleteItems: function () {

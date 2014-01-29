@@ -69,6 +69,7 @@ define([
 				this.pageMini=1;
 				this.renderMiniOpp();
 			},
+            
 			lastMiniPage:function(){
 				this.pageMini = this.allPages;
 				this.renderMiniOpp();
@@ -91,6 +92,7 @@ define([
 
 
 			},
+            
             addOpportunities: function (e) {
             	e.preventDefault();
             	var model = this.formModel.toJSON();
@@ -126,8 +128,7 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
 
-                var currentModel = this.model;
-                Backbone.history.navigate("#easyErp/Persons/form/" + currentModel.id, { trigger: true });
+                Backbone.history.navigate("#easyErp/Persons/form/" + this.model.id, { trigger: true });
             },
 
 
@@ -249,6 +250,7 @@ define([
                 $('#noteTitleArea').val('');
                 $('#getNoteKey').attr("value", '');
             },
+            
             editDelNote: function (e) {
                 var id = e.target.id;
                 var k = id.indexOf('_');
