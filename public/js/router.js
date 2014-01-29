@@ -17,7 +17,7 @@ define([
             "home": "main",
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
-            "easyErp/:contentType/thumbnails": "goToThumbnails",
+            "easyErp/:contentType/thumbnails(/:parrentContentId)": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
             "easyErp/:contentType/list(/:parrentContentId)": "goToList",
             "easyErp/Profiles": "goToProfiles",
@@ -184,7 +184,13 @@ define([
             if (this.mainView == null) this.main(contentType);
 
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
-                var collection = new contentCollection({ viewType: 'list', page: 1, count: 2, status: [], parrentContentId: parrentContentId });//status - to filter by workflows
+                var collection = new contentCollection({
+                    viewType: 'list',
+                    page: 1,
+                    count: 50,
+                    status: [],
+                    parrentContentId: parrentContentId
+                });//status - to filter by workflows
 
                 collection.bind('reset', _.bind(createViews, self));
                 custom.setCurrentVT('list');
@@ -311,7 +317,7 @@ define([
             });
         },
 
-        goToThumbnails: function (contentType) {
+        goToThumbnails: function (contentType, parrentContentId) {
             custom.setCurrentVT('thumbnails');
 
             var startTime = new Date();
@@ -335,8 +341,8 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 2,
-                            contentType: contentType
+                            count: 50,
+                            parrentContentId: parrentContentId
                         })
 
                     : new contentCollection();
