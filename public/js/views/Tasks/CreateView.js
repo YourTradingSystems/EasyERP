@@ -21,10 +21,15 @@ define([
                 "click #deadline": "showDatePicker",
                 "change #workflowNames": "changeWorkflows",
                 "click .current-selected": "showNewSelect",
-                "click .newSelectList li": "chooseOption",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
                 "click": "hideNewSelect",
                 'keydown': 'keydownHandler'
             },
+			notHide:function(e){
+				return false;
+			},
+
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -124,6 +129,10 @@ define([
             },
 			showNewSelect:function(e){
 				var currentPage = 1;
+				if ($(e.target).parent().find(".newSelectList").is(":visible")){
+					self.hideNewSelect();
+					return;
+				}
 				if ($(e.target).parent().find(".newSelectList").length){
 					currentPage = $(e.target).parent().find(".newSelectList").data("page");
 					$(e.target).parent().find(".newSelectList").remove();
@@ -131,6 +140,7 @@ define([
 					var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
 					var start = (currentPage-1)*25;
 					var end = Math.min(currentPage*25,$(e.target).parent().find("select option").length);
+					value
 					for (var i = start; i<end;i++){
 						s+="<li class="+$($(e.target).parent().find("select option")[i]).text().toLowerCase()+">"+$($(e.target).parent().find("select option")[i]).text()+"</li>";						
 					}
