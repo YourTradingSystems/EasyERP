@@ -272,7 +272,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             console.log("Opportunities.js create savetoDB _opportunitie.save " + err);
                             res.send(500, { error: 'Opportunities.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new Opportunities create success' });
+                            res.send(201, { success: { massage: 'A new Opportunities create success', id: result._id } });
                         }
                     });
                     //					}
