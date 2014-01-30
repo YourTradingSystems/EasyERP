@@ -32,15 +32,15 @@
         <div class="clearfix"></div>
     </div>
     <div class="task-content">
-        <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
-        <div class="info">
+        <div class="info" >
             <p><%=model.summary%></p>
             <% _.each(model.tags,function(tag){ %>
             <% });%>
-            <br/>
-            <p class="left bold"><%=model.type%></p>
-            <div class="clearfix">
-            </div>
+        </div>
+        <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
+
+        <div class="bottom"><p class="bold"><%=model.type%></p></div>
+        <div class="clearfix">
         </div>
     </div>
 </div>

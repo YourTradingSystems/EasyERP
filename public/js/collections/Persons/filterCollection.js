@@ -1,7 +1,7 @@
 ﻿define([
     'models/PersonsModel',
     'common',
-    "dataService"
+    'dataService'
 ],
     function (PersonModel, common, dataService) {
         var PersonsCollection = Backbone.Collection.extend({
@@ -81,7 +81,7 @@
             },
 
             getAlphabet: function (callback) {
-                dataService.getData("/getPersonAlphabet", { mid: 39 }, function (response) {
+                dataService.getData("/getPersonAlphabet", { mid: 39, contentType: this.contentType }, function (response) {
                     if (callback) {
                         callback(response.data);
                     }

@@ -31,6 +31,16 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
         },
+        projecttype: { type: String, default: '' },
+        notes: { type: Array, default: [] },
+        attachments: [{
+            id: { type: Number, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            size: Number,
+            uploaderName: { type: String, default: '' },
+            uploadDate: { type: Date, default: Date.now }
+        }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
@@ -64,6 +74,15 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
         },
+        notes: { type: Array, default: [] },
+        attachments: [{
+            id: { type: Number, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            size: Number,
+            uploaderName: { type: String, default: '' },
+            uploadDate: { type: Date, default: Date.now }
+        }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
@@ -391,6 +410,9 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                             _project.info.parent = data.info.parent;
                         }
                     }
+                    if (data.projecttype) {
+                        _project.projecttype = data.projecttype;
+                    }
                     if (data.workflow) {
                         _project.workflow = data.workflow;
                     }
@@ -400,13 +422,43 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     if (data.projectmanager) {
                         _project.projectmanager = data.projectmanager;
                     }
-                    _project.save(function (err, projectt) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Project.js saveProjectToDb _project.save" + err);
-                            res.send(500, { error: 'Project.save BD error' });
-                        } else {
-                            res.send(201, { success: 'A new Project crate success' });
+                    
+                    if (data.notes) {
+                    	_project.notes = data.notes;
+                    }
+
+                    if (data.attachments) {
+                        if (data.attachments.id) {
+                        	_project.attachments.id = data.attachments.id;
+                        }
+                        if (data.attachments.name) {
+                        	_project.attachments.name = data.attachments.name;
+                        }
+                        if (data.attachments.path) {
+                        	_project.attachments.path = data.attachments.path;
+                        }
+                        if (data.attachments.size) {
+                        	_project.attachments.size = data.attachments.size;
+                        }
+                        if (data.attachments.uploadDate) {
+                        	_project.attachments.uploadDate = data.attachments.uploadDate;
+                        }
+                        if (data.attachments.uploaderName) {
+                        	_project.attachments.uploaderName = data.attachments.uploaderName;
+                        }
+                    }
+                    _project.save(function (err, result) {
+                    	try {
+                    		if (err) {
+                    			console.log(err);
+                    			logWriter.log("Project.js saveProjectToDb _project.save" + err);
+                    			res.send(500, { error: 'Project.save BD error' });
+                    		} else {
+                    			res.send(201, { success: 'A new Project crate success',result:result });
+                    		}
+                    	} 
+                    	catch (error) {
+                            logWriter.log("Project.js create savetoBd _employee.save " + error);
                         }
                     });
 
@@ -1299,7 +1351,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             });
     }
 
-    function update(req, _id, data, res) {
+    function update(req, _id, data, res,remove) {
         try {
             delete data._id;
             delete data.createdBy;
@@ -1311,8 +1363,14 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 					}
 				}
 			}
-
-            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update({ _id: _id }, data, function (err, projects) {
+            if (data.notes && data.notes.length != 0 && !remove) {
+                var obj = data.notes[data.notes.length - 1];
+                obj._id = mongoose.Types.ObjectId();
+                obj.date = new Date();
+                obj.author = req.session.uName;
+                data.notes[data.notes.length - 1] = obj;
+            }
+            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate({ _id: _id }, data, function (err, projects) {
                 if (err) {
                     console.log(err);
                     logWriter.log("Project.js update project.update " + err);
@@ -1332,7 +1390,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                             }
                         }
                     });
-                    res.send(200, { success: 'Project updated success' });
+                    res.send(200,projects);
                 }
             });
         }
@@ -1443,6 +1501,32 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     if (data.logged) {
                         _task.logged = data.logged;
                     }
+
+                    if (data.attachments) {
+                        if (data.attachments.id) {
+                        	_task.attachments.id = data.attachments.id;
+                        }
+                        if (data.attachments.name) {
+                        	_task.attachments.name = data.attachments.name;
+                        }
+                        if (data.attachments.path) {
+                        	_task.attachments.path = data.attachments.path;
+                        }
+                        if (data.attachments.size) {
+                        	_task.attachments.size = data.attachments.size;
+                        }
+                        if (data.attachments.uploadDate) {
+                        	_task.attachments.uploadDate = data.attachments.uploadDate;
+                        }
+                        if (data.attachments.uploaderName) {
+                        	_task.attachments.uploaderName = data.attachments.uploaderName;
+                        }
+                    }
+                    
+                    if (data.notes) {
+                    	_task.notes = data.notes;
+                    }
+                    
                     if (data.estimated) {
                         _task.remaining = data.estimated - data.logged;
                         _task.progress = Math.round((data.logged / data.estimated) * 100);
@@ -1486,6 +1570,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
     function updateTask(req, _id, data, res) {
         delete data._id;
         delete data.createdBy;
+        
         data.remaining = data.estimated - data.logged;
         data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
         if (data.estimated != 0) {
@@ -1497,6 +1582,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         if (data.project && data.project._id) {
             data.project = data.project._id;
         }
+        
         if (data.project) {
             var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: data.project });
             query.sort({ taskCount: -1 });
@@ -1506,12 +1592,14 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     logWriter.log("Project.js updateTask tasks.find doc.length === 0" + error);
                     res.send(500, { error: 'Task find error' });
                 } else {
+                	
                     models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
                         if (err) {
                             console.log(err);
                             logWriter.log("Project.js updateTask tasks.findById " + err);
                             res.send(500, { error: 'Task find error' });
                         } else {
+                            
                             if (!_tasks[0] || (!task || (task.project != data.project))) {
                                 var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
                                 data.taskCount = n;
@@ -1535,13 +1623,21 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 									}
 								}
 							}
-                            models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).update({ _id: _id }, data, function (err, taskk) {
+                            if (data.notes && data.notes.length != 0 && !remove) {
+                                var obj = data.notes[data.notes.length - 1];
+                                obj._id = mongoose.Types.ObjectId();
+                                obj.date = new Date();
+                                obj.author = req.session.uName;
+                                data.notes[data.notes.length - 1] = obj;
+                            }
+
+                            models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, data, function (err, taskk) {
                                 if (err) {
                                     console.log(err);
                                     logWriter.log("Project.js updateTask tasks.update " + err);
                                     res.send(500, { error: "Can't update Task" });
                                 } else {
-                                    res.send(200, { success: 'JobPosition updated success' });
+                                    res.send(200, taskk);
                                 }
                             });
                         }

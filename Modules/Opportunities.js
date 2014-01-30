@@ -773,11 +773,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }                                              //����� �������� Person
             };
 
-
-            console.log(_id);
-            console.log(data.groups);
-
-
             if (data.company && data.company._id) {
                 data.company = data.company._id;
             } else if (data.company) {
@@ -886,7 +881,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             delete data._id;
             delete data.createdBy;
             if (data.workflow && data.workflow.wId == 'Lead') {
-                models.get(req.session.lastDb - 1, 'workflows', workflow.workflowSchema).findOne({ wId: 'Opportunity' }, function (err, _workflow) {
+                models.get(req.session.lastDb - 1, 'workflows', workflow.workflowSchema).findOne({ $and: [{ wId: 'Opportunities' }, { sequence: 0 }] }, function (err, _workflow) {
                     if (_workflow) {
                         data.workflow._id = _workflow._id;
                     }
@@ -1009,14 +1004,14 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-					var arrOr = []
- 					if (data.person){
-						arrOr.push({"customer":newObjectId(data.person)});
-					}
- 					if (data.company){
-						arrOr.push({"customer":newObjectId(data.company)});
-						arrOr.push({"company":newObjectId(data.company)});
-					}
+                    var arrOr = []
+                    if (data.person) {
+                        arrOr.push({ "customer": newObjectId(data.person) });
+                    }
+                    if (data.company) {
+                        arrOr.push({ "customer": newObjectId(data.company) });
+                        arrOr.push({ "company": newObjectId(data.company) });
+                    }
 
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                         {
@@ -1026,7 +1021,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 									    isOpportunitie: true
 									},
                                     {
-                                        $or:arrOr
+                                        $or: arrOr
                                     },
                                     {
                                         $or: [
@@ -1066,9 +1061,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
-                                if (data.onlyCount.toString().toLowerCase()=="true"){
+                                if (data.onlyCount.toString().toLowerCase() == "true") {
 
-                                    query.count(function(error,_res){
+                                    query.count(function (error, _res) {
                                         if (!error) {
                                             res['listLength'] = _res;
                                             response.send(res);
@@ -1076,15 +1071,15 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                             console.log(error);
                                         }
                                     })
-                                }else{
+                                } else {
 
                                     if (data && data.status && data.status.length > 0)
                                         query.where('workflow').in(data.status);
                                     query.select("_id name expectedRevenue.currency expectedRevenue.value nextAction.date workflow");
 
                                     query.populate('workflow', 'name').
-										skip((data.page - 1) * data.count).
-										limit(data.count)
+                                        skip((data.page - 1) * data.count).
+                                        limit(data.count);
 
                                     query.exec(function (error, _res) {
                                         if (!error) {
@@ -1095,9 +1090,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                             console.log(error);
                                         }
                                     });
-									
+
                                 }
-									
+
 
                             } else {
                                 console.log(err);
@@ -1261,7 +1256,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     {
                                         $project: {
                                             _id: 1,
-                                            workflow:1
+                                            workflow: 1
                                         }
                                     },
                                     {
@@ -1315,8 +1310,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
 
-        getFilterOpportunitiesForMiniView:getFilterOpportunitiesForMiniView,
-		
+        getFilterOpportunitiesForMiniView: getFilterOpportunitiesForMiniView,
+
         getLeads: getLeads,
 
         getLeadsForChart: getLeadsForChart,

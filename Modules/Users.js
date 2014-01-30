@@ -215,7 +215,7 @@ var Users = function (logWriter, mongoose, models) {
         console.log(id);
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(id);
         query.populate('profile');
-        query.populate('RelatedEmployee','imageSrc');
+        query.populate('RelatedEmployee','imageSrc name');
         
         query.exec(function (err, result) {
             if (err) {
