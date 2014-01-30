@@ -7,7 +7,8 @@
             <div class="half-block left">
                 <dl class="person-info-h3 right">
                   <dt><label>Assigned to :</label></dt>
-                  <dd><select id="assignedToDd"></select></dd>
+                  <dd>
+					<a id="assignedToDd" data-id="<%=model.assignedTo._id%>" class="current-selected" href="javascript:;"><%=model.assignedTo.name.first+' '+model.assignedTo.name.last%></a>
                 </dl>
             </div>
             <div class="clearfix">
@@ -22,33 +23,29 @@
               <div class="inner">
                 <dl class="person-info">
                   <dt><label>Project </label></dt><dd>
-                    <select id="projectDd">
-                    </select>
+					<a id="projectDd" data-id="<%=model.project.projectName%>" class="current-selected" href="javascript:;"><%=model.project.projectName%></a>
                   </dd>
                   <dt><label for="workflowNamesDd">Workflow :</label></dt><dd>
-                    <select id="workflowNamesDd">
-                    </select>
+					<a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
 
                   </dd>
                   <dt><label for="workflowsDd">State </label></dt><dd>
-                    <select id="workflowsDd">
-                    </select>
-
+					<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
                   </dd>
 
                   <dt><label>Type </label></dt><dd>
-                    <select id="type">
-                      <% ['Task', 'Bug', 'Feature'].forEach(function(option){ %>
-                      <option <%= (option == model.type) ? 'selected="selected"' : ''%>><%= option%></option>
-                      <% }); %>
-                    </select>
+					<a id="type" data-id="<%=model.type%>" class="current-selected" href="javascript:;"><%=model.type%></a>
+					<ul class="newSelectList">
+                      <li class="Task" id="Task">Task</li>
+                      <li class="Bug" id="Bug">Bug</li>
+                      <li class="Feature" id="Feature">Feature</li>
+					</ul>
                   </dd>
 
                   <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" value="<%= model.deadline %>" readonly maxlength="32"/></dd>
 
                   <dt><label for="priorityDd">Priority </label></dt><dd>
-                    <select id="priorityDd">
-                    </select>
+					<a id="priorityDd" data-id="<%=model.extrainfo.priority%>" class="current-selected" href="javascript:;"><%=model.extrainfo.priority%></a>
                   </dd>
 
                   <dt><label for="StartDate">Start Date</label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%= model.extrainfo.StartDate %>" readonly /></dd>

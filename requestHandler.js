@@ -325,21 +325,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-	 
-
-    function getPersonAlphabet(req, res, data) {
-        try {
-            console.log("Requst getPersonAlphabet is success");
-            if (req.session && req.session.loggedIn && req.session.lastDb ) {
-                customer.getPersonAlphabet(req, res);
-            } else {
-                res.send(401);
-            }
-        }
-        catch (Exception) {
-            console.log("requestHandler.js  " + Exception);
-        }
-    };
     function getPersonsListLength(req, res, data) {
         try {
             console.log("Requst getPersonListLength is success");
@@ -375,24 +360,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             //persons.get(res);
             customer.getPersons(req, res);
-        } else {
-            res.send(401);
-        }
-        // console.log("Requst getPersons is success");
-    };
-
-    function getFilterPersonsForList(req, res, data) {
-        console.log("Requst getPersons is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb ) {
-            access.getReadAccess(req, req.session.uId, 49, function (access) {
-                console.log(access);
-                if (access) {
-                    customer.getFilterPersonsForList(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
         } else {
             res.send(401);
         }
@@ -618,7 +585,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function updateProject(req, res, id, data) {
+    function updateProject(req, res, id, data,remove) {
         console.log("Requst updateProject is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getEditWritAccess(req, req.session.uId, 39, function (access) {
@@ -627,7 +594,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                         user: req.session.uId,
                         date: new Date().toISOString()
                     }
-                    project.update(req, id, data.project, res);
+                    project.update(req, id, data.project, res,remove);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    
+    function uploadProjectsFiles(req, res, id, file) {
+        console.log("File Uploading to Project");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getEditWritAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    console.log(file);
+                    project.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
                 }
@@ -765,7 +748,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function updateTask(req, res, id, data) {
+    function updateTask(req, res, id, data,remove) {
         console.log("Requst updateTask is success");
         var date = Date.now();
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -775,7 +758,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                         user: req.session.uId,
                         date: date
                     };
-                    project.updateTask(req, id, data.task, res);
+                    project.updateTask(req, id, data.task, res,remove);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
+    
+    function uploadTasksFiles(req, res, id, file) {
+        console.log("File Uploading to app");
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getEditWritAccess(req, req.session.uId, 40, function (access) {
+                if (access) {
+                    console.log(file);
+                    project.updateTask(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
                 }
@@ -1004,28 +1003,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-    function getFilterCompaniesForList(req, res, data) {
-        console.log("Requst getFilterCompanies is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb ) {
-            //company.get(res);
-            access.getReadAccess(req, req.session.uId, 50, function (access) {
-                if (access) {
-                    customer.getFilterCompaniesForList(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
 
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getCompaniesAlphabet(req, res, data) {
+    function getCustomersAlphabet(req, res) {
         try {
-            console.log("Requst getPersonAlphabet is success");
             if (req.session && req.session.loggedIn && req.session.lastDb ) {
-                customer.getCompaniesAlphabet(req, res);
+                customer.getCustomersAlphabet(req, res);
             } else {
                 res.send(401);
             }
@@ -2180,8 +2162,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,
-        getPersonAlphabet: getPersonAlphabet,
-        getFilterPersonsForList: getFilterPersonsForList,
 		getFilterPersonsForMiniView:getFilterPersonsForMiniView,
 
         getProjects: getProjects,
@@ -2191,6 +2171,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getProjectsForDd: getProjectsForDd,
         createProject: createProject,
         updateProject: updateProject,
+        uploadProjectsFiles:uploadProjectsFiles,
         removeProject: removeProject,
 		getProjectPMForDashboard: getProjectPMForDashboard,
 		getProjectStatusCountForDashboard:getProjectStatusCountForDashboard,
@@ -2204,6 +2185,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getTasksForList: getTasksForList,
         getTasksForKanban: getTasksForKanban,
         updateTask: updateTask,
+        uploadTasksFiles:uploadTasksFiles,
         removeTask: removeTask,
         getTasksPriority: getTasksPriority,
 
@@ -2215,8 +2197,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createCompany: createCompany,
         updateCompany: updateCompany,
         getFilterCustomers: getFilterCustomers,
-        getFilterCompaniesForList: getFilterCompaniesForList,
-        getCompaniesAlphabet: getCompaniesAlphabet,
+        getCustomersAlphabet : getCustomersAlphabet,
 
         getRelatedStatus: getRelatedStatus,
         getWorkflow: getWorkflow,

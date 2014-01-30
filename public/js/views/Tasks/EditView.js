@@ -1,8 +1,9 @@
 ﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "common"
+    "common",
+    "populate"
 ],
-    function (EditTemplate, common) {
+    function (EditTemplate, common, populate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
@@ -11,6 +12,7 @@
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				this.responseObj = {}
                 this.render();
             },
 
@@ -27,7 +29,9 @@
                 "click": "hideNewSelect",
 				"click #projectTopName":"hideDialog"
             },
-
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+            },
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -100,8 +104,8 @@
 
                 var mid = 39;
                 var summary = $.trim(this.$el.find("#summary").val());
-                var project = $("#projectDd option:selected").val();
-                var assignedTo = $("#assignedToDd option:selected").val();
+                var project = $("#projectDd").data("id");
+                var assignedTo = $("#assignedToDd").data("id");
 
                 var tags = $.trim($("#tags").val()).split(',');
                 if (tags.length == 0) {
@@ -112,7 +116,7 @@
                 if (!sequence) {
                     sequence = null;
                 }
-                var workflow = $("#workflowsDd option:selected").val();
+                var workflow = $("#workflowsDd").data("id");
                 var estimated = $.trim(this.$el.find("#estimated").val());
                 if ($.trim(estimated) == "") {
                     estimated = 0;
@@ -120,10 +124,10 @@
 
                 var logged = $.trim(this.$el.find("#logged").val());
 
-                var priority = $("#priorityDd option:selected").val();
+                var priority = $("#priorityDd").data("id");
 
                 var data = {
-                    type: $("#type option:selected").text(),
+                    type: $("#type").data("id"),
                     summary: summary,
                     assignedTo: assignedTo ? assignedTo : null,
                     workflow: workflow ? workflow : null,
@@ -188,45 +192,9 @@
 				this.showNewSelect(e,true,false)
 			},
             showNewSelect:function(e,prev,next){
-				var elementVisible = 25;
-				var newSel = $(e.target).parent().find(".newSelectList")
-				if (prev||next){
-					newSel = $(e.target).closest(".newSelectList")
-				}
-				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
-                var currentPage = 1;
-                if (newSel.is(":visible")&&!prev&&!next){
-                    newSel.hide();
-					return;
-				}
-
-                if (newSel.length){
-                    currentPage = newSel.data("page");
-                    newSel.remove();
-                }
-				if (prev)currentPage--;
-				if (next)currentPage++;
-                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-                var start = (currentPage-1)*elementVisible;
-				var options = parent.find("select option");
-                var end = Math.min(currentPage*elementVisible,options.length);
-                for (var i = start; i<end;i++){
-                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
-                }
-				var allPages  = Math.ceil(options.length/elementVisible)
-                if (options.length>elementVisible)
-                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
-                s+="</ul>";
-                parent.append(s);
+                populate.showSelect(e,prev,next,this);
                 return false;
-                
             },
-
-			styleSelect:function(id){
-				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
-				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
-				$(id).hide();
-			},
             deleteItem: function(event) {
                 var mid = 39;
                 event.preventDefault();
@@ -252,6 +220,7 @@
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
+				console.log(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
@@ -275,11 +244,10 @@
                         }
                     }
                 });
-                common.populateProjectsDd(App.ID.projectDd, "/getProjectsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.projectDd);});
-                common.populateWorkflows("Tasks", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.assignedToDd, "/getPersonsForDd", this.currentModel.toJSON(),function(){self.styleSelect(App.ID.assignedToDd);});
-                common.populatePriority(App.ID.priorityDd, "/Priority", this.currentModel.toJSON(), function(){self.styleSelect(App.ID.priorityDd);});
-				this.styleSelect("#type");
+				populate.get("#projectDd","/getProjectsForDd",{},"projectName",this);
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Tasks"},"name",this);
+				populate.get2name("#assignedToDd", "/getPersonsForDd",{},this);
+				populate.getPriority("#priorityDd",this);				
                 this.delegateEvents(this.events);
                 $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#deadline').datepicker({

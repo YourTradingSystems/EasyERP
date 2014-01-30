@@ -1838,6 +1838,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             populate('editedBy.user').
             populate('groups.users').
             populate('groups.group').
+            populate('workflow').
             exec(function (err, task) {
                 if (err) {
                     console.log(err);
