@@ -214,7 +214,7 @@ define([
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
                 var itemView = new ListItemView({ collection: this.collection });
-                itemView.bind('incomingSatges', itemView.pushStages, itemView);
+                itemView.bind('incomingStages', itemView.pushStages, itemView);
                 this.$el.append(itemView.render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -261,7 +261,7 @@ define([
                 });
                 common.populateWorkflowsList("Opportunities", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
 					self.stages = stages;
-                    itemView.trigger('incomingSatges', stages);
+                    itemView.trigger('incomingStages', stages);
                 });
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);

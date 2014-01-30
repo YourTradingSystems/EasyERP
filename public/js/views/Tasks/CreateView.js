@@ -21,9 +21,37 @@ define([
                 "click #deadline": "showDatePicker",
                 "change #workflowNames": "changeWorkflows",
                 "click .current-selected": "showNewSelect",
-                "click .newSelectList li": "chooseOption",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+                "change .inputAttach": "addAttach",
+    			"click .deleteAttach":"deleteAttach",
+            },
+                
+           addAttach: function (event) {
+    				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
+    				$(".attachContainer").append('<li class="attachFile">'+
+    											 '<a href="javascript:;">'+s+'</a>'+
+    											 '<a href="javascript:;" class="deleteAttach">Delete</a></li>'
+    											 );
+    				$(".attachContainer .attachFile:last").append($(".input-file .inputAttach").attr("hidden","hidden"));
+    				$(".input-file").append('<input type="file" value="Choose File" class="inputAttach" name="attachfile">');
+    		},
+  			deleteAttach:function(e){
+    				$(e.target).closest(".attachFile").remove();
+   			},
+   			
+   			fileSizeIsAcceptable: function(file){
+   				if(!file){return false;}
+   				return file.size < App.File.MAXSIZE;
+   			},
+   			
+
+            notHide: function (e) {
+				return false;
             },
             keydownHandler: function (e) {
                 switch (e.which) {
@@ -67,6 +95,7 @@ define([
             hideDialog: function () {
                 $(".edit-dialog").remove();
             },
+            
             saveItem: function () {
                 var self = this;
                 var mid = 39;
@@ -107,37 +136,121 @@ define([
                         mid: mid
                     },
                     wait: true,
-                    success: function (model, res) {
-                        model = model.toJSON();
-                        self.hideDialog();
-                        if (!model.project) {
-                            Backbone.history.navigate("#easyErp/Tasks", { trigger: true });
+                    success: function (model) {
+						var currentModel = model.changed.task;
+						var currentModelID = currentModel["_id"];
+						var addFrmAttach = $("#createTaskForm");
+						var fileArr= [];
+						var addInptAttach = '';
+						$("li .inputAttach").each(function(){
+							addInptAttach = $(this)[0].files[0];
+							fileArr.push(addInptAttach);
+							if(!self.fileSizeIsAcceptable(addInptAttach)){
+								alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+								return;
+							}
+						});
+							addFrmAttach.submit(function (e) {
+								var bar = $('.bar');
+								var status = $('.status');
+								
+								var formURL = "http://" + window.location.host + "/uploadTasksFiles";
+								e.preventDefault();
+								addFrmAttach.ajaxSubmit({
+									url: formURL,
+									type: "POST",
+									processData: false,
+									contentType: false,
+												   data: [fileArr],
 
-                        } else {
-                            common.checkBackboneFragment("easyErp/Tasks/kanban/" + model.project);
-                        }
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader("id", currentModelID);
+										status.show();
+										var statusVal = '0%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									uploadProgress: function(event, position, total, statusComplete) {
+										var statusVal = statusComplete + '%';
+										bar.width(statusVal);
+										status.html(statusVal);
+									},
+									
+									success: function (data) {
+										console.log('Attach file');
+										addFrmAttach[0].reset();
+										status.hide();
+										self.hideDialog();
+										Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+									},
+
+									error: function () {
+										console.log("Attach file error");
+									}
+								});
+							});
+						if(fileArr.length>0){
+							addFrmAttach.submit();
+						}
+						else{
+							self.hideDialog();
+							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+
+						}
+						addFrmAttach.off('submit');
+
                     },
-                    error: function (model, xhr, options) {
-                        Backbone.history.navigate("easyErp", { trigger: true });
+
+                    error: function () {
+                        self.hideDialog();
+                        Backbone.history.navigate("home", { trigger: true });
                     }
                 });
             },
-			showNewSelect:function(e){
-				if ($(".newSelectList").length){
-				this.hideNewSelect();
-				}else{
-					var s="<ul class='newSelectList'>";
-					$(e.target).parent().find("select option").each(function(){
-						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-					});
-					s+="</ul>";
-					$(e.target).parent().append(s);
-					return false;
-				}
-				
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true)
 			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false)
+			},
+
+            showNewSelect:function(e,prev,next){
+				var elementVisible = 25;
+				var newSel = $(e.target).parent().find(".newSelectList")
+				if (prev||next){
+					newSel = $(e.target).closest(".newSelectList")
+				}
+				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
+                var currentPage = 1;
+                if (newSel.is(":visible")&&!prev&&!next){
+                    newSel.hide();
+					return;
+				}
+
+                if (newSel.length){
+                    currentPage = newSel.data("page");
+                    newSel.remove();
+                }
+				if (prev)currentPage--;
+				if (next)currentPage++;
+                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
+                var start = (currentPage-1)*elementVisible;
+				var options = parent.find("select option");
+                var end = Math.min(currentPage*elementVisible,options.length);
+                for (var i = start; i<end;i++){
+                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
+                }
+				var allPages  = Math.ceil(options.length/elementVisible)
+                if (options.length>elementVisible)
+                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
+                s+="</ul>";
+                parent.append(s);
+                return false;
+                
+            },
             hideNewSelect: function (e) {
-                $(".newSelectList").remove();;
+                $(".newSelectList").hide();;
             },
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));

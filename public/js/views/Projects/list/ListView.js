@@ -121,7 +121,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
+                //"click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
 				"click #itemsButton": "itemsNumber",
 				"click .currentPageList": "itemsNumber",
 				"click":"hideItemsNumber",
@@ -280,7 +280,7 @@ define([
                 $('.ui-dialog ').remove();
                 this.$el.html(_.template(ListTemplate));
                 var itemView = new ListItemView({ collection: this.collection });
-                itemView.bind('incomingSatges', itemView.pushStages, itemView);
+                itemView.bind('incomingStages', itemView.pushStages, itemView);
                 this.$el.append(itemView.render());
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);

@@ -2,9 +2,11 @@ define([
     "text!templates/Projects/EditTemplate.html",
     "custom",
     "common",
-    "dataService"
+    "dataService",
+    'text!templates/Notes/AddAttachments.html',
+    'text!templates/Notes/AddNote.html',
 ],
-    function (EditTemplate, Custom, common, dataService) {
+    function (EditTemplate, Custom, common, dataService,addAttachTemplate,addNoteTemplate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Projects",
@@ -27,9 +29,254 @@ define([
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
 			    'click #addUsers':'addUsers',
-			    'click #removeUsers':'removeUsers'
-
+			    'click #removeUsers':'removeUsers',
+                "click .deleteAttach": "deleteAttach",
+                "change .inputAttach": "addAttach",
+                "click #addNote": "addNote",
+                "click .editDelNote": "editDelNote",
+                "click #cancelNote": "cancelNote",
+                "click #noteArea" : "expandNote",
+                "click #cancelNote" : "cancelNote",
+                "click .addTitle" : "showTitle",
+                "click .editNote" : "editNote",
+	        },
+	        
+	        cancelNote: function (e) {
+                $('#noteArea').val('');
+                $('#noteTitleArea').val('');
+                $('#getNoteKey').attr("value", '');
             },
+            editDelNote: function (e) {
+                var id = e.target.id;
+                var k = id.indexOf('_');
+                var type = id.substr(0, k);
+                var id_int = id.substr(k + 1);
+
+
+                var currentModel =  this.currentModel;
+                var notes = currentModel.get('notes');
+
+                switch (type) {
+                    case "edit": {
+                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                        $('#getNoteKey').attr("value", id_int);
+                        break;
+                    }
+                    case "del": {
+
+                        var new_notes = _.filter(notes, function (note) {
+                            if (note._id != id_int) {
+                            	console.log(note);
+                                return note;
+                            }
+                        });
+                        currentModel.set('notes', new_notes);
+                        currentModel.save({},
+                                {
+                                    headers: {
+                                        mid: 39,
+                                        remove: true
+                                    },
+                                    
+                                    wait: true,
+                                    success: function (models) {
+                                    	console.log(models);
+                                        $('#' + id_int).remove();
+                                    }
+                                });
+                        break;
+                    }
+                }
+            },
+
+            addNote: function (e) {
+            	e.preventDefault();
+                var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                if (val || title) {
+                    var notes = this.currentModel.get('notes');
+                    var arr_key_str = $('#getNoteKey').attr("value");
+                    var note_obj = {
+                        note: '',
+                        title: ''
+                    };
+                    if (arr_key_str) {
+                        var edit_notes = _.filter(notes, function (note) {
+                            if (note._id == arr_key_str) {
+                                note.note = val;
+                                note.title = title;
+                                return note;
+                            }
+                        });
+                        this.currentModel.save({},
+                                   {
+                                       headers: {
+                                           mid: 39
+                                       },
+                                       success: function (model, response, options) {
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
+                                           $('#getNoteKey').attr("value", '');
+                                       }
+                                   });
+
+
+
+                    } else {
+
+                        note_obj.note = val;
+                        note_obj.title = title;
+                        notes.push(note_obj);
+                        this.currentModel.set('notes', notes);
+                        this.currentModel.save({},
+                                    {
+                                        headers: {
+                                            mid: 39,
+                                            
+                                        },
+                                        wait: true,
+                                        success: function (models,data,response) {
+
+            								$('#noteBody').empty();
+            								data.notes.forEach(function(item){
+            									var date = common.utcDateToLocaleDate(item.date);
+
+            									$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
+            							});
+                                        }
+                                    });
+
+                    }
+                    $('#noteArea').val('');
+                    $('#noteTitleArea').val('');
+                }
+            },
+            
+            editNote : function(e){
+    			$(".title-wrapper").show();
+    			$("#noteArea").attr("placeholder","").parents(".addNote").addClass("active");
+    		},
+    		expandNote : function(e){
+    			if (!$(e.target).parents(".addNote").hasClass("active")){
+    				$(e.target).attr("placeholder","").parents(".addNote").addClass("active");
+    				$(".addTitle").show();
+    			}
+            },
+    		cancelNote : function(e){
+    			$(e.target).parents(".addNote").find("#noteArea").attr("placeholder","Add a Note...").parents(".addNote").removeClass("active");
+    			$(".title-wrapper").hide();
+    			$(".addTitle").hide();
+            },
+
+    		saveNote : function(e){
+    			if (!($(e.target).parents(".addNote").find("#noteArea").val()=="" && $(e.target).parents(".addNote").find("#noteTitleArea").val()=="")){
+    				$(e.target).parents(".addNote").find("#noteArea").attr("placeholder","Add a Note...").parents(".addNote").removeClass("active");
+    				$(".title-wrapper").hide();
+    				$(".addTitle").hide();
+    			}
+    			else{
+    				$(e.target).parents(".addNote").find("#noteArea").focus();
+    			}
+            },
+
+    		showTitle : function(e){
+    			$(e.target).hide().parents(".addNote").find(".title-wrapper").show().find("input").focus();
+            },
+
+	            
+	        fileSizeIsAcceptable: function(file){
+	                if(!file){return false;}
+	                return file.size < App.File.MAXSIZE;
+	        },
+	        addAttach: function (event) {
+	                event.preventDefault();
+	                var currentModel = this.currentModel;
+	                var currentModelID = currentModel["id"];
+	                var addFrmAttach = $("#editProjectForm");
+	                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
+	                if(!this.fileSizeIsAcceptable(addInptAttach)){
+	                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+	                    return;
+	                }
+	                addFrmAttach.submit(function (e) {
+	                    var bar = $('.bar');
+	                    var status = $('.progress_status');
+	                    var formURL = "http://" + window.location.host + "/uploadProjectsFiles";
+	                    e.preventDefault();
+	                    addFrmAttach.ajaxSubmit({
+	                        url: formURL,
+	                        type: "POST",
+	                        processData: false,
+	                        contentType: false,
+	                        data: [addInptAttach],
+
+	                        beforeSend: function (xhr) {
+	                            xhr.setRequestHeader("id", currentModelID);
+	                            status.show();
+	                            var statusVal = '0%';
+	                            bar.width(statusVal);
+	                            status.html(statusVal);
+	                        },
+	                        
+	                        uploadProgress: function(event, position, total, statusComplete) {
+	                            var statusVal = statusComplete + '%';
+	                            bar.width(statusVal);
+	                            status.html(statusVal);
+	                        },
+	                        
+	                        success: function (data) {
+	                            var attachments = currentModel.get('attachments');
+	  							attachments.length=0;
+								$('.attachContainer').empty();
+								
+								data.attachments.forEach(function(item){
+									var date = common.utcDateToLocaleDate(item.uploadDate);
+									attachments.push(item);
+									$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+							});
+	                            console.log('Attach file');
+	                            addFrmAttach[0].reset();
+	                            status.hide();
+	                        },
+
+	                        error: function () {
+	                            console.log("Attach file error");
+	                        }
+	                    });
+					})
+					addFrmAttach.submit();
+					addFrmAttach.off('submit');
+			},
+				
+			deleteAttach: function (e) {
+						if ($(e.target).closest("li").hasClass("attachFile")){
+							$(e.target).closest(".attachFile").remove();
+						}
+						else{
+							var id = e.target.id;
+							var currentModel = this.currentModel;
+							var attachments = currentModel.get('attachments');
+							var new_attachments = _.filter(attachments, function (attach) {
+								if (attach._id != id) {
+									return attach;
+								}
+							});
+							currentModel.set('attachments', new_attachments);
+							currentModel.save({},
+											  {
+												  headers: {
+													  mid: 39
+												  },
+
+												  success: function (model, response, options) {
+													  $('.attachFile_' + id).remove();
+												  }
+											  });
+						}
+			},
+
+            
 			nextUserList:function(e,page){
 				common.populateUsersForGroups('#sourceUsers','#targetUsers',null,page);
 			},
@@ -216,6 +463,7 @@ define([
                 var customer = this.$el.find("#customerDd option:selected").val();
                 var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
                 var workflow = this.$el.find("#workflowsDd option:selected").val();
+                var projecttype = this.$el.find("#projectTypeDD option:selected").val();
                 console.log(workflow);
                 var $userNodes = $("#usereditDd option:selected"), users = [];
                 $userNodes.each(function (key, val) {
@@ -243,6 +491,7 @@ define([
                     customer: customer ? customer : null,
                     projectmanager: projectmanager ? projectmanager: null,
                     workflow: workflow ? workflow : null,
+                    projecttype:projecttype ? projecttype : "",
                     teams: {
                         users: users
                     },

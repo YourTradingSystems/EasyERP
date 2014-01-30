@@ -21,6 +21,19 @@ define([
                 response.extrainfo.EndDate = common.utcDateToLocaleDate(response.extrainfo.EndDate);
                 response.deadline = common.utcDateToLocaleDate(response.deadline);
             }
+            if (response && response.attachments) {
+                _.map(response.attachments, function (attachment) {
+                    attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                    return attachment;
+                });
+            }
+            
+            if (response &&  response.notes) {
+                _.map(response.notes, function (notes) {
+                	notes.date = common.utcDateToLocaleDate(notes.date);
+                    return notes;
+                });
+            }
             return response;
         },
 
@@ -58,7 +71,8 @@ define([
             estimated: 0,
             logged: 0,
             remaining: 0,
-            progress: 0
+            progress: 0,
+            notes:[]
         },
 
         urlRoot: function () {

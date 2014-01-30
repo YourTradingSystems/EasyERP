@@ -1,8 +1,10 @@
-﻿define([
+﻿﻿define([
     "text!templates/Tasks/EditTemplate.html",
-    "common"
+    "text!templates/Notes/AddAttachments.html",
+    "common",
+    'text!templates/Notes/AddNote.html'
 ],
-    function (EditTemplate, common) {
+    function (EditTemplate,addAttachTemplate, common,addNoteTemplate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Tasks",
@@ -20,10 +22,251 @@
                 "change #workflowDd": "changeWorkflowValues",
                 'keydown': 'keydownHandler',
                 "click .current-selected": "showNewSelect",
-                "click .newSelectList li": "chooseOption",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-				"click #projectTopName":"hideDialog"
+				"click #projectTopName":"hideDialog",
+				"click .deleteAttach": "deleteAttach",
+	            "change .inputAttach": "addAttach",
+	            "click #addNote": "addNote",
+                "click .editDelNote": "editDelNote",
+                "click #cancelNote": "cancelNote",
+                "click #noteArea" : "expandNote",
+                "click #cancelNote" : "cancelNote",
+                "click .addTitle" : "showTitle",
+                "click .editNote" : "editNote",
+	        },
+	        
+	        cancelNote: function (e) {
+                $('#noteArea').val('');
+                $('#noteTitleArea').val('');
+                $('#getNoteKey').attr("value", '');
             },
+            editDelNote: function (e) {
+                var id = e.target.id;
+                var k = id.indexOf('_');
+                var type = id.substr(0, k);
+                var id_int = id.substr(k + 1);
+                var currentModel =  this.currentModel;
+                var notes = currentModel.get('notes');
+
+                switch (type) {
+                    case "edit": {
+                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                        $('#getNoteKey').attr("value", id_int);
+                        break;
+                    }
+                    case "del": {
+
+                        var new_notes = _.filter(notes, function (note) {
+                            if (note._id != id_int) {
+                                return note;
+                            }
+                        });
+                        currentModel.set('notes', new_notes);
+                        currentModel.save({},
+                                {
+                                    headers: {
+                                        mid: 40,
+                                        remove: true,
+                                    },
+                                    
+                                    success: function (model, response, options) {
+                                        $('#' + id_int).remove();
+                                    }
+                                });
+                        break;
+                    }
+                }
+            },
+
+            addNote: function (e) {
+            	e.preventDefault();
+                var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
+                if (val || title) {
+                	var currentModel =  this.currentModel;
+                	var notes = currentModel.get('notes');
+                    var arr_key_str = $('#getNoteKey').attr("value");
+                    var note_obj = {
+                        note: '',
+                        title: ''
+                    };
+                    if (arr_key_str) {
+                        var edit_notes = _.filter(notes, function (note) {
+                            if (note._id == arr_key_str) {
+                                note.note = val;
+                                note.title = title;
+                                return note;
+                            }
+                        });
+                        currentModel.save({},
+                                   {
+                                       headers: {
+                                           mid: 40
+                                       },
+                                       success: function (model, response, options) {
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
+                                           $('#getNoteKey').attr("value", '');
+                                       }
+                                   });
+
+
+
+                    } else {
+
+                        note_obj.note = val;
+                        note_obj.title = title;
+                        notes.push(note_obj);
+                        currentModel.set('notes', notes);
+                        currentModel.save({},
+                                    {
+                                        headers: {
+                                            mid: 40
+                                        },
+                                        wait: true,
+                                        success: function (models,data,response) {
+
+            								$('#noteBody').empty();
+            								data.notes.forEach(function(item){
+            									var date = common.utcDateToLocaleDate(item.date);
+            									//notes.push(item);
+            									$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
+            							});
+                                        }
+                                    });
+
+                    }
+                    $('#noteArea').val('');
+                    $('#noteTitleArea').val('');
+                }
+            },
+            
+            editNote : function(e){
+    			$(".title-wrapper").show();
+    			$("#noteArea").attr("placeholder","").parents(".addNote").addClass("active");
+    		},
+    		expandNote : function(e){
+    			if (!$(e.target).parents(".addNote").hasClass("active")){
+    				$(e.target).attr("placeholder","").parents(".addNote").addClass("active");
+    				$(".addTitle").show();
+    			}
+            },
+    		cancelNote : function(e){
+    			$(e.target).parents(".addNote").find("#noteArea").attr("placeholder","Add a Note...").parents(".addNote").removeClass("active");
+    			$(".title-wrapper").hide();
+    			$(".addTitle").hide();
+            },
+
+    		saveNote : function(e){
+    			if (!($(e.target).parents(".addNote").find("#noteArea").val()=="" && $(e.target).parents(".addNote").find("#noteTitleArea").val()=="")){
+    				$(e.target).parents(".addNote").find("#noteArea").attr("placeholder","Add a Note...").parents(".addNote").removeClass("active");
+    				$(".title-wrapper").hide();
+    				$(".addTitle").hide();
+    			}
+    			else{
+    				$(e.target).parents(".addNote").find("#noteArea").focus();
+    			}
+            },
+
+    		 showTitle : function(e){
+    			$(e.target).hide().parents(".addNote").find(".title-wrapper").show().find("input").focus();
+            },
+
+		            
+		            fileSizeIsAcceptable: function(file){
+		                if(!file){return false;}
+		                return file.size < App.File.MAXSIZE;
+		            },
+		            addAttach: function (event) {
+		                event.preventDefault();
+		                var currentModel = this.currentModel;
+		                var currentModelID = currentModel["id"];
+		                var addFrmAttach = $("#editTaskForm");
+		                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
+		                if(!this.fileSizeIsAcceptable(addInptAttach)){
+		                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+		                    return;
+		                }
+		                addFrmAttach.submit(function (e) {
+		                    var bar = $('.bar');
+		                    var status = $('.progress_status');
+		                    var formURL = "http://" + window.location.host + "/uploadTasksFiles";
+		                    e.preventDefault();
+		                    addFrmAttach.ajaxSubmit({
+		                        url: formURL,
+		                        type: "POST",
+		                        processData: false,
+		                        contentType: false,
+		                        data: [addInptAttach],
+
+		                        beforeSend: function (xhr) {
+		                            xhr.setRequestHeader("id", currentModelID);
+		                            status.show();
+		                            var statusVal = '0%';
+		                            bar.width(statusVal);
+		                            status.html(statusVal);
+		                        },
+		                        
+		                        uploadProgress: function(event, position, total, statusComplete) {
+		                            var statusVal = statusComplete + '%';
+		                            bar.width(statusVal);
+		                            status.html(statusVal);
+		                        },
+		                        
+		                        success: function (data) {
+		                            var attachments = currentModel.get('attachments');
+		  							attachments.length=0;
+									$('.attachContainer').empty();
+									data.attachments.forEach(function(item){
+										var date = common.utcDateToLocaleDate(item.uploadDate);
+										attachments.push(item);
+										$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+								});
+		                            console.log('Attach file');
+		                            addFrmAttach[0].reset();
+		                            status.hide();
+		                        },
+
+		                        error: function () {
+		                            console.log("Attach file error");
+		                        }
+		                    });
+						})
+						addFrmAttach.submit();
+						addFrmAttach.off('submit');
+					},
+					
+					deleteAttach: function (e) {
+							if ($(e.target).closest("li").hasClass("attachFile")){
+								$(e.target).closest(".attachFile").remove();
+							}
+							else{
+								var id = e.target.id;
+								var currentModel = this.currentModel;
+								var attachments = currentModel.get('attachments');
+								var new_attachments = _.filter(attachments, function (attach) {
+									if (attach._id != id) {
+										return attach;
+									}
+								});
+								currentModel.set('attachments', new_attachments);
+								currentModel.save({},
+												  {
+													  headers: {
+														  mid: 39
+													  },
+
+													  success: function (model, response, options) {
+														  $('.attachFile_' + id).remove();
+													  }
+												  });
+							}
+				},
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -172,38 +415,51 @@
                      this.$("#workflowValue").append( $('<option/>').val(value._id).text(value.name + " (" + value.status + ")" ));
                 },this);
             },
-			showNewSelect:function(e){
-				var s="<ul class='newSelectList'>";
-				$(e.target).parent().find("select option").each(function(){
-					s+="<li>"+$(this).text()+"</li>";
-				});
-				 s+="</ul>";
-				$(e.target).parent().append(s);
-				
+
+            notHide: function (e) {
+				return false;
+            },
+
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true)
 			},
-			hideNewSelect:function(e){
-				$(".newSelectList").remove();;
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false)
 			},
-			showNewSelect:function(e){
-				if ($(".newSelectList").length){
-				this.hideNewSelect();
-				}else{
-					var s="<ul class='newSelectList'>";
-					$(e.target).parent().find("select option").each(function(){
-						s+="<li class="+$(this).text().toLowerCase()+">"+$(this).text()+"</li>";
-					});
-					s+="</ul>";
-					$(e.target).parent().append(s);
-					return false;
+            showNewSelect:function(e,prev,next){
+				var elementVisible = 25;
+				var newSel = $(e.target).parent().find(".newSelectList")
+				if (prev||next){
+					newSel = $(e.target).closest(".newSelectList")
 				}
-				
-			},
-			chooseOption:function(e){
-				var k = $(e.target).parent().find("li").index($(e.target));
-				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
-				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-			},
+				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
+                var currentPage = 1;
+                if (newSel.is(":visible")&&!prev&&!next){
+                    newSel.hide();
+					return;
+				}
+
+                if (newSel.length){
+                    currentPage = newSel.data("page");
+                    newSel.remove();
+                }
+				if (prev)currentPage--;
+				if (next)currentPage++;
+                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
+                var start = (currentPage-1)*elementVisible;
+				var options = parent.find("select option");
+                var end = Math.min(currentPage*elementVisible,options.length);
+                for (var i = start; i<end;i++){
+                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
+                }
+				var allPages  = Math.ceil(options.length/elementVisible)
+                if (options.length>elementVisible)
+                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
+                s+="</ul>";
+                parent.append(s);
+                return false;
+                
+            },
 
 			styleSelect:function(id){
 				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();

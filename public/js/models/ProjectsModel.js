@@ -42,19 +42,12 @@ define(['Validation','common'],
             estimated: 0,
             logged: 0,
             remaining: 0,
-            progress: 0
+            progress: 0,
+            notes:[]
         },
 
         urlRoot: function () {
             return "/Projects";
-        },
-        parse: true,
-        parse: function (response) {
-            if (response.info.StartDate) {
-            	response.info.StartDate = common.utcDateToLocaleDate(response.info.StartDate);
-            	response.info.EndDate = common.utcDateToLocaleDate(response.info.EndDate);
-            }
-            return response;
         }
     });
 

@@ -1,181 +1,159 @@
 ﻿define([
-   'views/Companies/thumbnails/ThumbnailsItemView',
-    'custom',
     'common',
     'views/Companies/EditView',
     'views/Companies/CreateView',
-    'text!templates/Alpabet/AphabeticTemplate.html'
+    'text!templates/Alpabet/AphabeticTemplate.html',
+    "text!templates/Companies/thumbnails/ThumbnailsItemTemplate.html",
+    'dataService'
 ],
 
-function (ThumbnailsItemView, Custom, common, EditView, CreateView, AphabeticTemplate) {
-    var CompanyThumbnalView = Backbone.View.extend({
-        el: '#content-holder',
+    function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplate, dataService) {
+        var CompaniesThumbnalView = Backbone.View.extend({
+            el: '#content-holder',
+            countPerPage: 0,
+            template: _.template(ThumbnailsItemTemplate),
 
-        initialize: function (options) {
-			this.startTime = options.startTime;
-            this.collection = options.collection;
-            arrayOfcompanies = [];
-            dataIndexCounter = 0;
-			this.allAlphabeticArray = common.buildAllAphabeticArray();
-			this.selectedLetter="";
-            this.render();
-        },
+            initialize: function (options) {
+                this.startTime = options.startTime;
+                this.collection = options.collection;
+                this.allAlphabeticArray = common.buildAllAphabeticArray();
+                this.selectedLetter = "";
+                _.bind(this.collection.showMoreAlphabet, this.collection);
+                this.countPerPage = options.collection.length;
+                this.getTotalLength(this.countPerPage);
+                this.render();
+            },
 
-        events: {
-            "click #showMore": "showMore",
-			"click .letter:not(.empty)": "alpabeticalRender"
-        },
-		alpabeticalRender:function(e){
-			$(e.target).parent().find(".current").removeClass("current");
-			$(e.target).addClass("current");
-            _.bind(this.collection.showMoreAlphabet, this.collection);
-			this.selectedLetter=$(e.target).text();
-			if ($(e.target).text()=="All"){
-				this.selectedLetter="";
-			}
-            this.collection.showMoreAlphabet({count: 50, page: 1, letter:this.selectedLetter});
-		},
+            events: {
+                "click #showMore": "showMore",
+                "click .letter:not(.empty)": "alpabeticalRender",
+                "click .gotoForm": "gotoForm",
+                "click .company": "gotoCompanyForm"
+            },
 
-        render: function () {
-			var self = this;
-            var namberOfcompanies = this.collection.namberToShow;
-            console.log('Company render');
-            $('.ui-dialog ').remove();
-            this.$el.html('');
-            if (this.collection.length > 0) {
-                var holder = this.$el;
-                var thumbnailsItemView;
-                _.each(this.collection.models, function (model, index) {
-                    if (index < namberOfcompanies) {
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).append(thumbnailsItemView.render().el);
+            getTotalLength: function(currentNumber) {
+                dataService.getData('/totalCollectionLength/Companies', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
+                    var showMore = context.$el.find('#showMoreDiv');
+                    if (response.showMore) {
+                        if (showMore.length === 0) {
+                            var created = context.$el.find('#timeRecivingDataFromServer');
+                            created.before('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+                        } else {
+                            showMore.show();
+                        }
                     } else {
-                        arrayOfcompanies.push(model);
+                        showMore.hide();
                     }
                 }, this);
-            } else {
-                this.$el.html('<h2>No Companies found</h2>');
-            }
-            if (arrayOfcompanies.length > 0) {
-                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
-			common.buildAphabeticArray(this.collection,function(arr){
-				$(".startLetter").remove();
-				self.alphabeticArray = arr;
-				self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
-			});
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
-            return this;
-        },
+            },
 
-        showMore: function () {
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore();
-        },
-
-        showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
-            var thumbnailsItemView;
-            var counter =0;
-            var namberOfcompanies = this.collection.namberToShow;
-
-            if (arrayOfcompanies.length > 0) {
-                for (var i=0; i<arrayOfcompanies.length; i++) {
-                    if (counter < namberOfcompanies ) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfcompanies[i], dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
-                        arrayOfcompanies.splice(i,1);
-                        i--;
-                    }
+            alpabeticalRender: function (e) {
+                var target = $(e.target);
+                target.parent().find(".current").removeClass("current");
+                target.addClass("current");
+                this.selectedLetter = target.text();
+                if (target.text() == "All") {
+                    this.selectedLetter = "";
                 }
-            }
-            _.each(newModels.models, function (model) {
-                    if (counter < namberOfcompanies) {
-                        dataIndexCounter++;
-                        counter++;
-                        thumbnailsItemView = new ThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).before(thumbnailsItemView.render().el);
-                    } else {
-                        arrayOfcompanies.push(model);
-                    }
-            }, this);
+                this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
+            },
+            gotoForm: function (e) {
+                e.preventDefault();
+                App.ownContentType = true;
+                var id = $(e.target).closest("a").data("id");
+                window.location.hash = "#easyErp/Companies/form/" + id;
+            },
 
-            if (arrayOfcompanies.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
-        },
-        showMoreAlphabet: function (newModels) {
-			arrayOfcompanies=[];
-            var holder = $('#content-holder .startLetter');
-			$("#content-holder .thumbnailwithavatar").remove();
-            var thumbnailsItemView;
-            var counter =0;
-            var namberOfcompanies = this.collection.namberToShow;
+            gotoCompanyForm: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest("a").data("id");
+                window.location.hash = "#easyErp/Companies/form/" + id;
+            },
+            render: function () {
+                var self = this;
+                var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
+                var currentEl = this.$el;
 
-            if (arrayOfcompanies.length > 0) {
-                for (var i=0; i<arrayOfcompanies.length; i++) {
-                    if (counter < namberOfcompanies ) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ThumbnailsItemView({ model: arrayOfcompanies[i], dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.after(thumbnailsItemView.render().el);
-                        arrayOfcompanies.splice(i,1);
-                        i--;
-                    }
-                }
-
-            }
-            _.each(newModels.models, function (model) {
-                if (counter < namberOfcompanies) {
-                    counter++;
-                    dataIndexCounter++;
-                    thumbnailsItemView = new ThumbnailsItemView({ model: model, dataIndex: dataIndexCounter  });
-                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    holder.after(thumbnailsItemView.render().el);
+                currentEl.html('');
+                if (this.collection.length > 0) {
+                    currentEl.append(this.template({ collection: this.collection.toJSON() }));
                 } else {
-                    arrayOfcompanies.push(model);
+                    currentEl.html('<h2>No companies found</h2>');
                 }
-            }, this);
 
-            if (arrayOfcompanies.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
-			else{
-                this.$el.find('#showMoreDiv').show();
-			}
-        },
-        createItem: function () {
-            //create editView in dialog here
-            new CreateView();
-        },
-
-        editItem: function () {
-            //create editView in dialog here
-            new EditView({ collection: this.collection });
-        },
-
-        deleteItems: function () {
-            var that = this,
-        		mid = 39,
-                model;
-            model = this.collection.get(this.$el.attr("id"));
-            this.$el.fadeToggle(200, function () {
-                model.destroy({
-                    headers: {
-                        mid: mid
-                    }
+                common.buildAphabeticArray(this.collection, function (arr) {
+                    $("#startLetter").remove();
+                    self.alphabeticArray = arr;
+                    currentEl.prepend(_.template(AphabeticTemplate, {
+                        alphabeticArray: self.alphabeticArray,
+                        selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter),
+                        allAlphabeticArray: self.allAlphabeticArray
+                    }));
                 });
-                $(this).remove();
-            });
-        }
-    });
 
-    return CompanyThumbnalView;
-});
+                currentEl.append(createdInTag);
+                return this;
+            },
+
+            showMore: function () {
+                _.bind(this.collection.showMore, this.collection);
+                this.collection.showMore({ letter: this.selectedLetter  });
+            },
+
+            showMoreContent: function (newModels) {
+                var holder = this.$el;
+                this.countPerPage += newModels.length;
+                var showMore = holder.find('#showMoreDiv');
+                var created = holder.find('#timeRecivingDataFromServer');
+                this.getTotalLength(this.countPerPage);
+                showMore.before(this.template({ collection: this.collection.toJSON() }));
+                showMore.after(created);
+            },
+
+            showMoreAlphabet: function (newModels) {
+                var holder = this.$el;
+                var alphaBet = holder.find('#startLetter');
+                var created = holder.find('#timeRecivingDataFromServer');
+                var showMore = holder.find('#showMoreDiv');
+                var content = holder.find(".thumbnailwithavatar");
+                var countPerPage = this.countPerPage = newModels.length;
+
+                content.remove();
+
+                holder.append(this.template({ collection: newModels.toJSON() }));
+
+                this.getTotalLength(countPerPage);
+
+                holder.prepend(alphaBet);
+                holder.append(created);
+                created.before(showMore);
+            },
+
+            createItem: function () {
+                //create editView in dialog here
+                new createView();
+            },
+
+            editItem: function () {
+                //create editView in dialog here
+                new editView({ collection: this.collection });
+            },
+
+            deleteItems: function () {
+                var mid = 39;
+                var model;
+
+                model = this.collection.get(this.$el.attr("id"));
+                this.$el.fadeToggle(200, function () {
+                    model.destroy({
+                        headers: {
+                            mid: mid
+                        }
+                    });
+                    $(this).remove();
+                });
+            }
+        });
+
+        return CompaniesThumbnalView;
+    });

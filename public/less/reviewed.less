@@ -87,7 +87,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-        }
+}
     }
 }
 
@@ -122,7 +122,7 @@
 
         &:first-child {
             margin-top: 0;
-        }
+    }
     }
 
     dd {
@@ -191,7 +191,7 @@
 
         .btnHolder {
             .right;
-            padding: 5px;
+            height:26px;
         }
 
         h3 {
@@ -204,7 +204,7 @@
 
             span {
                 width: inherit;
-                .text-overflow;
+               .text-overflow;
             }
         }
     }
@@ -212,7 +212,7 @@
     h3 {
         margin-bottom: 10px;
         display: block;
-        .text-overflow;
+       .text-overflow;
 
         span {
             padding: 0;
@@ -292,10 +292,10 @@
     }
 
     .avatar {
-        .avatar(140px, 10px, 0, 10px, 0);
+       .avatar(140px, 10px, 0, 10px, 0);
         .left;
-        .box-shadow(0, 1px, 4px, rgba(0, 0, 0, 0.4));
-        position: relative;
+       .box-shadow(0, 1px, 4px, rgba(0, 0, 0, 0.4));
+        position: relative; 
         border: none;
 
         .upload {
@@ -327,7 +327,7 @@
         .half-block {
             textarea {
                 width: 95%;
-            }
+    }
         }
     }
 
@@ -494,7 +494,7 @@
                 }
 
                     progress::-webkit-progress-bar {
-                        background-color: @defaultProgressColor;
+                    background-color: @defaultProgressColor;
                     }
 
                     progress::-webkit-progress-value {
@@ -698,8 +698,8 @@
     .loginImage(@x: 0, @y: 0) {
         background-image: url("@{imagesfolder}/login-sprite.png");
         background-repeat: no-repeat;
-        background-position: @x @y;
-    }
+		background-position: @x @y;
+	}
 
     .error {
         padding-left: 30px;
@@ -712,7 +712,7 @@
         font-weight: 300 !important;
         font-size: @font-size;
         margin: 25px 0 35px 30px;
-    }
+                }
 
     .icon-pass,
     .icon-login {
@@ -726,9 +726,9 @@
             width: 25px;
             height: 19px;
             margin-top: 10px;
-            .loginImage;
+			.loginImage;
             .left;
-        }
+            }
 
         &.active {
             border-color: #999;
@@ -739,7 +739,7 @@
     &.notRegister {
         .error {
             display: block;
-        }
+}
 
         .icon-pass,
         .icon-login {
@@ -782,7 +782,7 @@
 
         a {
             font-size: @font-size/2;
-        }
+		}
     }
 
     .dotted-line {
@@ -810,7 +810,7 @@
             width: 14px;
             height: 14px;
             .right;
-            .loginImage(0, -81px);
+			.loginImage(0, -81px);
         }
     }
 
@@ -822,7 +822,7 @@
         line-height: 19px;
         color: black;
         .left;
-        .loginImage(0, 1px);
+		.loginImage(0, 1px);
 
         &:hover {
             color: black;
@@ -830,13 +830,13 @@
         }
 
         .check {
-            .position(absolute,5px,5px);
+           .position(absolute,5px,5px);
             display: none;
             width: 9px;
             height: 8px;
             z-index: 1000;
             .left;
-            .loginImage(50%, -40px);
+			.loginImage(50%, -40px);
         }
 
         &.active {
@@ -863,9 +863,9 @@
         font-size: 14px;
     }
 
-        input[type="submit"] {
+    input[type="submit"] {
             display: none;
-        }
+    }
 }
 
 .thumbnail-text {
@@ -1049,8 +1049,8 @@
 
             &.active {
                 .box-shadow(0px,0px,10px,rgba(50, 50, 50, 0.75));
-                transition: box-shadow 1s ease;
-                transition: border-color 1s ease;
+                 transition: box-shadow 1s ease;
+            transition: border-color 1s ease;
             }
 
             .inner {
@@ -1075,17 +1075,17 @@
                     width: auto;
 
                     p.bold {
-                        .bold;
+                       .bold;
                     }
                 }
 
                 .bottom {
                     .position(absolute,5px, auto, auto, 5px);
-                }
+            }
 
                 .avatar-small {
                     .avatar(26px, 5px, 0, 0, 0);
-                }
+        }
             }
         }
 
@@ -1108,11 +1108,11 @@
                     font-weight: normal;
                     line-height: 13px;
                     font-size: 13px;
-                }
+}
             }
         }
 
-        .columnNameDiv {
+         .columnNameDiv {
             background: #fff;
             height: 35px;
 
@@ -1277,8 +1277,8 @@
         .avatar(100px,0,auto,0,auto);
         .border-radius(3px);
         .box-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
+        }
     }
-}
 
 .thumbnail-text(@defaultColor: #4c4c4c, @font-size: 13px) {
     color: @defaultColor;
@@ -1307,10 +1307,10 @@
                 text-indent: -99999px;
                 overflow: hidden;
                 background-repeat: no-repeat;
-                display: block;
+    display: block;
                 .position(absolute,50%,50%);
-                cursor: pointer;
-            }
+    cursor: pointer;
+    }
         }
 
         .ui-datepicker-prev {
@@ -1327,7 +1327,7 @@
             span {
                 background-position: -6px -7px;
             }
-        }
+            }
 
         .ui-datepicker-title {
             margin: 0 2.3em;
@@ -1358,10 +1358,10 @@
                     display: block;
                     padding: .4em;
 
-                    &:hover {
+        &:hover {
                         text-decoration: none;
-                    }
-                }
+        }
+    }
 
                 &:hover {
                     background-color: #EEE;
@@ -1370,11 +1370,11 @@
                 &.ui-state-disabled {
                     opacity: .35;
 
-                    span {
-                    }
-                }
-            }
+        span {
         }
+    }
+    }
+    }
     }
 }
 
@@ -1395,26 +1395,26 @@
         .avatar(140px, 5px, 5px,5px, 0px);
         .box-shadow;
         border: @thin-border @lightgrey;
-    }
-
+}
+			
     .ui-dialog-content {
         position: relative;
         border: 0;
         padding: .5em 1em;
         background: 0;
-    }
+			}
 
     .ui-dialog-buttonpane {
         margin-top: 30px !important;
-    }
+		}
 
     .ui-dialog-titlebar {
         display: none;
-    }
+			}
 
     .app-block {
         .half-block;
-    }
+		}
 
     textarea {
         .noPaddingMargin;
@@ -1422,7 +1422,7 @@
 
         &#description {
             margin-top: 0 !important;
-        }
+			}
 
         &#otherInfo {
             margin-top: 13px;
@@ -1430,18 +1430,18 @@
             height: 113px;
             min-height: initial;
             max-width: 300px;
-        }
-    }
+		}
+			}
 
     .inner {
         padding: 5px;
-    }
+		}
 
     .form-holder {
         position: relative;
         padding: .5em 1em;
         clear: both;
-    }
+	}
 
     .app-empty-info {
         .dl-auto(200px,100%);
@@ -1449,23 +1449,23 @@
 
         dd {
             display: none;
-        }
+			}
 
         dt {
             margin-top: 11px;
 
             input {
                 width: 100% !important;
-            }
-        }
-    }
-
+					}
+				}
+				}
+						
     .person-info-h3 {
 
         dt, dd {
             margin-top: 0 !important;
-        }
-    }
+					}
+				}
 
     .summary-info {
         width:50%;
@@ -1474,8 +1474,8 @@
 
         #summary {
             width:89% !important;
-        }
-    }
+			}
+		}
 
     input {
         -moz-border-radius: 0px;
@@ -1494,33 +1494,33 @@
         &#summary {
             width: 100%;
             max-width: none;
-        }
-    }
+	}
+}
 
 
     .ui-dialog-buttonpane {
         border: @thin-border #AAA;
         background: @background;
         color: @color;
-        text-align: left;
-        border-width: 1px 0 0;
-        background-image: none;
+		text-align: left;
+		border-width: 1px 0 0;
+		background-image: none;
         margin: 0 1em;
-        margin-top: .7em;
-        padding: .3em 1em .5em .4em;
+		margin-top: .7em;
+		padding: .3em 1em .5em .4em;
 
         &:before {
-            content: "";
-            display: table;
-            border-collapse: collapse;
-        }
+			content: "";
+			display: table;
+			border-collapse: collapse;
+		}
 
         &:after {
             clear: both;
-            content: "";
-            display: table;
-            border-collapse: collapse;
-        }
+			content: "";
+			display: table;
+			border-collapse: collapse;
+		}
 
         .ui-dialog-buttonset {
             text-align: center;
@@ -1528,25 +1528,25 @@
             button {
                 background-image: none;
                 color: @tilte-color;
-                border: @thin-border #DDD;
-                margin: .5em .4em .5em 0;
-                cursor: pointer;
-                background-color: #E6E6E6;
-                font-size: 1.2em;
-                display: inline-block;
-                position: relative;
-                padding: 0;
-                line-height: normal;
-                vertical-align: middle;
-                text-align: center;
-                overflow: visible;
+				border: @thin-border #DDD;
+				margin: .5em .4em .5em 0;
+				cursor: pointer;
+				background-color: #E6E6E6;
+				font-size: 1.2em;
+				display: inline-block;
+				position: relative;
+				padding: 0;
+				line-height: normal;
+				vertical-align: middle;
+				text-align: center;
+				overflow: visible;
                 border-radius: 0;
 
                 span {
                     display: block;
-                    line-height: normal;
+					line-height: normal;
                     background: @background;
-                    padding: .4em 1em;
+					padding: .4em 1em;	
                     color: @tilte-color;
 
                     &:hover {
@@ -1862,7 +1862,7 @@
             text-align: center;
             line-height: 35px;
             text-decoration: none;
-            color: #36A9E1;
+					color: #36A9E1;
 
             &.active {
                 height: 35px;
@@ -1870,15 +1870,15 @@
                 border: @thin-border #DDD;
                 border-bottom: none;
                 background-color: white;
-            }
+				}
 
             &:hover {
                 background-color: #EEE;
-            }
-        }
-    }
+			}
+		}
+	}
 }
-
+       
 .workflow-list-wrapper,
 .workflow-sub-list-wrapper {
     width: 12%;
@@ -2185,7 +2185,7 @@ input, textarea, select {
         height: 24px;
         width: 24px;
 
-        a {
+a {
             &:hover {
                 text-decoration: none;
             }
@@ -2303,7 +2303,7 @@ dl {
     display: block;
 
     .form {
-        .form(98%, 0px);
+        .form(98%, 0);
         margin-bottom: 10px;
     }
 }
@@ -2463,8 +2463,8 @@ dl {
 
 .text-overflow {
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+   white-space: nowrap;
+   text-overflow: ellipsis;
 }
 
 .fullsize {
@@ -2473,15 +2473,15 @@ dl {
 }
 
 #wrapper {
-    .fullsize;
+	.fullsize;
     position: absolute;
 
-    #content-holder {
-        position: inherit;
-        height: auto;
-        display: block;
-        background: #fff;
-        clear: both;
+	#content-holder {
+		position: inherit;
+		height: auto;
+		display: block;
+		background: #fff;
+		clear: both;
         width: 100%;
     }
 }
@@ -2840,7 +2840,7 @@ button {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+		width: 100%;
     height: 100%;
 }
 
@@ -2891,7 +2891,7 @@ button {
 
     .prev, .next {
         width: @width;
-    }
+	}
 }
 /*----------------------------- Attachmetns ------------------------------*/
 .attachContainer {
@@ -2916,7 +2916,7 @@ button {
             line-height: 24px;
             font-size: 28px;
             font-weight: 200;
-        }
+}
 
         &:hover {
             background-color: #f1f1f1;
@@ -3152,7 +3152,7 @@ button {
     >h2 {
         text-align: center;
         font-size: 30px;
-        line-height: 30px;
+                line-height: 30px;
         padding-top: 15px;
     }
 }
@@ -3225,12 +3225,12 @@ table#workflows {
             td.text-right {
                 text-align: right;
             }
-    }
-}
+            }
+        }
 
 .addUserAndGroup {
     margin-top: 8px;
-}
+    }
 
 #allUsers, .buttons, #targetUsers {
     float: left;
@@ -3245,7 +3245,7 @@ table#workflows {
 }
 /*----------------------------- Top Bar --------------------------------*/
 #top-bar {
-    .top-bar;
+	.top-bar;
 }
 
 
@@ -3276,7 +3276,7 @@ table#workflows {
 
 /*----------------------------- Login Form --------------------------------*/
 #loginForm {
-    .loginForm;
+	.loginForm;
 }
 /*----------------------------- Tabs ------------------------------------*/
 ul.dialog-tabs {
@@ -3289,15 +3289,15 @@ ul.dialog-tabs {
 
 /*----------------------------- Styles --------------------------------*/
 .thumbnailwithavatar {
-    .thumbnailwithavatar;
+	.thumbnailwithavatar;
 }
 
 .list {
-    .list;
-}
+	.list;
+    }
 
 .thumbnail {
-    .thumbnail;
+	.thumbnail;
 }
 
 #modulesAccessTable {
@@ -3320,8 +3320,8 @@ ul.dialog-tabs {
 }
 
 .ui-datepicker {
-    .ui-datepicker;
-}
+	.ui-datepicker;
+    }
 
 .ui-dialog {
     .dialog;
@@ -3570,9 +3570,63 @@ h3.dashboard {
             text-align: center;
         }
     }
-}
+    }
 
 #timeRecivingDataFromServer, #timeBuildingDataFromServer {
     clear: both;
     text-align: center;
+}
+
+/*----------------------------- Dashboard --------------------------------*/
+#projectPM{
+	>div{
+		float:left;
+		width:33%;
+
+		>div{
+			padding: 0 20px;
+		}
+	}
+	h2{
+		text-align:center;
+		font-weight:bold;
+		font-size:18px;
+		color:@lightblue;
+		line-height:40px;
+	}
+	table{
+		width:100%;
+		tr{
+			th{
+				text-align:left;
+				font-weight:bold;
+				padding-left:3px;
+				line-height:25px;
+				border-bottom:2px solid #d6d6d6;
+				height:25px;
+				&.center{
+					text-align:center;
+				}
+
+			}		
+			td{
+				height:25px;
+				padding-left:3px;
+				line-height:25px;
+				border-bottom:2px solid #e7e7e7;
+				@width:10px;
+				.green{
+					width:@width;
+					height:@width;
+					margin:0 auto;
+					border-radius:@width;
+					background-color:green;
+				}
+				
+			}
+			&:first-child{
+			}
+		}
+		
+	}
 }

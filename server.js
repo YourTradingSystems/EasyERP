@@ -97,9 +97,9 @@ app.configure(function () {
     app.use(express.session({
         key: 'crm',
         secret: "CRMkey",
-        //cookie: {
-        //    maxAge: 600 * 1000 //1 minute
-        //},
+        cookie: {
+            maxAge: 10000 * 60 * 1000 //1 minute
+        },
         store: new MemoryStore(config)
         //store: new MemoryStore()
     }));
@@ -194,6 +194,7 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
         });
     })
 });
+
 app.post('/uploadEmployeesFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
@@ -219,6 +220,68 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
                     console.log(files);
                     console.log(req.files.attachfile.length);
                     requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+                }
+            });
+        });
+    })
+});
+
+app.post('/uploadProjectsFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Projects<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    var files = [];
+    if (req.files && !req.files.attachfile.length) {
+        req.files.attachfile = [req.files.attachfile];
+    }
+    console.log(req.files.attachfile);
+    req.files.attachfile.forEach(function (item) {
+
+        fs.readFile(item.path, function (err, data) {
+            var path = __dirname + "\\uploads\\" + item.name;
+            fs.writeFile(path, data, function (err) {
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
+                file.name = item.name;
+                file.path = path;
+                file.size = item.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                files.push(file);
+                if (files.length == req.files.attachfile.length) {
+                    console.log(files);
+                    console.log(req.files.attachfile.length);
+                    requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
+                }
+            });
+        });
+    })
+});
+
+app.post('/uploadTasksFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Tasks<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    var files = [];
+    if (req.files && !req.files.attachfile.length) {
+        req.files.attachfile = [req.files.attachfile];
+    }
+    console.log(req.files.attachfile);
+    req.files.attachfile.forEach(function (item) {
+
+        fs.readFile(item.path, function (err, data) {
+            var path = __dirname + "\\uploads\\" + item.name;
+            fs.writeFile(path, data, function (err) {
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
+                file.name = item.name;
+                file.path = path;
+                file.size = item.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                files.push(file);
+                if (files.length == req.files.attachfile.length) {
+                    console.log(files);
+                    console.log(req.files.attachfile.length);
+                    requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
                 }
             });
         });
@@ -375,7 +438,11 @@ app.delete('/Profiles/:_id', function (req, res) {
 //-----------------------------getTotalLength---------------------------------------------
 app.get('/totalCollectionLength/:contentType', function (req, res, next) {
     switch(req.params.contentType) {
-        case ('Persons'): requestHandler.personsTotalCollectionLength(req, res);
+        case ('Persons'): requestHandler.customerTotalCollectionLength(req, res);
+            break;
+        case ('Companies'): requestHandler.customerTotalCollectionLength(req, res);
+            break;
+        case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
             break;
         default: next();
     }
@@ -404,11 +471,7 @@ app.get('/getPersonsForDd', function (req, res) {
     requestHandler.getPersonsForDd(req, res, data);
 });
 app.get('/getPersonAlphabet', function (req, res) {
-    console.log('------getPersonAlphabet-----------------');
-    data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getPersonAlphabet(req, res, data);
+    requestHandler.getCustomersAlphabet(req, res);
 });
 app.get('/getPersonsForMiniView', function (req, res) {
     data = {};
@@ -452,9 +515,7 @@ app.get('/Persons/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getPersonById(req, res, data);
             break;
-        case "list": requestHandler.getFilterPersonsForList(req, res, data);
-            break;
-        default: requestHandler.getFilterPersons(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -535,6 +596,12 @@ app.get('/getProjectStatusCountForDashboard', function (req, res) {
     requestHandler.getProjectStatusCountForDashboard(req, res, data);
 });
 
+app.get('/getProjectByEndDateForDashboard', function (req, res) {
+    data = {};
+    data.mid = req.param('mid');
+    requestHandler.getProjectByEndDateForDashboard(req, res, data);
+});
+
 app.post('/Projects', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
@@ -546,17 +613,19 @@ app.post('/Projects', function (req, res) {
 app.put('/Projects/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
+    var remove = req.headers.remove;
     data.mid = req.headers.mid;
     data.project = req.body;
-    requestHandler.updateProject(req, res, id, data);
+    requestHandler.updateProject(req, res, id, data,remove);
 });
 
 app.put('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    var remove = req.headers.remove;
     data.project = req.body;
-    requestHandler.updateProject(req, res, id, data);
+    requestHandler.updateProject(req, res, id, data,remove);
 });
 
 app.delete('/Projects/:viewType/:_id', function (req, res) {
@@ -644,7 +713,8 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.task = req.body;
-    requestHandler.updateTask(req, res, id, data);
+    var remove = req.headers.remove;
+    requestHandler.updateTask(req, res, id, data,remove);
 });
 
 app.put('/Tasks/:_id', function (req, res) {
@@ -652,7 +722,8 @@ app.put('/Tasks/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.task = req.body;
-    requestHandler.updateTask(req, res, id, data);
+    var remove = req.headers.remove;
+    requestHandler.updateTask(req, res, id, data,remove);
 });
 
 app.delete('/Tasks/:viewType/:_id', function (req, res) {
@@ -806,9 +877,7 @@ app.get('/Companies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        case "list": requestHandler.getFilterCompaniesForList(req, res, data);
-            break;
-        default: requestHandler.getFilterCompanies(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -822,7 +891,7 @@ app.get('/ownCompanies/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getCompanyById(req, res, data);
             break;
-        default: requestHandler.getOwnCompanies(req, res, data);
+        default: requestHandler.getFilterCustomers(req, res);
             break;
     }
 });
@@ -912,11 +981,11 @@ app.put('/ownCompanies/:viewType/:_id', function (req, res) {
 });
 
 app.get('/getCompaniesAlphabet', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
-    data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getCompaniesAlphabet(req, res, data);
+    requestHandler.getCustomersAlphabet(req, res);
+});
+
+app.get('/getownCompaniesAlphabet', function (req, res) {
+    requestHandler.getCustomersAlphabet(req, res);
 });
 
 //------------------JobPositions---------------------------------------------------
@@ -1448,6 +1517,7 @@ app.put('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });
@@ -1456,6 +1526,7 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });

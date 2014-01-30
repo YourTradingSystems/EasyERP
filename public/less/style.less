@@ -134,13 +134,11 @@ dl {
     -moz-box-shadow: @arguments;
     -webkit-box-shadow: @arguments;
 }
-
 .border-radius(@radius: 4px) {
     -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
     border-radius: @radius;
 }
-
 .box-shadow (@x: 0, @y: 4px, @blur: 20px, @color: rgba(0, 0, 0, 0.15)) {
     box-shadow: @arguments;
     -moz-box-shadow: @arguments;
@@ -378,17 +376,17 @@ article {
                     height: @height;
                     line-height: @height;
                     width: 100x;
-
                     a {
                         line-height: @height;
                         height: @height;
                         text-decoration: underline;
                     }
+
+                        }
+                    }
                 }
             }
         }
-    }
-}
 
 #submenu-holder {
     .submenu;
@@ -415,7 +413,6 @@ article {
     border-bottom: @thin-border #ababab;
     background: #fff;
     clear: both;
-
     h3 {
         margin-top: 6px;
         padding: 0px 10px;
@@ -834,7 +831,7 @@ h3 {
         margin: 0 0;
 
         label {
-            line-height: 26px;
+        line-height:26px;
         }
 
         input {
@@ -1641,8 +1638,8 @@ h3 {
     float: left;
     display: block;
 
-    .form {
-        .form(98%, 0px);
+    &.form {
+        .form(40%, 0px);
         margin-bottom: 10px;
     }
 }
@@ -1676,7 +1673,7 @@ input, textarea, select {
     width: 50%;
 
     textarea {
-        width: 90% !important;
+     width:90% !important;
     }
 
     label {
@@ -2097,7 +2094,7 @@ button {
 #leadForm,
 #createDepartmentForm,
 #createUserForm */
-.form-holder form {
+.form-holder form{ 
     border: none;
     margin: 0 auto;
     width: auto;
@@ -2148,7 +2145,7 @@ button {
         max-width: 290px;
         width: 71%;
         border: @thin-border #E2E9EF;
-        border-top-color: #CBD3E2;
+        border-top-color:#CBD3E2;
         color: #262626;
         padding: 0;
         height: 25px;
@@ -2182,77 +2179,70 @@ button {
             outline: medium none;
             border: @thin-border rgba(121, 187, 238, 0.75) !important;
         }
+        }
+	&#leadForm {
+		input[type='email'],input[type='text'] {
+			width: 71%;
+    }
+		textarea {
+			margin-top: 10px;
+}
+}
+	&#createProfileForm {
+    input[type='text'] {
+        width: 100%;
     }
 
-    &#leadForm {
-        input[type='email'], input[type='text'] {
-            width: 71%;
-        }
-
-        textarea {
-            margin-top: 10px;
-        }
+    select {
+        width: 100%;
+    }
+}
+	&#createTaskForm input[type='text'] {
+    width: 95%;
+}
+	&#createApplicationForm, 
+	&#createEmployeeForm {
+    #otherInfo {
+        margin-top: 13px;
+        width: 316px;
+        height: 113px;
+        min-height: initial;
     }
 
-    &#createProfileForm {
-        input[type='text'] {
-            width: 100%;
-        }
-
-        select {
-            width: 100%;
-        }
+    .input-file {
+        padding: 2px 8px;
+        width: auto;
+        margin-top: 5px;
+    }
+}
+	&#createJobPositionForm,
+	&#editJobPositionForm {
+		#description {
+    margin-top: 0;
+}
+	}
+	&#createEmployeeForm,
+	&#editEmployeeForm {
+    textarea {
+        margin-top: 10px;
     }
 
-    &#createTaskForm input[type='text'] {
-        width: 95%;
+    #addContact {
+        margin-top: 10px;
     }
 
-    &#createApplicationForm,
-    &#createEmployeeForm {
-        #otherInfo {
-            margin-top: 13px;
-            width: 316px;
-            height: 113px;
-            min-height: initial;
-        }
-
-        .input-file {
-            padding: 2px 8px;
-            width: auto;
-            margin-top: 5px;
-        }
+    .textarea-wrapper {
+        margin-left: 10px;
     }
-
-    &#createJobPositionForm,
-    &#editJobPositionForm {
-        #description {
-            margin-top: 0;
-        }
-    }
-
-    &#createEmployeeForm,
-    &#editEmployeeForm {
-        textarea {
-            margin-top: 10px;
-        }
-
-        #addContact {
-            margin-top: 10px;
-        }
-
-        .textarea-wrapper {
-            margin-left: 10px;
-        }
-
-        &.notDialog {
-            dl {
-                dt, dd {
-                    line-height: 17px;
-                }
+		&.notDialog {
+        dl {
+            dt, dd {
+                line-height: 17px;
             }
         }
     }
+	}
+
 }
 
 .notDialog .inner .avatar {
@@ -2465,76 +2455,7 @@ button {
         }
     }
 }
-.workflow-list-wrapper,
-.workflow-sub-list-wrapper {
-    width: 12%;
-}
 
-.workflow-list,
-.workflow-sub-list {
-    color: #2A6496;
-    width: 100%;
-    font-size: 13px;
-
-    li {
-        border: @thin-border rgba(0, 0, 0, 0);
-        border-right-color: #ddd;
-        height: 40px;
-        line-height: 40px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        &:hover:not(.quickEdit) {
-            background-color: #EEE;
-
-            a {
-                text-decoration: underline;
-            }
-        }
-
-        &.active {
-            border: @thin-border #ddd;
-            border-right: none;
-
-            &.first {
-                border-top-color: rgba(0, 0, 0, 0);
-            }
-
-            &:hover {
-                background-color: white;
-            }
-
-            a {
-                text-decoration: none;
-            }
-        }
-
-        a {
-            padding-bottom: 10px;
-            padding-left: 15px;
-            padding-right: 15px;
-            padding-top: 10px;
-        }
-
-        .edit-holder {
-            a {
-                padding: 0;
-            }
-        }
-
-        .wNameEdit {
-            width: 92%;
-            position: relative;
-            top: -10px;
-        }
-
-        .saveAll, .cancelAll {
-            padding: 0;
-            position: relative;
-            top: -30px;
-        }
-    }
-}
 #createTaskForm {
     min-width: 100%;
 
@@ -3133,7 +3054,7 @@ button {
     height: 33px;
 
     select {
-        margin: 5px 10px;
+    margin:5px 10px;
     }
 
     .breadcrumb {
@@ -3464,7 +3385,7 @@ table#workflows {
     }
 }
 
-.startLetter {
+#startLetter {
     margin: 0px;
     padding: 5px 0;
     text-align: center;
@@ -3548,7 +3469,8 @@ table#workflows {
     dd {
         width: auto;
     }
-}
+
+    }
 
 .newSelectList {
     position: absolute;
@@ -4395,46 +4317,42 @@ ul.chart-tabs {
 }
 
 .chart {
-    rect {
-        fill: steelblue;
-
-        &.bar2 {
-            fill: #6ec262;
-            opacity: 0.3;
-        }
-
-        &.bar {
-            fill: #6ec262;
-        }
+	rect {
+    fill: steelblue;
+		&.bar2{
+        fill: #6ec262;
+        opacity: 0.3;
+    }
+		&.bar{
+        fill: #6ec262;
     }
 
-    text {
-        fill: black;
-        font: 18px sans-serif;
-        text-anchor: end;
-        font-weight: bold;
-    }
-
-    .x .tick line {
-        stroke: #f2f2f2;
-    }
+	}
+	text {
+    fill: black;
+    font: 18px sans-serif;
+    text-anchor: end;
+    font-weight: bold;
+}
+	.x .tick line {
+		stroke: #f2f2f2;
+	}
 }
 
 
 .axis {
-    text {
-        font: 14px sans-serif;
-    }
+	text {
+		font: 14px sans-serif;
 
-    path, line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-    }
-
-    .domain {
-        stroke: #fff;
-    }
+}
+	path, line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+	.domain {
+		stroke: #fff;
+	}
 }
 
 .bar {
@@ -4453,28 +4371,25 @@ ul.chart-tabs {
     display: none;
 }
 
-.y {
-    .tick line {
-        stroke: #f2f2f2;
-    }
-
-    &.label {
-        fill: #57D0b5;
-        font: 18px sans-serif;
-        font-weight: bold;
-    }
+.y{
+	.tick line {
+		stroke: #f2f2f2;
+	}
+	&.label {
+    fill: #57D0b5;
+    font: 18px sans-serif;
+    font-weight: bold;
 }
-
-.y2 {
-    &.label {
-        fill: #26a7dd;
-        font: 18px sans-serif;
-        font-weight: bold;
-    }
-
-    .tick line {
-        stroke: #fff;
-    }
+}
+.y2{
+	&.label {
+    fill: #26a7dd;
+    font: 18px sans-serif;
+    font-weight: bold;
+}
+	.tick line {
+    stroke: #fff;
+}
 }
 
 .legend {
@@ -4596,11 +4511,10 @@ h3.dashboard {
         }
     }
 }
-
-#timeRecivingDataFromServer, #timeBuildingDataFromServer {
-    clear: both;
-    text-align: center;
-}
+    #timeRecivingDataFromServer, #timeBuildingDataFromServer {
+        clear: both;
+        text-align: center;
+    }
 
 .miniPagination, .miniPaginationPersons {
     @width: 60px;
@@ -4635,8 +4549,8 @@ h3.dashboard {
         }
     }
 
-    .last, .lastPersons {
-        border-right: @thin-border silver !important;
+    .last,.lastPersons{
+        border-right:@thin-border silver !important;
     }
 
     .first, .last, .firstPersons, .lastPersons {
@@ -4651,34 +4565,29 @@ h3.dashboard {
         width: @width;
     }
 }
-
-#projectPM {
-    width: 400px;
-
-    h2 {
-        text-align: center;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    table {
-        width: 100%;
-        border: @thin-border silver;
-        margin-left: 10px;
-
-        tr {
-            th {
-                text-align: left;
-                font-weight: bold;
-                padding-left: 3px;
-                background-color: silver;
-                line-height: 15px;
-            }
-
-            td {
-                padding-left: 3px;
-                line-height: 15px;
-            }
-        }
-    }
+.newSelectList{
+	.miniStylePagination{
+		position:relative;
+		text-align:center;
+		min-width:160px;
+		&:hover{
+			background-color:white;
+		}
+		.next, .prev{
+			position:absolute;
+			top:4px;
+			&.disabled{
+				display:none;
+			}
+		}
+		.next{
+			right:5px;
+		}
+		.prev{
+			left:5px;
+		}
+		span{
+			padding:0;
+		}
+	}
 }
