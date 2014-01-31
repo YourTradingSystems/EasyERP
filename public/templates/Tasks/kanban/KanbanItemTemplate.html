@@ -6,7 +6,10 @@
 
       <div class="left">
         <div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
-        <div class="taskSelect left"><select id="priority<%=model._id%>" class="my"></select></div></div>
+        <div class="taskSelect left">
+		  <a id="priority<%=model._id%>" data-id="<%=model.extrainfo.priority%>" class="current-selected" href="javascript:;"><%=model.extrainfo.priority%></a>
+		</div>
+	  </div>
         <div class="dropDown">
             <a href="#">
                 <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />

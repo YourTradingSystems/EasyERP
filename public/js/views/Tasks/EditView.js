@@ -84,7 +84,9 @@
                    }
 				   }
                },
-
+			   hideNewSelect:function(e){
+				   $(".newSelectList").hide();;
+			   },
                addNote: function (e) {
             	   e.preventDefault();
                    var val = $('#noteArea').val().replace(/</g,"&#60;").replace(/>/g,"&#62;");
