@@ -69,22 +69,22 @@ define([
 			   });
 		   };
 
-		   var getWorkflow = function (id1, id2 , url, data, field, content, isCreate) {
+		   var getWorkflow = function (nameId, statusId , url, data, field, content, isCreate) {
 			   dataService.getData(url, data, function (response) {
-				   content.responseObj[id1] = _.map(response.data,function(item){
+				   content.responseObj[nameId] = _.map(response.data,function(item){
 					   return {_id:item._id, name: item[field]}
 				   });
 				   var wNames = $.map(response.data, function (item) {
 					   return item.wName
 				   });
 				   wNames = _.uniq(wNames);
-				   content.responseObj[id2] = $.map(wNames, function (wName) {
+				   content.responseObj[statusId] = $.map(wNames, function (wName) {
 					   return {_id:wName, name: wName}
 				   });
 
 				   if (isCreate){
-					   $(id1).text(content.responseObj[id1][0].name).attr("data-id",content.responseObj[id1][0]._id)
-					   $(id2).text(content.responseObj[id2][0].name).attr("data-id",content.responseObj[id2][0]._id)
+					   $(nameId).text(content.responseObj[nameId][0].name).attr("data-id",content.responseObj[nameId][0]._id)
+					   $(statusId).text(content.responseObj[statusId][0].name).attr("data-id",content.responseObj[statusId][0]._id)
 				   }
 			   });
 		   };
