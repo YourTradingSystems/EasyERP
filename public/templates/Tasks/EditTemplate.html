@@ -23,7 +23,7 @@
               <div class="inner">
                 <dl class="person-info">
                   <dt><label>Project </label></dt><dd>
-					<a id="projectDd" data-id="<%=model.project.projectName%>" class="current-selected" href="javascript:;"><%=model.project.projectName%></a>
+					<a id="projectDd" data-id="<%=model.project._id%>" class="current-selected" href="javascript:;"><%=model.project.projectName%></a>
                   </dd>
                   <dt><label for="workflowNamesDd">Workflow :</label></dt><dd>
 					<a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
@@ -35,7 +35,7 @@
 
                   <dt><label>Type </label></dt><dd>
 					<a id="type" data-id="<%=model.type%>" class="current-selected" href="javascript:;"><%=model.type%></a>
-					<ul class="newSelectList">
+					<ul class="newSelectList hidden">
                       <li class="Task" id="Task">Task</li>
                       <li class="Bug" id="Bug">Bug</li>
                       <li class="Feature" id="Feature">Feature</li>
