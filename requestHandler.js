@@ -87,7 +87,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function currentUser(req, res) {
         console.log("Requst currentUser is success");
-        console.log(req.session);
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             users.getUserById(req, req.session.uId, res);
         } else {
@@ -109,7 +108,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 7, function (access) {
-                console.log(access);
                 if (access) {
                     users.getFilterUsers(req, data, res);
                 } else {
@@ -125,7 +123,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Request getUser is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 7, function (access) {
-                console.log(access);
                 if (access) {
                     users.getUserById(req, data.id, res);
                 } else {
@@ -205,7 +202,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             console.log("Requst getProfile is success");
             if (req.session && req.session.loggedIn && req.session.lastDb ) {
                 access.getReadAccess(req, req.session.uId, 51, function (access) {
-                    console.log(access);
                     if (access) {
                         profile.getProfile(req, res);
                     } else {
@@ -370,7 +366,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getPersons is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 49, function (access) {
-                console.log(access);
                 if (access) {
                     customer.getPersonById(req, data.id, res);
                 } else {
@@ -609,7 +604,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getEditWritAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
-                    console.log(file);
                     project.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -773,7 +767,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getEditWritAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
-                    console.log(file);
                     project.updateTask(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -823,9 +816,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function getWorkflowsForDd(req, res, data) {
         console.log("Requst getWorkflowsForDd is Success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
-            console.log('<<<<<<<<<<<<>>>>>>>>>>>');
-            console.log(data);
-            console.log('<<<<<<<<<<<>>>>>>>>>>>>>');
             workflow.getWorkflowsForDd(req, data, res);
         } else {
             res.send(401);
@@ -1181,7 +1171,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getEmployeesCustom is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getEmployeeForCustom(req, data, res);
                 } else {
@@ -1198,7 +1187,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getEditWritAccess(req, req.session.uId, 42, function (access) {
                 if (access) {
-                    console.log(file);
                     employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -1214,7 +1202,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getEmployeesCustom is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getEmployeeForList(req, data, res);
                 } else {
@@ -1229,11 +1216,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     // Custom function for form
     function getEmployeesByIdCustom(req, res, data) {
-        console.log('----------------}');
-        console.log(data);
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getById(req, data, res);
                 } else {
@@ -1336,7 +1320,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getEmployeeForList(req, data, res);
                 } else {
@@ -1353,7 +1336,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getApplicationById is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getById(req, data, res);
                 } else {
@@ -1370,7 +1352,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getApplicationsForList(req, data, res);
                 } else {
@@ -1387,7 +1368,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getApplicationsForKanban(req, data, res);
                 } else {
@@ -1404,7 +1384,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getEmployeesForThumbnails(req, data, res);
                 } else {
@@ -1421,7 +1400,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
                 if (access) {
                     employee.getEmployeesImages(req, data, res);
                 } else {
@@ -1459,7 +1437,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getEditWritAccess(req, req.session.uId, 43, function (access) {
                 if (access) {
-                    console.log(file);
                     employee.update(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
@@ -1729,8 +1706,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     }
 
     function createLead(req, res, data) {
-        console.log(req.session);
-        console.log(data);
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             data.lead.uId = req.session.uId;
             access.getEditWritAccess(req, req.session.uId, 24, function (access) {

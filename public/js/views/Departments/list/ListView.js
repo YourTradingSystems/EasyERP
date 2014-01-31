@@ -71,11 +71,12 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             var departments = this.collection.toJSON();
             var self = this;
+			console.log(departments);
             departments.forEach(function(elm, i) {
                 if (!elm.parentDepartment) {
                     self.$el.find("#groupList").append(self.createDepartmentListRow(elm, i + 1, "parent"));
                 } else {
-                    self.$el.find("[data-id='" + elm.parentDepartment + "']").removeClass('child').addClass('parent').after(self.createDepartmentListRow(elm, i + 1, "child"));
+                    self.$el.find("[data-id='" + elm.parentDepartment._id + "']").removeClass('child').addClass('parent').after(self.createDepartmentListRow(elm, i + 1, "child"));
                 };
             });
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());

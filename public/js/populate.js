@@ -36,6 +36,21 @@ define([
 			   });
 		   };
 
+		   var getParrentDepartment = function (id, url, data, content, isCreate, canBeEmpty) {
+			   dataService.getData(url, data, function (response) {
+				   content.responseObj[id] = [];
+				   if (canBeEmpty){
+					   content.responseObj[id].push({_id:"",name:"Select"});
+				   }
+				   content.responseObj[id]= content.responseObj[id].concat(_.map(response.data,function(item){
+					   return {_id:item._id, name: item.departmentName, level:item.nestingLevel}
+				   }));
+				   if (isCreate){
+					   $(id).text(content.responseObj[id][0].name).attr("data-id",content.responseObj[id][0]._id)
+				   }
+			   });
+		   };
+
 		   var getPriority = function (id, content, isCreate) {
 			   dataService.getData("/Priority", {}, function (response) {
 				   console.log(response);
@@ -69,11 +84,16 @@ define([
 			   });
 		   };
 
-		   var get2name = function (id, url, data, content,isCreate) {
+		   var get2name = function (id, url, data, content, isCreate, canBeEmpty) {
 			   dataService.getData(url, data, function (response) {
-				   content.responseObj[id] = _.map(response.data,function(item){
+				   content.responseObj[id] = []
+				   if (canBeEmpty){
+					   content.responseObj[id].push({_id:"",name:"Select"});
+				   }
+				   content.responseObj[id]= content.responseObj[id].concat(_.map(response.data,function(item){
 					   return {_id:item._id, name: item.name.first+" "+item.name.last}
-				   });
+				   }));
+
 				   if (isCreate){
 					   $(id).text(content.responseObj[id][0].name).attr("data-id",content.responseObj[id][0]._id)
 				   }
@@ -118,6 +138,7 @@ define([
 			   get2name: get2name,
 			   getPriority:getPriority,
 			   getWorkflow:getWorkflow,
-			   showSelect: showSelect
+			   showSelect: showSelect,
+			   getParrentDepartment:getParrentDepartment
 		   }
        });
