@@ -46,7 +46,8 @@
 </div>
 <div class="inner">
     <div class="project-text left">
-      <span title="<%=projectName%>"><%=projectName%></span>
+      <span class="bold" title="<%=projectName%>"><%=projectName%></span><br/>
+      <span title="<%=customer?(customer.name.first+" "+customer.name.last):""%>"><%=customer?(customer.name.first+" "+customer.name.last):""%></span>
      <!-- <span title="<%=projectShortDesc%>"><%=projectShortDesc%></span>
       <span title="<%=(projectmanager && projectmanager.name) ? projectmanager.name.first + " " + projectmanager.name.last : '' %>"><%=(projectmanager && projectmanager.name) ? projectmanager.name.first + " " + projectmanager.name.last : '' %></span>-->
 	</div>

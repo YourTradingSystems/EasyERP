@@ -885,7 +885,7 @@
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
     width: @width;
-    min-height: 130px;
+    min-height: 100px;
     cursor: pointer;
 
     .viewswitch {
@@ -893,13 +893,14 @@
 
         a {
             display: block;
+			float:left;
             overflow: hidden;
             width: 16px;
             .noPaddingMargin;
             line-height: 18px !important;
             height: 16px;
             border: @thin-border transparent;
-
+			margin-left:3px;
             &:hover {
                 border-bottom: @thin-border @blue;
             }
@@ -984,7 +985,7 @@
         .text-overflow;
         width: 180px;
 
-        span {
+        span.bold{
             .bold;
         }
     }
@@ -2518,6 +2519,17 @@ dl {
 
 .half-block {
     width: 50%;
+	&.projectNote{
+		width:45%;
+		padding-right:5%;
+
+		.noteWrapper{
+			width:100%;
+		}
+		#noteArea{
+			width:100%;
+		}
+	}
 }
 
 .filterButton {
