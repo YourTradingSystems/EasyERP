@@ -21,7 +21,7 @@ function (ApplicationsListTemplate,common, stagesTamplate) {
              $(".newSelectList").hide();
          },
          showNewSelect: function (e) {
-             if ($(".newSelectList").length) {
+	         if ($(".newSelectList").is(":visible")) {
                  this.hideNewSelect();
                  return false;
              } else {
