@@ -25,11 +25,16 @@ define([
 			   }
 
 		   };
-		   var get = function (id, url, data, field, content, isCreate) {
+		   var get = function (id, url, data, field, content, isCreate, canBeEmpty) {
 			   dataService.getData(url, data, function (response) {
-				   content.responseObj[id] = _.map(response.data,function(item){
+				   content.responseObj[id] = [];
+				   if (canBeEmpty){
+					   content.responseObj[id].push({_id:"",name:"Select"});
+				   }
+				   content.responseObj[id]= content.responseObj[id].concat(_.map(response.data,function(item){
 					   return {_id:item._id, name: item[field]}
-				   });
+				   }));
+
 				   if (isCreate){
 					   $(id).text(content.responseObj[id][0].name).attr("data-id",content.responseObj[id][0]._id)
 				   }
@@ -99,6 +104,22 @@ define([
 				   }
 			   });
 		   };
+		   var getCompanies = function (id, url, data, content, isCreate, canBeEmpty) {
+			   dataService.getData(url, data, function (response) {
+				   content.responseObj[id] = []
+				   if (canBeEmpty){
+					   content.responseObj[id].push({_id:"",name:"Select"});
+				   }
+				   content.responseObj[id]= content.responseObj[id].concat(_.map(response.data,function(item){
+					   return {_id:item._id, name: item.name.first}
+				   }));
+
+				   if (isCreate){
+					   $(id).text(content.responseObj[id][0].name).attr("data-id",content.responseObj[id][0]._id)
+				   }
+			   });
+		   };
+
 		   var showSelect = function(e,prev,next,context){
 			   data = context.responseObj["#"+$(e.target).attr("id")];
 			   var elementVisible = 25;
@@ -139,6 +160,7 @@ define([
 			   getPriority:getPriority,
 			   getWorkflow:getWorkflow,
 			   showSelect: showSelect,
-			   getParrentDepartment:getParrentDepartment
+			   getParrentDepartment:getParrentDepartment,
+			   getCompanies:getCompanies
 		   }
        });
