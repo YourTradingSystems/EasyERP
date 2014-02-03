@@ -55,6 +55,7 @@ define(['Validation', 'common'],
                     if (response.info) {
                         response.info.StartDate = common.utcDateToLocaleDate(response.info.StartDate);
                         response.info.EndDate = common.utcDateToLocaleDate(response.info.EndDate);
+                        response.info.TargetEndDate = common.utcDateToLocaleDate(response.info.TargetEndDate);
                     }
                     //response.deadline = common.utcDateToLocaleDate(response.deadline);
                     if (response.notes) {

@@ -73,6 +73,7 @@
                         if (project.info) {
                             project.info.StartDate = common.utcDateToLocaleDate(project.info.StartDate);
                             project.info.EndDate = common.utcDateToLocaleDate(project.info.EndDate);
+                            project.info.TargetEndDate = common.utcDateToLocaleDate(response.info.TargetEndDate);
                         }
                         //project.deadline = common.utcDateToLocaleDate(project.deadline);
                         if (project.notes) {

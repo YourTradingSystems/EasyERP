@@ -446,6 +446,8 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
+                var health = this.$el.find('#health a').data('value');
+                var targetEndDate = $.trim(this.$el.find("#EndDateTarget").val());
                 var data = {
                     projectName: projectName,
                     projectShortDesc: projectShortDesc,
@@ -461,9 +463,11 @@ define([
                         users: usersId,
                         group: groupsId
                     },
-                    whoCanRW: whoCanRW
-
-
+                    whoCanRW: whoCanRW,
+                    health: health,
+                    info: {
+                        TargetEndDate: targetEndDate
+                    }
                 };
 
                 this.currentModel.save(data, {
@@ -556,6 +560,12 @@ define([
                         })
 
                     }
+                $('#EndDateTarget').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: new Date()
+                });
                 this.delegateEvents(this.events);
 
                 return this;
