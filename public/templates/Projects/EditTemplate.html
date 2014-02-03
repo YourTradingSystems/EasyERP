@@ -124,20 +124,37 @@
                   <select id="customerDd">
                   </select>
                 </dd>
-                <dt>
+                <!--<dt>
                   <label for="workflowNamesDd">Workflow Name</label>
                 </dt>
                 <dd>
                   <select id="workflowNamesDd">
                   </select>
-                </dd>
+                </dd>-->
                 <dt>
                   <label for="workflowsDd">Workflow</label></dt>
-                <dd>
-                  <select id="workflowsDd">
-                  </select>
-                </dd>
+                  <dd>
+                      <select id="workflowsDd">
+                      </select>
+                  </dd>
+                  <dt><label for="health">Health</label></dt>
+                  <dd id="health">
+                      <a href="javascript:;" data-value="<%=model.health%>"><%=model.health%></a>
+                      <ul>
+                          <li>
+                              <div class="health1"></div>
+                          </li>
+                          <li>
+                              <div class="health2"></div>
+                          </li>
+                          <li>
+                              <div class="health3"></div>
+                          </li>
+                      </ul>
+                  </dd>
  				<dt><label for="EndDate">End Date </label></dt><dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.info.StartDate%>" readonly /></dd>
+                  <dt><label for="targetEndDate">Target End Date</label></dt>
+                  <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.info.TargetEndDate%>" readonly /></dd>
               </dl>
             </div>
             <div class="clearfix"></div>
