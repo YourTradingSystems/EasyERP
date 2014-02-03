@@ -249,27 +249,22 @@ define([
                 e.preventDefault();
 
                 var parent = $(event.target).parent().parent();
-                var objIndex = parent[0].id.split('_');
+                var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
                 var currentModel = this.model;
-                if (objIndex.length > 1) {
-                    obj = this.formModel.get(objIndex[0]);
-                    obj[objIndex[1]] = $('#editInput').val();
-                } else if (objIndex.length == 1) {
-                    obj[objIndex[0]] = $('#editInput').val();
-                }
+                obj[objIndex] = $('#editInput').val();
+
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                this.formModel.set(obj);
-
-                this.formModel.save({}, {
+                this.formModel.save(obj, {
                     headers: {
                         mid: 39
                     },
+					patch:true,
                     success: function () {
                         Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
                     }
@@ -363,12 +358,15 @@ define([
                                 success: function (models, data) {
                                     $('#noteBody').empty();
                                     data.notes.forEach(function (item) {
-                                    	   var key = notes.length - 1;
+                                    	/*   var key = notes.length - 1;
                                            var notes_data = response.notes;
                                            var date = common.utcDateToLocaleDate(response.notes[key].date);
                                            var author = currentModel.get('name').first;
                                            var id = response.notes[key]._id;
-                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
+                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
+								var date = common.utcDateToLocaleDate(item.date);
+            							//notes.push(item);
+            							$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
                                     });
                                 }
                             });

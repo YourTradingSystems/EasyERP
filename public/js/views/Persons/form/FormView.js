@@ -193,23 +193,16 @@ define([
             saveClick: function (e) {
                 e.preventDefault();
                 var parent = $(event.target).parent().parent();
-                var objIndex = parent[0].id.split('_');
+                var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
 
-                if (objIndex.length > 1) {
-                    obj = this.formModel.get(objIndex[0]);
-                    if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                        obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-                    } else {
-                        obj[objIndex[1]] = $('#editInput').val();
-                    }
-                } else if (objIndex.length == 1) {
-                    if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                        obj[objIndex[0]] = ($("#" + parent[0].id + " input").prop("checked"));
-                    } else {
-                        obj[objIndex[0]] = $('#editInput').val();
-                    }
+
+                if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                    obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+                } else {
+                    obj[objIndex] = $('#editInput').val();
                 }
+				
 
                 this.text = $('#editInput').val();
                 if ($("#" + parent[0].id).hasClass('with-checkbox')) {
@@ -224,11 +217,11 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
 
-                this.formModel.set(obj);
-                this.formModel.save({}, {
+                this.formModel.save(obj, {
                     headers: {
                         mid: 39
                     },
+					patch:true,
                     success: function (model) {
                         Backbone.history.fragment = '';
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
@@ -324,12 +317,15 @@ define([
                                 success: function (models, data) {
                                     $('#noteBody').empty();
                                     data.notes.forEach(function (item) {
-                                    	   var key = notes.length - 1;
+/*                                    	   var key = notes.length - 1;
                                            var notes_data = response.notes;
                                            var date = common.utcDateToLocaleDate(response.notes[key].date);
                                            var author = currentModel.get('name').first;
                                            var id = response.notes[key]._id;
-                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
+                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
+										var date = common.utcDateToLocaleDate(item.date);
+            							//notes.push(item);
+            							$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
                                     });
                                 }
                             });
