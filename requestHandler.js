@@ -13,7 +13,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         project = require("./Modules/Projects.js")(logWriter, mongoose, department, models, workflow),
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, department, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
-        sourcesofapplicants = require("./Modules/SourcesOfApplicants.js")(logWriter, mongoose, models),
+        campaigns = require("./Modules/Campaigns.js")(logWriter, mongoose, models),
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
@@ -1638,38 +1638,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
-    //-----------------SourcesOfApplicants--------------------------------------
-    function createSourcesOfApplicant(req, res, data) {
-        console.log("Requst createSourcesOfApplicant is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            sourcesofapplicants.create(req, data.soa, res);
-        } else {
-            res.send(401);
-        }
-    }
-
-    function getSourcesOfApplicants(req, res, data) {
+    //-----------------Campaigns--------------------------------------
+    function getCampaigns(req, res, data) {
         console.log("Requst getSourcesOfApplicants is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            sourcesofapplicants.get(req, res);
-        } else {
-            res.send(401);
-        }
-    }
-
-    function updateSourcesOfApplicant(req, res, id, data) {
-        console.log("Requst updateSourcesOfApplicant is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            sourcesofapplicants.update(req, id, data.soa, res);
-        } else {
-            res.send(401);
-        }
-    }
-
-    function removeSourcesOfApplicant(req, res, id, data) {
-        console.log("Requst removeDegree is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            sourcesofapplicants.remove(req, id, res);
+            campaigns.getForDd(req, res);
         } else {
             res.send(401);
         }
@@ -2232,10 +2205,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateDegree: updateDegree,
         removeDegree: removeDegree,
 
-        createSourcesOfApplicant: createSourcesOfApplicant,
-        getSourcesOfApplicants: getSourcesOfApplicants,
-        updateSourcesOfApplicant: updateSourcesOfApplicant,
-        removeSourcesOfApplicant: removeSourcesOfApplicant,
+		getCampaigns:getCampaigns,
         getApplicationsForList: getApplicationsForList,
         getEmployeesForThumbnails: getEmployeesForThumbnails,
         uploadEmployeesFile: uploadEmployeesFile,
