@@ -262,6 +262,7 @@ define([
                            c2 = data1;
                            isChanged = true;
                        }
+					   alert(data1.length);
                        for (var i = 0; i < c1.length; i++) {
                            var b = false;
                            for (var j = 0; j < c2.length; j++) {
