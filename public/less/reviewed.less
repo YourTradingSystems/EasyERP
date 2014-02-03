@@ -882,9 +882,15 @@
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
     width: @width;
-    min-height: 100px;
+    min-height: 130px;
     cursor: pointer;
-
+	.dropDown {
+		width: 5%;
+		float: right;
+		top: 2.5px;
+		right: 7px;
+		position: absolute;
+	}
     .viewswitch {
         .position(absolute, auto, 5px, 5px, auto);
 
@@ -909,6 +915,7 @@
     }
 
     .bottom {
+		clear:both;
         width: 100%;
         .position(absolute, 0,auto,auto,0);
 
@@ -1068,8 +1075,7 @@
                 position: relative;
 
                 .info {
-                    padding: 5px;
-                    padding-bottom: 2px;
+                    padding: 5px 5px 2px 0px;
                     width: auto;
 
                     p.bold {
@@ -1078,12 +1084,12 @@
                 }
 
                 .bottom {
-                    .position(absolute,5px, auto, auto, 5px);
-            }
+                    .position(absolute,0px, auto, auto, 5px);
+				}
 
                 .avatar-small {
                     .avatar(26px, 5px, 0, 0, 0);
-        }
+				}
             }
         }
 
@@ -2158,7 +2164,6 @@ input, textarea, select {
         text-decoration: none;
     }
 }
-
 #thumbBtn {
     font-size: 14px;
 }
@@ -3328,7 +3333,10 @@ ul.dialog-tabs {
 .thumbnail {
 	.thumbnail;
 }
-
+#showMoreDiv{
+	clear:both;
+	text-align:center;
+}
 #modulesAccessTable {
     td {
         text-align: center;
