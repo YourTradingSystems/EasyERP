@@ -122,7 +122,7 @@ define([
 
 		   var showSelect = function(e,prev,next,context){
 			   data = context.responseObj["#"+$(e.target).attr("id")];
-			   var elementVisible = 25;
+			   var elementVisible = 10;
 			   var newSel = $(e.target).parent().find(".newSelectList");
 			   if (prev||next){
 				   newSel = $(e.target).closest(".newSelectList");
