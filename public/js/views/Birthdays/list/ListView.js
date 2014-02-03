@@ -23,11 +23,7 @@ function (ListTemplate, ListItemView, common, Custom) {
             var ids = _.map( this.employeesCollection.monthly,function(item){
 				return item._id;
 			});
-			common.getEmployeesImages(ids);
-			var ids = _.map( this.employeesCollection.monthly,function(item){
-				return item._id;
-			});
-			common.getEmployeesImages(ids); 
+			common.getImages(ids, "/getEmployeesImages");
 			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 
         }

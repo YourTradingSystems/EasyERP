@@ -19,21 +19,18 @@
         </h3>
         <div class="half-block left">
 		  <dl class="app-info">
-			<dt>Subject </dt><dd><%=subject%></dd>
-			<dt>First Name </dt><dd><%=name.first%></dd>
-			<dt>Last Name </dt><dd><%=name.last%></dd>
-			<dt>Created By </dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
-			<dt>Edited By </dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
-		</dl></div>
-        <div class="half-block left">
-		  <dl class="app-info">
 			<dt>Email </dt><dd><span><%=personalEmail%></span></dd>
 			<dt>Phone </dt><dd><span><a href="skype:<%=workPhones.phone%>?call"><%=workPhones.phone%></a></span></dd>
 			<dt>Mobile </dt><dd><span><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.mobile%></a></span></dd>
 		  </dl>
+		</div>
+        <div class="half-block left">
+		  <dl class="app-info">
+			<dt>Created By </dt><dd><%=createdBy.user ?  createdBy.user.login + " (" + createdBy.date +  ")" : " "%></dd>
+			<dt>Edited By </dt><dd><%=editedBy.user ?  editedBy.user.login + " (" + editedBy.date +  ")" : " "%></dd>
+			<dt>&nbsp;</dt><dd>&nbsp;</dd>
+		  </dl>
 
-        </div>
-        <div class="clearfix">
         </div>
 	  <div class="formTitle">
 		<h3 class="left">Job</h3>
