@@ -1,9 +1,6 @@
-<div class="dropDown">
-    <!--<a href="javascript;">-->
-    <a href="javascript;" id="tasksKanban" class="icon3 icon-btn">&reg;</a>
-    <a href="javascript;" id="tasksList" class="icon icon-btn">i</a>
-    <!--<img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" />-->
-    <!--</a>-->
+<div class="viewswitch"  >
+    <a href="javascript;" id="tasksKanban" title="Kanban View" class="icon icon-btn">r</a>
+    <a href="javascript;" id="tasksList" title="List View" class="icon icon-btn">i</a>
     <ul class="dropDownOpened" hidden="hidden">
         <li>
             <a href="javascript;" id="edit">Edit...</a>
@@ -49,7 +46,8 @@
 </div>
 <div class="inner">
     <div class="project-text left">
-      <span title="<%=projectName%>"><%=projectName%></span>
+      <span class="bold" title="<%=projectName%>"><%=projectName%></span><br/>
+      <span title="<%=customer?(customer.name.first+" "+customer.name.last):""%>"><%=customer?(customer.name.first+" "+customer.name.last):""%></span>
      <!-- <span title="<%=projectShortDesc%>"><%=projectShortDesc%></span>
       <span title="<%=(projectmanager && projectmanager.name) ? projectmanager.name.first + " " + projectmanager.name.last : '' %>"><%=(projectmanager && projectmanager.name) ? projectmanager.name.first + " " + projectmanager.name.last : '' %></span>-->
 	</div>

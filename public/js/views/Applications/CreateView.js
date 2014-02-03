@@ -1,9 +1,10 @@
 define([
     "text!templates/Applications/CreateTemplate.html",
     "models/ApplicationsModel",
-    "common"
+    "common",
+	"populate"
 ],
-    function (CreateTemplate, ApplicationModel, common) {
+    function (CreateTemplate, ApplicationModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,6 +16,7 @@ define([
                 this.model = new ApplicationModel();
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {}
                 this.render();
             },
             events: {
@@ -277,18 +279,18 @@ define([
                     mobile: mobile
                 };
 
-                var workflow = $("#workflowsDd option:selected").data("id");
+                var workflow = $("#workflowsDd").data("id");
                 var relatedUserId = $("#relatedUsersDd option:selected").val();
                 var nextAction = $.trim($("#nextAction").val());
                 /*var nextAction = "";
                 if (nextActionSt) {
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
                 }*/
-                var sourceId = $("#source option:selected").val();
+                var sourceId = $("#sourceDd").data("id");
                 var referredBy = $.trim($("#referredBy").val());
-                var departmentId = $("#departmentDd option:selected").val();
+                var departmentId = $("#departmentDd").data("id");
 
-                var jobPositionId = $("#jobPositionDd option:selected").val();
+                var jobPositionId = $("#jobPositionDd").data("id");
 
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());
@@ -411,51 +413,12 @@ define([
 				$(".newSelectList").hide();;
 			},
             showNewSelect:function(e,prev,next){
-				var elementVisible = 25;
-				var newSel = $(e.target).parent().find(".newSelectList")
-				if (prev||next){
-					newSel = $(e.target).closest(".newSelectList")
-				}
-				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
-                var currentPage = 1;
-                if (newSel.is(":visible")&&!prev&&!next){
-                    newSel.hide();
-					return;
-				}
-
-                if (newSel.length){
-                    currentPage = newSel.data("page");
-                    newSel.remove();
-                }
-				if (prev)currentPage--;
-				if (next)currentPage++;
-                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-                var start = (currentPage-1)*elementVisible;
-				var options = parent.find("select option");
-                var end = Math.min(currentPage*elementVisible,options.length);
-                for (var i = start; i<end;i++){
-                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
-                }
-				var allPages  = Math.ceil(options.length/elementVisible)
-                if (options.length>elementVisible)
-                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
-                s+="</ul>";
-                parent.append(s);
-                return false;
-                
+                populate.showSelect(e,prev,next,this);
+                return false;	
             },
 
 			chooseOption:function(e){
-				var k = $(e.target).parent().find("li").index($(e.target));
-				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
-				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-			},
-
-			styleSelect:function(id){
-				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
-				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
-				$(id).hide();
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
 			},
 
             render: function () {
@@ -481,15 +444,9 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
-
-                common.populateWorkflows("Applications", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd",null,function(){self.styleSelect(App.ID.workflowDd);self.styleSelect(App.ID.workflowNamesDd);});
-                common.populateEmployeesDd(App.ID.relatedUsersDd, "/getForDdByRelatedUser", null, function () { self.styleSelect(App.ID.relatedUsersDd); });
-//                common.populateSourceApplicants(App.ID.sourceDd, "/SourcesOfApplicants");
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd",null,function(){self.styleSelect(App.ID.departmentDd);});
-//                common.populateDegrees(App.ID.degreesDd, "/Degrees",null,function(){self.styleSelect(App.ID.degreesDd);});
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd",null,function(){self.styleSelect(App.ID.jobPositionDd);});
-				self.styleSelect("#sourceDd");
-				self.styleSelect("#jobtapeDd");
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this,true);
+				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this,true);
+				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this,true);
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

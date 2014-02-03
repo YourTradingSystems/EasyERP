@@ -18,44 +18,33 @@
                     <dl class="person-info">
 
                       <dt><label>Project</label></dt><dd>
-                        <select id="projectDd">
-
-                        </select>
+						<a id="projectDd" class="current-selected" href="javascript:;"></a>
                       </dd>
                       <dt><label for="workflowNamesDd">Workflow</label></dt><dd>
-                        <select id="workflowNamesDd">
-
-                        </select>
-
+						<a id="workflowNamesDd" class="current-selected" href="javascript:;"></a>
                       </dd>
 
                         <dt><label for="workflowsDd">State</label></dt><dd id="selectWorkflow">
-                             <select id="workflowsDd">
-
-                             </select>
+						<a id="workflowsDd" class="current-selected" href="javascript:;"></a>
                         </dd>
                         <dt><label for="type">Type </label></dt><dd>
-                        <select id="type">
-
-                            <option>Task</option>
-                            <option>Bug</option>
-                            <option>Feature</option>
-                        </select>
+						<a id="type" data-id="Task" class="current-selected" href="javascript:;">Task</a>
+						<ul class="newSelectList hidden">
+                          <li class="Task" id="Task">Task</li>
+                          <li class="Bug" id="Bug">Bug</li>
+                          <li class="Feature" id="Feature">Feature</li>
+						</ul>
                       </dd>
 
                         <dt><label>Assigned to</label></dt><dd>
-                        <select id="assignedToDd" required>
-
-                        </select>
+						<a id="assignedToDd" class="current-selected" href="javascript:;"></a>
                       </dd>
 
 
                       <dt><label for="deadline">Deadline </label></dt><dd><input class="blueback" type="text" name="deadline" id="deadline" readonly/></dd>
 
                       <dt><label for="priorityDd">Priority </label></dt><dd>
-                        <select id="priorityDd">
-
-                        </select>
+						<a id="priorityDd" class="current-selected" href="javascript:;"></a>
                       </dd>
 
 

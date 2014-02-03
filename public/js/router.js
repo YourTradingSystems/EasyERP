@@ -154,7 +154,7 @@ define([
                     topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
                     topbarView.bind('saveEvent', contentview.saveProfile, contentview);
 
-                    this.changeView(contentView);
+                    this.changeView(contentview);
                     this.changeTopBarView(topbarView);
                     var url = '#easyErp/Workflows';
                     Backbone.history.navigate(url, { replace: true });

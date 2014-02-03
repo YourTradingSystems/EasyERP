@@ -93,7 +93,6 @@ var Users = function (logWriter, mongoose, models) {
                             logWriter.log("User.js create savetoBd _user.save " + err);
                             result.send(500, { error: 'User.create save error' });
                         } else {
-                            console.log(result1);
                             result.send(201, { success: 'A new User crate success' });
                         }
                     });
@@ -212,7 +211,6 @@ var Users = function (logWriter, mongoose, models) {
     }
 
     function getUserById(req, id, response) {
-        console.log(id);
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).findById(id);
         query.populate('profile');
         query.populate('RelatedEmployee','imageSrc name');

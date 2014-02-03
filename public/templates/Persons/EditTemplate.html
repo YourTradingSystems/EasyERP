@@ -41,13 +41,14 @@
 
                                     <dt><label for="companiesDd">Company</label></dt>
                                     <dd>
-                                        <select id="companiesDd"></select>
+									  <a id="companiesDd" data-id="<%=(model.company)?model.company._id:""%>" class="current-selected" href="javascript:;"><%=(model.company)?(model.company.name.first):"Select"%></a>
                                     </dd>
                                     <dt><label for="tagsDd">Tags</label></dt>
                                     <dd>
-                                        <select id="tagsDd">
-                                            <option selected="selected" value="0">Select...</option>
-                                        </select>
+									  <a id="tagsDd" class="current-selected" href="javascript:;">Select</a>
+									  <ul class="newSelectList hidden">
+										<li>Select</li>
+									  </ul>
                                     </dd>
                                 </dl>
                             </div>
@@ -83,19 +84,18 @@
                                     <dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="32"/></dd>
                                     <dt><label for="departmentDd">Department</label></dt>
                                     <dd>
-                                        <select id="departmentDd"></select>
+									  <a id="departmentDd" data-id="<%=(model.department)?model.department._id:""%>" class="current-selected" href="javascript:;"><%=(model.department)?(model.department.departmentName):"Select"%></a>									  
                                     </dd>
                                     <dt><label for="faxInput">Fax </label></dt>
                                     <dd><input type="text" id="faxInput" value="<%= model.phones.fax%>" maxlength="32"/></dd>
                                     <dt><label for="titleDd">Title</label></dt>
                                     <dd>
-                                        <select id="titleDd">
-                                            <option value="0">Select...</option>
-                                            <% ['Mr', 'Mrs', 'Miss'].forEach(function(option){ %>
-                                            <option<%= (option == model.type) ? 'selected="selected"' : ''%>><%= option%></option>
-                                            <% }); %>
-                                        </select>
-
+									  <a id="titleDd" data-id="<%=model.title?model.title:''%>" class="current-selected" href="javascript:;"><%=model.title?model.title:"Select"%></a>
+									  <ul class="newSelectList hidden">
+										<li class="Mr" id="Mr">Mr</li>
+										<li class="Mrs" id="Mrs">Mrs</li>
+										<li class="Miss" id="Miss">Miss</li>
+									  </ul>
                                     </dd>
                                 </dl>
                             </div>

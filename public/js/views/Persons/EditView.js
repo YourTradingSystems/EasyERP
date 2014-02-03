@@ -2,9 +2,10 @@ define([
     "text!templates/Persons/EditTemplate.html",
     "common",
     "custom",
-    "dataService"
+    "dataService",
+	"populate"
 ],
-    function (EditTemplate, common, Custom, dataService) {
+    function (EditTemplate, common, Custom, dataService, populate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Persons",
@@ -17,6 +18,7 @@ define([
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {}
                 this.render();
             },
 
@@ -199,10 +201,10 @@ define([
 
                 //var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
                 var dateBirth = this.$el.find(".dateBirth").val();
-                var company = $('#companiesDd option:selected').val();
+                var company = $('#companiesDd').data("id");
                 company = (company) ? company : null;
 
-                var department = $("#departmentDd option:selected").val();
+                var department = $("#departmentDd").data("id");
                 department = (department) ? department : null;
 
                 var jobPosition = $.trim(this.$el.find('#jobPositionInput').val());
@@ -281,36 +283,7 @@ define([
             },
             
             showNewSelect:function(e,prev,next){
-				var elementVisible = 25;
-				var newSel = $(e.target).parent().find(".newSelectList")
-				if (prev||next){
-					newSel = $(e.target).closest(".newSelectList")
-				}
-				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
-                var currentPage = 1;
-                if (newSel.is(":visible")&&!prev&&!next){
-                    newSel.hide();
-					return;
-				}
-
-                if (newSel.length){
-                    currentPage = newSel.data("page");
-                    newSel.remove();
-                }
-				if (prev)currentPage--;
-				if (next)currentPage++;
-                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-                var start = (currentPage-1)*elementVisible;
-				var options = parent.find("select option");
-                var end = Math.min(currentPage*elementVisible,options.length);
-                for (var i = start; i<end;i++){
-                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
-                }
-				var allPages  = Math.ceil(options.length/elementVisible)
-                if (options.length>elementVisible)
-                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
-                s+="</ul>";
-                parent.append(s);
+                populate.showSelect(e,prev,next,this);
                 return false;
                 
             },
@@ -320,15 +293,7 @@ define([
                 $(".newSelectList").hide();;
             },
             chooseOption: function (e) {
-                var k = $(e.target).parent().find("li").index($(e.target));
-                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-            },
-            styleSelect: function (id) {
-                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
-                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
-                $(id).hide();
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
             },
             deleteItem: function(event) {
                 var mid = 39;
@@ -353,6 +318,7 @@ define([
             },
             render: function () {
                 var self = this;
+				console.log(this.currentModel.toJSON());
                 console.log('render persons dialog');
                 var formString = this.template({
                     model: this.currentModel.toJSON()
@@ -389,13 +355,16 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
+				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,false,true);
+/*
                 common.populateCompanies(App.ID.companiesDd, "/CompaniesForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
                 common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
                 this.styleSelect(App.ID.titleDd);
                 this.styleSelect(App.ID.tagsDd);
+*/
                 //                this.populateDropDown("company", App.ID.companiesDd, "/Companies");
                 //this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
-                this.styleSelect("#type");
                 this.delegateEvents(this.events);
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

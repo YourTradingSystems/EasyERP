@@ -2,7 +2,6 @@
     var getAccess = function (req, uId, mid, callback) { 
         models.get(req.session.lastDb - 1, 'Users', users.schema).findById(uId, function (err, user) {
             if (user) {
-                console.log(user);
                 models.get(req.session.lastDb - 1, 'Profile', profile).aggregate(
                 {
                     $project: {

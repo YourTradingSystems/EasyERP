@@ -297,7 +297,7 @@ define([
             },
 
             hideNewSelect: function (e) {
-                $(".newSelectList").remove();;
+                $(".newSelectList").hide();;
             },
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));

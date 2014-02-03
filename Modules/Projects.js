@@ -539,8 +539,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 								function (err, result) {
 									if (!err) {
 										var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-										query.select("projectName projectmanager").
-											populate('projectmanager', 'name').
+										query.select("projectName projectmanager _id").
+											populate('projectmanager', 'name _id').
 											exec(function (error, _res) {
 												if (!error) {
 													res={}
@@ -889,7 +889,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id info.EndDate").
+                                query.select("_id info.EndDate projectmanager projectName").
+									populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {
                                     if (!error) {
 										var endThisWeek = new Date();
@@ -901,19 +902,19 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 										endNextWeek.setHours(24,59,59,0);
 
 										var n = _res.length;
-										ret={"This":0, "Next":0, "Next2":0}
+										ret={"This":[], "Next":[], "Next2":[]}
 										for (var i=0;i<_res.length;i++){
 											var d = new Date(_res[i].info.EndDate);
 											endDate.setDate(endDate.getDate() - endDate.getDay()+7);
 											if (d<endThisWeek){
-												ret.This+=1;
+												ret.This.push(_res[i]);
 											}
 											else{
 												if (d<endNextWeek){
-													ret.Next+=1;
+													ret.Next.push(_res[i]);
 												}
 												else{
-													ret.Next2+=1;
+													ret.Next2.push(_res[i]);
 												}
 												
 											}
@@ -1934,6 +1935,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             populate('editedBy.user').
             populate('groups.users').
             populate('groups.group').
+            populate('workflow').
             exec(function (err, task) {
                 if (err) {
                     console.log(err);
@@ -2017,7 +2019,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                               models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                 where('project').in(projectsId.objectID()).
                                 where('workflow',newObjectId(data.workflowId)).
-                                select("_id assignedTo workflow editedBy.date deadline project taskCount summary type remaining").
+                                select("_id assignedTo workflow editedBy.date deadline project taskCount summary type remaining extrainfo.priority").
                                 populate('assignedTo','name imageSrc').
                                 populate('project','projectShortDesc').
                                 populate('workflow','_id').

@@ -17,10 +17,10 @@
 				   "click .newSelectList li": "chooseOption"
 			   },
 	           hideNewSelect: function (e) {
-	               $(".newSelectList").remove();;
+	               $(".newSelectList").hide();;
 	           },
 	           showNewSelect: function (e) {
-	               if ($(".newSelectList").length) {
+	               if ($(".newSelectList").is(":visible")) {
 	                   this.hideNewSelect();
 	                   return false;
 	               } else {

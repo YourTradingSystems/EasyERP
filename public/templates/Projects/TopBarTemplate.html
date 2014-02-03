@@ -1,18 +1,11 @@
 <h3><%=contentType%></h3>
 <div id="createBtnHolder">
-    <a href="#home/action-<%=contentType%>/Create" class="icon-img add left" title="Create" id="top-bar-createBtn"></a>
-    <a href="javascript;" class="icon-img edit left" title="Edit" id="top-bar-editBtn"></a>
-    <a href="javascript;" class="icon-img remove left" title="Remove"  id="top-bar-deleteBtn"></a>
-</div>
-<div id="saveDiscardHolder">
-    <button id="top-bar-saveBtn" >Save</button> or <button id="top-bar-discardBtn">Discard</button>
+    <a href="#home/action-<%=contentType%>/Create" class="icon add left" title="Create" id="top-bar-createBtn">5</a>
+    <a href="javascript;" class="icon edit left" title="Edit" id="top-bar-editBtn">4</a>
+    <a href="javascript;" class="icon remove left" title="Remove"  id="top-bar-deleteBtn">x</a>
 </div>
 
 <div id="template-switcher" class="right">
-    <ul class="btn-list changeContentIndex">
-        <li><a href="javascript;" class="icon2 icon-btn dark" data-shift="left" id="leftBtn">(</a></li>
-        <li><a href="javascript;" class="icon2 icon-btn dark" data-shift="right" id="rightBtn">)</a></li>
-    </ul>
     <ul class="btn-list">
         <li><a href="javascript;" class="changeContentView icon icon-btn dark <%= (viewType == 'thumbnails') ? 'selected' : ''%>" data-view-type="thumbnails" id="thumbBtn">k</a></li>
         <li><a href="javascript;" class="changeContentView icon icon-btn dark <%= (viewType == 'list') ? 'selected' : ''%>" data-view-type="list" id="listBtn">i</a></li>
