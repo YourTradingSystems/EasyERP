@@ -401,12 +401,10 @@ define([
                 var id = e.target.id;
                 var currentModel = this.formModel;
                 var attachments = currentModel.get('attachments');
-                var new_attachments = _.filter(attachments, function (attach) {
-                    if (attach._id != id) {
-                        return attach;
-                    }
+                var newAttachments = _.filter(attachments, function (attach) {
+                    return (attach._id != id);
                 });
-                currentModel.set('attachments', new_attachments);
+                currentModel.set('attachments', newAttachments);
                 currentModel.save({},
                         {
                             headers: {

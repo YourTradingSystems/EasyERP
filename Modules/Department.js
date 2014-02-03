@@ -43,7 +43,6 @@ var Department = function (logWriter, mongoose, models) {
                 });
             }
             function saveToDb(data) {
-                console.log(data);
                 try {
                     _department = new models.get(req.session.lastDb - 1, 'Department', DepartmentSchema)();
 
@@ -176,7 +175,9 @@ var Department = function (logWriter, mongoose, models) {
     function get(req, response) {
         var res = {};
         res['data'] = [];
+
         var query = models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({});
+
         query.select('_id departmentName');
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
@@ -186,7 +187,7 @@ var Department = function (logWriter, mongoose, models) {
                 response.send(500, { error: "Can't find Department" });
             } else {
                 res['data'] = departments;
-                console.log(departments);
+
                 response.send(res);
             }
         });
@@ -196,6 +197,9 @@ var Department = function (logWriter, mongoose, models) {
         var res = {};
         res['data'] = [];
         var query = models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({});
+		query.populate("parentDepartment","departmentName _id");
+		query.populate("departmentManager","name _id");
+		query.populate("users","login _id");
         query.exec(function (err, departments) {
             if (err) {
                 console.log(err);
@@ -217,9 +221,6 @@ var Department = function (logWriter, mongoose, models) {
     function updateNestingLevel(req, id, nestingLevel, callback) {
         models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({ parentDepartment: id }).exec(function (err, result) {
             var n = 0;
-            console.log("my super data");
-            console.log(result);
-
             if (result.length != 0) {
                 result.forEach(function (item) {
                     n++;
@@ -247,9 +248,6 @@ var Department = function (logWriter, mongoose, models) {
                     res.send(500, { error: "Can't update Department" });
                 } else {
                     if (data.isAllUpdate) {
-                        console.log("my super res");
-                        console.log(data);
-
                         updateNestingLevel(req, _id, data.nestingLevel, function () {
                             res.send(200, { success: 'Department updated success' });
                         });

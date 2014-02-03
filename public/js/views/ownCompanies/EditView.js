@@ -297,7 +297,7 @@ define([
             },
 
             hideNewSelect: function (e) {
-                $(".newSelectList").remove();;
+                $(".newSelectList").hide();;
             },
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));
@@ -374,8 +374,8 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
-			    common.populateEmployeesDd(App.ID.employeesDd, "/getSalesPerson", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.employeesDd); });
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#departmentDd"); });
+			    common.populateEmployeesDd("#employeesDd", "/getSalesPerson", this.currentModel.toJSON(), function () { self.styleSelect("#employeesDd"); });
 			    this.styleSelect('#language');
 			    this.delegateEvents(this.events);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

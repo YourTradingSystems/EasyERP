@@ -58,11 +58,9 @@ var Profile = function (logWriter, mongoose, models) {
                     if (data.profileAccess) {
                         _profile.profileAccess = data.profileAccess.map(function(item){
 							item.module=item.module._id;
-							console.log(item);
 							return item;
 						});
                     }
-					console.log(_profile);
                     _profile.save(function (err, result) {
                         try {
                             if (err) {
@@ -139,7 +137,6 @@ var Profile = function (logWriter, mongoose, models) {
             delete data._id;
             models.get(req.session.lastDb - 1, "Profile", ProfileSchema).update({ _id: _id }, data, function (err, result) {
                 if (result) {
-                    console.log(" RESULT " + result);
                     res.send(200, { success: 'Profile updated success' });
                 } else if(err){
                         logWriter.log("Profile.js update profile.update" + err);

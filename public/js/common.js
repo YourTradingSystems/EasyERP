@@ -878,15 +878,16 @@
             return associateArray;
         }
 
-        var getEmployeesImages = function (ids, callback) {
-            dataService.getData("/getEmployeesImages", { ids: ids }, function (response) {
+        var getImages = function (ids, url, callback) {
+            dataService.getData(url, { ids: ids }, function (response) {
                 if (response.data !== undefined) {
                     response.data.forEach(function (item) {
                         $("#" + item._id + " img").attr("src", item.imageSrc);
                         $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
+                        $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
                     });
                 }
-                if (callback) callback();
+                if (callback) callback(response);
             });
         };
 
@@ -930,7 +931,7 @@
             populateParentDepartments: populateParentDepartments,
             populateDepartmentsList: populateDepartmentsList,
             getLeadsForChart: getLeadsForChart,
-            getEmployeesImages: getEmployeesImages,
+            getImages: getImages,
 			populateOpportunitiesForMiniView:populateOpportunitiesForMiniView
         }
     });

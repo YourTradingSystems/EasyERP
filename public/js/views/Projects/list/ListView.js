@@ -330,7 +330,7 @@ define([
                         }
                     }
                 });
-                common.populateWorkflowsList("Projects", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows",null);
+                common.populateWorkflowsList("Projects", ".filter-check-list", "#workflowNamesDd", "/Workflows",null);
                 this.deleteCounter = 0;
 				$(document).on("click",function(e){
 					self.hideItemsNumber(e);

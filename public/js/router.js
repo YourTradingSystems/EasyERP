@@ -154,7 +154,7 @@ define([
                     topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
                     topbarView.bind('saveEvent', contentview.saveProfile, contentview);
 
-                    this.changeView(contentView);
+                    this.changeView(contentview);
                     this.changeTopBarView(topbarView);
                     var url = '#easyErp/Workflows';
                     Backbone.history.navigate(url, { replace: true });
@@ -342,7 +342,7 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 50,
+                            count: 3,
                             contentType: contentType
                         })
 

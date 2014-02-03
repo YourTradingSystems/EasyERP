@@ -258,8 +258,8 @@ define([
                     resizable:true,
                     dialogClass:"create-dialog",
                     title: "Edit Job position",
-                    width:"1200",
-                    height:460,
+                    width:"900",
+                    
                     buttons: [
                         {
                             text: "Create",
@@ -276,8 +276,8 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateDepartments(App.ID.departmentDd, "/Departments");
-                common.populateWorkflows("Jobposition", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd");
+                common.populateDepartments("#departmentDd", "/Departments");
+                common.populateWorkflows("Jobposition", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
                 this.delegateEvents(this.events);
                 return this;
             }

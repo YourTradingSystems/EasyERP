@@ -86,7 +86,7 @@ define([
                         }
                     }
                 });
-                common.populateProfilesDd(App.ID.profilesDd, "/ProfilesForDd");
+                common.populateProfilesDd("#profilesDd", "/ProfilesForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }

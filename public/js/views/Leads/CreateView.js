@@ -323,11 +323,11 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
-                common.populateCustomers(App.ID.customerDd, "/Customer");
-                common.populateDepartments(App.ID.salesTeam, "/DepartmentsForDd");
-                common.populateEmployeesDd(App.ID.salesPerson, "/getForDdByRelatedUser");
-                common.populatePriority(App.ID.priorityDd, "/Priority");
-                common.populateWorkflows("Lead", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd");
+                common.populateCustomers("#customerDd", "/Customer");
+                common.populateDepartments("#salesTeam", "/DepartmentsForDd");
+                common.populateEmployeesDd("#salesPerson", "/getForDdByRelatedUser");
+                common.populatePriority("#priorityDd", "/Priority");
+                common.populateWorkflows("Lead", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
                 this.delegateEvents(this.events);
                 return this;
             }

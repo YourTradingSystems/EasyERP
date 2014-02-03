@@ -66,7 +66,6 @@ var Module = function (logWriter, mongoose, profile, models) {
                             sort({ sequence: 1 }).
                             exec(function (err, mod) {
                                 if (mod) {
-                                    console.log(mod);
                                     response.send(mod);
                                 } else {
                                     console.log("Node JS error " + err);
@@ -81,7 +80,6 @@ var Module = function (logWriter, mongoose, profile, models) {
         update: function (func) {
             _module.find({}, function (err, modules) {
                 if (!err) {
-                    console.log(modules);
                     upMod(0, modules);
                 } else {
                     console.log(err);
@@ -104,7 +102,6 @@ var Module = function (logWriter, mongoose, profile, models) {
                     var value = toHref(modules[count].mname);
                     _module.update({ _id: modules[count]._id }, { $set: { href: value } }, function (err, res) {
                         if (!err) {
-                            console.log(res);
                             count++;
                             upMod(count, modules);
                         } else {

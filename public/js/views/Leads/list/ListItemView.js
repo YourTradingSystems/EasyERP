@@ -16,11 +16,11 @@
 	               "click .stageSelect": "showNewSelect",
 	               "click .newSelectList li": "chooseOption"
 	           },
-	           hideNewSelect: function () {
-	               $(".newSelectList").remove();;
+	           hideNewSelect: function (e) {
+	               $(".newSelectList").hide();;
 	           },
 	           showNewSelect: function (e) {
-	               if ($(".newSelectList").length) {
+	               if ($(".newSelectList").is(":visible")) {
 	                   this.hideNewSelect();
 	                   return false;
 	               } else {
