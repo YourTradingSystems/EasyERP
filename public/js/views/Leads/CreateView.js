@@ -1,9 +1,10 @@
 define([
     "text!templates/Leads/CreateTemplate.html",
     "models/LeadsModel",
-    "common"
+    "common",
+	"populate"
 ],
-    function (CreateTemplate, LeadModel, common) {
+    function (CreateTemplate, LeadModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,6 +16,7 @@ define([
                 this.model = new LeadModel();
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {}
                 this.render();
             },
 
@@ -22,15 +24,37 @@ define([
                 "click #tabList a": "switchTab",
                 "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows",
-
                 'keydown': 'keydownHandler',
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
                 "click .prevUserList":"prevUserList",
-                "click .nextUserList":"nextUserList"
+                "click .nextUserList":"nextUserList",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect",
+                "click .current-selected": "showNewSelect",
             },
+			notHide: function (e) {
+				return false;
+            },
+
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true)
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false)
+			},
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+            },
+			chooseOption:function(e){
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+			},
 
             keydownHandler: function(e){
                 switch (e.which){
@@ -198,14 +222,14 @@ define([
                     name: $company.val(),
                     id: $company.data('id')
                 }
-                var idCustomer = this.$("#customerDd option:selected").val();
+                var idCustomer = this.$("#customerDd").data("id");
                 var address = {};
                 $("dd").find(".address").each(function () {
                     var el = $(this);
                     address[el.attr("name")] = $.trim(el.val());
                 });
 
-                var salesPersonId = this.$("#salesPerson option:selected").val();
+                var salesPersonId = this.$("#salesPerson").data("id");
                 var salesTeamId = this.$("#salesTeam option:selected").val();
                 var first = $.trim(this.$el.find("#first").val());
                 var last = $.trim(this.$el.find("#last").val());
@@ -213,7 +237,7 @@ define([
                     first: first,
                     last: last
                 };
-                var email = $.trim(this.$el.find("#email").val());
+                var email = $.trim(this.$el.find("#mail").val());
                 var func = $.trim(this.$el.find("#func").val());
 
                 var phone = $.trim(this.$el.find("#phone").val());
@@ -224,8 +248,8 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
-                var workflow = this.$("#workflowsDd option:selected").data('id');
-                var priority = $("#priorityDd").val();
+                var workflow = this.$("#workflowsDd").data('id');
+                var priority = $("#priorityDd").data("id");
                 var internalNotes = $.trim(this.$el.find("#internalNotes").val());
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
                 var optout = (this.$el.find("#optout").is(":checked")) ? true : false;
@@ -246,8 +270,8 @@ define([
                 this.model.save({
                     name: name,
                     company: company,
-                    campaign: $('#campaignDd option:selected').val(),
-                    source: $('#sourceDd option:selected').val(),
+                    campaign: $('#campaignDd').data("id"),
+                    source: $('#sourceDd').data("id"),
                     customer: idCustomer,
                     address: address,
                     salesPerson: salesPersonId,
@@ -323,11 +347,13 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
-                common.populateCustomers("#customerDd", "/Customer");
-                common.populateDepartments("#salesTeam", "/DepartmentsForDd");
-                common.populateEmployeesDd("#salesPerson", "/getForDdByRelatedUser");
-                common.populatePriority("#priorityDd", "/Priority");
-                common.populateWorkflows("Lead", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
+
+				populate.getPriority("#priorityDd",this,true);
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Lead"},"name",this,true);			
+				populate.get2name("#customerDd", "/Customer",{},this,true,true);	
+				populate.get("#sourceDd", "/sources",{},"name",this,true,true);	
+				populate.get("#campaignDd", "/Campaigns",{},"name",this,true,true);	
+				populate.get2name("#salesPerson", "/getForDdByRelatedUser",{},this,true,true);	
                 this.delegateEvents(this.events);
                 return this;
             }

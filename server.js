@@ -1313,33 +1313,11 @@ app.delete('/Degrees/:_id', function (req, res) {
     requestHandler.removeDegree(req, res, id, data);
 });
 
-//----------------------SourcesOfApplicants----------------------------------------------------------------
-app.get('/SourcesOfApplicants', function (req, res) {
+//----------------------campaign----------------------------------------------------------------
+app.get('/Campaigns', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getSourcesOfApplicants(req, res, data);
-});
-
-app.post('/SourcesOfApplicants', function (req, res) {
-    data = {};
-    data.mid = req.headers.mid;
-    data.soa = req.body;
-    requestHandler.createSourcesOfApplicant(req, res, data);
-});
-
-app.put('/SourcesOfApplicants/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.soa = req.body;
-    requestHandler.updateSourcesOfApplicant(req, res, id, data);
-});
-
-app.delete('/SourcesOfApplicants/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeSourcesOfApplicant(req, res, id, data);
+    requestHandler.getCampaigns(req, res, data);
 });
 
 app.get('/sources', function (req, res) {
