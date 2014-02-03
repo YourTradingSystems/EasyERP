@@ -467,7 +467,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     user: req.session.uId,
                     date: new Date().toISOString()
                 };
-                project.update(req, id, data, res);
+                project.updateOnlySelectedFields(req, id, data, res);
             } else {
                 res.send(403);
             }

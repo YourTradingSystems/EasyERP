@@ -1415,7 +1415,13 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
     function updateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
-
+        if (data.notes && data.notes.length != 0) {
+            var obj = data.notes[data.notes.length - 1];
+            obj._id = mongoose.Types.ObjectId();
+            obj.date = new Date();
+            obj.author = req.session.uName;
+            data.notes[data.notes.length - 1] = obj;
+        }
         models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, projects) {
             if (err) {
                 console.log(err);

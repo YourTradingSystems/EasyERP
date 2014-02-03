@@ -342,7 +342,7 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 3,
+                            count: 50,
                             contentType: contentType
                         })
 
