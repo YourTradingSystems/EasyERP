@@ -244,91 +244,95 @@ define([
             },
 
             editDelNote: function (e) {
-                var id = e.target.id;
-                var k = id.indexOf('_');
-                var type = id.substr(0, k);
-                var id_int = id.substr(k + 1);
+            	  var id = e.target.id;
+                  var k = id.indexOf('_');
+                  var type = id.substr(0, k);
+                  var id_int = id.substr(k + 1);
+                  var currentModel = this.formModel;
+                  var notes = currentModel.get('notes');
 
-
-                var currentModel = this.formModel;
-                var notes = currentModel.get('notes');
-
-                switch (type) {
-                    case "edit": {
-                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
-                        $('#getNoteKey').attr("value", id_int);
-                        break;
-                    }
-                    case "del": {
-
-                        var newNotes = _.filter(notes, function (note) {
-                            if (note._id != id_int) {
-                                return note;
-                            }
-                        });
-                        currentModel.set('notes', newNotes);
-                        currentModel.save({},
-                                {
-                                    headers: {
-                                        mid: 39,
-                                        remove: true
-                                    },
-                                    success: function () {
-                                        $('#' + id_int).remove();
-                                    }
-                                });
-                        break;
-                    }
-                }
+                  switch (type) {
+                      case "edit": {
+                          $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                          $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                          $('#getNoteKey').attr("value", id_int);
+                          break;
+                      }
+                      case "del": {
+                          var newNotes = _.filter(notes, function (note) {
+                              if (note._id != id_int) {
+                                  return note;
+                              }
+                          });
+                          currentModel.save({ 'notes': newNotes },
+                                  {
+                                      headers: {
+                                          mid: 39
+                                      },
+                                      patch: true,
+                                      success: function () {
+                                          $('#' + id_int).remove();
+                                      }
+                                  });
+                          break;
+                      }
+                  }
             },
 
-            addNote: function () {
+            addNote: function (e) {
+                e.preventDefault();
                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 if (val || title) {
-                    var currentModel = this.formModel;
-                    var notes = currentModel.get('notes');
+                    var notes = this.formModel.get('notes');
                     var arrKeyStr = $('#getNoteKey').attr("value");
                     var noteObj = {
                         note: '',
                         title: ''
                     };
                     if (arrKeyStr) {
-                        currentModel.save({},
-                                   {
-                                       headers: {
-                                           mid: 39
-                                       },
-                                       success: function () {
-                                           $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                           $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
-                                           $('#getNoteKey').attr("value", '');
-                                       }
-                                   });
-
-
-
+                        var editNotes = _.map(notes, function (note) {
+                            if (note._id == arrKeyStr) {
+                                note.note = val;
+                                note.title = title;
+                            }
+                            return note;
+                        });
+                        this.formModel.save({ 'notes': editNotes },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function () {
+                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
+                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+                                    $('#getNoteKey').attr("value", '');
+                                }
+                            });
                     } else {
                         noteObj.note = val;
                         noteObj.title = title;
                         notes.push(noteObj);
-                        currentModel.set('notes', notes);
-                        currentModel.save({},
-                                    {
-                                        headers: {
-                                            mid: 39,
-                                            wait: true
-                                        },
-                                        success: function (model, response) {
-                                            var key = notes.length - 1;
-                                            var notesData = response.notes;
-                                            var date = common.utcDateToLocaleDate(response.notes[key].date);
-                                            var author = currentModel.get('name').first;
-                                            var id = response.notes[key]._id;
-                                            $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notesData, date: date, id: id }));
-                                        }
+                        this.formModel.set();
+                        this.formModel.save({ 'notes': notes },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function (models, data) {
+                                    $('#noteBody').empty();
+                                    data.notes.forEach(function (item) {
+                                    	   var key = notes.length - 1;
+                                           var notes_data = response.notes;
+                                           var date = common.utcDateToLocaleDate(response.notes[key].date);
+                                           var author = currentModel.get('name').first;
+                                           var id = response.notes[key]._id;
+                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
                                     });
+                                }
+                            });
                     }
                     $('#noteArea').val('');
                     $('#noteTitleArea').val('');
@@ -398,23 +402,29 @@ define([
             },
 
             deleteAttach: function (e) {
-                var id = e.target.id;
-                var currentModel = this.formModel;
-                var attachments = currentModel.get('attachments');
-                var newAttachments = _.filter(attachments, function (attach) {
-                    return (attach._id != id);
-                });
-                currentModel.set('attachments', newAttachments);
-                currentModel.save({},
+                var target = $(e.target);
+                if (target.closest("li").hasClass("attachFile")) {
+                    target.closest(".attachFile").remove();
+                } else {
+                    var id = e.target.id;
+                    var currentModel = this.formModel;
+                    var attachments = currentModel.get('attachments');
+                    var newAttachments = _.filter(attachments, function (attach) {
+                        if (attach._id != id) {
+                            return attach;
+                        }
+                    });
+                    currentModel.save({ 'attachments': newAttachments },
                         {
                             headers: {
                                 mid: 39
                             },
-
+                            patch: true,//Send only changed attr(add Roma)
                             success: function () {
                                 $('.attachFile_' + id).remove();
                             }
                         });
+                }
             },
 
             editItem: function () {
