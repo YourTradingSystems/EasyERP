@@ -132,7 +132,7 @@ require(['app'], function (app) {
             page: page,
             letter: this.selectedLetter
         };
-        if (dataObject) serchObject = _.extend(dataObject);
+        if (dataObject) _.extend(serchObject,dataObject);
         this.collection.showMore(serchObject);
     };
 
@@ -157,7 +157,7 @@ require(['app'], function (app) {
             page: page,
             letter: this.selectedLetter
         };
-        if (dataObject) serchObject = _.extend(dataObject);
+        if (dataObject) _.extend(serchObject,dataObject);
         this.collection.showMore(serchObject);
     };
 
@@ -205,7 +205,7 @@ require(['app'], function (app) {
                 page: page,
                 letter: this.selectedLetter
             };
-            if (dataObject) serchObject = _.extend(dataObject);
+            if (dataObject) _.extend(serchObject,dataObject);
             this.collection.showMore(serchObject);
         }
     };
@@ -270,7 +270,7 @@ require(['app'], function (app) {
                     count: itemsNumber,
                     page: deletePage
                 };
-                if (dataObject) serchObject = _.extend(dataObject);
+                if (dataObject) _.extend(serchObject,dataObject);
                 this.collection.showMore(serchObject);
             }
             $('#check_all').prop('checked', false);

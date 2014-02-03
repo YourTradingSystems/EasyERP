@@ -26,7 +26,7 @@
             events: {
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #refuse": "changeWorkflow",
-                "click #hire": "isEmployee",
+//                "click #hire": "isEmployee",
                 "change #workflowNames": "changeWorkflows",
                 'keydown': 'keydownHandler',
                 "mouseenter .avatar": "showEdit",
@@ -46,7 +46,22 @@
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+				"click .hireEmployee": "isEmployee"
             },
+            isEmployee: function (e) {
+				e.preventDefault();
+            	this.currentModel.save({
+                    isEmployee: true
+                },{
+                    headers: {
+                        mid: 39
+                    },
+                    success: function (model) {
+                        Backbone.history.navigate("easyErp/Employees", { trigger: true });
+                    }
+                });
+            },
+
             notHide: function (e) {
 				return false;
             },
@@ -303,7 +318,7 @@
                 return workflows;
             },
 
-            isEmployee: function (e) {
+/*            isEmployee: function (e) {
                 var mid = 39;
                 var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
                 model.set({ isEmployee: true });
@@ -313,7 +328,7 @@
                     }
                 });
             },
-
+*/
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -461,7 +476,6 @@
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
-				console.log(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "applications-edit-dialog",
