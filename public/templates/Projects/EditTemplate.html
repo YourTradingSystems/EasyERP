@@ -9,6 +9,80 @@
 		<div class="clearfix"></div>
         <div class="dialog-tabs-items">
           <div class="dialog-tabs-item active">
+            <div class="half-block left projectNote">
+			<div class="noteWrapper">
+			  <label>Note</label>
+			  <div id="noteBody">
+				<% var n = model.notes.length-1;
+				   model.notes.reverse();
+				   _.each(model.notes, function(val,key){ %>
+				<div id="<%=val['_id'] %>" class="noteContainer">
+				  <div class="noteTitle"><%=val['title'].replace(/</g,"&#60;").replace(/>/g,"&#62;")  %></div>
+				  <div class="noteText"><%=val['note'].replace(/</g,"&#60;").replace(/>/g,"&#62;") %></div>
+				  <div>
+					<a class="name" href="javascript:;"><%=name.first %></a><span class="date"><%=val['date'] %></span>
+					<div class="right">
+					  <span>
+						<a href="javascript:;" id="edit_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote editNote" >Edit</a>
+					  </span>
+					  <span  class="sep" >|</span>
+					  <span>
+						<a href="javascript:;" id="del_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote">Del</a>
+					  </span>
+
+					</div>
+				  </div>
+				</div>
+				<div class="clearfix"></div>
+
+				<% }); model.notes.reverse(); %>
+			  </div>
+			  
+			  <div class="addNote">
+				<div>
+				  <label>Note Content</label>
+				  <textarea id="noteArea" placeholder="Add a Note..." maxlength="500"></textarea>
+				  <a class="addTitle" href="javascript:;">Add a title</a>
+				  <div class="title-wrapper">
+					<label>Note Title</label>
+					<input type="text" id="noteTitleArea" value="" maxlength="64">
+				  </div>
+				  <div class="buttons">
+					<input type="submit" id="addNote" class="btn" value="Save">
+					<a href="javascript:;" id="cancelNote">Cancel</a>
+					<div class="clearfix">
+					</div>
+				  </div>
+				  <input type="hidden" id="getNoteKey" value="">
+				</div>
+				<div class="clearfix"></div>
+
+			  </div>
+			  <div class="clearfix"></div>
+			</div>
+
+            <label>Attachments</label>
+
+            <div id="attachBody">
+              <ul class="attachContainer">
+                <% var n = model.attachments.length-1;
+                   model.attachments.reverse();
+                   _.each(model.attachments, function(data,key){ %>
+                <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+                  <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
+                </li>
+                <% }); model.attachments.reverse(); %>
+              </ul>
+            </div>
+            <div class="clearfix"></div>
+            <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
+            <div class="progress" style="float:left;">
+              <div class="bar">
+                <span class="progress_status"></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            </div>
             <div class="half-block left">
               <dl class="profile-edit-info">
                 <dt>
@@ -29,20 +103,19 @@
                   </select>
                 </dd>
                 
-                				 <dt><label for="projectTypeDD">Project Type </label></dt>
-				  <dd>
-					<select id="projectTypeDD">
-							<option value="Web">Web</option>
-							<option value="Android">Android</option>
-							<option value="iOs">iOs</option>
-							<option value=".Net">.Net</option>
-							<option value="QA">QA</option>
-					</select>
-				  </dd>
-                 <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.info.StartDate%>" readonly /></dd>
+                <dt><label for="projectTypeDD">Project Manager </label></dt>
+				<dd>
+				  <select id="projectTypeDD">
+					<option value="Select">Select ...</option>
+					<option value="Web">Web</option>
+					<option value="Android">Android</option>
+					<option value="iOs">iOs</option>
+					<option value=".Net">.Net</option>
+					<option value="QA">QA</option>
+				  </select>
+				</dd>
+                <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.info.StartDate%>" readonly /></dd>
               </dl>
-            </div>
-            <div class="half-block left">
               <dl class="profile-edit-info">
                 <dt>
                   <label for="customerDd">Project Customer </label>
@@ -67,95 +140,24 @@
  				<dt><label for="EndDate">End Date </label></dt><dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.info.StartDate%>" readonly /></dd>
               </dl>
             </div>
-               <div class="clearfix"></div>
-<div class="noteWrapper">
-  <label>Note</label>
-  <div id="noteBody">
-    <% var n = model.notes.length-1;
-       model.notes.reverse();
-       _.each(model.notes, function(val,key){ %>
-    <div id="<%=val['_id'] %>" class="noteContainer">
-      <div class="noteTitle"><%=val['title'].replace(/</g,"&#60;").replace(/>/g,"&#62;")  %></div>
-      <div class="noteText"><%=val['note'].replace(/</g,"&#60;").replace(/>/g,"&#62;") %></div>
-      <div>
-		<a class="name" href="javascript:;"><%=name.first %></a><span class="date"><%=val['date'] %></span>
-        <div class="right">
-          <span>
-            <a href="javascript:;" id="edit_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote editNote" >Edit</a>
-          </span>
-          <span  class="sep" >|</span>
-          <span>
-            <a href="javascript:;" id="del_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote">Del</a>
-          </span>
+            <div class="clearfix"></div>
 
-        </div>
-	  </div>
-    </div>
-  <div class="clearfix"></div>
-
-    <% }); model.notes.reverse(); %>
-  </div>
-  
-    <div class="addNote">
-	<div>
-      <label>Note Content</label>
-      <textarea id="noteArea" placeholder="Add a Note..." maxlength="500"></textarea>
-	  <a class="addTitle" href="javascript:;">Add a title</a>
-      <div class="title-wrapper">
-		<label>Note Title</label>
-		<input type="text" id="noteTitleArea" value="" maxlength="64">
-	  </div>
-      <div class="buttons">
-		<input type="submit" id="addNote" class="btn" value="Save">
-		<a href="javascript:;" id="cancelNote">Cancel</a>
-        <div class="clearfix">
-        </div>
-	  </div>
-      <input type="hidden" id="getNoteKey" value="">
-	</div>
-  <div class="clearfix"></div>
-
-  </div>
-  <div class="clearfix"></div>
-</div>
-
-                    <label>Attachments</label>
-
-                      <div id="attachBody">
-                        <ul class="attachContainer">
-                           <% var n = model.attachments.length-1;
-                              model.attachments.reverse();
-                            _.each(model.attachments, function(data,key){ %>
-                   <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
-                          <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
-                   </li>
-                       <% }); model.attachments.reverse(); %>
-                        </ul>
-                      </div>
-                      <div class="clearfix"></div>
-                      <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
-                      <div class="progress" style="float:left;">
-                        <div class="bar">
-                          <span class="progress_status"></span>
-                        </div>
-                      </div>
-                 <div class="clearfix"></div>
 		  </div>
-		<div class="clearfix"></div>
-	  
+		  <div class="clearfix"></div>
+		  
 
           <div class="dialog-tabs-item">
-			  <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-              <div class="clearfix"></div>
+			<div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+            <div class="clearfix"></div>
 
-			  <div class="half-block left">
-                <div class="canReadAndWrite">
-                    <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
-                    <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
-                    <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
-                </div>
-			  </div>
-			  <div class="half-block left">
+			<div class="half-block left">
+              <div class="canReadAndWrite">
+                <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
+                <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
+                <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
+              </div>
+			</div>
+			<div class="half-block left">
 			  <dl class="project-owner-info">
 				<dt><label for="allUsers">Owner</label></dt><dd>
 
@@ -165,66 +167,66 @@
 
 				</dd>
 			  </dl>
+			</div>
+
+
+            <div class="addUserDialog">
+
+			  <div class="formTitle">
+				<h3 class="left">Choose Users</h3>
+				<div class="clearfix"></div>
 			  </div>
-
-
-              <div class="addUserDialog">
-
-				<div class="formTitle">
-				  <h3 class="left">Choose Users</h3>
-				  <div class="clearfix"></div>
+              <div class="groupsChooser">
+				<div class="left">
+				  <ul id="sourceUsers" class="source">
+					
+				  </ul>
 				</div>
-                <div class="groupsChooser">
-				  <div class="left">
-					<ul id="sourceUsers" class="source">
-					  
-					</ul>
-				  </div>
-				  <div class="left">
-					<div class="swich"></div>
-				  </div>
-				  <div class="left">
-					<ul id="targetUsers" class="target">
-					  
-					</ul>
-				  </div>
-                </div>
-
-				<div class="clearfix"></div>
-              </div>
-              <div class="addGroupDialog">
-				<div class="formTitle">
-				  <h3 class="left">Choose Groups</h3>
-				  <div class="clearfix"></div>
+				<div class="left">
+				  <div class="swich"></div>
 				</div>
-                <div class="groupsChooser">
-				  <div class="left">
-					<ul id="sourceGroups" class="source">
-					  
-					</ul>
-				  </div>
-				  <div class="left">
-					<div class="swich"></div>
-				  </div>
-				  <div class="left">
-					<ul id="targetGroups" class="target">
-					  
-					</ul>
-				  </div>
+				<div class="left">
+				  <ul id="targetUsers" class="target">
+					
+				  </ul>
 				</div>
-				<div class="clearfix"></div>
               </div>
 
-			  <table class="groupsAndUser">
-				<tr>
-				  <th>Groups and Users</th><th></th>
-				</tr>
-			  </table>
-			    <div class="clearfix"></div>
+			  <div class="clearfix"></div>
+            </div>
+            <div class="addGroupDialog">
+			  <div class="formTitle">
+				<h3 class="left">Choose Groups</h3>
+				<div class="clearfix"></div>
+			  </div>
+              <div class="groupsChooser">
+				<div class="left">
+				  <ul id="sourceGroups" class="source">
+					
+				  </ul>
+				</div>
+				<div class="left">
+				  <div class="swich"></div>
+				</div>
+				<div class="left">
+				  <ul id="targetGroups" class="target">
+					
+				  </ul>
+				</div>
+			  </div>
+			  <div class="clearfix"></div>
+            </div>
+
+			<table class="groupsAndUser">
+			  <tr>
+				<th>Groups and Users</th><th></th>
+			  </tr>
+			</table>
+			<div class="clearfix"></div>
 		  </div>
           <div class="clearfix"></div>
         </div>
       </div>
     </fieldset>
   </form>
-  </div>
+</div>

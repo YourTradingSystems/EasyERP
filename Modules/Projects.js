@@ -93,10 +93,10 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         _id: Number,
         priority: String
     }, { collection: 'Priority' });
-    
+
     var projectTypeSchema = mongoose.Schema({
         _id: String,
-       name: String
+        name: String
     }, { collection: 'projectType' });
 
     mongoose.model('projectType', projectTypeSchema);
@@ -546,8 +546,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 								function (err, result) {
 								    if (!err) {
 								        var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-								        query.select("projectName projectmanager").
-											populate('projectmanager', 'name').
+								        query.select("projectName projectmanager _id").
+											populate('projectmanager', 'name _id').
 											exec(function (error, _res) {
 											    if (!error) {
 											        res = {}
@@ -898,7 +898,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id info.EndDate").
+                                query.select("_id info.EndDate projectmanager projectName").
+									populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {
                                     if (!error) {
                                         var endThisWeek = new Date();
@@ -909,20 +910,19 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                         endNextWeek.setDate(endNextWeek.getDate() - endNextWeek.getDay() + 14);
                                         endNextWeek.setHours(24, 59, 59, 0);
 
-                                        var n = _res.length;
-                                        ret = { "This": 0, "Next": 0, "Next2": 0 }
-                                        for (var i = 0; i < _res.length; i++) {
+                                        var ret = { "This": [], "Next": [], "Next2": [] };
+                                        for (var i = 0, n = _res.length; i < n; i++) {
                                             var d = new Date(_res[i].info.EndDate);
                                             endDate.setDate(endDate.getDate() - endDate.getDay() + 7);
                                             if (d < endThisWeek) {
-                                                ret.This += 1;
+                                                ret.This.push(_res[i]);
                                             }
                                             else {
                                                 if (d < endNextWeek) {
-                                                    ret.Next += 1;
+                                                    ret.Next.push(_res[i]);
                                                 }
                                                 else {
-                                                    ret.Next2 += 1;
+                                                    ret.Next2.push(_res[i]);
                                                 }
 
                                             }
@@ -959,73 +959,73 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     _id: 1
                 }
             },
-            function (err, deps) {
-                if (!err) {
-                    var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
-                    models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
-                        {
-                            $match: {
-                                $or: [
-                                    {
-                                        $or: [
-                                            {
-                                                $and: [
-                                                    { whoCanRW: 'group' },
-                                                    { 'groups.users': newObjectId(req.session.uId) }
-                                                ]
-                                            },
-                                            {
-                                                $and: [
-                                                    { whoCanRW: 'group' },
-                                                    { 'groups.group': { $in: arrOfObjectId } }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        $and: [
-                                            { whoCanRW: 'owner' },
-                                            { 'groups.owner': newObjectId(req.session.uId) }
-                                        ]
-                                    },
-                                    { whoCanRW: "everyOne" }
-                                ]
-                            }
-                        },
-                        {
-                            $project: {
-                                _id: 1
-                            }
-                        },
-                        function (err, result) {
-                            if (!err) {
-                                var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                if (data && data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
-                                query.select("_id projectName task workflow projectmanager").
-									populate('workflow', 'status').
-									populate('projectmanager', 'name').
-									skip((data.page - 1) * data.count).
-									limit(data.count).
-                                exec(function (error, _res) {
-                                    if (!error) {
-                                        res['data'] = _res;
-                                        res['listLength'] = _res.length;
-                                        response.send(res);
-                                    } else {
-                                        console.log(error);
-                                    }
-                                });
-                            } else {
-                                console.log(err);
-                            }
-                        }
-                    );
-                } else {
-                    console.log(err);
-                }
-            });
+											   function (err, deps) {
+											       if (!err) {
+											           var arrOfObjectId = deps.objectID();
+											           console.log(arrOfObjectId);
+											           models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                                               {
+                                                   $match: {
+                                                       $or: [
+                                                           {
+                                                               $or: [
+                                                                   {
+                                                                       $and: [
+                                                                           { whoCanRW: 'group' },
+                                                                           { 'groups.users': newObjectId(req.session.uId) }
+                                                                       ]
+                                                                   },
+                                                       {
+                                                           $and: [
+                                                               { whoCanRW: 'group' },
+                                                               { 'groups.group': { $in: arrOfObjectId } }
+                                                           ]
+                                                       }
+                                                               ]
+                                                           },
+                                                       {
+                                                           $and: [
+                                                               { whoCanRW: 'owner' },
+                                                               { 'groups.owner': newObjectId(req.session.uId) }
+                                                           ]
+                                                       },
+                                                           { whoCanRW: "everyOne" }
+                                                       ]
+                                                   }
+                                               },
+                                                                   {
+                                                                       $project: {
+                                                                           _id: 1
+                                                                       }
+                                                                   },
+                                                           function (err, result) {
+                                                               if (!err) {
+                                                                   var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
+                                                                   if (data && data.status && data.status.length > 0)
+                                                                       query.where('workflow').in(data.status);
+                                                                   query.select("_id projectName task workflow projectmanager").
+                                                                       populate('workflow', 'status').
+                                                                       populate('projectmanager', 'name').
+                                                                       skip((data.page - 1) * data.count).
+                                                                       limit(data.count).
+                                                                   exec(function (error, _res) {
+                                                                       if (!error) {
+                                                                           res['data'] = _res;
+                                                                           res['listLength'] = _res.length;
+                                                                           response.send(res);
+                                                                       } else {
+                                                                           console.log(error);
+                                                                       }
+                                                                   });
+                                                               } else {
+                                                                   console.log(err);
+                                                               }
+                                                           }
+                                           );
+											       } else {
+											           console.log(err);
+											       }
+											   });
 
     };
 
@@ -1036,8 +1036,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         query.populate('workflow').
             populate('createdBy.user', '_id login').
             populate('editedBy.user', '_id login').
-            populate('groups.owner','_id name').
-			populate('groups.users','_id name').
+            populate('groups.owner', '_id name').
+			populate('groups.users', '_id name').
 			populate('groups.group', '_id departmentName');
         query.exec(function (err, project) {
             if (err) {
@@ -1360,7 +1360,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         delete data.task;
         if (data.groups) {
             if (data.groups.users) {
-                data.groups.users = data.groups.users.map(function(currentValue) {
+                data.groups.users = data.groups.users.map(function (currentValue) {
                     return (currentValue._id) ? currentValue._id : currentValue;
                 });
             }
@@ -1412,7 +1412,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             }
         });
     };
-    
+
     function updateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
 
@@ -1422,7 +1422,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                 logWriter.log("Project.js update project.update " + err);
                 res.send(500, { error: "Can't update Project" });
             } else {
-               res.send(200, projects);
+                res.send(200, projects);
             }
         });
     };
@@ -1747,7 +1747,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             }
         });
     };
-    
+
     function getProjectType(req, response) {
         var res = {};
         res['data'] = [];
@@ -1975,6 +1975,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             populate('editedBy.user').
             populate('groups.users').
             populate('groups.group').
+            populate('workflow').
             exec(function (err, task) {
                 if (err) {
                     console.log(err);
@@ -2262,7 +2263,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         getById: getById,
 
         update: update,
-        
+
         updateOnlySelectedFields: updateOnlySelectedFields,
 
         remove: remove,
@@ -2282,7 +2283,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         getTasksForKanban: getTasksForKanban,
 
         getTasksPriority: getTasksPriority,
-        
+
         getProjectType: getProjectType,
 
         ProjectSchema: ProjectSchema,

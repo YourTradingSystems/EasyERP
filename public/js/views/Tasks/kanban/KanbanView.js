@@ -7,15 +7,22 @@
     'views/Tasks/CreateView',
     'collections/Tasks/TasksCollection',
     'models/TasksModel',
-    'dataService'
+    'dataService',
+	'populate'
 ],
-    function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, TasksCollection, CurrentModel, dataService) {
+    function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, TasksCollection, CurrentModel, dataService, populate) {
         var collection = new TasksCollection();
         var TasksKanbanView = Backbone.View.extend({
             el: '#content-holder',
             events: {
                 "dblclick .item": "gotoEditForm",
-                "click .item": "selectItem"
+                "click .item": "selectItem",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect"
             },
 
             columnTotalLength: null,
@@ -26,7 +33,50 @@
                 this.render();
                 this.asyncFetc(options.workflowCollection, options.parrentContentId);
                 this.getCollectionLengthByWorkflows(this, options.parrentContentId);
+				this.responseObj = {}
             },
+            notHide: function (e) {
+				return false;
+            },
+
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true)
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false)
+			},
+            showNewSelect:function(e,prev,next){
+				populate.showSelectPriority(e,prev,next,this);
+                return false;
+                
+            },
+
+            hideNewSelect: function (e) {
+                $(".newSelectList").hide();;
+            },
+			   chooseOption:function(e){
+				   $(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
+				   var id=$(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority","");
+				   var obj = collection.get(id);
+				   var extr = obj.get('extrainfo');
+				   if (extr.customer==""){
+					   extr.customer = null
+				   }
+				   extr.priority=$(e.target).parents(".taskSelect").find(".current-selected").text();
+				   console.log(obj);
+				   obj.set({"extrainfo":extr });
+                   obj.save({}, {
+                       headers: {
+                           mid: 39
+                       },
+                       success: function () {
+                       }
+                   });
+
+				   this.hideNewSelect();
+				   return false;
+			   },
+
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode
 				if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -155,7 +205,8 @@
                     var remaining = " <span><span class='remaining'>" + itemCount + "</span> </span>";
                     column.find(".columnNameDiv h2").append(count).append(total).append(remaining);
                 }, this);
-
+				populate.getPriority("#priority",this);
+				
                 this.$(".column").sortable({
                     connectWith: ".column",
                     cancel: "h2",

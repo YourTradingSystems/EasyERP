@@ -1,9 +1,11 @@
 define([
     "text!templates/Tasks/CreateTemplate.html",
     "models/TasksModel",
-    "common"
+    "common",
+    "populate",
+
 ],
-    function (CreateTemplate, TaskModel, common) {
+       function (CreateTemplate, TaskModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -13,7 +15,9 @@ define([
             initialize: function (options) {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new TaskModel();
+				this.responseObj = {}
                 this.render();
+				
             },
 
             events: {
@@ -30,7 +34,7 @@ define([
                 "change .inputAttach": "addAttach",
     			"click .deleteAttach":"deleteAttach",
             },
-                
+
            addAttach: function (event) {
     				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
     				$(".attachContainer").append('<li class="attachFile">'+
@@ -100,20 +104,19 @@ define([
                 var self = this;
                 var mid = 39;
                 var summary = $.trim(this.$el.find("#summary").val());
-                var project = $("#projectDd option:selected").val();
-                var assignedTo = $("#assignedToDd option:selected").val();
+                var project = $("#projectDd").data("id");
+                var assignedTo = $("#assignedToDd").data("id");
                 var deadline = $.trim(this.$el.find("#deadline").val());
                 var tags = $.trim(this.$el.find("#tags").val()).split(',');
                 var description = $.trim(this.$el.find("#description").val());
                 var sequence = $.trim(this.$el.find("#sequence").val());
                 var StartDate = $.trim(this.$el.find("#StartDate").val());
-                var workflow = this.$el.find("#workflowsDd option:selected").data("id");
+                var workflow = this.$el.find("#workflowsDd").data("id");
                 var estimated = $.trim(this.$el.find("#estimated").val());
                 var logged = $.trim(this.$el.find("#logged").val());
-                var priority = $("#priorityDd option:selected").val();
+                var priority = $("#priorityDd").data("id");
                 //var priority = common.toObject(idPriority, this.priorityCollection);
-
-                var type = this.$("#type option:selected").text();
+                var type = this.$("#type").data("id");
                 this.model.save({
                     type: type,
                     summary: summary,
@@ -194,10 +197,10 @@ define([
 							addFrmAttach.submit();
 						}
 						else{
-							self.hideDialog();
+                        self.hideDialog();
 							Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
 
-						}
+                        }
 						addFrmAttach.off('submit');
 
                     },
@@ -216,53 +219,14 @@ define([
 			},
 
             showNewSelect:function(e,prev,next){
-				var elementVisible = 25;
-				var newSel = $(e.target).parent().find(".newSelectList")
-				if (prev||next){
-					newSel = $(e.target).closest(".newSelectList")
-				}
-				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
-                var currentPage = 1;
-                if (newSel.is(":visible")&&!prev&&!next){
-                    newSel.hide();
-					return;
-				}
-
-                if (newSel.length){
-                    currentPage = newSel.data("page");
-                    newSel.remove();
-                }
-				if (prev)currentPage--;
-				if (next)currentPage++;
-                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-                var start = (currentPage-1)*elementVisible;
-				var options = parent.find("select option");
-                var end = Math.min(currentPage*elementVisible,options.length);
-                for (var i = start; i<end;i++){
-                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
-                }
-				var allPages  = Math.ceil(options.length/elementVisible)
-                if (options.length>elementVisible)
-                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
-                s+="</ul>";
-                parent.append(s);
+                populate.showSelect(e,prev,next,this);
                 return false;
-                
             },
             hideNewSelect: function (e) {
                 $(".newSelectList").hide();;
             },
             chooseOption: function (e) {
-                var k = $(e.target).parent().find("li").index($(e.target));
-                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-            },
-
-            styleSelect: function (id) {
-                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
-                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
-                $(id).hide();
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
             },
 
             render: function () {
@@ -293,11 +257,11 @@ define([
                         }
                     }
                 });
-                common.populateProjectsDd("#projectDd", "/getProjectsForDd", model, function () { self.styleSelect("#projectDd"); });
-                common.populateWorkflows("Tasks", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", null, function () { self.styleSelect("#workflowsDd"); self.styleSelect("#workflowNamesDd"); });
-                common.populateEmployeesDd("#assignedToDd", "/getPersonsForDd", null, function () { self.styleSelect("#assignedToDd"); });
-                common.populatePriority("#priorityDd", "/Priority", model, function () { self.styleSelect("#priorityDd"); });
-                this.styleSelect("#type");
+				populate.get("#projectDd","/getProjectsForDd",{},"projectName",this,true);
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Tasks"},"name",this,true);
+				populate.get2name("#assignedToDd", "/getPersonsForDd",{},this,true);
+				populate.getPriority("#priorityDd",this,true);
+
                 $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#deadline').datepicker({
                     dateFormat: "d M, yy",

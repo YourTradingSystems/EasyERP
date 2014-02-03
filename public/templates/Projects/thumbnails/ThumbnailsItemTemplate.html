@@ -6,12 +6,14 @@
     </div>
     <div class="inner">
         <div class="project-text left">
-            <span title="<%=project.projectName%>"><%=project.projectName%></span>
+            <span class="bold" title="<%=project.projectName%>"><%=project.projectName%></span>
+            <span title="<%=(project.customer) ? project.customer.name.first+ ' ' + project.customer.name.last : '' %>"><%=(project.customer)?project.customer.name.first+' ' + project.customer.name.last : ''%></span>
         </div>
     </div>
     <div class="bottom">
         <div class="half-block left">
             <p class="inner">
+                `
                 <a id="<%=project._id%>" class="tasksByProject" href="#easyErp/Tasks/kanban/<%= project._id %>"><%=project.task.length%> Tasks</a>
             </p>
             <p class="inner"><label>Status: </label><span class="status <%=(project.workflow && project.workflow.status) ? project.workflow.status.toLowerCase().split(' ').join('') : ''%>"><%=(project.workflow) ? project.workflow.status : ''%></span></p>

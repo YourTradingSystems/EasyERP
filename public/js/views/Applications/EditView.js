@@ -2,9 +2,10 @@
     "text!templates/Applications/EditTemplate.html",
     'text!templates/Notes/AddAttachments.html',
     "common",
-    "custom"
+    "custom",
+	"populate"
 ],
-    function (EditTemplate, addAttachTemplate, common, Custom) {
+    function (EditTemplate, addAttachTemplate, common, Custom, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -18,6 +19,7 @@
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.page = 1;
                 this.pageG = 1;
+				this.responseObj = {}
                 this.render();
             },
 
@@ -349,7 +351,7 @@
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
-                var department = this.$el.find("#departmentDd option:selected").val();
+                var department = this.$el.find("#departmentDd").data("id");
                 department = department ? department : null;
 
                 var nextAction = $.trim(this.$el.find("#nextAction").val());
@@ -357,7 +359,7 @@
                 if (nextActionSt) {
                     nextAction = new Date(Date.parse(nextActionSt)).toISOString();
                 }*/
-                var jobPositionId = this.$el.find("#jobPositionDd option:selected").val() ? this.$el.find("#jobPositionDd option:selected").val() : null;
+                var jobPositionId = this.$el.find("#jobPositionDd").data("id") ? this.$el.find("#jobPositionDd").data("id") : null;
                 var usersId = [];
                 var groupsId = [];
                 $(".groupsAndUser tr").each(function () {
@@ -395,7 +397,7 @@
                     proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
-                    workflow: this.$el.find("#workflowsDd option:selected").val() ? this.$el.find("#workflowsDd option:selected").val() : null,
+                    workflow: this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
@@ -445,59 +447,21 @@
                 $(".newSelectList").hide();;
             },
               showNewSelect:function(e,prev,next){
-				var elementVisible = 25;
-				var newSel = $(e.target).parent().find(".newSelectList")
-				if (prev||next){
-					newSel = $(e.target).closest(".newSelectList")
-				}
-				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
-                var currentPage = 1;
-                if (newSel.is(":visible")&&!prev&&!next){
-                    newSel.hide();
-					return;
-				}
-
-                if (newSel.length){
-                    currentPage = newSel.data("page");
-                    newSel.remove();
-                }
-				if (prev)currentPage--;
-				if (next)currentPage++;
-                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-                var start = (currentPage-1)*elementVisible;
-				var options = parent.find("select option");
-                var end = Math.min(currentPage*elementVisible,options.length);
-                for (var i = start; i<end;i++){
-                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
-                }
-				var allPages  = Math.ceil(options.length/elementVisible)
-                if (options.length>elementVisible)
-                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
-                s+="</ul>";
-                parent.append(s);
+                populate.showSelect(e,prev,next,this);
                 return false;
                 
             },
 
 
             chooseOption: function (e) {
-                var k = $(e.target).parent().find("li").index($(e.target));
-                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
             },
-
-            styleSelect: function (id) {
-                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
-                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
-                $(id).hide();
-            },
-
 
             render: function () {
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
+				console.log(this.currentModel.toJSON());
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "applications-edit-dialog",
@@ -524,14 +488,9 @@
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
-
-                common.populateJobPositions("#jobPositionDd", "/JobPositionForDd", this.currentModel.toJSON(), function () { self.styleSelect("#jobPositionDd"); });
-                common.populateWorkflows("Applications", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#workflowsDd"); self.styleSelect("#workflowNamesDd"); });
-                common.populateEmployeesDd("#relatedUsersDd", "/getPersonsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#relatedUsersDd"); });
-                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#departmentDd"); });
-                //                common.populateDegrees("#degreesDd", "/Degrees", this.currentModel.toJSON(),function(){self.styleSelect("#degreesDd");});
-                self.styleSelect("#sourceDd");
-                self.styleSelect("#jobtapeDd");
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this);
+				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this);
+				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

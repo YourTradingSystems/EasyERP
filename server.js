@@ -64,7 +64,6 @@ var config = {
 };
 
 var allowCrossDomain = function (req, res, next) {
-    console.log(req.headers.host);
 
     var allowedHost = [
         '185.2.100.192:8088',
@@ -125,8 +124,6 @@ app.get('/account/authenticated', function (req, res, next) {
     //console.log(req);
     //if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
     if (req.session && req.session.loggedIn) {
-        console.log(req.cookies);
-        console.log(req.session.lastDb);
         res.send(200);
     } else {
         res.send(401);
@@ -145,7 +142,6 @@ app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
     file = {};
-    console.log(req.headers);
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
         fs.writeFile(path, data, function (err) {
@@ -171,7 +167,6 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
-    console.log(req.files.attachfile);
     req.files.attachfile.forEach(function (item) {
 
         fs.readFile(item.path, function (err, data) {
@@ -186,8 +181,6 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
                 file.uploaderName = req.session.uName;
                 files.push(file);
                 if (files.length == req.files.attachfile.length) {
-                    console.log(files);
-                    console.log(req.files.attachfile.length);
                     requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
                 }
             });
@@ -202,7 +195,6 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
-    console.log(req.files.attachfile);
     req.files.attachfile.forEach(function (item) {
 
         fs.readFile(item.path, function (err, data) {
@@ -217,8 +209,6 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
                 file.uploaderName = req.session.uName;
                 files.push(file);
                 if (files.length == req.files.attachfile.length) {
-                    console.log(files);
-                    console.log(req.files.attachfile.length);
                     requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
                 }
             });
@@ -233,7 +223,6 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
-    console.log(req.files.attachfile);
     req.files.attachfile.forEach(function (item) {
 
         fs.readFile(item.path, function (err, data) {
@@ -248,8 +237,6 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
                 file.uploaderName = req.session.uName;
                 files.push(file);
                 if (files.length == req.files.attachfile.length) {
-                    console.log(files);
-                    console.log(req.files.attachfile.length);
                     requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
                 }
             });
@@ -264,7 +251,6 @@ app.post('/uploadTasksFiles', function (req, res, next) {
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
-    console.log(req.files.attachfile);
     req.files.attachfile.forEach(function (item) {
 
         fs.readFile(item.path, function (err, data) {
@@ -279,8 +265,6 @@ app.post('/uploadTasksFiles', function (req, res, next) {
                 file.uploaderName = req.session.uName;
                 files.push(file);
                 if (files.length == req.files.attachfile.length) {
-                    console.log(files);
-                    console.log(req.files.attachfile.length);
                     requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
                 }
             });
@@ -299,13 +283,11 @@ app.post('/login', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
     data = {};
     data = req.body;
-    console.log(data);
     req.session.lastDb = data.dbId;
     requestHandler.login(req, res, data);
 });
 
 app.post('/Users', function (req, res) {
-    console.log(req.body);
     data = {};
     data.mid = req.headers.mid;
     data.user = req.body;
@@ -326,7 +308,6 @@ app.get('/currentUser', function (req, res) {
 });
 
 app.post('/currentUser', function (req, res) {
-    console.log(req.body);
     var data = {};
     if (req.body.oldpass && req.body.pass) {
         data.changePass = true;
@@ -335,7 +316,6 @@ app.post('/currentUser', function (req, res) {
 });
 
 app.put('/currentUser/:id', function (req, res) {
-    console.log(req.body);
     var data = {};
     var id = req.param('id');
     if (req.body.oldpass && req.body.pass) {
@@ -365,7 +345,6 @@ app.get('/Users/:viewType', function (req, res) {
 });
 
 app.put('/Users/:viewType/:_id', function (req, res) {
-    console.log(req.body);
     data = {};
     var id = req.param('_id');
     //data._id = req.params('_id');
@@ -378,14 +357,12 @@ app.delete('/Users/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    console.log(data);
     requestHandler.removeUser(req, res, id);
 });
 app.delete('/Users/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    console.log(data);
     requestHandler.removeUser(req, res, id);
 });
 
@@ -400,7 +377,6 @@ app.get('/Profiles', function (req, res) {
     console.log('---------SERVER----getProfiles-------------------------------');
     data = {};
     data.mid = req.param('mid');
-    console.log(data);
     console.log('--------END SERVER-----getProfiles-------------------------------');
     requestHandler.getProfile(req, res);
 });
@@ -409,18 +385,15 @@ app.get('/ProfilesForDd', function (req, res) {
     console.log('---------SERVER----getProfiles-------------------------------');
     data = {};
     data.mid = req.param('mid');
-    console.log(data);
     console.log('--------END SERVER-----getProfiles-------------------------------');
     requestHandler.getProfileForDd(req, res);
 });
 
 app.put('/Profiles/:_id', function (req, res) {
-    console.log(req.body);
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.profile = req.body;
-    console.log(data);
     requestHandler.updateProfile(req, res, id, data);
 });
 
@@ -428,7 +401,6 @@ app.delete('/Profiles/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    console.log(data);
     requestHandler.removeProfile(req, res, id);
 });
 
@@ -460,7 +432,6 @@ app.get('/getNewModules', function (req, res) {
     data.uid = req.param('uid');
     data.hash = req.param('hash');
     //if (req.session.loggedIn) console.log('We Are the BEST');
-    console.log(data);
     requestHandler.getNewModules(res, data);
 });
 //----------------------Accounts----------------------------------------------------------------
@@ -508,7 +479,6 @@ app.post('/Persons', function (req, res) {
 });
 
 app.get('/Persons/:viewType', function (req, res) {
-    console.log(req.session.cookie);
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -529,7 +499,6 @@ app.get('/Persons', function (req, res) {
 });
 
 app.put('/Persons/:viewType/:_id', function (req, res) {
-    console.log(req.body);
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -613,7 +582,6 @@ app.post('/Projects', function (req, res) {
     data = {};
     data.mid = req.headers.mid;
     data.project = req.body;
-    console.log(data);
     requestHandler.createProject(req, res, data);
 });
 
@@ -782,7 +750,6 @@ app.get('/WorkflowContractEnd', function (req, res) {
     data.id = req.param('id');
     //console.log(req.body);
     data.mid = req.param('mid');
-    console.log(data);
     requestHandler.getWorkflowContractEnd(req, res, data);
 });
 
@@ -794,7 +761,6 @@ app.get('/WorkflowsForDd', function (req, res) {
     //type.name = 'task';
     type.id = req.param('id');
     data.type = type;
-    console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
 });
 
@@ -806,7 +772,6 @@ app.get('/taskWorkflows', function (req, res) {
     //type.name = 'task';
     type.id = "Task";
     data.type = type;
-    console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
 });
 
@@ -818,7 +783,6 @@ app.get('/projectWorkflows', function (req, res) {
     type.name = 'project';
     type.id = "Project";
     data.type = type;
-    console.log(data);
     requestHandler.getWorkflowsForDd(req, res, data);
 });
 
@@ -829,7 +793,6 @@ app.post('/Workflows', function (req, res) {
     //data._id = req.headers.id;
     data._id = req.body.wId;
     data.wName = req.body.name;
-    console.log(data);
     requestHandler.createWorkflow(req, res, data);
 });
 
@@ -837,9 +800,6 @@ app.put('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
     data = {};
     var _id = req.param('_id');
-    console.log("*************");
-    console.log(_id);
-
     data.mid = req.headers.mid;
     data.status = req.body.status;
     data.name = req.body.name;
@@ -1016,7 +976,6 @@ app.get('/jobType', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     //data._id = req.param('_id');
-    console.log(data);
     requestHandler.getJobType(req, res, data);
 });
 
@@ -1031,7 +990,6 @@ app.get('/JobPosition', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     //data._id = req.param('_id');
-    console.log(data);
     requestHandler.getJobPosition(req, res, data);
 });
 
@@ -1049,7 +1007,6 @@ app.get('/JobPositions/:viewType', function (req, res) {
     }
     var viewType = req.params.viewType;
     console.log('----------------getJobPos-----------------' + viewType);
-    console.log(data);
     console.log('----------------getJobPos-----------------' + viewType);
     switch (viewType) {
         case "form": requestHandler.getJobPositionById(req, res, data);
@@ -1064,7 +1021,6 @@ app.get('/JobPosition/:_id', function (req, res) {
     data = {};
     data._id = req.params._id;
     //data._id = req.param('_id');
-    console.log(data);
     res.send(200, { success: 'ok' });
     //requestHandler.getJobPosition(req, res, data);
 });
@@ -1133,7 +1089,7 @@ app.get('/Departments/:viewType', function (req, res) {
 
 });
 
-app.put('/Departments/:viewType/:_id', function (req, res) {
+app.put('/Departments/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
@@ -1198,8 +1154,6 @@ app.get('/Employees/:viewType', function (req, res) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
-    console.log('______________>>');
-    console.log(viewType);
     switch (viewType) {
         case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
             break;
@@ -1287,7 +1241,6 @@ app.get('/Applications/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(req.params);
     viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
@@ -1424,7 +1377,6 @@ app.get('/Leads/:viewType', function (req, res) {
         data[i] = req.query[i];
     }
     console.log('============== /Leads/:viewType=================');
-    console.log(data);
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
@@ -1448,7 +1400,6 @@ app.put('/Leads/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.lead = req.body;
-    console.log(data);
     requestHandler.updateLead(req, res, id, data);
 });
 
@@ -1457,7 +1408,6 @@ app.put('/Leads/:viewType/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.lead = req.body;
-    console.log(data);
     requestHandler.updateLead(req, res, id, data);
 });
 
@@ -1497,7 +1447,6 @@ app.get('/Opportunities/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log(data);
     viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getOpportunityById(req, res, data);
@@ -1571,7 +1520,6 @@ app.get('/Events', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     data.idArray = req.param('idArray');
-    console.log(data);
     requestHandler.getEvents(req, res, data);
 });
 
@@ -1580,7 +1528,6 @@ app.put('/Events/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.event = req.body;
-    console.log(data);
     requestHandler.updateEvent(req, res, id, data);
 });
 

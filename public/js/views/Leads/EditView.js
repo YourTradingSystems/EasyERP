@@ -2,9 +2,10 @@ define([
     "text!templates/Leads/EditTemplate.html",
     "custom",
     'common',
-    'dataService'
+    'dataService',
+	"populate"
 ],
-    function (EditTemplate, Custom, common, dataService) {
+    function (EditTemplate, Custom, common, dataService, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -16,6 +17,7 @@ define([
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {}
                 this.render();
             },
 
@@ -27,7 +29,6 @@ define([
                 "click .current-selected": "showNewSelect",
                 "click": "hideNewSelect",
                 'keydown': 'keydownHandler',
-
                 'click .dialog-tabs a': 'changeTab',
                 'click .addUser': 'addUser',
                 'click .addGroup': 'addGroup',
@@ -231,7 +232,7 @@ define([
 
                 var company = $.trim(this.$el.find("#company").val());
 
-                var idCustomer = $("#customerDd option:selected").val();
+                var idCustomer = $("#customerDd").data("id");
                 idCustomer = idCustomer ? idCustomer : null;
                 var address = {};
                 $("p").find(".address").each(function () {
@@ -239,7 +240,7 @@ define([
                     address[el.attr("name")] = $.trim(el.val());
                 });
 
-                var salesPersonId = this.$("#salesPerson option:selected").val();
+                var salesPersonId = this.$("#salesPerson").data("id");
                 salesPersonId = salesPersonId ? salesPersonId : null;
                 var salesTeamId = this.$("#salesTeam option:selected").val();
                 salesTeamId = salesTeamId ? salesTeamId : null;
@@ -250,7 +251,7 @@ define([
                     last: last
                 };
 
-                var email = $.trim(this.$el.find("#email").val());
+                var email = $.trim(this.$el.find("#mail").val());
                 var func = $.trim(this.$el.find("#func").val());
 
                 var phone = $.trim(this.$el.find("#phone").val());
@@ -261,10 +262,9 @@ define([
                     mobile: mobile,
                     fax: fax
                 };
-
-                var workflow = this.$("#workflowsDd option:selected").data('id');
+                var workflow = this.$("#workflowsDd").data('id');
                 workflow = workflow ? workflow : null;
-                var priority = $("#priorityDd option:selected").val();
+                var priority = $("#priorityDd").data("id");
 
                 var internalNotes = $.trim($("#internalNotes").val());
 
@@ -295,8 +295,8 @@ define([
                 this.currentModel.save({
                     name: name,
                     company: company,
-                    campaign: this.$el.find('#campaignDd option:selected').val(),
-                    source: this.$el.find('#sourceDd option:selected').val(),
+                    campaign: this.$el.find('#campaignDd').data("id"),
+                    source: this.$el.find('#sourceDd').data("id"),
                     customer: idCustomer,
                     address: address,
                     salesPerson: salesPersonId,
@@ -356,36 +356,7 @@ define([
                 }
             },
             showNewSelect:function(e,prev,next){
-				var elementVisible = 25;
-				var newSel = $(e.target).parent().find(".newSelectList")
-				if (prev||next){
-					newSel = $(e.target).closest(".newSelectList")
-				}
-				var parent = newSel.length>0?newSel.parent():$(e.target).parent();
-                var currentPage = 1;
-                if (newSel.is(":visible")&&!prev&&!next){
-                    newSel.hide();
-					return;
-				}
-
-                if (newSel.length){
-                    currentPage = newSel.data("page");
-                    newSel.remove();
-                }
-				if (prev)currentPage--;
-				if (next)currentPage++;
-                var s="<ul class='newSelectList' data-page='"+currentPage+"'>";
-                var start = (currentPage-1)*elementVisible;
-				var options = parent.find("select option");
-                var end = Math.min(currentPage*elementVisible,options.length);
-                for (var i = start; i<end;i++){
-                    s+="<li class="+$(options[i]).text().toLowerCase()+">"+$(options[i]).text()+"</li>";                                                
-                }
-				var allPages  = Math.ceil(options.length/elementVisible)
-                if (options.length>elementVisible)
-                    s+="<li class='miniStylePagination'><a class='prev"+ (currentPage==1?" disabled":"")+"' href='javascript:;'>&lt;Prev</a><span class='counter'>"+(start+1)+"-"+end+" of "+parent.find("select option").length+"</span><a class='next"+ (currentPage==allPages?" disabled":"")+"' href='javascript:;'>Next&gt;</a></li>";
-                s+="</ul>";
-                parent.append(s);
+                populate.showSelect(e,prev,next,this);
                 return false;
                 
             },
@@ -395,19 +366,11 @@ define([
 			},
 
 			chooseOption:function(e){
-				var k = $(e.target).parent().find("li").index($(e.target));
-				$(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-				$(e.target).parents("dd").find("select option").eq(k).attr("selected","selected");
-				$(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-			},
-
-			styleSelect:function(id){
-				var text = $(id).find("option:selected").length==0?$(id).find("option").eq(0).text():$(id).find("option:selected").text();
-				$(id).parent().append("<a class='current-selected' href='javascript:;'>"+text+"</a>");
-				$(id).hide();
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
 			},
 
             render: function () {
+				console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
@@ -436,16 +399,10 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-                common.populateCustomers("#customerDd", "/Customer", this.currentModel.toJSON(),function(){self.styleSelect("#customerDd");});
-                common.populateDepartments("#salesTeam", "/DepartmentsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#salesTeam");});
-                common.populateEmployeesDd("#salesPerson", "/getForDdByRelatedUser", this.currentModel.toJSON(), function () { self.styleSelect("#salesPerson"); });
-                common.populatePriority("#priorityDd", "/Priority", this.currentModel.toJSON(),function(){self.styleSelect("#priorityDd");});
-                common.populateWorkflows("Lead", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON(),function(){self.styleSelect("#workflowsDd");self.styleSelect("#workflowNamesDd");});
-                common.populateSourceDd("#sourceDd", "/sources", this.currentModel.get("source"), function () {
-                    self.styleSelect("#sourceDd");
-                });
-             
-				this.styleSelect("#campaignDd");
+				populate.getPriority("#priorityDd",this);
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Lead"},"name",this);			
+				populate.get2name("#customerDd", "/Customer",{},this);	
+				populate.get2name("#salesPerson", "/getForDdByRelatedUser",{},this);	
                 this.delegateEvents(this.events);
                 $('#campaignDd').val(this.currentModel.get('campaign'));
                 $('#sourceDd').val(this.currentModel.get('source'));

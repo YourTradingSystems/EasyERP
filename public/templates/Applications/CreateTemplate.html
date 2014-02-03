@@ -54,37 +54,37 @@
                     <dl class="person-info">
                       <dt><label for="jobPositionDd">Applied Job </label></dt>
                       <dd>
-                        <select id="jobPositionDd">
-
-                        </select>
+						<a id="jobPositionDd" class="current-selected" href="javascript:;"></a>
                       </dd>
                       <dt><label for="departmentDd">Department</label></dt>
                       <dd>
-                        <select id="departmentDd">
-
-                        </select>
-
+						<a id="departmentDd" class="current-selected" href="javascript:;"></a>
                       </dd>
                       <dt><label for="sourceDd">Source </label></dt>
                       <dd>
-                        <select id="sourceDd">
-                          <option>www.rabota.ua</option>
-                          <option>www.work.ua</option>
-                          <option>www.ain.net</option>
-                          <option>other</option>
-                        </select>
+						<a id="sourceDd" data-id="www.rabota.ua" class="current-selected" href="javascript:;">www.rabota.ua</a>
+						<ul class="newSelectList hidden">
+                          <li id="www.rabota.ua">www.rabota.ua</li>
+                          <li id="www.work.ua">www.work.ua</li>
+                          <li id="www.ain.net">www.ain.net</li>
+                          <li id="other">other</li>
+						</ul>
+
                       </dd>
-                      <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow"><select id="workflowsDd"></select></dd>
+                      <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow">
+						<a id="workflowsDd" class="current-selected" href="javascript:;"></a>
+					  </dd>
                       <dt><label for="jobtapeDd">Job type</label></dt>
                       <dd>
-                        <select id="jobtapeDd">
-                          <option>Full-time</option>
-                          <option>Part-time</option>
-                          <option>Remote</option>
-                          <option>Permanent</option>
-                          <option>Contract</option>
-                          <option>Temporary</option>
-                        </select>
+						<a id="jobtapeDd" data-id="Full-time" class="current-selected" href="javascript:;">Full-time</a>
+						<ul class="newSelectList hidden">
+                          <li id="Full-time">Full-time</li>
+                          <li id="Part-time">Part-time</li>
+                          <li id="Remote">Remote</li>
+                          <li id="Permanent">Permanent</li>
+                          <li id="Contract">Contract</li>
+                          <li id="Temporary">Temporary</li>
+						</ul>
                       </dd>
 
                       <!--				  <dt><label for="degreesDd">Degree </label></dt><dd> <select id="degreesDd"> </select> </dd>
