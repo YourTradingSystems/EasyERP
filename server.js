@@ -513,6 +513,12 @@ app.put('/Persons/:viewType/:_id', function (req, res) {
     requestHandler.updatePerson(req, res, id, data, remove);
 });
 
+app.patch('/Persons/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
+});
+
 app.delete('/Persons/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -699,6 +705,13 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data,remove);
 });
 
+app.patch('/Tasks/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+	console.log(req.body);
+    requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
+});
+
 app.put('/Tasks/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -878,7 +891,11 @@ app.put('/Companies/:viewType/:_id', function (req, res) {
     }
     requestHandler.updateCompany(req, res, id, data, remove);
 });
-
+app.patch('/Companies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
+});
 app.delete('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

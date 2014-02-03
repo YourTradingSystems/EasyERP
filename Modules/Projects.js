@@ -1433,6 +1433,27 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         });
     };
 
+    function taskUpdateOnlySelectedFields(req, _id, data, res) {
+        delete data._id;
+        if (data.notes && data.notes.length != 0) {
+            var obj = data.notes[data.notes.length - 1];
+            obj._id = mongoose.Types.ObjectId();
+            obj.date = new Date();
+            obj.author = req.session.uName;
+            data.notes[data.notes.length - 1] = obj;
+        }
+		console.log(data);
+        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, tasks) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js update project.update " + err);
+                res.send(500, { error: "Can't update Project" });
+            } else {
+                res.send(200, tasks);
+            }
+        });
+    };
+
     function remove(req, _id, res) {
         models.get(req.session.lastDb - 1, 'Project', ProjectSchema).remove({ _id: _id }, function (err, projects) {
             if (err) {
@@ -2271,6 +2292,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         update: update,
 
         updateOnlySelectedFields: updateOnlySelectedFields,
+
+		taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,
 
         remove: remove,
 
