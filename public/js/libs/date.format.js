@@ -35,6 +35,7 @@ var dateFormat = function () {
 
 		// Passing date through Date applies Date.parse, if necessary
 		date = date ? new Date(date) : new Date;
+		console.log(date);
 		if (isNaN(date)) throw SyntaxError("invalid date");
 
 		mask = String(dF.masks[mask] || mask || dF.masks["default"]);
