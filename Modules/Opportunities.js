@@ -1164,10 +1164,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         getById: getById,
 
-       // getListLength: getListLength,
-
-       // getFilterOpportunities: getFilterOpportunities,
-
         getFilterOpportunitiesForKanban: getFilterOpportunitiesForKanban,
 
         getFilterOpportunitiesForMiniView: getFilterOpportunitiesForMiniView,
@@ -1178,15 +1174,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
         getLeadsForChart: getLeadsForChart,
 
-       // getLeadsForList: getLeadsForList,
-
-       // getLeadsCustom: getLeadsCustom,
-
         update: update,
 
         remove: remove
-
-      //  opportunitiesSchema: opportunitiesSchema
     }
 };
 module.exports = Opportunities;
