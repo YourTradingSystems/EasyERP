@@ -27,8 +27,7 @@
             events: {
                 "click #showMore": "showMore",
                 "click .letter:not(.empty)": "alpabeticalRender",
-                "click .gotoForm": "gotoForm",
-                "click .company": "gotoCompanyForm"
+                "click .gotoForm": "gotoForm"
             },
 
             getTotalLength: function(currentNumber) {
@@ -64,11 +63,6 @@
                 window.location.hash = "#easyErp/Companies/form/" + id;
             },
 
-            gotoCompanyForm: function (e) {
-                e.preventDefault();
-                var id = $(e.target).closest("a").data("id");
-                window.location.hash = "#easyErp/Companies/form/" + id;
-            },
             render: function () {
                 var self = this;
                 var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
