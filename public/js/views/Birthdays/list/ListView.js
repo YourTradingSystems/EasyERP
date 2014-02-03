@@ -20,9 +20,12 @@ function (ListTemplate, ListItemView, common, Custom) {
             var list = this.$el.find('#birthdaysList');
             list.find("#weekList").append(new ListItemView({ collection: this.employeesCollection.weekly }).render().el);
             list.find("#monthList").append(new ListItemView({ collection: this.employeesCollection.monthly }).render().el);
-            var ids = _.map( this.employeesCollection.monthly,function(item){
+            var ids = _.map( this.employeesCollection.weekly,function(item){
 				return item._id;
 			});
+			ids = ids.concat( _.map( this.employeesCollection.monthly,function(item){
+				return item._id;
+			}));
 			common.getImages(ids, "/getEmployeesImages");
 			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 
