@@ -3672,3 +3672,53 @@ h3.dashboard {
     stroke: #1ebbea;
     stroke-width: 3px;
 }
+#health{
+	@width:15px;
+	a{
+		margin-top:5px;
+		display:block;
+		width:@width;
+		height:@width;
+		border-radius:@width;
+		margin-left:6px;
+		&.health1{
+			background-color:green;
+		}
+		&.health2{
+			background-color:yellow;
+		}
+		&.health3{
+			background-color:red;
+		}
+	}
+	ul{
+		display:none;
+		margin-top:5px;
+		border:@thin-border silver;
+		width:25px;
+		position:absolute;
+		background-color:white;
+		li{
+			div{
+				width:@width;
+				height:@width;
+				border-radius:@width;
+				margin:5px;
+				cursor:pointer;
+				border:@thin-border silver;
+				&.health1{
+					background-color:green;
+				}
+				&.health2{
+					background-color:yellow;
+				}
+				&.health3{
+					background-color:red;
+				}
+				&:hover{
+					.box-shadow(0,0,5px,blue)
+				}
+			}
+		}
+	}
+}

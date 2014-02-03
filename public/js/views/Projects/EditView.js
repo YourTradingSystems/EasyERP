@@ -5,8 +5,9 @@ define([
     "dataService",
     'text!templates/Notes/AddAttachments.html',
     'text!templates/Notes/AddNote.html',
+	"populate"
 ],
-    function (EditTemplate, Custom, common, dataService, addAttachTemplate, addNoteTemplate) {
+    function (EditTemplate, Custom, common, dataService, addAttachTemplate, addNoteTemplate,populate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Projects",
@@ -17,6 +18,7 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.page = 1;
                 this.pageG = 1;
+				this.responseObj = {}
                 this.render();
             },
 
@@ -38,8 +40,48 @@ define([
                 "click #cancelNote": "cancelNote",
                 "click .addTitle": "showTitle",
                 "click .editNote": "editNote",
+                "click #health a": "showHealthDd",
+                "click #health ul li div": "chooseHealthDd",
+				"click": "hideHealth",
+				"click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect",
+                "click .current-selected": "showNewSelect",
             },
+            notHide: function (e) {
+				return false;
+            },
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+                
+            },
+			chooseOption:function(e){
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+			},
+			hideNewSelect:function(e){
+				$(".newSelectList").hide();;
+			},
 
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true)
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false)
+			},
+			hideHealth:function(){
+				$("#health ul").hide();
+			},
+			chooseHealthDd:function(e){
+				$(e.target).parents("#health").find("a").attr("class",$(e.target).attr("class")).attr("data-value",$(e.target).attr("class").replace("health","")).parent().find("ul").toggle();
+				return false;
+			},
+			showHealthDd:function(e){
+				$(e.target).parent().find("ul").toggle();
+				return false;
+			},
             cancelNote: function (e) {
                 $('#noteArea').val('');
                 $('#noteTitleArea').val('');
@@ -421,10 +463,10 @@ define([
                 var mid = 39;
                 var projectName = $.trim(this.$el.find("#projectName").val());
                 var projectShortDesc = $.trim(this.$el.find("#projectShortDesc").val());
-                var customer = this.$el.find("#customerDd option:selected").val();
-                var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
-                var workflow = this.$el.find("#workflowsDd option:selected").val();
-                var projecttype = this.$el.find("#projectTypeDD option:selected").val();
+                var customer = this.$el.find("#customerDd").data("id");
+                var projectmanager = this.$el.find("#projectManagerDD").data("id");
+                var workflow = this.$el.find("#workflowsDd").data("id");
+                var projecttype = this.$el.find("#projectTypeDD").data("id");
                 var $userNodes = $("#usereditDd option:selected");
                 var users = [];
                 $userNodes.each(function (key, val) {
@@ -542,10 +584,14 @@ define([
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
-                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
-                common.populateCustomers("#customerDd", "/Customer", this.currentModel.toJSON());
-                common.populateEmployeesDd("#userEditDd", "/getPersonsForDd");
-                common.populateWorkflows("Projects", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON());
+//                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
+//                common.populateCustomers("#customerDd", "/Customer", this.currentModel.toJSON());
+//                common.populateEmployeesDd("#userEditDd", "/getPersonsForDd");
+//                common.populateWorkflows("Projects", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON());
+				populate.get("#projectTypeDD", "/projectType",{},"name",this);	
+				populate.get2name("#projectManagerDD", "/getPersonsForDd",{},this);	
+				populate.get2name("#customerDd", "/Customer",{},this);	
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Projects"},"name",this);			
                 var model = this.currentModel.toJSON();
                 if (model.groups)
                     if (model.groups.users.length > 0 || model.groups.group.length) {

@@ -28,8 +28,20 @@ define([
                 'click .unassign': 'unassign',
                 "change .inputAttach": "addAttach",
                 "click .deleteAttach": "deleteAttach",
+                "click #health a": "showHealthDd",
+                "click #health ul li div": "chooseHealthDd",
+				"click": "hideHealth"
+				
             },
-
+			hideHealth:function(){
+				$("#health ul").hide();
+			},
+			chooseHealthDd:function(e){
+				$(e.target).parents("#health").find("a").attr("class",$(e.target).attr("class")).attr("data-value",$(e.target).attr("class").replace("health","")).parent().find("ul").toggle();
+			},
+			showHealthDd:function(e){
+				$(e.target).parent().find("ul").toggle();
+			},
             addAttach: function () {
                 var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];
                 $(".attachContainer").append('<li class="attachFile">' +

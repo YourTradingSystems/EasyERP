@@ -99,20 +99,12 @@
                   <label for="projectManagerDD">Project Manager</label>
                 </dt>
                 <dd>
-                  <select id="projectManagerDD">
-                  </select>
+				  <a id="projectManagerDD" data-id="<%=model.projectmanager?model.projectmanager._id:''%>" class="current-selected" href="javascript:;"><%=model.projectmanager?(model.projectmanager.name.first+' '+model.projectmanager.name.last):'Select'%></a>
                 </dd>
                 
                 <dt><label for="projectTypeDD">Project Type </label></dt>
 				<dd>
-				  <select id="projectTypeDD">
-					<option value="Select">Select ...</option>
-					<option value="Web">Web</option>
-					<option value="Android">Android</option>
-					<option value="iOs">iOs</option>
-					<option value=".Net">.Net</option>
-					<option value="QA">QA</option>
-				  </select>
+				  <a id="projectTypeDD" data-id="<%=model.projecttype?model.projecttype:''%>" class="current-selected" href="javascript:;"><%=model.projecttype?model.projecttype:'Select'%></a>			  
 				</dd>
                 <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.info.StartDate%>" readonly /></dd>
               </dl>
@@ -121,8 +113,7 @@
                   <label for="customerDd">Project Customer </label>
                 </dt>
                 <dd>
-                  <select id="customerDd">
-                  </select>
+				  <a id="customerDd" data-id="<%=model.customer?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=model.customer?(model.customer.name.first+' '+model.customer.name.last):'Select'%></a>
                 </dd>
                 <!--<dt>
                   <label for="workflowNamesDd">Workflow Name</label>
@@ -134,12 +125,11 @@
                 <dt>
                   <label for="workflowsDd">Workflow</label></dt>
                   <dd>
-                      <select id="workflowsDd">
-                      </select>
+							<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
                   </dd>
                   <dt><label for="health">Health</label></dt>
                   <dd id="health">
-                      <a href="javascript:;" data-value="<%=model.health%>"><%=model.health%></a>
+                      <a href="javascript:;" data-value="<%=model.health%>" class="health<%=model.health%>"></a>
                       <ul>
                           <li>
                               <div class="health1"></div>
