@@ -444,6 +444,10 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
             break;
+        case ('Leads'): requestHandler.opportunitiesTotalCollectionLength(req, res);
+            break;
+        case ('Opportunities'): requestHandler.opportunitiesTotalCollectionLength(req, res);
+            break;
         default: next();
     }
     
@@ -470,9 +474,11 @@ app.get('/getPersonsForDd', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getPersonsForDd(req, res, data);
 });
+
 app.get('/getPersonAlphabet', function (req, res) {
     requestHandler.getCustomersAlphabet(req, res);
 });
+
 app.get('/getPersonsForMiniView', function (req, res) {
     data = {};
     for (var i in req.query) {
@@ -548,12 +554,6 @@ app.delete('/Persons/:_id', function (req, res) {
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
-});
-
-app.get('/getPersonListLength', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersonsListLength(req, res, data);
 });
 
 //---------------------------Projects--------------------------------------------------------
@@ -852,15 +852,6 @@ app.get('/CompaniesForDd', function (req, res) {
     data = {};
     data.mid = req.param('mid');
     requestHandler.getCompaniesForDd(req, res, data);
-});
-
-app.get('/ownCompaniesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getOwnCompaniesListLength(req, res, data);
 });
 
 app.get('/ownCompanies', function (req, res) {
@@ -1409,15 +1400,11 @@ app.get('/Leads/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log('============== /Leads/:viewType=================');
-    console.log(data);
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
             break;
-        case "list": requestHandler.getLeadsForList(req, res, data);
-            break;
-        default: requestHandler.getLeadsCustom(req, res, data);
+        case "list": requestHandler.getFilterOpportunities(req, res);
             break;
     }
 });
@@ -1462,15 +1449,6 @@ app.delete('/Leads/:_id', function (req, res) {
 });
 
 //---------------------Opportunities---------------------
-app.get('/OpportunitiesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getOpportunitiesListLength(req, res, data);
-});
-
 app.post('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1490,7 +1468,7 @@ app.get('/Opportunities/:viewType', function (req, res) {
             break;
         case "kanban": requestHandler.getFilterOpportunitiesForKanban(req, res, data);
             break;
-        default: requestHandler.getFilterOpportunities(req, res, data);
+        default: requestHandler.getFilterOpportunities(req, res);
     }
 });
 
