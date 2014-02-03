@@ -9,9 +9,9 @@
 	           el: '#listTable',
 	           stages: null,
 	           initialize: function (options) {
-	               this.collection = options.collection;
+                   this.collection = options.collection;
 	               this.startNumber = options.startNumber;
-	           },
+               },
 	           events: {
 	               "click .stageSelect": "showNewSelect",
 	               "click .newSelectList li": "chooseOption"
@@ -54,9 +54,9 @@
 
 	           render: function () {
 	               var self = this;
-	               this.$el.append(_.template(ListTemplate, { leadsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
-				   $(document).on("click",function(){
-					   self.hideNewSelect();
+                   this.$el.append(_.template(ListTemplate, { leadsCollection: this.collection.toJSON(), startNumber: this.startNumber }));
+                   $(document).on("click",function(e){
+					   self.hideNewSelect(e);
 				   });
 	           }
 	       });

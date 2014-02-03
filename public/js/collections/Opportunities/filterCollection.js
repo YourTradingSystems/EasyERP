@@ -7,76 +7,47 @@
             model: OpportunityModel,
             url: "/Opportunities/",
             page: 1,
+            namberToShow: null,
+            contentType: null,
+
             initialize: function (options) {
-				this.startTime = new Date();
                 var that = this;
-                this.status = [];
-                this.status = options.status;
+				this.startTime = new Date();
+                this.contentType = options.contentType;
+                this.wfStatus = [];
+                this.wfStatus = options.status;
                 this.namberToShow = options.count;
-                this.page = options.page;
+
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    var viewType = options.viewType;
-                    delete options.viewType;
-                }
-                var filterObject = {};
-                for (var i in options) {
-                    filterObject[i] = options[i];
-                };
-
-                switch (viewType) {
-                    case 'thumbnails': {
-                        filterObject['count'] = filterObject['count']*2;
-                        var addPage = 2;
-                        break;
-                    }
-                    case 'list': {
-                        filterObject['page'] = 1;
-                        filterObject['status'] = [];
-                        filterObject['status'] = options.status;
-                        var addPage = 0;
-                        break;
-                    }
-                    default: {
-                        var addPage = 1;
-                    }
+                   // delete options.viewType;
                 }
 
                 this.fetch({
-                    data: filterObject,
+                    data: options,
                     reset: true,
                     success: function(models,response) {
-                        console.log("Opportunities fetchSuccess");
-                        that.showMoreButton = response.showMore;
-                        that.page += addPage;
+                        that.page ++;
                     },
-                    error: this.fetchError
+                    error: function (models, xhr) {
+                        if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
+                    }
                 });
             },
-            filterByWorkflow: function (id) {
-                return this.filter(function (data) {
-                    return data.get("workflow")._id == id;
-                });
-            },
+
             showMore: function (options) {
                 var that = this;
-                
-                var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
+
+                var filterObject = options || {};
+
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
-                filterObject['status'] = [];
-                filterObject['status'] = (options && options.status) ? options.status: this.status;
+                filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
                 this.fetch({
                     data: filterObject,
                     waite: true,
-                    success: function (models,response) {
-                        that.page += 1;
-                        that.showMoreButton = response.showMore;
+                    success: function (models) {
+                        that.page ++;
                         that.trigger('showmore', models);
                     },
                     error: function() {
@@ -89,18 +60,19 @@
             parse: function (response) {
             	 if (response.data) {
                      _.map(response.data, function (opportunity) {
-                         opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
-                         opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
+                         if (opportunity.creationDate)
+                             opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
+                         if (opportunity.expectedClosing)
+                            opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
 						 if (opportunity.nextAction)
 							 opportunity.nextAction.date = ( opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date):'';
 						 if (opportunity.createdBy)
-                         opportunity.createdBy.date = common.utcDateToLocaleDateTime(opportunity.createdBy.date);
+                            opportunity.createdBy.date = common.utcDateToLocaleDateTime(opportunity.createdBy.date);
 						 if (opportunity.editedBy)
-                         opportunity.editedBy.date = common.utcDateToLocaleDateTime(opportunity.editedBy.date);
+                            opportunity.editedBy.date = common.utcDateToLocaleDateTime(opportunity.editedBy.date);
                          return opportunity;
                      });
                  }
-                this.listLength = response.listLength;
                 return response.data;
             }
         });

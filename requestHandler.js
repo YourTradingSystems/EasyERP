@@ -325,21 +325,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getPersonsListLength(req, res, data) {
-        try {
-            console.log("Requst getPersonListLength is success");
-            if (req.session && req.session.loggedIn && req.session.lastDb) {
-                customer.getPersonsListLength(req, res, data);
-            } else {
-                res.send(401);
-            }
-        }
-        catch (Exception) {
-            console.log("requestHandler.js  " + Exception);
-        }
-    };
-
-
     function getCustomer(req, res, data) {
         try {
             console.log("Requst getCustomer is success");
@@ -935,14 +920,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getOwnCompaniesListLength(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            customer.getListLength(req, data, res);
-        } else {
-            res.send(401);
-        }
-    }
-
     function getOwnCompanies(req, res, data) {
         console.log("Request getOwnCompanies is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1012,11 +989,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-
+    // Get  Persons or Companies or ownCompanies for list and thumbnail
     function getFilterCustomers(req, res) {
-        console.log("Requst getFilterCompanies is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            //company.get(res);
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
                     customer.getFilterCustomers(req, res);
@@ -1030,6 +1005,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
+    // Get Alphabet for Companies or ownCompanies or Persons
     function getCustomersAlphabet(req, res) {
         try {
             if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1727,33 +1703,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
-    function getLeadsCustom(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 24, function (access) {
-                if (access) {
-                    opportunities.getLeadsCustom(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-        } else {
-            res.send(401);
-        }
-    }
-    function getLeadsForList(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 24, function (access) {
-                if (access) {
-                    opportunities.getLeadsForList(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-        } else {
-            res.send(401);
-        }
-    }
-
     function createLead(req, res, data) {
         console.log(req.session);
         console.log(data);
@@ -1821,13 +1770,25 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
     //-------------------Opportunities---------------------------
-    function getOpportunitiesListLength(req, res, data) {
-        console.log("Requst getEmployeesListLength is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            opportunities.getListLength(req, data, res);
+
+    // Get  Leads or Opportunities for List
+    function getFilterOpportunities(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb ) {
+            access.getReadAccess(req, req.session.uId, 24, function (access) {
+                if (access) {
+                    opportunities.getFilter(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
         } else {
             res.send(401);
         }
+    }
+
+    // Get  Leads or Opportunities total count
+    function opportunitiesTotalCollectionLength(req, res) {
+        opportunities.getTotalCount(req, res);
     }
 
     function getOpportunitiesLengthByWorkflows(req, res) {
@@ -1849,6 +1810,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+
     function getOpportunityById(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 25, function (access) {
@@ -1864,20 +1826,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
-    function getFilterOpportunities(req, res, data) {
-        console.log("Requst getFilterOpportunities is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 25, function (access) {
-                if (access) {
-                    opportunities.getFilterOpportunities(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-        } else {
-            res.send(401);
-        }
-    };
     function getFilterOpportunitiesForMiniView(req, res, data) {
         console.log("Requst getFilterOpportunities is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2153,6 +2101,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
+    // Get  Persons or Companies or ownCompanies total count
     function customerTotalCollectionLength(req, res) {
         customer.getTotalCount(req, res);
     }
@@ -2187,7 +2136,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonById: getPersonById,
         updatePerson: updatePerson,
         removePerson: removePerson,
-        getPersonsListLength: getPersonsListLength,
         // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,
@@ -2223,7 +2171,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         getCompaniesForDd: getCompaniesForDd,
         getCompanyById: getCompanyById,
-        getOwnCompaniesListLength: getOwnCompaniesListLength,
         getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,
         createCompany: createCompany,
@@ -2297,14 +2244,12 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         createLead: createLead,
         getLeads: getLeads,
-        getLeadsCustom: getLeadsCustom,
         updateLead: updateLead,
         removeLead: removeLead,
         getLeadsById: getLeadsById,
         getLeadsForChart: getLeadsForChart,
-        getLeadsForList: getLeadsForList,
 
-        getOpportunitiesListLength: getOpportunitiesListLength,
+        opportunitiesTotalCollectionLength: opportunitiesTotalCollectionLength,
         getOpportunitiesLengthByWorkflows: getOpportunitiesLengthByWorkflows,
         createOpportunitie: createOpportunitie,
         getFilterOpportunities: getFilterOpportunities,
