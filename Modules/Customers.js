@@ -70,7 +70,7 @@
     mongoose.model('Customers', customerSchema);
 
     return {
-        
+
         getTotalCount: function (req, response) {
             var res = {};
             var data = {};
@@ -79,10 +79,9 @@
             }
             res['showMore'] = false;
 
-            var  contentType = req.params.contentType;
-            console.log(contentType);
+            var contentType = req.params.contentType;
             var optionsObject = {};
-            switch(contentType) {
+            switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
                     if (data.letter)
@@ -160,18 +159,11 @@
                             },
                             function (err, result) {
                                 if (!err) {
-                                    var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find().where('_id').in(result);
-                                    query.count(function (error, count) {
-                                        if (!error) {
-                                            if (data.currentNumber && data.currentNumber < count) {
-                                                res['showMore'] = true;
-                                            }
-                                            res['count'] = count;
-                                            response.send(res);
-                                        } else {
-                                            console.log(error);
-                                        }
-                                    });
+                                    if (data.currentNumber && data.currentNumber < result.length) {
+                                        res['showMore'] = true;
+                                    }
+                                    res['count'] = result.length;
+                                    response.send(res);
                                 } else {
                                     console.log(err);
                                     response.send(500, { error: 'Server Eroor' });
@@ -181,7 +173,7 @@
 
                     } else {
                         console.log(err);
-                        response.send(500, {error: 'Server Eroor'});
+                        response.send(500, { error: 'Server Eroor' });
                     }
                 });
         },
@@ -416,7 +408,7 @@
                 }
             });
         },
-        
+
         getFilterPersonsForMiniView: function (req, response, data) {
             console.log('------------get filter Persons-------------------');
             var res = {};
@@ -605,7 +597,7 @@
             var searchName;
             var res = {};
             var optionsObject = {};
-            switch(contentType) {
+            switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
                     searchName = "$name.last";
@@ -620,7 +612,7 @@
                     optionsObject['type'] = 'Company';
                     optionsObject['isOwn'] = true;
                     searchName = "$name.first";
-                 }
+                }
                     break;
             }
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -706,7 +698,7 @@
             var res = {};
             res['data'] = [];
             var optionsObject = {};
-            switch(contentType) {
+            switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
                     if (data.letter)

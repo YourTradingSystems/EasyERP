@@ -338,12 +338,12 @@ define([
                     headers: {
                         mid: mid
                     },
-                    success: function (model) {
+                    success: function () {
                         self.hideDialog();
                         Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                     },
-                    error: function (model, xhr, options) {
-                        Backbone.history.navigate("easyErp", { trigger: true });
+                    error: function () {
+                        Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                     }
                 });
             },

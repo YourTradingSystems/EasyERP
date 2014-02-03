@@ -415,7 +415,9 @@ define([
 
             showMoreContent: function (newModels) {
                 $("#listTable").empty();
-                this.$el.append(new ListItemView({ collection: newModels }).render());
+                var view = new ListItemView({ collection: newModels });
+                view.undelegateEvents();
+                this.$el.append(view.render());
                 $('#timeRecivingDataFromServer').remove();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },
