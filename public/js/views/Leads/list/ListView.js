@@ -273,7 +273,7 @@ define([
                         }
                     }
                 });
-                common.populateWorkflowsList("Lead", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+                common.populateWorkflowsList("Lead", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function(stages) {
 					self.stages = stages;
                     itemView.trigger('incomingStages', stages);
                 });
@@ -415,7 +415,9 @@ define([
 
             showMoreContent: function (newModels) {
                 $("#listTable").empty();
-                this.$el.append(new ListItemView({ collection: newModels }).render());
+                var view = new ListItemView({ collection: newModels });
+                view.undelegateEvents();
+                this.$el.append(view.render());
                 $('#timeRecivingDataFromServer').remove();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             },

@@ -333,8 +333,8 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON());
-                common.populateWorkflows("Jobposition", App.ID.workflowDd, App.ID.workflowNamesDd, "/WorkflowsForDd", this.currentModel.toJSON());
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON());
+                common.populateWorkflows("Jobposition", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON());
 
                 var model = this.currentModel.toJSON();
                 if (model.groups)

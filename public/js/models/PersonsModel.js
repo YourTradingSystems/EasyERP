@@ -56,8 +56,8 @@ function (common, Validation) {
 
         defaults: {
             id: null,
+            imageSrc:'',
             type: 'Person',
-            imageSrc: "",
             photoUrl: null,
             name: {
                 first: "",

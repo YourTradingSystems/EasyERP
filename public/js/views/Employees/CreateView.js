@@ -416,13 +416,13 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateUsers(App.ID.relatedUsersDd, "/UsersForDd");
-                common.populateDepartments(App.ID.departmentsDd, "/DepartmentsForDd");
-                common.populateJobPositions(App.ID.jobPositionDd, "/JobPositionForDd");
+                common.populateUsers("#relatedUsersDd", "/UsersForDd");
+                common.populateDepartments("#departmentsDd", "/DepartmentsForDd");
+                common.populateJobPositions("#jobPositionDd", "/JobPositionForDd");
                 common.populateJobTypeDd("#jobTypeDd", "/jobType");
                 console.log(this.model.toJSON());
-                common.populateEmployeesDd(App.ID.coachDd, "/getPersonsForDd");
-                common.populateEmployeesDd(App.ID.managerSelect, "/getPersonsForDd");
+                common.populateEmployeesDd("#coachDd", "/getPersonsForDd");
+                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
                     dateFormat: "d M, yy",

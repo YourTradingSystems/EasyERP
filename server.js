@@ -416,6 +416,8 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
             break;
+        case ('Projects'): requestHandler.projectsTotalCollectionLength(req, res);
+            break;
         default: next();
     }
     
@@ -535,6 +537,11 @@ app.get('/ProjectsListLength', function (req, res) {
     requestHandler.getProjectsListLength(req, res, data);
 });
 
+app.get('/projectType', function (req, res) {
+    console.log('Get getProjectType');
+    requestHandler.getProjectType(req, res);
+});
+
 app.get('/Projects', function (req, res) {
     console.log('Get Projects');
     data = {};
@@ -542,12 +549,12 @@ app.get('/Projects', function (req, res) {
     requestHandler.getProjects(req, res, data);
 });
 
-/*app.get('/Projects/:_id', function (req, res) {
+app.get('/Projects/form/:_id', function (req, res) {
     data = {};
     data.id = req.params._id;
     data.mid = req.param('mid');
     requestHandler.getProjectsById(req, res, data);
-});*/
+});
 
 app.get('/getProjectsForDd', function (req, res) {
     data = {};
@@ -587,13 +594,20 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data,remove);
 });
 
+app.patch('/Projects/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.updateOnlySelectedFields(req, res, id, req.body);
+});
+
 app.put('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     var remove = req.headers.remove;
     data.project = req.body;
-    requestHandler.updateProject(req, res, id, data,remove);
+    requestHandler.updateProject(req, res, id, data, remove);
 });
 
 app.delete('/Projects/:viewType/:_id', function (req, res) {
@@ -612,7 +626,7 @@ app.delete('/Projects/:_id', function (req, res) {
     requestHandler.removeProject(req, res, id, data);
 });
 
-app.get('/Projects/:viewType', function (req, res) {
+app.get('/Projects/:viewType', function (req, res, next) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -624,7 +638,7 @@ app.get('/Projects/:viewType', function (req, res) {
         case "list": requestHandler.getProjectsForList(req, res, data);
             break;
 
-        default: requestHandler.getProjects(req, res, data);
+        default: requestHandler.getProjects(req, res, data, next);
             break;
     }
 

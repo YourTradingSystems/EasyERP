@@ -338,12 +338,12 @@ define([
                     headers: {
                         mid: mid
                     },
-                    success: function (model) {
+                    success: function () {
                         self.hideDialog();
                         Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                     },
-                    error: function (model, xhr, options) {
-                        Backbone.history.navigate("easyErp", { trigger: true });
+                    error: function () {
+                        Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                     }
                 });
             },
@@ -377,12 +377,12 @@ define([
 
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
-                common.populateCustomers(App.ID.customerDd, App.URL.customers,this.model);
-                //common.populateEmployeesDd(App.ID.salesPersonDd, App.URL.salesPersons);
-                common.populateEmployeesDd(App.ID.salesPersonDd, "/getForDdByRelatedUser", this.model);
-                common.populateDepartments(App.ID.salesTeamDd, App.URL.salesTeam);
-                common.populatePriority(App.ID.priorityDd, App.URL.priorities);
-                common.populateWorkflows('Opportunities', '#workflowDd', App.ID.workflowNamesDd, '/WorkflowsForDd');
+                common.populateCustomers("#customerDd", "/Customer",this.model);
+                //common.populateEmployeesDd("#salesPerson"Dd, "/getSalesPerson");
+                common.populateEmployeesDd("#salesPersonDd", "/getForDdByRelatedUser", this.model);
+                common.populateDepartments("#salesTeamDd", "/DepartmentsForDd");
+                common.populatePriority("#priorityDd", "/Priority");
+                common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/WorkflowsForDd');
                 this.delegateEvents(this.events);
                 return this;
             }

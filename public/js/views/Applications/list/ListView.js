@@ -196,7 +196,7 @@ define([
                         $("#pageList").empty();
                         var pageNumber = Math.ceil(self.listLength/itemsNumber);
                         for (var i=1;i<=pageNumber;i++) {
-                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                            $("#pageList").append('<li class="showPage">' + i + '</li>');
                         }
                         $("#lastPage").text(pageNumber);
                         $("#currentShowPage").val(1);
@@ -208,7 +208,7 @@ define([
                         }
                     }
                 });
-                common.populateWorkflowsList("Applications", ".filter-check-list", App.ID.workflowNamesDd, "/Workflows", null, function(stages) {
+                common.populateWorkflowsList("Applications", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function(stages) {
 					self.stages = stages;
                     itemView.trigger('incomingStages', stages);
                 });
@@ -292,7 +292,7 @@ define([
                         $("#lastPage").text(pageNumber);
                         $("#pageList").empty();
                         for (var i=1;i<=pageNumber;i++) {
-                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                            $("#pageList").append('<li class="showPage">' + i + '</li>');
                         }
                     }
                 });
@@ -353,9 +353,9 @@ define([
                 this.startTime = new Date();
 
                 var workflowIdArray = [];
-                $('.filter-check-list input:checked').each(function(){
+                $('.filter-check-list input:checked').each(function() {
                     workflowIdArray.push($(this).val());
-                })
+                });
                 this.wfStatus = workflowIdArray;
 
                 var itemsNumber = $("#itemsNumber").text();
@@ -387,7 +387,7 @@ define([
                         $("#lastPage").text(pageNumber);
                         $("#pageList").empty();
                         for (var i=1;i<=pageNumber;i++) {
-                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                            $("#pageList").append('<li class="showPage">' + i + '</li>');
                         }
                     }
                 });
@@ -448,7 +448,7 @@ define([
 
                     });
                     that.listLength--;
-                    localCounter++
+                    localCounter++;
                 });
                 this.deleteCounter = localCounter;
                 this.deletePage = $("#currentShowPage").val();
