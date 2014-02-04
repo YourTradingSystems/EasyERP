@@ -340,7 +340,7 @@ app.get('/Users/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getUserById(req, res, data);
             break;
-        default: requestHandler.getFilterUsers(req, res, data);
+        default: requestHandler.getFilterUsers(req, res);
             break;
     }
 });
@@ -427,9 +427,12 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('Applications'): requestHandler.employeesTotalCollectionLength(req, res);
             break;
+        case ('JobPositions'): requestHandler.jobPositionsTotalCollectionLength(req, res);
+            break;
+        case ('Users'): requestHandler.usersTotalCollectionLength(req, res);
+            break;
         default: next();
     }
-    
 });
 //------------------------END--getTotalLength---------------------------------------------
 
@@ -980,15 +983,6 @@ app.get('/getownCompaniesAlphabet', function (req, res) {
 });
 
 //------------------JobPositions---------------------------------------------------
-app.get('/JobPositionsListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getJobPositionsListLength(req, res, data);
-});
-
 app.get('/jobType', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1023,12 +1017,10 @@ app.get('/JobPositions/:viewType', function (req, res) {
         data[i] = req.query[i];
     }
     var viewType = req.params.viewType;
-    console.log('----------------getJobPos-----------------' + viewType);
-    console.log('----------------getJobPos-----------------' + viewType);
     switch (viewType) {
         case "form": requestHandler.getJobPositionById(req, res, data);
             break;
-        default: requestHandler.getCustomJobPosition(req, res, data);
+        default: requestHandler.getFilterJobPosition(req, res);
             break;
     }
 

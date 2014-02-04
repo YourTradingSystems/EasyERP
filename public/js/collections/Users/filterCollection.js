@@ -7,47 +7,29 @@
             model: UserModel,
             url: "/Users/",
             page: 1,
+            namberToShow: null,
+
             initialize: function (options) {
 				this.startTime = new Date();
+
                 var that = this;
+
                 this.namberToShow = options.count;
+
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    var viewType = options.viewType;
-                    delete options.viewType;
-                }
-                var filterObject = {};
-                for (var i in options) {
-                    filterObject[i] = options[i];
-                };
-
-                switch (viewType) {
-                    case 'thumbnails': {
-                        filterObject['count'] = filterObject['count']*2;
-                        var addPage = 2;
-                        break;
-                    }
-                    case 'list': {
-                        filterObject['page'] = 1;
-                        var addPage = 0;
-                        break;
-                    }
-                    default: {
-                        var addPage = 1;
-                    }
+                   // delete options.viewType;
                 }
 
                 this.fetch({
-                    data: filterObject,
+                    data: options,
                     reset: true,
                     success: function () {
                         console.log("Users fetchSuccess");
-                        that.page += addPage;
+                        that.page ++;
                     },
-                    error: function (models, xhr, optiond) {
-                        if ((xhr.status === 401) || (xhr.status === 403)) {
-                            window.location = 'logout';
-                        }
+                    error: function (models, xhr) {
+                        if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
                     }
                 });
             },
@@ -55,19 +37,15 @@
             showMore: function (options) {
                 var that = this;
 
-                var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
+                var filterObject = options || {};
+
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 this.fetch({
                     data: filterObject,
                     waite: true,
                     success: function (models) {
-                        that.page += 1;
+                        that.page ++;
                         that.trigger('showmore', models);
                     },
                     error: function () {
@@ -86,7 +64,6 @@
                         return user;
                     });
                 }
-                this.listLength = response.listLength;
                 return response.data;
             }
 
