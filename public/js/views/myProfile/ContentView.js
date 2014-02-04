@@ -83,7 +83,6 @@ define([
 
             save: function (e) {
                 e.preventDefault();
-                e.preventDefault();
                 dataService.getData('/currentUser', null, function (response, context) {
 
                     var dataResponse = {
@@ -115,7 +114,7 @@ define([
 	                    },
 	                    editMode: true
 	                });
-                }, this);
+                }, this.render());
             },
 
             resetForm: function (e) {
@@ -178,7 +177,6 @@ define([
                         context.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - context.startTime) + " ms</div>");
                     }, this);
                 }, this);
-
                 return this;
             }
         });
