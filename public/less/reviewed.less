@@ -557,7 +557,7 @@
                 a {
                     letter-spacing: 1.5px;
                     color: #fff;
-                    font-size: 14px;
+                    font-size: 0.75rem;
                     text-decoration: none;
                     display: block;
                     .fullsize;
@@ -588,7 +588,6 @@
                     transition: all ease .5s;
 
                     a {
-                        font-size: 14px;
                         font-size: 0.75rem;
                         color: #fff;
                         text-decoration: none;
@@ -601,7 +600,7 @@
     }
 }
 
-.top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px,) {
+.top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px) {
     position: relative;
     display: block;
     width: auto;
@@ -617,6 +616,7 @@
         font-family: @title-font;
         font-weight: normal;
         float: left;
+        overflow: visible;
     }
 }
 
@@ -1242,7 +1242,12 @@
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
         line-height: 18px;
         font-family: @lucida-font;
-        .text-overflow;
+        span{
+          .text-overflow;
+          white-space: normal;
+          width: 182px;
+          display: block;
+        }
     }
 
     .inner {
