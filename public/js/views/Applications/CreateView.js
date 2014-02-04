@@ -291,7 +291,7 @@ define([
                 var departmentId = $("#departmentDd").data("id");
 
                 var jobPositionId = $("#jobPositionDd").data("id");
-
+                var jobType= this.$el.find("#jobTypeDd").data("id");
                 var expectedSalary = $.trim($("#expectedSalary").val());
                 var proposedSalary = $.trim($("#proposedSalary").val());
                 var tags = $.trim($("#tags").val()).split(',');
@@ -325,6 +325,7 @@ define([
                     expectedSalary: expectedSalary,
                     proposedSalary: proposedSalary,
                     tags: tags,
+					jobType:jobType,
                     otherInfo: otherInfo,
                     workflow: workflow,
                     groups: {
@@ -447,6 +448,7 @@ define([
 				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this,true);
 				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this,true);
 				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this,true);
+				populate.get("#jobTypeDd","/jobType",{},"_id",this,true);
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

@@ -63,6 +63,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function redirectFromModuleId(req, res, id) {
+        console.log("Requst get Modules is success");
+        // if (req.session && req.session.loggedIn && req.session.lastDb ) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            models.get(req.session.lastDb - 1, 'Users', users.schema).findById(req.session.uId, function (err, _user) {
+                if (_user) {
+                    modules.redirectToUrl(req, _user.profile, res, id);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
     function login(req, res, data) {
         console.log("Requst LOGIN is success");
         users.login(req, data, res);
@@ -2151,6 +2167,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         mongoose: mongoose,
         getModules: getModules,
+		redirectFromModuleId:redirectFromModuleId,
 
         login: login,
         createUser: createUser,
