@@ -1,8 +1,7 @@
 ﻿define([
-    'models/ProjectsModel',
-    'common'
+    'models/ProjectsModel'
 ],
-    function (ProjectModel, common) {
+    function (ProjectModel) {
         var ProjectsCollection = Backbone.Collection.extend({
             model: ProjectModel,
             url: "/Projects/",
@@ -12,10 +11,10 @@
 
             initialize: function (options) {
                 var that = this;
-
                 this.startTime = new Date();
                 this.namberToShow = options.count;
-
+                this.wfStatus = [];
+                this.wfStatus = options.status;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                 }
@@ -62,8 +61,6 @@
                 this.listLength = response.listLength;
                 return response.data;
             }
-
-
         });
 
         return ProjectsCollection;

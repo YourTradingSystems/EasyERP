@@ -50,7 +50,7 @@
                     data: filterObject,
                     waite: true,
                     success: function (models) {
-                        that.page += 1;
+                        that.page ++;
                         that.trigger('showmore', models);
                     },
                     error: function () {
