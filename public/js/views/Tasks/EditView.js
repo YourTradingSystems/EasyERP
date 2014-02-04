@@ -74,7 +74,7 @@
 												 mid: 40,
 												 remove: true,
 											 },
-											 
+											 patch:true,
 											 success: function (model, response, options) {
 												 $('#' + id_int).remove();
 											 }

@@ -1431,7 +1431,7 @@
 
     .app-block {
         .half-block;
-		}
+	}
 
     textarea {
         .noPaddingMargin;
@@ -1439,7 +1439,14 @@
 
         &#description {
             margin-top: 0 !important;
+			&.taskDescription{
+				height:310px;
 			}
+			&.taskDescriptionCreate{
+				height:340px;
+			}
+
+		}
 
         &#otherInfo {
             margin-top: 13px;
@@ -2335,7 +2342,9 @@ dl {
 
 .noteWrapper {
     width: 50%;
-
+	&.full-width{
+		width:100%;
+	}
     >label {
         font-size: 16px;
         color: #555;
@@ -2361,6 +2370,10 @@ dl {
             display: none;
             margin-top: 10px;
             margin-bottom: 10px;
+			input{
+				width:100%;
+				max-width:inherit;
+			}
         }
 
         #cancelNote {
@@ -2377,8 +2390,10 @@ dl {
         }
 
         textarea {
+			padding: 2px 4px;
+			min-height:inherit;
             width: 100%;
-            height: 15px;
+            height: 17px;
             padding-left: 3px;
             padding-right: 0;
             .border-radius(0);
