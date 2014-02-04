@@ -208,7 +208,7 @@ define([
 
                 var name = $.trim($("#name").val());
 
-                var expectedRecruitment = $.trim($("#expectedRecruitment").val());
+                var expectedRecruitment =  parseInt($.trim($("#expectedRecruitment").val()));
 
                 var description = $.trim($("#description").val());
 

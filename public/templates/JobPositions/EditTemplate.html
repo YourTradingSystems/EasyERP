@@ -13,7 +13,7 @@
 		<dl class="job-create-info">
 		  <dt><label for="name">Job Name </label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" value="<%=model.name%>" required maxlength="32"/></dd>
 		  <dt><label for="currentNumberEmployees">Current Number of Employees</label></dt><dd><label><%= model.numberOfEmployees %></label></dd>
-		  <dt><label for="expectedRecruitment">Expected in Recruitment</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" value="<%=model.expectedRecruitment%>" maxlength="32"/></dd>
+		  <dt><label for="expectedRecruitment">Expected in Recruitment</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" value="<%=model.expectedRecruitment%>" min="0" maxlength="32"/></dd>
 		  <dt><label for="totalForecastedEmployees">Total Forecasted Employees</label></dt><dd><label>2</label></dd>
 		  <dt><label for="interviewForm">Interview Form :</label></dt>
 		  <dd>
