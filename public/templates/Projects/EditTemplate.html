@@ -125,7 +125,7 @@
                 <dt>
                   <label for="workflowsDd">Workflow</label></dt>
                   <dd>
-							<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
+                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:''%></a>
                   </dd>
                   <dt><label for="health">Health</label></dt>
                   <dd id="health">

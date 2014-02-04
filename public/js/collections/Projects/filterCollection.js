@@ -30,11 +30,6 @@
                     }
                 });
             },
-            filterByWorkflow: function (id) {
-                return this.filter(function (data) {
-                    return data.get("workflow")._id == id;
-                });
-            },
             showMore: function (options) {
                 var that = this;
 
@@ -64,34 +59,6 @@
 
             parse: true,
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (project) {
-                        if (project.createdBy)
-                            project.createdBy.date = common.utcDateToLocaleDateTime(project.createdBy.date);
-                        if (project.editedBy)
-                            project.editedBy.date = common.utcDateToLocaleDateTime(project.editedBy.date);
-                        if (project.info) {
-                            project.info.StartDate = common.utcDateToLocaleDate(project.info.StartDate);
-                            project.info.EndDate = common.utcDateToLocaleDate(project.info.EndDate);
-                            project.info.TargetEndDate = common.utcDateToLocaleDate(response.info.TargetEndDate);
-                        }
-                        //project.deadline = common.utcDateToLocaleDate(project.deadline);
-                        if (project.notes) {
-                            _.map(project.notes, function (note) {
-                                note.date = common.utcDateToLocaleDate(note.date);
-                                return note;
-                            });
-                        }
-
-                        if (project.attachments) {
-                            _.map(project.attachments, function (attachment) {
-                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                                return attachment;
-                            });
-                        }
-                        return project;
-                    });
-                }
                 this.listLength = response.listLength;
                 return response.data;
             }

@@ -43,18 +43,17 @@
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
-                    this.fetch({
-                        data: filterObject,
-                        waite: true,
-                        success: function (models) {
-                            that.page ++;
-                            that.trigger('showmore', models);
-                           // that.add(newCollection.toJSON());
-                        },
-                        error: function() {
-                            alert('Some Error');
-                        }
-                    });
+                this.fetch({
+                    data: filterObject,
+                    waite: true,
+                    success: function (models) {
+                        that.page ++;
+                        that.trigger('showmore', models);
+                    },
+                    error: function() {
+                        alert('Some Error');
+                    }
+                });
             },
 
             parse: true,
@@ -70,8 +69,6 @@
                 }
                 return response.data;
             }
-
-            
         });
 
         return LeadsCollection;

@@ -13,9 +13,9 @@
             contentType: null,
             
             initialize: function (options) {
-                var that = this;
-               
                 this.startTime = new Date();
+
+                var that = this;
                 this.namberToShow = options.count;
                 this.viewType = options.viewType;
                 this.contentType = options.contentType;
@@ -71,7 +71,7 @@
                     data: filterObject,
                     waite: true,
                     success: function (models) {
-                        that.page += 1;
+                        that.page ++;
                         that.trigger('showmoreAlphabet', models);
                     },
                     error: function () {
