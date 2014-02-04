@@ -21,7 +21,7 @@
 					</select>
 				  </dd>
 				  
-				 <dt><label for="projectTypeDD">Project Manager </label></dt>
+				 <dt><label for="projectTypeDD">Project Type </label></dt>
 				  <dd>
 					<select id="projectTypeDD">
 					<option value="Select" selected="selected">Select ...</option>
@@ -43,18 +43,38 @@
 					</select>
 
 				  </dd>
-				  <dt><label for="workflowNamesDd">Workflow Name</label></dt><dd>
+				  <!--<dt><label for="workflowNamesDd">Workflow Name</label></dt><dd>
 					<select id="workflowNamesDd">
 
 					</select>
 
-				  </dd>
+				  </dd>-->
 				  
-				  <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow">
-					<select id="workflowsDd">
+				    <dt><label for="workflowsDd">Workflow</label></dt>
+                    <dd id="selectWorkflow">
+				        <select id="workflowsDd">
 
-					</select>
-				  </dd>
+				        </select>
+				    </dd>
+                    <dt><label for="health">Health</label></dt>
+                    <dd id="health">
+                        <a href="javascript:;" data-value="1" class="health1"></a>
+                        <ul>
+                            <li>
+                                <div class="health1"></div>
+                            </li>
+                            <li>
+                                <div class="health2"></div>
+                            </li>
+                            <li>
+                                <div class="health3"></div>
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt><label for="targetEndDate">Target End Date</label></dt>
+                    <dd id="targetEndDate">
+                        <input class="extrainfo blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="" readonly />
+                    </dd>
 				</dl>
 			  </div>
 			  

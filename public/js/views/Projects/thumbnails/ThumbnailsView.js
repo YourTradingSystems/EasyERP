@@ -19,7 +19,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             this.countPerPage = options.collection.length;
             this.getTotalLength(this.countPerPage);
             this.render();
-            this.asyncLoadImgs();
+            this.asyncLoadImgs(this.collection);
         },
 
         events: {
@@ -43,8 +43,8 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             }, this);
         },
 
-        asyncLoadImgs: function () {
-            var arr = _.filter(this.collection.toJSON(), function (item) {
+        asyncLoadImgs: function (collection) {
+            var arr = _.filter(collection.toJSON(), function (item) {
                 return item.projectmanager !== undefined;
             });
             var ids = _.map(arr, function (item) {
@@ -92,41 +92,14 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         },
 
         showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
-            var thumbnailsItemView;
-            var counter = 0;
-            var namberOfprojects = this.collection.namberToShow;
-
-            if (arrayOfProjects.length > 0) {
-                for (var i = 0; i < arrayOfProjects.length; i++) {
-                    if (counter < namberOfprojects) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ProjectsThumbnailsItemView({ model: arrayOfProjects[i], dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
-                        arrayOfProjects.splice(i, 1);
-                        i--;
-                    }
-                }
-
-            }
-            _.each(newModels.models, function (model) {
-                if (counter < namberOfprojects) {
-                    counter++;
-                    dataIndexCounter++;
-                    thumbnailsItemView = new ProjectsThumbnailsItemView({ model: model });
-                    thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                    $(holder).prepend(thumbnailsItemView.render().el);
-                } else {
-                    arrayOfProjects.push(model);
-                }
-
-            }, this);
-
-            if (arrayOfProjects.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
+            var holder = this.$el;
+            this.countPerPage += newModels.length;
+            var showMore = holder.find('#showMoreDiv');
+            var created = holder.find('#timeRecivingDataFromServer');
+            this.getTotalLength(this.countPerPage);
+            showMore.before(this.template({ collection: this.collection.toJSON() }));
+            showMore.after(created);
+            this.asyncLoadImgs(newModels);
         },
 
         createItem: function () {
@@ -140,8 +113,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         },
 
         deleteItems: function () {
-            var that = this,
-                mid = 39,
+            var mid = 39,
                 model;
             model = this.collection.get(this.$el.attr("id"));
             this.$el.fadeToggle(200, function () {

@@ -253,55 +253,39 @@ define([
                        });
 
                        var percent = [];
+					   unicSource = _.map(data1,function(item){
+						   return item.source;
+					   });
+					   unicSource= unicSource.concat( _.map(data2,function(item){
+						   return item.source;
+					   }));
+					   unicSource = _.unique(unicSource);
+					   unicSource.sort(function (a, b) { return d3.ascending(a, b); });
 
-                       c1 = data1;
-                       c2 = data2;
-                       var isChanged = false;
-                       if (data1.length < data2.length) {
-                           c1 = data2;
-                           c2 = data1;
-                           isChanged = true;
-                       }
-					   alert(data1.length);
-                       for (var i = 0; i < c1.length; i++) {
-                           var b = false;
-                           for (var j = 0; j < c2.length; j++) {
-                               if (c1[i].source == c2[j].source) {
-                                   if (isChanged) {
-                                       if (c1[i].count || c2[j].count) {
-                                           percent.push({ source: c1[i].source, count: c2[j].count / (c1[i].count + c2[j].count) });
-                                       } else {
-                                           percent.push({ source: c1[i].source, count: 0 });
-                                       }
-
-                                   }
-                                   else {
-                                       if (c2[j].count || c1[i].count) {
-                                           percent.push({ source: c1[i].source, count: c1[i].count / (c1[i].count + c2[j].count) });
-                                       } else {
-                                           percent.push({ source: c1[i].source, count: 0 });
-                                       }
-                                   }
-
-                                   b = true;
-                                   break;
-                               }
-                           }
-                           if (!b) {
-                               percent.push({ source: c1[i].source, count: 0 });
-                           }
-                       }
-
+					   dataAll = []
+					   for (var z=0;z<unicSource.length;z++){
+						   var d1 = 0;
+						   for (var i = 0; i < data1.length; i++) {
+							   if (data1[i].source==unicSource[z]){
+								   d1 = data1[i].count;
+							   }
+						   }
+						   var d2=0;
+						   for (var i = 0; i < data2.length; i++) {
+							   if (data2[i].source==unicSource[z]){
+								   d2 = data2[i].count;
+							   }
+						   }
+						   if (d1||d2){
+							   percent.push({source:unicSource[z],count:d1/(d1+d2)});
+						   }
+						   else{
+							   percent.push({source:unicSource[z],count:0});
+						   }
+						   dataAll.push(({source:unicSource[z],count:d1+d2}));
+					   }
                        var maxval = d3.max(data, function (d) { return d.count; });
-                       for (var i = 0; i < data1.length; i++) {
-                           for (var j = 0; j < data2.length; j++) {
-                               if (data1[i].source == data2[j].source) {
-                                   data1[i].count += data2[j].count;
-                                   break;
-                               }
-                           }
-                       }
-
+					   data1 = dataAll;
                        var maxval3 = d3.max(percent, function (d) { return d.count; });
                        var minval3 = d3.min(percent, function (d) { return d.count; });
 

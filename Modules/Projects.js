@@ -17,6 +17,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         info: {
             StartDate: Date,
             EndDate: Date,
+            TargetEndDate: Date,
             duration: Number,
             sequence: { type: Number, default: 0 },
             parent: { type: String, default: null }
@@ -44,7 +45,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-        }
+        },
+        health: { type: Number, default: 1 }
     }, { collection: 'Project' });
 
     var TasksSchema = mongoose.Schema({
@@ -410,7 +412,10 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         if (data.info.EndDate) {
                             _project.info.EndDate = data.info.EndDate;
                         }
-                        if (data.info.sequenc) {
+                        if (data.info.targetEndDate) {
+                            _project.info.TargetEndDate = data.info.targetEndDate;
+                        }
+                        if (data.info.sequence) {
                             _project.info.sequence = data.info.sequence;
                         }
                         if (data.info.parent) {
@@ -433,28 +438,12 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     if (data.notes) {
                         _project.notes = data.notes;
                     }
-
-                    if (data.attachments) {
-                        if (data.attachments.id) {
-                            _project.attachments.id = data.attachments.id;
-                        }
-                        if (data.attachments.name) {
-                            _project.attachments.name = data.attachments.name;
-                        }
-                        if (data.attachments.path) {
-                            _project.attachments.path = data.attachments.path;
-                        }
-                        if (data.attachments.size) {
-                            _project.attachments.size = data.attachments.size;
-                        }
-                        if (data.attachments.uploadDate) {
-                            _project.attachments.uploadDate = data.attachments.uploadDate;
-                        }
-                        if (data.attachments.uploaderName) {
-                            _project.attachments.uploaderName = data.attachments.uploaderName;
-                        }
+                    
+                    if (data.health) {
+                        _project.health = data.health;
                     }
-                    _project.save(function (err, result) {
+
+                   _project.save(function (err, result) {
                         try {
                             if (err) {
                                 console.log(err);
@@ -1415,7 +1404,13 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
     function updateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
-
+        if (data.notes && data.notes.length != 0) {
+            var obj = data.notes[data.notes.length - 1];
+            obj._id = mongoose.Types.ObjectId();
+            obj.date = new Date();
+            obj.author = req.session.uName;
+            data.notes[data.notes.length - 1] = obj;
+        }
         models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, projects) {
             if (err) {
                 console.log(err);
@@ -1423,6 +1418,27 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                 res.send(500, { error: "Can't update Project" });
             } else {
                 res.send(200, projects);
+            }
+        });
+    };
+
+    function taskUpdateOnlySelectedFields(req, _id, data, res) {
+        delete data._id;
+        if (data.notes && data.notes.length != 0) {
+            var obj = data.notes[data.notes.length - 1];
+            obj._id = mongoose.Types.ObjectId();
+            obj.date = new Date();
+            obj.author = req.session.uName;
+            data.notes[data.notes.length - 1] = obj;
+        }
+		console.log(data);
+        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, tasks) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js update project.update " + err);
+                res.send(500, { error: "Can't update Project" });
+            } else {
+                res.send(200, tasks);
             }
         });
     };
@@ -2265,6 +2281,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         update: update,
 
         updateOnlySelectedFields: updateOnlySelectedFields,
+
+		taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,
 
         remove: remove,
 

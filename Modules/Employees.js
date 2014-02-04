@@ -274,26 +274,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     if (data.marital) {
                         _employee.marital = data.marital;
                     }
-                    if (data.attachments) {
-                        if (data.attachments.id) {
-                            _employee.attachments.id = data.attachments.id;
-                        }
-                        if (data.attachments.name) {
-                            _employee.attachments.name = data.attachments.name;
-                        }
-                        if (data.attachments.path) {
-                            _employee.attachments.path = data.attachments.path;
-                        }
-                        if (data.attachments.size) {
-                            _employee.attachments.size = data.attachments.size;
-                        }
-                        if (data.attachments.uploadDate) {
-                            _employee.attachments.uploadDate = data.attachments.uploadDate;
-                        }
-                        if (data.attachments.uploaderName) {
-                            _employee.attachments.uploaderName = data.attachments.uploaderName;
-                        }
-                    }
                     if (data.subject) {
                         _employee.subject = data.subject;
                     }

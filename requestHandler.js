@@ -409,6 +409,24 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function personUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 49, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					customer.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
+
     function uploadFile(req, res, id, file) {
         console.log("File Uploading to Persons");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -474,7 +492,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                     user: req.session.uId,
                     date: new Date().toISOString()
                 };
-                project.update(req, id, data, res);
+                project.updateOnlySelectedFields(req, id, data, res);
             } else {
                 res.send(403);
             }
@@ -785,6 +803,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function taskUpdateOnlySelectedFields(req, res, id, data) {
+        console.log("Requst updateOnlySelectedFields is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            if (access) {
+                data.editedBy = {
+                    user: req.session.uId,
+                    date: new Date().toISOString()
+                };
+                project.taskUpdateOnlySelectedFields(req, id, data, res);
+            } else {
+                res.send(403);
+            }
+        } else {
+            res.send(401);
+        }
+    }
 
     function uploadTasksFiles(req, res, id, file) {
         console.log("File Uploading to app");
@@ -995,7 +1029,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
+    function companyUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 50, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					customer.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     // Get  Persons or Companies or ownCompanies for list and thumbnail
     function getFilterCustomers(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -2095,6 +2145,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         uploadFile: uploadFile,
         getCustomer: getCustomer,
         getFilterPersonsForMiniView: getFilterPersonsForMiniView,
+		personUpdateOnlySelectedFields:personUpdateOnlySelectedFields,
 
         projectsTotalCollectionLength: projectsTotalCollectionLength,//for Showmore and Lists
         getProjects: getProjects,//for Thumbnails
@@ -2110,6 +2161,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getProjectStatusCountForDashboard: getProjectStatusCountForDashboard,
         getProjectByEndDateForDashboard: getProjectByEndDateForDashboard,
         updateOnlySelectedFields: updateOnlySelectedFields,
+		taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,
         getProjectType: getProjectType,
 
         createTask: createTask,
@@ -2130,6 +2182,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
+		companyUpdateOnlySelectedFields:companyUpdateOnlySelectedFields,
         getFilterCustomers: getFilterCustomers,
         getCustomersAlphabet: getCustomersAlphabet,
 
