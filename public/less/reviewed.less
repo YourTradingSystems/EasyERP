@@ -91,7 +91,6 @@
     }
 }
 
-
 .border-radius(@radius: 4px) {
     -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
@@ -362,7 +361,7 @@
         line-height: 30px;
         min-height: 30px;
 
-        lable {
+        label {
             margin-bottom: 2px;
         }
 
@@ -556,12 +555,9 @@
                 cursor: pointer;
 
                 a {
-                    font-size: 14px;
-                    font-size: 0.75rem;
                     letter-spacing: 1.5px;
                     color: #fff;
                     font-size: 14px;
-                    font-size: 0.75rem;
                     text-decoration: none;
                     display: block;
                     .fullsize;
@@ -1630,7 +1626,7 @@
         float: none;
     }
 
-    .dl-auto(160px, 50%, 16px, 16px, 10px);
+    .dl-auto(160px, 30%, 16px, 16px, 10px);
 
     select {
         font-family: Arial, Helvetica, sans-serif;
@@ -1652,7 +1648,7 @@
         margin-top: 0px;
     }
 
-    input:not[type=checkbox] {
+    input:not([type=checkbox]) {
         .border-radius(0px);
         border: @thin-border #E2E9EF;
         border-top-color: #CBD3E2;
@@ -1928,7 +1924,7 @@
     width: 88%;
 }
 
-    #profileTableWrapper table thead th:first-of-type {
+#profileTableWrapper table thead th:first-of-type {
         width: auto;
     }
 
@@ -2053,20 +2049,23 @@
 .input-file {
     position: relative;
     overflow: hidden;
+	display:block;
     float: left;
-    width: 40px;
+    width: 60px;
     margin-right: 10px;
     text-align: center;
-    padding: 2px 4px;
+//    padding: 2p===x 4px;
     border: @thin-border #ccc;
-    line-height: 15px;
-    height: 15px;
+    line-height: 20px;
+    height: 20px;
     cursor: pointer;
 
     input {
         position: absolute;
         top: 0;
-        left: -200px;
+        left: 0px;
+		width:60px;
+		height:20px;
         opacity: 0;
         font-size: 20px;
         cursor: pointer;
@@ -2521,7 +2520,7 @@ dl {
     }
 }
 
-.person-info, customer-info {
+.person-info, .customer-info {
     .dl-auto;
 }
 
@@ -3063,9 +3062,6 @@ button {
     background-image: url("@{imagesfolder}/arrow-right.png");
 }
 
-#targetUsers {
-}
-
 #groupList {
     @linh: 25px;
     margin-top: 10px;
@@ -3354,6 +3350,7 @@ ul.dialog-tabs {
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
     border: 1px solid #DDD !important;
+	display:none;
 }
 
 .ui-datepicker {
@@ -3673,7 +3670,7 @@ h3.dashboard {
     stroke-width: 3px;
 }
 #health{
-	@width:15px;
+	@width:10px;
 	a{
 		margin-top:5px;
 		display:block;
@@ -3681,6 +3678,7 @@ h3.dashboard {
 		height:@width;
 		border-radius:@width;
 		margin-left:6px;
+		border:@thin-border silver;
 		&.health1{
 			background-color:green;
 		}
@@ -3703,7 +3701,7 @@ h3.dashboard {
 				width:@width;
 				height:@width;
 				border-radius:@width;
-				margin:5px;
+				margin:6px;
 				cursor:pointer;
 				border:@thin-border silver;
 				&.health1{

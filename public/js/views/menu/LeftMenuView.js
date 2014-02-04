@@ -84,7 +84,6 @@ define([
                 this.selectedId = $(e.target).data('module-id');
                 this.$('li.selected').removeClass('selected');
                 this.lastClickedLeftMenuItem = $(e.target).data('module-id');
-				$("body").attr("id",$(e.target).text().replace(" ",""));
                 $(e.target).closest('li').addClass('selected');
                 var root = this.collection.root();
                 for (var i = 0; i < root.length; i++) {
@@ -129,7 +128,6 @@ define([
                 if (this.currentChildren) {
                     clickEl = $dom.find('li#' + this.currentChildren[0].get("_id") + " a")[0];
                 }
-				$("body").attr("id",$(clickEl).closest('li').find("a").text().replace(" ",""));
 
                 var _el = $('.selected > a').text();
                 var that = this;

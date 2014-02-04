@@ -152,7 +152,7 @@ define([
 
                 if (parent[0].id == 'dateBirth') {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" readonly class="left has-datepicker"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="48" type="text" readonly class="left has-datepicker"/>');
                     $('.has-datepicker').datepicker({
                         dateFormat: "d M, yy",
                         changeMonth: true,
@@ -164,28 +164,26 @@ define([
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left"/>');
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="48" type="text" class="left"/>');
                 }
                 $('#editInput').val(this.text);
                 this.prevQuickEdit = parent[0];
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
-            saveCheckboxChange: function (e) {
+			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
-                var objIndex = parent[0].id.split('_');
-
-                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')) {
-                    var obj = this.formModel.get(objIndex[0]) || {};
-                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-                    this.formModel.set(obj);
-                    this.formModel.save({}, {
-                        headers: {
-                            mid: 39
-                        }
-                    });
-                }
-            },
+                var objIndex = parent[0].id.replace('_','.');
+                var obj = {};
+                var currentModel = this.model;
+                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+				this.formModel.save(obj, {
+					headers: {
+						mid: 39
+					},
+					patch:true
+				});
+			},
             saveClick: function (e) {
                 e.preventDefault();
                 var parent = $(event.target).parent().parent();

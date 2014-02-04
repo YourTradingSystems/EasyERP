@@ -219,27 +219,23 @@ define([
                 $('#editSpan').remove();
                 this.text = $('#' + parent[0].id).text();
                 $("#" + parent[0].id).text('');
-                $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left"/>');
+                $("#" + parent[0].id).append('<input id="editInput" maxlength="48" type="text" class="left"/>');
                 $('#editInput').val(this.text);
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
-                var objIndex = parent[0].id.split('_');
+                var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
                 var currentModel = this.model;
-
-                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
-                    obj = this.formModel.get(objIndex[0]);
-                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-					this.formModel.set(obj);
-					this.formModel.save({}, {
-						headers: {
-							mid: 39
-						}
-					});
-				}
+                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+				this.formModel.save(obj, {
+					headers: {
+						mid: 39
+					},
+					patch:true
+				});
 			},
 
             saveClick: function (e) {

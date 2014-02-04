@@ -1318,7 +1318,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
+    function employeesUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					employee.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     function removeEmployees(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1503,6 +1519,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function aplicationUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 43, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					employee.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     function removeApplication(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2225,6 +2258,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeApplication: removeApplication,
         updateApplication: updateApplication,
         uploadApplicationFile: uploadApplicationFile,
+		aplicationUpdateOnlySelectedFields:aplicationUpdateOnlySelectedFields,
+		employeesUpdateOnlySelectedFields:employeesUpdateOnlySelectedFields,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,
