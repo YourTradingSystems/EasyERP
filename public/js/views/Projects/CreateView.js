@@ -41,6 +41,7 @@ define([
 			},
 			showHealthDd:function(e){
 				$(e.target).parent().find("ul").toggle();
+				return false;
 			},
             addAttach: function () {
                 var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];

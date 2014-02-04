@@ -2053,20 +2053,23 @@
 .input-file {
     position: relative;
     overflow: hidden;
+	display:block;
     float: left;
-    width: 40px;
+    width: 60px;
     margin-right: 10px;
     text-align: center;
-    padding: 2px 4px;
+//    padding: 2p===x 4px;
     border: @thin-border #ccc;
-    line-height: 15px;
-    height: 15px;
+    line-height: 20px;
+    height: 20px;
     cursor: pointer;
 
     input {
         position: absolute;
         top: 0;
-        left: -200px;
+        left: 0px;
+		width:60px;
+		height:20px;
         opacity: 0;
         font-size: 20px;
         cursor: pointer;
@@ -3354,6 +3357,7 @@ ul.dialog-tabs {
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
     border: 1px solid #DDD !important;
+	display:none;
 }
 
 .ui-datepicker {
@@ -3673,7 +3677,7 @@ h3.dashboard {
     stroke-width: 3px;
 }
 #health{
-	@width:15px;
+	@width:10px;
 	a{
 		margin-top:5px;
 		display:block;
@@ -3681,6 +3685,7 @@ h3.dashboard {
 		height:@width;
 		border-radius:@width;
 		margin-left:6px;
+		border:@thin-border silver;
 		&.health1{
 			background-color:green;
 		}
@@ -3703,7 +3708,7 @@ h3.dashboard {
 				width:@width;
 				height:@width;
 				border-radius:@width;
-				margin:5px;
+				margin:6px;
 				cursor:pointer;
 				border:@thin-border silver;
 				&.health1{
