@@ -359,7 +359,7 @@
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
                                 console.log(result);
-                                res.send(201, { success: 'A new Person crate success' });
+                                res.send(201, { success: { massage: 'A new Person create success', id: result._id } });
                             }
                         });
 
@@ -1107,7 +1107,7 @@
             models.get(req.session.lastDb - 1, "Customers", customerSchema).remove({ _id: _id }, function (err, customer) {
                 if (err) {
                     console.log(err);
-                    logWriter("Project.js remove project.remove " + err);
+                    logWriter.log("Project.js remove project.remove " + err);
                     res.send(500, { error: "Can't remove customer" });
                 } else {
                     res.send(200, { success: 'customer removed' });
