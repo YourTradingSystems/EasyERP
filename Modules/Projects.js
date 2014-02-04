@@ -2075,7 +2075,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                   where('project').in(projectsId.objectID()).
                                   where('workflow', newObjectId(data.workflowId)).
-                                  select("_id assignedTo workflow editedBy.date deadline project taskCount summary type remaining").
+                                  select("_id assignedTo workflow editedBy.date deadline project taskCount summary type remaining extrainfo.priority").
                                   populate('assignedTo', 'name imageSrc').
                                   populate('project', 'projectShortDesc').
                                   populate('workflow', '_id').
