@@ -337,7 +337,7 @@ define([
 				   targetInput.closest("li").addClass("quickEdit")
 				   targetInput.closest("li").find("span").hide();
 				   targetInput.closest("li").append(
-                       $("<input class='wNameEdit' type='text' value = '"+text+"' required />")
+                       $("<input class='wNameEdit' maxlength='32' type='text' value = '"+text+"' required />")
 				   );
 				   targetInput.closest("li").append("<span class='save-status'><a href='#' class='saveAll'>Save</a> <a href='#' class='cancelAll'>Cancel</a></span>");
 				   

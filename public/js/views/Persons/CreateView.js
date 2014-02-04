@@ -31,9 +31,12 @@ define([
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
                 "click .prevUserList": "prevUserList",
-                "click .nextUserList": "nextUserList"
+                "click .nextUserList": "nextUserList",
+				"click .details":"showDetailsBox"
             },
-
+			showDetailsBox:function(e){
+				$(e.target).parent().find(".details-box").toggle();
+			},
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -261,11 +264,10 @@ define([
                         Backbone.history.navigate("easyErp/Persons", { trigger: true });
                     },
                     error: function (model, xhr, options) {
-                        self.hideDialog();
                         if (xhr && xhr.status === 401) {
                             Backbone.history.navigate("login", { trigger: true });
                         } else {
-                            Backbone.history.navigate("home", { trigger: true });
+							alert(xhr.responseJSON.error);
                         }
                     }
                 });
@@ -286,7 +288,7 @@ define([
                     resizable: true,
                     dialogClass: "create-person-dialog",
                     title: "Edit Person",
-                    width: "950px",
+                    width: "80%",
                     buttons: [
                         {
                             id: "create-person-dialog",
