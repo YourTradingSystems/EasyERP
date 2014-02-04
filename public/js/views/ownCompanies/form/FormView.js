@@ -1,12 +1,11 @@
 define([
-    'text!templates/ownCompanies/form/FormTemplate.html',
+    'text!templates/Companies/form/FormTemplate.html',
     'views/ownCompanies/EditView',
-    'collections/Opportunities/OpportunitiesCollection',
-    'collections/Persons/PersonsCollection',
     'views/Opportunities/compactContent',
     'views/Persons/compactContent',
     'custom',
     'common',
+    "dataService",
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
     'views/Opportunities/CreateView',
@@ -14,16 +13,43 @@ define([
     'text!templates/Notes/AddAttachments.html'
 ],
 
-    function (CompaniesFormTemplate, EditView, OpportunitiesCollection, PersonsCollection, opportunitiesCompactContentView, personsCompactContentView, Custom, common, noteView, addNoteTemplate,CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
+    function (CompaniesFormTemplate, EditView, opportunitiesCompactContentView, personsCompactContentView, Custom, common, dataService, noteView, addNoteTemplate, CreateViewOpportunities,CreateViewPersons, addAttachTemplate) {
         var FormCompaniesView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
+                _.bindAll(this, 'render');
                 this.formModel = options.model;
-                this.render = _.after(2, this.render);
-                this.opportunitiesCollection = new OpportunitiesCollection();
-                this.opportunitiesCollection.bind('reset', _.bind(this.render, this));
-                this.personsCollection = new PersonsCollection();
-                this.personsCollection.bind('reset', _.bind(this.render, this));
+				this.pageMini = 1;
+				this.pageCount = 4;
+				this.allMiniOpp =0;
+				this.allPages =0;
+
+				this.pageMiniPersons = 1;
+				this.pageCountPersons = 4;
+				this.allMiniPersons =0;
+				this.allPagesPersons =0;
+
+				var self = this;
+				var formModel = this.formModel.toJSON();
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",null, formModel._id,this.pageMini,this.pageCount,true,function(count){
+					self.allMiniOpp = count.listLength;
+					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
+					if (self.allPages == self.pageMini){
+						$(".miniPagination .next").addClass("not-active");
+						$(".miniPagination .last").addClass("not-active");
+					}
+				});
+				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,true,function(count){
+					self.allMiniPersons = count.listLength;
+					self.allPagesPersons = Math.ceil(self.allMiniPersons/self.pageCountPersons);
+					if (self.allPagesPersons == self.pageMiniPersons){
+						$(".miniPagination .next").addClass("not-active");
+						$(".miniPagination .last").addClass("not-active");
+					}
+				});
+
+
+//                this.personsCollection.bind('reset', _.bind(this.render, this));
             },
             flag: true,
             events: {
@@ -43,31 +69,113 @@ define([
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
                 "click .btnHolder .add.persons": "addPersons",
-                "change .person-info.company.long input": "saveCheckboxChange"
+                "change .customer-info.company.long input": "saveCheckboxChange",
+                "click .miniPagination .next:not(.not-active)": "nextMiniPage",
+                "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
+                "click .miniPagination .first:not(.not-active)": "firstMiniPage",
+                "click .miniPagination .last:not(.not-active)": "lastMiniPage",
+
+                "click .miniPaginationPersons .nextPersons:not(.not-active)": "nextMiniPagePersons",
+                "click .miniPaginationPersons .prevPersons:not(.not-active)": "prevMiniPagePersons",
+                "click .miniPaginationPersons .firstPersons:not(.not-active)": "firstMiniPagePersons",
+                "click .miniPaginationPersons .lastPersons:not(.not-active)": "lastMiniPagePersons"
+
             },
-            
+			nextMiniPagePersons:function(){
+				this.pageMiniPersons +=1;
+				this.renderMiniPersons();
+			},
+			prevMiniPagePersons:function(){
+				this.pageMiniPersons -=1;
+				this.renderMiniPersons();
+			},
+			firstMiniPagePersons:function(){
+				this.pageMiniPersons=1;
+				this.renderMiniPersons();
+			},
+			lastMiniPagePersons:function(){
+				this.pageMiniPersons = this.allPagesPersons;
+				this.renderMiniPersons();
+			},
+
+			nextMiniPage:function(){
+				this.pageMini +=1;
+				this.renderMiniOpp();
+			},
+			prevMiniPage:function(){
+				this.pageMini -=1;
+				this.renderMiniOpp();
+			},
+			firstMiniPage:function(){
+				this.pageMini=1;
+				this.renderMiniOpp();
+			},
+			lastMiniPage:function(){
+				this.pageMini = this.allPages;
+				this.renderMiniOpp();
+			},
+			populatePersonsForMiniView:function (url, companyId, page, count, onlyCount, callback) {
+				var self = this;
+				dataService.getData(url, {companyId:companyId, page:page,count:count,onlyCount:onlyCount }, function (response) {
+					if (callback) callback(response);
+				});
+			},
+			renderMiniPersons:function(){
+				var self = this;
+            	var formModel = this.formModel.toJSON();
+				$("#persons").closest(".form").remove();
+				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,false,function(collection){
+					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false
+					self.$el.find('.formRightColumn').append(
+                        new personsCompactContentView({
+                            collection: collection.data,
+                        }).render({first:self.pageMiniPersons==1?true:false,last:isLast,all:self.allPagesPersons}).el
+                    );
+				});
+			},           
+			renderMiniOpp:function(){
+				var self = this;
+            	var formModel = this.formModel.toJSON();
+				$("#opportunities").closest(".form").remove();
+				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",null, formModel._id,this.pageMini,this.pageCount,false,function(collection){
+					var isLast = self.pageMini==self.allPages?true:false
+					self.$el.find('.formRightColumn').prepend(
+                        new opportunitiesCompactContentView({
+                            collection: collection.data,
+                        }).render({first:self.pageMini==1?true:false,last:isLast,all:self.allPages}).el
+                    );
+				});
+			},            
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-                this.$el.find('.formRightColumn').append(
+				this.$el.find('.formRightColumn').empty();
+				this.renderMiniOpp();
+				this.renderMiniPersons();
+/*                this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
                                     companiesCollection: this.collection,
                                     personsCollection: this.personsCollection,
                                     model: this.formModel
                                 }).render().el,
-                                new personsCompactContentView({
-                                    collection: this.personsCollection,
-                                    model: this.formModel
-                                }).render().el
-                            );
-
+                            );*/
                 this.$el.find('.formLeftColumn').append(
                         new noteView({
                             model: this.formModel
                         }).render().el
                     );
                 return this;
+            },
+            
+            editItem: function () {
+                //create editView in dialog here
+                new EditView({ model: this.formModel });
+            },
+            
+            quickEdit: function (e) {
+                // alert(e.target.id);
+                $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
             },
             
             addOpportunities: function (e) {
@@ -80,16 +188,6 @@ define([
             	e.preventDefault();
             	var model = this.formModel.toJSON();
             	new CreateViewPersons({model:model});
-            },
-            
-            editItem: function () {
-                //create editView in dialog here
-                new EditView({ model: this.formModel });
-            },
-            
-            quickEdit: function (e) {
-                // alert(e.target.id);
-                $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
             },
             
             removeEdit: function (e) {
@@ -107,24 +205,6 @@ define([
                 var currentModel = this.model;
                 Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
             },
-            
-			saveCheckboxChange:function(e){
-                var parent = $(e.target).parent();
-                var objIndex = parent[0].id.split('_');
-                var obj = {};
-                var currentModel = this.model;
-
-                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
-                    obj = this.formModel.get(objIndex[0]);
-                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-					this.formModel.set(obj);
-					this.formModel.save({}, {
-						headers: {
-							mid: 39
-						}
-					});
-				}
-			},
 
             editClick: function (e) {
                 e.preventDefault();
@@ -139,12 +219,24 @@ define([
                 $('#editSpan').remove();
                 this.text = $('#' + parent[0].id).text();
                 $("#" + parent[0].id).text('');
-                $("#" + parent[0].id).append('<input id="editInput" type="text" class="left"/>');
+                $("#" + parent[0].id).append('<input id="editInput" maxlength="20" type="text" class="left"/>');
                 $('#editInput').val(this.text);
-
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
+			saveCheckboxChange:function(e){
+                var parent = $(e.target).parent();
+                var objIndex = parent[0].id.replace('_','.');
+                var obj = {};
+                var currentModel = this.model;
+                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+				this.formModel.save(obj, {
+					headers: {
+						mid: 39
+					},
+					patch:true
+				});
+			},
 
             saveClick: function (e) {
                 e.preventDefault();
@@ -165,12 +257,10 @@ define([
                     headers: {
                         mid: 39
                     },
-					patch:true,
-                    success: function () {
-                        Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
-                    }
+					patch:true
                 });
             },
+
 
             cancelNote: function (e) {
                 $('#noteArea').val('');
@@ -178,101 +268,104 @@ define([
                 $('#getNoteKey').attr("value", '');
             },
             editDelNote: function (e) {
-            	 var id = e.target.id;
-                 var k = id.indexOf('_');
-                 var type = id.substr(0, k);
-                 var id_int = id.substr(k + 1);
-                 var currentModel = this.formModel;
-                 var notes = currentModel.get('notes');
+                var id = e.target.id;
+                var k = id.indexOf('_');
+                var type = id.substr(0, k);
+                var id_int = id.substr(k + 1);
+                var currentModel = this.formModel;
+                var notes = currentModel.get('notes');
 
-                 switch (type) {
-                     case "edit": {
-                         $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                         $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
-                         $('#getNoteKey').attr("value", id_int);
-                         break;
-                     }
-                     case "del": {
-                         var newNotes = _.filter(notes, function (note) {
-                             if (note._id != id_int) {
-                                 return note;
-                             }
-                         });
-                         currentModel.save({ 'notes': newNotes },
-                                 {
-                                     headers: {
-                                         mid: 39
-                                     },
-                                     patch: true,
-                                     success: function () {
-                                         $('#' + id_int).remove();
-                                     }
-                                 });
-                         break;
-                     }
-                 }
+                switch (type) {
+                    case "edit": {
+                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                        $('#getNoteKey').attr("value", id_int);
+                        break;
+                    }
+                    case "del": {
+                        var newNotes = _.filter(notes, function (note) {
+                            if (note._id != id_int) {
+                                return note;
+                            }
+                        });
+                        currentModel.save({ 'notes': newNotes },
+                                {
+                                    headers: {
+                                        mid: 39
+                                    },
+                                    patch: true,
+                                    success: function () {
+                                        $('#' + id_int).remove();
+                                    }
+                                });
+                        break;
+                    }
+                }
             },
 
             addNote: function (e) {
-            	 e.preventDefault();
-                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                 if (val || title) {
-                     var notes = this.formModel.get('notes');
-                     var arrKeyStr = $('#getNoteKey').attr("value");
-                     var noteObj = {
-                         note: '',
-                         title: ''
-                     };
-                     if (arrKeyStr) {
-                         var editNotes = _.map(notes, function (note) {
-                             if (note._id == arrKeyStr) {
-                                 note.note = val;
-                                 note.title = title;
-                             }
-                             return note;
-                         });
-                         this.formModel.save({ 'notes': editNotes },
-                             {
-                                 headers: {
-                                     mid: 39
-                                 },
-                                 patch: true,
-                                 success: function () {
-                                     $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                     $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
-                                     $('#getNoteKey').attr("value", '');
-                                 }
-                             });
-                     } else {
-                         noteObj.note = val;
-                         noteObj.title = title;
-                         notes.push(noteObj);
-                         this.formModel.set();
-                         this.formModel.save({ 'notes': notes },
-                             {
-                                 headers: {
-                                     mid: 39
-                                 },
-                                 patch: true,
-                                 success: function (models, data) {
-                                     $('#noteBody').empty();
-                                     data.notes.forEach(function (item) {
-                                     	   var key = notes.length - 1;
-                                            var notes_data = response.notes;
-                                            var date = common.utcDateToLocaleDate(response.notes[key].date);
-                                            var author = currentModel.get('name').first;
-                                            var id = response.notes[key]._id;
-                                            $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
-                                     });
-                                 }
-                             });
-                     }
-                     $('#noteArea').val('');
-                     $('#noteTitleArea').val('');
-                 }
+                e.preventDefault();
+                var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                if (val || title) {
+                    var notes = this.formModel.get('notes');
+                    var arrKeyStr = $('#getNoteKey').attr("value");
+                    var noteObj = {
+                        note: '',
+                        title: ''
+                    };
+                    if (arrKeyStr) {
+                        var editNotes = _.map(notes, function (note) {
+                            if (note._id == arrKeyStr) {
+                                note.note = val;
+                                note.title = title;
+                            }
+                            return note;
+                        });
+                        this.formModel.save({ 'notes': editNotes },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function () {
+                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
+                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+                                    $('#getNoteKey').attr("value", '');
+                                }
+                            });
+                    } else {
+                        noteObj.note = val;
+                        noteObj.title = title;
+                        notes.push(noteObj);
+                        this.formModel.set();
+                        this.formModel.save({ 'notes': notes },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function (models, data) {
+                                    $('#noteBody').empty();
+                                    data.notes.forEach(function (item) {
+                                    	/*   var key = notes.length - 1;
+                                           var notes_data = response.notes;
+                                           var date = common.utcDateToLocaleDate(response.notes[key].date);
+                                           var author = currentModel.get('name').first;
+                                           var id = response.notes[key]._id;
+                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
+								var date = common.utcDateToLocaleDate(item.date);
+            							//notes.push(item);
+            							$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
+                                    });
+                                }
+                            });
+                    }
+                    $('#noteArea').val('');
+                    $('#noteTitleArea').val('');
+                }
             },
-
+            
             addAttach: function (event) {
                 event.preventDefault();
                 var currentModel = this.formModel;
@@ -328,34 +421,35 @@ define([
                 addFrmAttach.submit();
                 addFrmAttach.off('submit');
             },
+
             fileSizeIsAcceptable: function(file){
                 if(!file){return false;}
                 return file.size < App.File.MAXSIZE;
             },
             deleteAttach: function (e) {
-            	 var target = $(e.target);
-                 if (target.closest("li").hasClass("attachFile")) {
-                     target.closest(".attachFile").remove();
-                 } else {
-                     var id = e.target.id;
-                     var currentModel = this.formModel;
-                     var attachments = currentModel.get('attachments');
-                     var newAttachments = _.filter(attachments, function (attach) {
-                         if (attach._id != id) {
-                             return attach;
-                         }
-                     });
-                     currentModel.save({ 'attachments': newAttachments },
-                         {
-                             headers: {
-                                 mid: 39
-                             },
-                             patch: true,//Send only changed attr(add Roma)
-                             success: function () {
-                                 $('.attachFile_' + id).remove();
-                             }
-                         });
-                 }
+                var target = $(e.target);
+                if (target.closest("li").hasClass("attachFile")) {
+                    target.closest(".attachFile").remove();
+                } else {
+                    var id = e.target.id;
+                    var currentModel = this.formModel;
+                    var attachments = currentModel.get('attachments');
+                    var newAttachments = _.filter(attachments, function (attach) {
+                        if (attach._id != id) {
+                            return attach;
+                        }
+                    });
+                    currentModel.save({ 'attachments': newAttachments },
+                        {
+                            headers: {
+                                mid: 39
+                            },
+                            patch: true,//Send only changed attr(add Roma)
+                            success: function () {
+                                $('.attachFile_' + id).remove();
+                            }
+                        });
+                }
             },
 
             toggle: function () {
@@ -367,14 +461,14 @@ define([
             },
             socialActive: function (e) {
                 e.preventDefault();
-                $(e.target).animate({
+                $(e.target).stop().animate({
                     'background-position-y': '-38px'
 
                 }, 300, function () { });
             },
             socialNotActive: function (e) {
                 e.preventDefault();
-                $(e.target).animate({
+                $(e.target).stop().animate({
                     'background-position-y': '0px'
 
                 }, 300, function () { });
@@ -397,7 +491,7 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/ownCompanies/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/Companies/list", { trigger: true });
                     }
                 });
 

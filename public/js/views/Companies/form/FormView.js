@@ -226,19 +226,16 @@ define([
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
-                var objIndex = parent[0].id.split('_');
+                var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
                 var currentModel = this.model;
-
-                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
-                    obj = this.formModel.get(objIndex[0]);
-                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-					this.formModel.save(obj, {
-						headers: {
-							mid: 39
-						}
-					});
-				}
+                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+				this.formModel.save(obj, {
+					headers: {
+						mid: 39
+					},
+					patch:true
+				});
 			},
 
             saveClick: function (e) {
