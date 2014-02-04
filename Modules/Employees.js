@@ -111,7 +111,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         if (data.status && data.status.length > 0) {
             var filterStatusArray = data.status.objectID();
             filterStatus = {
-                _id: { $in: filterStatusArray }
+                workflow: { $in: filterStatusArray }
             };
         }
 
@@ -171,7 +171,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                             },
                                             { whoCanRW: "everyOne" }
                                         ]
-                                    }
+                                    },
+                                    filterStatus
                                 ]
                             }
                         },
@@ -179,7 +180,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             $project: {
                                 _id: 1
                             }
-                        },
+                        }
+                        ,
                         function (err, result) {
                             if (!err) {
                                 if (data.currentNumber && data.currentNumber < result.length) {
@@ -1179,6 +1181,19 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
     };
 
+    function updateOnlySelectedFields(req, _id, data, res) {
+        delete data._id;
+
+        models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, projects) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js update project.update " + err);
+                res.send(500, { error: "Can't update Project" });
+            } else {
+                res.send(200, projects);
+            }
+        });
+    };
     function update(req, _id, data, res) {
         try {
             delete data._id;
@@ -1303,6 +1318,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         getForDdByRelatedUser: getForDdByRelatedUser,
 
         update: update,
+		
+		updateOnlySelectedFields:updateOnlySelectedFields,
 
         remove: remove,
 

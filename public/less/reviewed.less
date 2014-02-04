@@ -91,7 +91,6 @@
     }
 }
 
-
 .border-radius(@radius: 4px) {
     -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
@@ -362,7 +361,7 @@
         line-height: 30px;
         min-height: 30px;
 
-        lable {
+        label {
             margin-bottom: 2px;
         }
 
@@ -556,11 +555,8 @@
                 cursor: pointer;
 
                 a {
-                    font-size: 14px;
-                    font-size: 0.75rem;
                     letter-spacing: 1.5px;
                     color: #fff;
-                    font-size: 14px;
                     font-size: 0.75rem;
                     text-decoration: none;
                     display: block;
@@ -592,7 +588,6 @@
                     transition: all ease .5s;
 
                     a {
-                        font-size: 14px;
                         font-size: 0.75rem;
                         color: #fff;
                         text-decoration: none;
@@ -605,7 +600,7 @@
     }
 }
 
-.top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px,) {
+.top-bar(@defaultHeight: 30px, @defaultBackground: #fff, @defaultBorderColor: #ababab, @defaultH3Color: #333, @defaultMargin: 6px 0 0 0, @defaultPadding: 0 10px) {
     position: relative;
     display: block;
     width: auto;
@@ -621,6 +616,7 @@
         font-family: @title-font;
         font-weight: normal;
         float: left;
+        overflow: visible;
     }
 }
 
@@ -1020,6 +1016,7 @@
             display: block;
             line-height: 18px;
             clear: left;
+
         }
     }
 
@@ -1060,6 +1057,12 @@
 
             .inner {
                 padding: 5px;
+              .application-header{
+
+              }
+                p{
+                    width: 100%;
+                }
             }
 
             .task-header {
@@ -1068,6 +1071,7 @@
                 p.right {
                     text-align: right;
                     line-height: 21px;
+                    width: 100%;
                 }
             }
 
@@ -1238,7 +1242,11 @@
     text-align: center;
     .border-radius;
     .left;
-
+    .info{
+      >*{
+        .text-overflow;
+      }
+    }
     .title {
         color: @tilte-color;
         font-size: @font-size;
@@ -1246,7 +1254,12 @@
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
         line-height: 18px;
         font-family: @lucida-font;
-        .text-overflow;
+      white-space: normal;
+        span{
+          .text-overflow;
+          white-space: normal;
+          width: 182px;
+        }
     }
 
     .inner {
@@ -1418,7 +1431,7 @@
 
     .app-block {
         .half-block;
-		}
+	}
 
     textarea {
         .noPaddingMargin;
@@ -1426,7 +1439,14 @@
 
         &#description {
             margin-top: 0 !important;
+			&.taskDescription{
+				height:310px;
 			}
+			&.taskDescriptionCreate{
+				height:340px;
+			}
+
+		}
 
         &#otherInfo {
             margin-top: 13px;
@@ -1630,7 +1650,7 @@
         float: none;
     }
 
-    .dl-auto(160px, 50%, 16px, 16px, 10px);
+    .dl-auto(160px, 30%, 16px, 16px, 10px);
 
     select {
         font-family: Arial, Helvetica, sans-serif;
@@ -1651,13 +1671,11 @@
     .inner {
         margin-top: 0px;
     }
-
-    input:not[type=checkbox] {
+    input:not([type=checkbox]) {
         .border-radius(0px);
         border: @thin-border #E2E9EF;
         border-top-color: #CBD3E2;
         max-width: 280px;
-        width: 60%;
         height: 18px;
         background-color: white;
         font-family: Arial, Helvetica, sans-serif;
@@ -1928,7 +1946,7 @@
     width: 88%;
 }
 
-    #profileTableWrapper table thead th:first-of-type {
+#profileTableWrapper table thead th:first-of-type {
         width: auto;
     }
 
@@ -2053,20 +2071,23 @@
 .input-file {
     position: relative;
     overflow: hidden;
+	display:block;
     float: left;
-    width: 40px;
+    width: 60px;
     margin-right: 10px;
     text-align: center;
-    padding: 2px 4px;
+//    padding: 2p===x 4px;
     border: @thin-border #ccc;
-    line-height: 15px;
-    height: 15px;
+    line-height: 20px;
+    height: 20px;
     cursor: pointer;
 
     input {
         position: absolute;
         top: 0;
-        left: -200px;
+        left: 0px;
+		width:60px;
+		height:20px;
         opacity: 0;
         font-size: 20px;
         cursor: pointer;
@@ -2321,7 +2342,9 @@ dl {
 
 .noteWrapper {
     width: 50%;
-
+	&.full-width{
+		width:100%;
+	}
     >label {
         font-size: 16px;
         color: #555;
@@ -2347,6 +2370,10 @@ dl {
             display: none;
             margin-top: 10px;
             margin-bottom: 10px;
+			input{
+				width:100%;
+				max-width:inherit;
+			}
         }
 
         #cancelNote {
@@ -2363,8 +2390,10 @@ dl {
         }
 
         textarea {
+			padding: 2px 4px;
+			min-height:inherit;
             width: 100%;
-            height: 15px;
+            height: 17px;
             padding-left: 3px;
             padding-right: 0;
             .border-radius(0);
@@ -2521,7 +2550,7 @@ dl {
     }
 }
 
-.person-info, customer-info {
+.person-info, .customer-info {
     .dl-auto;
 }
 
@@ -3063,9 +3092,6 @@ button {
     background-image: url("@{imagesfolder}/arrow-right.png");
 }
 
-#targetUsers {
-}
-
 #groupList {
     @linh: 25px;
     margin-top: 10px;
@@ -3354,6 +3380,7 @@ ul.dialog-tabs {
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 2px;
     border: 1px solid #DDD !important;
+	display:none;
 }
 
 .ui-datepicker {
@@ -3673,7 +3700,7 @@ h3.dashboard {
     stroke-width: 3px;
 }
 #health{
-	@width:15px;
+	@width:10px;
 	a{
 		margin-top:5px;
 		display:block;
@@ -3681,6 +3708,7 @@ h3.dashboard {
 		height:@width;
 		border-radius:@width;
 		margin-left:6px;
+		border:@thin-border silver;
 		&.health1{
 			background-color:green;
 		}
@@ -3703,7 +3731,7 @@ h3.dashboard {
 				width:@width;
 				height:@width;
 				border-radius:@width;
-				margin:5px;
+				margin:6px;
 				cursor:pointer;
 				border:@thin-border silver;
 				&.health1{

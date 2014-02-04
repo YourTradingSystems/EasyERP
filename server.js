@@ -114,6 +114,7 @@ app.get('/', function (req, res) {
     res.sendfile('index.html');
 });
 
+
 app.get('/getDBS', function (req, res) {
     console.log('Get DBS is success');
     res.send(200, { dbsNames: dbsNames });
@@ -898,7 +899,7 @@ app.put('/Companies/:viewType/:_id', function (req, res) {
 app.patch('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-    requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
+    requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
 });
 app.delete('/Companies/:viewType/:_id', function (req, res) {
     data = {};
@@ -946,7 +947,11 @@ app.put('/ownCompanies/:_id', function (req, res) {
     //console.log(data.company.address);
     requestHandler.updateCompany(req, res, id, data, remove);
 });
-
+app.patch('/ownCompanies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
+});
 app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -1185,6 +1190,12 @@ app.put('/Employees/:viewType/:_id', function (req, res) {
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
 });
+app.patch('/Employees/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);
+});
 
 app.delete('/Employees/:viewType/:_id', function (req, res) {
     data = {};
@@ -1273,6 +1284,13 @@ app.put('/Applications/:_id', function (req, res) {
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateApplication(req, res, id, data);
+});
+
+app.patch('/Applications/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
 app.put('/Applications/:viewType/:_id', function (req, res) {
@@ -1566,6 +1584,10 @@ app.get('/ChangeSyncCalendar', function (req, res) {
     var id = req.param('id');
     var isSync = req.param('isSync');
     requestHandler.changeSyncCalendar(id, isSync, res, req);
+});
+app.get('/:id', function (req, res) {
+    var id = req.param('id');
+    requestHandler.redirectFromModuleId(req, res, id);
 });
 app.listen(8088);
 

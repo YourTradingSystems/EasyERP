@@ -115,6 +115,50 @@ define(
             }
         }
         
+        var checkLogedField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(fieldValue.length < MIN_LENGTH) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(MIN_LENGTH)].join(' '));
+                    return;
+                }
+                if(!validateLoggedValue(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(!validateLoggedValue(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
+                }
+            }
+        }
+        
+        var checkNumberField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.notNumberMsg].join(' '));
+                    return;
+                }
+                if(!validateNumber(fieldValue)) errorArray.push([fieldName, errorMessages.notNumberMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.notNumberMsg].join(' '));
+                        return;
+                    }
+                    if(!validateNumber(fieldValue)) errorArray.push([fieldName, errorMessages.notNumberMsg].join(' '));
+                }
+            }
+        }
+        
         var checkGroupsNameField = function(errorArray, required, fieldValue, fieldName){
             if(required){
                 if(!fieldValue){
@@ -363,12 +407,13 @@ define(
             withMinLength: requiredFieldLength,
             validLoggedValue: validateLoggedValue,
             errorMessages: errorMessages,
-            validNumber: validateNumber,
+            checkNumberField: checkNumberField,
             validStreet: validateStreet,
             validDate: validDate,
             validPhone: validatePhone,
             validName: validateName,
             validGroupsName: validateGroupsName,
-            validMoneyAmount: validateMoneyAmount
+            validMoneyAmount: validateMoneyAmount,
+            checkLogedField:checkLogedField
         }
     });

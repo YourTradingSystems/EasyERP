@@ -48,6 +48,7 @@ define([
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
+				"click":"hideHealth",
                 "click .current-selected": "showNewSelect",
             },
             notHide: function (e) {
@@ -76,7 +77,6 @@ define([
 			},
 			chooseHealthDd:function(e){
 				$(e.target).parents("#health").find("a").attr("class",$(e.target).attr("class")).attr("data-value",$(e.target).attr("class").replace("health","")).parent().find("ul").toggle();
-				return false;
 			},
 			showHealthDd:function(e){
 				$(e.target).parent().find("ul").toggle();
