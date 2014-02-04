@@ -153,33 +153,27 @@ define([
                 e.preventDefault();
 
                 var parent = $(event.target).parent().parent();
-                var objIndex = parent[0].id.split('_');
+                var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
                 var currentModel = this.model;
-                if (objIndex.length > 1) {
-                    obj = this.formModel.get(objIndex[0]);
-                    obj[objIndex[1]] = $('#editInput').val();
-                } else if (objIndex.length == 1) {
-                    obj[objIndex[0]] = $('#editInput').val();
-                }
+                obj[objIndex] = $('#editInput').val();
+
                 this.text = $('#editInput').val();
                 $("#" + parent[0].id).text(this.text);
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
-                this.formModel.set(obj);
-
-                this.formModel.save({}, {
+                this.formModel.save(obj, {
                     headers: {
                         mid: 39
                     },
+					patch:true,
                     success: function () {
                         Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
                     }
                 });
             },
-
 
             cancelNote: function (e) {
                 $('#noteArea').val('');

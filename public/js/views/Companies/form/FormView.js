@@ -233,11 +233,11 @@ define([
                 if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
                     obj = this.formModel.get(objIndex[0]);
                     obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-					this.formModel.set(obj);
-					this.formModel.save({}, {
+					this.formModel.save(obj, {
 						headers: {
 							mid: 39
 						},
+						patch:true,
 						success: function () {
 							Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
 						}
