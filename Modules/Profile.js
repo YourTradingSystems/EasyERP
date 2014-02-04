@@ -35,7 +35,7 @@ var Profile = function (logWriter, mongoose, models) {
                         }
                         if (doc.length > 0) {
                             console.log("A Profile with the same name already exists");
-                            res.send(400, { error: 'A Profile with the same name already exists' });
+                            res.send(500, { error: 'A Profile with the same name already exists' });
                         } else if (doc.length === 0) {
                             saveProfileToDb(data);
                         }
