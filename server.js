@@ -114,6 +114,7 @@ app.get('/', function (req, res) {
     res.sendfile('index.html');
 });
 
+
 app.get('/getDBS', function (req, res) {
     console.log('Get DBS is success');
     res.send(200, { dbsNames: dbsNames });
@@ -1583,6 +1584,10 @@ app.get('/ChangeSyncCalendar', function (req, res) {
     var id = req.param('id');
     var isSync = req.param('isSync');
     requestHandler.changeSyncCalendar(id, isSync, res, req);
+});
+app.get('/:id', function (req, res) {
+    var id = req.param('id');
+    requestHandler.redirectFromModuleId(req, res, id);
 });
 app.listen(8088);
 
