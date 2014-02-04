@@ -111,7 +111,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         if (data.status && data.status.length > 0) {
             var filterStatusArray = data.status.objectID();
             filterStatus = {
-                _id: { $in: filterStatusArray }
+                workflow: { $in: filterStatusArray }
             };
         }
 
@@ -171,7 +171,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                             },
                                             { whoCanRW: "everyOne" }
                                         ]
-                                    }
+                                    },
+                                    filterStatus
                                 ]
                             }
                         },
@@ -179,7 +180,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             $project: {
                                 _id: 1
                             }
-                        },
+                        }
+                        ,
                         function (err, result) {
                             if (!err) {
                                 if (data.currentNumber && data.currentNumber < result.length) {
