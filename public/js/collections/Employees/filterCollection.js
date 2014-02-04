@@ -8,64 +8,44 @@
             model: EmployeeModel,
             url: "/Employees/",
             page: 1,
+            namberToShow: null,
+            viewType: null,
+            contentType: null,
+
             initialize: function (options) {
 				this.startTime = new Date();
+
                 var that = this;
                 this.namberToShow = options.count;
+                this.viewType = options.viewType;
+                this.contentType = options.contentType;
+
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    var viewType = options.viewType;
-                    delete options.viewType;
-                }
-
-                var filterObject = {};
-                for (var i in options) {
-                    filterObject[i] = options[i];
-                }
-
-                switch (viewType) {
-                    case 'thumbnails': {
-                        filterObject['count'] = filterObject['count']*2;
-                        var addPage = 2;
-                        break;
-                    }
-                    case 'list': {
-                        filterObject['page'] = 1;
-                        var addPage = 0;
-                        break;
-                    }
-                    default: {
-                        var addPage = 1;
-                    }
+                    //delete options.viewType;
                 }
 
                 this.fetch({
-                    data: filterObject,
+                    data: options,
                     reset: true,
                     success: function() {
-                        console.log("Employees fetchSuccess");
-                        that.page += addPage;
+                        that.page ++;
                     },
-                    error: this.fetchError
+                    error: function (models, xhr) {
+                        if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
+                    }
                 });
             },
-            filterByWorkflow: function (id) {
-                return this.filter(function (data) {
-                    return data.get("workflow")._id == id;
-                });
-            },
+
             showMore: function (options) {
                 var that = this;
-                
-                var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
+
+                var filterObject = options || {};
+
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
-                filterObject['letter'] = (options && options.letter) ? options.letter: '';
+                filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
+                filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
                 this.fetch({
                     data: filterObject,
                     waite: true,
@@ -87,16 +67,17 @@
                         filterObject[i] = options[i];
                     }
                 }
-				that.page=1;
-                filterObject['page'] = (options && options.page) ? options.page: this.page;
-                filterObject['count'] = (options && options.count) ? options.count*2: this.namberToShow;
-                filterObject['letter'] = (options && options.letter) ? options.letter: '';
+				that.page = 1;
+                filterObject['page'] = (options && options.page) ? options.page : this.page;
+                filterObject['count'] = (options && options.count) ? options.count * 2 : this.namberToShow;
+                filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
+                filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
                 this.fetch({
                     data: filterObject,
                     waite: true,
                     success: function (models) {
-                        that.page += 2;
-							that.trigger('showmoreAlphabet', models);
+                        that.page ++;
+                        that.trigger('showmoreAlphabet', models);
                     },
                     error: function () {
                         alert('Some Error');
@@ -117,14 +98,13 @@
                 if (response.data) {
                     _.map(response.data, function (employee) {
                         employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
-						if (!employee.createdBy)employee.createdBy={}
-						if (!employee.editedBy)employee.editedBy={}
+						if (!employee.createdBy) employee.createdBy={}
+						if (!employee.editedBy) employee.editedBy={}
 							employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
 							employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
                         return employee;
                     });
                 }
-                this.listLength = response.listLength;
                 return response.data;
             }
 
