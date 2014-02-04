@@ -1,6 +1,5 @@
 ﻿define([
-    'text!templates/Projects/list/ListTemplate.html',
-    "common"
+    'text!templates/Projects/list/ListTemplate.html'
 ],
 
 function (listTemplate) {

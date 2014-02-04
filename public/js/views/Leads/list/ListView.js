@@ -47,7 +47,6 @@ define([
             },
 
             showFilteredPage: function (event) {
-                var self = this;
                 this.startTime = new Date();
 
                 var workflowIdArray = [];
