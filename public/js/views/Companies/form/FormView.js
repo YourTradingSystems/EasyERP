@@ -69,7 +69,7 @@ define([
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
                 "click .btnHolder .add.persons": "addPersons",
-                "change .person-info.company.long input": "saveCheckboxChange",
+                "change .customer-info.company.long input": "saveCheckboxChange",
                 "click .miniPagination .next:not(.not-active)": "nextMiniPage",
                 "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
                 "click .miniPagination .first:not(.not-active)": "firstMiniPage",
@@ -236,10 +236,6 @@ define([
 					this.formModel.save(obj, {
 						headers: {
 							mid: 39
-						},
-						patch:true,
-						success: function () {
-							Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
 						}
 					});
 				}
@@ -264,10 +260,7 @@ define([
                     headers: {
                         mid: 39
                     },
-					patch:true,
-                    success: function () {
-                        Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
-                    }
+					patch:true
                 });
             },
 

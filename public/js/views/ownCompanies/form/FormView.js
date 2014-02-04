@@ -121,9 +121,6 @@ define([
 					this.formModel.save({}, {
 						headers: {
 							mid: 39
-						},
-						success: function () {
-							Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
 						}
 					});
 				}
