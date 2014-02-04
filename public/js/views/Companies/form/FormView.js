@@ -69,7 +69,7 @@ define([
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
                 "click .btnHolder .add.persons": "addPersons",
-                "change .person-info.company.long input": "saveCheckboxChange",
+                "change .customer-info.company.long input": "saveCheckboxChange",
                 "click .miniPagination .next:not(.not-active)": "nextMiniPage",
                 "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
                 "click .miniPagination .first:not(.not-active)": "firstMiniPage",
@@ -226,23 +226,16 @@ define([
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
-                var objIndex = parent[0].id.split('_');
+                var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
                 var currentModel = this.model;
-
-                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')){
-                    obj = this.formModel.get(objIndex[0]);
-                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-					this.formModel.set(obj);
-					this.formModel.save({}, {
-						headers: {
-							mid: 39
-						},
-						success: function () {
-							Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
-						}
-					});
-				}
+                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+				this.formModel.save(obj, {
+					headers: {
+						mid: 39
+					},
+					patch:true
+				});
 			},
 
             saveClick: function (e) {
@@ -264,10 +257,7 @@ define([
                     headers: {
                         mid: 39
                     },
-					patch:true,
-                    success: function () {
-                        Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
-                    }
+					patch:true
                 });
             },
 

@@ -171,25 +171,19 @@ define([
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
             },
-            saveCheckboxChange: function (e) {
+			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
-                var objIndex = parent[0].id.split('_');
-
-                if ((objIndex.length > 1) && $("#" + parent[0].id).hasClass('with-checkbox')) {
-                    var obj = this.formModel.get(objIndex[0]) || {};
-                    obj[objIndex[1]] = ($("#" + parent[0].id + " input").prop("checked"));
-                    this.formModel.set(obj);
-                    this.formModel.save({}, {
-                        headers: {
-                            mid: 39
-                        },
-                        success: function (model) {
-                            Backbone.history.fragment = '';
-                            Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
-                        }
-                    });
-                }
-            },
+                var objIndex = parent[0].id.replace('_','.');
+                var obj = {};
+                var currentModel = this.model;
+                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+				this.formModel.save(obj, {
+					headers: {
+						mid: 39
+					},
+					patch:true
+				});
+			},
             saveClick: function (e) {
                 e.preventDefault();
                 var parent = $(event.target).parent().parent();
@@ -221,11 +215,7 @@ define([
                     headers: {
                         mid: 39
                     },
-					patch:true,
-                    success: function (model) {
-                        Backbone.history.fragment = '';
-                        Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
-                    }
+					patch:true
                 });
             },
 

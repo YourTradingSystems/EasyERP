@@ -422,6 +422,10 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('Opportunities'): requestHandler.opportunitiesTotalCollectionLength(req, res);
             break;
+        case ('Employees'): requestHandler.employeesTotalCollectionLength(req, res);
+            break;
+        case ('Applications'): requestHandler.employeesTotalCollectionLength(req, res);
+            break;
         default: next();
     }
     
@@ -894,7 +898,7 @@ app.put('/Companies/:viewType/:_id', function (req, res) {
 app.patch('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-    requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
+    requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
 });
 app.delete('/Companies/:viewType/:_id', function (req, res) {
     data = {};
@@ -942,7 +946,11 @@ app.put('/ownCompanies/:_id', function (req, res) {
     //console.log(data.company.address);
     requestHandler.updateCompany(req, res, id, data, remove);
 });
-
+app.patch('/ownCompanies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
+});
 app.put('/ownCompanies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -1127,14 +1135,6 @@ app.get('/getDepartmentsForEditDd', function (req, res) {
 
 
 //------------------Employee---------------------------------------------------
-app.get('/EmployeesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getEmployeesListLength(req, res, data);
-});
 
 app.get('/Employees', function (req, res) {
     data = {};
@@ -1165,7 +1165,7 @@ app.get('/Employees/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
             break;
-        case "list": requestHandler.getEmployeesForList(req, res, data);
+        case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "thumbnails": requestHandler.getEmployeesForThumbnails(req, res, data);
             break;
@@ -1188,6 +1188,12 @@ app.put('/Employees/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
+});
+app.patch('/Employees/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
 app.delete('/Employees/:viewType/:_id', function (req, res) {
@@ -1253,7 +1259,7 @@ app.get('/Applications/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
             break;
-        case "list": requestHandler.getApplicationsForList(req, res, data);
+        case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
             break;
@@ -1277,6 +1283,13 @@ app.put('/Applications/:_id', function (req, res) {
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateApplication(req, res, id, data);
+});
+
+app.patch('/Applications/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
 app.put('/Applications/:viewType/:_id', function (req, res) {

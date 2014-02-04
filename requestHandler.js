@@ -21,10 +21,17 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
     Array.prototype.objectID = function () {
+
         var _arrayOfID = [];
+        var newObjectId = mongoose.Types.ObjectId;
         for (var i = 0; i < this.length; i++) {
             if (typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
                 _arrayOfID.push(this[i]._id);
+            } else {
+
+                if(typeof this[i] == 'string' && this[i].length === 24) {
+                    _arrayOfID.push(newObjectId(this[i]));
+                }
             }
         }
         return _arrayOfID;
@@ -1193,6 +1200,9 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //---------END------JobPosition-----------------------------------
     //---------------------Employee--------------------------------
+    function employeesTotalCollectionLength(req, res) {
+        employee.getTotalCount(req, res);
+    }
     function createEmployee(req, res, data) {
         console.log("Requst createEmployee is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1218,15 +1228,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
-    function getEmployeesListLength(req, res, data) {
-        console.log("Requst getEmployeesListLength is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            employee.getListLength(req, data, res);
-        } else {
-            res.send(401);
-        }
-    }
 
     // Custom function for list
     function getEmployeesCustom(req, res, data) {
@@ -1261,14 +1262,12 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-
-    function getEmployeesForList(req, res, data) {
-        console.log("Requst getEmployeesCustom is success");
+    // get employee or Applications for list or thumbnails
+    function getEmployeesFilter(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
-                console.log(access);
                 if (access) {
-                    employee.getEmployeeForList(req, data, res);
+                    employee.getFilter(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1319,7 +1318,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
+    function employeesUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					employee.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     function removeEmployees(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1418,23 +1433,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getApplicationsForList(req, res, data) {
-        console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
-                if (access) {
-                    employee.getApplicationsForList(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
     function getApplicationsForKanban(req, res, data) {
         console.log("Requst getApplications is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1521,6 +1519,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function aplicationUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 43, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					employee.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     function removeApplication(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2222,10 +2237,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         createEmployee: createEmployee,
         getCustomJobPosition: getCustomJobPosition,
         getEmployees: getEmployees,
-        getEmployeesListLength: getEmployeesListLength,
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
-        getEmployeesForList: getEmployeesForList,
         getEmployeesForThumbnails: getEmployeesForThumbnails,
         getEmployeesByIdCustom: getEmployeesByIdCustom,
         removeEmployees: removeEmployees,
@@ -2245,6 +2258,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeApplication: removeApplication,
         updateApplication: updateApplication,
         uploadApplicationFile: uploadApplicationFile,
+		aplicationUpdateOnlySelectedFields:aplicationUpdateOnlySelectedFields,
+		employeesUpdateOnlySelectedFields:employeesUpdateOnlySelectedFields,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,
@@ -2259,7 +2274,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeDegree: removeDegree,
 
 		getCampaigns:getCampaigns,
-        getApplicationsForList: getApplicationsForList,
+        employeesTotalCollectionLength: employeesTotalCollectionLength,
+        getEmployeesFilter: getEmployeesFilter,
         getEmployeesForThumbnails: getEmployeesForThumbnails,
         uploadEmployeesFile: uploadEmployeesFile,
         getApplicationById: getApplicationById,
@@ -2302,7 +2318,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         getSources: getSources,
         getJobType: getJobType,
-        customerTotalCollectionLength: customerTotalCollectionLength,
+        customerTotalCollectionLength: customerTotalCollectionLength
 
     }
 }
