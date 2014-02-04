@@ -177,6 +177,7 @@ define([
                         context.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - context.startTime) + " ms</div>");
                     }, this);
                 }, this);
+
                 return this;
             }
         });
