@@ -273,13 +273,12 @@
                             return attach;
                         }
                     });
-                    currentModel.set('attachments', new_attachments);
-                    currentModel.save({},
+                    currentModel.save({'attachments': new_attachments},
                                       {
                                           headers: {
                                               mid: 39
                                           },
-
+										  patch:true,
                                           success: function (model, response, options) {
                                               $('.attachFile_' + id).remove();
                                           }
@@ -403,8 +402,9 @@
                     relatedUser: relatedUser,
                     nextAction: nextAction,
                     source: {
-                        id: this.$el.find("#sourceDd option:selected").val()
+                        id: this.$el.find("#sourceDd").data("id")
                     },
+                    jobType: this.$el.find("#jobTypeDd").data("id"),
                     referredBy: $.trim(this.$el.find("#referredBy").val()),
                     department: department,
                     jobPosition: jobPositionId,
@@ -505,6 +505,7 @@
 				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this);
 				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this);
 				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this);
+				populate.get("#jobTypeDd","/jobType",{},"_id",this);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 $('#nextAction').datepicker({
                     dateFormat: "d M, yy",

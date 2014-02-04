@@ -63,6 +63,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function redirectFromModuleId(req, res, id) {
+        console.log("Requst get Modules is success");
+        // if (req.session && req.session.loggedIn && req.session.lastDb ) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            models.get(req.session.lastDb - 1, 'Users', users.schema).findById(req.session.uId, function (err, _user) {
+                if (_user) {
+                    modules.redirectToUrl(req, _user.profile, res, id);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
     function login(req, res, data) {
         console.log("Requst LOGIN is success");
         users.login(req, data, res);
@@ -1318,7 +1334,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
+    function employeesUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 42, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					employee.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     function removeEmployees(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1503,6 +1535,23 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function aplicationUpdateOnlySelectedFields(req, res, id, data) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 43, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					employee.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
+        } else {
+            res.send(401);
+        }
+    }
     function removeApplication(req, res, id, data) {
         console.log("Requst removeEmployees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2118,6 +2167,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         mongoose: mongoose,
         getModules: getModules,
+		redirectFromModuleId:redirectFromModuleId,
 
         login: login,
         createUser: createUser,
@@ -2225,6 +2275,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         removeApplication: removeApplication,
         updateApplication: updateApplication,
         uploadApplicationFile: uploadApplicationFile,
+		aplicationUpdateOnlySelectedFields:aplicationUpdateOnlySelectedFields,
+		employeesUpdateOnlySelectedFields:employeesUpdateOnlySelectedFields,
 
         getDepartment: getDepartment,
         createDepartment: createDepartment,
