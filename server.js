@@ -422,6 +422,10 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('Opportunities'): requestHandler.opportunitiesTotalCollectionLength(req, res);
             break;
+        case ('Employees'): requestHandler.employeesTotalCollectionLength(req, res);
+            break;
+        case ('Applications'): requestHandler.employeesTotalCollectionLength(req, res);
+            break;
         default: next();
     }
     
@@ -1110,14 +1114,6 @@ app.get('/getDepartmentsForEditDd', function (req, res) {
 
 
 //------------------Employee---------------------------------------------------
-app.get('/EmployeesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getEmployeesListLength(req, res, data);
-});
 
 app.get('/Employees', function (req, res) {
     data = {};
@@ -1148,7 +1144,7 @@ app.get('/Employees/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
             break;
-        case "list": requestHandler.getEmployeesForList(req, res, data);
+        case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "thumbnails": requestHandler.getEmployeesForThumbnails(req, res, data);
             break;
@@ -1236,7 +1232,7 @@ app.get('/Applications/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
             break;
-        case "list": requestHandler.getApplicationsForList(req, res, data);
+        case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
             break;
