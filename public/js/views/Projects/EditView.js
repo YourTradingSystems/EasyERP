@@ -47,7 +47,6 @@ define([
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-                "click": "hideHealth",
                 "click .current-selected": "showNewSelect",
             },
             notHide: function (e) {
@@ -60,9 +59,12 @@ define([
             },
             chooseOption: function (e) {
                 $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();;
             },
             hideNewSelect: function (e) {
-                $(".newSelectList").hide();;
+                $(".newSelectList").hide();
+                $("#health ul").hide();
+
             },
 
             nextSelect: function (e) {
@@ -70,9 +72,6 @@ define([
             },
             prevSelect: function (e) {
                 this.showNewSelect(e, true, false)
-            },
-            hideHealth: function () {
-                $("#health ul").hide();
             },
             chooseHealthDd: function (e) {
                 $(e.target).parents("#health").find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
@@ -383,14 +382,13 @@ define([
                 });
                 $("#targetUsers").unbind().on("click", "li", this.removeUsers);
                 $("#sourceUsers").unbind().on("click", "li", this.addUsers);
-                var self = this;
                 $(document).on("click", ".nextUserList", function (e) {
-                    self.page += 1
-                    self.nextUserList(e, self.page)
+                    self.page += 1;
+                    self.nextUserList(e, self.page);
                 });
                 $(document).on("click", ".prevUserList", function (e) {
-                    self.page -= 1
-                    self.prevUserList(e, self.page)
+                    self.page -= 1;
+                    self.prevUserList(e, self.page);
                 });
 
             },
@@ -458,6 +456,7 @@ define([
 
             saveItem: function (event) {
                 event.preventDefault();
+				var self = this;
                 Backbone.history.fragment = '';
                 var viewType = custom.getCurrentVT();
                 var mid = 39;
@@ -520,7 +519,13 @@ define([
                         $('.edit-project-dialog').remove();
                         $(".add-group-dialog").remove();
                         $(".add-user-dialog").remove();
-                        Backbone.history.navigate("#easyErp/Projects/" + viewType, { trigger: true });
+						$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(0).text(projectName);
+						if (customer)
+							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
+						$("#"+self.currentModel.toJSON()._id).find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
+						if (projectmanager)
+							common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
+						//                        Backbone.history.navigate("#easyErp/Projects/" + viewType, { trigger: true });
                     },
                     error: function () {
                         $('.edit-project-dialog').remove();
@@ -598,7 +603,7 @@ define([
                         model.groups.users.forEach(function (item) {
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='" + item._id + "'><td>" + item.login + "</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='" + item._id + "'>" + item.login + "</li>");
-                        })
+                        });
 
                     }
                 $('#EndDateTarget').datepicker({

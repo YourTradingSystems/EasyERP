@@ -14,7 +14,7 @@
         </div>
         <div class="inner">
             <div class="project-text left">
-                <span class="bold" title="<%=project.projectName%>"><%=project.projectName%></span><br />
+              <span class="bold" title="<%=project.projectName%>"><%=project.projectName%></span><span class="health-container"><a href="javascript:;" data-value="<%=project.health%>" class="health<%=project.health%>"></a></span><br />
                 <span title="<%=(project.customer) ? project.customer.name.first+ ' ' + project.customer.name.last : ' ' %>"><%=(project.customer)?project.customer.name.first+' ' + project.customer.name.last : ' '%></span>
             </div>
             <div class="clearfix">

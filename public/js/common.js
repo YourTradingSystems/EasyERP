@@ -871,8 +871,8 @@
 
 
         var buildAllAphabeticArray = function () {
-            var associateArray = ["All", "0-9"]
-            for (i = 65; i <= 90; i++) {
+            var associateArray = ["All", "0-9"];
+            for (var i = 65; i <= 90; i++) {
                 associateArray.push(String.fromCharCode(i).toUpperCase());
             }
             return associateArray;
@@ -886,6 +886,16 @@
                         $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
                         $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
                     });
+                }
+                if (callback) callback(response);
+            });
+        };
+        var getImagesPM = function (id, url, thumbID, callback) {
+            dataService.getData(url, { ids: [id] }, function (response) {
+                if (response.data !== undefined) {
+					$(thumbID).find(".avatar").attr("data-id",response.data[0]._id).find("img").attr("src",response.data[0].imageSrc);
+//                    $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
+
                 }
                 if (callback) callback(response);
             });
@@ -917,7 +927,6 @@
             populateCustomers: populateCustomers,
             populateEmployeesDd: populateEmployeesDd,
             populateCoachDd: populateCoachDd,
-            utcDateToLocaleDate: utcDateToLocaleDate,
             populateRelatedStatuses: populateRelatedStatuses,
             checkBackboneFragment: checkBackboneFragment,
             displayControlBtnsByActionType: displayControlBtnsByActionType,
@@ -932,6 +941,7 @@
             populateDepartmentsList: populateDepartmentsList,
             getLeadsForChart: getLeadsForChart,
             getImages: getImages,
+			getImagesPM:getImagesPM,
 			populateOpportunitiesForMiniView:populateOpportunitiesForMiniView
         }
     });

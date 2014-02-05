@@ -998,9 +998,10 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                             var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                             if (data && data.status && data.status.length > 0)
                                 query.where('workflow').in(data.status);
-                            query.select("_id projectName task workflow projectmanager").
+                            query.select("_id projectName task workflow projectmanager customer health").
                                 populate('workflow', 'status').
                                 populate('projectmanager', 'name').
+                                populate('customer', 'name').
                                 skip((data.page - 1) * data.count).
                                 limit(data.count).
                             exec(function (error, _res) {
