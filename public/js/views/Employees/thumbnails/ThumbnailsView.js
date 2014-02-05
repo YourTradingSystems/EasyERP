@@ -28,7 +28,7 @@
 
             events: {
                 "click #showMore": "showMore",
-                "click .thumbnail": "gotoEditForm",
+                "click .thumbnailwithavatar": "gotoEditForm",
                 "click .letter:not(.empty)": "alpabeticalRender"
             },
 
@@ -86,7 +86,7 @@
                 } else {
                     currentEl.html('<h2>No Employees found</h2>');
                 }
-
+                currentEl.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
                 currentEl.append(createdInTag);
                 return this;
             },
@@ -96,7 +96,7 @@
                 if ((clas === "dropDown") || (clas === "inner")) {
                 } else {
                     e.preventDefault();
-                    var id = $(e.target).closest('.thumbnail').attr("id");
+                    var id = $(e.target).closest('.thumbnailwithavatar').attr("id");
                     var model = new currentModel({validate: false});
                     model.urlRoot = '/Employees/form/' + id;
                     model.fetch({
@@ -117,7 +117,7 @@
                 var holder = this.$el;
                 if (this.checkClearView) {
                     this.checkClearView = null;
-                    $('.thumbnail').remove();
+                    $('.thumbnailwithavatar').remove();
                     this.countPerPage = 0;
                     this.collection.page = 1;
                 }

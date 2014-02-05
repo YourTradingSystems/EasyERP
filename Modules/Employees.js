@@ -1033,7 +1033,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
         getApplications: getApplications,
 
-		getApplicationsForKanban:getApplicationsForKanban,
+		getApplicationsForKanban: getApplicationsForKanban,
 
 		getEmployeesImages: getEmployeesImages,
 
