@@ -461,7 +461,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                             res.send(200, file);
                         }
                     });
-                    customer.update(req, id, remove, data.person, res);
+                    //customer.update(req, id, remove, data.person, res);
                 } else {
                     res.send(403);
                 }

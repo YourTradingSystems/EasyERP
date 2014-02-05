@@ -144,21 +144,67 @@ app.post('/uploadFiles', function (req, res, next) {
     //data = {};
     file = {};
     fs.readFile(req.files.attachfile.path, function (err, data) {
-        var path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+        var path;
+        var dir;
+        os = require("os");
+        var osType = (os.type().split('_')[0]);
+        switch(osType) {
+            case "Windows":
+                {
+                    path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+                    dir = __dirname + "\\uploads";
+                }
+                break;
+            case "Linux":
+                {
+                    path = __dirname + "\/uploads\/" + req.files.attachfile.name;
+                    dir = __dirname + "\/uploads";
+                }
+        }
+        
         fs.writeFile(path, data, function (err) {
-            file._id = mongoose.Types.ObjectId();
-            file.name = req.files.attachfile.name;
-            file.path = path;
-            file.size = req.files.attachfile.size;
-            file.uploadDate = new Date();
-            file.uploaderName = req.session.uName;
-            requestHandler.uploadFile(req, res, req.headers.id, file);
+            if (!err) {
+                file._id = mongoose.Types.ObjectId();
+                file.name = req.files.attachfile.name;
+                file.path = path;
+                file.size = req.files.attachfile.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                requestHandler.uploadFile(req, res, req.headers.id, file);
+            } else {
+                if (err.errno === 34) {
+                    fs.mkdir(dir, function (errr) {
+                        if (errr) {
+                            console.log(errr);
+                            next();
+                        } else {
+                            fs.writeFile(path, data, function (err) {
+                                if (!err) {
+                                    file._id = mongoose.Types.ObjectId();
+                                    file.name = req.files.attachfile.name;
+                                    file.path = path;
+                                    file.size = req.files.attachfile.size;
+                                    file.uploadDate = new Date();
+                                    file.uploaderName = req.session.uName;
+                                    requestHandler.uploadFile(req, res, req.headers.id, file);
+                                } else {
+                                    console.log(err);
+                                    next();
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log(err);
+                    next();
+                }
+            }
         });
     });
 });
 app.get('/download/:name', function (req, res) {
     var name = req.param('name');
-	res.download(__dirname + "\\uploads\\" + name);
+    res.download(__dirname + "\\uploads\\" + name);
 });
 
 app.post('/uploadApplicationFiles', function (req, res, next) {
@@ -410,7 +456,7 @@ app.delete('/Profiles/:_id', function (req, res) {
 
 //-----------------------------getTotalLength---------------------------------------------
 app.get('/totalCollectionLength/:contentType', function (req, res, next) {
-    switch(req.params.contentType) {
+    switch (req.params.contentType) {
         case ('Persons'): requestHandler.customerTotalCollectionLength(req, res);
             break;
         case ('Companies'): requestHandler.customerTotalCollectionLength(req, res);
@@ -605,7 +651,7 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     var remove = req.headers.remove;
     data.mid = req.headers.mid;
     data.project = req.body;
-    requestHandler.updateProject(req, res, id, data,remove);
+    requestHandler.updateProject(req, res, id, data, remove);
 });
 
 app.patch('/Projects/:_id', function (req, res) {
@@ -710,13 +756,13 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     data.task = req.body;
     var remove = req.headers.remove;
-    requestHandler.updateTask(req, res, id, data,remove);
+    requestHandler.updateTask(req, res, id, data, remove);
 });
 
 app.patch('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-	console.log(req.body);
+    console.log(req.body);
     requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
@@ -726,7 +772,7 @@ app.put('/Tasks/:_id', function (req, res) {
     data.mid = req.headers.mid;
     data.task = req.body;
     var remove = req.headers.remove;
-    requestHandler.updateTask(req, res, id, data,remove);
+    requestHandler.updateTask(req, res, id, data, remove);
 });
 
 app.delete('/Tasks/:viewType/:_id', function (req, res) {
@@ -1579,11 +1625,11 @@ app.get('/ChangeSyncCalendar', function (req, res) {
 });
 app.get('/:id', function (req, res) {
     var id = req.param('id');
-	if (!isNaN(parseFloat(id))){
-		requestHandler.redirectFromModuleId(req, res, id);
-	}else{
-		res.send(500);
-	}
+    if (!isNaN(parseFloat(id))) {
+        requestHandler.redirectFromModuleId(req, res, id);
+    } else {
+        res.send(500);
+    }
 });
 app.listen(8088);
 

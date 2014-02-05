@@ -187,7 +187,7 @@ define([
                 var collection = new contentCollection({
                     viewType: 'list',
                     page: 1,
-                    count: 5,
+                    count: 50,
                     status: [],
                     parrentContentId: parrentContentId,
                     contentType: contentType,
