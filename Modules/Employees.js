@@ -253,8 +253,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             }
 
             function savetoDb(data) {
-                try {
-                    _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
+                _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
                     if (data.uId) {
 
                         _employee.createdBy.user = data.uId;
@@ -419,28 +418,17 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     }
                     ///////////////////////////////////////////////////
                     _employee.save(function (err, result) {
-                        try {
-                            if (err) {
+                        if (err) {
                                 console.log(err);
                                 logWriter.log("Employees.js create savetoBd _employee.save " + err);
                                 res.send(500, { error: 'Employees.save BD error' });
                             } else {
                                 res.send(201, { success: 'A new Employees create success', result: result });
-                                console.log(result);
-                                event.emit('recalculate', req);
+                                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                                //event.emit('recalculate', req);
                             }
-                        } catch (error) {
-                            logWriter.log("Employees.js create savetoBd _employee.save " + error);
-                        }
-                    });
-                } catch (error) {
-                    console.log(error);
-                    logWriter.log("Employees.js create savetoBd " + error);
-                    res.send(500, { error: 'Employees.save  error' });
-                    console.log('======================Reguest');
-
+                       });
                 }
-            }
         }
         catch (exception) {
             console.log(exception);

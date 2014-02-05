@@ -177,7 +177,7 @@ define([
                     $(".groupsAndUser").hide();
                 }
             },
-//=============
+
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -203,20 +203,7 @@ define([
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
             },
-
-            changeWorkflows: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                } else {
-                    var currentModel = this.contentCollection.models[itemIndex].toJSON();
-                    var name = this.$("#workflowNames option:selected").val();
-                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                    //$("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
-                }
-            },
-
+            
             getWorkflowValue: function (value) {
                 var workflows = [];
                 for (var i = 0; i < value.length; i++) {
@@ -235,7 +222,7 @@ define([
                 var idCustomer = $("#customerDd").data("id");
                 idCustomer = idCustomer ? idCustomer : null;
                 var address = {};
-                $("p").find(".address").each(function () {
+                $("dd").find(".address").each(function () {
                     var el = $(this);
                     address[el.attr("name")] = $.trim(el.val());
                 });

@@ -788,9 +788,12 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                if (data && data.status && data.status.length > 0)
+                                if (data && data.status) {
                                     query.where('workflow').in(data.status);
-                                query.select("_id createdBy editedBy workflow projectName projectShortDesc projectmanager customer estimated remaining progress info").
+                                } else if (data && !data.newCollection) {
+                                    query.where('workflow').in([]);
+                                }     
+                                query.select("_id createdBy editedBy workflow projectName health customer progress info").
 									populate('createdBy.user', 'login').
 									populate('editedBy.user', 'login').
 									populate('projectmanager', 'name').
@@ -1144,7 +1147,11 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         if (data && data.parrentContentId) {
             addObj['_id'] = newObjectId(data.parrentContentId);
         }
-
+        if (data && data.status) {
+            addObj['workflow'] = { $in: data.status.objectID() };
+        } else if (data && !data.newCollection) {
+            addObj['workflow'] = { $in: [] };
+        }
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
                 $match: {
@@ -1364,7 +1371,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         if (data.workflow && data.workflow._id) {
             data.workflow = data.workflow._id;
         }
-        if (data.workflowForList || data.workflowForKanban) {
+        if (data.workflowForList || data.workflowForKanban) {//may be for delete
             data = {
                 $set: {
                     workflow: data.workflow

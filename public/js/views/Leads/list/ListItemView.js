@@ -1,7 +1,7 @@
 ﻿define([
     'common',
     'text!templates/Leads/list/ListTemplate.html',
-    'text!templates/Leads/list/stages.html'
+    'text!templates/stages.html'
 ],
 
 	   function (common, ListTemplate, stagesTamplate) {
@@ -17,7 +17,7 @@
 	               "click .newSelectList li": "chooseOption"
 	           },
 	           hideNewSelect: function (e) {
-	               $(".newSelectList").hide();;
+	               $(".newSelectList").hide();
 	           },
 	           showNewSelect: function (e) {
 	               if ($(".newSelectList").is(":visible")) {

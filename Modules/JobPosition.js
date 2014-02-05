@@ -183,7 +183,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                             logWriter.log("JobPosition.js create savetoDB _job.save " + err);
                             res.send(500, { error: 'JobPosition.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new JobPosition create success' });
+                            res.send(201, { success: { massage: 'A new JobPosition create success', id: result._id } });
                         }
                     });
                 }
