@@ -206,7 +206,7 @@
                             res.send(500, { error: 'Person.create find error' });
                         } else {
                             if (doc.length > 0) {
-                                res.send(400, { error: 'Person with same name alredy existds' });
+                                res.send(500, { error: 'Person with same name alredy existds' });
                             } else if (doc.length === 0) {
                                 savetoBd(data);
                             }

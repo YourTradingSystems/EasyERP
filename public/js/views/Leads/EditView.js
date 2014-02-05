@@ -177,7 +177,7 @@ define([
                     $(".groupsAndUser").hide();
                 }
             },
-//=============
+
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -222,7 +222,7 @@ define([
                 var idCustomer = $("#customerDd").data("id");
                 idCustomer = idCustomer ? idCustomer : null;
                 var address = {};
-                $("p").find(".address").each(function () {
+                $("dd").find(".address").each(function () {
                     var el = $(this);
                     address[el.attr("name")] = $.trim(el.val());
                 });

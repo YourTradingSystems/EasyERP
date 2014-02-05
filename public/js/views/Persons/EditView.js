@@ -39,8 +39,12 @@ define([
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
-                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+				"click .details":"showDetailsBox"
             },
+			showDetailsBox:function(e){
+				$(e.target).parent().find(".details-box").toggle();
+			},
             notHide: function (e) {
 				return false;
             },

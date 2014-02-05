@@ -87,7 +87,7 @@ define([
 					    if (xhr && xhr.status === 401) {
 					        Backbone.history.navigate("login", { trigger: true });
 					    } else {
-					        Backbone.history.navigate("home", { trigger: true });
+							alert(xhr.responseJSON.error);
 					    }
 					}
 				});

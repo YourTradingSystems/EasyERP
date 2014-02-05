@@ -2,7 +2,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     var logWriter = require("./Modules/additions/logWriter.js")(fs),
         models = require("./models.js")(dbsArray),
         department = require("./Modules/Department.js")(logWriter, mongoose, models),
-        users = require("./Modules/Users.js")(logWriter, mongoose, models),
+        users = require("./Modules/Users.js")(logWriter, mongoose, models, department),
         profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
         employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
@@ -62,6 +62,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
     function redirectFromModuleId(req, res, id) {
         console.log("Requst get Modules is success");
         // if (req.session && req.session.loggedIn && req.session.lastDb ) {
@@ -78,10 +79,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
     function login(req, res, data) {
         console.log("Requst LOGIN is success");
         users.login(req, data, res);
     };
+
+    // Get users Total count
+    function usersTotalCollectionLength(req, res) {
+        users.getTotalCount(req, res);
+    }
 
     function createUser(req, res, data) {
         console.log("Requst createUser is success");
@@ -126,14 +133,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-
-    function getFilterUsers(req, res, data) {
-        console.log("Requst getUsers is success");
+    // Get users for list
+    function getFilterUsers(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 7, function (access) {
                 console.log(access);
                 if (access) {
-                    users.getFilterUsers(req, data, res);
+                    users.getFilter(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1093,6 +1099,12 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //----------------END-----Companies-------------------------------
     //---------------------JobPosition--------------------------------
+
+    // get  jobPositions Total count
+    function jobPositionsTotalCollectionLength(req, res) {
+        jobPosition.getTotalCount(req, res);
+    }
+
     function createJobPosition(req, res, data) {
 
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1108,14 +1120,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
-
-    function getJobPositionsListLength(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            jobPosition.getListLength(req, data, res);
-        } else {
-            res.send(401);
-        }
-    }
 
     function getJobType(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1147,18 +1151,16 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getCustomJobPosition(req, res, data) {
-        console.log("Requst getCustomJobPosition is success");
+    // Get JobPosition for list
+    function getFilterJobPosition(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 14, function (access) {
                 if (access) {
-                    jobPosition.getJobPosition(req, data, res);
+                    jobPosition.getFilter(req, res);
                 } else {
                     res.send(403);
                 }
             });
-
-            //company.get(res);
         } else {
             res.send(401);
         }
@@ -1215,6 +1217,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     //---------END------JobPosition-----------------------------------
     //---------------------Employee--------------------------------
+
     function employeesTotalCollectionLength(req, res) {
         employee.getTotalCount(req, res);
     }
@@ -2170,6 +2173,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         login: login,
         createUser: createUser,
+        usersTotalCollectionLength: usersTotalCollectionLength,
         getUsers: getUsers,
         getUsersForDd: getUsersForDd,
         getUserById: getUserById,
@@ -2242,7 +2246,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getWorkflowsForDd: getWorkflowsForDd,
         removeWorkflow: removeWorkflow,
 
-        getJobPositionsListLength: getJobPositionsListLength,
+        jobPositionsTotalCollectionLength: jobPositionsTotalCollectionLength,
         getJobPosition: getJobPosition,
         createJobPosition: createJobPosition,
         updateJobPosition: updateJobPosition,
@@ -2251,7 +2255,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getJobPositionForDd: getJobPositionForDd,
 
         createEmployee: createEmployee,
-        getCustomJobPosition: getCustomJobPosition,
+        getFilterJobPosition: getFilterJobPosition,
         getEmployees: getEmployees,
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesCustom: getEmployeesCustom,
