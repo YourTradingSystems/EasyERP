@@ -49,36 +49,36 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
         Backbone.history.navigate(url, { trigger: true });
     };
 
-    var getCurrentII = function () {
-        if (App.currentItemIndex == null) {
-            App.currentItemIndex = 1;
-            return App.currentItemIndex;
-        }
+    //var getCurrentII = function () {
+    //    if (App.currentItemIndex == null) {
+    //        App.currentItemIndex = 1;
+    //        return App.currentItemIndex;
+    //    }
 
-        var testIndex = new RegExp(/^[1-9]{1}[0-9]*$/), itemIndex;
-        if (testIndex.test(App.currentItemIndex) == false) {
-            App.currentItemIndex = 0;
-            itemIndex = 0;
-        } else {
-            //if (!App.currentItemIndex){
-            //    itemIndex = null;
-            //} else {
-            itemIndex = App.currentItemIndex;
-        }
-        return itemIndex;
-    };
+    //    var testIndex = new RegExp(/^[1-9]{1}[0-9]*$/), itemIndex;
+    //    if (testIndex.test(App.currentItemIndex) == false) {
+    //        App.currentItemIndex = 0;
+    //        itemIndex = 0;
+    //    } else {
+    //        //if (!App.currentItemIndex){
+    //        //    itemIndex = null;
+    //        //} else {
+    //        itemIndex = App.currentItemIndex;
+    //    }
+    //    return itemIndex;
+    //};
 
-    var setCurrentII = function (index) {
-        var testIndex = new RegExp(/^[1-9]{1}[0-9]*$/),
-            contentLength = getCurrentCL();
+    //var setCurrentII = function (index) {
+    //    var testIndex = new RegExp(/^[1-9]{1}[0-9]*$/),
+    //        contentLength = getCurrentCL();
 
-        if (testIndex.test(index) == false)
-            index = 1;
-        if (index > contentLength) index = contentLength;
-        App.currentItemIndex = index;
+    //    if (testIndex.test(index) == false)
+    //        index = 1;
+    //    if (index > contentLength) index = contentLength;
+    //    App.currentItemIndex = index;
 
-        return index;
-    };
+    //    return index;
+    //};
 
     var getCurrentVT = function (option) {
         console.log('Get Current View Type -------> ' + Backbone.history.fragment);
@@ -247,8 +247,8 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     return {
         runApplication: runApplication,
         changeContentViewType: changeContentViewType,
-        getCurrentII: getCurrentII,
-        setCurrentII: setCurrentII,
+        //getCurrentII: getCurrentII,
+        //setCurrentII: setCurrentII,
         getCurrentVT: getCurrentVT,
         setCurrentVT: setCurrentVT,
         getCurrentCL: getCurrentCL,

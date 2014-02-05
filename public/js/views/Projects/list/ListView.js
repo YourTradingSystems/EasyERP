@@ -3,11 +3,13 @@ define([
     'text!templates/stages.html',
     'views/Projects/CreateView',
     'views/Projects/list/ListItemView',
+    'views/Projects/EditView',
+    'models/ProjectsModel',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, stagesTamplate, CreateView, listItemView, common, dataService) {
+    function (listTemplate, stagesTamplate, CreateView, listItemView, editView, currentModel, common, dataService) {
         var ProjectsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -48,8 +50,17 @@ define([
                 "click tr": "goToEditDialog"
             },
 
-            goToEditDialog: function(e) {
-                
+            goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/Projects/form/' + id;
+                model.fetch({
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             },
 
             checkCheckbox: function (e) {
@@ -57,7 +68,7 @@ define([
                     $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
                 }
             },
-            
+
             chooseHealthDd: function (e) {
                 var target = $(e.target).parents("#health");
                 target.find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
@@ -71,11 +82,11 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-                        
+
                     }
                 });
             },
-            
+
             showHealthDd: function (e) {
                 $(e.target).parent().find("ul").toggle();
                 return false;
