@@ -68,8 +68,7 @@
                                return note;
                            }
                        });
-                       currentModel.set('notes', new_notes);
-                       currentModel.save({},
+                       currentModel.save({'notes': new_notes},
 										 {
 											 headers: {
 												 mid: 40,
@@ -107,11 +106,12 @@
                                    return note;
                                }
                            });
-                           currentModel.save({},
+                           currentModel.save({ 'notes': editNotes },
 											 {
 												 headers: {
 													 mid: 40
 												 },
+												 patch: true,
 												 success: function (model, response, options) {
 													 $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
 													 $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
@@ -126,12 +126,13 @@
                            note_obj.note = val;
                            note_obj.title = title;
                            notes.push(note_obj);
-                           currentModel.set('notes', notes);
-                           currentModel.save({},
+                           currentModel.set();
+                           currentModel.save({'notes': notes},
 											 {
 												 headers: {
 													 mid: 40
 												 },
+												 patch: true,
 												 wait: true,
 												 success: function (models,data,response) {
 
@@ -258,14 +259,13 @@
 							   return attach;
 						   }
 					   });
-					   currentModel.set('attachments', new_attachments);
-					   currentModel.save({},
+					   currentModel.save({'attachments': new_attachments},
 										 {
 											 headers: {
 												 mid: 39
 											 },
 											 
-
+											 patch: true,//Send only changed attr(add Roma)
 											 success: function (model, response, options) {
 												 $('.attachFile_' + id).remove();
 											 }

@@ -339,8 +339,8 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd");
-                common.populateEmployeesDd(App.ID.employeesDd, "/getSalesPerson");
+                common.populateDepartments("#departmentDd", "/DepartmentsForDd");
+                common.populateEmployeesDd("#employeesDd", "/getSalesPerson");
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
                 $('#date').datepicker({ dateFormat: "d M, yy" });
                 this.delegateEvents(this.events);

@@ -403,9 +403,10 @@ define([
 				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Lead"},"name",this);			
 				populate.get2name("#customerDd", "/Customer",{},this);	
 				populate.get2name("#salesPerson", "/getForDdByRelatedUser",{},this);	
+				populate.get("#campaignDd", "/Campaigns",{},"name",this);	
+				populate.get("#sourceDd", "/sources",{},"name",this);	
+
                 this.delegateEvents(this.events);
-                $('#campaignDd').val(this.currentModel.get('campaign'));
-                $('#sourceDd').val(this.currentModel.get('source'));
 
                 var model = this.currentModel.toJSON();
                 if (model.groups)

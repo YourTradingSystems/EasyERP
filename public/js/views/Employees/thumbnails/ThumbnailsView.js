@@ -69,7 +69,7 @@ function (EmployeesThumbnailsItemView, Custom, common, EditView, CreateView, Aph
 			var ids = _.map(this.collection.toJSON(),function(item){
 				return item._id;
 			});
-			common.getEmployeesImages(ids);
+			common.getImages(ids, "/getEmployeesImages");
 			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
             return this;
         },

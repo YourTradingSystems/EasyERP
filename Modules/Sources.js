@@ -1,7 +1,7 @@
 ﻿var Source = function (logWriter, mongoose, models) {
     var SourceSchema = mongoose.Schema({
         _id: String,
-        neme: String
+        name: String
 
     }, { collection: 'sources' });
 

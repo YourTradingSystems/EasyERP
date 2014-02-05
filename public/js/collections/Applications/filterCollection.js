@@ -7,119 +7,57 @@
             model: ApplicationModel,
             url: "/Applications/",
             page: 1,
-            count: 13,
+            namberToShow: null,
+            contentType: null,
+            viewType: null,
 
             initialize: function (options) {
-				this.startTime = new Date();
-                this.status = [];
-                this.status = options.status;
-                this.count = options.count;
-                this.page = options.page;
-                this.namberToShow = options.count;
                 var that = this;
+                this.startTime = new Date();
+                this.contentType = options.contentType;
+                this.viewType = options.viewType;
+                this.wfStatus = [];
+                this.wfStatus = options.status;
+                this.namberToShow = options.count;
 
                 if (options && options.viewType) {
                     this.url += options.viewType;
-                    var viewType = options.viewType;
-                    delete options.viewType;
-                }
-
-                var filterObject = {};
-                for (var i in options) {
-                    filterObject[i] = options[i];
-                };
-
-                switch (viewType) {
-                    case 'thumbnails': {
-                        filterObject['count'] = filterObject['count']*2;
-                        var addPage = 2;
-                        break;
-                    }
-                    case 'list': {
-                        filterObject['page'] = 1;
-                        filterObject['status'] = [];
-                        filterObject['status'] = options.status;;
-                        var addPage = 0;
-                        break;
-                    }
-                    default: {
-                        var addPage = 1;
-                    }
+                   // delete options.viewType;
                 }
 
                 this.fetch({
-                    data: filterObject,
+                    data: options,
                     reset: true,
-                    success: function(model,response) {
-                        console.log("Application fetchSuccess");
-                        that.page += addPage;
-                        that.showMoreButton = response.showMore;
-                        that.optionsArray = response.options;
+                    success: function() {
+                        that.page ++;
+
                     },
-                    error: this.fetchError
-
-                });
-            },
-
-            filterByWorkflow: function (id) {
-                return this.filter(function (data) {
-                    return data.get("workflow")._id == id;
+                    error: function (models, xhr) {
+                        if (xhr.status == 401) Backbone.history.navigate('#login', { trigger: true });
+                    }
                 });
             },
 
             showMore: function (options) {
                 var that = this;
-                var filterObject = {};
+
+                var filterObject = options || {};
+
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
-                filterObject['status'] = [];
-                filterObject['status'] = (options && options.status) ? options.status: this.status;
-                if (options.viewType && options.viewType == 'list') {
-                    this.fetch({
-                        data: filterObject,
-                        waite: true,
-                        success: function (models, response) {
-                            that.showMoreButton = response.showMore;
-                            that.optionsArray = response.options;
-                            that.page += 1;
-                            that.trigger('showmore', models);
-                        },
-                        error: function() {
-                            alert('Some Error');
-                        }
-                    });
-                } else {
-                    var NewCollection = Backbone.Collection.extend({
-                        model: ApplicationModel,
-                        url: that.url,
-                        parse: true,
-                        parse: function(response) {
-                            return response.data;
-                        },
-                        page: that.page,
-
-                        filterByWorkflow: function (id) {
-                            return this.filter(function (data) {
-                                return data.get("workflow")._id == id;
-                            });
-                        }
-                    });
-                    var newCollection = new NewCollection();
-
-                    newCollection.fetch({
-                        data: filterObject,
-                        waite: true,
-                        success: function (models, response) {
-                            that.showMoreButton = response.showMore;
-                            that.optionsArray = response.options;
-                            that.page += 1;
-                            that.trigger('showmore', models);
-                        },
-                        error: function() {
-                            alert('Some Error');
-                        }
-                    });
-                }
+                filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
+                filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
+                this.fetch({
+                    data: filterObject,
+                    waite: true,
+                    success: function (models) {
+                        that.page ++;
+                        that.trigger('showmore', models);
+                    },
+                    error: function() {
+                        alert('Some Error');
+                    }
+                });
 
             },
 
@@ -130,17 +68,13 @@
                     	application.creationDate = common.utcDateToLocaleDate(application.creationDate);
                     	application.nextAction = common.utcDateToLocaleDate(application.nextAction);
 						if (application.createdBy)
-                        application.createdBy.date = common.utcDateToLocaleDateTime(application.createdBy.date);
+                            application.createdBy.date = common.utcDateToLocaleDateTime(application.createdBy.date);
 						if (application.editedBy)
-                        application.editedBy.date = common.utcDateToLocaleDateTime(application.editedBy.date);
+                            application.editedBy.date = common.utcDateToLocaleDateTime(application.editedBy.date);
                         return application;
                     });
                 }
-                this.listLength = response.listLength;
                 return response.data;
-            },
-
-            fetchError: function (error) {
             }
         });
 

@@ -20,8 +20,8 @@ define([
                 this.formModel = options.model;
             },
             events:{
-                "click .breadcrumb a, #refuse": "changeWorkflow",
-                "click #hire": "isEmployee"
+                "click .breadcrumb a, .refuseEmployee": "changeWorkflow",
+                "click .hireEmployee": "isEmployee"
             },
             render: function () {
                 var formModel = this.formModel.toJSON();

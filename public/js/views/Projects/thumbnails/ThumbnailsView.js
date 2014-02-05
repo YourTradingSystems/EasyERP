@@ -1,21 +1,25 @@
 ﻿define([
-   'views/Projects/thumbnails/ThumbnailsItemView',
-    'custom',
-    'common',
+    "text!templates/Projects/thumbnails/ThumbnailsItemTemplate.html",
     'views/Projects/EditView',
-    'views/Projects/CreateView'
+    'views/Projects/CreateView',
+    'dataService',
+    'models/ProjectsModel',
+    'common'
 ],
 
-function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
+function (thumbnailsItemTemplate, editView, createView, dataService, currentModel, common) {
     var ProjectThumbnalView = Backbone.View.extend({
         el: '#content-holder',
+        countPerPage: 0,
+        template: _.template(thumbnailsItemTemplate),
 
         initialize: function (options) {
-			this.startTime = options.startTime;
+            this.startTime = options.startTime;
             this.collection = options.collection;
-            arrayOfProjects = [];
-            dataIndexCounter = 0;
+            this.countPerPage = options.collection.length;
+            this.getTotalLength(this.countPerPage);
             this.render();
+            this.asyncLoadImgs(this.collection);
         },
 
         events: {
@@ -23,42 +27,62 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
             "click .thumbnail": "gotoEditForm"
         },
 
-        render: function () {
-            var namberOfprojects = this.collection.namberToShow;
-            console.log('Project render');
-            this.$el.html('');
-            if (this.collection.length > 0) {
-                var holder = this.$el;
-                var thumbnailsItemView;
-                _.each(this.collection.models, function (model,index) {
-                    if (index < namberOfprojects) {
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ProjectsThumbnailsItemView({ model: model, dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).append(thumbnailsItemView.render().el);
+        getTotalLength: function (currentNumber) {
+            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber }, function (response, context) {
+                var showMore = context.$el.find('#showMoreDiv');
+                if (response.showMore) {
+                    if (showMore.length === 0) {
+                        var created = context.$el.find('#timeRecivingDataFromServer');
+                        created.before('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
                     } else {
-                        arrayOfProjects.push(model);
+                        showMore.show();
                     }
-                }, this);
+                } else {
+                    showMore.hide();
+                }
+            }, this);
+        },
+
+        asyncLoadImgs: function (collection) {
+            var arr = _.filter(collection.toJSON(), function (item) {
+                return item.projectmanager !== undefined;
+            });
+            var ids = _.map(arr, function (item) {
+                return item.projectmanager._id;
+            });
+            common.getImages(ids, "/getEmployeesImages");
+        },
+
+        render: function () {
+            var currentEl = this.$el;
+            var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
+
+            currentEl.html('');
+
+            if (this.collection.length > 0) {
+                currentEl.append(this.template({ collection: this.collection.toJSON() }));
             } else {
-                this.$el.html('<h2>No projects found</h2>');
+                currentEl.html('<h2>No projects found</h2>');
             }
-            if (arrayOfProjects.length > 0) {
-                this.$el.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
-            }
-			this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+
+            currentEl.append(createdInTag);
             return this;
         },
 
         gotoEditForm: function (e) {
-            if ($(e.target).attr("class") == "tasksByProject") {
-                return;
-            }
-            e.preventDefault();
-            var id = $(e.target).attr("id");
-            if ($(e.target).parent().attr("class") != "dropDown") {
-                var model = this.collection.getElement(id);
-                new EditView({ model: model, collection: this.collection });
+            var clas = $(e.target).parent().attr("class");
+            if ((clas === "dropDown") || (clas === "inner")) {
+            } else {
+                e.preventDefault();
+                var id = $(e.target).closest('.thumbnail').attr("id");
+                var model = new currentModel({validate: false});
+                model.urlRoot = '/Projects/form/' + id;
+                model.fetch({
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             }
         },
 
@@ -68,56 +92,28 @@ function (ProjectsThumbnailsItemView, Custom, common, EditView, CreateView) {
         },
 
         showMoreContent: function (newModels) {
-            var holder = this.$el.find('#showMoreDiv');
-            var thumbnailsItemView;
-            var counter =0;
-            var namberOfprojects = this.collection.namberToShow;
-
-            if (arrayOfProjects.length > 0) {
-                for (var i=0; i<arrayOfProjects.length; i++) {
-                    if (counter < namberOfprojects ) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ProjectsThumbnailsItemView({ model: arrayOfProjects[i], dataIndex: dataIndexCounter });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        holder.before(thumbnailsItemView.render().el);
-                        arrayOfProjects.splice(i,1);
-                        i--;
-                    }
-                }
-
-            }
-            _.each(newModels.models, function (model) {
-                    if (counter < namberOfprojects) {
-                        counter++;
-                        dataIndexCounter++;
-                        thumbnailsItemView = new ProjectsThumbnailsItemView({ model: model });
-                        thumbnailsItemView.bind('deleteEvent', this.deleteItems, thumbnailsItemView);
-                        $(holder).prepend(thumbnailsItemView.render().el);
-                    } else {
-                        arrayOfProjects.push(model);
-                    }
-
-            }, this);
-
-            if (arrayOfProjects.length == 0) {
-                this.$el.find('#showMoreDiv').hide();
-            }
+            var holder = this.$el;
+            this.countPerPage += newModels.length;
+            var showMore = holder.find('#showMoreDiv');
+            var created = holder.find('#timeRecivingDataFromServer');
+            this.getTotalLength(this.countPerPage);
+            showMore.before(this.template({ collection: this.collection.toJSON() }));
+            showMore.after(created);
+            this.asyncLoadImgs(newModels);
         },
 
         createItem: function () {
             //create editView in dialog here
-            new CreateView();
+            new createView();
         },
 
         editItem: function () {
             //create editView in dialog here
-            new EditView({ collection: this.collection });
+            new editView({ collection: this.collection });
         },
 
         deleteItems: function () {
-            var that = this,
-        		mid = 39,
+            var mid = 39,
                 model;
             model = this.collection.get(this.$el.attr("id"));
             this.$el.fadeToggle(200, function () {

@@ -43,12 +43,11 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             $(e.target).parent().find(".current").removeClass("current");
             $(e.target).addClass("current");
             var itemsNumber = $("#itemsNumber").text();
-            var page = parseInt($("#currentShowPage").val());
             this.selectedLetter = $(e.target).text();
             if ($(e.target).text() == "All") {
                 this.selectedLetter = "";
             }
-            this.collection.showMore({ count: itemsNumber, page: page, letter: this.selectedLetter });
+            this.collection.showMore({ count: itemsNumber, page: 1, letter: this.selectedLetter });
             this.getTotalLength(null, itemsNumber);
         },
 

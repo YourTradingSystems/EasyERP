@@ -416,6 +416,16 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('ownCompanies'): requestHandler.customerTotalCollectionLength(req, res);
             break;
+        case ('Projects'): requestHandler.projectsTotalCollectionLength(req, res);
+            break;
+        case ('Leads'): requestHandler.opportunitiesTotalCollectionLength(req, res);
+            break;
+        case ('Opportunities'): requestHandler.opportunitiesTotalCollectionLength(req, res);
+            break;
+        case ('Employees'): requestHandler.employeesTotalCollectionLength(req, res);
+            break;
+        case ('Applications'): requestHandler.employeesTotalCollectionLength(req, res);
+            break;
         default: next();
     }
     
@@ -441,9 +451,11 @@ app.get('/getPersonsForDd', function (req, res) {
     data.mid = req.param('mid');
     requestHandler.getPersonsForDd(req, res, data);
 });
+
 app.get('/getPersonAlphabet', function (req, res) {
     requestHandler.getCustomersAlphabet(req, res);
 });
+
 app.get('/getPersonsForMiniView', function (req, res) {
     data = {};
     for (var i in req.query) {
@@ -505,6 +517,12 @@ app.put('/Persons/:viewType/:_id', function (req, res) {
     requestHandler.updatePerson(req, res, id, data, remove);
 });
 
+app.patch('/Persons/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
+});
+
 app.delete('/Persons/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -519,12 +537,6 @@ app.delete('/Persons/:_id', function (req, res) {
     requestHandler.removePerson(req, res, id);
 });
 
-app.get('/getPersonListLength', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersonsListLength(req, res, data);
-});
-
 //---------------------------Projects--------------------------------------------------------
 app.get('/ProjectsListLength', function (req, res) {
     data = {};
@@ -535,6 +547,11 @@ app.get('/ProjectsListLength', function (req, res) {
     requestHandler.getProjectsListLength(req, res, data);
 });
 
+app.get('/projectType', function (req, res) {
+    console.log('Get getProjectType');
+    requestHandler.getProjectType(req, res);
+});
+
 app.get('/Projects', function (req, res) {
     console.log('Get Projects');
     data = {};
@@ -542,12 +559,12 @@ app.get('/Projects', function (req, res) {
     requestHandler.getProjects(req, res, data);
 });
 
-/*app.get('/Projects/:_id', function (req, res) {
+app.get('/Projects/form/:_id', function (req, res) {
     data = {};
     data.id = req.params._id;
     data.mid = req.param('mid');
     requestHandler.getProjectsById(req, res, data);
-});*/
+});
 
 app.get('/getProjectsForDd', function (req, res) {
     data = {};
@@ -587,13 +604,20 @@ app.put('/Projects/:viewType/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data,remove);
 });
 
+app.patch('/Projects/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.updateOnlySelectedFields(req, res, id, req.body);
+});
+
 app.put('/Projects/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     var remove = req.headers.remove;
     data.project = req.body;
-    requestHandler.updateProject(req, res, id, data,remove);
+    requestHandler.updateProject(req, res, id, data, remove);
 });
 
 app.delete('/Projects/:viewType/:_id', function (req, res) {
@@ -612,7 +636,7 @@ app.delete('/Projects/:_id', function (req, res) {
     requestHandler.removeProject(req, res, id, data);
 });
 
-app.get('/Projects/:viewType', function (req, res) {
+app.get('/Projects/:viewType', function (req, res, next) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -624,7 +648,7 @@ app.get('/Projects/:viewType', function (req, res) {
         case "list": requestHandler.getProjectsForList(req, res, data);
             break;
 
-        default: requestHandler.getProjects(req, res, data);
+        default: requestHandler.getProjects(req, res, data, next);
             break;
     }
 
@@ -683,6 +707,13 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     data.task = req.body;
     var remove = req.headers.remove;
     requestHandler.updateTask(req, res, id, data,remove);
+});
+
+app.patch('/Tasks/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+	console.log(req.body);
+    requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
 app.put('/Tasks/:_id', function (req, res) {
@@ -814,15 +845,6 @@ app.get('/CompaniesForDd', function (req, res) {
     requestHandler.getCompaniesForDd(req, res, data);
 });
 
-app.get('/ownCompaniesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getOwnCompaniesListLength(req, res, data);
-});
-
 app.get('/ownCompanies', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -873,7 +895,11 @@ app.put('/Companies/:viewType/:_id', function (req, res) {
     }
     requestHandler.updateCompany(req, res, id, data, remove);
 });
-
+app.patch('/Companies/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
+});
 app.delete('/Companies/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
@@ -1105,14 +1131,6 @@ app.get('/getDepartmentsForEditDd', function (req, res) {
 
 
 //------------------Employee---------------------------------------------------
-app.get('/EmployeesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getEmployeesListLength(req, res, data);
-});
 
 app.get('/Employees', function (req, res) {
     data = {};
@@ -1143,7 +1161,7 @@ app.get('/Employees/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
             break;
-        case "list": requestHandler.getEmployeesForList(req, res, data);
+        case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "thumbnails": requestHandler.getEmployeesForThumbnails(req, res, data);
             break;
@@ -1231,7 +1249,7 @@ app.get('/Applications/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
             break;
-        case "list": requestHandler.getApplicationsForList(req, res, data);
+        case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "kanban": requestHandler.getApplicationsForKanban(req, res, data);
             break;
@@ -1308,33 +1326,11 @@ app.delete('/Degrees/:_id', function (req, res) {
     requestHandler.removeDegree(req, res, id, data);
 });
 
-//----------------------SourcesOfApplicants----------------------------------------------------------------
-app.get('/SourcesOfApplicants', function (req, res) {
+//----------------------campaign----------------------------------------------------------------
+app.get('/Campaigns', function (req, res) {
     data = {};
     data.mid = req.param('mid');
-    requestHandler.getSourcesOfApplicants(req, res, data);
-});
-
-app.post('/SourcesOfApplicants', function (req, res) {
-    data = {};
-    data.mid = req.headers.mid;
-    data.soa = req.body;
-    requestHandler.createSourcesOfApplicant(req, res, data);
-});
-
-app.put('/SourcesOfApplicants/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.soa = req.body;
-    requestHandler.updateSourcesOfApplicant(req, res, id, data);
-});
-
-app.delete('/SourcesOfApplicants/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeSourcesOfApplicant(req, res, id, data);
+    requestHandler.getCampaigns(req, res, data);
 });
 
 app.get('/sources', function (req, res) {
@@ -1367,9 +1363,7 @@ app.get('/Leads/:viewType', function (req, res) {
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
             break;
-        case "list": requestHandler.getLeadsForList(req, res, data);
-            break;
-        default: requestHandler.getLeadsCustom(req, res, data);
+        case "list": requestHandler.getFilterOpportunities(req, res);
             break;
     }
 });
@@ -1412,15 +1406,6 @@ app.delete('/Leads/:_id', function (req, res) {
 });
 
 //---------------------Opportunities---------------------
-app.get('/OpportunitiesListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getOpportunitiesListLength(req, res, data);
-});
-
 app.post('/Opportunities', function (req, res) {
     data = {};
     data.mid = req.param('mid');
@@ -1439,7 +1424,7 @@ app.get('/Opportunities/:viewType', function (req, res) {
             break;
         case "kanban": requestHandler.getFilterOpportunitiesForKanban(req, res, data);
             break;
-        default: requestHandler.getFilterOpportunities(req, res, data);
+        default: requestHandler.getFilterOpportunities(req, res);
     }
 });
 

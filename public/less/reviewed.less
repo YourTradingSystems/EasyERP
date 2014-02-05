@@ -882,9 +882,15 @@
     border-bottom-color: rgba(0, 0, 0, 0.3);
     -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
     width: @width;
-    min-height: 100px;
+    min-height: 130px;
     cursor: pointer;
-
+	.dropDown {
+		width: 5%;
+		float: right;
+		top: 2.5px;
+		right: 7px;
+		position: absolute;
+	}
     .viewswitch {
         .position(absolute, auto, 5px, 5px, auto);
 
@@ -909,6 +915,7 @@
     }
 
     .bottom {
+		clear:both;
         width: 100%;
         .position(absolute, 0,auto,auto,0);
 
@@ -1068,8 +1075,7 @@
                 position: relative;
 
                 .info {
-                    padding: 5px;
-                    padding-bottom: 2px;
+                    padding: 5px 5px 2px 0px;
                     width: auto;
 
                     p.bold {
@@ -1078,12 +1084,12 @@
                 }
 
                 .bottom {
-                    .position(absolute,5px, auto, auto, 5px);
-            }
+                    .position(absolute,0px, auto, auto, 5px);
+				}
 
                 .avatar-small {
                     .avatar(26px, 5px, 0, 0, 0);
-        }
+				}
             }
         }
 
@@ -1874,6 +1880,12 @@
                 background-color: #EEE;
 			}
 		}
+		&.right{
+			float:right;
+			button{
+				margin-top:4px;
+			}
+		}
 	}
 }
        
@@ -2152,7 +2164,6 @@ input, textarea, select {
         text-decoration: none;
     }
 }
-
 #thumbBtn {
     font-size: 14px;
 }
@@ -3322,7 +3333,10 @@ ul.dialog-tabs {
 .thumbnail {
 	.thumbnail;
 }
-
+#showMoreDiv{
+	clear:both;
+	text-align:center;
+}
 #modulesAccessTable {
     td {
         text-align: center;
@@ -3651,5 +3665,60 @@ h3.dashboard {
 			}
 		}
 		
+	}
+}
+.line {
+    fill: none;
+    stroke: #1ebbea;
+    stroke-width: 3px;
+}
+#health{
+	@width:15px;
+	a{
+		margin-top:5px;
+		display:block;
+		width:@width;
+		height:@width;
+		border-radius:@width;
+		margin-left:6px;
+		&.health1{
+			background-color:green;
+		}
+		&.health2{
+			background-color:yellow;
+		}
+		&.health3{
+			background-color:red;
+		}
+	}
+	ul{
+		display:none;
+		margin-top:5px;
+		border:@thin-border silver;
+		width:25px;
+		position:absolute;
+		background-color:white;
+		li{
+			div{
+				width:@width;
+				height:@width;
+				border-radius:@width;
+				margin:5px;
+				cursor:pointer;
+				border:@thin-border silver;
+				&.health1{
+					background-color:green;
+				}
+				&.health2{
+					background-color:yellow;
+				}
+				&.health3{
+					background-color:red;
+				}
+				&:hover{
+					.box-shadow(0,0,5px,blue)
+				}
+			}
+		}
 	}
 }

@@ -187,105 +187,99 @@ define([
                 $('#getNoteKey').attr("value", '');
             },
             editDelNote: function (e) {
-                var id = e.target.id;
-                var k = id.indexOf('_');
-                var type = id.substr(0, k);
-                var id_int = id.substr(k + 1);
+            	 var id = e.target.id;
+                 var k = id.indexOf('_');
+                 var type = id.substr(0, k);
+                 var id_int = id.substr(k + 1);
+                 var currentModel = this.formModel;
+                 var notes = currentModel.get('notes');
 
-
-                var currentModel = this.formModel;
-                var notes = currentModel.get('notes');
-
-                switch (type) {
-                    case "edit": {
-                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
-                        $('#getNoteKey').attr("value", id_int);
-                        break;
-                    }
-                    case "del": {
-
-                        var new_notes = _.filter(notes, function (note) {
-                            if (note._id != id_int) {
-                                return note;
-                            }
-                        });
-                        currentModel.set('notes', new_notes);
-                        currentModel.save({},
-                                {
-                                    headers: {
-                                        mid: 39,
-                                        remove: true
-                                    },
-                                    success: function (model, response, options) {
-                                        $('#' + id_int).remove();
-                                    }
-                                });
-                        break;
-                    }
-                }
+                 switch (type) {
+                     case "edit": {
+                         $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                         $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                         $('#getNoteKey').attr("value", id_int);
+                         break;
+                     }
+                     case "del": {
+                         var newNotes = _.filter(notes, function (note) {
+                             if (note._id != id_int) {
+                                 return note;
+                             }
+                         });
+                         currentModel.save({ 'notes': newNotes },
+                                 {
+                                     headers: {
+                                         mid: 39
+                                     },
+                                     patch: true,
+                                     success: function () {
+                                         $('#' + id_int).remove();
+                                     }
+                                 });
+                         break;
+                     }
+                 }
             },
 
             addNote: function (e) {
-                var val = $('#noteArea').val();
-                var title = $('#noteTitleArea').val();
-                if (val || title) {
-                	var currentModel = this.formModel;
-                    var notes = currentModel.get('notes');
-                    var arr_key_str = $('#getNoteKey').attr("value");
-                    var note_obj = {
-                        note: '',
-                        title: ''
-                    };
-                    if (arr_key_str) {
-                        var edit_notes = _.filter(notes, function (note) {
-                            if (note._id == arr_key_str) {
-                                note.note = val;
-                                note.title = title;
-                                return note;
-                            }
-                        });
-                        currentModel.save({},
-                                   {
-                                       headers: {
-                                           mid: 39
-                                       },
-                                       success: function (model, response, options) {
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteText').text(val));
-                                           $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').text(title));
-                                           $('#getNoteKey').attr("value", '');
-                                       }
-                                   });
-
-
-
-                    } else {
-
-                        note_obj.note = val;
-                        note_obj.title = title;
-                        notes.push(note_obj);
-                        currentModel.set('notes', notes);
-                        currentModel.save({},
-                                    {
-                                        headers: {
-                                            mid: 39
-                                        },
-                                        success: function (model, response, options) {
-                                            var key = notes.length - 1;
+            	 e.preventDefault();
+                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                 if (val || title) {
+                     var notes = this.formModel.get('notes');
+                     var arrKeyStr = $('#getNoteKey').attr("value");
+                     var noteObj = {
+                         note: '',
+                         title: ''
+                     };
+                     if (arrKeyStr) {
+                         var editNotes = _.map(notes, function (note) {
+                             if (note._id == arrKeyStr) {
+                                 note.note = val;
+                                 note.title = title;
+                             }
+                             return note;
+                         });
+                         this.formModel.save({ 'notes': editNotes },
+                             {
+                                 headers: {
+                                     mid: 39
+                                 },
+                                 patch: true,
+                                 success: function () {
+                                     $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
+                                     $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+                                     $('#getNoteKey').attr("value", '');
+                                 }
+                             });
+                     } else {
+                         noteObj.note = val;
+                         noteObj.title = title;
+                         notes.push(noteObj);
+                         this.formModel.set();
+                         this.formModel.save({ 'notes': notes },
+                             {
+                                 headers: {
+                                     mid: 39
+                                 },
+                                 patch: true,
+                                 success: function (models, data) {
+                                     $('#noteBody').empty();
+                                     data.notes.forEach(function (item) {
+                                     	   var key = notes.length - 1;
                                             var notes_data = response.notes;
                                             var date = common.utcDateToLocaleDate(response.notes[key].date);
                                             var author = currentModel.get('name').first;
                                             var id = response.notes[key]._id;
-
                                             $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));
-
-                                        }
-                                    });
-
-                    }
-                    $('#noteArea').val('');
-                    $('#noteTitleArea').val('');
-                }
+                                     });
+                                 }
+                             });
+                     }
+                     $('#noteArea').val('');
+                     $('#noteTitleArea').val('');
+                 }
             },
 
             addAttach: function (event) {
@@ -348,25 +342,29 @@ define([
                 return file.size < App.File.MAXSIZE;
             },
             deleteAttach: function (e) {
-                var id = e.target.id;
-                var currentModel = this.formModel;
-                var attachments = currentModel.get('attachments');
-                var new_attachments = _.filter(attachments, function (attach) {
-                    if (attach._id != id) {
-                        return attach;
-                    }
-                });
-                currentModel.set('attachments', new_attachments);
-                currentModel.save({},
-                        {
-                            headers: {
-                                mid: 39
-                            },
-
-                            success: function (model, response, options) {
-                                $('.attachFile_' + id).remove();
-                            }
-                        });
+            	 var target = $(e.target);
+                 if (target.closest("li").hasClass("attachFile")) {
+                     target.closest(".attachFile").remove();
+                 } else {
+                     var id = e.target.id;
+                     var currentModel = this.formModel;
+                     var attachments = currentModel.get('attachments');
+                     var newAttachments = _.filter(attachments, function (attach) {
+                         if (attach._id != id) {
+                             return attach;
+                         }
+                     });
+                     currentModel.save({ 'attachments': newAttachments },
+                         {
+                             headers: {
+                                 mid: 39
+                             },
+                             patch: true,//Send only changed attr(add Roma)
+                             success: function () {
+                                 $('.attachFile_' + id).remove();
+                             }
+                         });
+                 }
             },
 
             toggle: function () {
