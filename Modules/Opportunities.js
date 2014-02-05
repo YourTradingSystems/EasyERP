@@ -104,6 +104,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 break;
         }
 
+        var filterStatus= {};
+        if (data.status && data.status.length > 0) {
+            var filterStatusArray = data.status.objectID();
+            filterStatus = {
+                workflow: { $in: filterStatusArray }
+            };
+        }
 
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
@@ -149,7 +156,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                             },
                                             { whoCanRW: "everyOne" }
                                         ]
-                                    }
+                                    },
+                                    filterStatus
                                 ]
                             }
                         },
@@ -160,20 +168,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         },
                         function (err, result) {
                             if (!err) {
-                                var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
-                                if (data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
-                                query.count(function (error, count) {
-                                    if (!error) {
-                                        if (data.currentNumber && data.currentNumber < count) {
-                                            res['showMore'] = true;
-                                        }
-                                        res['count'] = count;
-                                        response.send(res);
-                                    } else {
-                                        console.log(error);
-                                    }
-                                });
+                                if (data.currentNumber && data.currentNumber < result.length) {
+                                    res['showMore'] = true;
+                                }
+                                res['count'] = result.length;
+                                response.send(res);
                             } else {
                                 console.log(err);
                                 response.send(500, { error: 'Server Eroor' });
@@ -190,9 +189,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
     function create(req, data, res) {
         try {
-            console.log('--------------->LEAD<---------------------------');
-            console.log(data);
-            console.log('--------------->LEAD<---------------------------');
             if (!data) {
                 logWriter.log('Opprtunities.create Incorrect Incoming Data');
                 res.send(400, { error: 'Opprtunities.create Incorrect Incoming Data' });

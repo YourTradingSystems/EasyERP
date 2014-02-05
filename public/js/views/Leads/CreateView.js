@@ -16,7 +16,7 @@ define([
                 this.model = new LeadModel();
                 this.page=1;
                 this.pageG=1;
-				this.responseObj = {}
+				this.responseObj = {};
                 this.render();
             },
 
@@ -36,9 +36,9 @@ define([
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-                "click .current-selected": "showNewSelect",
+                "click .current-selected": "showNewSelect"
             },
-			notHide: function (e) {
+			notHide: function () {
 				return false;
             },
 
@@ -74,7 +74,7 @@ define([
                 $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
-            addUser:function(e){
+            addUser:function(){
                 var self = this;
                 $(".addUserDialog").dialog({
                     dialogClass: "add-user-dialog",
@@ -196,7 +196,7 @@ define([
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
-//========================
+
             changeWorkflows: function () {
                 var name = this.$("#workflowNames option:selected").val();
                 var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;

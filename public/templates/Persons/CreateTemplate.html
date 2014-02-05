@@ -2,202 +2,202 @@
 
   <form method="post" action="" id="createPersonsForm" class="form">
     <fieldset>
-        <div class="inner">
-            <ul class="dialog-tabs">
-                <li><a class="active" href="javascript:;">Main</a></li>
-                <li><a href="javascript:;">Assignees</a></li>
-            </ul>
-            <div class="clearfix"></div>
-            <div class="dialog-tabs-items">
-                <div class="dialog-tabs-item active">
-                  <div class="formTitle">
-                    <h3 class="left">Personal Info</h3>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="half-block left">
-                    <dl class="person-info">
-                      <dt><label for="firstName">First Name</label></dt><dd><input type="text" name="firstName" id="firstName" class="blueback" required maxlength="32"/></dd>
-                      <dt><label for="lastName">Last Name</label></dt><dd><input type="text" name="lastName" id="lastName" class="blueback" required maxlength="32"/></dd>
-                      <dt><label for="companiesDd">Company</label></dt>
-                      <dd>
-                        <select id="companiesDd">
-                        </select>
+      <div class="inner">
+        <ul class="dialog-tabs">
+          <li><a class="active" href="javascript:;">Main</a></li>
+          <li><a href="javascript:;">Assignees</a></li>
+        </ul>
+        <div class="clearfix"></div>
+        <div class="dialog-tabs-items">
+          <div class="dialog-tabs-item active">
+            <div class="formTitle">
+              <h3 class="left">Personal Info</h3>
+              <div class="clearfix"></div>
+            </div>
+            <div class="avatar">
+              <div class="upload">
+                Edit
+                <input type="file" value="Edit" id="inputImg" accept="image/*">
+              </div>
+              <canvas id="avatar" width="120" height="120"></canvas>
+            </div>
+            <div class="avatarInfoContainer">
+              <div class="half-block left">
+                <dl class="person-info">
+                  <dt><label for="firstName">First Name</label></dt><dd><input type="text" name="firstName" id="firstName" class="blueback" required maxlength="32"/></dd>
+                  <dt><label for="lastName">Last Name</label></dt><dd><input type="text" name="lastName" id="lastName" class="blueback" required maxlength="32"/></dd>
+                  <dt><label for="jobPositionInput">Job Position</label></dt><dd><input class="blueback" type="text" id="jobPositionInput" placeholder="e.g. Sales Manager" maxlength="32"/></dd>
+                  <dt><label for="dateBirth">Date Of Birth </label></dt><dd><input class="blueback dateBirth" type="text"  readonly/></dd>
+                  <dt><label for="emailInput">Email</label></dt><dd><input class="blueback" type="text" id="emailInput" maxlength="48"/></dd>
+                  <dt><label for="mobileInput">Mobile</label></dt><dd><input class="blueback" type="text" id="mobileInput" maxlength="32"/></dd>
+                  <dt><label for="companiesDd">Company</label></dt>
+                  <dd>
+                    <select id="companiesDd">
+                    </select>
 
-                      </dd>
-                      <dt><label for="tagsDd">Tags</label></dt>
-                      <dd>
-                        <select id="tagsDd">
-                          <option selected="selected" value="0">Select...</option>
-                        </select>
+                  </dd>
+				  <!--                      <dt><label for="tagsDd">Tags</label></dt>
+											<dd>
+											  <select id="tagsDd">
+												<option selected="selected" value="0">Select...</option>
+											  </select>
 
-                      </dd>
-                    </dl>
-                  </div>
-                  <div class="half-block left">
-                      <div class="avatar">
-                          <div class="upload">
-                              Edit
-                              <input type="file" value="Edit" id="inputImg" accept="image/*">
-                          </div>
-                          <canvas id="avatar" width="120" height="120"></canvas>
-                      </div>
-                  </div>
-                  <div class="clearfix">
-                  </div>
-                  <div class="formTitle">
-                    <h3 class="left">Address Info</h3>
-                    <div class="clearfix"></div>
-                  </div>
+											</dd>-->
+                </dl>
+              </div>
+              <div class="half-block left">
+				<div class="sale-purchase">
+                  <span class="left">Address</span>
+                </div>
+                <dl class="person-info">
+                  <dt><label for="addressInput">Street</label></dt><dd><input class="blueback" type="text" id="addressInput" placeholder="Street..." maxlength="32"/></dd>
+                  <dt>City</dt><dd><input class="blueback" type="text" id="cityInput"  placeholder="City" maxlength="32"/></dd>
+                  <dt>Country</dt><dd><input class="blueback" type="text" id="stateInput"  placeholder="State" maxlength="32"/></dd>
+                  <dt>State</dt><dd><input class="blueback" type="text" id="zipInput" placeholder="Zip" maxlength="32"/></dd>
+                  <dt>Zip</dt><dd><input class="blueback" type="text" id="countryInput"  placeholder="Country" maxlength="32"/></dd>
+                  <dt><label for="phoneInput">Phone </label></dt><dd><input class="blueback" type="text" id="phoneInput" maxlength="32"/></dd>
 
-                  <div class="half-block left">
-                    <dl class="person-info">
-                      <dt><label for="addressInput">Address</label></dt><dd><input class="blueback" type="text" id="addressInput" placeholder="Street..." maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input class="blueback" type="text" id="cityInput"  placeholder="City" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input class="blueback" type="text" id="stateInput"  placeholder="State" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input class="blueback" type="text" id="zipInput" placeholder="Zip" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input class="blueback" type="text" id="countryInput"  placeholder="Country" maxlength="32"/></dd>
-                      <dt><label for="mobileInput">Mobile</label></dt><dd><input class="blueback" type="text" id="mobileInput" maxlength="32"/></dd>
-                      <dt><label for="faxInput">Fax</label></dt><dd><input class="blueback" type="text" id="faxInput" maxlength="32"/></dd>
-                      <dt><label for="emailInput">Email</label></dt><dd><input class="blueback" type="text" id="emailInput" maxlength="48"/></dd>
-                    </dl>
-                  </div>
-                  <div class="half-block left">
-                    <dl class="person-info">
-                      <dt><label for="websiteInput">Website</label></dt><dd><input class="blueback" type="text" id="websiteInput" placeholder="e.g. www.site.com" maxlength="32"/></dd>
-                      <dt><label for="skype">Skype</label></dt><dd><input class="blueback" type="text" id="skype" placeholder="Skype login" maxlength="32"/></dd>
-                      <dt><label for="jobPositionInput">Job Position</label></dt><dd><input class="blueback" type="text" id="jobPositionInput" placeholder="e.g. Sales Manager" maxlength="32"/></dd>
-                      <dt><label for="departmentDd">Department</label></dt>
-                      <dd>
-                        <select id="departmentDd">
-                        </select>
+                </dl>
+              </div>
+            </div>
+            <div class="clearfix">
+            </div>
+			<div class="details center">...</div>
+			<div class="details-box">
+              <div class="formTitle">
+				<h3 class="left">Contact Info</h3>
+				<div class="clearfix"></div>
+              </div>
+              <div class="avatarInfoContainer">
+				<div class="half-block left">
+				  <dl class="person-info">
+					<dt><label for="websiteInput">Website</label></dt><dd><input class="blueback" type="text" id="websiteInput" placeholder="e.g. www.site.com" maxlength="32"/></dd>
+					<dt><label for="skype">Skype</label></dt><dd><input class="blueback" type="text" id="skype" placeholder="Skype login" maxlength="32"/></dd>
+				  </dl>
+				</div>
+				<div class="half-block left">
+				  <dl class="person-info">
+					<dt><label for="faxInput">Fax</label></dt><dd><input class="blueback" type="text" id="faxInput" maxlength="32"/></dd>
+				  </dl>
+				</div>
+			  </div>
+			</div>
+            <div class="clearfix">
+            </div>
+			<!--                  <div class="formTitle">
+								  <h3 class="left">Sales &amp; Purchases</h3>
+								  <div class="clearfix"></div>
+            </div>
 
-                      </dd>
-                      <dt><label for="phoneInput">Phone </label></dt><dd><input class="blueback" type="text" id="phoneInput" maxlength="32"/></dd>
-                      <dt><label for="dateBirth">Date Of Birth </label></dt><dd><input class="blueback dateBirth" type="text"  readonly/></dd>
-                      <dt><label for="titleDd">Title </label></dt>
-                      <dd>
-                        <select id="titleDd">
-                          <option selected="selected" value="0">Select...</option>
-                        </select>
-
-                      </dd>
-                    </dl>
-                  </div>
-                  <div class="clearfix">
-                  </div>
-                  <div class="formTitle">
-                    <h3 class="left">Sales &amp; Purchases</h3>
-                    <div class="clearfix"></div>
-                  </div>
-
-                  <div class="half-block left">
-                    <dl class="person-info">
-                      <dt><label>Customer</label></dt><dd><input type="checkbox" id="isCustomerInput" /></dd>
-                      <dt><label>Supplier</label></dt><dd><input type="checkbox" id="isSupplierInput" /></dd>
-                    </dl>
-                  </div>
-                  <div class="half-block left">
-                    <dl class="person-info">
-                      <dt><label>Active</label></dt><dd><input type="checkbox" id="isActiveInput" /></dd>
-                    </dl>
-                  </div>
-                  <div class="clearfix">
-                  <div class="cropImages form" style="display:none;">
-                 <div class="formTitle">
-                    <h3 class="left">Crop Images</h3>
-                    <div class="clearfix"></div>
-                  </div><br />
-                  <div class="image_input" style="float: left;margin-right: 20px;"></div>
-                  <img class="image_output" />
+            <div class="half-block left">
+              <dl class="person-info">
+                <dt><label>Customer</label></dt><dd><input type="checkbox" id="isCustomerInput" /></dd>
+                <dt><label>Supplier</label></dt><dd><input type="checkbox" id="isSupplierInput" /></dd>
+              </dl>
+            </div>
+            <div class="half-block left">
+              <dl class="person-info">
+                <dt><label>Active</label></dt><dd><input type="checkbox" id="isActiveInput" /></dd>
+              </dl>
+            </div>
+			-->
+            <div class="clearfix">
+              <div class="cropImages form" style="display:none;">
+                <div class="formTitle">
+                  <h3 class="left">Crop Images</h3>
                   <div class="clearfix"></div>
-                  </div>
-                  </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="dialog-tabs-item">
-                    <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-                    <div class="clearfix"></div>
-
-                    <div class="half-block left">
-                        <div class="canReadAndWrite">
-                            <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
-                            <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
-                            <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <dl class="project-owner-info">
-                            <dt><label for="allUsers">Owner</label></dt><dd>
-
-                            <select id="allUsers">
-
-                            </select>
-
-                        </dd>
-                        </dl>
-                    </div>
-
-
-                    <div class="addUserDialog">
-
-                        <div class="formTitle">
-                            <h3 class="left">Choose Users</h3>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="groupsChooser">
-                            <div class="left">
-                                <ul id="sourceUsers" class="source">
-
-                                </ul>
-                            </div>
-                            <div class="left">
-                                <div class="swich"></div>
-                            </div>
-                            <div class="left">
-                                <ul id="targetUsers" class="target">
-
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="addGroupDialog">
-                        <div class="formTitle">
-                            <h3 class="left">Choose Groups</h3>
-                            <div class="clearfix"></div>
-                        </div>
-
-                        <div class="groupsChooser">
-                            <div class="left">
-                                <ul id="sourceGroups" class="source">
-
-                                </ul>
-                            </div>
-                            <div class="left">
-                                <div class="swich"></div>
-                            </div>
-                            <div class="left">
-                                <ul id="targetGroups" class="target">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <table class="groupsAndUser">
-                        <tr>
-                            <th>Groups and Users</th><th></th>
-                        </tr>
-                    </table>
-                    <div class="clearfix"></div>
-
-                    <div class="clearfix"></div>
-                </div>
+                </div><br />
+                <div class="image_input" style="float: left;margin-right: 20px;"></div>
+                <img class="image_output" />
+                <div class="clearfix"></div>
+              </div>
             </div>
             <div class="clearfix"></div>
+          </div>
+          <div class="dialog-tabs-item">
+            <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
+            <div class="clearfix"></div>
+
+            <div class="half-block left">
+              <div class="canReadAndWrite">
+                <input type="radio" name="whoCanRW" value="everyOne" checked="checked"/>Everyone<br>
+                <input type="radio" name="whoCanRW" value="owner"/>Owner<br>
+                <input type="radio" name="whoCanRW" value="group"/>Owner, Users and Users in Groups
+              </div>
+            </div>
+            <div class="half-block left">
+              <dl class="project-owner-info">
+                <dt><label for="allUsers">Owner</label></dt><dd>
+
+                  <select id="allUsers">
+
+                  </select>
+
+                </dd>
+              </dl>
+            </div>
+
+
+            <div class="addUserDialog">
+
+              <div class="formTitle">
+                <h3 class="left">Choose Users</h3>
+                <div class="clearfix"></div>
+              </div>
+              <div class="groupsChooser">
+                <div class="left">
+                  <ul id="sourceUsers" class="source">
+
+                  </ul>
+                </div>
+                <div class="left">
+                  <div class="swich"></div>
+                </div>
+                <div class="left">
+                  <ul id="targetUsers" class="target">
+
+                  </ul>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+            <div class="addGroupDialog">
+              <div class="formTitle">
+                <h3 class="left">Choose Groups</h3>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="groupsChooser">
+                <div class="left">
+                  <ul id="sourceGroups" class="source">
+
+                  </ul>
+                </div>
+                <div class="left">
+                  <div class="swich"></div>
+                </div>
+                <div class="left">
+                  <ul id="targetGroups" class="target">
+
+                  </ul>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+
+            <table class="groupsAndUser">
+              <tr>
+                <th>Groups and Users</th><th></th>
+              </tr>
+            </table>
+            <div class="clearfix"></div>
+
+            <div class="clearfix"></div>
+          </div>
         </div>
+        <div class="clearfix"></div>
+      </div>
     </fieldset>
   </form>
 </div>

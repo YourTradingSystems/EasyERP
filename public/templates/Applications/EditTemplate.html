@@ -65,17 +65,9 @@
                       <dt><label for="workflowsDd">Workflow</label></dt><dd id="selectWorkflow">
 						<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
 					  </dd>
-                     <dt><label for="jobtapeDd">Job type</label></dt>
+                     <dt><label for="jobTypeDd">Job type</label></dt>
                       <dd>
-						<a id="jobtapeDd" data-id="Full-time" class="current-selected" href="javascript:;">Full-time</a>
-						<ul class="newSelectList hidden">
-                          <li id="Full-time">Full-time</li>
-                          <li id="Part-time">Part-time</li>
-                          <li id="Remote">Remote</li>
-                          <li id="Permanent">Permanent</li>
-                          <li id="Contract">Contract</li>
-                          <li id="Temporary">Temporary</li>
-						</ul>
+						<a id="jobTypeDd" data-id="<%=model.jobType?model.jobType:''%>" class="current-selected" href="javascript:;"><%=model.jobType?model.jobType:'Select'%></a>
                       </dd>
                     </dl>
                   </div>

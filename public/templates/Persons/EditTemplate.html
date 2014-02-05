@@ -20,7 +20,7 @@
                             </div>
                             <canvas id="avatar" width="120" height="120"></canvas>
                         </div>
-                        <div style="margin-left:150px; width:auto; display:block;">
+                        <div class="avatarInfoContainer">
                             <div class="half-block left">
                                 <dl class="person-info">
                                     <dt><label for="firstName">First Name</label></dt>
@@ -36,20 +36,18 @@
                                     <dd><input type="text" id="emailInput" value="<%= model.email%>" maxlength="48"/></dd>
                                     <dt><label for="mobileInput">Mobile</label></dt>
                                     <dd><input type="text" id="mobileInput" value="<%= model.phones.mobile%>" maxlength="32"/></dd>
-                                    <dt><label for="phoneInput">Phone </label></dt>
-                                    <dd><input type="text" id="phoneInput" value="<%= model.phones.phone%>" maxlength="32"/></dd>
 
                                     <dt><label for="companiesDd">Company</label></dt>
                                     <dd>
 									  <a id="companiesDd" data-id="<%=(model.company)?model.company._id:""%>" class="current-selected" href="javascript:;"><%=(model.company)?(model.company.name.first):"Select"%></a>
                                     </dd>
-                                    <dt><label for="tagsDd">Tags</label></dt>
+<!--                                    <dt><label for="tagsDd">Tags</label></dt>
                                     <dd>
 									  <a id="tagsDd" class="current-selected" href="javascript:;">Select</a>
 									  <ul class="newSelectList hidden">
 										<li>Select</li>
 									  </ul>
-                                    </dd>
+                                    </dd>-->
                                 </dl>
                             </div>
                             <div class="half-block left">
@@ -67,28 +65,31 @@
                                     <dd><input type="text" id="stateInput" value="<%= model.address.state%>" placeholder="State" maxlength="32"/></dd>
                                     <dt><label for="zipInput">Zip</label></dt>
                                     <dd><input type="text" id="zipInput" value="<%= model.address.zip%>" placeholder="Zip" maxlength="32"/></dd>
+                                    <dt><label for="phoneInput">Phone </label></dt>
+                                    <dd><input type="text" id="phoneInput" value="<%= model.phones.phone%>" maxlength="32"/></dd>
+
                                 </dl>
                             </div>
                             <div class="clearfix"></div>
-                        </div>
+						</div>
+						<div class="details center">...</div>
+						<div class="details-box">
                         <div class="formTitle">
                             <h3 class="left">Contact Info</h3>
                             <div class="clearfix"></div>
                         </div>
-                        <div style="margin-left:150px; width:auto; display:block;">
+                        <div class="avatarInfoContainer">
                             <div class="half-block left">
                                 <dl class="person-info">
                                     <dt><label for="websiteInput">Website</label></dt>
                                     <dd><input type="text" id="websiteInput" value="<%= model.website%>" placeholder="e.g. www.site.com" maxlength="32"/></dd>
                                     <dt><label for="skype">Skype</label></dt>
                                     <dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="32"/></dd>
-                                    <dt><label for="departmentDd">Department</label></dt>
+<!--                                    <dt><label for="departmentDd">Department</label></dt>
                                     <dd>
 									  <a id="departmentDd" data-id="<%=(model.department)?model.department._id:""%>" class="current-selected" href="javascript:;"><%=(model.department)?(model.department.departmentName):"Select"%></a>									  
-                                    </dd>
-                                    <dt><label for="faxInput">Fax </label></dt>
-                                    <dd><input type="text" id="faxInput" value="<%= model.phones.fax%>" maxlength="32"/></dd>
-                                    <dt><label for="titleDd">Title</label></dt>
+                                    </dd>-->
+<!--                                    <dt><label for="titleDd">Title</label></dt>
                                     <dd>
 									  <a id="titleDd" data-id="<%=model.title?model.title:''%>" class="current-selected" href="javascript:;"><%=model.title?model.title:"Select"%></a>
 									  <ul class="newSelectList hidden">
@@ -96,11 +97,16 @@
 										<li class="Mrs" id="Mrs">Mrs</li>
 										<li class="Miss" id="Miss">Miss</li>
 									  </ul>
-                                    </dd>
+                                    </dd>-->
                                 </dl>
                             </div>
                             <div class="half-block left">
-                                <div class='sale-purchase'>
+                                <dl class="person-info">
+                                    <dt><label for="faxInput">Fax </label></dt>
+                                    <dd><input type="text" id="faxInput" value="<%= model.phones.fax%>" maxlength="32"/></dd>
+								</dl>
+
+<!--                                <div class='sale-purchase'>
                                     <span class="left">Sales &amp; Purchases</span>
                                 </div>
                                 <dl class="person-info">
@@ -110,12 +116,14 @@
                                     <dd><input type="checkbox" <% if(model.salesPurchases.isSupplier) { %> checked="checked" <% } %>  id="isSupplierInput"/></dd>
                                     <dt><label>Active</label></dt>
                                     <dd><input type="checkbox" <% if(model.salesPurchases.active) { %> checked="checked" <% } %>  id="isActiveInput"/></dd>
-                                </dl>
+                                </dl>-->
                             </div>
 
                             <div class="clearfix">
                             </div>
                         </div>
+                        </div>
+
                         <div class="clearfix">
                         </div>
 

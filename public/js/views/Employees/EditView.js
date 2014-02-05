@@ -122,13 +122,12 @@ define([
 								return attach;
 							}
 						});
-						currentModel.set('attachments', new_attachments);
-						currentModel.save({},
+						currentModel.save({'attachments': new_attachments},
 										  {
 											  headers: {
 												  mid: 39
 											  },
-
+											  patch:true,
 											  success: function (model, response, options) {
 												  $('.attachFile_' + id).remove();
 											  }

@@ -83,7 +83,6 @@ define([
 
             save: function (e) {
                 e.preventDefault();
-                e.preventDefault();
                 dataService.getData('/currentUser', null, function (response, context) {
 
                     var dataResponse = {
@@ -115,7 +114,7 @@ define([
 	                    },
 	                    editMode: true
 	                });
-                }, this);
+                }, this.render());
             },
 
             resetForm: function (e) {

@@ -1,6 +1,7 @@
 // JavaScript source code
-var Users = function (logWriter, mongoose, models) {
+var Users = function (logWriter, mongoose, models, department) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
+    var newObjectId = mongoose.Types.ObjectId;
     var crypto = require('crypto');
     var collection = 'Users';
 
@@ -30,6 +31,20 @@ var Users = function (logWriter, mongoose, models) {
     }, { collection: 'Users' });
 
     mongoose.model('Users', userSchema);
+
+    function getTotalCount(req, response) {
+        var res = {};
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
+        query.exec(function (err, result) {
+            if (!err) {
+                res['count'] = result.length;
+                response.send(res);
+            } else {
+                logWriter.log("JobPosition.js getTotalCount JobPositions.find " + err);
+                response.send(500, { error: "Can't find JobPositions" });
+            }
+        });
+    };
 
     function createUser(req, data, result) {
         try {
@@ -226,23 +241,20 @@ var Users = function (logWriter, mongoose, models) {
         });
     }
 
-    function getFilterUsers(req, data, response) {
+    function getFilter(req, response) {
         var res = {};
         res['data'] = [];
+        var data = {};
+        for (var i in req.query) {
+            data[i] = req.query[i];
+        }
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
-        query.exec(function (err, result) {
-            if (!err) {
-                res['listLength'] = result.length;
-            }
-        });
-
-        query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
         query.populate('profile');
         query.skip((data.page - 1) * data.count).limit(data.count);
         query.exec(function (err, result) {
             if (err) {
                 console.log(err);
-                logWriter.log("Users.js getFilterUser.find " + err);
+                logWriter.log("Users.js getFilter.find " + err);
                 response.send(500, { error: "User get DB error" });
             } else {
                 res['data'] = result;
@@ -323,14 +335,24 @@ var Users = function (logWriter, mongoose, models) {
     }
 
     return {
+        getTotalCount: getTotalCount,
+
         createUser: createUser,
+
         login: login,
+
         getUsers: getUsers,
+
         getUserById: getUserById,
-        getFilterUsers: getFilterUsers,
+
+        getFilter: getFilter,
+
         getUsersForDd: getUsersForDd,
+
         updateUser: updateUser,
+
         removeUser: removeUser,
+
         schema: userSchema
     };
 };
