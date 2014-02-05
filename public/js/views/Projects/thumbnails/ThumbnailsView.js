@@ -119,7 +119,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             });
             this.wfStatus = workflowIdArray;
             this.countPerPage = 0;
-            this.collection.showMore({ count: 3, page: 1, status: workflowIdArray });
+            this.collection.showMore({ count: 50, page: 1, status: workflowIdArray });
             this.newCollection = false;
         },
 
