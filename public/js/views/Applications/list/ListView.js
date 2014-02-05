@@ -504,7 +504,7 @@ define([
 
             checkCheckbox: function (e) {
                 if (!$(e.target).is("input")) {
-                    $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
+                    $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
                 }
             },
 

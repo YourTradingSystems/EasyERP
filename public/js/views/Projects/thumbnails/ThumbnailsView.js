@@ -12,23 +12,57 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         el: '#content-holder',
         countPerPage: 0,
         template: _.template(thumbnailsItemTemplate),
-
+        newCollection: true,
+        wfStatus: [],
+        
         initialize: function (options) {
+            $(document).off("click");
             this.startTime = options.startTime;
             this.collection = options.collection;
             this.countPerPage = options.collection.length;
             this.getTotalLength(this.countPerPage);
             this.render();
             this.asyncLoadImgs(this.collection);
+            _.bind(this.collection.showMore, this.collection);
         },
 
         events: {
             "click #showMore": "showMore",
-            "click .thumbnail": "gotoEditForm"
+            "click .thumbnail": "gotoEditForm",
+            "click .filterButton": "showfilter"
+        },
+
+        showfilter: function (e) {
+            $(".filter-check-list").toggle();
+            return false;
+        },
+
+        hide: function (e) {
+           if (!$(e.target).closest(".filter-check-list").length) {
+                $(".allNumberPerPage").hide();
+                if ($(".filter-check-list").is(":visible")) {
+                    $(".filter-check-list").hide();
+                    this.showFilteredPage();
+                }
+            }
+
+        },
+        
+        showFilteredPage: function () {
+            this.$el.find('.thumbnail').remove();
+            this.startTime = new Date();
+            var workflowIdArray = [];
+            $('.filter-check-list input:checked').each(function () {
+                workflowIdArray.push($(this).val());
+            })
+            this.wfStatus = workflowIdArray;
+            this.countPerPage = 0;
+            this.collection.showMore({ count: 3, page: 1, status: workflowIdArray });
+            this.newCollection = false;
         },
 
         getTotalLength: function (currentNumber) {
-            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber }, function (response, context) {
+            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, status: this.wfStatus, newCollection: this.newCollection }, function (response, context) {
                 var showMore = context.$el.find('#showMoreDiv');
                 if (response.showMore) {
                     if (showMore.length === 0) {
@@ -54,6 +88,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         },
 
         render: function () {
+            var self = this;
             var currentEl = this.$el;
             var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
 
@@ -64,8 +99,13 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             } else {
                 currentEl.html('<h2>No projects found</h2>');
             }
-
+            common.populateWorkflowsList("Projects", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
+                self.stages = stages;
+            });
             currentEl.append(createdInTag);
+            $(document).on("click", function (e) {
+                self.hide(e);
+            });
             return this;
         },
 
@@ -87,18 +127,22 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         },
 
         showMore: function () {
-            _.bind(this.collection.showMore, this.collection);
-            this.collection.showMore();
+            this.collection.showMore({ status: this.wfStatus });
         },
 
         showMoreContent: function (newModels) {
             var holder = this.$el;
+            var content = holder.find("#thumbnailContent");
             this.countPerPage += newModels.length;
             var showMore = holder.find('#showMoreDiv');
             var created = holder.find('#timeRecivingDataFromServer');
             this.getTotalLength(this.countPerPage);
-            showMore.before(this.template({ collection: this.collection.toJSON() }));
-            showMore.after(created);
+            if (showMore.length != 0) {
+                showMore.before(this.template({ collection: this.collection.toJSON() }));
+                showMore.after(created);
+            } else {
+                content.html(this.template({ collection: this.collection.toJSON() }));
+            }
             this.asyncLoadImgs(newModels);
         },
 

@@ -247,7 +247,8 @@ define([
                 getModel.fetch({
                     data: { id: modelId },
                     success: function (model) {
-                        self.convertModelDates(model);
+						console.log(model);
+//                        self.convertModelDates(model);
                         var topbarView = new topBarView({ actionType: "Content" });
                         var contentView = new contentFormView({ model: model, startTime: startTime });
 
@@ -343,7 +344,7 @@ define([
                     ? new contentCollection({
                             viewType: 'thumbnails',
                             page: 1,
-                            count: 4,
+                            count: 3,
                             contentType: contentType
                         })
 

@@ -7,7 +7,7 @@ define([
     'text!templates/Notes/AddNote.html',
 	"populate"
 ],
-    function (EditTemplate, Custom, common, dataService, addAttachTemplate, addNoteTemplate,populate) {
+    function (EditTemplate, custom, common, dataService, addAttachTemplate, addNoteTemplate, populate) {
 
         var EditView = Backbone.View.extend({
             contentType: "Projects",
@@ -18,7 +18,7 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.page = 1;
                 this.pageG = 1;
-				this.responseObj = {}
+                this.responseObj = {}
                 this.render();
             },
 
@@ -42,45 +42,45 @@ define([
                 "click .editNote": "editNote",
                 "click #health a": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-				"click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-				"click":"hideHealth",
+                "click": "hideHealth",
                 "click .current-selected": "showNewSelect",
             },
             notHide: function (e) {
-				return false;
-            },
-            showNewSelect:function(e,prev,next){
-                populate.showSelect(e,prev,next,this);
                 return false;
-                
             },
-			chooseOption:function(e){
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
-			},
-			hideNewSelect:function(e){
-				$(".newSelectList").hide();;
-			},
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
 
-			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
-			},
-			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
-			},
-			hideHealth:function(){
-				$("#health ul").hide();
-			},
-			chooseHealthDd:function(e){
-				$(e.target).parents("#health").find("a").attr("class",$(e.target).attr("class")).attr("data-value",$(e.target).attr("class").replace("health","")).parent().find("ul").toggle();
-			},
-			showHealthDd:function(e){
-				$(e.target).parent().find("ul").toggle();
-				return false;
-			},
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+            },
+            hideNewSelect: function (e) {
+                $(".newSelectList").hide();;
+            },
+
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true)
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false)
+            },
+            hideHealth: function () {
+                $("#health ul").hide();
+            },
+            chooseHealthDd: function (e) {
+                $(e.target).parents("#health").find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
+            },
+            showHealthDd: function (e) {
+                $(e.target).parent().find("ul").toggle();
+                return false;
+            },
             cancelNote: function (e) {
                 $('#noteArea').val('');
                 $('#noteTitleArea').val('');
@@ -458,7 +458,8 @@ define([
 
             saveItem: function (event) {
                 event.preventDefault();
-                var self = this;
+                Backbone.history.fragment = '';
+                var viewType = custom.getCurrentVT();
                 var mid = 39;
                 var projectName = $.trim(this.$el.find("#projectName").val());
                 var projectShortDesc = $.trim(this.$el.find("#projectShortDesc").val());
@@ -489,6 +490,8 @@ define([
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var health = this.$el.find('#health a').data('value');
                 var targetEndDate = $.trim(this.$el.find("#EndDateTarget").val());
+                var info = this.currentModel.get('info');
+                info['TargetEndDate'] = targetEndDate || info.TargetEndDate;
                 var data = {
                     projectName: projectName,
                     projectShortDesc: projectShortDesc,
@@ -506,11 +509,8 @@ define([
                     },
                     whoCanRW: whoCanRW,
                     health: health,
-                    info: {
-                        TargetEndDate: targetEndDate
-                    }
+                    info: info
                 };
-
                 this.currentModel.save(data, {
                     headers: {
                         mid: mid
@@ -520,7 +520,7 @@ define([
                         $('.edit-project-dialog').remove();
                         $(".add-group-dialog").remove();
                         $(".add-user-dialog").remove();
-                        Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        Backbone.history.navigate("#easyErp/Projects/" + viewType, { trigger: true });
                     },
                     error: function () {
                         $('.edit-project-dialog').remove();
@@ -583,14 +583,10 @@ define([
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
-//                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
-//                common.populateCustomers("#customerDd", "/Customer", this.currentModel.toJSON());
-//                common.populateEmployeesDd("#userEditDd", "/getPersonsForDd");
-//                common.populateWorkflows("Projects", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON());
-				populate.get("#projectTypeDD", "/projectType",{},"name",this);	
-				populate.get2name("#projectManagerDD", "/getPersonsForDd",{},this);	
-				populate.get2name("#customerDd", "/Customer",{},this);	
-				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Projects"},"name",this);			
+                populate.get("#projectTypeDD", "/projectType", {}, "name", this);
+                populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this);
+                populate.get2name("#customerDd", "/Customer", {}, this);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Projects" }, "name", this);
                 var model = this.currentModel.toJSON();
                 if (model.groups)
                     if (model.groups.users.length > 0 || model.groups.group.length) {

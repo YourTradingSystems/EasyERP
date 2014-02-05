@@ -5,15 +5,8 @@
     </nav>
     <div id="loginPanel">      
         <div class="dropdown-button">
-			<%if (model.RelatedEmployee && (model.RelatedEmployee.imageSrc)) {%>
-            	<img class="iconEmployee" src="<%=model.RelatedEmployee.imageSrc%>" width="26" height="26" />
-            <%}%>
-            
-            <%if (model.RelatedEmployee && (model.RelatedEmployee.name)) {%>
-            	<span id="userName"><%=model.RelatedEmployee.name.first%>&nbsp<%=model.RelatedEmployee.name.last%></span>
-            <%} else {%>
-            	<span id="userName"><%=model.login%></span>
-            <%}%>
+          <img class="iconEmployee" width="26" height="26" />
+          <span id="userName"></span>
             
             <ul id="loginSelect" hidden="true">
               <li selected="selected"><a href="javascript:;">.....</a></li>

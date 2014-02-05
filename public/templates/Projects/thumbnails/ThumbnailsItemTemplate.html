@@ -1,29 +1,38 @@
-<% collection.forEach(function(project){ %>
-<div class="thumbnail" id="<%=project._id%>">
-    <div class="dropDown">
-        <a href="#easyErp/Tasks/kanban/<%= project._id %>" class="icon icon-btn">r</a>
-        <a href="#easyErp/Tasks/list/<%= project._id %>" class="icon icon-btn">i</a>
+<div class="filterButton">
+    <span class="text">Stage</span>
+    <div class="arrow">
+        ^
     </div>
-    <div class="inner">
-        <div class="project-text left">
-            <span class="bold" title="<%=project.projectName%>"><%=project.projectName%></span><br/>
-            <span title="<%=(project.customer) ? project.customer.name.first+ ' ' + project.customer.name.last : ' ' %>"><%=(project.customer)?project.customer.name.first+' ' + project.customer.name.last : ' '%></span>
+</div>
+<ul class="filter-check-list"></ul>
+<div id="thumbnailContent">
+    <% collection.forEach(function(project){ %>
+    <div class="thumbnail" id="<%=project._id%>">
+        <div class="dropDown">
+            <a href="#easyErp/Tasks/kanban/<%= project._id %>" class="icon icon-btn">r</a>
+            <a href="#easyErp/Tasks/list/<%= project._id %>" class="icon icon-btn">i</a>
         </div>
-        <div class="clearfix">
+        <div class="inner">
+            <div class="project-text left">
+                <span class="bold" title="<%=project.projectName%>"><%=project.projectName%></span><br />
+                <span title="<%=(project.customer) ? project.customer.name.first+ ' ' + project.customer.name.last : ' ' %>"><%=(project.customer)?project.customer.name.first+' ' + project.customer.name.last : ' '%></span>
+            </div>
+            <div class="clearfix">
+            </div>
         </div>
-    </div>
-    <div class="bottom">
-        <div class="half-block left">
-            <p class="inner">
-                <a id="<%=project._id%>" class="tasksByProject" href="#easyErp/Tasks/kanban/<%= project._id %>"><%=project.task.length%> Tasks</a>
-            </p>
-            <p class="inner"><label>Status: </label><span class="status <%=(project.workflow && project.workflow.status) ? project.workflow.status.toLowerCase().split(' ').join('') : ''%>"><%=(project.workflow) ? project.workflow.status : ''%></span></p>
-        </div>
-        <div class="half-block right">
-            <div class="avatar right" data-id="<%=(project.projectmanager) ? project.projectmanager._id: ''%>">
-                <img alt="" src="" />
+        <div class="bottom">
+            <div class="half-block left">
+                <p class="inner">
+                    <a id="<%=project._id%>" class="tasksByProject" href="#easyErp/Tasks/kanban/<%= project._id %>"><%=project.task.length%> Tasks</a>
+                </p>
+                <p class="inner"><label>Status: </label><span class="status <%=(project.workflow && project.workflow.status) ? project.workflow.status.toLowerCase().split(' ').join('') : ''%>"><%=(project.workflow) ? project.workflow.status : ''%></span></p>
+            </div>
+            <div class="half-block right">
+                <div class="avatar right" data-id="<%=(project.projectmanager) ? project.projectmanager._id: ''%>">
+                    <img alt="" src="" />
+                </div>
             </div>
         </div>
     </div>
+    <% }) %>
 </div>
-<% }) %>

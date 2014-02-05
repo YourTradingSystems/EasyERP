@@ -21,7 +21,7 @@ define([
                 this.collection.bind('reset', this.createMenuViews, this);
             },
 			hideProp:function(e){
-				if ($(e.target).closest("#loginPanel").length==0){
+				if ($(e.target).closest("#loginPanel").length===0){
 					var select = this.$el.find('#loginSelect');
 					select.hide();
 					select.prop('hidden', true);
@@ -52,9 +52,22 @@ define([
             },
             render: function() {
                 console.log('Render Main View');
+				var self = this;
                 dataService.getData('/currentUser', null, function (response, context) {
-                		context.$el.html(_.template(MainTemplate,{model: response}));
+					if (response.RelatedEmployee){
+						$("#loginPanel .iconEmployee").attr("src",response.RelatedEmployee.imageSrc);
+						if (response.RelatedEmployee.name){
+							$("#loginPanel  #userName").text(response.RelatedEmployee.name.first+" "+response.RelatedEmployee.name.last);
+						}else{
+							$("#loginPanel  #userName").text(response.login);
+						}
+					}else{
+						$("#loginPanel .iconEmployee").attr("src",response.imageSrc);
+						$("#loginPanel  #userName").text(response.login);
+					}
                 }, this);
+				this.$el.html(_.template(MainTemplate));
+
                 return this;
             }
         });

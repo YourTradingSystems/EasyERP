@@ -66,12 +66,12 @@ define([
 				var self = this;
 				this.populateProjectForDashboard("/getProjectByEndDateForDashboard",function(data){
 					data= data.data;
-					k=0;
+					var k=0;
 					data.This.forEach(function(item){
 						k++;
 						$("#projectEndTW").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
 					});
-					if (data.This.length==0){
+					if (data.This.length===0){
 						$("#projectEndTW").hide();
 					}
 					else{
@@ -83,7 +83,7 @@ define([
 						k++;
 						$("#projectEndNW").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
 					});
-					if (data.Next.length==0){
+					if (data.Next.length===0){
 						$("#projectEndNW").hide();
 					}
 					else{
@@ -95,7 +95,7 @@ define([
 						k++;
 						$("#projectEndN2W").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
 					});
-					if (data.Next2.length==0){
+					if (data.Next2.length===0){
 						$("#projectEndN2W").hide();
 					}
 					else{
