@@ -39,8 +39,15 @@
                    "click #cancelNote" : "cancelNote",
                    "click .addTitle" : "showTitle",
                    "click .editNote" : "editNote",
+				   "keypress #logged, #estimated": "isNumberKey"
 	           },
-	           
+			   isNumberKey: function(evt){
+				   var charCode = (evt.which) ? evt.which : event.keyCode;
+				   if (charCode > 31 && (charCode < 48 || charCode > 57))
+					   return false;
+				   return true;
+			   },
+          
 	           cancelNote: function (e) {
                    $('#noteArea').val('');
                    $('#noteTitleArea').val('');
