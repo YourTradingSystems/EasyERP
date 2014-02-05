@@ -22,6 +22,7 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             this.countPerPage = options.collection.length;
             this.getTotalLength(this.countPerPage);
             this.render();
+            this.asyncLoadImgs(this.collection);
         },
 
         events: {
@@ -45,6 +46,13 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
                     showMore.hide();
                 }
             }, this);
+        },
+
+        asyncLoadImgs: function (collection) {
+            var ids = _.map(collection.toJSON(), function (item) {
+                return item._id;
+            });
+            common.getImages(ids, "/getCustomersImages");
         },
 
         alpabeticalRender: function (e) {

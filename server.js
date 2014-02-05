@@ -481,7 +481,9 @@ app.get('/Customer', function (req, res) {
     requestHandler.getCustomer(req, res, data);
 });
 
-
+app.get('/getCustomersImages', function (req, res) {
+    requestHandler.getEmployeesImages(req, res);
+});
 
 //----------------------------Persons---------------------------------------------------------
 

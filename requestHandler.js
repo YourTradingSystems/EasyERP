@@ -1067,12 +1067,30 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+
     // Get  Persons or Companies or ownCompanies for list and thumbnail
     function getFilterCustomers(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb ) {
             access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
                     customer.getFilterCustomers(req, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
+
+    // Get  Persons or Companies or ownCompanies images for thumbnails
+    function getCustomersImages(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getReadAccess(req, req.session.uId, 43, function (access) {
+                console.log(access);
+                if (access) {
+                    customer.getCustomersImages(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1449,7 +1467,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     function getEmployeesImages(req, res, data) {
-        console.log("Requst getEmployeesImages is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
@@ -1485,6 +1502,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
     function uploadApplicationFile(req, res, id, file) {
         console.log("File Uploading to app");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -2200,6 +2218,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateCompany: updateCompany,
 		companyUpdateOnlySelectedFields:companyUpdateOnlySelectedFields,
         getFilterCustomers: getFilterCustomers,
+        getCustomersImages: getCustomersImages,
         getCustomersAlphabet: getCustomersAlphabet,
 
         getRelatedStatus: getRelatedStatus,
