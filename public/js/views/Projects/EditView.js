@@ -42,7 +42,6 @@ define([
                 "click .editNote": "editNote",
                 "click #health a": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-				"click": "hideHealth",
 				"click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",

@@ -1,7 +1,7 @@
 ﻿define([
     'common',
     'text!templates/Tasks/list/ListTemplate.html',
-    'text!templates/Leads/list/stages.html'
+    'text!templates/stages.html'
 ],
 
        function (common,ListTemplate, stagesTamplate) {
