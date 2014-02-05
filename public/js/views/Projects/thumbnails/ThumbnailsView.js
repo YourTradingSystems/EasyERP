@@ -29,9 +29,36 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         events: {
             "click #showMore": "showMore",
             "click .thumbnail": "gotoEditForm",
-            "click .filterButton": "showfilter"
+            "click .filterButton": "showfilter",
+			"click .health-wrapper .health-container": "showHealthDd",
+            "click .health-wrapper ul li div": "chooseHealthDd",
+			"click": "hideHealth"
         },
 
+        chooseHealthDd: function (e) {
+            var target = $(e.target).parents(".health-wrapper");
+            target.find(".health-container a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parents(".health-wrapper").find("ul").toggle();
+            var id = target.parents(".thumbnail").attr("id");
+            var model = this.collection.get(id);
+            model.save({ health: target.find(".health-container a").data("value") }, {
+                headers:
+                {
+                    mid: 39
+                },
+                patch: true,
+                validate: false,
+                success: function () {
+					$(".health-wrapper ul").hide();
+                }
+            });
+        },
+		hideHealth:function(){
+			$(".health-wrapper ul").hide();
+		},
+        showHealthDd: function (e) {
+            $(e.target).parents(".health-wrapper").find("ul").toggle();
+            return false;
+        },
         showfilter: function (e) {
             $(".filter-check-list").toggle();
             return false;
@@ -105,6 +132,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             currentEl.append(createdInTag);
             $(document).on("click", function (e) {
                 self.hide(e);
+				self.hideHealth(e);
             });
             return this;
         },

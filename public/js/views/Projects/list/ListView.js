@@ -82,9 +82,11 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-
+						$(e.target).parents("#health").find("ul").hide();
                     }
                 });
+				return false;
+				
             },
 
             showHealthDd: function (e) {

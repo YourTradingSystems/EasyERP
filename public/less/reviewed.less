@@ -928,7 +928,6 @@
     span {
         font-family: @lucida-font;
         position: relative;
-        z-index: 2;
         .thumbnail-text;
 
         &.status {
@@ -985,10 +984,11 @@
     }
 
     .project-text {
-        .text-overflow;
         width: 180px;
-
         span.bold{
+			display:block;
+			max-width: 160px;
+			.text-overflow;
             .bold;
         }
     }
@@ -3705,7 +3705,11 @@ h3.dashboard {
     stroke: #1ebbea;
     stroke-width: 3px;
 }
-#health{
+.blockLeft{
+	display:block;
+	float:left;
+}
+#health, .health-wrapper{
 	@width:10px;
 	a{
 		margin-top:5px;
@@ -3763,6 +3767,24 @@ h3.dashboard {
 			}
 		}
 	}
+}
+ .health-wrapper{
+	 a{
+		 margin-top:2px;
+		 float:right;
+	  }
+	.health-container{
+		margin-top:-3px;
+		width:15px;
+		height:15px;
+		display:block;
+	}
+	ul{
+		margin-top:17px;
+		margin-left:-4px;
+		z-index:1000;
+	}
+
 }
 .avatarInfoContainer{
 	margin-left:150px;
