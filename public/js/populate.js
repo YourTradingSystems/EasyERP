@@ -5,26 +5,6 @@ define([
        function (dataService, selectTemplate) {
            var dataFormServer = {};
            // arr= {url:..., data:...}
-           var populateAll = function (el, arr, isCreate) {
-               var n = arr.length;
-               for (var i = 0; i < n; i++) {
-                   this.populate(arr[i].url, arr[i].data, function (data) {
-                       if (arr[i].url == "/WorkflowsForDd") {
-
-                           el.trigger('incomingData', { url: arr[i].url, data: data });
-                           var wNames = $.map(data, function (item) {
-                               return item.wName;
-                           });
-                           wNames = _.uniq(wNames);
-                           dataFromServer["workflow"] = wNames
-                       } else {
-                           dataFromServer[arr[i].url] = data
-                       }
-                   })
-
-               }
-
-           };
            var get = function (id, url, data, field, content, isCreate, canBeEmpty, parrrentContentId) {
                dataService.getData(url, data, function (response) {
                    content.responseObj[id] = [];
@@ -36,7 +16,7 @@ define([
                    }));
 
                    if (isCreate) {
-                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id)
+                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
                    if (parrrentContentId) {
                        var current = _.filter(response.data, function(item) {
@@ -54,10 +34,10 @@ define([
                        content.responseObj[id].push({ _id: "", name: "Select" });
                    }
                    content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
-                       return { _id: item._id, name: item.departmentName, level: item.nestingLevel }
+                       return { _id: item._id, name: item.departmentName, level: item.nestingLevel };
                    }));
                    if (isCreate) {
-                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id)
+                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
                });
            };
@@ -66,10 +46,10 @@ define([
                dataService.getData("/Priority", {}, function (response) {
                    console.log(response);
                    content.responseObj[id] = _.map(response.data, function (item) {
-                       return { _id: item.priority, name: item.priority }
+                       return { _id: item.priority, name: item.priority };
                    });
                    if (isCreate) {
-                       $(id).text(content.responseObj[id][2].name).attr("data-id", content.responseObj[id][2]._id)
+                       $(id).text(content.responseObj[id][2].name).attr("data-id", content.responseObj[id][2]._id);
                    }
 
                });
@@ -78,56 +58,56 @@ define([
            var getWorkflow = function (nameId, statusId, url, data, field, content, isCreate) {
                dataService.getData(url, data, function (response) {
                    content.responseObj[nameId] = _.map(response.data, function (item) {
-                       return { _id: item._id, name: item[field] }
+                       return { _id: item._id, name: item[field] };
                    });
                    var wNames = $.map(response.data, function (item) {
-                       return item.wName
+                       return item.wName;
                    });
                    wNames = _.uniq(wNames);
                    content.responseObj[statusId] = $.map(wNames, function (wName) {
-                       return { _id: wName, name: wName }
+                       return { _id: wName, name: wName };
                    });
 
                    if (isCreate) {
-                       $(nameId).text(content.responseObj[nameId][0].name).attr("data-id", content.responseObj[nameId][0]._id)
-                       $(statusId).text(content.responseObj[statusId][0].name).attr("data-id", content.responseObj[statusId][0]._id)
+                       $(nameId).text(content.responseObj[nameId][0].name).attr("data-id", content.responseObj[nameId][0]._id);
+                       $(statusId).text(content.responseObj[statusId][0].name).attr("data-id", content.responseObj[statusId][0]._id);
                    }
                });
            };
 
            var get2name = function (id, url, data, content, isCreate, canBeEmpty) {
                dataService.getData(url, data, function (response) {
-                   content.responseObj[id] = []
+                   content.responseObj[id] = [];
                    if (canBeEmpty) {
                        content.responseObj[id].push({ _id: "", name: "Select" });
                    }
                    content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
-                       return { _id: item._id, name: item.name.first + " " + item.name.last }
+                       return { _id: item._id, name: item.name.first + " " + item.name.last };
                    }));
 
                    if (isCreate) {
-                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id)
+                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
                });
            };
            var getCompanies = function (id, url, data, content, isCreate, canBeEmpty) {
                dataService.getData(url, data, function (response) {
-                   content.responseObj[id] = []
+                   content.responseObj[id] = [];
                    if (canBeEmpty) {
                        content.responseObj[id].push({ _id: "", name: "Select" });
                    }
                    content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
-                       return { _id: item._id, name: item.name.first }
+                       return { _id: item._id, name: item.name.first };
                    }));
 
                    if (isCreate) {
-                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id)
+                       $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
                });
            };
 
            var showSelect = function (e, prev, next, context) {
-               data = context.responseObj["#" + $(e.target).attr("id")];
+               var data = context.responseObj["#" + $(e.target).attr("id")];
                var elementVisible = 10;
                var newSel = $(e.target).parent().find(".newSelectList");
                if (prev || next) {
@@ -155,12 +135,12 @@ define([
                var s = "<ul class='newSelectList' data-page='" + currentPage + "'>";
                var start = (currentPage - 1) * elementVisible;
                var end = Math.min(currentPage * elementVisible, data.length);
-               var allPages = Math.ceil(data.length / elementVisible)
+               var allPages = Math.ceil(data.length / elementVisible);
                parent.append(_.template(selectTemplate, { collection: data.slice(start, end), currentPage: currentPage, allPages: allPages, start: start, end: end, dataLength: data.length, elementVisible: elementVisible }));
            };
 
            var showSelectPriority = function (e, prev, next, context) {
-               data = context.responseObj["#priority"];
+               var data = context.responseObj["#priority"];
                var elementVisible = 25;
                var newSel = $(e.target).parent().find(".newSelectList");
                if (prev || next) {
@@ -188,11 +168,10 @@ define([
                var s = "<ul class='newSelectList' data-page='" + currentPage + "'>";
                var start = (currentPage - 1) * elementVisible;
                var end = Math.min(currentPage * elementVisible, data.length);
-               var allPages = Math.ceil(data.length / elementVisible)
+               var allPages = Math.ceil(data.length / elementVisible);
                parent.append(_.template(selectTemplate, { collection: data.slice(start, end), currentPage: currentPage, allPages: allPages, start: start, end: end, dataLength: data.length, elementVisible: elementVisible }));
            };
            return {
-               populateAll: populateAll,
                get: get,
                get2name: get2name,
                getPriority: getPriority,
@@ -201,5 +180,5 @@ define([
                getParrentDepartment: getParrentDepartment,
                getCompanies: getCompanies,
                showSelectPriority: showSelectPriority
-           }
+           };
        });
