@@ -140,7 +140,7 @@ define([
                 var workflowIdArray = [];
                 $('.filter-check-list input:checked').each(function () {
                     workflowIdArray.push($(this).val());
-                })
+                });
                 this.wfStatus = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
                 this.collection.showMore({ count: itemsNumber, page: 1, status: workflowIdArray });

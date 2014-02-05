@@ -1,13 +1,15 @@
 ﻿define([
     "text!templates/Projects/thumbnails/ThumbnailsItemTemplate.html",
+    'text!templates/stages.html',
     'views/Projects/EditView',
     'views/Projects/CreateView',
     'dataService',
     'models/ProjectsModel',
-    'common'
+    'common',
+	'populate'
 ],
 
-function (thumbnailsItemTemplate, editView, createView, dataService, currentModel, common) {
+function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataService, currentModel, common, populate) {
     var ProjectThumbnalView = Backbone.View.extend({
         el: '#content-holder',
         countPerPage: 0,
@@ -21,6 +23,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             this.collection = options.collection;
             this.countPerPage = options.collection.length;
             this.getTotalLength(this.countPerPage);
+			this.responseObj = {};
             this.render();
             this.asyncLoadImgs(this.collection);
             _.bind(this.collection.showMore, this.collection);
@@ -32,9 +35,39 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             "click .filterButton": "showfilter",
 			"click .health-wrapper .health-container": "showHealthDd",
             "click .health-wrapper ul li div": "chooseHealthDd",
-			"click": "hideHealth"
+            "click .stageSelect": "showNewSelect",
+            "click .newSelectList li": "chooseOption",
+            "click": "hideHealth"
+        },
+		showNewSelect: function (e) {
+            if ($(".newSelectList").is(":visible")) {
+                this.hideHealth();
+                return false;
+            } else {
+                $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+                return false;
+            }
         },
 
+        chooseOption: function (e) {
+            var targetElement = $(e.target).parents(".thumbnail");
+            var id = targetElement.attr("id");
+            var model = this.collection.get(id);
+            model.save({ workflow: $(e.target).attr("id") }, {
+                headers:
+                {
+                    mid: 39
+                },
+                patch: true,
+                validate: false,
+                success: function () {
+                    targetElement.find(".stageSelect").text($(e.target).text());
+                }
+            });
+
+            this.hideHealth();
+            return false;
+		},
         chooseHealthDd: function (e) {
             var target = $(e.target).parents(".health-wrapper");
             target.find(".health-container a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parents(".health-wrapper").find("ul").toggle();
@@ -52,8 +85,10 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
                 }
             });
         },
+          
 		hideHealth:function(){
 			$(".health-wrapper ul").hide();
+            $(".newSelectList").hide();
 		},
         showHealthDd: function (e) {
             $(e.target).parents(".health-wrapper").find("ul").toggle();
@@ -81,7 +116,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             var workflowIdArray = [];
             $('.filter-check-list input:checked').each(function () {
                 workflowIdArray.push($(this).val());
-            })
+            });
             this.wfStatus = workflowIdArray;
             this.countPerPage = 0;
             this.collection.showMore({ count: 50, page: 1, status: workflowIdArray });
@@ -134,6 +169,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
                 self.hide(e);
 				self.hideHealth(e);
             });
+			populate.getPriority("#priority",this);
             return this;
         },
 

@@ -33,7 +33,7 @@
                 this.render();
                 this.asyncFetc(options.workflowCollection, options.parrentContentId);
                 this.getCollectionLengthByWorkflows(this, options.parrentContentId);
-				this.responseObj = {}
+				this.responseObj = {};
             },
             notHide: function (e) {
 				return false;
@@ -52,30 +52,30 @@
             },
 
             hideNewSelect: function (e) {
-                $(".newSelectList").hide();;
+                $(".newSelectList").hide();
             },
-			   chooseOption:function(e){
-				   $(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
-				   var id=$(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority","");
-				   var obj = collection.get(id);
-				   var extr = obj.get('extrainfo');
-				   if (extr.customer==""){
-					   extr.customer = null
-				   }
-				   extr.priority=$(e.target).parents(".taskSelect").find(".current-selected").text();
-				   console.log(obj);
-				   obj.set({"extrainfo":extr });
-                   obj.save({}, {
-                       headers: {
-                           mid: 39
-                       },
-                       success: function () {
-                       }
-                   });
+			chooseOption:function(e){
+				$(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
+				var id=$(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority","");
+				var obj = collection.get(id);
+				var extr = obj.get('extrainfo');
+				if (extr.customer==""){
+					extr.customer = null
+				}
+				extr.priority=$(e.target).parents(".taskSelect").find(".current-selected").text();
+				console.log(obj);
+				obj.set({"extrainfo":extr });
+                obj.save({}, {
+                    headers: {
+                        mid: 39
+                    },
+                    success: function () {
+                    }
+                });
 
-				   this.hideNewSelect();
-				   return false;
-			   },
+				this.hideNewSelect();
+				return false;
+			},
 
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -198,7 +198,7 @@
                 $(".column").last().addClass("lastColumn");
                 var itemCount;
                 _.each(workflows, function (workflow, i) {
-                    itemCount = 0
+                    itemCount = 0;
                     var column = this.$(".column").eq(i);
                     var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
                     var total = " <span><span class='totalCount'>" + itemCount + "</span> )</span>";
@@ -242,7 +242,7 @@
                     }
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
-			$(document).on("keypress","#cPerPage",this.isNumberKey);
+				$(document).on("keypress","#cPerPage",this.isNumberKey);
                 return this;
             }
         });
