@@ -42,6 +42,8 @@
 
                 var filterObject = options || {};
 
+
+
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
@@ -69,7 +71,7 @@
                 }
 				that.page = 1;
                 filterObject['page'] = (options && options.page) ? options.page : this.page;
-                filterObject['count'] = (options && options.count) ? options.count * 2 : this.namberToShow;
+                filterObject['count'] = (options && options.count) ? options.count : this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
                 filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
                 this.fetch({
