@@ -13,8 +13,6 @@
                 var that = this;
                 this.startTime = new Date();
                 this.namberToShow = options.count;
-                this.wfStatus = [];
-                this.wfStatus = options.status;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                 }
@@ -38,10 +36,15 @@
                         filterObject[i] = options[i];
                     }
                 }
-                filterObject['page'] = (options && options.page) ? options.page : this.page;
-                filterObject['count'] = (options && options.count) ? options.count : this.namberToShow;
-                filterObject['status'] = [];
-                filterObject['status'] = (options && options.status) ? options.status : this.status;
+                if (options && options.page) {
+                    this.page = options.page;
+                }
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                }
+                filterObject['page'] = this.page;
+                filterObject['count'] = this.namberToShow;
+                filterObject['status'] = (options && options.status) ? options.status : [];
 
                 this.fetch({
                     data: filterObject,

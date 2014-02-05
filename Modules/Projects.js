@@ -995,6 +995,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     },
                     function (err, result) {
                         if (!err) {
+                            console.log(data);
                             var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                             if (data && data.status && data.status.length > 0)
                                 query.where('workflow').in(data.status);

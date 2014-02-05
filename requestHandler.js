@@ -1469,7 +1469,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     function getEmployeesForThumbnails(req, res, data) {
-        console.log("Requst getApplications is success");
+        console.log("Requst Employees is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
@@ -1486,7 +1486,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     function getEmployeesImages(req, res, data) {
-        console.log("Requst getApplications is success");
+        console.log("Requst getEmployeesImages is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
