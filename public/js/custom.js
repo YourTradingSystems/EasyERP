@@ -9,6 +9,7 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
 
             Backbone.history.fragment = "";
             Backbone.history.navigate(url, { trigger: true });
+
         } else {
             if (App.requestedURL == null)
                 App.requestedURL = Backbone.history.fragment;

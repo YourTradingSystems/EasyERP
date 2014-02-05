@@ -45,7 +45,7 @@ define([
                 "click .filter-check-list li": "checkCheckbox",
                 "click .stageSelect": "showNewSelect",
                 "click .newSelectList li": "chooseOption",
-                "click #health a": "showHealthDd",
+                "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
                 "click tr": "goToEditDialog"
             },
@@ -71,10 +71,10 @@ define([
 
             chooseHealthDd: function (e) {
                 var target = $(e.target).parents("#health");
-                target.find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
+                target.find("div a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parents("#health").find("ul").toggle();
                 var id = target.data("id");
                 var model = this.collection.get(id);
-                model.save({ health: target.find("a").data("value") }, {
+                model.save({ health: target.find("div a").data("value") }, {
                     headers:
                         {
                             mid: 39
@@ -88,7 +88,7 @@ define([
             },
 
             showHealthDd: function (e) {
-                $(e.target).parent().find("ul").toggle();
+                $(e.target).parents("#health").find("ul").toggle();
                 return false;
             },
 

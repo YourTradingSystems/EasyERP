@@ -850,8 +850,8 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         {
                             $match: {
                                 $and: [
-                                    { 'info.EndDate': { $gte: startDate } },
-                                    { 'info.EndDate': { $lte: endDate } },
+                                    { 'info.TargetEndDate': { $gte: startDate } },
+                                    { 'info.TargetEndDate': { $lte: endDate } },
                                     {
 
                                         $or: [
@@ -893,7 +893,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id info.EndDate projectmanager projectName").
+                                query.select("_id info.TargetEndDate projectmanager projectName").
 									populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {
                                     if (!error) {
@@ -907,7 +907,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
                                         var ret = { "This": [], "Next": [], "Next2": [] };
                                         for (var i = 0, n = _res.length; i < n; i++) {
-                                            var d = new Date(_res[i].info.EndDate);
+                                            var d = new Date(_res[i].info.TargetEndDate);
                                             endDate.setDate(endDate.getDate() - endDate.getDay() + 7);
                                             if (d < endThisWeek) {
                                                 ret.This.push(_res[i]);

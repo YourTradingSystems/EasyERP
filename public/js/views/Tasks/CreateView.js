@@ -15,7 +15,7 @@ define([
                initialize: function (options) {
                    _.bindAll(this, "saveItem", "render");
                    this.model = new TaskModel();
-                   this.responseObj = {}
+                   this.responseObj = {};
                    this.render();
                },
 
@@ -32,6 +32,7 @@ define([
                    'keydown': 'keydownHandler',
                    "change .inputAttach": "addAttach",
                    "click .deleteAttach": "deleteAttach",
+				   "keypress #logged, #estimated": "isNumberKey"
                },
 
                addAttach: function (event) {
@@ -81,7 +82,7 @@ define([
                },
 
                showDatePicker: function (e) {
-                   if ($(".createFormDatepicker").find(".arrow").length == 0) {
+                   if ($(".createFormDatepicker").find(".arrow").length === 0) {
                        $(".createFormDatepicker").append("<div class='arrow'></div>");
                    }
 
@@ -211,10 +212,10 @@ define([
                    });
                },
                nextSelect: function (e) {
-                   this.showNewSelect(e, false, true)
+                   this.showNewSelect(e, false, true);
                },
                prevSelect: function (e) {
-                   this.showNewSelect(e, true, false)
+                   this.showNewSelect(e, true, false);
                },
 
                showNewSelect: function (e, prev, next) {
@@ -222,12 +223,17 @@ define([
                    return false;
                },
                hideNewSelect: function (e) {
-                   $(".newSelectList").hide();;
+                   $(".newSelectList").hide();
                },
                chooseOption: function (e) {
                    $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
                },
-
+			   isNumberKey: function(evt){
+				   var charCode = (evt.which) ? evt.which : event.keyCode;
+				   if (charCode > 31 && (charCode < 48 || charCode > 57))
+					   return false;
+				   return true;
+			   },
                render: function () {
                    var projectID = (window.location.hash).split('/')[3];
                    var formString = this.template();
@@ -253,7 +259,6 @@ define([
                    populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Tasks" }, "name", this, true);
                    populate.get2name("#assignedToDd", "/getPersonsForDd", {}, this, true);
                    populate.getPriority("#priorityDd", this, true);
-
                    $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                    $('#deadline').datepicker({
                        dateFormat: "d M, yy",

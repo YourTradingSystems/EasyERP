@@ -247,7 +247,8 @@ define([
                 getModel.fetch({
                     data: { id: modelId },
                     success: function (model) {
-                        self.convertModelDates(model);
+						console.log(model);
+//                        self.convertModelDates(model);
                         var topbarView = new topBarView({ actionType: "Content" });
                         var contentView = new contentFormView({ model: model, startTime: startTime });
 
