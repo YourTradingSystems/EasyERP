@@ -146,7 +146,7 @@ app.post('/uploadFiles', function (req, res, next) {
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path;
         var dir;
-        os = require("os");
+        var os = require("os");
         var osType = (os.type().split('_')[0]);
         switch(osType) {
             case "Windows":
@@ -1199,11 +1199,8 @@ app.get('/getForDdByRelatedUser', function (req, res) {
     requestHandler.getForDdByRelatedUser(req, res, data);
 });
 
-app.get('/Employees/form/:_id', function (req, res) {
-    requestHandler.getEmployeesById(req, res);
-});
-
 app.get('/Employees/:viewType', function (req, res) {
+    console.log('-------------------------------');
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -1213,6 +1210,8 @@ app.get('/Employees/:viewType', function (req, res) {
         case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "thumbnails": requestHandler.getEmployeesFilter(req, res);
+            break;
+        case "form": requestHandler.getEmployeesById(req, res);
             break;
     }
 

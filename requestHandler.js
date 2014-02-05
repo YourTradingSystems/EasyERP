@@ -1432,13 +1432,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getApplicationById(req, res, data) {
+    function getApplicationById(req, res) {
         console.log("Requst getApplicationById is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
                 if (access) {
-                    employee.getById(req, data, res);
+                    employee.getById(req, res);
                 } else {
                     res.send(403);
                 }
