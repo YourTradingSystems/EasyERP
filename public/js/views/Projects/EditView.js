@@ -514,16 +514,35 @@ define([
                         mid: mid
                     },
                     //wait: true,
-                    success: function () {
+                    success: function (model) {
+						console.log(model);
                         $('.edit-project-dialog').remove();
                         $(".add-group-dialog").remove();
                         $(".add-user-dialog").remove();
-						$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(0).text(projectName);
-						if (customer)
-							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
-						$("#"+self.currentModel.toJSON()._id).find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
-						if (projectmanager)
-							common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
+						if (viewType=="list"){
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(2).text(projectName);
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(3).text(self.$el.find("#customerDd").text());
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(4).text(self.$el.find("#StartDate").val());
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).text(self.$el.find("#EndDate").val());
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(6).text(self.$el.find("#EndDateTarget").val());
+							if (new Date(self.$el.find("#EndDate").val())<new Date(self.$el.find("#EndDateTarget").val())){
+								$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).addClass("red-border");
+							}
+							else{
+								$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).removeClass("red-border");
+							}
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(9).find(".health-container a").attr("class","health"+health).attr("data-value",health);
+							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(11).text(model.toJSON().editedBy.date+" ("+model.toJSON().editedBy.user.login+")");
+						}else{
+							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(0).text(projectName);
+							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(1).find("a").attr("class","health"+health).attr("data-value",health);
+							if (customer)
+								$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
+							$("#"+self.currentModel.toJSON()._id).find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
+							if (projectmanager)
+								common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
+						}
                     },
                     error: function () {
                         $('.edit-project-dialog').remove();

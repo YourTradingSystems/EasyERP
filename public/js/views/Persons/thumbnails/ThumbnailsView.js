@@ -12,6 +12,7 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
         el: '#content-holder',
         countPerPage: 0,
         template: _.template(ThumbnailsItemTemplate),
+        checkClearView: null,
         
         initialize: function (options) {
             this.startTime = options.startTime;
@@ -22,6 +23,7 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             this.countPerPage = options.collection.length;
             this.getTotalLength(this.countPerPage);
             this.render();
+            this.asyncLoadImgs(this.collection);
         },
 
         events: {
@@ -47,6 +49,13 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             }, this);
         },
 
+        asyncLoadImgs: function (collection) {
+            var ids = _.map(collection.toJSON(), function (item) {
+                return item._id;
+            });
+            common.getImages(ids, "/getCustomersImages");
+        },
+
         alpabeticalRender: function (e) {
             var target = $(e.target);
             target.parent().find(".current").removeClass("current");
@@ -55,7 +64,9 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             if (target.text() == "All") {
                 this.selectedLetter = "";
             }
-            this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
+            this.checkClearView = true;
+            this.collection.showMore({ page: 1, letter: this.selectedLetter });
+            this.getTotalLength(null);
         },
         gotoForm: function (e) {
             e.preventDefault();
@@ -70,6 +81,7 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             window.location.hash = "#easyErp/Companies/form/" + id;
         },
         render: function () {
+            _.bind(this.collection.showMore, this.collection);
             var self = this;
             var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
             var currentEl = this.$el;
@@ -90,24 +102,30 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
                     allAlphabeticArray: self.allAlphabeticArray
                 }));
             });
-     
+            currentEl.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
             currentEl.append(createdInTag);
             return this;
         },
 
         showMore: function () {
-            _.bind(this.collection.showMore, this.collection);
             this.collection.showMore({ letter: this.selectedLetter });
         },
 
         showMoreContent: function (newModels) {
             var holder = this.$el;
+            if (this.checkClearView) {
+                this.checkClearView = null;
+                $('.thumbnailwithavatar').remove();
+                this.countPerPage = 0;
+                this.collection.page = 1;
+            }
             this.countPerPage += newModels.length;
             var showMore = holder.find('#showMoreDiv');
             var created = holder.find('#timeRecivingDataFromServer');
             this.getTotalLength(this.countPerPage);
             showMore.before(this.template({ collection: this.collection.toJSON() }));
             showMore.after(created);
+            this.asyncLoadImgs(newModels);
         },
         
         showMoreAlphabet: function (newModels) {

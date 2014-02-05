@@ -527,7 +527,11 @@ app.get('/Customer', function (req, res) {
     requestHandler.getCustomer(req, res, data);
 });
 
-
+//Get images for persons or companies or owncompanies
+app.get('/getCustomersImages', function (req, res) {
+    requestHandler.getCustomersImages(req, res);
+    console.log('-----------getCustomersImages');
+});
 
 //----------------------------Persons---------------------------------------------------------
 
