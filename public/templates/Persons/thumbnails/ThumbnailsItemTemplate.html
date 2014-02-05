@@ -1,8 +1,8 @@
 <% collection.forEach(function(person){ %>
-<div class="inner thumbnailwithavatar">
+<div class="inner thumbnailwithavatar" id="<%=person._id%>">
     <div class="avatar" style="line-height: 140px">
         <a class="gotoForm" href="javascript;" title="<%=person.name.first%> <%=person.name.last%>" data-id="<%=person._id%>">
-            <img src="<%=person.imageSrc%>" /></a>
+            <img src="" /></a>
     </div>
     <div class="info">
         <div>
