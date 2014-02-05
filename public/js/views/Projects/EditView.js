@@ -525,7 +525,7 @@ define([
 						$("#"+self.currentModel.toJSON()._id).find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
 						if (projectmanager)
 							common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
-						//                        Backbone.history.navigate("#easyErp/Projects/" + viewType, { trigger: true });
+						// Backbone.history.navigate("#easyErp/Projects/" + viewType, { trigger: true });
                     },
                     error: function () {
                         $('.edit-project-dialog').remove();
