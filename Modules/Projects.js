@@ -526,7 +526,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 								function (err, result) {
 								    if (!err) {
 								        var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-								        query.select("projectName projectmanager _id").
+								        query.select("projectName projectmanager _id health").
 											populate('projectmanager', 'name _id').
 											exec(function (error, _res) {
 											    if (!error) {
@@ -884,7 +884,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
-                                query.select("_id info.TargetEndDate projectmanager projectName").
+                                query.select("_id info.TargetEndDate projectmanager projectName health").
 									populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {
                                     if (!error) {
@@ -1379,7 +1379,9 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             data.notes[data.notes.length - 1] = obj;
         }
         console.log(data);
-        models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate({ _id: _id }, data, function (err, projects) {
+        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate({ _id: _id }, data);
+		query.populate("editedBy.user","login");
+		query.exec(function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js update project.update " + err);

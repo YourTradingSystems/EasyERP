@@ -16,7 +16,6 @@ define([
                    "click .choseDateRange .item": "newRange"
                },
 			   populateProjectForDashboard:function (url, callback) {
-				   var self = this;
 				   dataService.getData(url, {}, function (response) {
 					   if (callback) callback(response);
 				   });
@@ -28,7 +27,7 @@ define([
 					var k=0;
 					collection.forEach(function(item){
 						k++;
-						$("#ProjectPMContent").append("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
+						$("#ProjectPMContent").append("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health-wrapper'><a href='javascript:;' class='center health"+item.health+"'></a></td></tr>");
 					});
 					if (collection.length==0){
 						$(".projectInProgress").hide();
@@ -69,7 +68,7 @@ define([
 					var k=0;
 					data.This.forEach(function(item){
 						k++;
-						$("#projectEndTW").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
+						$("#projectEndTW").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health-wrapper'><a href='javascript:;' class='center health"+item.health+"'></a></td></tr>");
 					});
 					if (data.This.length===0){
 						$("#projectEndTW").hide();
@@ -81,7 +80,7 @@ define([
 					k=0;
 					data.Next.forEach(function(item){
 						k++;
-						$("#projectEndNW").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
+						$("#projectEndNW").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health-wrapper'><a href='javascript:;' class='center health"+item.health+"'></a></td></tr>");
 					});
 					if (data.Next.length===0){
 						$("#projectEndNW").hide();
@@ -93,7 +92,7 @@ define([
 					k=0;
 					data.Next2.forEach(function(item){
 						k++;
-						$("#projectEndN2W").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health'><div class='green'></div></td></tr>");
+						$("#projectEndN2W").find("tr").eq(0).after("<tr><td>"+k+"</td><td><a href='#easyErp/Employees/form/"+item.projectmanager._id+"'>"+item.projectmanager.name.first+" "+item.projectmanager.name.last+"</a></td><td><a href='#easyErp/Tasks/list/"+item._id+"'>"+item.projectName+"</a></td><td class='health-wrapper'><a href='javascript:;' class='center health"+item.health+"'></a></td></tr>");
 					});
 					if (data.Next2.length===0){
 						$("#projectEndN2W").hide();
