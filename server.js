@@ -1149,6 +1149,10 @@ app.get('/getForDdByRelatedUser', function (req, res) {
     requestHandler.getForDdByRelatedUser(req, res, data);
 });
 
+app.get('/Employees/form/:_id', function (req, res) {
+    requestHandler.getEmployeesById(req, res);
+});
+
 app.get('/Employees/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -1156,13 +1160,9 @@ app.get('/Employees/:viewType', function (req, res) {
     }
     var viewType = req.params.viewType;
     switch (viewType) {
-        case "form": requestHandler.getEmployeesByIdCustom(req, res, data);
-            break;
         case "list": requestHandler.getEmployeesFilter(req, res);
             break;
-        case "thumbnails": requestHandler.getEmployeesForThumbnails(req, res, data);
-            break;
-        default: requestHandler.getEmployeesCustom(req, res, data);
+        case "thumbnails": requestHandler.getEmployeesFilter(req, res);
             break;
     }
 

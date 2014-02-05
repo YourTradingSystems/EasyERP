@@ -157,6 +157,7 @@ define([
                     }
                 }
             },
+
             deleteItemsRender: function (deleteCounter, deletePage) {
                 this.deleteRender(deleteCounter, deletePage);
                 if (deleteCounter !== this.collectionLength) {
@@ -165,6 +166,7 @@ define([
                     created.before(new listItemView({ collection: this.collection }).render());
                 }
             },
+
             deleteItems: function () {
                 var that = this,
                     mid = 39,

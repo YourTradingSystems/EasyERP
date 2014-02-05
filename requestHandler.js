@@ -1247,23 +1247,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    // Custom function for list
-    function getEmployeesCustom(req, res, data) {
-        console.log("Requst getEmployeesCustom is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 42, function (access) {
-                console.log(access);
-                if (access) {
-                    employee.getEmployeeForCustom(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    }
     function uploadEmployeesFile(req, res, id, file) {
         console.log("File Uploading to app");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
@@ -1296,15 +1279,12 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
-    // Custom function for form
-    function getEmployeesByIdCustom(req, res, data) {
-        console.log('----------------}');
-        console.log(data);
+    // Get Employee form by employee id
+    function getEmployeesById(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 42, function (access) {
-                console.log(access);
                 if (access) {
-                    employee.getById(req, data, res);
+                    employee.getById(req, res);
                 } else {
                     res.send(403);
                 }
@@ -1468,25 +1448,8 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getEmployeesForThumbnails(req, res, data) {
-        console.log("Requst getApplications is success");
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 43, function (access) {
-                console.log(access);
-                if (access) {
-                    employee.getEmployeesForThumbnails(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
     function getEmployeesImages(req, res, data) {
-        console.log("Requst getApplications is success");
+        console.log("Requst getEmployeesImages is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 43, function (access) {
                 console.log(access);
@@ -2258,9 +2221,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getFilterJobPosition: getFilterJobPosition,
         getEmployees: getEmployees,
         getForDdByRelatedUser: getForDdByRelatedUser,
-        getEmployeesCustom: getEmployeesCustom,
-        getEmployeesForThumbnails: getEmployeesForThumbnails,
-        getEmployeesByIdCustom: getEmployeesByIdCustom,
+        getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
         updateEmployees: updateEmployees,
         getEmployeesAlphabet: getEmployeesAlphabet,
@@ -2296,7 +2257,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 		getCampaigns:getCampaigns,
         employeesTotalCollectionLength: employeesTotalCollectionLength,
         getEmployeesFilter: getEmployeesFilter,
-        getEmployeesForThumbnails: getEmployeesForThumbnails,
         uploadEmployeesFile: uploadEmployeesFile,
         getApplicationById: getApplicationById,
         getApplicationsForKanban: getApplicationsForKanban,

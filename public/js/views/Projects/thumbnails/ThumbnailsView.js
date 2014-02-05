@@ -13,7 +13,8 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         countPerPage: 0,
         template: _.template(thumbnailsItemTemplate),
         newCollection: true,
-
+        wfStatus: [],
+        
         initialize: function (options) {
             $(document).off("click");
             this.startTime = options.startTime;
@@ -22,6 +23,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             this.getTotalLength(this.countPerPage);
             this.render();
             this.asyncLoadImgs(this.collection);
+            _.bind(this.collection.showMore, this.collection);
         },
 
         events: {
@@ -35,7 +37,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             return false;
         },
 
-        hideItemsNumber: function (e) {
+        hide: function (e) {
            if (!$(e.target).closest(".filter-check-list").length) {
                 $(".allNumberPerPage").hide();
                 if ($(".filter-check-list").is(":visible")) {
@@ -50,19 +52,17 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             this.$el.find('.thumbnail').remove();
             this.startTime = new Date();
             var workflowIdArray = [];
-            _.bind(this.collection.showMore, this.collection);
             $('.filter-check-list input:checked').each(function () {
                 workflowIdArray.push($(this).val());
             })
             this.wfStatus = workflowIdArray;
-            this.countPerPage = 3;
-            this.collection.showMore({ count: this.countPerPage, page: 1, status: workflowIdArray });
+            this.countPerPage = 0;
+            this.collection.showMore({ count: 3, page: 1, status: workflowIdArray });
             this.newCollection = false;
-            this.getTotalLength(this.countPerPage);
         },
 
         getTotalLength: function (currentNumber) {
-            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, newCollection: this.newCollection }, function (response, context) {
+            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, status: this.wfStatus, newCollection: this.newCollection }, function (response, context) {
                 var showMore = context.$el.find('#showMoreDiv');
                 if (response.showMore) {
                     if (showMore.length === 0) {
@@ -104,7 +104,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
             });
             currentEl.append(createdInTag);
             $(document).on("click", function (e) {
-                self.hideItemsNumber(e);
+                self.hide(e);
             });
             return this;
         },
@@ -127,7 +127,7 @@ function (thumbnailsItemTemplate, editView, createView, dataService, currentMode
         },
 
         showMore: function () {
-            this.collection.showMore();
+            this.collection.showMore({ status: this.wfStatus });
         },
 
         showMoreContent: function (newModels) {

@@ -1,32 +1,24 @@
-<div class="inner">
-    <div class="dropDown">
-        <a href="javascript;">
-            <img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" />
-        </a>
-        <ul class="dropDownOpened" hidden="hidden">
-            <li>
-                <a href="javascript;" id="edit">Edit...</a>
-            </li>
-            <li>
-                <a href="javascript;" id="delete">Delete</a>
-            </li>            
-        </ul>
+    <% collection.forEach(function(employee){ %>
+    <div class="thumbnail" id="<%=employee._id%>">
+        <div class="inner">
+            <div class="avatar" style="line-height: 140px;>
+                <a href="javascript;" class="title gotoForm" title="<%=employee.name.first%> <%=employee.name.last%>">
+                    <img src="" /></a>
+            </div>
+        </div>
+        <div class="info">
+          <div>
+            <a class = "gotoForm title" href="javascript;" title="<%=employee.name.first%> <%=employee.name.last%>"><%=employee.name.first%> <%=employee.name.last%> <% if(employee.relatedUser) { %>
+                <span>(<%= employee.relatedUser.login %>)</span>
+                <% } else { %>
+                <span></span>
+                <% } %></a>
+          </div>
+            <p><%=(employee.jobPosition) ? employee.jobPosition.name : ''%></p>
+            <p><label>Age: </label><%=employee.age%>
+                <span>(<%= employee.dateBirth %>)</span>
+            </p>
+            <p><label>Tel: </label><a href="skype:<%=employee.workPhones.mobile%>?call"><%=employee.workPhones.mobile%></a></p>
+        </div>
     </div>
-    <div class="avatar" style="line-height: 140px;>
-        <a href="javascript;" class="title gotoForm" title="<%=name.first%> <%=name.last%>"><img src="<%=imageSrc%>" /></a>
-    </div>
-    <div class="info">
-	  <div>
-        <a class = "gotoForm title" href="javascript;" title="<%=name.first%> <%=name.last%>"><%=name.first%> <%=name.last%> <% if(relatedUser) { %>
-            <span>(<%= relatedUser.login %>)</span>
-            <% } else { %>
-            <span></span>
-            <% } %></a>
-	  </div>
-        <p><%=(jobPosition) ? jobPosition.name : ''%></p>
-        <p><label>Age: </label><%=age%>
-            <span>(<%= dateBirth %>)</span>
-        </p>
-        <p><label>Tel: </label><a href="skype:<%=workPhones.mobile%>?call"><%=workPhones.mobile%></a></p>
-    </div>
-</div>
+    <% }) %>
