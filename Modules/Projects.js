@@ -5,7 +5,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         projectShortDesc: { type: String, default: 'emptyProject' },
         projectName: { type: String, default: 'emptyProject' },
         task: [{ type: ObjectId, ref: 'Tasks', default: null }],
-        privacy: { type: String, default: 'All Users' },
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
         whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
@@ -23,7 +22,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             parent: { type: String, default: null }
         },
         workflow: { type: ObjectId, ref: 'workflows', default: null },
-        color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
@@ -67,7 +65,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         },
         workflow: { type: ObjectId, ref: 'workflows', default: null },
         type: { type: String, default: '' },
-        color: { type: String, default: '#4d5a75' },
         estimated: { type: Number, default: 0 },
         logged: { type: Number, default: 0 },
         remaining: { type: Number, default: 0 },
@@ -392,12 +389,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
                     if (data.task) {
                         _project.task = data.task;
-                    }
-                    if (data.color) {
-                        _project.color = data.color;
-                    }
-                    if (data.privacy) {
-                        _project.privacy = data.privacy;
                     }
                     if (data.groups) {
                         _project.groups = data.groups;
@@ -941,7 +932,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             });
     }
 
-    function get(req, data, response, next) {
+    function get(req, data, response) {
         var res = {};
         res['data'] = [];
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
@@ -1045,96 +1036,96 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         });
     };
 
-    function getListLength(req, data, response) {
-        var res = {};
-        var addObj = {};
-        if (data.parrentContentId) {
-            addObj['_id'] = newObjectId(data.parrentContentId);
-        }
-        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
-            {
-                $match: {
-                    users: newObjectId(req.session.uId)
-                }
-            }, {
-                $project: {
-                    _id: 1
-                }
-            },
-            function (err, deps) {
-                if (!err) {
-                    var arrOfObjectId = deps.objectID();
-                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
-                        {
-                            $match: {
-                                $and: [
-                                    addObj,
-                                    {
-                                        $or: [
-                                            {
-                                                $or: [
-                                                    {
-                                                        $and: [
-                                                            { whoCanRW: 'group' },
-                                                            { 'groups.users': newObjectId(req.session.uId) }
-                                                        ]
-                                                    },
-                                                    {
-                                                        $and: [
-                                                            { whoCanRW: 'group' },
-                                                            { 'groups.group': { $in: arrOfObjectId } }
-                                                        ]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                $and: [
-                                                    { whoCanRW: 'owner' },
-                                                    { 'groups.owner': newObjectId(req.session.uId) }
-                                                ]
-                                            },
-                                            { whoCanRW: "everyOne" }
-                                        ]
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            $project: {
-                                _id: 1
-                            }
-                        },
-                        function (err, projectsId) {
-                            console.log('============ projectsId ===================');
-                            console.log(projectsId);
-                            if (!err) {
-                                if (data.type == 'Tasks') {
-                                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
-                                        where('project').in(projectsId.objectID()).
-                                        select("_id").
-                                        exec(function (err, result) {
-                                            if (!err) {
-                                                res['listLength'] = result.length;
-                                                response.send(res);
-                                            } else {
-                                                logWriter.log("Projects.js getListLength task.find" + err);
-                                                response.send(500, { error: "Can't find Tasks" });
-                                            }
-                                        })
-                                } else {
-                                    res['listLength'] = projectsId.length;
-                                    response.send(res);
-                                }
-                            } else {
-                                logWriter.log("Projects.js getListLength task.find " + err);
-                                response.send(500, { error: "Can't find projects" });
-                            }
-                        });
-                } else {
-                    console.log(err);
-                }
-            });
-    };
+    //function getListLength(req, data, response) {
+    //    var res = {};
+    //    var addObj = {};
+    //    if (data.parrentContentId) {
+    //        addObj['_id'] = newObjectId(data.parrentContentId);
+    //    }
+    //    models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
+    //        {
+    //            $match: {
+    //                users: newObjectId(req.session.uId)
+    //            }
+    //        }, {
+    //            $project: {
+    //                _id: 1
+    //            }
+    //        },
+    //        function (err, deps) {
+    //            if (!err) {
+    //                var arrOfObjectId = deps.objectID();
+    //                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
+    //                    {
+    //                        $match: {
+    //                            $and: [
+    //                                addObj,
+    //                                {
+    //                                    $or: [
+    //                                        {
+    //                                            $or: [
+    //                                                {
+    //                                                    $and: [
+    //                                                        { whoCanRW: 'group' },
+    //                                                        { 'groups.users': newObjectId(req.session.uId) }
+    //                                                    ]
+    //                                                },
+    //                                                {
+    //                                                    $and: [
+    //                                                        { whoCanRW: 'group' },
+    //                                                        { 'groups.group': { $in: arrOfObjectId } }
+    //                                                    ]
+    //                                                }
+    //                                            ]
+    //                                        },
+    //                                        {
+    //                                            $and: [
+    //                                                { whoCanRW: 'owner' },
+    //                                                { 'groups.owner': newObjectId(req.session.uId) }
+    //                                            ]
+    //                                        },
+    //                                        { whoCanRW: "everyOne" }
+    //                                    ]
+    //                                }
+    //                            ]
+    //                        }
+    //                    },
+    //                    {
+    //                        $project: {
+    //                            _id: 1
+    //                        }
+    //                    },
+    //                    function (err, projectsId) {
+    //                        console.log('============ projectsId ===================');
+    //                        console.log(projectsId);
+    //                        if (!err) {
+    //                            if (data.type == 'Tasks') {
+    //                                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
+    //                                    where('project').in(projectsId.objectID()).
+    //                                    select("_id").
+    //                                    exec(function (err, result) {
+    //                                        if (!err) {
+    //                                            res['listLength'] = result.length;
+    //                                            response.send(res);
+    //                                        } else {
+    //                                            logWriter.log("Projects.js getListLength task.find" + err);
+    //                                            response.send(500, { error: "Can't find Tasks" });
+    //                                        }
+    //                                    })
+    //                            } else {
+    //                                res['listLength'] = projectsId.length;
+    //                                response.send(res);
+    //                            }
+    //                        } else {
+    //                            logWriter.log("Projects.js getListLength task.find " + err);
+    //                            response.send(500, { error: "Can't find projects" });
+    //                        }
+    //                    });
+    //            } else {
+    //                console.log(err);
+    //            }
+    //        });
+    //};
 
     function getTotalCount(req, response) {
         var res = {};
@@ -2273,11 +2264,11 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
         get: get,
 
-        getListLength: getListLength,
+        //getListLength: getListLength,
 
         getTotalCount: getTotalCount,
 
-        getCollectionLengthByWorkflows: getCollectionLengthByWorkflows,
+        getCollectionLengthByWorkflows: getCollectionLengthByWorkflows,//For Kanban
 
         getProjectsForList: getProjectsForList,
 
@@ -2287,13 +2278,13 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
         getProjectByEndDateForDashboard: getProjectByEndDateForDashboard,
 
-        getById: getById,
+        getById: getById,//For Ediit View
 
         update: update,
 
-        updateOnlySelectedFields: updateOnlySelectedFields,
+        updateOnlySelectedFields: updateOnlySelectedFields,//Patch method
 
-        taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,
+        taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,//Patch Method
 
         remove: remove,
 
