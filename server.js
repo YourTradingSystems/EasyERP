@@ -1582,7 +1582,7 @@ app.get('/:id', function (req, res) {
 	if (!isNaN(parseFloat(id))){
 		requestHandler.redirectFromModuleId(req, res, id);
 	}else{
-		res.send(500)
+		res.send(500);
 	}
 });
 app.listen(8088);

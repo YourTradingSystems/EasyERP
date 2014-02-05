@@ -65,7 +65,6 @@ define([
 						$("#loginPanel .iconEmployee").attr("src",response.imageSrc);
 						$("#loginPanel  #userName").text(response.login);
 					}
-					console.log(response);
                 }, this);
 				this.$el.html(_.template(MainTemplate));
 
