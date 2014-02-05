@@ -1579,7 +1579,11 @@ app.get('/ChangeSyncCalendar', function (req, res) {
 });
 app.get('/:id', function (req, res) {
     var id = req.param('id');
-    requestHandler.redirectFromModuleId(req, res, id);
+	if (!isNaN(parseFloat(id))){
+		requestHandler.redirectFromModuleId(req, res, id);
+	}else{
+		res.send(500)
+	}
 });
 app.listen(8088);
 

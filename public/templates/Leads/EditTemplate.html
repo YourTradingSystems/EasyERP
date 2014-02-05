@@ -37,10 +37,10 @@
                             <dt><label for="salesPerson">Salesperson</label></dt><dd>
 							<a id="salesPerson" data-id="<%=model.salesPerson?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=model.salesPerson?(model.salesPerson.name.first+' '+model.salesPerson.name.last):'Select'%></a>
 							</dd>
-                            <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd>
+<!--                            <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd>
 							<a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
-							</dd>
-                            <dt><label for="selectWorkflow">Workflow </label></dt><dd id="selectWorkflow">
+							</dd>-->
+                            <dt><label for="selectWorkflow">Status </label></dt><dd id="selectWorkflow">
 							<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
 							</dd>
 

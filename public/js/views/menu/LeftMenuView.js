@@ -58,7 +58,6 @@ define([
                 var root = this.collection.root();
                 if (this.currentSection == null)
                     this.currentSection = root[0].get('mname');
-
                 for (var i = 0, len = root.length; i < len; i++) {
                     if (root[i].get('mname') == this.currentSection) {
                         currentModule = root[i];
@@ -67,9 +66,9 @@ define([
                 }
                 if (currentModule == null) currentModule = root[0];
                 var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
-                var currentSelElem = document.getElementById(selectedId);
+                var currentSelElem =document.getElementById(selectedId);
                 if ($(currentSelElem).length == 0) {
-                    currentSelElem = document.getElementById(this.lastClickedLeftMenuItem);
+                    currentSelElem = $(this.lastClickedLeftMenuItem);
                 }
                 $(currentSelElem).closest("ul").find(".selected").removeClass("selected");
                 $(currentSelElem).addClass('selected');
@@ -121,7 +120,7 @@ define([
                     var html = this.renderMenuItem(model);
                     $dom.append(html);
                     var kids = this.collection.children(model);
-                    $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
+//                    $dom.find(':last').append(this.renderMenu(kids, onMouseOver));
                 }, this);
                 var clickEl = $dom.find('a')[0];
 
@@ -144,6 +143,7 @@ define([
                     $(clickEl).click();
                 }
                 this.currentChildren = null;
+
                 return $dom;
             },
 

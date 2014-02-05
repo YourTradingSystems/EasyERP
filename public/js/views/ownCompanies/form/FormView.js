@@ -8,7 +8,7 @@ define([
     "dataService",
     'views/Notes/NoteView',
     'text!templates/Notes/AddNote.html',
-    'views/Opportunities/CreateView',
+	'views/Opportunities/CreateView',
     'views/Persons/CreateView',
     'text!templates/Notes/AddAttachments.html'
 ],
@@ -33,7 +33,7 @@ define([
 				var formModel = this.formModel.toJSON();
 				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",null, formModel._id,this.pageMini,this.pageCount,true,function(count){
 					self.allMiniOpp = count.listLength;
-					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
+					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount);
 					if (self.allPages == self.pageMini){
 						$(".miniPagination .next").addClass("not-active");
 						$(".miniPagination .last").addClass("not-active");
@@ -122,10 +122,10 @@ define([
 			},
 			renderMiniPersons:function(){
 				var self = this;
-            	var formModel = this.formModel.toJSON();
+				var formModel = this.formModel.toJSON();
 				$("#persons").closest(".form").remove();
 				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,false,function(collection){
-					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false
+					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false;
 					self.$el.find('.formRightColumn').append(
                         new personsCompactContentView({
                             collection: collection.data,
@@ -179,7 +179,7 @@ define([
             },
             
             addOpportunities: function (e) {
-            	e.preventDefault();
+				e.preventDefault();
             	var model = this.formModel.toJSON();
             	new CreateViewOpportunities({model:model});
             },
@@ -190,7 +190,7 @@ define([
             	new CreateViewPersons({model:model});
             },
             
-            removeEdit: function (e) {
+            removeEdit: function () {
                 $('#editSpan').remove();
             },
             
@@ -276,13 +276,13 @@ define([
                 var notes = currentModel.get('notes');
 
                 switch (type) {
-                    case "edit": {
-                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                case "edit": {
+					$('#noteArea').val($('#' + id_int).find('.noteText').text());
                         $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
                         $('#getNoteKey').attr("value", id_int);
                         break;
                     }
-                    case "del": {
+                case "del": {
                         var newNotes = _.filter(notes, function (note) {
                             if (note._id != id_int) {
                                 return note;
