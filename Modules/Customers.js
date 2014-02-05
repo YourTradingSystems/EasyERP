@@ -687,6 +687,39 @@
                 })
         },
 
+        getCustomersImages: function (req, res) {
+            var data = {};
+            for (var i in req.query) {
+                data[i] = req.query[i];
+            }
+            var optionsObject = {};
+
+            var contentType = data.contentType;
+            switch (contentType) {
+                case ('Persons'): {
+                    optionsObject['type'] = 'Person';
+                }
+                    break;
+                case ('Companies'): {
+                    optionsObject['type'] = 'Company';
+                }
+                    break;
+                case ('ownCompanies'): {
+                    optionsObject['type'] = 'Company';
+                    optionsObject['isOwn'] = true;
+                }
+                    break;
+            }
+
+            var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find(optionsObject);
+            query.where('_id').in(data.ids).
+                select('_id imageSrc').
+                exec(function (error, response) {
+                    res.send(200,{data:response});
+                });
+
+        },
+
         getFilterCustomers: function (req, response) {
             var data = {};
             for (var i in req.query) {
