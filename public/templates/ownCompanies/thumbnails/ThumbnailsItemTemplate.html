@@ -1,5 +1,5 @@
 <% collection.forEach(function(ownCompanies){ %>
-<div class="inner thumbnailwithavatar">
+<div class="inner thumbnailwithavatar" id="<%=ownCompanies._id%>">
     <!--  <div class="dropDown">
           <a href="javascript;">
               <img hidden="hidden" src="./images/downCircleBlack.png" alt="Down" />
@@ -47,7 +47,9 @@
               </li>-->
     <!--    </ul>
     </div>-->
-	<div class="avatar" style="line-height: 140px;><a href="javascript;" class = "gotoForm" title="<%=ownCompanies.name.first%>"><img src="<%=ownCompanies.imageSrc%>"/></a></div>
+	<div class="avatar" style="line-height: 140px;><a href="javascript;" class = "gotoForm" title="<%=ownCompanies.name.first%>">
+        <img src=""/>
+    </a></div>
     <div class="info">
 	  <div>
         <a class="title gotoForm" title="<%=name.first%>" href="javascript;" data-id="<%=ownCompanies._id%>"><%=ownCompanies.name.first%></a>

@@ -13,7 +13,6 @@
             el: '#content-holder',
             countPerPage: 0,
             template: _.template(thumbnailsItemTemplate),
-            checkClearView: null,
 
             initialize: function (options) {
                 this.startTime = options.startTime;
@@ -57,19 +56,17 @@
 
             alpabeticalRender: function (e) {
                 this.startTime = new Date();
-                $(e.target).parent().find(".current").removeClass("current");
-                $(e.target).addClass("current");
-                this.selectedLetter = $(e.target).text();
-                if ($(e.target).text() == "All") {
+                var target = $(e.target);
+                target.parent().find(".current").removeClass("current");
+                target.addClass("current");
+                this.selectedLetter = target.text();
+                if (target.text() == "All") {
                     this.selectedLetter = "";
                 }
-                this.checkClearView = true;
-                this.collection.showMore({ page: 1, letter: this.selectedLetter });
-                this.getTotalLength(null);
+                this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
             },
 
             render: function () {
-                _.bind(this.collection.showMore, this.collection);
                 var self = this;
                 var currentEl = this.$el;
                 var createdInTag = "<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>";
@@ -86,7 +83,6 @@
                 } else {
                     currentEl.html('<h2>No Employees found</h2>');
                 }
-                currentEl.append('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
                 currentEl.append(createdInTag);
                 return this;
             },
@@ -110,23 +106,39 @@
             },
 
             showMore: function () {
+                this.startTime = new Date();
                 this.collection.showMore({letter: this.selectedLetter });
             },
 
             showMoreContent: function (newModels) {
                 var holder = this.$el;
-                if (this.checkClearView) {
-                    this.checkClearView = null;
-                    $('.thumbnailwithavatar').remove();
-                    this.countPerPage = 0;
-                    this.collection.page = 1;
-                }
                 this.countPerPage += newModels.length;
                 var showMore = holder.find('#showMoreDiv');
                 var created = holder.find('#timeRecivingDataFromServer');
                 this.getTotalLength(this.countPerPage);
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
                 showMore.before(this.template({ collection: this.collection.toJSON() }));
                 showMore.after(created);
+                this.asyncLoadImgs(newModels);
+            },
+
+            showMoreAlphabet: function (newModels) {
+                var holder = this.$el;
+                var alphaBet = holder.find('#startLetter');
+                var created = holder.find('#timeRecivingDataFromServer');
+                var showMore = holder.find('#showMoreDiv');
+                var content = holder.find(".thumbnailwithavatar");
+                var countPerPage = this.countPerPage = newModels.length;
+
+                content.remove();
+
+                holder.append(this.template({ collection: newModels.toJSON() }));
+
+                this.getTotalLength(countPerPage);
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
+                holder.prepend(alphaBet);
+                holder.append(created);
+                created.before(showMore);
                 this.asyncLoadImgs(newModels);
             },
 

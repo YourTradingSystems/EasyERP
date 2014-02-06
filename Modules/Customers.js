@@ -823,7 +823,8 @@
                                                 }
                                                     break;
                                                 case ('thumbnails'): {
-                                                    query.populate('company', '_id name').
+                                                    query.select("_id name email").
+                                                        populate('company', '_id name').
                                                         populate('department', '_id departmentName').
                                                         populate('createdBy.user').
                                                         populate('editedBy.user');

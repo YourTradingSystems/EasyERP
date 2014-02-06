@@ -22,6 +22,8 @@
                 this.countPerPage = options.collection.length;
                 this.getTotalLength(this.countPerPage);
                 this.render();
+                this.asyncLoadImgs(this.collection);
+                _.bind(this.collection.showMore, this.collection);
             },
 
             events: {
@@ -47,7 +49,15 @@
                 }, this);
             },
 
+            asyncLoadImgs: function (collection) {
+                var ids = _.map(collection.toJSON(), function (item) {
+                    return item._id;
+                });
+                common.getImages(ids, "/getCustomersImages");
+            },
+
             alpabeticalRender: function (e) {
+                this.startTime = new Date();
                 var target = $(e.target);
                 target.parent().find(".current").removeClass("current");
                 target.addClass("current");
@@ -96,7 +106,7 @@
             },
 
             showMore: function () {
-                _.bind(this.collection.showMore, this.collection);
+                this.startTime = new Date();
                 this.collection.showMore({ letter: this.selectedLetter  });
             },
 
@@ -107,7 +117,9 @@
                 var created = holder.find('#timeRecivingDataFromServer');
                 this.getTotalLength(this.countPerPage);
                 showMore.before(this.template({ collection: this.collection.toJSON() }));
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
                 showMore.after(created);
+                this.asyncLoadImgs(newModels);
             },
 
             showMoreAlphabet: function (newModels) {
@@ -123,10 +135,11 @@
                 holder.append(this.template({ collection: newModels.toJSON() }));
 
                 this.getTotalLength(countPerPage);
-
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
                 holder.prepend(alphaBet);
                 holder.append(created);
                 created.before(showMore);
+                this.asyncLoadImgs(newModels);
             },
 
             createItem: function () {
