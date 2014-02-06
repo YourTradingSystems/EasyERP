@@ -2283,13 +2283,13 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
         getProjectByEndDateForDashboard: getProjectByEndDateForDashboard,
 
-        getById: getById,//For Ediit View
+        getById: getById,//For Project Ediit View
 
         update: update,
 
-        updateOnlySelectedFields: updateOnlySelectedFields,//Patch method
+        updateOnlySelectedFields: updateOnlySelectedFields,//Project Patch method
 
-        taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,//Patch Method
+        taskUpdateOnlySelectedFields: taskUpdateOnlySelectedFields,//Tasks Patch Method
 
         remove: remove,
 
