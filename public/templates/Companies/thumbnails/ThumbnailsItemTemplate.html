@@ -1,20 +1,20 @@
 <% collection.forEach(function(company){ %>
-<div class="inner thumbnailwithavatar">
-	<div class="avatar" style="line-height: 140px;">
+<div class="inner thumbnailwithavatar" id="<%=company._id%>">
+    <div class="avatar" style="line-height: 140px;">
         <a href="javascript;" class = "gotoForm" title="<%=company.name.first%>" data-id="<%=company._id%>">
-            <img src="<%=company.imageSrc%>"/>
+            <img src=""/>
         </a>
     </div>
     <div class="info">
-	  <div>
+      <div>
         <a class="title gotoForm" title="<%=company.name.first%>" href="javascript;" data-id="<%=company._id%>"><%=company.name.first%></a>
-	  </div>
-	  <div>
+      </div>
+      <div>
         <p><%=company.address.city%></p>
-	  </div>
-	  <div>
+      </div>
+      <div>
         <p><%=company.address.country%></p>
-	  </div>
+      </div>
 
     </div>
 </div>

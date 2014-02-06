@@ -557,10 +557,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     };
 
     function getFilter(req, response) {
+
         var data = {};
         for (var i in req.query) {
             data[i] = req.query[i];
         }
+
         var viewType = data.viewType;
         var contentType = data.contentType;
         var res = {};
@@ -1096,7 +1098,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
         getApplications: getApplications,
 
-		getApplicationsForKanban: getApplicationsForKanban,
+		getApplicationsForKanban:getApplicationsForKanban,
 
 		getEmployeesImages: getEmployeesImages,
 

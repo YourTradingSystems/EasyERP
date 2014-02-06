@@ -22,12 +22,21 @@
                 this.countPerPage = options.collection.length;
                 this.getTotalLength(this.countPerPage);
                 this.render();
+                this.asyncLoadImgs(this.collection);
+                _.bind(this.collection.showMore, this.collection);
             },
 
             events: {
                 "click #showMore": "showMore",
                 "click .letter:not(.empty)": "alpabeticalRender",
                 "click .gotoForm": "gotoForm"
+            },
+
+            asyncLoadImgs: function (collection) {
+                var ids = _.map(collection.toJSON(), function (item) {
+                    return item._id;
+                });
+                common.getImages(ids, "/getCustomersImages");
             },
 
             getTotalLength: function(currentNumber) {
@@ -47,6 +56,7 @@
             },
 
             alpabeticalRender: function (e) {
+                this.startTime = new Date();
                 var target = $(e.target);
                 target.parent().find(".current").removeClass("current");
                 target.addClass("current");
@@ -69,12 +79,12 @@
                 var currentEl = this.$el;
 
                 currentEl.html('');
+
                 if (this.collection.length > 0) {
                     currentEl.append(this.template({ collection: this.collection.toJSON() }));
                 } else {
                     currentEl.html('<h2>No companies found</h2>');
                 }
-
                 common.buildAphabeticArray(this.collection, function (arr) {
                     $("#startLetter").remove();
                     self.alphabeticArray = arr;
@@ -84,13 +94,12 @@
                         allAlphabeticArray: self.allAlphabeticArray
                     }));
                 });
-
                 currentEl.append(createdInTag);
                 return this;
             },
 
             showMore: function () {
-                _.bind(this.collection.showMore, this.collection);
+                this.startTime = new Date();
                 this.collection.showMore({ letter: this.selectedLetter  });
             },
 
@@ -99,9 +108,11 @@
                 this.countPerPage += newModels.length;
                 var showMore = holder.find('#showMoreDiv');
                 var created = holder.find('#timeRecivingDataFromServer');
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
                 this.getTotalLength(this.countPerPage);
                 showMore.before(this.template({ collection: this.collection.toJSON() }));
                 showMore.after(created);
+                this.asyncLoadImgs(newModels);
             },
 
             showMoreAlphabet: function (newModels) {
@@ -117,10 +128,11 @@
                 holder.append(this.template({ collection: newModels.toJSON() }));
 
                 this.getTotalLength(countPerPage);
-
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
                 holder.prepend(alphaBet);
                 holder.append(created);
                 created.before(showMore);
+                this.asyncLoadImgs(newModels);
             },
 
             createItem: function () {
