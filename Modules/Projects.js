@@ -1618,12 +1618,15 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         delete data.createdBy;
 
         data.remaining = data.estimated - data.logged;
-        data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-        if (data.estimated != 0) {
+		if (data.extrainfo)
+			data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+        if (data.estimated != 0&&data.extrainfo) {
             data.progress = Math.round((data.logged / data.estimated) * 100);
             var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
+		if (data.extrainfo){
             data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
             data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+		}
         }
         if (data.project && data.project._id) {
             data.project = data.project._id;

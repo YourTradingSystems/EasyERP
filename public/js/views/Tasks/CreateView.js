@@ -255,7 +255,11 @@ define([
                            }
                        }
                    });
-                   populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, false, false, projectID);
+				   if (projectID){
+					   populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, false, false, projectID);
+				   }else{
+					   populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, true);
+				   }
                    populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Tasks" }, "name", this, true);
                    populate.get2name("#assignedToDd", "/getPersonsForDd", {}, this, true);
                    populate.getPriority("#priorityDd", this, true);
