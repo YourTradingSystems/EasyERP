@@ -74,7 +74,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         campaign: { type: String, default: '' },
         source: { type: String, default: '' },
         isConverted: { type: Boolean, default: false },
-        convertedDate: { type: Date, default: Date.now }
+        convertedDate: { type: Date, default: Date.now },
     }, { collection: 'Opportunities' });
 
     mongoose.model('Opportunities', opportunitiesSchema);
@@ -958,7 +958,19 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
             });
     }
-
+	function updateSequence(start,end,workflow,callback){
+		var inc = -1;
+		if (start>end){
+			inc = 1;
+			var c = end;
+			end = start;
+			start = c;
+		}
+		var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({"workflow":workflow,sequence:{$gt:start, $lte:end}},{$inc:{sequence:inc}});
+		query.exec(function(err,res){
+			if (callback)callback();
+		});
+	}
     function getFilterOpportunitiesForKanban(req, data, response) {
         var res = {};
         res['data'] = [];
@@ -1027,11 +1039,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 console.log(responseOpportunities.length);
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).
                                 where('_id').in(responseOpportunities).
-								select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue").
+								select("_id customer salesPerson workflow editedBy.date name nextAction expectedRevenue info.sequence").
                                 populate('customer', 'name').
                                 populate('salesPerson', 'name').
                                 populate('workflow', '_id').
-								sort({ 'editedBy.date': -1 }).
+								sort({ 'info.sequence': 1 }).
                                 limit(req.session.kanbanSettings.opportunities.countPerPage).
                                 exec(function (err, result) {
                                     if (!err) {
