@@ -25,7 +25,7 @@ var Profile = function (logWriter, mongoose, models) {
                 res.send(400, { error: 'Profile.create Incorrect Incoming Data' });
                 return;
             } else {
-//                console.log(data);
+//                
                 models.get(req.session.lastDb - 1, "Profile", ProfileSchema).find({ profileName: data.profileName }, function (error, doc) {
                     try {
                         if (error) {

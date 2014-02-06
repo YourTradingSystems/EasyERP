@@ -331,7 +331,7 @@ var Events = function (logWriter, mongoose, googleModule, models) {
                 _calendar.timeZone = data.timeZone;
             }
             _calendar.save(function (err, result) {
-                console.log(result);
+                
                 try {
                     if (err) {
                         console.log(err);
@@ -491,10 +491,10 @@ var Events = function (logWriter, mongoose, googleModule, models) {
     }; //end get
 
     function update(req, id, data, res) {
-        //console.log(data);
+        //
         try {
             console.log("update");
-            console.log(data);
+            
             console.log(id);
             delete data._id;
             var _id = "";

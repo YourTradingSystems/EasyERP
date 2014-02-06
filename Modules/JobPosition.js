@@ -266,7 +266,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                 res['data'] = result;
                 response.send(res);
                 //getTotalEmployees(result, 0);
-                //console.log(res);
+                //
                 //response.send(res);
             }
         });
@@ -308,7 +308,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                 //res['data'] = result;
                 //response.send(res);
                 getTotalEmployees(jobPos, 0);
-                //console.log(res);
+                //
                 //response.send(res);
             }
         });
@@ -375,7 +375,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).aggregate(
                         {
                             $match: {
@@ -612,7 +612,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
         try {
             delete data._id;
             delete data.createdBy;
-            console.log(data);
+            
             if (data.workflow.status === 'New') {
                 data.expectedRecruitment = 0;
             } else {
@@ -620,7 +620,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                     ++data.expectedRecruitment;
                 }
             }
-            console.log(data);
+            
             if (data.department && data.department._id) {
                 data.department = data.department._id;
             }
