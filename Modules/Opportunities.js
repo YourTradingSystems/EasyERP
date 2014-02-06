@@ -752,7 +752,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     $set: {
                         workflow: data.workflow
                     }
-                }
+                };
             }
 
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
@@ -841,6 +841,78 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             res.send(500, { error: 'Opportunities updated error' });
         }
     };// end update
+
+	function updateSequence(req, start, end, workflow, callback){
+		var inc = -1;
+		if (start>end){
+			inc = 1;
+			var c = end;
+			end = start;
+			start = c;
+		}
+		console.log(end);
+		console.log(inc);
+		var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({"workflow":workflow,"info.sequence":{$gte:start, $lte:end}},{$inc:{"info.sequence":inc}},{ multi: true });
+		query.exec(function(err,res){
+			console.log(err);
+			console.log(res);
+
+			if (callback)callback();
+		});
+	}
+
+	function updateSequenceBetwenWorkflow(req, start, end, workflowStart, workflowEnd, callback){
+		var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({"workflow":workflowStart,"info.sequence":{$gt:start}},{$inc:{"info.sequence":-1}},{ multi: true });
+		query.exec();
+		query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({"workflow":workflowEnd,"info.sequence":{$gte:end}},{$inc:{"info.sequence":1}},{ multi: true });
+		query.exec(function(err,res){
+			if (callback)callback();
+		});
+
+	}
+
+
+    function updateOnlySelectedFields(req, _id, data, res) {
+		var opp = data;
+		if (opp.workflow === opp.workflowStart){
+			if (opp.sequence>opp.sequenceStart)opp.sequence-=1;
+			updateSequence(req, opp.sequenceStart, opp.sequence, opp.workflow, function(){
+				delete opp.sequenceStart;
+				delete opp.workflowEnd;
+				opp.info = {};
+				opp.info.sequence = opp.sequence;
+				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, opp, function (err, result) {
+                    if (!err) {
+                        res.send(200);
+                    } else {
+                        res.send(500, { error: "Can't update Opportunitie" });
+                    }
+					
+				});
+			});
+		}else{
+			console.log("zishlo");
+			updateSequenceBetwenWorkflow(req, opp.sequenceStart, opp.sequence,opp.workflowStart, opp.workflow, function(){
+				delete opp.sequenceStart;
+				delete opp.workflowEnd;
+				opp.info = {};
+				opp.info.sequence = opp.sequence;
+				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, opp, function (err, result) {
+                    if (!err) {
+                        res.send(200);
+                    } else {
+                        res.send(500, { error: "Can't update Opportunitie" });
+                    }
+					
+				});
+			});
+			
+		}
+/*        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
+		
+		});
+*/
+    }
 
     function getFilterOpportunitiesForMiniView(req, data, response) {
         var res = {};
@@ -958,19 +1030,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
             });
     }
-	function updateSequence(start,end,workflow,callback){
-		var inc = -1;
-		if (start>end){
-			inc = 1;
-			var c = end;
-			end = start;
-			start = c;
-		}
-		var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({"workflow":workflow,sequence:{$gt:start, $lte:end}},{$inc:{sequence:inc}});
-		query.exec(function(err,res){
-			if (callback)callback();
-		});
-	}
+
     function getFilterOpportunitiesForKanban(req, data, response) {
         var res = {};
         res['data'] = [];
@@ -1183,6 +1243,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         getLeadsForChart: getLeadsForChart,
 
         update: update,
+
+		updateOnlySelectedFields: updateOnlySelectedFields,
 
         remove: remove
     }

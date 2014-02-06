@@ -525,7 +525,7 @@ define([
 							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(4).text(self.$el.find("#StartDate").val());
 							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).text(self.$el.find("#EndDate").val());
 							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(6).text(self.$el.find("#EndDateTarget").val());
-							if (new Date(self.$el.find("#EndDate").val())<new Date(self.$el.find("#EndDateTarget").val())){
+							if (new Date(self.$el.find("#EndDate").val())>new Date(self.$el.find("#EndDateTarget").val())){
 								$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).addClass("red-border");
 							}
 							else{
