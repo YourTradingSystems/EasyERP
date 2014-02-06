@@ -1,6 +1,5 @@
 define([
-        "text!templates/Opportunities/kanban/KanbanItemTemplate.html",
-        "common"
+        "text!templates/Opportunities/kanban/KanbanItemTemplate.html"
 ],
     function (KanbanItemTemplate) {
         var OpportunitiesItemView = Backbone.View.extend({

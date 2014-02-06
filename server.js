@@ -28,7 +28,7 @@ mainDb.once('open', function callback() {
     var main = mainDb.model('easyErpDBS', mainDBSchema);
     main.find().exec(function (err, result) {
         if (!err) {
-            console.log(result);
+            
             result.forEach(function (_db, index) {
                 var dbInfo = {
                     DBname: '',
@@ -952,7 +952,7 @@ app.put('/Workflows/:_id', function (req, res) {
     data.status = req.body.status;
     data.name = req.body.name;
     data.wName = req.body.wName;
-    //console.log(data);
+    //
     requestHandler.updateWorkflow(req, res, _id, data);
 });
 

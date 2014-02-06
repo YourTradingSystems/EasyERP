@@ -350,7 +350,7 @@
                                 logWriter.log("Person.js create savetoBd _customer.save " + err);
                                 res.send(500, { error: 'Person.save BD error' });
                             } else {
-                                console.log(result);
+                                
                                 res.send(201, { success: 'A new Person crate success' });
                             }
                         });
@@ -628,7 +628,7 @@
                 function (err, deps) {
                     if (!err) {
                         var arrOfObjectId = deps.objectID();
-                        console.log(arrOfObjectId);
+                        
                         models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
                             {
                                 $match: {
@@ -766,7 +766,7 @@
                 function (err, deps) {
                     if (!err) {
                         var arrOfObjectId = deps.objectID();
-                        console.log(arrOfObjectId);
+                        
                         models.get(req.session.lastDb - 1, "Customers", customerSchema).aggregate(
                             {
                                 $match: {
@@ -1136,7 +1136,7 @@
 				obj.author = req.session.uName;
 				data.notes[data.notes.length - 1] = obj;
 			}
-			 console.log(data);
+			 
 			models.get(req.session.lastDb - 1, 'Customers', customerSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, tasks) {
 				if (err) {
 					console.log(err);

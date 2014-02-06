@@ -619,7 +619,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     };
 
     function getProjectsById(req, res, data) {
-        console.log(data);
+        
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 39, function (access) {
                 if (access) {
@@ -897,7 +897,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getWorkflowsForDd is Success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             console.log('<<<<<<<<<<<<>>>>>>>>>>>');
-            console.log(data);
+            
             console.log('<<<<<<<<<<<>>>>>>>>>>>>>');
             workflow.getWorkflowsForDd(req, data, res);
         } else {
@@ -1742,7 +1742,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function createLead(req, res, data) {
         console.log(req.session);
-        console.log(data);
+        
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             data.lead.uId = req.session.uId;
             access.getEditWritAccess(req, req.session.uId, 24, function (access) {

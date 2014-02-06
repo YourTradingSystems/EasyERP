@@ -473,7 +473,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
                         {
                             $match: {
@@ -592,7 +592,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
                         {
                             $match: {
@@ -785,7 +785,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
                         {
                             $match: {

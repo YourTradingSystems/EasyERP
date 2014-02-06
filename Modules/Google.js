@@ -80,7 +80,7 @@
 											function (err, result) {
 												if (result) {
 													checkAsGoogle(item._id,result.id);
-													console.log(result);
+													
 												} else {
 													console.log(err);
 												};
@@ -216,7 +216,7 @@
                             client.calendar.events.list({ calendarId: id }).withAuthClient(oauth2Client).execute(
                                 function (err, events) {
                                     if (events) {
-                                        //console.log(result);
+                                        //
                                         result.items = events.items;
 										result.isSync = true;
                                         calendars.push(result);

@@ -1,41 +1,19 @@
-<div class="inner" id="<%=model._id%>" data-id="<%=model._id%>">
+<div class="inner" data-id="<%=model._id%>">
     <div class="task-header">
         <div class="right">
-          <p class="right bold"><%=model.deadline%></p>
+            <p class="right bold"><%=model.deadline%></p>
         </div>
 
-      <div class="left">
-        <div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
-        <div class="taskSelect left">
-		  <a id="priority<%=model._id%>" data-id="<%=model.extrainfo.priority%>" class="current-selected" href="javascript:;"><%=model.extrainfo.priority%></a>
-		</div>
-	  </div>
-        <div class="dropDown">
-            <a href="#">
-                <img src="./images/downCircleWhite.png" alt="Down" hidden="hidden" />
-            </a>
-            <ul class="dropDownOpened" hidden="hidden">
-                <li>
-                    <a href="#" id="edit">Edit...</a>
-                </li>
-                <li>
-                    <a href="#" id="delete">Delete</a>
-                </li>
-                <li>
-                    <ul class="colorPicker">
-                        <% colors.forEach(function(color, index){ %>
-                            <li>
-                                <a href="#" data-color="<%=color.dataColor%>" class="<%= color.className %>"></a>
-                            </li>
-                        <% }) %>
-                    </ul>
-                </li>
-            </ul>
+        <div class="left">
+            <div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
+            <div class="taskSelect left">
+                <a id="priority<%=model._id%>" data-id="<%=model.extrainfo.priority%>" class="current-selected" href="javascript:;"><%=model.extrainfo.priority%></a>
+            </div>
         </div>
         <div class="clearfix"></div>
     </div>
     <div class="task-content">
-        <div class="info" >
+        <div class="info">
             <p><%=model.summary%></p>
             <% _.each(model.tags,function(tag){ %>
             <% });%>

@@ -21,7 +21,7 @@ var Workflow = function (logWriter, mongoose, models) {
         create: function (req, data, result) {
             try {
                 if (data) {
-                    console.log(data);
+                    
                     models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
@@ -59,7 +59,7 @@ var Workflow = function (logWriter, mongoose, models) {
 
         update: function (req, _id, data, result) {
             console.log('>>>>>>>Incoming Workflow Update>>>>>>>');
-            console.log(data);
+            
             try {
                 if (data) {
                     delete data._id;
@@ -70,7 +70,7 @@ var Workflow = function (logWriter, mongoose, models) {
                             result.send(400, { error: 'WorkFlow.js update workflow error ' });
                             return;
                         } else {
-                            console.log(res);
+                            
                             result.send(200, { success: 'WorkFlow update success' });
                         }
                     });
@@ -95,7 +95,7 @@ var Workflow = function (logWriter, mongoose, models) {
                 } else {
                     //res['data'] = result[0].value;
                     res['data'] = result;
-                    console.log(result);
+                    
                     response.send(res);
                 }
             });

@@ -154,7 +154,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         result.remaining = 0;
         result.progress = 0;
         for (var i = 0; i < tasksArray.length; i++) {
-            console.log(tasksArray[i].summary);
             if (tasksArray[i].length != 0 && tasksArray[i].workflow && tasksArray[i].workflow.status != 'Cancelled') {
                 try {
                     result.estimated += tasksArray[i].estimated;
@@ -291,27 +290,27 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         }
     };
 
-    var _updateTask = function (req, tasksArray, fieldsObject) {
-        var n = tasksArray.length;
-        var i = 0;
-        var _update = function (i) {
-            if (i < n) {
-                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).update({ _id: tasksArray[i]._id }, { $set: fieldsObject }, function (err, result) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log(i);
-                        console.log(result);
-                        i++;
-                        _update(i);
-                    }
-                });
-            } else {
-                return true;
-            }
-        };
-        _update(i);
-    };
+    //var _updateTask = function (req, tasksArray, fieldsObject) {
+    //    var n = tasksArray.length;
+    //    var i = 0;
+    //    var _update = function (i) {
+    //        if (i < n) {
+    //            models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).update({ _id: tasksArray[i]._id }, { $set: fieldsObject }, function (err, result) {
+    //                if (err) {
+    //                    console.log(err);
+    //                } else {
+    //                    console.log(i);
+    //                    
+    //                    i++;
+    //                    _update(i);
+    //                }
+    //            });
+    //        } else {
+    //            return true;
+    //        }
+    //    };
+    //    _update(i);
+    //};
 
     var calculateTaskEndDate = function (startDate, estimated) {
         var iWeeks, iDateDiff, iAdjust = 0;
@@ -355,7 +354,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
     function create(req, data, res) {
         try {
-            console.log(data);
             if (!data.projectName || !data.projectShortDesc) {
                 logWriter.log('Project.create Incorrect Incoming Data');
                 res.send(400, { error: 'Project.create Incorrect Incoming Data' });
@@ -481,7 +479,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 					    if (!err) {
 
 					        var arrOfObjectId = deps.objectID();
-					        console.log(arrOfObjectId);
 					        models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
 								{
 								    $match: {
@@ -664,7 +661,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
                     models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
                         {
                             $match: {
@@ -740,7 +736,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
                     models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
                         {
                             $match: {
@@ -783,7 +778,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                     query.where('workflow').in(data.status);
                                 } else if (data && !data.newCollection) {
                                     query.where('workflow').in([]);
-                                }     
+                                }
                                 query.select("_id createdBy editedBy workflow projectName health customer progress info").
 									populate('createdBy.user', 'login').
 									populate('editedBy.user', 'login').
@@ -836,7 +831,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
                     models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
                         {
                             $match: {
@@ -948,7 +942,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 	        function (err, deps) {
 	            if (!err) {
 	                var arrOfObjectId = deps.objectID();
-	                console.log(arrOfObjectId);
+	                
 	                models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
                     {
                         $match: {
@@ -986,7 +980,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     },
                     function (err, result) {
                         if (!err) {
-                            console.log(data);
+                            
                             var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
                             if (data && data.status && data.status.length > 0)
                                 query.where('workflow').in(data.status);
@@ -1253,7 +1247,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, 'Project', ProjectSchema).aggregate(
                         {
                             $match: {
@@ -1378,29 +1372,15 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             obj.author = req.session.uName;
             data.notes[data.notes.length - 1] = obj;
         }
-        console.log(data);
+        
         var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate({ _id: _id }, data);
-		query.populate("editedBy.user","login");
-		query.exec(function (err, projects) {
+        query.populate("editedBy.user", "login");
+        query.exec(function (err, projects) {
             if (err) {
                 console.log(err);
                 logWriter.log("Project.js update project.update " + err);
                 res.send(500, { error: "Can't update Project" });
             } else {
-                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ 'project.id': _id }, function (err, result) {
-                    if (err) {
-                        console.log(err);
-                        logWriter.log("Project.js update tasks.find " + err);
-                        res.send(500, { error: "Can't update Project & tasks.find" });
-                    } else {
-                        if (result.length > 0) {
-                            _updateTask(req, result, {
-                                'project.name': data.projectName,
-                                'project.projectShortDesc': data.projectShortDesc
-                            });
-                        }
-                    }
-                });
                 res.send(200, projects);
             }
         });
@@ -1435,7 +1415,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             obj.author = req.session.uName;
             data.notes[data.notes.length - 1] = obj;
         }
-        console.log(data);
         models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, tasks) {
             if (err) {
                 console.log(err);
@@ -1469,7 +1448,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                 for (var i in taskss) {
                     models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).remove({ _id: taskss[i]._id }, function (errr, result) {
                         if (errr) {
-                            console.log(err);
+                            console.log(errr);
                             logWriter.log("Project.js removeTasksByPorjectID tasks.remove " + err);
                         }
                     });
@@ -1502,7 +1481,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             }
             function saveTaskToBd(data, n) {
                 try {
-                    console.log(data);
                     _task = new models.get(req.session.lastDb - 1, 'Tasks', TasksSchema)({ taskCount: n });
                     _task.summary = data.summary;
                     if (data.project) {
@@ -1618,15 +1596,15 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         delete data.createdBy;
 
         data.remaining = data.estimated - data.logged;
-		if (data.extrainfo)
-			data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-        if (data.estimated != 0&&data.extrainfo) {
+        if (data.extrainfo)
+            data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+        if (data.estimated != 0 && data.extrainfo) {
             data.progress = Math.round((data.logged / data.estimated) * 100);
             var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
-		if (data.extrainfo){
-            data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
-            data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-		}
+            if (data.extrainfo) {
+                data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
+                data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+            }
         }
         if (data.project && data.project._id) {
             data.project = data.project._id;
@@ -1988,8 +1966,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
     //};
 
     function getTaskById(req, data, response) {
-        console.log(')))))))))))))))))))))))))))))');
-        console.log(data);
         var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(data.id, function (err, res) { });
         query.populate('project', '_id projectShortDesc projectName').
             populate(' assignedTo', '_id name imageSrc').

@@ -548,7 +548,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         //        response.send(500, { error: "Can't find Leads" });
         //    } else {
         //        res['data'] = result;
-        //        console.log(res);
+        //        
         //        response.send(res);
         //    }
         //});
@@ -591,7 +591,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                         {
                             $match: {
@@ -756,7 +756,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             }
 
             models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
-                console.log(data);
+                
                 if (err) {
                     console.log(err);
                     logWriter.log("Opportunities.js update opportunitie.update " + err);
@@ -976,7 +976,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                         {
                             $match: {
@@ -1069,7 +1069,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    console.log(arrOfObjectId);
+                    
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate(
                                     {
                                         $match: {

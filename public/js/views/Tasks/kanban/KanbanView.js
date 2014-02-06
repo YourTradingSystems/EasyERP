@@ -31,40 +31,40 @@
                 this.startTime = options.startTime;
                 this.workflowsCollection = options.workflowCollection;
                 this.render();
-                this.asyncFetc(options.workflowCollection, options.parrentContentId);
+                this.asyncFetch(options.workflowCollection, options.parrentContentId);
                 this.getCollectionLengthByWorkflows(this, options.parrentContentId);
-				this.responseObj = {};
+                this.responseObj = {};
             },
             notHide: function (e) {
-				return false;
+                return false;
             },
 
-			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
-			},
-			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
-			},
-            showNewSelect:function(e,prev,next){
-				populate.showSelectPriority(e,prev,next,this);
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true)
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false)
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelectPriority(e, prev, next, this);
                 return false;
-                
+
             },
 
             hideNewSelect: function (e) {
                 $(".newSelectList").hide();
             },
-			chooseOption:function(e){
-				$(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
-				var id=$(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority","");
-				var obj = collection.get(id);
-				var extr = obj.get('extrainfo');
-				if (extr.customer==""){
-					extr.customer = null
-				}
-				extr.priority=$(e.target).parents(".taskSelect").find(".current-selected").text();
-				console.log(obj);
-				obj.set({"extrainfo":extr });
+
+            chooseOption: function (e) {
+                $(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
+                var id = $(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority", "");
+                var obj = collection.get(id);
+                var extr = obj.get('extrainfo');
+                if (extr.customer == "") {
+                    extr.customer = null
+                }
+                extr.priority = $(e.target).parents(".taskSelect").find(".current-selected").text();
+                obj.set({ "extrainfo": extr });
                 obj.save({}, {
                     headers: {
                         mid: 39
@@ -73,16 +73,16 @@
                     }
                 });
 
-				this.hideNewSelect();
-				return false;
-			},
+                this.hideNewSelect();
+                return false;
+            },
 
-			isNumberKey: function(evt){
-				var charCode = (evt.which) ? evt.which : event.keyCode;
-				if (charCode > 31 && (charCode < 48 || charCode > 57))
-					return false;
-				return true;
-			},
+            isNumberKey: function (evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+                return true;
+            },
 
             saveKanbanSettings: function () {
                 var countPerPage = $(this).find('#cPerPage').val();
@@ -99,7 +99,7 @@
                 $(".edit-dialog").remove();
             },
 
-            editKanban: function(e){
+            editKanban: function (e) {
                 dataService.getData('/currentUser', null, function (user, context) {
                     var tempDom = _.template(kanbanSettingsTemplate, { tasks: user.kanbanSettings.tasks });
                     context.$el = $(tempDom).dialog({
@@ -127,7 +127,7 @@
             getCollectionLengthByWorkflows: function (context, parrentContentId) {
                 dataService.getData('/getTasksLengthByWorkflows', { parrentContentId: parrentContentId }, function (data) {
                     data.arrayOfObjects.forEach(function (object) {
-                        var column = context.$("[data-id='" + object._id + "']");
+                        var column = context.$el.find("#" + object._id);
                         column.find('.totalCount').text(object.count);
                         column.find('.remaining').text(object.remaining);
                     });
@@ -149,21 +149,20 @@
                 model.urlRoot = '/Tasks/form';
                 model.fetch({
                     data: { id: id },
-                    success: function (model, response, options) {
+                    success: function (model) {
                         new EditView({ model: model });
                     },
                     error: function () { alert('Please refresh browser'); }
                 });
             },
 
-            asyncFetc: function (workflows, parrentContentId) {
+            asyncFetch: function (workflows, parrentContentId) {
                 _.each(workflows.toJSON(), function (wfModel) {
                     dataService.getData('/Tasks/kanban', { workflowId: wfModel._id, parrentContentId: parrentContentId }, this.asyncRender, this);
                 }, this);
             },
 
             asyncRender: function (response, context) {
-                console.log(response.time);
                 var contentCollection = new TasksCollection();
                 contentCollection.set(contentCollection.parse(response));
                 if (collection) {
@@ -173,7 +172,7 @@
                     collection.set(collection.parse(response));
                 }
                 var kanbanItemView;
-                var column = this.$("[data-id='" + response.workflowId + "']");
+                var column = context.$el.find("#" + response.workflowId);
                 column.find(".counter").html(parseInt(column.find(".counter").html()) + contentCollection.models.length);
                 _.each(contentCollection.models, function (wfModel) {
                     kanbanItemView = new KanbanItemView({ model: wfModel });
@@ -205,8 +204,8 @@
                     var remaining = " <span><span class='remaining'>" + itemCount + "</span> </span>";
                     column.find(".columnNameDiv h2").append(count).append(total).append(remaining);
                 }, this);
-				populate.getPriority("#priority",this);
-				
+                populate.getPriority("#priority", this);
+
                 this.$(".column").sortable({
                     connectWith: ".column",
                     cancel: "h2",
@@ -229,12 +228,9 @@
                         var id = ui.item.context.id;
                         var model = collection.get(id);
                         var column = ui.item.closest(".column");
-                        console.log('--------------');
-                        console.log(id);
-                        console.log(model);
                         if (model) {
-                            model.set({ workflow: column.data('id'), workflowForKanban: true  });
-                            model.save({},{validate: false});
+                            model.set({ workflow: column.attr('id'), workflowForKanban: true });
+                            model.save({}, { validate: false });
                             column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                             column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
                             column.find(".remaining").html(parseInt(column.find(".remaining").html()) + parseInt(model.get('remaining')));
@@ -242,7 +238,7 @@
                     }
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
-				$(document).on("keypress","#cPerPage",this.isNumberKey);
+                $(document).on("keypress", "#cPerPage", this.isNumberKey);
                 return this;
             }
         });

@@ -282,7 +282,7 @@ define([
                     },
                     whoCanRW: whoCanRW
                 };
-                console.log(data);
+                
 
                 this.currentModel.save(data, {
                     headers: {
