@@ -3,7 +3,7 @@
 ],
     function (compactContentTemplate) {
         var compactContentView = Backbone.View.extend({
-            el: "#opportunities",
+			className:"form",
 
             initialize: function (options) {
             	this.personsCollection = (options && options.personsCollection) ? options.personsCollection : null;
@@ -22,6 +22,7 @@
             },
 
             render: function (options) {
+				console.log(this.collection);
                 this.$el.html(this.template({
                     collection: this.collection,
 					options: options
