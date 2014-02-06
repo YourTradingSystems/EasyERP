@@ -866,7 +866,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         for (var i in req.query) {
             data[i] = req.query[i];
         }
-        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).findById(data.id, function (err, res) { });
+        var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).findById(data.id);
         query.populate('manager', 'name _id');
         query.populate('department', 'departmentName _id');
         query.populate('coach', 'name _id');

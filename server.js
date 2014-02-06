@@ -231,20 +231,20 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
             dir = __dirname + "\/uploads";
         }
     }
-    
+
     req.files.attachfile.forEach(function (item) {
 		var files = [];
         fs.readFile(item.path, function (err, data) {
             var path = __dirname + "\\uploads\\" + item.name;
             fs.writeFile(path, data, function (err) {
 				if (!err) {
-					var file = {};
-					file._id = mongoose.Types.ObjectId();
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
 					file.name = req.files.attachfile.name;
-					file.path = path;
+                file.path = path;
 					file.size = req.files.attachfile.size;
-					file.uploadDate = new Date();
-					file.uploaderName = req.session.uName;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
 					requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
 				} else {
 					if (err.errno === 34) {
@@ -261,21 +261,21 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
 										file.size = req.files.attachfile.size;
 										file.uploadDate = new Date();
 										file.uploaderName = req.session.uName;
-										files.push(file);
-										requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                files.push(file);
+                    requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
 									} else {
 										console.log(err);
 										next();
-									}
-								});
+                }
+            });
 							}
-						});
+        });
 					} else {
 						console.log(err);
 						next();
 					}
 				}
-				
+
             });
         });
     });
@@ -307,19 +307,19 @@ function uploadFileArray(req,res,callback){
 			}
             fs.writeFile(path, data, function (err) {
 				if (!err) {
-					var file = {};
-					file._id = mongoose.Types.ObjectId();
-					file.name = item.name;
+                var file = {};
+                file._id = mongoose.Types.ObjectId();
+                file.name = item.name;
 					console.log(osType);
 					
 
-					file.path = path;
-					file.size = item.size;
-					file.uploadDate = new Date();
-					file.uploaderName = req.session.uName;
-					files.push(file);
+                file.path = path;
+                file.size = item.size;
+                file.uploadDate = new Date();
+                file.uploaderName = req.session.uName;
+                files.push(file);
 
-					if (files.length == req.files.attachfile.length) {
+                if (files.length == req.files.attachfile.length) {
 						if (callback){
 							callback(files);
 						}
@@ -361,10 +361,10 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
 			});
 		}else{
 			uploadFileArray(req,res,function(files){
-				requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+                    requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
 			});
-		}
-	});
+                }
+            });
 
 });
 
@@ -1304,11 +1304,8 @@ app.get('/getForDdByRelatedUser', function (req, res) {
     requestHandler.getForDdByRelatedUser(req, res, data);
 });
 
-app.get('/Employees/form/:_id', function (req, res) {
-    requestHandler.getEmployeesById(req, res);
-});
-
 app.get('/Employees/:viewType', function (req, res) {
+    console.log('-------------------------------');
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -1318,6 +1315,8 @@ app.get('/Employees/:viewType', function (req, res) {
         case "list": requestHandler.getEmployeesFilter(req, res);
             break;
         case "thumbnails": requestHandler.getEmployeesFilter(req, res);
+            break;
+        case "form": requestHandler.getEmployeesById(req, res);
             break;
     }
 
