@@ -341,7 +341,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         if (data.info.EndDate) {
                             _opportunitie.info.EndDate = data.info.EndDate;
                         }
-                        if (data.info.sequenc) {
+                        if (data.info.sequence) {
                             _opportunitie.info.sequence = data.info.sequence;
                         }
                         if (data.info.parent) {
@@ -891,7 +891,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 				});
 			});
 		}else{
-			console.log("zishlo");
 			updateSequenceBetwenWorkflow(req, opp.sequenceStart, opp.sequence,opp.workflowStart, opp.workflow, function(){
 				delete opp.sequenceStart;
 				delete opp.workflowEnd;
@@ -908,10 +907,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 			});
 			
 		}
-/*        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
-		
-		});
-*/
     }
 
     function getFilterOpportunitiesForMiniView(req, data, response) {
