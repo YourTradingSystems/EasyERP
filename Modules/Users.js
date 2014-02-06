@@ -203,8 +203,12 @@ var Users = function (logWriter, mongoose, models, department) {
         });
     }
 
-    function getUsersForDd(req, response, data) {
+    function getUsersForDd(req, response) {
         var res = {};
+		var data ={};
+		for (var i in req.query){
+			data[i]=req.query[i];
+		}
         res['data'] = [];
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find();
         query.select("_id login");
