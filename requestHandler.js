@@ -124,10 +124,10 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getUsersForDd(req, res, data) {
+    function getUsersForDd(req, res) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            users.getUsersForDd(req, res, data);
+            users.getUsersForDd(req, res);
         } else {
             res.send(401);
         }

@@ -142,11 +142,11 @@ app.get('/getModules', function (req, res) {
 app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     //data = {};
-    file = {};
+    var file = {};
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path;
         var dir;
-        os = require("os");
+        var os = require("os");
         var osType = (os.type().split('_')[0]);
         switch(osType) {
             case "Windows":
@@ -214,53 +214,158 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
+    var path;
+    var dir;
+    var os = require("os");
+    var osType = (os.type().split('_')[0]);
+    switch(osType) {
+    case "Windows":
+        {
+            path = __dirname + "\\uploads\\" + req.files.attachfile.name;
+            dir = __dirname + "\\uploads";
+        }
+        break;
+    case "Linux":
+        {
+            path = __dirname + "\/uploads\/" + req.files.attachfile.name;
+            dir = __dirname + "\/uploads";
+        }
+    }
+    
     req.files.attachfile.forEach(function (item) {
-
+		var files = [];
         fs.readFile(item.path, function (err, data) {
             var path = __dirname + "\\uploads\\" + item.name;
             fs.writeFile(path, data, function (err) {
-                var file = {};
-                file._id = mongoose.Types.ObjectId();
-                file.name = item.name;
-                file.path = path;
-                file.size = item.size;
-                file.uploadDate = new Date();
-                file.uploaderName = req.session.uName;
-                files.push(file);
-                if (files.length == req.files.attachfile.length) {
-                    requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
-                }
+				if (!err) {
+					var file = {};
+					file._id = mongoose.Types.ObjectId();
+					file.name = req.files.attachfile.name;
+					file.path = path;
+					file.size = req.files.attachfile.size;
+					file.uploadDate = new Date();
+					file.uploaderName = req.session.uName;
+					requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+				} else {
+					if (err.errno === 34) {
+						fs.mkdir(dir, function (errr) {
+							if (errr) {
+								console.log(errr);
+								next();
+							} else {
+								fs.writeFile(path, data, function (err) {
+									if (!err) {
+										file._id = mongoose.Types.ObjectId();
+										file.name = req.files.attachfile.name;
+										file.path = path;
+										file.size = req.files.attachfile.size;
+										file.uploadDate = new Date();
+										file.uploaderName = req.session.uName;
+										files.push(file);
+										requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+									} else {
+										console.log(err);
+										next();
+									}
+								});
+							}
+						});
+					} else {
+						console.log(err);
+						next();
+					}
+				}
+				
             });
         });
-    })
+    });
 });
-
-app.post('/uploadEmployeesFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
+function uploadFileArray(req,res,callback){
     var files = [];
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
     }
-    req.files.attachfile.forEach(function (item) {
+    var path;
+    var dir;
+    var os = require("os");
+    var osType = (os.type().split('_')[0]);
 
+    req.files.attachfile.forEach(function (item) {
         fs.readFile(item.path, function (err, data) {
-            var path = __dirname + "\\uploads\\" + item.name;
+			switch(osType) {
+			case "Windows":
+				{
+					path = __dirname + "\\uploads\\" + item.name;
+					dir = __dirname + "\\uploads";
+				}
+				break;
+			case "Linux":
+				{
+					path = __dirname + "\/uploads\/" + item.name;
+					dir = __dirname + "\/uploads";
+				}
+			}
             fs.writeFile(path, data, function (err) {
-                var file = {};
-                file._id = mongoose.Types.ObjectId();
-                file.name = item.name;
-                file.path = path;
-                file.size = item.size;
-                file.uploadDate = new Date();
-                file.uploaderName = req.session.uName;
-                files.push(file);
-                if (files.length == req.files.attachfile.length) {
-                    requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
-                }
+				if (!err) {
+					var file = {};
+					file._id = mongoose.Types.ObjectId();
+					file.name = item.name;
+					console.log(osType);
+					
+
+					file.path = path;
+					file.size = item.size;
+					file.uploadDate = new Date();
+					file.uploaderName = req.session.uName;
+					files.push(file);
+
+					if (files.length == req.files.attachfile.length) {
+						if (callback){
+							callback(files);
+						}
+					}
+				} else {
+					console.log(err);
+					res.send(500);
+				}
+				
             });
         });
-    })
+    });
+	
+}
+app.post('/uploadEmployeesFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File employees<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    var os = require("os");
+    var osType = (os.type().split('_')[0]);
+	var dir;
+	switch(osType) {
+	case "Windows":
+		{
+			dir = __dirname + "\\uploads";
+		}
+		break;
+	case "Linux":
+		{
+			dir = __dirname + "\/uploads";
+		}
+	}
+	fs.readdir(dir,function(err,files){
+		if (err){
+			fs.mkdir(dir, function (errr){
+				uploadFileArray(req,res,function(files){
+					requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+				});
+				
+			});
+		}else{
+			uploadFileArray(req,res,function(files){
+				requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+			});
+		}
+	});
+
 });
 
 app.post('/uploadProjectsFiles', function (req, res, next) {
@@ -288,7 +393,7 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
                 }
             });
         });
-    })
+    });
 });
 
 app.post('/uploadTasksFiles', function (req, res, next) {
@@ -373,7 +478,7 @@ app.put('/currentUser/:id', function (req, res) {
 
 app.get('/UsersForDd', function (req, res) {
     console.log('---------------------getUsers-------------');
-    requestHandler.getUsersForDd(req, res, data);
+    requestHandler.getUsersForDd(req, res);
 });
 
 app.get('/Users/:viewType', function (req, res) {
