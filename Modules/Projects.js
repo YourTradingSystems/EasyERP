@@ -1319,11 +1319,11 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                                     function (err, responseTasks) {
                                         if (!err) {
                                             responseTasks.forEach(function (object) {
-                                                if (object.count > req.session.kanbanSettings.opportunities.countPerPage)
+                                                if (object.count > req.session.kanbanSettings.tasks.countPerPage)
                                                     data['showMore'] = true;
-                                                data['arrayOfObjects'] = responseTasks;
-                                                res.send(data);
                                             });
+                                            data['arrayOfObjects'] = responseTasks;
+                                            res.send(data);
                                         } else {
                                             console.log(err);
                                         }
