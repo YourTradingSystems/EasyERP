@@ -1613,12 +1613,13 @@ app.patch('/Opportunities/:_id', function (req, res) {
     data.opportunitie = req.body;
     requestHandler.opportunitieUpdateOnlySelectedFields(req, res, id, data);
 });
-
-app.delete('/Opportunities/:_id', function (req, res) {
+app.patch('/Opportunities/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
-    requestHandler.removeOpportunitie(req, res, id, data);
+    data.toBeConvert = req.headers.toBeConvert;
+    data.opportunitie = req.body;
+    requestHandler.opportunitieUpdateOnlySelectedFields(req, res, id, data);
 });
 
 app.delete('/Opportunities/:viewType/:_id', function (req, res) {
