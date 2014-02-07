@@ -53,6 +53,8 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
     var getCurrentVT = function (option) {
         console.log('Get Current View Type -------> ' + Backbone.history.fragment);
         var viewType;
+
+
         if (option && (option.contentType != App.contentType)) {
             App.ownContentType = false;
         }
@@ -155,7 +157,6 @@ define(['libs/date.format', 'common'], function (dateformat, common) {
         }
 
         var viewVariants = ["kanban", "list", "form", "thumbnails"];
-
         if ($.inArray(App.currentViewType, viewVariants) == -1) {
             App.currentViewType = "thumbnails";
             viewType = "thumbnails";

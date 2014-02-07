@@ -228,6 +228,7 @@ define([
                 var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
                 var projecttype = this.$el.find("#projectTypeDD option:selected").val();
                 var workflow = this.$el.find("#workflowsDd option:selected").data("id");
+                var description = $.trim(this.$el.find("#description").val());
                 var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
                 console.log(workflow);
                 $userNodes.each(function (key, val) {
@@ -257,6 +258,7 @@ define([
                     projectmanager: projectmanager ? projectmanager : "",
                     workflow: workflow ? workflow : "",
                     projecttype: projecttype ? projecttype : "",
+					description:description,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,

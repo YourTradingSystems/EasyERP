@@ -297,8 +297,7 @@
 
                     });
                     var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
-                    this.currentModel.set({
+                    this.currentModel.save({
                         name: name,
                         expectedRevenue: expectedRevenue,
                         customer: customerId,
@@ -317,22 +316,28 @@
                         active: active,
                         optout: optout,
                         reffered: reffered,
+						sequenceStart: this.currentModel.toJSON().info.sequence,
+						info: this.currentModel.toJSON().info,
+						sequence:-1,
+						workflowStart:this.currentModel.toJSON().workflow._id,
                         groups: {
                             owner: $("#allUsers").val(),
                             users: usersId,
                             group: groupsId
                         },
                         whoCanRW: whoCanRW
-                    });
-                    this.currentModel.save({}, {
+                    }, {
                         headers: {
                             mid: mid
                         },
+						patch:true,
                         success: function () {
                             self.hideDialog();
                             Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                         },
-                        error: function () {
+                        error: function (data,data2) {
+							alert();
+							console.log(data2);
                             self.hideDialog();
                             Backbone.history.navigate("home", { trigger: true });
                         }

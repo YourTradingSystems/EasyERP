@@ -7,6 +7,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         task: [{ type: ObjectId, ref: 'Tasks', default: null }],
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
+        description: String,
         whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
         groups: {
             owner: { type: ObjectId, ref: 'Users', default: null },
@@ -365,6 +366,11 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     if (data.task) {
                         _project.task = data.task;
                     }
+
+                    if (data.description) {
+                        _project.description = data.description;
+                    }
+
                     if (data.groups) {
                         _project.groups = data.groups;
                     }
@@ -988,7 +994,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
     };
 
     function getById(req, data, response) {
-        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(data.id, function (err, res) { });
+        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(data.id);
         query.populate('projectmanager', 'name _id');
         query.populate('customer', 'name _id');
         query.populate('workflow').

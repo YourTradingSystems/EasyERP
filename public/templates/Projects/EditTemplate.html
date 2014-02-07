@@ -10,7 +10,79 @@
         <div class="dialog-tabs-items">
           <div class="dialog-tabs-item active">
             <div class="half-block left projectNote">
-			<div class="noteWrapper">
+              <div class="inner">
+                <div class="textarea-wrapper">
+                  <textarea type="text" class="taskDescriptionCreate" name="description" placeholder="Add a Description..." id="description"><%=model.description%></textarea>
+                </div>
+              </div>
+            <div class="clearfix"></div>
+            </div>
+            <div class="half-block left">
+              <dl class="profile-edit-info">
+                <dt>
+                  <label for="projectName">Project Name </label>
+                </dt>
+                <dd>
+                  <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>" maxlength="32"/></dd>
+                <dt>
+                  <label for="projectShortDesc">Project Short Description </label>
+                </dt>
+                <dd>
+                  <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" maxlength="32"/></dd>
+                <dt>
+                  <label for="projectManagerDD">Project Manager</label>
+                </dt>
+                <dd>
+				  <a id="projectManagerDD" data-id="<%=model.projectmanager?model.projectmanager._id:''%>" class="current-selected" href="javascript:;"><%=model.projectmanager?(model.projectmanager.name.first+' '+model.projectmanager.name.last):'Select'%></a>
+                </dd>
+                
+                <dt><label for="projectTypeDD">Project Type </label></dt>
+				<dd>
+				  <a id="projectTypeDD" data-id="<%=model.projecttype?model.projecttype:''%>" class="current-selected" href="javascript:;"><%=model.projecttype?model.projecttype:'Select'%></a>			  
+				</dd>
+                <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.info.StartDate%>" readonly /></dd>
+              </dl>
+              <dl class="profile-edit-info">
+                <dt>
+                  <label for="customerDd">Project Customer </label>
+                </dt>
+                <dd>
+				  <a id="customerDd" data-id="<%=model.customer?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=model.customer?(model.customer.name.first+' '+model.customer.name.last):'Select'%></a>
+                </dd>
+                <!--<dt>
+                  <label for="workflowNamesDd">Workflow Name</label>
+                </dt>
+                <dd>
+                  <select id="workflowNamesDd">
+                  </select>
+                </dd>-->
+                <dt>
+                  <label for="workflowsDd">Status</label></dt>
+                  <dd>
+                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Select'%></a>
+                  </dd>
+                  <dt><label for="health">Health</label></dt>
+                  <dd id="health">
+                      <a href="javascript:;" data-value="<%=model.health%>" class="health<%=model.health%>"></a>
+                      <ul>
+                          <li>
+                              <div class="health1"></div>
+                          </li>
+                          <li>
+                              <div class="health2"></div>
+                          </li>
+                          <li>
+                              <div class="health3"></div>
+                          </li>
+                      </ul>
+                  </dd>
+ 				<dt><label for="EndDate">End Date </label></dt><dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.info.StartDate%>" readonly /></dd>
+                  <dt><label for="targetEndDate">Target End Date</label></dt>
+                  <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.info.TargetEndDate%>" readonly /></dd>
+              </dl>
+            </div>
+            <div class="clearfix"></div>
+			<div class="noteWrapper projects-dialog">
 			  <label>Note</label>
 			  <div id="noteBody">
 				<% var n = model.notes.length-1;
@@ -81,74 +153,6 @@
                 <span class="progress_status"></span>
               </div>
             </div>
-            <div class="clearfix"></div>
-            </div>
-            <div class="half-block left">
-              <dl class="profile-edit-info">
-                <dt>
-                  <label for="projectName">Project Name </label>
-                </dt>
-                <dd>
-                  <input type="text" class="title-input blueback" name="projectName" id="projectName" required value="<%=model.projectName%>" maxlength="32"/></dd>
-                <dt>
-                  <label for="projectShortDesc">Project Short Description </label>
-                </dt>
-                <dd>
-                  <input type="text" class="title-input blueback" name="projectShortDesc" id="projectShortDesc" required value="<%=model.projectShortDesc%>" maxlength="32"/></dd>
-                <dt>
-                  <label for="projectManagerDD">Project Manager</label>
-                </dt>
-                <dd>
-				  <a id="projectManagerDD" data-id="<%=model.projectmanager?model.projectmanager._id:''%>" class="current-selected" href="javascript:;"><%=model.projectmanager?(model.projectmanager.name.first+' '+model.projectmanager.name.last):'Select'%></a>
-                </dd>
-                
-                <dt><label for="projectTypeDD">Project Type </label></dt>
-				<dd>
-				  <a id="projectTypeDD" data-id="<%=model.projecttype?model.projecttype:''%>" class="current-selected" href="javascript:;"><%=model.projecttype?model.projecttype:'Select'%></a>			  
-				</dd>
-                <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.info.StartDate%>" readonly /></dd>
-              </dl>
-              <dl class="profile-edit-info">
-                <dt>
-                  <label for="customerDd">Project Customer </label>
-                </dt>
-                <dd>
-				  <a id="customerDd" data-id="<%=model.customer?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=model.customer?(model.customer.name.first+' '+model.customer.name.last):'Select'%></a>
-                </dd>
-                <!--<dt>
-                  <label for="workflowNamesDd">Workflow Name</label>
-                </dt>
-                <dd>
-                  <select id="workflowNamesDd">
-                  </select>
-                </dd>-->
-                <dt>
-                  <label for="workflowsDd">Status</label></dt>
-                  <dd>
-                      <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Select'%></a>
-                  </dd>
-                  <dt><label for="health">Health</label></dt>
-                  <dd id="health">
-                      <a href="javascript:;" data-value="<%=model.health%>" class="health<%=model.health%>"></a>
-                      <ul>
-                          <li>
-                              <div class="health1"></div>
-                          </li>
-                          <li>
-                              <div class="health2"></div>
-                          </li>
-                          <li>
-                              <div class="health3"></div>
-                          </li>
-                      </ul>
-                  </dd>
- 				<dt><label for="EndDate">End Date </label></dt><dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.info.StartDate%>" readonly /></dd>
-                  <dt><label for="targetEndDate">Target End Date</label></dt>
-                  <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.info.TargetEndDate%>" readonly /></dd>
-              </dl>
-            </div>
-            <div class="clearfix"></div>
-
 		  </div>
 		  <div class="clearfix"></div>
 		  
