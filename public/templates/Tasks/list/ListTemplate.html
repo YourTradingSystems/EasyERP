@@ -3,18 +3,18 @@
   <td><input type="checkbox" value="<%=task._id%>" class="checkbox" /></td>
   <td><%=index + 1%></td>
   <td><%=(task.project) ? task.project.projectShortDesc : ''%><%=task.taskCount%></td>
-  <td><%=task.summary%></td>
+    <td><%=task.summary%></td>
+    <td>
+        <a href="javascript:;" data-id="<%=task.project._id%>" class="project"><%=task.project.projectName%></a>
+    </td>
   <td id='<%=task._id%>'>
       <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : ''%></a>
-  </td>
   </td>
   <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
   <td><%=task.estimated%></td>
   <td><%=task.logged%></td>
   <td><%=task.type%></td>
   <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
-
-
   <td><%=(task.createdBy.user) ? task.createdBy.date + " (" + task.createdBy.user.login + ")" : ''%></td>
   <td><%=(task.editedBy.user) ? task.editedBy.date + " (" + task.editedBy.user.login + ")" : ''%></td>
 </tr>

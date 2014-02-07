@@ -37,7 +37,6 @@ define([
                 "click .editDelNote": "editDelNote",
                 "click #cancelNote": "cancelNote",
                 "click #noteArea": "expandNote",
-                "click #cancelNote": "cancelNote",
                 "click .addTitle": "showTitle",
                 "click .editNote": "editNote",
                 "click #health a": "showHealthDd",
@@ -626,8 +625,7 @@ define([
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
-                    changeYear: true,
-                    minDate: new Date()
+                    changeYear: true
                 });
                 this.delegateEvents(this.events);
 

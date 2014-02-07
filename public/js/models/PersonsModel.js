@@ -6,35 +6,35 @@ function (common, Validation) {
     var PersonModel = Backbone.Model.extend({
         idAttribute: "_id",
 
-        initialize: function(){
-            this.on('invalid', function(model, errors){
-                if(errors.length > 0){
+        initialize: function () {
+            this.on('invalid', function (model, errors) {
+                if (errors.length > 0) {
                     var msg = errors.join('\n');
                     alert(msg);
                 }
             });
         },
-        
-        parse:true,
+
+        parse: true,
         parse: function (response) {
 
-                    if (response.notes) {
-                        _.map(response.notes, function (note) {
-                        	note.date = common.utcDateToLocaleDate(note.date);
-                            return note;
-                        });
-                    }
-                  
-                    if (response.attachments) {
-                        _.map(response.attachments, function (attachment) {
-                            attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                            return attachment;
-                        });
-                    }
+            if (response.notes) {
+                _.map(response.notes, function (note) {
+                    note.date = common.utcDateToLocaleDate(note.date);
+                    return note;
+                });
+            }
+
+            if (response.attachments) {
+                _.map(response.attachments, function (attachment) {
+                    attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                    return attachment;
+                });
+            }
             return response;
         },
 
-        validate: function(attrs){
+        validate: function (attrs) {
             var errors = [];
 
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
@@ -50,15 +50,14 @@ function (common, Validation) {
             Validation.checkStreetField(errors, false, attrs.address.street, "Street");
             Validation.checkEmailField(errors, false, attrs.email, "Email");
 
-            if(errors.length > 0)
+            if (errors.length > 0)
                 return errors;
         },
 
         defaults: {
             id: null,
-            imageSrc:'',
+            imageSrc: null,
             type: 'Person',
-            photoUrl: null,
             name: {
                 first: "",
                 last: ""
@@ -81,15 +80,12 @@ function (common, Validation) {
                 fax: ""
             },
             salesPurchases: {
-                isCustomer: true,
-                isSupplier: false,
-                active: false
+                isCustomer: true
             },
             department: null,
-            color: '#4d5a75',
             dateBirth: null,
-            attachments:[],
-            notes:[]
+            attachments: [],
+            notes: []
         },
 
         urlRoot: function () {
