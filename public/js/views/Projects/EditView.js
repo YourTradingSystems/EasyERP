@@ -18,7 +18,7 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.page = 1;
                 this.pageG = 1;
-                this.responseObj = {}
+                this.responseObj = {};
                 this.render();
             },
 
@@ -37,7 +37,6 @@ define([
                 "click .editDelNote": "editDelNote",
                 "click #cancelNote": "cancelNote",
                 "click #noteArea": "expandNote",
-                "click #cancelNote": "cancelNote",
                 "click .addTitle": "showTitle",
                 "click .editNote": "editNote",
                 "click #health a": "showHealthDd",
@@ -47,9 +46,9 @@ define([
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click": "hideNewSelect",
-                "click .current-selected": "showNewSelect",
+                "click .current-selected": "showNewSelect"
             },
-            notHide: function (e) {
+            notHide: function () {
                 return false;
             },
             showNewSelect: function (e, prev, next) {
@@ -59,9 +58,9 @@ define([
             },
             chooseOption: function (e) {
                 $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
-                $(".newSelectList").hide();;
+                $(".newSelectList").hide();
             },
-            hideNewSelect: function (e) {
+            hideNewSelect: function () {
                 $(".newSelectList").hide();
                 $("#health ul").hide();
 
@@ -80,11 +79,6 @@ define([
                 $(e.target).parent().find("ul").toggle();
                 return false;
             },
-            cancelNote: function (e) {
-                $('#noteArea').val('');
-                $('#noteTitleArea').val('');
-                $('#getNoteKey').attr("value", '');
-            },
 
             editDelNote: function (e) {
                 var id = e.target.id;
@@ -96,8 +90,9 @@ define([
 
                 switch (type) {
                     case "edit": {
-                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                        var id_int_holder = $('#' + id_int);
+                        $('#noteArea').val(id_int_holder.find('.noteText').text());
+                        $('#noteTitleArea').val(id_int_holder.find('.noteTitle').text());
                         $('#getNoteKey').attr("value", id_int);
                         break;
                     }
@@ -124,8 +119,10 @@ define([
 
             addNote: function (e) {
                 e.preventDefault();
-                var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var noteArea_holder = $('#noteArea');
+                var noteTitleArea_holder = $('#noteTitleArea');
+                var val = noteArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var title = noteTitleArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 if (val || title) {
                     var notes = this.currentModel.get('notes');
                     var arrKeyStr = $('#getNoteKey').attr("value");
@@ -148,8 +145,10 @@ define([
                                 },
                                 patch: true,
                                 success: function () {
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+                                    var arrKeyStr_holder = $('#' + arrKeyStr);
+                                    var noteBody_holder = $('#noteBody');
+                                    noteBody_holder.val(arrKeyStr_holder.find('.noteText').html(val));
+                                    noteBody_holder.val(arrKeyStr_holder.find('.noteTitle').html(title));
                                     $('#getNoteKey').attr("value", '');
                                 }
                             });
@@ -173,8 +172,8 @@ define([
                                 }
                             });
                     }
-                    $('#noteArea').val('');
-                    $('#noteTitleArea').val('');
+                    noteArea_holder.val('');
+                    noteTitleArea_holder.val('');
                 }
             },
 
@@ -271,7 +270,7 @@ define([
                             alert(xhr.status);
                         }
                     });
-                })
+                });
                 addFrmAttach.submit();
                 addFrmAttach.off('submit');
             },
@@ -335,23 +334,26 @@ define([
                 var text = target.closest("tr").find("td").eq(0).text();
                 $("#" + type).append("<option value='" + id + "'>" + text + "</option>");
                 target.closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length == 1) {
-                    $(".groupsAndUser").hide();
+                var groupsAndUser_holder = $(".groupsAndUser");
+                if (groupsAndUser_holder.find("tr").length == 1) {
+                    groupsAndUser_holder.hide();
                 }
 
             },
             addUserToTable: function (id) {
-                $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function () {
+                var groupsAndUser_holder = $(".groupsAndUser");
+                var groupsAndUserTr_holder = $(".groupsAndUser tr");
+                groupsAndUser_holder.show();
+                groupsAndUserTr_holder.each(function () {
                     if ($(this).data("type") == id.replace("#", "")) {
                         $(this).remove();
                     }
                 });
                 $(id).find("li").each(function () {
-                    $(".groupsAndUser").append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
+                    groupsAndUser_holder.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length < 2) {
-                    $(".groupsAndUser").hide();
+                if (groupsAndUserTr_holder.length < 2) {
+                    groupsAndUser_holder.hide();
                 }
             },
             addUser: function () {
@@ -365,7 +367,7 @@ define([
                             class: "btn",
 
                             click: function () {
-                                click: self.addUserToTable("#targetUsers")
+                                self.addUserToTable("#targetUsers");
                                 $(this).dialog("close");
                             }
 
@@ -392,7 +394,7 @@ define([
                 });
 
             },
-            addGroup: function (e) {
+            addGroup: function () {
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
@@ -402,7 +404,7 @@ define([
                             text: "Choose",
                             class: "btn",
                             click: function () {
-                                self.addUserToTable("#targetGroups")
+                                self.addUserToTable("#targetGroups");
                                 $(this).dialog("close");
                             }
                         },
@@ -418,14 +420,13 @@ define([
                 });
                 $("#targetGroups").unbind().on("click", "li", this.removeUsers);
                 $("#sourceGroups").unbind().on("click", "li", this.addUsers);
-                var self = this;
                 $(document).unbind().on("click", ".nextGroupList", function (e) {
-                    self.pageG += 1
-                    self.nextUserList(e, self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e, self.pageG);
                 });
                 $(document).unbind().on("click", ".prevGroupList", function (e) {
-                    self.pageG -= 1
-                    self.prevUserList(e, self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e, self.pageG);
                 });
             },
 
@@ -434,8 +435,9 @@ define([
                 target.closest(".dialog-tabs").find("a.active").removeClass("active");
                 target.addClass("active");
                 var n = target.parents(".dialog-tabs").find("li").index(target.parent());
-                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+                var dialog_holder = $(".dialog-tabs-items");
+                dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
+                dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
             keydownHandler: function (e) {
@@ -515,31 +517,31 @@ define([
                     },
                     //wait: true,
                     success: function (model) {
-						console.log(model);
                         $('.edit-project-dialog').remove();
                         $(".add-group-dialog").remove();
                         $(".add-user-dialog").remove();
 						if (viewType=="list"){
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(2).text(projectName);
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(3).text(self.$el.find("#customerDd").text());
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(4).text(self.$el.find("#StartDate").val());
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).text(self.$el.find("#EndDate").val());
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(6).text(self.$el.find("#EndDateTarget").val());
+                            var tr_holder = $("tr[data-id='"+self.currentModel.toJSON()._id+"'] td");
+                            tr_holder.eq(3).text(self.$el.find("#customerDd").text());
+                            tr_holder.eq(4).text(self.$el.find("#StartDate").val());
+                            tr_holder.eq(5).text(self.$el.find("#EndDate").val());
+                            tr_holder.eq(6).text(self.$el.find("#EndDateTarget").val());
 							if (new Date(self.$el.find("#EndDate").val())<new Date(self.$el.find("#EndDateTarget").val())){
-								$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).addClass("red-border");
+                                tr_holder.eq(5).addClass("red-border");
 							}
 							else{
-								$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(5).removeClass("red-border");
+                                tr_holder.eq(5).removeClass("red-border");
 							}
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(9).find(".health-container a").attr("class","health"+health).attr("data-value",health);
-							$("tr[data-id='"+self.currentModel.toJSON()._id+"'] td").eq(11).text(model.toJSON().editedBy.date+" ("+model.toJSON().editedBy.user.login+")");
-						}else{
-							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(0).text(projectName);
-							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(1).find("a").attr("class","health"+health).attr("data-value",health);
+                            tr_holder.eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());
+                            tr_holder.eq(9).find(".health-container a").attr("class","health"+health).attr("data-value",health);
+                            tr_holder.eq(11).text(model.toJSON().editedBy.date+" ("+model.toJSON().editedBy.user.login+")");
+						} else {
+                            var currentModel_holder = $("#"+self.currentModel.toJSON()._id);
+                            currentModel_holder.find(".project-text span").eq(0).text(projectName);
+                            currentModel_holder.find(".project-text span").eq(1).find("a").attr("class","health"+health).attr("data-value",health);
 							if (customer)
-								$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
-							$("#"+self.currentModel.toJSON()._id).find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
+                                currentModel_holder.find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
+                            currentModel_holder.find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
 							if (projectmanager)
 								common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
 						}
