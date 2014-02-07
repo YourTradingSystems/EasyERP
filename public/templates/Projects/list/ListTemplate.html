@@ -5,7 +5,7 @@
     <td><%=project.projectName%></td>
     <td><%=(project.customer) ? project.customer.name.first + " " + project.customer.name.last : ''%></td>
     <td><%=project.info.StartDate%></td>
-    <td <%=(project.info.EndDate&&project.info.TargetEndDate&&new Date(project.info.TargetEndDate)>new Date(project.info.EndDate))?"class='red-border'":""%>><%=project.info.EndDate%></td>
+    <td <%=(project.info.EndDate&&project.info.TargetEndDate&&new Date(project.info.TargetEndDate)<new Date(project.info.EndDate))?"class='red-border'":""%>><%=project.info.EndDate%></td>
     <td><%=project.info.TargetEndDate%></td>
     <td><progress name="projectProgress" max="100" value="<%=project.progress%>" /></td>
     <td id='<%=project._id%>'>

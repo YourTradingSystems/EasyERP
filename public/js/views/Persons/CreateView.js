@@ -34,9 +34,11 @@ define([
                 "click .nextUserList": "nextUserList",
 				"click .details":"showDetailsBox"
             },
+
 			showDetailsBox:function(e){
 				$(e.target).parent().find(".details-box").toggle();
 			},
+
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -66,7 +68,7 @@ define([
                             class: "btn",
 
                             click: function () {
-                                click: self.addUserToTable("#targetUsers");
+                                self.addUserToTable("#targetUsers");
                                 $(this).dialog("close");
                             }
 
@@ -137,12 +139,12 @@ define([
                 $("#sourceGroups").unbind().on("click", "li", this.addUsers);
                 var self = this;
                 $(".nextGroupList").unbind().on("click", function (e) {
-                    self.pageG += 1
-                    self.nextUserList(e, self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e, self.pageG);
                 });
                 $(".prevGroupList").unbind().on("click", function (e) {
-                    self.pageG -= 1
-                    self.prevUserList(e, self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e, self.pageG);
                 });
 
             },
@@ -156,7 +158,6 @@ define([
                 if ($(".groupsAndUser").find("tr").length == 1) {
                     $(".groupsAndUser").hide();
                 }
-
             },
 
             nextUserList: function (e, page) {
@@ -273,6 +274,7 @@ define([
                 });
 
             },
+
             hideDialog: function () {
                 $(".create-person-dialog").remove();
                 $(".add-group-dialog").remove();
@@ -280,8 +282,7 @@ define([
             },
 
             render: function () {
-                var formString = this.template({
-                });
+                var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
                     autoOpen: true,
@@ -293,12 +294,16 @@ define([
                         {
                             id: "create-person-dialog",
                             text: "Create",
-                            click: function () { self.saveItem(); }
+                            click: function () {
+                                self.saveItem();
+                            }
                         },
 
 						{
 						    text: "Cancel",
-						    click: function () { $(this).dialog().remove(); }
+						    click: function () {
+                                self.hideDialog();
+                            }
 						}]
 
                 });

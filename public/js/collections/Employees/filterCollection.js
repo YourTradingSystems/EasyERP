@@ -62,13 +62,7 @@
             },
             showMoreAlphabet: function (options) {
                 var that = this;
-
-                var filterObject = {};
-                if (options) {
-                    for (var i in options) {
-                        filterObject[i] = options[i];
-                    }
-                }
+                var filterObject = options || {};
 				that.page = 1;
                 filterObject['page'] = (options && options.page) ? options.page : this.page;
                 filterObject['count'] = (options && options.count) ? options.count : this.namberToShow;

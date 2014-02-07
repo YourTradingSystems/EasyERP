@@ -33,7 +33,7 @@
         internalNotes: { type: String, default: '' },
         title: { type: String, default: '' },
         salesPurchases: {
-            isCustomer: { type: Boolean, default: false },
+            isCustomer: { type: Boolean, default: true },
             isSupplier: { type: Boolean, default: false },
             salesPerson: { type: ObjectId, ref: 'Employees', default: null },
             salesTeam: { type: ObjectId, ref: 'Department', default: null },
@@ -823,7 +823,8 @@
                                                 }
                                                     break;
                                                 case ('thumbnails'): {
-                                                    query.populate('company', '_id name').
+                                                    query.select("_id name email").
+                                                        populate('company', '_id name').
                                                         populate('department', '_id departmentName').
                                                         populate('createdBy.user').
                                                         populate('editedBy.user');

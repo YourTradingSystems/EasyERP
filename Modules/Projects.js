@@ -995,7 +995,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
             populate('createdBy.user', '_id login').
             populate('editedBy.user', '_id login').
             populate('groups.owner', '_id name').
-			populate('groups.users', '_id name').
+			populate('groups.users', '_id login').
 			populate('groups.group', '_id departmentName');
         query.exec(function (err, project) {
             if (err) {

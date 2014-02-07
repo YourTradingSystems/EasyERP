@@ -291,7 +291,6 @@ define([
                 return false;
                 
             },
-
     
             hideNewSelect: function (e) {
                 $(".newSelectList").hide();;

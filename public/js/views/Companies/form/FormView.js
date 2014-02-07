@@ -33,7 +33,7 @@ define([
 				var formModel = this.formModel.toJSON();
 				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",null, formModel._id,this.pageMini,this.pageCount,true,function(count){
 					self.allMiniOpp = count.listLength;
-					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount)
+					self.allPages = Math.ceil(self.allMiniOpp/self.pageCount);
 					if (self.allPages == self.pageMini){
 						$(".miniPagination .next").addClass("not-active");
 						$(".miniPagination .last").addClass("not-active");
@@ -123,10 +123,11 @@ define([
 			renderMiniPersons:function(){
 				var self = this;
             	var formModel = this.formModel.toJSON();
-				$("#persons").closest(".form").remove();
 				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,false,function(collection){
-					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false
-					self.$el.find('.formRightColumn').append(
+					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false;
+                    var perElem = self.$el.find('#persons');
+                    perElem.empty();
+					perElem.append(
                         new personsCompactContentView({
                             collection: collection.data,
                         }).render({first:self.pageMiniPersons==1?true:false,last:isLast,all:self.allPagesPersons}).el
@@ -136,10 +137,11 @@ define([
 			renderMiniOpp:function(){
 				var self = this;
             	var formModel = this.formModel.toJSON();
-				$("#opportunities").closest(".form").remove();
 				common.populateOpportunitiesForMiniView("/OpportunitiesForMiniView",null, formModel._id,this.pageMini,this.pageCount,false,function(collection){
-					var isLast = self.pageMini==self.allPages?true:false
-					self.$el.find('.formRightColumn').prepend(
+					var isLast = self.pageMini==self.allPages?true:false;
+                    var oppElem = self.$el.find('#opportunities');
+                    oppElem.empty();
+					oppElem.prepend(
                         new opportunitiesCompactContentView({
                             collection: collection.data,
                         }).render({first:self.pageMini==1?true:false,last:isLast,all:self.allPages}).el
@@ -149,9 +151,9 @@ define([
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-				this.$el.find('.formRightColumn').empty();
+//				this.$el.find('.formRightColumn').empty();
 				this.renderMiniOpp();
-				this.renderMiniPersons();
+//				this.renderMiniPersons();
 /*                this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,
