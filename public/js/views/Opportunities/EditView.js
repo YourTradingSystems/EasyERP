@@ -4,7 +4,7 @@
     "common",
     "custom"
 ],
-    function (EditTemplate, editSelectTemplate, common, Custom) {
+    function (EditTemplate, editSelectTemplate, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -34,13 +34,15 @@
                 'click #removeUsers':'removeUsers'
             },
             changeTab:function(e){
-                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-                $(e.target).addClass("active");
-                var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
-                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+                var holder = $(e.target);
+                holder.closest(".dialog-tabs").find("a.active").removeClass("active");
+                holder.addClass("active");
+                var n= holder.parents(".dialog-tabs").find("li").index(holder.parent());
+                var dialog_holder = $(".dialog-tabs-items");
+                dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
+                dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
-            addUser:function(e){
+            addUser:function(){
                 var self = this;
                 $(".addUserDialog").dialog({
                     dialogClass: "add-user-dialog",
@@ -51,7 +53,7 @@
                             class:"btn",
 
                             click: function(){
-                                click: self.addUserToTable("#targetUsers")
+                                self.addUserToTable("#targetUsers");
                                 $( this ).dialog( "close" );
                             }
 
@@ -68,18 +70,17 @@
                 });
                 $("#targetUsers").unbind().on("click","li",this.removeUsers);
                 $("#sourceUsers").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(document).on("click",".nextUserList",function(e){
-                    self.page+=1
-                    self.nextUserList(e,self.page)
+                    self.page += 1;
+                    self.nextUserList(e,self.page);
                 });
                 $(document).on("click",".prevUserList",function(e){
-                    self.page-=1
-                    self.prevUserList(e,self.page)
+                    self.page -= 1;
+                    self.prevUserList(e,self.page);
                 });
 
             },
-            addGroup:function(e){
+            addGroup:function(){
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
@@ -89,7 +90,7 @@
                             text:"Choose",
                             class:"btn",
                             click: function(){
-                                self.addUserToTable("#targetGroups")
+                                self.addUserToTable("#targetGroups");
                                 $( this ).dialog( "close" );
                             }
                         },
@@ -105,14 +106,13 @@
                 });
                 $("#targetGroups").unbind().on("click","li",this.removeUsers);
                 $("#sourceGroups").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(document).unbind().on("click",".nextGroupList",function(e){
-                    self.pageG+=1
-                    self.nextUserList(e,self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e,self.pageG);
                 });
                 $(document).unbind().on("click",".prevGroupList",function(e){
-                    self.pageG-=1
-                    self.prevUserList(e,self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e,self.pageG);
                 });
             },
             addUsers: function (e) {
@@ -125,31 +125,34 @@
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
             unassign:function(e){
-                var id=$(e.target).closest("tr").data("id");
-                var type=$(e.target).closest("tr").data("type");
-                var text=$(e.target).closest("tr").find("td").eq(0).text();
+                var holder = $(e.target);
+                var id = holder.closest("tr").data("id");
+                var type = holder.closest("tr").data("type");
+                var text = holder.closest("tr").find("td").eq(0).text();
                 $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
-                $(e.target).closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length==1){
-                    $(".groupsAndUser").hide();
+                holder.closest("tr").remove();
+                var groupsAndUser = $(".groupsAndUser");
+                if (groupsAndUser.find("tr").length==1){
+                    groupsAndUser.hide();
                 }
-
             },
             chooseUser:function(e){
                 $(e.target).toggleClass("choosen");
             },
             addUserToTable:function(id){
-                $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function(){
+                var groupsAndUser_holder = $(".groupsAndUser");
+                var groupsAndUserHr_holder = $(".groupsAndUser tr");
+                groupsAndUser_holder.show();
+                groupsAndUserHr_holder.each(function(){
                     if ($(this).data("type")==id.replace("#","")){
                         $(this).remove();
                     }
                 });
                 $(id).find("li").each(function(){
-                    $(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length<2){
-                    $(".groupsAndUser").hide();
+                if (groupsAndUserHr_holder.length<2){
+                    groupsAndUser_holder.hide();
                 }
             },
             keydownHandler: function (e) {
@@ -281,7 +284,6 @@
                     var optout = ($("#optout").is(":checked")) ? true : false;
 
                     var reffered = $.trim($("#reffered").val());
-                    var self = this;
 
                     var usersId=[];
                     var groupsId=[];
@@ -295,8 +297,7 @@
 
                     });
                     var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
-                    this.currentModel.set({
+                    this.currentModel.save({
                         name: name,
                         expectedRevenue: expectedRevenue,
                         customer: customerId,
@@ -315,22 +316,28 @@
                         active: active,
                         optout: optout,
                         reffered: reffered,
+						sequenceStart: this.currentModel.toJSON().info.sequence,
+						info: this.currentModel.toJSON().info,
+						sequence:-1,
+						workflowStart:this.currentModel.toJSON().workflow._id,
                         groups: {
                             owner: $("#allUsers").val(),
                             users: usersId,
                             group: groupsId
                         },
                         whoCanRW: whoCanRW
-                    });
-                    this.currentModel.save({}, {
+                    }, {
                         headers: {
                             mid: mid
                         },
+						patch:true,
                         success: function () {
                             self.hideDialog();
                             Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                         },
-                        error: function () {
+                        error: function (data,data2) {
+							alert();
+							console.log(data2);
                             self.hideDialog();
                             Backbone.history.navigate("home", { trigger: true });
                         }

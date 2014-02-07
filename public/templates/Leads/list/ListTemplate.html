@@ -11,7 +11,7 @@
     <td id='<%=lead._id%>'>
       <a href="javascript:;" class="stageSelect"><%=(lead.workflow) ? lead.workflow.name : ''%></a>
     </td>
-    <td><%=(lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
-    <td><%=(lead.editedBy.user) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
+    <td><%=(lead.createdBy && lead.createdBy.user) ? lead.createdBy.user.login + " (" +  lead.createdBy.date + ")" : "" %></td>
+    <td><%=(lead.editedBy && lead.editedBy.user ) ? lead.editedBy.user.login + " (" +  lead.editedBy.date  + ")" : "" %></td>
 </tr>
 <% }) %>
