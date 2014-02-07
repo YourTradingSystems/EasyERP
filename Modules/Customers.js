@@ -844,8 +844,8 @@
                                                 }
                                                     break;
                                                 case ('thumbnails'): {
-                                                    query.populate('salesPurchases.salesPerson', '_id name').
-                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                    query.select("_id name").
+                                                        populate('company', '_id name address').
                                                         populate('createdBy.user').
                                                         populate('editedBy.user');
                                                 }
@@ -863,8 +863,8 @@
                                                 }
                                                     break;
                                                 case ('thumbnails'): {
-                                                    query.populate('salesPurchases.salesPerson', '_id name').
-                                                        populate('salesPurchases.salesTeam', '_id departmentName').
+                                                    query.select("_id name").
+                                                        populate('company', '_id name address').
                                                         populate('createdBy.user').
                                                         populate('editedBy.user');
                                                 }

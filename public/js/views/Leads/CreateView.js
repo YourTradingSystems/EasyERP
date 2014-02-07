@@ -67,11 +67,13 @@ define([
             },
 
             changeTab:function(e){
-                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-                $(e.target).addClass("active");
-                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
-                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+                var holder = $(e.target);
+                holder.closest(".dialog-tabs").find("a.active").removeClass("active");
+                holder.addClass("active");
+                var n = holder.parents(".dialog-tabs").find("li").index(holder.parent());
+                var dialog_holder = $(".dialog-tabs-items");
+                dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
+                dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
             addUser:function(){
@@ -85,7 +87,7 @@ define([
                             class:"btn",
 
                             click: function(){
-                                click: self.addUserToTable("#targetUsers")
+                                self.addUserToTable("#targetUsers");
                                 $( this ).dialog( "close" );
                             }
 
@@ -102,33 +104,34 @@ define([
                 });
                 $("#targetUsers").unbind().on("click","li",this.removeUsers);
                 $("#sourceUsers").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(".nextUserList").unbind().on("click",function(e){
-                    self.page+=1
-                    self.nextUserList(e,self.page)
+                    self.page += 1;
+                    self.nextUserList(e,self.page);
                 });
                 $(".prevUserList").unbind().on("click",function(e){
-                    self.page-=1
-                    self.prevUserList(e,self.page)
+                    self.page -= 1;
+                    self.prevUserList(e,self.page);
                 });
             },
 
             addUserToTable:function(id){
-                $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function(){
+                var groupsAndUser_holder = $(".groupsAndUser");
+                var groupsAndUserHr_holder = $(".groupsAndUser tr");
+                groupsAndUser_holder.show();
+                groupsAndUserHr_holder.each(function(){
                     if ($(this).data("type")==id.replace("#","")){
                         $(this).remove();
                     }
                 });
                 $(id).find("li").each(function(){
-                    $(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length<2){
-                    $(".groupsAndUser").hide();
+                if (groupsAndUserHr_holder.length<2){
+                    groupsAndUser_holder.hide();
                 }
             },
 
-            addGroup:function(e){
+            addGroup:function(){
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
@@ -138,7 +141,7 @@ define([
                             text:"Choose",
                             class:"btn",
                             click: function(){
-                                self.addUserToTable("#targetGroups")
+                                self.addUserToTable("#targetGroups");
                                 $( this ).dialog( "close" );
                             }
                         },
@@ -154,28 +157,28 @@ define([
                 });
                 $("#targetGroups").unbind().on("click","li",this.removeUsers);
                 $("#sourceGroups").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(".nextGroupList").unbind().on("click",function(e){
-                    self.pageG+=1
-                    self.nextUserList(e,self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e,self.pageG);
                 });
                 $(".prevGroupList").unbind().on("click",function(e){
-                    self.pageG-=1
-                    self.prevUserList(e,self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e,self.pageG);
                 });
 
             },
 
             unassign:function(e){
-                var id=$(e.target).closest("tr").data("id");
-                var type=$(e.target).closest("tr").data("type");
-                var text=$(e.target).closest("tr").find("td").eq(0).text();
+                var holder = $(e.target);
+                var id = holder.closest("tr").data("id");
+                var type = holder.closest("tr").data("type");
+                var text = holder.closest("tr").find("td").eq(0).text();
                 $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
-                $(e.target).closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length==1){
-                    $(".groupsAndUser").hide();
+                holder.closest("tr").remove();
+                var groupsAndUser_holder = $(".groupsAndUser");
+                if (groupsAndUser_holder.find("tr").length==1){
+                    groupsAndUser_holder.hide();
                 }
-
             },
 
             nextUserList:function(e,page){
@@ -221,7 +224,7 @@ define([
                 var company = {
                     name: $company.val(),
                     id: $company.data('id')
-                }
+                };
                 var idCustomer = this.$("#customerDd").data("id");
                 var address = {};
                 $("dd").find(".address").each(function () {
@@ -299,11 +302,11 @@ define([
                             mid: mid
                         },
                         
-                        success: function (model) {
+                        success: function () {
 							self.hideDialog();
                             Backbone.history.navigate("easyErp/Leads", { trigger: true });
                         },
-                        error: function (model, xhr, options) {
+                        error: function (model, xhr) {
                             self.hideDialog();
                             if (xhr && xhr.status === 401) {
                                 Backbone.history.navigate("login", { trigger: true });
