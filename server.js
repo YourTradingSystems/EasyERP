@@ -542,6 +542,8 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
             break;
         case ('Projects'): requestHandler.projectsTotalCollectionLength(req, res);
             break;
+        case ('Tasks'): requestHandler.projectsTotalCollectionLength(req, res);
+            break;
         case ('Leads'): requestHandler.opportunitiesTotalCollectionLength(req, res);
             break;
         case ('Opportunities'): requestHandler.opportunitiesTotalCollectionLength(req, res);

@@ -1,4 +1,11 @@
 ﻿<div>
+    <div class="filterButton">
+        <span class="text">Stage</span>
+        <div class="arrow">
+            ^
+        </div>
+    </div>
+    <ul class="filter-check-list"></ul>
     <table class="list task-list">
         <thead>
             <tr>
@@ -6,8 +13,9 @@
                     <input type="checkbox" id="check_all" />
                 </th>
                 <th>#</th>
-				<th>TaskID</th>
+                <th>TaskID</th>
                 <th>Task Summary</th>
+                <th>Project</th>
                 <th>Status</th>
                 <th>Assigned to</th>
                 <th>Estimated</th>
@@ -21,69 +29,69 @@
         <tbody id="listTable"></tbody>
     </table>
     <div class="pagination">
-      <div class="countOnPage">
-		<div>
-          <span>
-            <span id="grid-start"></span>
-            -
-            <span id="grid-end"></span>
-            of
-            <span id="grid-count"></span>
-            items
-          </span>
-		</div>
-        <div class="pageList">
-          <button id="itemsButton">
-            <span id="itemsNumber"></span>
-          </button>
-          <ul class="allNumberPerPage">
-            <li>
-              <a class="itemsNumber" href="javascript;">5</a>
-            </li>
-            <li>
-              <a class="itemsNumber" href="javascript;">10</a>
-            </li>
-            <li>
-              <a class="itemsNumber" href="javascript;">20</a>
-            </li>
-            <li>
-              <a class="itemsNumber" href="javascript;">50</a>
-            </li>
-            <li>
-              <a class="itemsNumber" href="javascript;">100</a>
-            </li>
-          </ul>
-        </div>
-        <span>Per Page</span>
-      </div>
-      <div class="nextPrev">
-		<div>
-          <button id="previousPage" type="button"></button>
-		  <div>
-			<span>Page</span>
-		  </div>
-		</div>
-        <div>
-          <div>
-			<div>
-              <input id="currentShowPage" type="text">
-			</div>
-            <div class="allPage">
-              <button class="currentPageList">
-                <i class="caret"></i>
-              </button>
-              <ul id="pageList" class="allNumberPerPage">
-              </ul>
+        <div class="countOnPage">
+            <div>
+                <span>
+                    <span id="grid-start"></span>
+                    -
+                    <span id="grid-end"></span>
+                    of
+                    <span id="grid-count"></span>
+                    items
+                </span>
             </div>
-          </div>
+            <div class="pageList">
+                <button id="itemsButton">
+                    <span id="itemsNumber"></span>
+                </button>
+                <ul class="allNumberPerPage">
+                    <li>
+                        <a class="itemsNumber" href="javascript;">5</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">10</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">20</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">50</a>
+                    </li>
+                    <li>
+                        <a class="itemsNumber" href="javascript;">100</a>
+                    </li>
+                </ul>
+            </div>
+            <span>Per Page</span>
         </div>
-		<div>
-        <span>
-          of
-          <span id="lastPage"></span>
-        </span>
-		</div>
-        <button  id="nextPage" type="button"></button>
-      </div>
+        <div class="nextPrev">
+            <div>
+                <button id="previousPage" type="button"></button>
+                <div>
+                    <span>Page</span>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <div>
+                        <input id="currentShowPage" type="text">
+                    </div>
+                    <div class="allPage">
+                        <button class="currentPageList">
+                            <i class="caret"></i>
+                        </button>
+                        <ul id="pageList" class="allNumberPerPage">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <span>
+                    of
+                    <span id="lastPage"></span>
+                </span>
+            </div>
+            <button  id="nextPage" type="button"></button>
+        </div>
     </div>
 </div>
