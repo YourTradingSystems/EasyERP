@@ -7,6 +7,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         task: [{ type: ObjectId, ref: 'Tasks', default: null }],
         customer: { type: ObjectId, ref: 'Customers', default: null },
         projectmanager: { type: ObjectId, ref: 'Employees', default: null },
+        description: String,
         whoCanRW: { type: String, enum: ['owner', 'group', 'everyOne'], default: 'everyOne' },
         groups: {
             owner: { type: ObjectId, ref: 'Users', default: null },
