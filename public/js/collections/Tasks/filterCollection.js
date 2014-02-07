@@ -2,7 +2,7 @@
     'models/TasksModel',
     'common'
 ],
-    function (TaskModel, common) {
+    function (TaskModel) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
             url: "/Tasks/",
@@ -65,31 +65,6 @@
 
             parse: true,
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (task) {
-                        if (task.createdBy)
-                            task.createdBy.date = common.utcDateToLocaleDateTime(task.createdBy.date);
-                        if (task.editedBy)
-                            task.editedBy.date = common.utcDateToLocaleDateTime(task.editedBy.date);
-                        // task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                        // task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
-                        // task.deadline = common.utcDateToLocaleDate(task.deadline);
-                        if (task.notes) {
-                            _.map(task.notes, function (note) {
-                                note.date = common.utcDateToLocaleDate(note.date);
-                                return note;
-                            });
-                        }
-
-                        if (task.attachments) {
-                            _.map(task.attachments, function (attachment) {
-                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                                return attachment;
-                            });
-                        }
-                        return task;
-                    });
-                }
                 return response.data;
             }
 

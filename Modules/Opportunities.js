@@ -580,6 +580,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 break;
         }
 
+        console.log('>>>>>>>>>>>');
+        console.log(optionsObject);
+
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
                 $match: {

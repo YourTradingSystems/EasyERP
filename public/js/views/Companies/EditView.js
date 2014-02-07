@@ -4,11 +4,9 @@ define([
     "collections/Employees/EmployeesCollection",
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
-    "common",
-    "custom",
-    "dataService"
+    "common"
 ],
-    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common, Custom, dataService) {
+    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -46,14 +44,16 @@ define([
             },
 
             changeTab:function(e){
-                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-                $(e.target).addClass("active");
-                var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
-                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+                var holder = $(e.target);
+                holder.closest(".dialog-tabs").find("a.active").removeClass("active");
+                holder.addClass("active");
+                var n= holder.parents(".dialog-tabs").find("li").index(holder.parent());
+                var dialog_holder = $(".dialog-tabs-items");
+                dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
+                dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
-            addUser:function(e){
+            addUser:function(){
                 var self = this;
                 $(".addUserDialog").dialog({
                     dialogClass: "add-user-dialog",
@@ -64,7 +64,7 @@ define([
                             class:"btn",
 
                             click: function(){
-                                click: self.addUserToTable("#targetUsers")
+                                self.addUserToTable("#targetUsers");
                                 $( this ).dialog( "close" );
                             }
 
@@ -81,19 +81,18 @@ define([
                 });
                 $("#targetUsers").unbind().on("click","li",this.removeUsers);
                 $("#sourceUsers").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(document).on("click",".nextUserList",function(e){
-                    self.page+=1
-                    self.nextUserList(e,self.page)
+                    self.page += 1;
+                    self.nextUserList(e,self.page);
                 });
                 $(document).on("click",".prevUserList",function(e){
-                    self.page-=1
-                    self.prevUserList(e,self.page)
+                    self.page -= 1;
+                    self.prevUserList(e,self.page);
                 });
 
             },
 
-            addGroup:function(e){
+            addGroup:function(){
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
@@ -103,7 +102,7 @@ define([
                             text:"Choose",
                             class:"btn",
                             click: function(){
-                                self.addUserToTable("#targetGroups")
+                                self.addUserToTable("#targetGroups");
                                 $( this ).dialog( "close" );
                             }
                         },
@@ -119,14 +118,13 @@ define([
                 });
                 $("#targetGroups").unbind().on("click","li",this.removeUsers);
                 $("#sourceGroups").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(document).unbind().on("click",".nextGroupList",function(e){
-                    self.pageG+=1
-                    self.nextUserList(e,self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e,self.pageG);
                 });
                 $(document).unbind().on("click",".prevGroupList",function(e){
-                    self.pageG-=1
-                    self.prevUserList(e,self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e,self.pageG);
                 });
             },
 
@@ -142,13 +140,15 @@ define([
             },
 
             unassign:function(e){
-                var id=$(e.target).closest("tr").data("id");
-                var type=$(e.target).closest("tr").data("type");
-                var text=$(e.target).closest("tr").find("td").eq(0).text();
+                var holder = $(e.target);
+                var id = holder.closest("tr").data("id");
+                var type = holder.closest("tr").data("type");
+                var text = holder.closest("tr").find("td").eq(0).text();
                 $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
-                $(e.target).closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length==1){
-                    $(".groupsAndUser").hide();
+                holder.closest("tr").remove();
+                var groupsAndUser = $(".groupsAndUser");
+                if (groupsAndUser.find("tr").length==1){
+                    groupsAndUser.hide();
                 }
 
             },
@@ -158,36 +158,24 @@ define([
             },
 
             addUserToTable:function(id){
-                $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function(){
+                var groupsAndUser_holder = $(".groupsAndUser");
+                var groupsAndUserHr_holder = $(".groupsAndUser tr");
+                groupsAndUser_holder.show();
+                groupsAndUserHr_holder.each(function(){
                     if ($(this).data("type")==id.replace("#","")){
                         $(this).remove();
                     }
                 });
                 $(id).find("li").each(function(){
-                    $(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length<2){
-                    $(".groupsAndUser").hide();
+                if (groupsAndUserHr_holder.length<2){
+                    groupsAndUser_holder.hide();
                 }
             },
-			toggleDetails:function(e){
+			toggleDetails:function(){
 				$("#details-dialog").toggle();
 			},
-            showEdit: function () {
-                $(".upload").animate({
-                    height: "20px",
-                    display: "block"
-                }, 250);
-
-            },
-            hideEdit: function () {
-                $(".upload").animate({
-                    height: "0px",
-                    display: "block"
-                }, 250);
-
-            },
             hideDialog: function () {
                 $(".edit-companies-dialog").remove();
                 $(".add-group-dialog").remove();
@@ -228,7 +216,6 @@ define([
             },
             saveItem: function (event) {
                 if(event) event.preventDefault();
-                var self = this;
                 var mid = 39;
 
                 var usersId=[];
@@ -306,13 +293,13 @@ define([
                     s += "<li>" + $(this).text() + "</li>";
                 });
                 s += "</ul>";
-                $(".newSelectList").hide();;
+                $(".newSelectList").hide();
                 $(e.target).parent().append(s);
                 return false;
             },
 
-            hideNewSelect: function (e) {
-                $(".newSelectList").hide();;
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
             },
             chooseOption: function (e) {
                 var k = $(e.target).parent().find("li").index($(e.target));

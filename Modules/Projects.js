@@ -1026,7 +1026,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         if (data && data.parrentContentId) {
             addObj['_id'] = newObjectId(data.parrentContentId);
         }
-        if (data && data.status) {
+        if (data && data.type !== 'Tasks' && data.status) {
             addObj['workflow'] = { $in: data.status.objectID() };
         } else if (data && !data.newCollection) {
             addObj['workflow'] = { $in: [] };
@@ -1087,9 +1087,14 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         function (err, projectsId) {
                             if (!err) {
                                 if (data && data.type == 'Tasks') {
-                                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
-                                        where('project').in(projectsId.objectID()).
-                                        exec(function (err, result) {
+                                    var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
+                                        where('project').in(projectsId.objectID());
+                                    if (data && data.status) {
+                                        query.where('workflow').in(data.status);
+                                    } else if (data && !data.newCollection) {
+                                        query.where('workflow').in([]);
+                                    }
+                                    query.exec(function (err, result) {
                                             if (!err) {
                                                 if (data.currentNumber && data.currentNumber < result.length) {
                                                     res['showMore'] = true;
@@ -1842,9 +1847,14 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         },
                         function (err, projectsId) {
                             if (!err) {
-                                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
-                                    where('project').in(projectsId.objectID()).
-                                    select("-attachments -notes").
+                                var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
+                                    where('project').in(projectsId.objectID());
+                                if (data && data.status) {
+                                    query.where('workflow').in(data.status);
+                                } else if (data && !data.newCollection) {
+                                    query.where('workflow').in([]);
+                                }
+                                query.select("-attachments -notes").
                                     populate('project', 'projectShortDesc projectName').
                                     populate('assignedTo', 'name').
                                     populate('editedBy.user', 'login').
