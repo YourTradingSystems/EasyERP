@@ -1,26 +1,37 @@
 define([
     'text!templates/Tasks/list/ListHeader.html',
+    'text!templates/stages.html',
     'views/Tasks/CreateView',
     'views/Tasks/list/ListItemView',
+    'views/Tasks/EditView',
+    'models/TasksModel',
+    'views/Projects/EditView',
+    'models/ProjectsModel',
 	'common',
     'dataService'
 ],
 
-    function (ListTemplate, CreateView, ListItemView, common, dataService) {
+    function (listTemplate, stagesTamplate, createView, listItemView, editView, currentModel, projectEditView, projectModel, common, dataService) {
         var TasksListView = Backbone.View.extend({
             el: '#content-holder',
-            parrentContentId: '10',
-            defaultItemsNumber : 50,
+            defaultItemsNumber: null,
+            listLength: null,
+            wfStatus: [],
+            convertedStatus: null,
+            newCollection: true,
 
             initialize: function (options) {
-				this.startTime = options.startTime;
+                $(document).off("click");
+                this.startTime = options.startTime;
                 this.collection = options.collection;
+                _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
-				this.stages = [];
-                //this.collection.bind('reset', _.bind(this.render, this));
-                if (this.collection.namberToShow)
-                    this.defaultItemsNumber = this.collection.namberToShow;
+                this.stages = [];
+                this.wfStatus = this.collection.wfStatus;
+                this.defaultItemsNumber = this.collection.namberToShow || 50;
+                this.deleteCounter = 0;
                 this.render();
+                this.getTotalLength(null, this.defaultItemsNumber);
             },
 
             events: {
@@ -30,30 +41,143 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(:has('input[type='checkbox']'))": "gotoForm",
-				"click #itemsButton": "itemsNumber",
-				"click .currentPageList": "itemsNumber",
-				"click":"hideItemsNumber"
+                "click tr": "goToEditDialog",
+                "click .project": "goToProject",
+                "click #itemsButton": "itemsNumber",
+                "click .currentPageList": "itemsNumber",
+                "click": "hideItemsNumber",
+                "click .stageSelect": "showNewSelect",
+                "click .newSelectList li": "chooseOption",
+                "click .filterButton": "showfilter",
+                "click .filter-check-list li": "checkCheckbox"
             },
 
- 			hideItemsNumber:function(e){
-				$(".allNumberPerPage").hide();
-			},
+            getTotalLength: function (currentNumber, itemsNumber) {
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    currentNumber: currentNumber,
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                    context.pageElementRender(response.count, itemsNumber);//prototype in main.js
+                }, this);
+            },
 
-			itemsNumber:function(e){
-				$(e.target).closest("button").next("ul").toggle();
-				return false;
-			},
+            goToProject: function(e) {
+                var projectId = $(e.target).data('id');
+                var model = new projectModel({ validate: false });
+                model.urlRoot = '/Projects/form/' + projectId;
+                model.fetch({
+                    success: function (model) {
+                        new projectEditView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
+                return false;
+            },
+
+            goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/Tasks/form/' + id;
+                model.fetch({
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
+            },
+
+            hideNewSelect: function (e) {
+                $(".newSelectList").hide();
+            },
+
+            showfilter: function (e) {
+                $(".filter-check-list").toggle();
+                return false;
+            },
+
+            checkCheckbox: function (e) {
+                if (!$(e.target).is("input")) {
+                    $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
+                }
+            },
+
+            showNewSelect: function (e) {
+                if ($(".newSelectList").is(":visible")) {
+                    this.hideNewSelect();
+                    return false;
+                } else {
+                    $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+                    return false;
+                }
+            },
+
+            chooseOption: function (e) {
+                var targetElement = $(e.target).parents("td");
+                var id = targetElement.attr("id");
+                var model = this.collection.get(id);
+                model.save({ workflow: $(e.target).attr("id") }, {
+                    headers:
+                        {
+                            mid: 39
+                        },
+                    patch: true,
+                    validate: false,
+                    success: function () {
+                        targetElement.find(".stageSelect").text($(e.target).text());
+                    }
+                });
+
+                this.hideNewSelect();
+                return false;
+            },
+
+            showFilteredPage: function () {
+                this.startTime = new Date();
+                var workflowIdArray = [];
+                $('.filter-check-list input:checked').each(function () {
+                    workflowIdArray.push($(this).val());
+                });
+                this.wfStatus = workflowIdArray;
+                var itemsNumber = $("#itemsNumber").text();
+                this.collection.showMore({ count: itemsNumber, page: 1, status: workflowIdArray, parrentContentId: this.parrentContentId });
+                this.getTotalLength(null, itemsNumber);
+            },
+
+            hideItemsNumber: function (e) {
+                $(".allNumberPerPage").hide();
+                $(".newSelectList").hide();
+                if (!$(e.target).closest(".filter-check-list").length) {
+                    $(".allNumberPerPage").hide();
+                    if ($(".filter-check-list").is(":visible")) {
+                        $(".filter-check-list").hide();
+                        this.showFilteredPage();
+                    }
+                }
+            },
+
+            pushStages: function (stages) {
+                this.stages = stages;
+            },
+
+            itemsNumber: function (e) {
+                $(e.target).closest("button").next("ul").toggle();
+                return false;
+            },
 
             deleteItemsRender: function (deleteCounter, deletePage) {
                 this.startTime = new Date();
                 var self = this;
-                $('.task-list').find("input").prop("checked",false);
+                $('.task-list').find("input").prop("checked", false);
                 $("#top-bar-deleteBtn").hide();
                 var itemsNumber = parseInt($("#itemsNumber").text());
 
                 if (deleteCounter == this.collectionLength) {
-                    var pageNumber = Math.ceil(this.listLength/itemsNumber);
+                    var pageNumber = Math.ceil(this.listLength / itemsNumber);
                     if (deletePage > 1) {
                         deletePage = deletePage - 1;
                     }
@@ -68,88 +192,96 @@ define([
                         $("#grid-start").text(0);
                         $("#grid-end").text(0);
                         $("#grid-count").text(0);
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",true);
+                        $("#previousPage").prop("disabled", true);
+                        $("#nextPage").prop("disabled", true);
                         $("#currentShowPage").val(0);
                         $("#lastPage").text(0);
                         $("#pageList").empty();
                         $("#listTable").empty();
                     } else {
-                        $("#grid-start").text((deletePage-1)*itemsNumber + 1);
-                        $("#grid-end").text(deletePage*itemsNumber);
+                        $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
+                        $("#grid-end").text(deletePage * itemsNumber);
                         $("#grid-count").text(this.listLength);
                         $("#currentShowPage").val(deletePage);
                         $("#pageList").empty();
 
-                        for (var i=1;i<=pageNumber;i++) {
-                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                        for (var i = 1; i <= pageNumber; i++) {
+                            $("#pageList").append('<li class="showPage">' + i + '</li>')
                         }
                         $("#lastPage").text(pageNumber);
 
-                        if (deletePage <= 1 ) {
-                            $("#previousPage").prop("disabled",true);
-                            $("#nextPage").prop("disabled",false);
+                        if (deletePage <= 1) {
+                            $("#previousPage").prop("disabled", true);
+                            $("#nextPage").prop("disabled", false);
                         }
                         if (deletePage >= pageNumber) {
-                            $("#nextPage").prop("disabled",true);
-                            $("#previousPage").prop("disabled",false);
+                            $("#nextPage").prop("disabled", true);
+                            $("#previousPage").prop("disabled", false);
                         }
                         if ((1 < deletePage) && (deletePage < pageNumber)) {
-                            $("#nextPage").prop("disabled",false);
-                            $("#previousPage").prop("disabled",false);
+                            $("#nextPage").prop("disabled", false);
+                            $("#previousPage").prop("disabled", false);
                         }
-                        if ((deletePage == pageNumber) && (pageNumber == 1) ) {
-                            $("#previousPage").prop("disabled",true);
-                            $("#nextPage").prop("disabled",true);
+                        if ((deletePage == pageNumber) && (pageNumber == 1)) {
+                            $("#previousPage").prop("disabled", true);
+                            $("#nextPage").prop("disabled", true);
                         }
 
                         _.bind(this.collection.showMore, this.collection);
-                        this.collection.showMore({count: itemsNumber, page: deletePage, parrentContentId: this.parrentContentId});
+                        this.collection.showMore({ count: itemsNumber, page: deletePage, parrentContentId: this.parrentContentId });
                     }
                 } else {
                     $("#listTable").empty()
-                    this.$el.append(new ListItemView({ collection: this.collection}).render());
+                    this.$el.append(new listItemView({ collection: this.collection }).render());
 
-                    $("#grid-start").text((deletePage-1)*itemsNumber + 1);
-                    $("#grid-end").text((deletePage-1)*itemsNumber + this.collectionLength - deleteCounter);
+                    $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
+                    $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
                     $("#grid-count").text(this.listLength);
                     $("#currentShowPage").val(deletePage);
 
                     $("#pageList").empty();
-                    var pageNumber = Math.ceil(this.listLength/itemsNumber);
-                    for (var i=1;i<=pageNumber;i++) {
-                        $("#pageList").append('<li class="showPage">'+ i +'</li>')
+                    var pageNumber = Math.ceil(this.listLength / itemsNumber);
+                    for (var i = 1; i <= pageNumber; i++) {
+                        $("#pageList").append('<li class="showPage">' + i + '</li>')
                     }
                     $("#lastPage").text(pageNumber);
 
-                    if (deletePage <= 1 ) {
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",false);
+                    if (deletePage <= 1) {
+                        $("#previousPage").prop("disabled", true);
+                        $("#nextPage").prop("disabled", false);
                     }
                     if (deletePage >= pageNumber) {
-                        $("#nextPage").prop("disabled",true);
-                        $("#previousPage").prop("disabled",false);
+                        $("#nextPage").prop("disabled", true);
+                        $("#previousPage").prop("disabled", false);
                     }
                     if ((1 < deletePage) && (deletePage < pageNumber)) {
-                        $("#nextPage").prop("disabled",false);
-                        $("#previousPage").prop("disabled",false);
+                        $("#nextPage").prop("disabled", false);
+                        $("#previousPage").prop("disabled", false);
                     }
-                    if ((deletePage == pageNumber) && (pageNumber == 1) ) {
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",true);
+                    if ((deletePage == pageNumber) && (pageNumber == 1)) {
+                        $("#previousPage").prop("disabled", true);
+                        $("#nextPage").prop("disabled", true);
                     }
                     $('#timeRecivingDataFromServer').remove();
-                    this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+                    this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
                 }
             },
 
             render: function () {
-                var self = this;
                 $('.ui-dialog ').remove();
-                this.$el.html(_.template(ListTemplate));
-                var itemView = new ListItemView({ collection: this.collection });
+                var self = this;
+                var currentEl = this.$el;
+
+                currentEl.html('');
+                currentEl.append(_.template(listTemplate));
+
+                currentEl.html('');
+                currentEl.append(_.template(listTemplate));
+                var itemView = new listItemView({ collection: this.collection });
+                currentEl.append(itemView.render());
+
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
-                this.$el.append(itemView.render());
+
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -157,208 +289,93 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-                dataService.getData('/ProjectsListLength', { mid: 39, type: 'Tasks', parrentContentId: this.parrentContentId }, function (response) {
-                    self.listLength = response.listLength;
-                    var itemsNumber = self.defaultItemsNumber;
-                    $("#itemsNumber").text(itemsNumber);
-                    if ((self.listLength == 0) || self.listLength == undefined) {
-                        $("#grid-start").text(0);
-                        $("#grid-end").text(0);
-                        $("#grid-count").text(0);
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",true);
-                        $("#pageList").empty();
-                        $("#currentShowPage").val(0);
-                        $("#lastPage").text(0);
-                    } else {
-                        $("#grid-start").text(1);
-                        if (self.listLength <= itemsNumber) {
-                            $("#grid-end").text(self.listLength);
-                        } else {
-                            $("#grid-end").text(itemsNumber);
-                        }
-                        $("#grid-count").text(self.listLength);
-                        $("#pageList").empty();
-                        var pageNumber = Math.ceil(self.listLength/itemsNumber);
-                        for (var i=1;i<=pageNumber;i++) {
-                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
-                        }
-                        $("#lastPage").text(pageNumber);
-                        $("#currentShowPage").val(1);
-                        $("#previousPage").prop("disabled",true);
-                        if (pageNumber <= 1) {
-                            $("#nextPage").prop("disabled",true);
-                        } else {
-                            $("#nextPage").prop("disabled",false);
-                        }
-                    }
-                });
 
-                common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function(stages) {
-					self.stages = stages;
+                common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function (stages) {
+                    self.stages = stages;
                     itemView.trigger('incomingStages', stages);
                 });
-				$(document).on("click",function(){
-					self.hideItemsNumber();
-				});
-				this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+
+                $(document).on("click", function (e) {
+                    self.hideItemsNumber(e);
+                });
+
+                currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
 
             previousPage: function (event) {
-                this.startTime = new Date();
                 event.preventDefault();
-                var itemsNumber = $("#itemsNumber").text();
-                var page = parseInt($("#currentShowPage").val()) - 1;
-                $("#currentShowPage").val(page);
-                if (page == 1) {
-                    $("#previousPage").prop("disabled",true);
-                }
-                $("#grid-start").text((page - 1)*itemsNumber+1);
-                if (this.listLength <= page*itemsNumber ) {
-                    $("#grid-end").text(this.listLength);
-                } else {
-                    $("#grid-end").text(page*itemsNumber);
-                }
-                $("#nextPage").prop("disabled",false);
-                $('.task-list').find("input").prop("checked",false);
-                _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: page, parrentContentId: this.parrentContentId});
+                this.prevP({
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
             },
 
             nextPage: function (event) {
-                this.startTime = new Date();
                 event.preventDefault();
-                var itemsNumber = $("#itemsNumber").text();
-                var page =  parseInt($("#currentShowPage").val()) + 1;
-                $("#currentShowPage").val(page);
-                $("#grid-start").text((page - 1)*itemsNumber+1);
-                if (this.listLength <= page*itemsNumber ) {
-                    $("#grid-end").text(this.listLength);
-                    $("#nextPage").prop("disabled",true);
-                } else {
-                    $("#grid-end").text(page*itemsNumber);
-                }
-                $("#previousPage").prop("disabled",false);
-                $('.task-list').find("input").prop("checked",false);
-                _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: page, parrentContentId: this.parrentContentId});
+                this.nextP({
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
+                dataService.getData('/totalCollectionLength/Projects', {
+                    type: 'Tasks',
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
             },
 
             switchPageCounter: function (event) {
-                this.startTime = new Date();
-                var self = this;
                 event.preventDefault();
-                $('.task-list').find("input").prop("checked",false);
+                this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
-
-                dataService.getData('/ProjectsListLength', { mid: 39, type: 'Tasks', parrentContentId: this.parrentContentId }, function (response) {
-                    self.listLength = response.listLength;
-                    if ((self.listLength == 0) || self.listLength == undefined) {
-                        $("#grid-start").text(0);
-                        $("#grid-end").text(0);
-                        $("#grid-count").text(0);
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",true);
-                        $("#pageList").empty();
-                        $("#currentShowPage").val(0);
-                        $("#lastPage").text(0);
-                    } else {
-                        $("#grid-start").text(1);
-                        if (self.listLength <= itemsNumber) {
-                            $("#grid-end").text(self.listLength);
-                            $("#nextPage").prop("disabled",true);
-                        } else {
-                            $("#grid-end").text(itemsNumber);
-                            $("#nextPage").prop("disabled",false);
-                        }
-                        $("#grid-count").text(self.listLength);
-                        $("#previousPage").prop("disabled",true);
-                        $("#itemsNumber").text(itemsNumber);
-                        $("#currentShowPage").val(1);
-                        var pageNumber = Math.ceil(self.listLength/itemsNumber);
-                        $("#lastPage").text(pageNumber);
-                        $("#pageList").empty();
-                        for (var i=1;i<=pageNumber;i++) {
-                            $("#pageList").append('<li class="showPage">'+ i +'</li>')
-                        }
-                    }
+                this.getTotalLength(null, itemsNumber);
+                this.collection.showMore({
+                    count: itemsNumber,
+                    page: 1,
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
                 });
-
-                _.bind(this.collection.showMore, this.collection);
-                this.collection.showMore({count: itemsNumber, page: 1, parrentContentId: this.parrentContentId});
             },
 
             showPage: function (event) {
-                this.startTime = new Date();
                 event.preventDefault();
-                $('.task-list').find("input").prop("checked",false);
-                if (this.listLength == 0) {
-                    $("#currentShowPage").val(0);
-                } else {
-                    var itemsNumber = $("#itemsNumber").text();
-                    var page = event.target.textContent;
-                    if (!page) {
-                        page = $(event.target).val();
-                    }
-                    var adr = /^\d+$/;
-                    var lastPage = $('#lastPage').text();
-
-                    if (!adr.test(page) || (parseInt(page) <= 0) || (parseInt(page) > parseInt(lastPage))) {
-                        page = 1;
-                    }
-                    $("#currentShowPage").val(page);
-                    $("#grid-start").text((page - 1)*itemsNumber +1);
-                    if (this.listLength <= page*itemsNumber ) {
-                        $("#grid-end").text(this.listLength);
-                    } else {
-                        $("#grid-end").text(page*itemsNumber);
-                    }
-                    if (page <= 1 ) {
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",false);
-                    }
-                    if (page >= lastPage) {
-                        $("#nextPage").prop("disabled",true);
-                        $("#previousPage").prop("disabled",false);
-                    }
-                    if ((1 < page) && (page < lastPage)) {
-                        $("#nextPage").prop("disabled",false);
-                        $("#previousPage").prop("disabled",false);
-                    }
-                    if ((page == lastPage) && (lastPage == 1) ) {
-                        $("#previousPage").prop("disabled",true);
-                        $("#nextPage").prop("disabled",true);
-                    }
-
-                    _.bind(this.collection.showMore, this.collection);
-                    this.collection.showMore({count: itemsNumber, page: page, parrentContentId: this.parrentContentId});
-                }
+                this.showP(event, { status: this.wfStatus, newCollection: this.newCollection, parrentContentId: this.parrentContentId });
             },
 
             showMoreContent: function (newModels) {
-                $("#listTable").empty();
-                this.$el.append(new ListItemView({ collection: newModels }).render());
-                $('#timeRecivingDataFromServer').remove();
-                this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
-            },
+                var holder = this.$el;
+                holder.find("#listTable").empty();
+                var itemView = new listItemView({ collection: newModels });
+                holder.append(itemView.render());
+                itemView.undelegateEvents();
 
-            gotoForm: function (e) {
-                App.ownContentType = true;
-                var id = $(e.target).closest("tr").data("id");
-                window.location.hash = "#easyErp/Tasks/form/" + id;
+                holder.find('#timeRecivingDataFromServer').remove();
+                holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
 
             createItem: function () {
                 //create editView in dialog here
-                new CreateView();
+                new createView();
             },
 
             checked: function () {
                 if (this.collection.length > 0) {
                     if ($("input.checkbox:checked").length > 0)
                         $("#top-bar-deleteBtn").show();
-                    else
-                    {
+                    else {
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);
                     }

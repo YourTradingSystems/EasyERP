@@ -198,9 +198,9 @@ define([
                 custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
-                    var contentview = new contentView({ collection: collection, startTime: startTime });
                     var topbarView = new topBarView({ actionType: "Content", collection: collection });
-
+                    var contentview = new contentView({ collection: collection, startTime: startTime });
+                   
                     topbarView.bind('createEvent', contentview.createItem, contentview);
                     topbarView.bind('editEvent', contentview.editItem, contentview);
                     topbarView.bind('deleteEvent', contentview.deleteItems, contentview);

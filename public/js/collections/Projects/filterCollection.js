@@ -61,7 +61,6 @@
 
             parse: true,
             parse: function (response) {
-                this.listLength = response.listLength;
                 return response.data;
             }
         });
