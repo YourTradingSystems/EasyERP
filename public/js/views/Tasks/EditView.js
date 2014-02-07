@@ -14,7 +14,7 @@
                    _.bindAll(this, "render", "saveItem");
                    _.bindAll(this, "render", "deleteItem");
                    this.currentModel = (options.model) ? options.model : options.collection.getElement();
-				   this.responseObj = {}
+				   this.responseObj = {};
                    this.render();
                },
 
@@ -473,7 +473,7 @@
                    var self = this;
                    this.$el = $(formString).dialog({
                        dialogClass: "edit-dialog",
-                       width: 600,
+                       width: 500,
                        title: this.currentModel.toJSON().project.projectShortDesc,
                        buttons:{
                            save:{

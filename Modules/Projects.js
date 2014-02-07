@@ -366,6 +366,11 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                     if (data.task) {
                         _project.task = data.task;
                     }
+
+                    if (data.description) {
+                        _project.description = data.description;
+                    }
+
                     if (data.groups) {
                         _project.groups = data.groups;
                     }
@@ -989,7 +994,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
     };
 
     function getById(req, data, response) {
-        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(data.id, function (err, res) { });
+        var query = models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(data.id);
         query.populate('projectmanager', 'name _id');
         query.populate('customer', 'name _id');
         query.populate('workflow').

@@ -240,7 +240,7 @@ define([
                    var self = this;
                    this.$el = $(formString).dialog({
                        dialogClass: "edit-dialog",
-                       width: 600,
+                       width: 500,
                        title: "Create Task",
                        buttons: {
                            save: {

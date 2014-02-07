@@ -332,7 +332,9 @@
                             self.hideDialog();
                             Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                         },
-                        error: function () {
+                        error: function (data,data2) {
+							alert();
+							console.log(data2);
                             self.hideDialog();
                             Backbone.history.navigate("home", { trigger: true });
                         }

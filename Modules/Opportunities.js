@@ -915,7 +915,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 						data.info.sequence-=1;
 					models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
 						if (!err) {
-							res.send(200);
+							res.send(200, { success: 'Opportunities updated' });
 						} else {
 							res.send(500, { error: "Can't update Opportunitie" });
 						}
@@ -926,14 +926,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 			});
 		}else{
 			updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema),"info.sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function(sequence){
-				console.log(data.sequence);
 				delete data.sequenceStart;
 				delete data.workflowStart;
 				data.info = {};
 				data.info.sequence = sequence;
 				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
 					if (!err) {
-						res.send(200);
+						res.send(200, { success: 'Opportunities updated' });
 					} else {
 						res.send(500, { error: "Can't update Opportunitie" });
 					}

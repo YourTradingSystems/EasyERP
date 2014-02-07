@@ -13,19 +13,19 @@
       </div>
       <div class="clearfix">
       </div>
-      <input type="text" name="summary" class="input-title-long blueback" id="summary" value="<%=model.summary%>" required maxlength="32"/>
+      <input type="text" name="summary" class="input-title-long blueback projectSummary" id="summary" value="<%=model.summary%>" required maxlength="32"/>
       <div class="half-block left withPaddingLeft taskNote">
-        <div class="inner">
-          <textarea type="text" name="description" class="taskDescription" placeholder="Add a Description" id="description" required ><%=model.description%> </textarea>
+        <div class="">
+          <textarea type="text" name="description" class="projectDescription" placeholder="Add a Description" id="description" required ><%=model.description%> </textarea>
         </div>
       </div>
       <div class="half-block left">
-        <div class="inner">
-          <dl class="person-info">
+        <div class="">
+          <dl class="task-info">
             <dt><label>Project </label></dt><dd>
 			  <a id="projectDd" data-id="<%=model.project._id%>" class="current-selected" href="javascript:;"><%=model.project.projectName%></a>
             </dd>
-            <dt><label for="workflowNamesDd">Workflow :</label></dt><dd>
+            <dt><label for="workflowNamesDd">Workflow</label></dt><dd>
 			  <a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
 
             </dd>
@@ -62,6 +62,7 @@
 
 		<div class="clearfix"></div>  
 	  </div>
+		<div class="clearfix"></div>  
 	  <div class="noteWrapper full-width">
 		<label>Note</label>
 		<div id="noteBody">

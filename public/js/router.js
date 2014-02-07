@@ -289,7 +289,7 @@ define([
             var collectionUrl = "collections/Workflows/WorkflowsCollection";
 
             if (this.mainView == null) this.main(contentType);
-
+            custom.setCurrentVT('kanban');
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, workflowsCollection) {
                 var startTime = new Date();
 

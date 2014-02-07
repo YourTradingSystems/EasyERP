@@ -1447,8 +1447,15 @@
 			&.taskDescription{
 				height:310px;
 			}
+			&.projectDescription{
+				height:225px;
+				margin-top:5px !important;
+			}
 			&.taskDescriptionCreate{
-				height:340px;
+				height:255px;
+			}
+			&.projectDescriptionCreate{
+				height:270px;
 			}
 
 		}
@@ -1488,13 +1495,29 @@
 					}
 				}
 				}
-						
-    .person-info-h3 {
+.person-info-h3 {
+    width: auto;
+    .dl-auto(auto,50%);
+    clear: none;
 
-        dt, dd {
-            margin-top: 0 !important;
-					}
-				}
+    dt, dd {
+        clear: none;
+        margin-top: 0px !important;
+
+        a {
+            line-height: 22px;
+        }
+    }
+
+    dt {
+        width: 90px;
+    }
+
+    dd {
+        width: auto;
+    }
+
+    }
 
     .summary-info {
         width:50%;
@@ -1523,7 +1546,7 @@
         &#summary {
             width: 100%;
             max-width: none;
-	}
+		}
 }
 
 
@@ -2350,6 +2373,13 @@ dl {
 
 .noteWrapper {
     width: 50%;
+	&.projects-dialog{
+		width:98%;
+		margin:0 auto;
+		.addNote textarea{
+			max-width:inherit;
+		}
+	}
 	&.full-width{
 		width:100%;
 	}
@@ -2561,7 +2591,6 @@ dl {
 .person-info, .customer-info {
     .dl-auto;
 }
-
 .half-block {
     width: 50%;
 	&.projectNote{
@@ -3804,4 +3833,19 @@ h3.dashboard {
 	&.inprogress{
 		color:@lightblue;
 	}
+}
+.form-holder form {
+.task-info{
+    .dl-auto(200px,40%);
+	input{
+		width:70% !important;
+	}
+}
+.task-summary-info{
+	.dl-auto(1000px,20%);
+	input{
+		width:95%!important;
+	}
+}
+
 }
