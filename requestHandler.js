@@ -1927,6 +1927,24 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
+    function opportunitieUpdateOnlySelectedFields(req, res, id, data) {
+        console.log("Requst updateOnlySelectedFields is success");
+		data = data.opportunitie;
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            if (access) {
+                data.editedBy = {
+                    user: req.session.uId,
+                    date: new Date().toISOString()
+                };
+                opportunities.updateOnlySelectedFields(req, id, data, res);
+            } else {
+                res.send(403);
+            }
+        } else {
+            res.send(401);
+        }
+    }
+
     function removeOpportunitie(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 25, function (access) {
@@ -2297,6 +2315,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getOpportunityById: getOpportunityById,
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
+		opportunitieUpdateOnlySelectedFields: opportunitieUpdateOnlySelectedFields,
 
         createEvent: createEvent,
         getEvents: getEvents,

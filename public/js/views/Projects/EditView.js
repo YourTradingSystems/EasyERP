@@ -18,7 +18,7 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.page = 1;
                 this.pageG = 1;
-                this.responseObj = {};
+                this.responseObj = {}
                 this.render();
             },
 
@@ -522,6 +522,7 @@ define([
                         $(".add-user-dialog").remove();
 						if (viewType=="list"){
                             var tr_holder = $("tr[data-id='"+self.currentModel.toJSON()._id+"'] td");
+                            tr_holder.eq(2).text(projectName);
                             tr_holder.eq(3).text(self.$el.find("#customerDd").text());
                             tr_holder.eq(4).text(self.$el.find("#StartDate").val());
                             tr_holder.eq(5).text(self.$el.find("#EndDate").val());
@@ -540,8 +541,8 @@ define([
                             currentModel_holder.find(".project-text span").eq(0).text(projectName);
                             currentModel_holder.find(".project-text span").eq(1).find("a").attr("class","health"+health).attr("data-value",health);
 							if (customer)
-                                currentModel_holder.find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
-                            currentModel_holder.find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
+								$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
+                            currentModel_holder.find(".bottom .stageSelect").text(self.$el.find("#workflowsDd").text()).attr("class","stageSelect "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
 							if (projectmanager)
 								common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
 						}

@@ -33,7 +33,7 @@
         internalNotes: { type: String, default: '' },
         title: { type: String, default: '' },
         salesPurchases: {
-            isCustomer: { type: Boolean, default: false },
+            isCustomer: { type: Boolean, default: true },
             isSupplier: { type: Boolean, default: false },
             salesPerson: { type: ObjectId, ref: 'Employees', default: null },
             salesTeam: { type: ObjectId, ref: 'Department', default: null },

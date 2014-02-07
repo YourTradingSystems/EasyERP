@@ -1410,7 +1410,12 @@ app.patch('/Applications/:viewType/:_id', function (req, res) {
     console.log(req.body);
     requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
 });
-
+app.patch('/Applications/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
+});
 app.put('/Applications/:viewType/:_id', function (req, res) {
     console.log('-----SERVER put Applications---------------');
     var data = {};
@@ -1599,6 +1604,14 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
     data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
+});
+app.patch('/Opportunities/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    data.toBeConvert = req.headers.toBeConvert;
+    data.opportunitie = req.body;
+    requestHandler.opportunitieUpdateOnlySelectedFields(req, res, id, data);
 });
 
 app.delete('/Opportunities/:_id', function (req, res) {

@@ -89,7 +89,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         },
         marital: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
         gender: { type: String, enum: ['male', 'female'], default: 'male' },
-        jobType: { type: String, default: '' }
+        jobType: { type: String, default: '' },
+        sequence: { type: Number, default: 0 }
     }, { collection: 'Employees' });
 
     mongoose.model('Employees', employeeSchema);
@@ -837,10 +838,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).
                                     where('_id').in(responseOpportunities).
-                                    select("_id name proposedSalary jobPosition nextAction workflow editedBy.date").
+                                    select("_id name proposedSalary jobPosition nextAction workflow editedBy.date sequence").
                                     populate('jobPosition','name').
                                     populate('workflow','_id').
-                                    sort({ 'editedBy.date': -1 }).
+                                    sort({ 'sequence': 1 }).
                                     limit(req.session.kanbanSettings.applications.countPerPage).
                                     exec(function (err, result) {
                                         if (!err) {
@@ -890,19 +891,81 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         });
 
     };
+	function updateSequence(req, start, end, workflow, callback){
+		var inc = -1;
+		if (start>end){
+			inc = 1;
+			var c = end;
+			end = start;
+			start = c;
+		}
+		console.log(end);
+		console.log(inc);
+		var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({"workflow":workflow,"sequence":{$gte:start, $lte:end}},{$inc:{"sequence":inc}},{ multi: true });
+		query.exec(function(err,res){
+			console.log(err);
+			console.log(res);
+
+			if (callback)callback();
+		});
+	}
+
+	function updateSequenceBetwenWorkflow(req, start, end, workflowStart, workflowEnd, callback){
+		var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({"workflow":workflowStart,"sequence":{$gt:start}},{$inc:{"sequence":-1}},{ multi: true });
+		query.exec();
+		query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({"workflow":workflowEnd,"sequence":{$gte:end}},{$inc:{"sequence":1}},{ multi: true });
+		query.exec(function(err,res){
+			if (callback)callback();
+		});
+
+	}
 
     function updateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
+		if(data.workflowStart){
+			
+			if (data.workflow === data.workflowStart){
+				if (data.sequence>data.sequenceStart)opp.sequence-=1;
+				updateSequence(req, data.sequenceStart, data.sequence, data.workflow, function(){
+					delete data.sequenceStart;
+					delete data.workflowEnd;
+					data.info = {};
+					models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({ _id: _id }, data, function (err, result) {
+						if (!err) {
+							res.send(200);
+						} else {
+							res.send(500, { error: "Can't update Employees" });
+						}
+						
+					});
+				});
+			}else{
+				updateSequenceBetwenWorkflow(req, data.sequenceStart, data.sequence, data.workflowStart, data.workflow, function(){
+					delete data.sequenceStart;
+					delete data.workflowEnd;
+					models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({ _id: _id }, data, function (err, result) {
+						if (!err) {
+							res.send(200);
+						} else {
+							res.send(500, { error: "Can't update Employees" });
+						}
+						
+					});
+				});
+				
+			}
 
-        models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, projects) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js update project.update " + err);
-                res.send(500, { error: "Can't update Project" });
-            } else {
-                res.send(200, projects);
-            }
-        });
+		}else{
+			models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, projects) {
+				if (err) {
+					console.log(err);
+					logWriter.log("Project.js update project.update " + err);
+					res.send(500, { error: "Can't update Project" });
+				} else {
+					res.send(200, projects);
+				}
+			});
+		}
     };
     function update(req, _id, data, res) {
         try {
