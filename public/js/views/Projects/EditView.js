@@ -539,7 +539,7 @@ define([
 							$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(1).find("a").attr("class","health"+health).attr("data-value",health);
 							if (customer)
 								$("#"+self.currentModel.toJSON()._id).find(".project-text span").eq(2).text(self.$el.find("#customerDd").text());
-							$("#"+self.currentModel.toJSON()._id).find(".bottom .status").text(self.$el.find("#workflowsDd").text()).attr("class","status "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
+							$("#"+self.currentModel.toJSON()._id).find(".bottom .stageSelect").text(self.$el.find("#workflowsDd").text()).attr("class","stageSelect "+self.$el.find("#workflowsDd").text().toLowerCase().replace(" ",''));
 							if (projectmanager)
 								common.getImagesPM([projectmanager], "/getEmployeesImages", "#"+self.currentModel.toJSON()._id);
 						}

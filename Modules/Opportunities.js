@@ -791,7 +791,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                             if (success) {
                                                 createPersonCustomer(companies[0]);
                                             }
-                                        })
+                                        });
                                     }
                                 } else {
                                     var _Company = new models.get(req.session.lastDb - 1, 'Customers', customer.customerSchema)(_company);
@@ -840,9 +840,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             logWriter.log("Opportunities.js update " + exception);
             res.send(500, { error: 'Opportunities updated error' });
         }
-    };// end update
+    }// end update
 
-	function updateSequence(req, start, end, workflow, callback){
+/*	function updateSequence(req, start, end, workflow, callback){
 		var inc = -1;
 		if (start>end){
 			inc = 1;
@@ -870,8 +870,66 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 		});
 
 	}
+	function updateSequenceWhenCreate(req, workflow, callback){
+		var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find({"workflow":workflow}).count(function(err,res){
+			console.log("sequens count");
+			console.log(res);
+			if (callback)callback(res-1);
+		});
+	}
+	function updateSequenceWhenDelete(req, workflow, sequens, callback){
+		var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({"workflow":workflow,"info.sequence":{$gt:sequens}},{$inc:{"info.sequence":-1}},{ multi: true });
+		query.exec(function(err,res){
+			if (callback)callback();
+		});
+	}
+*/
+	function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback){
+		var query;
+		if (!workflowEnd){//on one workflow
+			if (!(isCreate&&isDelete)){
+				var inc = -1;
+				if (start>end){
+					inc = 1;
+					var c = end;
+					end = start;
+					start = c;
+				}
+				console.log(end);
+				console.log(inc);
+				query = model.update({"workflow":workflowStart,sequenceField:{$gte:start, $lte:end}},{$inc:{sequenceField:inc}},{ multi: true });
+				query.exec(function(err,res){
+					console.log(err);
+					console.log(res);
 
+					if (callback)callback();
+				});
+			}else{
+				if (isCreate){
+					query = model.find({"workflow":workflowStart}).count(function(err,res){
+						console.log("sequens count");
+						console.log(res);
+						if (callback)callback(res-1);
+					});
+				}
+				if (isDelete){
+					query = model.update({"workflow":workflowStart,sequenceField:{$gt:start}},{$inc:{sequenceField:-1}},{ multi: true });
+					query.exec(function(err,res){
+						console.log(res);
+					});
+				}
+			}
+		}else{//between workflow
+			query = model.update({"workflow":workflowStart,sequenceField:{$gt:start}},{$inc:{sequenceField:-1}},{ multi: true });
+			query.exec();
+			query = model.update({"workflow":workflowEnd,sequenceField:{$gte:end}},{$inc:{sequenceField: 1}},{ multi: true });
+			query.exec(function(err,res){
+				if (callback)callback();
+			});
 
+			
+		}
+	}
     function updateOnlySelectedFields(req, _id, data, res) {
 		var opp = data;
 		if (opp.workflow === opp.workflowStart){
@@ -1098,7 +1156,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 populate('customer', 'name').
                                 populate('salesPerson', 'name').
                                 populate('workflow', '_id').
-								sort({ 'info.sequence': 1 }).
+								sort({ 'info.sequence': -1 }).
                                 limit(req.session.kanbanSettings.opportunities.countPerPage).
                                 exec(function (err, result) {
                                     if (!err) {
@@ -1108,7 +1166,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                         logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
                                         response.send(500, { error: "Can't find Opportunitie" });
                                     }
-                                })
+                                });
                             } else {
                                 logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban task.find " + err);
                                 response.send(500, { error: "Can't group Opportunitie" });

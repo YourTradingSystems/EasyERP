@@ -142,10 +142,10 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             new CreateView();
         },
 		updateSequence:function(column){
-			var k=0;
+			var k=column.find(".item").length-1;
 			column.find(".item").each(function(){
 				$(this).find(".inner").attr("data-sequence",k);
-				k++;
+				k--;
 			});
 		},
         render: function () {
@@ -182,8 +182,8 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                     var model = collection.get(id);
                     var column = ui.item.closest(".column");
 					var sequence = 0;
-					if (ui.item.prev().hasClass("item")){
-						sequence = ui.item.prev().find(".inner").data("sequence")+1;
+					if (ui.item.next().hasClass("item")){
+						sequence = ui.item.next().find(".inner").data("sequence")+1;
 					}
 					self.updateSequence(column);
                     if (model) {
