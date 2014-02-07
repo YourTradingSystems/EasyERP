@@ -82,8 +82,9 @@ define([
                 e.preventDefault();
                 var id = $(e.target).closest('tr').data("id");
                 var model = new currentModel({ validate: false });
-                model.urlRoot = '/Tasks/form/' + id;
+                model.urlRoot = '/Tasks/form';
                 model.fetch({
+                    data: { id: id },
                     success: function (model) {
                         new editView({ model: model });
                     },
