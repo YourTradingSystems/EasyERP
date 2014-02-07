@@ -159,7 +159,6 @@ define([
                 if (groupsAndUser_holder.find("tr").length==1){
                     groupsAndUser_holder.hide();
                 }
-
             },
 
             nextUserList:function(e,page){

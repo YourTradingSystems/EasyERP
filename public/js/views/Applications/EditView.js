@@ -19,7 +19,7 @@
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.page = 1;
                 this.pageG = 1;
-				this.responseObj = {}
+				this.responseObj = {};
                 this.render();
             },
 
@@ -56,7 +56,7 @@
                     headers: {
                         mid: 39
                     },
-                    success: function (model) {
+                    success: function () {
                         Backbone.history.navigate("easyErp/Employees", { trigger: true });
                     }
                 });
@@ -72,15 +72,18 @@
 			prevSelect:function(e){
 				this.showNewSelect(e,true,false)
 			},
-            changeTab: function (e) {
-                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-                $(e.target).addClass("active");
-                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
-                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+
+            changeTab:function(e){
+                var holder = $(e.target);
+                holder.closest(".dialog-tabs").find("a.active").removeClass("active");
+                holder.addClass("active");
+                var n= holder.parents(".dialog-tabs").find("li").index(holder.parent());
+                var dialog_holder = $(".dialog-tabs-items");
+                dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
+                dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
-            addUser: function (e) {
+            addUser: function () {
                 var self = this;
                 $(".addUserDialog").dialog({
                     dialogClass: "add-user-dialog",
@@ -91,7 +94,7 @@
                             class: "btn",
 
                             click: function () {
-                                click: self.addUserToTable("#targetUsers")
+                                self.addUserToTable("#targetUsers");
                                 $(this).dialog("close");
                             }
 
@@ -108,19 +111,18 @@
                 });
                 $("#targetUsers").unbind().on("click", "li", this.removeUsers);
                 $("#sourceUsers").unbind().on("click", "li", this.addUsers);
-                var self = this;
                 $(document).on("click", ".nextUserList", function (e) {
-                    self.page += 1
-                    self.nextUserList(e, self.page)
+                    self.page += 1;
+                    self.nextUserList(e, self.page);
                 });
                 $(document).on("click", ".prevUserList", function (e) {
-                    self.page -= 1
-                    self.prevUserList(e, self.page)
+                    self.page -= 1;
+                    self.prevUserList(e, self.page);
                 });
 
             },
 
-            addGroup: function (e) {
+            addGroup: function () {
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
@@ -130,7 +132,7 @@
                             text: "Choose",
                             class: "btn",
                             click: function () {
-                                self.addUserToTable("#targetGroups")
+                                self.addUserToTable("#targetGroups");
                                 $(this).dialog("close");
                             }
                         },
@@ -146,14 +148,13 @@
                 });
                 $("#targetGroups").unbind().on("click", "li", this.removeUsers);
                 $("#sourceGroups").unbind().on("click", "li", this.addUsers);
-                var self = this;
                 $(document).unbind().on("click", ".nextGroupList", function (e) {
-                    self.pageG += 1
-                    self.nextUserList(e, self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e, self.pageG);
                 });
                 $(document).unbind().on("click", ".prevGroupList", function (e) {
-                    self.pageG -= 1
-                    self.prevUserList(e, self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e, self.pageG);
                 });
             },
 
@@ -168,14 +169,16 @@
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
             },
 
-            unassign: function (e) {
-                var id = $(e.target).closest("tr").data("id");
-                var type = $(e.target).closest("tr").data("type");
-                var text = $(e.target).closest("tr").find("td").eq(0).text();
-                $("#" + type).append("<option value='" + id + "'>" + text + "</option>");
-                $(e.target).closest("tr").remove();
-                if ($(".groupsAndUser").find("tr").length == 1) {
-                    $(".groupsAndUser").hide();
+            unassign:function(e){
+                var holder = $(e.target);
+                var id = holder.closest("tr").data("id");
+                var type = holder.closest("tr").data("type");
+                var text = holder.closest("tr").find("td").eq(0).text();
+                $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
+                holder.closest("tr").remove();
+                var groupsAndUser = $(".groupsAndUser");
+                if (groupsAndUser.find("tr").length==1){
+                    groupsAndUser.hide();
                 }
 
             },
@@ -184,18 +187,20 @@
                 $(e.target).toggleClass("choosen");
             },
 
-            addUserToTable: function (id) {
-                $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function () {
-                    if ($(this).data("type") == id.replace("#", "")) {
+            addUserToTable:function(id){
+                var groupsAndUser_holder = $(".groupsAndUser");
+                var groupsAndUserHr_holder = $(".groupsAndUser tr");
+                groupsAndUser_holder.show();
+                groupsAndUserHr_holder.each(function(){
+                    if ($(this).data("type")==id.replace("#","")){
                         $(this).remove();
                     }
                 });
-                $(id).find("li").each(function () {
-                    $(".groupsAndUser").append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
+                $(id).find("li").each(function(){
+                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length < 2) {
-                    $(".groupsAndUser").hide();
+                if (groupsAndUserHr_holder.length<2){
+                    groupsAndUser_holder.hide();
                 }
             },
             fileSizeIsAcceptable: function (file) {
@@ -256,7 +261,7 @@
                             console.log("Attach file error");
                         }
                     });
-                })
+                });
                 addFrmAttach.submit();
                 addFrmAttach.off('submit');
             },
@@ -286,19 +291,6 @@
                 }
             },
 
-
-            changeWorkflows: function () {
-                var itemIndex = Custom.getCurrentII() - 1;
-
-                if (itemIndex == -1) {
-                    this.$el.html();
-                } else {
-                    var currentModel = this.applicationsCollection.models[itemIndex].toJSON();
-                    var name = this.$("#workflowNames option:selected").val();
-                    var value = this.workflowsCollection.findWhere({ name: name }).toJSON().value;
-                    $("#selectWorkflow").html(_.template(editSelectTemplate, { model: currentModel, workflows: this.getWorkflowValue(value) }));
-                }
-            },
             keydownHandler: function (e) {
                 switch (e.which) {
                     case 27:
@@ -317,17 +309,6 @@
                 return workflows;
             },
 
-/*            isEmployee: function (e) {
-                var mid = 39;
-                var model = this.collection.get($(e.target).closest(".formHeader").siblings().find("form").data("id"));
-                model.set({ isEmployee: true });
-                model.save({}, {
-                    headers: {
-                        mid: mid
-                    }
-                });
-            },
-*/
             switchTab: function (e) {
                 e.preventDefault();
                 var link = this.$("#tabList a");
@@ -426,7 +407,7 @@
                         mid: mid
                     },
                     wait: true,
-                    success: function (model) {
+                    success: function () {
                         Backbone.history.navigate("easyErp/Applications", { trigger: true });
                         self.hideDialog();
                     },
