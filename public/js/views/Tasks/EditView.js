@@ -393,8 +393,8 @@
                                       kanban_holder.find("#summary" + model._id).text(summary);
                                       kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
 									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
-									  $("#"+data.workflowStart).find(".item").each(function(){
-										  $(this).find(".inner")
+									  $("#"+data.workflowStart).find(".item").each(function() {
+									      $(this).find(".inner");
 									  });
 									  
 									  kanban_holder.parent().find(".columnNameDiv").after(kanban_holder);
@@ -403,7 +403,7 @@
                           }
                       },
                       error: function () {
-                          Backbone.history.navigate("easyErp", { trigger: true });
+                          Backbone.history.navigate("#easyErp/Tasks", { trigger: true });
                       }
                   });
 

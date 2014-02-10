@@ -66,7 +66,7 @@ define([
                 }, this);
             },
 
-            goToProject: function(e) {
+            goToProject: function (e) {
                 var projectId = $(e.target).data('id');
                 var model = new projectModel({ validate: false });
                 model.urlRoot = '/Projects/form/' + projectId;
@@ -109,17 +109,16 @@ define([
             },
 
             showNewSelectType: function (e) {
-                if ($(".newSelectListType").is(":visible")) {
+                if ($(".newSelectList").is(":visible")) {
                     this.hideNewSelect();
                     return false;
                 } else {
                     var targetElement = $(e.target).parents("td");
-                    var id = targetElement.attr("id");
-                	$("td#" + id + " .newSelectList").show();
+                    targetElement.find(".newSelectList").show();
                     return false;
                 }
             },
-            
+
             showNewSelect: function (e) {
                 if ($(".newSelectList").is(":visible")) {
                     this.hideNewSelect();
@@ -132,42 +131,56 @@ define([
 
             chooseOption: function (e) {
                 var that = this;
-                var targetElement = $(e.target).parents("td");
-                var selectType = targetElement.attr("id").split("_")[0];
-                if (selectType == 'stages'){
-	                var id = targetElement.attr("id").replace("stages_", "");
-	                console.log($(e.target).attr("id"));
-	                var model = this.collection.get(id);
-	                model.urlRoot = '/Tasks/form/';
-	                model.save({ workflow: $(e.target).attr("id"), sequence:-1,sequenceStart:model.toJSON().sequence,workflowStart:model.toJSON().workflow._id  }, {
-	                    headers:
-	                        {
-	                            mid: 39
-	                        },
-	                    patch: true,
-	                    validate: false,
-	                    success: function () {
-	                        that.showFilteredPage();
-	                    }
-	                });
-            	}
-                //type task drop down 
-                else if (selectType == 'type'){
-	                var id = targetElement.attr("id").replace("type_", "");
-	                var model = this.collection.get(id);
-	                model.urlRoot = '/Tasks/form/';
-	                model.save({ type: $(e.target).attr("id"), sequence:-1,sequenceStart:model.toJSON().sequence,workflowStart:model.toJSON().workflow._id }, {
-	                    headers:
-	                        {
-	                            mid: 39
-	                        },
-	                    patch: true,
-	                    validate: false,
-	                    success: function () {
-	                        that.showFilteredPage();
-	                    }
-	                });
-            	}
+                var target = $(e.target);
+                var targetParrentElement = target.parents("td");
+                var selectType = targetParrentElement.attr("id").split("_")[0];
+                var model;
+                var id;
+                if (selectType == 'stages') {
+                    id = targetParrentElement.attr("id").replace("stages_", "");
+                    model = this.collection.get(id);
+                    model.urlRoot = '/Tasks/form/';
+                    model.save({
+                        workflow: target.attr("id"),
+                        sequence: -1,
+                        sequenceStart: model.toJSON().sequence,
+                        workflowStart: model.toJSON().workflow._id
+                    },
+                        {
+                            headers:
+                                {
+                                    mid: 39
+                                },
+                            patch: true,
+                            validate: false,
+                            success: function () {
+                                that.showFilteredPage();
+                            }
+                        });
+                } else if (selectType == 'type') {
+                    id = targetParrentElement.attr("id").replace("type_", "");
+                    model = this.collection.get(id);
+                    model.urlRoot = '/Tasks/form/';
+                    var type = target.attr("id");
+                    model.save({
+                        type: type,
+                        sequence: -1,
+                        sequenceStart: model.toJSON().sequence,
+                        workflowStart: model.toJSON().workflow._id
+                    },
+                        {
+                            headers:
+                                {
+                                    mid: 39
+                                },
+                            patch: true,
+                            validate: false,
+                            success: function (model) {
+                                //that.showFilteredPage();//When add filter by Type, then uncoment this code
+                                targetParrentElement.find('#' + model.id).text(type);
+                            }
+                        });
+                }
                 this.hideNewSelect();
                 return false;
             },
