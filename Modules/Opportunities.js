@@ -1250,9 +1250,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             } else {
 				console.log(result);
 				if (result.isOpportunitie){
-					updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "info.sequence", result.info.sequence, 0, result.workflow, result.workflow, false, true);
+					updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "info.sequence", result.info.sequence, 0, result.workflow, result.workflow, false, true,function(){
+						res.send(200, { success: 'Opportunities removed' });
+					});
 				}
-                res.send(200, { success: 'Opportunities removed' });
             }
         });
     }// end remove

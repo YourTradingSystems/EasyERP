@@ -67,10 +67,10 @@
             },
 
 			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
+				this.showNewSelect(e,false,true);
 			},
 			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
+				this.showNewSelect(e,true,false);
 			},
 
             changeTab:function(e){
@@ -393,6 +393,9 @@
                     proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
+					sequenceStart: this.currentModel.toJSON().sequence,
+					sequence:-1,
+					workflowStart:this.currentModel.toJSON().workflow._id,
                     workflow: this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null,
                     groups: {
                         owner: $("#allUsers").val(),
@@ -406,7 +409,7 @@
                     headers: {
                         mid: mid
                     },
-                    wait: true,
+                    patch: true,
                     success: function () {
                         Backbone.history.navigate("easyErp/Applications", { trigger: true });
                         self.hideDialog();
@@ -440,7 +443,7 @@
                 }
             },
             hideNewSelect: function (e) {
-                $(".newSelectList").hide();;
+                $(".newSelectList").hide();
             },
               showNewSelect:function(e,prev,next){
                 populate.showSelect(e,prev,next,this);
@@ -506,7 +509,7 @@
                         model.groups.users.forEach(function (item) {
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='" + item._id + "'><td>" + item.login + "</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='" + item._id + "'>" + item.login + "</li>");
-                        })
+                        });
 
                     }
                 return this;
