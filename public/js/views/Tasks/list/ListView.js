@@ -47,6 +47,7 @@ define([
                 "click .currentPageList": "itemsNumber",
                 "click": "hideItemsNumber",
                 "click .stageSelect": "showNewSelect",
+                "click .stageSelectType": "showNewSelectType",
                 "click .newSelectList li": "chooseOption",
                 "click .filterButton": "showfilter",
                 "click .filter-check-list li": "checkCheckbox"
@@ -107,6 +108,18 @@ define([
                 }
             },
 
+            showNewSelectType: function (e) {
+                if ($(".newSelectListType").is(":visible")) {
+                    this.hideNewSelect();
+                    return false;
+                } else {
+                    var targetElement = $(e.target).parents("td");
+                    var id = targetElement.attr("id");
+                	$("td#" + id + " .newSelectList").show();
+                    return false;
+                }
+            },
+            
             showNewSelect: function (e) {
                 if ($(".newSelectList").is(":visible")) {
                     this.hideNewSelect();
@@ -120,21 +133,41 @@ define([
             chooseOption: function (e) {
                 var that = this;
                 var targetElement = $(e.target).parents("td");
-                var id = targetElement.attr("id");
-                var model = this.collection.get(id);
-                model.urlRoot = '/Tasks/form/';
-                model.save({ workflow: $(e.target).attr("id") }, {
-                    headers:
-                        {
-                            mid: 39
-                        },
-                    patch: true,
-                    validate: false,
-                    success: function () {
-                        that.showFilteredPage();
-                    }
-                });
-
+                var selectType = targetElement.attr("id").split("_")[0];
+                if (selectType == 'stages'){
+	                var id = targetElement.attr("id").replace("stages_", "");
+	                console.log($(e.target).attr("id"));
+	                var model = this.collection.get(id);
+	                model.urlRoot = '/Tasks/form/';
+	                model.save({ workflow: $(e.target).attr("id"), sequence:-1,sequenceStart:model.toJSON().sequence,workflowStart:model.toJSON().workflow._id  }, {
+	                    headers:
+	                        {
+	                            mid: 39
+	                        },
+	                    patch: true,
+	                    validate: false,
+	                    success: function () {
+	                        that.showFilteredPage();
+	                    }
+	                });
+            	}
+                //type task drop down 
+                else if (selectType == 'type'){
+	                var id = targetElement.attr("id").replace("type_", "");
+	                var model = this.collection.get(id);
+	                model.urlRoot = '/Tasks/form/';
+	                model.save({ type: $(e.target).attr("id"), sequence:-1,sequenceStart:model.toJSON().sequence,workflowStart:model.toJSON().workflow._id }, {
+	                    headers:
+	                        {
+	                            mid: 39
+	                        },
+	                    patch: true,
+	                    validate: false,
+	                    success: function () {
+	                        that.showFilteredPage();
+	                    }
+	                });
+            	}
                 this.hideNewSelect();
                 return false;
             },

@@ -107,7 +107,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
     mongoose.model('Priority', PrioritySchema);
 
-    event.on('updateContent', updateContent);//binding for Event (при видаленні тасків, оновленні та створенні)
+    event.on('updateContent', updateContent);//binding for Event (РїСЂРё РІРёРґР°Р»РµРЅРЅС– С‚Р°СЃРєС–РІ, РѕРЅРѕРІР»РµРЅРЅС– С‚Р° СЃС‚РІРѕСЂРµРЅРЅС–)
 
     function updateContent(request, response, projectId, eventType, tasksArray) {
         switch (eventType) {
@@ -1389,6 +1389,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     }
 
     function taskUpdateOnlySelectedFields(req, _id, data, res) {
+		if (data.workflow&&data.workflow._id){
+			data.workflow = data.workflow._id;
+		}
+		
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
             obj._id = mongoose.Types.ObjectId();
@@ -1404,7 +1408,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         data.sequence -= 1;
                     models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
-                            res.send(200, { success: 'Tasks updated' });
+                            res.send(200, { success: 'Tasks updated' ,result:result});
                         } else {
                             res.send(500, { error: "Can't update Tasks" });
                         }
@@ -1681,7 +1685,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }
     };
 
-    function removeTask(req, _id, res) {//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Використовується
+    function removeTask(req, _id, res) {//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Р’РёРєРѕСЂРёСЃС‚РѕРІСѓС”С‚СЊСЃСЏ
         models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
             if (err) {
                 logWriter.log("Project.js remove task.remove " + err);
@@ -1956,7 +1960,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     populate('assignedTo', 'name').
                                     populate('editedBy.user', 'login').
                                     populate('createdBy.user', 'login').
-                                    populate('workflow', 'name').
+                                    populate('workflow', 'name _id').
+									sort({ 'editedBy.date': -1 }).
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (err, result) {

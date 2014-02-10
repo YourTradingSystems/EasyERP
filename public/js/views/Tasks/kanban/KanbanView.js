@@ -57,22 +57,39 @@
 
             chooseOption: function (e) {
                 $(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
-                var id = $(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority", "");
-                var obj = collection.get(id);
-                var extr = obj.get('extrainfo');
-                if (extr.customer == "") {
-                    extr.customer = null;
+                var selectType =$(e.target).parents(".taskSelect").find(".current-selected").attr("id").split('_')[0]; 
+                if (selectType == 'priority'){
+	                var id = $(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority", "");
+	                var obj = collection.get(id);
+	                var extr = obj.get('extrainfo');
+	                if (extr.customer == "") {
+	                    extr.customer = null;
+	                }
+	                extr.priority = $(e.target).parents(".taskSelect").find(".current-selected").text();
+	                obj.set({ "extrainfo": extr });
+	                obj.save({}, {
+	                    headers: {
+	                        mid: 39
+	                    },
+	                    success: function () {
+	                    }
+	                });
                 }
-                extr.priority = $(e.target).parents(".taskSelect").find(".current-selected").text();
-                obj.set({ "extrainfo": extr });
-                obj.save({}, {
-                    headers: {
-                        mid: 39
-                    },
-                    success: function () {
-                    }
-                });
-
+                //type task drop down 
+                else if (selectType == 'type'){
+	                var id = $(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("type_", "");
+	                var obj = collection.get(id);
+	                var type = obj.get('type');
+	                type = $(e.target).parents(".taskSelect").find(".current-selected").text();
+	                obj.set({ "type": type });
+	                obj.save({}, {
+	                    headers: {
+	                        mid: 39
+	                    },
+	                    success: function () {
+	                    }
+	                });
+                }
                 this.hideNewSelect();
                 return false;
             },
