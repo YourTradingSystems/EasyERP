@@ -6,11 +6,9 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
     "collections/Users/UsersCollection",
-    "common",
-    "custom",
-    "dataService",
+    "common"
 ],
-    function (EditTemplate, addAttachTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common, Custom, dataService) {
+    function (EditTemplate, addAttachTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -105,7 +103,7 @@ define([
                             console.log("Attach file error");
                         }
                     });
-				})
+				});
 				addFrmAttach.submit();
 				addFrmAttach.off('submit');
 			},
@@ -136,14 +134,16 @@ define([
 				},
 
             changeTab:function(e){
-                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-                $(e.target).addClass("active");
-                var n= $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
-                $(".dialog-tabs-items").find(".dialog-tabs-item.active").removeClass("active");
-                $(".dialog-tabs-items").find(".dialog-tabs-item").eq(n).addClass("active");
+                var holder = $(e.target);
+                holder.closest(".dialog-tabs").find("a.active").removeClass("active");
+                holder.addClass("active");
+                var n = holder.parents(".dialog-tabs").find("li").index(holder.parent());
+                var dialog_holder = $(".dialog-tabs-items");
+                dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
+                dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
 
-            addUser:function(e){
+            addUser:function(){
                 var self = this;
                 $(".addUserDialog").dialog({
                     dialogClass: "add-user-dialog",
@@ -154,7 +154,7 @@ define([
                             class:"btn",
 
                             click: function(){
-                                click: self.addUserToTable("#targetUsers")
+                                self.addUserToTable("#targetUsers");
                                 $( this ).dialog( "close" );
                             }
 
@@ -171,19 +171,18 @@ define([
                 });
                 $("#targetUsers").unbind().on("click","li",this.removeUsers);
                 $("#sourceUsers").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(document).on("click",".nextUserList",function(e){
-                    self.page+=1
-                    self.nextUserList(e,self.page)
+                    self.page += 1;
+                    self.nextUserList(e,self.page);
                 });
                 $(document).on("click",".prevUserList",function(e){
-                    self.page-=1
-                    self.prevUserList(e,self.page)
+                    self.page -= 1;
+                    self.prevUserList(e,self.page);
                 });
 
             },
 
-            addGroup:function(e){
+            addGroup:function(){
                 var self = this;
                 $(".addGroupDialog").dialog({
                     dialogClass: "add-group-dialog",
@@ -193,7 +192,7 @@ define([
                             text:"Choose",
                             class:"btn",
                             click: function(){
-                                self.addUserToTable("#targetGroups")
+                                self.addUserToTable("#targetGroups");
                                 $( this ).dialog( "close" );
                             }
                         },
@@ -209,14 +208,13 @@ define([
                 });
                 $("#targetGroups").unbind().on("click","li",this.removeUsers);
                 $("#sourceGroups").unbind().on("click","li",this.addUsers);
-                var self = this;
                 $(document).unbind().on("click",".nextGroupList",function(e){
-                    self.pageG+=1
-                    self.nextUserList(e,self.pageG)
+                    self.pageG += 1;
+                    self.nextUserList(e,self.pageG);
                 });
                 $(document).unbind().on("click",".prevGroupList",function(e){
-                    self.pageG-=1
-                    self.prevUserList(e,self.pageG)
+                    self.pageG -= 1;
+                    self.prevUserList(e,self.pageG);
                 });
             },
 
@@ -247,20 +245,23 @@ define([
                 $(e.target).toggleClass("choosen");
             },
 
-            addUserToTable:function(id){
-                $(".groupsAndUser").show();
-                $(".groupsAndUser tr").each(function(){
+            addUserToTable:function(id) {
+                var groupsAndUser_holder = $(".groupsAndUser");
+                var groupsAndUserHr_holder = $(".groupsAndUser tr");
+                groupsAndUser_holder.show();
+                groupsAndUserHr_holder.each(function(){
                     if ($(this).data("type")==id.replace("#","")){
                         $(this).remove();
                     }
                 });
                 $(id).find("li").each(function(){
-                    $(".groupsAndUser").append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
+                    groupsAndUser_holder.append("<tr data-type='"+id.replace("#","")+"' data-id='"+ $(this).attr("id")+"'><td>"+$(this).text()+"</td><td class='text-right'></td></tr>");
                 });
-                if ($(".groupsAndUser tr").length<2){
-                    $(".groupsAndUser").hide();
+                if (groupsAndUserHr_holder.length<2){
+                    groupsAndUser_holder.hide();
                 }
             },
+
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:

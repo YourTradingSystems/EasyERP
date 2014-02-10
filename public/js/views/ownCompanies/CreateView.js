@@ -46,9 +46,10 @@ define([
             },
 
             changeTab:function(e){
-                $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
-                $(e.target).addClass("active");
-                var n = $(e.target).parents(".dialog-tabs").find("li").index($(e.target).parent());
+                var holder = $(e.target);
+                holder.closest(".dialog-tabs").find("a.active").removeClass("active");
+                holder.addClass("active");
+                var n = holder.parents(".dialog-tabs").find("li").index(holder.parent());
                 var dialog_holder = $(".dialog-tabs-items");
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
@@ -147,11 +148,12 @@ define([
             },
 
             unassign:function(e){
-                var id=$(e.target).closest("tr").data("id");
-                var type=$(e.target).closest("tr").data("type");
-                var text=$(e.target).closest("tr").find("td").eq(0).text();
+                var holder = $(e.target);
+                var id = holder.closest("tr").data("id");
+                var type = holder.closest("tr").data("type");
+                var text = holder.closest("tr").find("td").eq(0).text();
                 $("#"+type).append("<option value='"+id+"'>"+text+"</option>");
-                $(e.target).closest("tr").remove();
+                holder.closest("tr").remove();
                 var groupsAndUser_holder = $(".groupsAndUser");
                 if (groupsAndUser_holder.find("tr").length==1){
                     groupsAndUser_holder.hide();
