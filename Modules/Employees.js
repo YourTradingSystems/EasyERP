@@ -1037,7 +1037,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 					data.sequence = sequence;
 					if (data.workflow==data.workflowStart)
 						data.sequence-=1;
-					models.get(req.session.lastDb - 1, 'Employees', employeeSchema).update({ _id: _id }, data, function (err, result) {
+					models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id ,  { $set: data }, function (err, result) {
 						if (!err) {
 							res.send(200, { success: 'Employees updated' });
 						} else {
@@ -1053,7 +1053,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 				delete data.sequenceStart;
 				delete data.workflowStart;
 				data.sequence = sequence;
-				models.get(req.session.lastDb - 1, 'Employees', employeeSchema).update({ _id: _id }, data, function (err, result) {
+				models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate( _id,  { $set: data }, function (err, result) {
 					if (!err) {
 						res.send(200, { success: 'Employees updated' });
 					} else {
