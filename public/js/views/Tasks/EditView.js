@@ -366,8 +366,9 @@
                           mid: mid
                       },
 					  patch:true,
-                      success: function (model) {
+                      success: function (model,res) {
                           model = model.toJSON();
+						  result = res.result;
                           self.hideDialog();
                           switch (viewType) {
                               case 'list':
@@ -391,6 +392,10 @@
                                       kanban_holder.find("#shortDesc" + model._id).text(editHolder.find('#projectDd').data("shortdesc"));
                                       kanban_holder.find("#summary" + model._id).text(summary);
                                       kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
+									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
+									  $("#"+data.workflowStart).find(".item").each(function(){
+										  $(this).find(".inner")
+									  });
 									  
 									  kanban_holder.parent().find(".columnNameDiv").after(kanban_holder);
 									  
