@@ -392,12 +392,15 @@
                                       kanban_holder.find("#shortDesc" + model._id).text(editHolder.find('#projectDd').data("shortdesc"));
                                       kanban_holder.find("#summary" + model._id).text(summary);
                                       kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
-									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
 									  $("#"+data.workflowStart).find(".item").each(function(){
-										  $(this).find(".inner")
+										  var seq = $(this).find(".inner").data("sequence");
+										  if (seq>data.sequenceStart){
+											  $(this).find(".inner").attr("data-sequence",seq-1);
+										  }
 									  });
-									  
-									  kanban_holder.parent().find(".columnNameDiv").after(kanban_holder);
+									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
+
+									  $("#"+data.workflow).find(".columnNameDiv").after(kanban_holder);
 									  
                                   }
                           }
