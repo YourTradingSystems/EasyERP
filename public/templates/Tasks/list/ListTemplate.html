@@ -7,13 +7,18 @@
     <td>
         <a href="javascript:;" data-id="<%=task.project._id%>" class="project"><%=task.project.projectName%></a>
     </td>
-  <td id='<%=task._id%>'>
+  <td id='stages_<%=task._id%>'>
       <a href="javascript:;" class="stageSelect"><%=(task.workflow) ? task.workflow.name : ''%></a>
   </td>
   <td><%=(task.assignedTo) ? task.assignedTo.name.first + ' ' + task.assignedTo.name.last : ''%></td>
   <td><%=task.estimated%></td>
   <td><%=task.logged%></td>
-  <td><%=task.type%></td>
+  <td id='type_<%=task._id%>'><a id="<%=task._id%>" data-id="<%=task.type%>" class="stageSelectType" href="javascript:;"><%=task.type%></a>
+				<ul class="newSelectList hidden">
+                     <li class="Task" id="Task">Task</li>
+                     <li class="Bug" id="Bug">Bug</li>
+                     <li class="Feature" id="Feature">Feature</li>
+	</ul></td>
   <td><progress name="taskProgress" max="100" value="<%=task.progress%>" /></td>
   <td><%=(task.createdBy.user) ? task.createdBy.date + " (" + task.createdBy.user.login + ")" : ''%></td>
   <td><%=(task.editedBy.user) ? task.editedBy.date + " (" + task.editedBy.user.login + ")" : ''%></td>
