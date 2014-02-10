@@ -44,12 +44,6 @@
                       return false;
                   return true;
               },
-
-              cancelNote: function (e) {
-                  $('#noteArea').val('');
-                  $('#noteTitleArea').val('');
-                  $('#getNoteKey').attr("value", '');
-              },
               editDelNote: function (e) {
                   var id = e.target.id;
                   var k = id.indexOf('_');
@@ -76,7 +70,7 @@
                                             {
                                                 headers: {
                                                     mid: 40,
-                                                    remove: true,
+                                                    remove: true
                                                 },
                                                 patch: true,
                                                 success: function () {
@@ -357,7 +351,7 @@
                       logged: logged,
 					  sequenceStart: this.currentModel.toJSON().sequence,
 					  sequence:-1,
-					  workflowStart:this.currentModel.toJSON().workflow._id,
+					  workflowStart:this.currentModel.toJSON().workflow._id
                   };
 
 
@@ -368,6 +362,10 @@
 					  patch:true,
                       success: function (model,res) {
                           model = model.toJSON();
+                          var ids = [];
+                          ids.push(assignedTo);
+                          ids['task_id'] = model._id;
+                          common.getImages(ids, "/getEmployeesImages");
 						  result = res.result;
                           self.hideDialog();
                           switch (viewType) {
@@ -399,7 +397,7 @@
 										  }
 									  });
 									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
-
+									  
 									  $("#"+data.workflow).find(".columnNameDiv").after(kanban_holder);
 									  
                                   }
@@ -409,7 +407,6 @@
                           Backbone.history.navigate("easyErp", { trigger: true });
                       }
                   });
-
               },
 
               notHide: function (e) {

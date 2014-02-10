@@ -882,6 +882,8 @@
             dataService.getData(url, { ids: ids }, function (response) {
                 if (response.data !== undefined) {
                     response.data.forEach(function (item) {
+                        if (ids['task_id'])
+                            $("#" + ids['task_id'] + " img").attr("src", item.imageSrc);
                         $("#" + item._id + " img").attr("src", item.imageSrc);
                         $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
                         $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
