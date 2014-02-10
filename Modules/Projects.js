@@ -1958,7 +1958,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     populate('assignedTo', 'name').
                                     populate('editedBy.user', 'login').
                                     populate('createdBy.user', 'login').
-                                    populate('workflow', 'name').
+                                    populate('workflow', 'name _id').
+									sort({ 'editedBy.date': -1 }).
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (err, result) {

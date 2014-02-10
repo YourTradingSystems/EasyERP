@@ -139,7 +139,7 @@ define([
 	                console.log($(e.target).attr("id"));
 	                var model = this.collection.get(id);
 	                model.urlRoot = '/Tasks/form/';
-	                model.save({ workflow: $(e.target).attr("id") }, {
+	                model.save({ workflow: $(e.target).attr("id"), sequence:-1,sequenceStart:model.toJSON().sequence,workflowStart:model.toJSON().workflow._id  }, {
 	                    headers:
 	                        {
 	                            mid: 39
@@ -156,7 +156,7 @@ define([
 	                var id = targetElement.attr("id").replace("type_", "");
 	                var model = this.collection.get(id);
 	                model.urlRoot = '/Tasks/form/';
-	                model.save({ type: $(e.target).attr("id") }, {
+	                model.save({ type: $(e.target).attr("id"), sequence:-1,sequenceStart:model.toJSON().sequence,workflowStart:model.toJSON().workflow._id }, {
 	                    headers:
 	                        {
 	                            mid: 39
