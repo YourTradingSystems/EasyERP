@@ -23,16 +23,20 @@
                     if (response.data.weekly) {
                         _.map(response.data.weekly, function (employee) {
                             employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
-                            //employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
-                            //employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
                             return employee;
                         });
                     }
+                    
+                    if (response.data.nextweek) {
+                        _.map(response.data.nextweek, function (employee) {
+                            employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
+                            return employee;
+                        });
+                    }
+                    
                     if (response.data.monthly) {
                         _.map(response.data.monthly, function (employee) {
                             employee.dateBirth = common.utcDateToLocaleDateTime(employee.dateBirth, true);
-                            //employee.createdBy.date = common.utcDateToLocaleDateTime(employee.createdBy.date);
-                            //employee.editedBy.date = common.utcDateToLocaleDateTime(employee.editedBy.date);
                             return employee;
                         });
                     }

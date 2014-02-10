@@ -144,12 +144,37 @@
                 new CreateView();
             },
 
-			updateSequence:function(column){
-				var k=column.find(".item").length-1;
-				column.find(".item").each(function(){
-					$(this).find(".inner").attr("data-sequence",k);
-					k--;
-				});
+			updateSequence:function(item, workflow, sequence, workflowStart, sequenceStart ){
+				if (workflow==workflowStart){
+					if (sequence>sequenceStart)
+						sequence-=1;
+					var a = sequenceStart;
+					var b = sequence;
+					var inc = -1;
+					if (a>b){
+						a = sequence;
+						b = sequenceStart;
+						inc = 1;
+					}
+					$(".column[data-id='"+workflow+"']").find(".item").each(function(){
+						var sec = parseInt($(this).find(".inner").attr("data-sequence"));
+						if (sec>=a&&sec<=b)
+							$(this).find(".inner").attr("data-sequence",sec+inc);
+					});
+					item.find(".inner").attr("data-sequence",sequence);
+					
+				}else{
+					$(".column[data-id='"+workflow+"']").find(".item").each(function(){
+						if (parseInt($(this).find(".inner").attr("data-sequence"))>=sequence)
+							$(this).find(".inner").attr("data-sequence",parseInt($(this).find(".inner").attr("data-sequence"))+1);
+					});
+					$(".column[data-id='"+workflowStart+"']").find(".item").each(function(){
+						if (parseInt($(this).find(".inner").attr("data-sequence"))>sequenceStart)
+							$(this).find(".inner").attr("data-sequence",parseInt($(this).find(".inner").attr("data-sequence"))-1);
+					});
+					item.find(".inner").attr("data-sequence",sequence);
+
+				}
 			},
             render: function () {
 				var self = this;
@@ -158,7 +183,7 @@
                 $(".column").last().addClass("lastColumn");
                 var itemCount;
                 _.each(workflows, function (workflow, i) {
-                    itemCount = 0
+                    itemCount = 0;
                     var column = this.$(".column").eq(i);
                     var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
                     var total = " <span><span class='totalCount'>" + itemCount + "</span> )</span>";
@@ -186,17 +211,21 @@
                         var column = ui.item.closest(".column");
 						var sequence = 0;
 						if (ui.item.next().hasClass("item")){
-							sequence = ui.item.next().find(".inner").data("sequence")+1;
+							sequence = parseInt(ui.item.next().find(".inner").attr("data-sequence"))+1;
 						}
-						self.updateSequence(column);
 
                         if (model) {
-							model.save({ workflow: column.data('id'), sequenceStart:model.toJSON().sequence, sequence:sequence, workflowStart : model.toJSON().workflow._id}, {
+							var secStart = parseInt($(".inner[data-id='"+model.toJSON()._id+"']").attr("data-sequence"));
+							var workStart =  model.toJSON().workflow._id?model.toJSON().workflow._id:model.toJSON().workflow;
+							model.save({ workflow: column.data('id'), sequenceStart:parseInt($(".inner[data-id='"+model.toJSON()._id+"']").attr("data-sequence")), sequence:sequence, workflowStart : model.toJSON().workflow._id?model.toJSON().workflow._id:model.toJSON().workflow}, {
 								patch:true,
-								validate: false
+								validate: false,
+								success: function (model2) {
+									self.updateSequence(ui.item, column.attr("data-id"), sequence, workStart,secStart );
+
+									collection.add(model2,{merge:true});
+								}
 							});
-//                            model.set({ workflow: column.data('id'), workflowForKanban: true });
-  //                          model.save({},{validate: false});
                             column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                             column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
                         }

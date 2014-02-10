@@ -44,12 +44,6 @@
                       return false;
                   return true;
               },
-
-              cancelNote: function (e) {
-                  $('#noteArea').val('');
-                  $('#noteTitleArea').val('');
-                  $('#getNoteKey').attr("value", '');
-              },
               editDelNote: function (e) {
                   var id = e.target.id;
                   var k = id.indexOf('_');
@@ -76,7 +70,7 @@
                                             {
                                                 headers: {
                                                     mid: 40,
-                                                    remove: true,
+                                                    remove: true
                                                 },
                                                 patch: true,
                                                 success: function () {
@@ -355,9 +349,9 @@
                       },
                       estimated: estimated,
                       logged: logged,
-					  sequenceStart: this.currentModel.toJSON().sequence,
-					  sequence:-1,
-					  workflowStart:this.currentModel.toJSON().workflow._id,
+                      sequenceStart: this.currentModel.toJSON().sequence,
+                      sequence: -1,
+                      workflowStart: this.currentModel.toJSON().workflow._id
                   };
 
 
@@ -365,10 +359,14 @@
                       headers: {
                           mid: mid
                       },
-					  patch:true,
-                      success: function (model,res) {
+                      patch: true,
+                      success: function (model, res) {
                           model = model.toJSON();
-						  result = res.result;
+                          var ids = [];
+                          ids.push(assignedTo);
+                          ids['task_id'] = model._id;
+                          common.getImages(ids, "/getEmployeesImages");
+                          result = res.result;
                           self.hideDialog();
                           switch (viewType) {
                               case 'list':
@@ -392,13 +390,16 @@
                                       kanban_holder.find("#shortDesc" + model._id).text(editHolder.find('#projectDd').data("shortdesc"));
                                       kanban_holder.find("#summary" + model._id).text(summary);
                                       kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
-									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
-									  $("#"+data.workflowStart).find(".item").each(function() {
-									      $(this).find(".inner");
-									  });
-									  
-									  kanban_holder.parent().find(".columnNameDiv").after(kanban_holder);
-									  
+                                      $("#" + data.workflowStart).find(".item").each(function () {
+                                          var seq = $(this).find(".inner").data("sequence");
+                                          if (seq > data.sequenceStart) {
+                                              $(this).find(".inner").attr("data-sequence", seq - 1);
+                                          }
+                                      });
+                                      kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+
+                                      $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+
                                   }
                           }
                       },
@@ -406,7 +407,6 @@
                           Backbone.history.navigate("#easyErp/Tasks", { trigger: true });
                       }
                   });
-
               },
 
               notHide: function (e) {
