@@ -426,7 +426,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             } else {
                                 res.send(201, { success: 'A new Employees create success', result: result });
                                 console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                //event.emit('recalculate', req);
+                                event.emit('recalculate', req);
                             }
                        });
                 }
