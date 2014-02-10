@@ -41,7 +41,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click tr": "goToEditDialog",
+                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog",
                 "click .project": "goToProject",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",

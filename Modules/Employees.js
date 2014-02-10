@@ -84,7 +84,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             uploadDate: { type: Date, default: Date.now }
         }],
         contractEnd: {
-            reason: {type: String, default: '' },
+            reason: { type: String, default: '' },
             date: { type: Date, default: Date.now }
         },
         marital: { type: String, enum: ['married', 'unmarried'], default: 'unmarried' },
@@ -108,7 +108,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         if (data.letter)
             optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
 
-        var filterStatus= {};
+        var filterStatus = {};
         if (data.status && data.status.length > 0) {
             var filterStatusArray = data.status.objectID();
             filterStatus = {
@@ -255,171 +255,171 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
             function savetoDb(data) {
                 _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
-                    if (data.uId) {
+                if (data.uId) {
 
-                        _employee.createdBy.user = data.uId;
+                    _employee.createdBy.user = data.uId;
+                }
+                if (data.isEmployee) {
+                    _employee.isEmployee = data.isEmployee;
+                }
+                if (data.name) {
+                    if (data.name.first) {
+                        _employee.name.first = data.name.first;
                     }
-                    if (data.isEmployee) {
-                        _employee.isEmployee = data.isEmployee;
+                    if (data.name.last) {
+                        _employee.name.last = data.name.last;
                     }
-                    if (data.name) {
-                        if (data.name.first) {
-                            _employee.name.first = data.name.first;
-                        }
-                        if (data.name.last) {
-                            _employee.name.last = data.name.last;
-                        }
+                }
+                if (data.gender) {
+                    _employee.gender = data.gender;
+                }
+                if (data.marital) {
+                    _employee.marital = data.marital;
+                }
+                if (data.subject) {
+                    _employee.subject = data.subject;
+                }
+                if (data.tags) {
+                    _employee.tags = data.tags;
+                }
+                if (data.workAddress) {
+                    if (data.workAddress.street) {
+                        _employee.workAddress.street = data.workAddress.street;
                     }
-                    if (data.gender) {
-                        _employee.gender = data.gender;
+                    if (data.workAddress.city) {
+                        _employee.workAddress.city = data.workAddress.city;
                     }
-                    if (data.marital) {
-                        _employee.marital = data.marital;
+                    if (data.workAddress.state) {
+                        _employee.workAddress.state = data.workAddress.state;
                     }
-                    if (data.subject) {
-                        _employee.subject = data.subject;
+                    if (data.workAddress.zip) {
+                        _employee.workAddress.zip = data.workAddress.zip;
                     }
-                    if (data.tags) {
-                        _employee.tags = data.tags;
+                    if (data.workAddress.country) {
+                        _employee.workAddress.country = data.workAddress.country;
                     }
-                    if (data.workAddress) {
-                        if (data.workAddress.street) {
-                            _employee.workAddress.street = data.workAddress.street;
-                        }
-                        if (data.workAddress.city) {
-                            _employee.workAddress.city = data.workAddress.city;
-                        }
-                        if (data.workAddress.state) {
-                            _employee.workAddress.state = data.workAddress.state;
-                        }
-                        if (data.workAddress.zip) {
-                            _employee.workAddress.zip = data.workAddress.zip;
-                        }
-                        if (data.workAddress.country) {
-                            _employee.workAddress.country = data.workAddress.country;
-                        }
+                }
+                if (data.workEmail) {
+                    _employee.workEmail = data.workEmail;
+                }
+                if (data.personalEmail) {
+                    _employee.personalEmail = data.personalEmail;
+                }
+                if (data.skype) {
+                    _employee.skype = data.skype;
+                }
+                if (data.workPhones) {
+                    if (data.workPhones.phone) {
+                        _employee.workPhones.phone = data.workPhones.phone;
                     }
-                    if (data.workEmail) {
-                        _employee.workEmail = data.workEmail;
+                    if (data.workPhones.mobile) {
+                        _employee.workPhones.mobile = data.workPhones.mobile;
                     }
-                    if (data.personalEmail) {
-                        _employee.personalEmail = data.personalEmail;
+                }
+                if (data.officeLocation) {
+                    _employee.officeLocation = data.officeLocation;
+                }
+                if (data.relatedUser) {
+                    _employee.relatedUser = data.relatedUser;
+                }
+                if (data.visibility) {
+                    _employee.visibility = data.visibility;
+                }
+                if (data.department) {
+                    _employee.department = data.department;
+                }
+                if (data.groups) {
+                    _employee.groups = data.groups;
+                }
+                if (data.whoCanRW) {
+                    _employee.whoCanRW = data.whoCanRW;
+                }
+                if (data.jobPosition) {
+                    _employee.jobPosition = data.jobPosition;
+                }
+                if (data.manager) {
+                    _employee.manager = data.manager;
+                }
+                if (data.coach) {
+                    _employee.coach = data.coach;
+                }
+                if (data.nationality) {
+                    _employee.nationality = data.nationality;
+                }
+                if (data.identNo) {
+                    _employee.identNo = data.identNo;
+                }
+                if (data.passportNo) {
+                    _employee.passportNo = data.passportNo;
+                }
+                if (data.bankAccountNo) {
+                    _employee.bankAccountNo = data.bankAccountNo;
+                }
+                if (data.otherId) {
+                    _employee.otherId = data.otherId;
+                }
+                if (data.homeAddress) {
+                    if (data.homeAddress.street) {
+                        _employee.homeAddress.street = data.homeAddress.street;
                     }
-                    if (data.skype) {
-                        _employee.skype = data.skype;
+                    if (data.homeAddress.city) {
+                        _employee.homeAddress.city = data.homeAddress.city;
                     }
-                    if (data.workPhones) {
-                        if (data.workPhones.phone) {
-                            _employee.workPhones.phone = data.workPhones.phone;
-                        }
-                        if (data.workPhones.mobile) {
-                            _employee.workPhones.mobile = data.workPhones.mobile;
-                        }
+                    if (data.homeAddress.state) {
+                        _employee.homeAddress.state = data.homeAddress.state;
                     }
-                    if (data.officeLocation) {
-                        _employee.officeLocation = data.officeLocation;
+                    if (data.homeAddress.zip) {
+                        _employee.homeAddress.zip = data.homeAddress.zip;
                     }
-                    if (data.relatedUser) {
-                        _employee.relatedUser = data.relatedUser;
+                    if (data.homeAddress.country) {
+                        _employee.homeAddress.country = data.homeAddress.country;
                     }
-                    if (data.visibility) {
-                        _employee.visibility = data.visibility;
+                }
+                if (data.dateBirth) {
+                    _employee.dateBirth = getDate(data.dateBirth);
+                    _employee.age = getAge(data.dateBirth);
+                }
+                if (data.nextAction) {
+                    _employee.nextAction = data.nextAction;
+                }
+                if (data.source) {
+                    if (data.source._id) {
+                        _employee.source.id = data.source._id;
                     }
-                    if (data.department) {
-                        _employee.department = data.department;
+                    if (data.source.name) {
+                        _employee.source.name = data.source.name;
                     }
-                    if (data.groups) {
-                        _employee.groups = data.groups;
-                    }
-                    if (data.whoCanRW) {
-                        _employee.whoCanRW = data.whoCanRW;
-                    }
-                    if (data.jobPosition) {
-                        _employee.jobPosition = data.jobPosition;
-                    }
-                    if (data.manager) {
-                        _employee.manager = data.manager;
-                    }
-                    if (data.coach) {
-                        _employee.coach = data.coach;
-                    }
-                    if (data.nationality) {
-                        _employee.nationality = data.nationality;
-                    }
-                    if (data.identNo) {
-                        _employee.identNo = data.identNo;
-                    }
-                    if (data.passportNo) {
-                        _employee.passportNo = data.passportNo;
-                    }
-                    if (data.bankAccountNo) {
-                        _employee.bankAccountNo = data.bankAccountNo;
-                    }
-                    if (data.otherId) {
-                        _employee.otherId = data.otherId;
-                    }
-                    if (data.homeAddress) {
-                        if (data.homeAddress.street) {
-                            _employee.homeAddress.street = data.homeAddress.street;
-                        }
-                        if (data.homeAddress.city) {
-                            _employee.homeAddress.city = data.homeAddress.city;
-                        }
-                        if (data.homeAddress.state) {
-                            _employee.homeAddress.state = data.homeAddress.state;
-                        }
-                        if (data.homeAddress.zip) {
-                            _employee.homeAddress.zip = data.homeAddress.zip;
-                        }
-                        if (data.homeAddress.country) {
-                            _employee.homeAddress.country = data.homeAddress.country;
-                        }
-                    }
-                    if (data.dateBirth) {
-                        _employee.dateBirth = getDate(data.dateBirth);
-                        _employee.age = getAge(data.dateBirth);
-                    }
-                    if (data.nextAction) {
-                        _employee.nextAction = data.nextAction;
-                    }
-                    if (data.source) {
-                        if (data.source._id) {
-                            _employee.source.id = data.source._id;
-                        }
-                        if (data.source.name) {
-                            _employee.source.name = data.source.name;
-                        }
-                    }
-                    if (data.referredBy) {
-                        _employee.referredBy = data.referredBy;
-                    }
-                    if (data.active) {
-                        _employee.active = data.active;
-                    }
-                    if (data.workflow) {
-                        _employee.workflow = data.workflow;
-                    }
-                    if (data.otherInfo) {
-                        _employee.otherInfo = data.otherInfo;
-                    }
-                    if (data.expectedSalary) {
-                        _employee.expectedSalary = data.expectedSalary;
-                    }
-                    if (data.proposedSalary) {
-                        _employee.proposedSalary = data.proposedSalary;
-                    }
-                    if (data.color) {
-                        _employee.color = data.color;
-                    }
-                    if (data.imageSrc) {
-                        _employee.imageSrc = data.imageSrc;
-                    }
-                    if (data.jobType) {
-                        _employee.jobType = data.jobType;
-                    }
-                    ///////////////////////////////////////////////////
-				updateSequence(models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0,0,_employee.workflow, _employee.workflow, true, false, function(sequence){
-					_employee.sequence = sequence;
+                }
+                if (data.referredBy) {
+                    _employee.referredBy = data.referredBy;
+                }
+                if (data.active) {
+                    _employee.active = data.active;
+                }
+                if (data.workflow) {
+                    _employee.workflow = data.workflow;
+                }
+                if (data.otherInfo) {
+                    _employee.otherInfo = data.otherInfo;
+                }
+                if (data.expectedSalary) {
+                    _employee.expectedSalary = data.expectedSalary;
+                }
+                if (data.proposedSalary) {
+                    _employee.proposedSalary = data.proposedSalary;
+                }
+                if (data.color) {
+                    _employee.color = data.color;
+                }
+                if (data.imageSrc) {
+                    _employee.imageSrc = data.imageSrc;
+                }
+                if (data.jobType) {
+                    _employee.jobType = data.jobType;
+                }
+                ///////////////////////////////////////////////////
+                updateSequence(models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
+                    _employee.sequence = sequence;
                     _employee.save(function (err, result) {
                         if (err) {
                             console.log(err);
@@ -427,12 +427,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             res.send(500, { error: 'Employees.save BD error' });
                         } else {
                             res.send(201, { success: 'A new Employees create success', result: result });
-                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                            //event.emit('recalculate', req);
+                            event.emit('recalculate', req);
                         }
                     });
-				});
-                }
+                });
+            }
         }
         catch (exception) {
             console.log(exception);
@@ -477,7 +476,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    
+
                     models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
                         {
                             $match: {
@@ -518,7 +517,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         {
                             $project: {
                                 _id: 1,
-                                workflow:1
+                                workflow: 1
                             }
                         },
                         {
@@ -598,7 +597,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    
+
                     models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
                         {
                             $match: {
@@ -649,17 +648,17 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         switch (viewType) {
                                             case ('list'): {
                                                 query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
-                                                    populate('manager','name').
-                                                    populate('jobPosition','name').
-                                                    populate('createdBy.user','login').
-                                                    populate('department','departmentName').
-                                                    populate('editedBy.user','login');
+                                                    populate('manager', 'name').
+                                                    populate('jobPosition', 'name').
+                                                    populate('createdBy.user', 'login').
+                                                    populate('department', 'departmentName').
+                                                    populate('editedBy.user', 'login');
                                             }
                                                 break;
                                             case ('thumbnails'): {
                                                 query.select('_id name dateBirth age jobPosition relatedUser workPhones.mobile').
-                                                    populate('relatedUser','login').
-                                                    populate('jobPosition','name');
+                                                    populate('relatedUser', 'login').
+                                                    populate('jobPosition', 'name');
                                             }
                                                 break;
 
@@ -669,12 +668,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         switch (viewType) {
                                             case ('list'): {
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow email department').
-                                                    populate('manager','name').
-                                                    populate('jobPosition','name').
-                                                    populate('createdBy.user','login').
-                                                    populate('department','departmentName').
-                                                    populate('editedBy.user','login').
-                                                    populate('workflow','name');
+                                                    populate('manager', 'name').
+                                                    populate('jobPosition', 'name').
+                                                    populate('createdBy.user', 'login').
+                                                    populate('department', 'departmentName').
+                                                    populate('editedBy.user', 'login').
+                                                    populate('workflow', 'name');
                                             }
                                                 break;
                                             case ('thumbnails'): {
@@ -791,7 +790,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    
+
                     models.get(req.session.lastDb - 1, "Employees", employeeSchema).aggregate(
                         {
                             $match: {
@@ -842,8 +841,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                 var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).
                                     where('_id').in(responseOpportunities).
                                     select("_id name proposedSalary jobPosition nextAction workflow editedBy.date sequence").
-                                    populate('jobPosition','name').
-                                    populate('workflow','_id').
+                                    populate('jobPosition', 'name').
+                                    populate('workflow', '_id').
                                     sort({ 'sequence': -1 }).
                                     limit(req.session.kanbanSettings.applications.countPerPage).
                                     exec(function (err, result) {
@@ -894,175 +893,99 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         });
 
     }
-/*	function updateSequence(req, start, end, workflow, callback){
-		var inc = -1;
-		if (start>end){
-			inc = 1;
-			var c = end;
-			end = start;
-			start = c;
-		}
-		console.log(end);
-		console.log(inc);
-		var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({"workflow":workflow,"sequence":{$gte:start, $lte:end}},{$inc:{"sequence":inc}},{ multi: true });
-		query.exec(function(err,res){
-			console.log(err);
-			console.log(res);
+    function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
+        var query;
+        var objFind = {};
+        var objChange = {};
+        if (workflowStart == workflowEnd) {//on one workflow
 
-			if (callback)callback();
-		});
-	}
+            if (!(isCreate || isDelete)) {
+                var inc = -1;
+                if (start > end) {
+                    inc = 1;
+                    var c = end;
+                    end = start;
+                    start = c;
+                } else {
+                    end -= 1;
+                }
+                objChange = {};
+                objFind = { "workflow": workflowStart };
+                objFind[sequenceField] = { $gte: start, $lte: end };
+                objChange[sequenceField] = inc;
+                query = model.update(objFind, { $inc: objChange }, { multi: true });
+                query.exec(function (err, res) {
+                    if (callback) callback((inc == -1) ? end : start);
+                });
+            } else {
+                if (isCreate) {
+                    query = model.count({ "workflow": workflowStart }).exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+                if (isDelete) {
+                    objChange = {};
+                    objFind = { "workflow": workflowStart };
+                    objFind[sequenceField] = { $gt: start };
+                    objChange[sequenceField] = -1;
+                    query = model.update(objFind, { $inc: objChange }, { multi: true });
+                    query.exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+            }
+        } else {//between workflow
+            objChange = {};
+            objFind = { "workflow": workflowStart };
+            objFind[sequenceField] = { $gte: start };
+            objChange[sequenceField] = -1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec();
+            objFind = { "workflow": workflowEnd };
+            objFind[sequenceField] = { $gte: end };
+            objChange[sequenceField] = 1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec(function (err, res) {
+                if (callback) callback(end);
+            });
 
-	function updateSequenceBetwenWorkflow(req, start, end, workflowStart, workflowEnd, callback){
-		var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({"workflow":workflowStart,"sequence":{$gt:start}},{$inc:{"sequence":-1}},{ multi: true });
-		query.exec();
-		query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({"workflow":workflowEnd,"sequence":{$gte:end}},{$inc:{"sequence":1}},{ multi: true });
-		query.exec(function(err,res){
-			if (callback)callback();
-		});
 
-	}
-*/
-	function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback){
-		var query;
-		var objFind ={};
-		var objChange = {};
-		if (workflowStart == workflowEnd){//on one workflow
+        }
+    }
+    function updateOnlySelectedFields(req, _id, data, res) {
+        if (data.sequence == -1) {
+            console.log(data);
+            updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                    data.sequence = sequence;
+                    if (data.workflow == data.workflowStart)
+                        data.sequence -= 1;
+                    models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                        if (!err) {
+                            res.send(200, { success: 'Employees updated' });
+                        } else {
+                            res.send(500, { error: "Can't update Employees" });
+                        }
 
-			if (!(isCreate||isDelete)){
-				var inc = -1;
-				if (start>end){
-					inc = 1;
-					var c = end;
-					end = start;
-					start = c;
-				}else{
-					end-=1;
-				}
-				objChange = {};
-				objFind ={"workflow":workflowStart};
-				objFind[sequenceField]={$gte:start, $lte:end};
-				objChange[sequenceField] = inc;
-				query = model.update(objFind,{$inc:objChange},{ multi: true });
-				query.exec(function(err,res){
-					if (callback)callback((inc==-1)?end:start);
-				});
-			}else{
-				if (isCreate){
-					query = model.count({"workflow":workflowStart}).exec(function(err,res){
-						if (callback)callback(res);
-					});
-				}
-				if (isDelete){
-					objChange = {};
-					objFind ={"workflow":workflowStart};
-					objFind[sequenceField]={$gt:start};
-					objChange[sequenceField] = -1;
-					query = model.update(objFind,{$inc:objChange},{ multi: true });
-					query.exec(function(err,res){
-						if (callback)callback(res);
-					});
-				}
-			}
-		}else{//between workflow
-			objChange = {};
-			objFind ={"workflow":workflowStart};
-			objFind[sequenceField]={$gte:start};
-			objChange[sequenceField] = -1;
-			query = model.update(objFind,{$inc:objChange},{ multi: true });
-			query.exec();
-			objFind ={"workflow":workflowEnd};
-			objFind[sequenceField]={$gte:end};
-			objChange[sequenceField] = 1;
-			query = model.update(objFind,{$inc:objChange},{ multi: true });
-			query.exec(function(err,res){
-				if (callback)callback(end);
-			});
+                    });
 
-			
-		}
-	}
-/*    function updateOnlySelectedFields(req, _id, data, res) {
-        delete data._id;
-		if(data.workflowStart){
-			
-			if (data.workflow === data.workflowStart){
-				if (data.sequence>data.sequenceStart)opp.sequence-=1;
-				updateSequence(req, data.sequenceStart, data.sequence, data.workflow, function(){
-					delete data.sequenceStart;
-					delete data.workflowEnd;
-					data.info = {};
-					models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({ _id: _id }, data, function (err, result) {
-						if (!err) {
-							res.send(200);
-						} else {
-							res.send(500, { error: "Can't update Employees" });
-						}
-						
-					});
-				});
-			}else{
-				updateSequenceBetwenWorkflow(req, data.sequenceStart, data.sequence, data.workflowStart, data.workflow, function(){
-					delete data.sequenceStart;
-					delete data.workflowEnd;
-					models.get(req.session.lastDb - 1, "Employees", employeeSchema).update({ _id: _id }, data, function (err, result) {
-						if (!err) {
-							res.send(200);
-						} else {
-							res.send(500, { error: "Can't update Employees" });
-						}
-						
-					});
-				});
-				
-			}
+                });
+            });
+        } else {
+            updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                delete data.sequenceStart;
+                delete data.workflowStart;
+                data.sequence = sequence;
+                models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                    if (!err) {
+                        res.send(200, { success: 'Employees updated' });
+                    } else {
+                        res.send(500, { error: "Can't update Employees" });
+                    }
 
-		}else{
-			models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, projects) {
-				if (err) {
-					console.log(err);
-					logWriter.log("Project.js update project.update " + err);
-					res.send(500, { error: "Can't update Project" });
-				} else {
-					res.send(200, projects);
-				}
-			});
-		}
-    };*/
-	function updateOnlySelectedFields(req, _id, data, res) {
-		if (data.sequence == -1){
-			console.log(data);
-			updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema),"sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function(sequence){
-				updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema),"sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function(sequence){
-					data.sequence = sequence;
-					if (data.workflow==data.workflowStart)
-						data.sequence-=1;
-					models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id ,  { $set: data }, function (err, result) {
-						if (!err) {
-							res.send(200, { success: 'Employees updated' });
-						} else {
-							res.send(500, { error: "Can't update Employees" });
-						}
-						
-					});
-					
-				});
-			});
-		}else{
-			updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema),"sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function(sequence){
-				delete data.sequenceStart;
-				delete data.workflowStart;
-				data.sequence = sequence;
-				models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate( _id,  { $set: data }, function (err, result) {
-					if (!err) {
-						res.send(200, { success: 'Employees updated' });
-					} else {
-						res.send(500, { error: "Can't update Employees" });
-					}
-					
-				});
-			});
-		}
+                });
+            });
+        }
     }
     function update(req, _id, data, res) {
         try {
@@ -1102,19 +1025,19 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             }
 
             if (data.workflowForList || data.workflowForKanban) {
-				data={
-					$set:{
-						workflow:data.workflow
-					}
-				}
-			}
-
-            if (data.workflowContractEnd){
                 data = {
-                    $set:{
+                    $set: {
+                        workflow: data.workflow
+                    }
+                }
+            }
+
+            if (data.workflowContractEnd) {
+                data = {
+                    $set: {
                         workflow: data.workflow,
-                        'contractEnd.reason' : data.contractEndReason,
-                        'contractEnd.date' : new Date(),
+                        'contractEnd.reason': data.contractEndReason,
+                        'contractEnd.date': new Date(),
                         isEmployee: false
                     }
                 }
@@ -1122,7 +1045,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
 
 
-			models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, {upsert: true}, function (err, result) {
+            models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndUpdate({ _id: _id }, data, { upsert: true }, function (err, result) {
                 try {
                     if (err) {
                         console.log(err);
@@ -1148,31 +1071,31 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     }// end update
 
     function remove(req, _id, res) {
-		models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove( _id , function (err, result) {
-			if (err) {
-				console.log(err);
-				logWriter.log("Employees.js remove employee.remove " + err);
-				res.send(500, { error: "Can't remove Employees" });
-			} else {
-				if (!result.isEmployee){
-					updateSequence(models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true,function(){
-						res.send(200, { success: 'Employees removed' });
-					});
-				}
-				event.emit('recalculate', req);
-			}
-		});
+        models.get(req.session.lastDb - 1, "Employees", employeeSchema).findByIdAndRemove(_id, function (err, result) {
+            if (err) {
+                console.log(err);
+                logWriter.log("Employees.js remove employee.remove " + err);
+                res.send(500, { error: "Can't remove Employees" });
+            } else {
+                if (!result.isEmployee) {
+                    updateSequence(models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                        res.send(200, { success: 'Employees removed' });
+                    });
+                }
+                event.emit('recalculate', req);
+            }
+        });
     }// end remove
 
-	function getEmployeesImages(req, data, res){
+    function getEmployeesImages(req, data, res) {
         var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find({ isEmployee: true });
         query.where('_id').in(data.ids).
 			select('_id imageSrc').
             exec(function (error, response) {
-				res.send(200,{data:response});
-			});
+                res.send(200, { data: response });
+            });
 
-	};
+    };
 
     return {
         getTotalCount: getTotalCount,
@@ -1192,16 +1115,16 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         getForDdByRelatedUser: getForDdByRelatedUser,
 
         update: update,
-		
-		updateOnlySelectedFields:updateOnlySelectedFields,
+
+        updateOnlySelectedFields: updateOnlySelectedFields,
 
         remove: remove,
 
         getApplications: getApplications,
 
-		getApplicationsForKanban:getApplicationsForKanban,
+        getApplicationsForKanban: getApplicationsForKanban,
 
-		getEmployeesImages: getEmployeesImages,
+        getEmployeesImages: getEmployeesImages,
 
         employeeSchema: employeeSchema,
 
