@@ -1327,6 +1327,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             }
         });
     };
+    
     function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
         var query;
         var objFind = {};
@@ -1594,7 +1595,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }
     };
 
-    function updateTask(req, _id, data, res) {
+    function updateTask(req, _id, data, res) {//Треба перекинути логіку на updateOnlySelectedFields
+        console.log(">>>>>>>>>>>>>>>>!!!!!!!!!<<<<<<<<<<<<<<");
         delete data._id;
         delete data.createdBy;
 
