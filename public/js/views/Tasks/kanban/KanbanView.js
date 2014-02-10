@@ -61,7 +61,7 @@
                 var obj = collection.get(id);
                 var extr = obj.get('extrainfo');
                 if (extr.customer == "") {
-                    extr.customer = null
+                    extr.customer = null;
                 }
                 extr.priority = $(e.target).parents(".taskSelect").find(".current-selected").text();
                 obj.set({ "extrainfo": extr });
@@ -192,8 +192,15 @@
                 //create editView in dialog here
                 new CreateView();
             },
-
+			updateSequence:function(column){
+				var k=column.find(".item").length-1;
+				column.find(".item").each(function(){
+					$(this).find(".inner").attr("data-sequence",k);
+					k--;
+				});
+			},
             render: function () {
+				var self = this;
                 var workflows = this.workflowsCollection.toJSON();
                 this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
                 $(".column").last().addClass("lastColumn");
@@ -230,9 +237,16 @@
                         var id = ui.item.context.id;
                         var model = collection.get(id);
                         var column = ui.item.closest(".column");
+						var sequence = 0;
+						if (ui.item.next().hasClass("item")){
+							sequence = ui.item.next().find(".inner").data("sequence")+1;
+						}
+						self.updateSequence(column);
+
                         if (model) {
-                            model.set({ workflow: column.attr('id'), workflowForKanban: true });
-                            model.save({}, { validate: false });
+                            model.save({ workflow: column.attr('id'), sequenceStart:model.toJSON().sequence, sequence:sequence, workflowStart : model.toJSON().workflow._id}, {
+								patch:true,
+								validate: false });
                             column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                             column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
                             column.find(".remaining").html(parseInt(column.find(".remaining").html()) + parseInt(model.get('remaining')));

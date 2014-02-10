@@ -916,7 +916,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 					data.info.sequence = sequence;
 					if (data.workflow==data.workflowStart)
 						data.info.sequence-=1;
-					models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
+					models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
 						if (!err) {
 							res.send(200, { success: 'Opportunities updated' });
 						} else {
@@ -933,7 +933,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 				delete data.workflowStart;
 				data.info = {};
 				data.info.sequence = sequence;
-				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
+				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
 					if (!err) {
 						res.send(200, { success: 'Opportunities updated' });
 					} else {
@@ -1250,9 +1250,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             } else {
 				console.log(result);
 				if (result.isOpportunitie){
-					updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "info.sequence", result.info.sequence, 0, result.workflow, result.workflow, false, true);
+					updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "info.sequence", result.info.sequence, 0, result.workflow, result.workflow, false, true,function(){
+						res.send(200, { success: 'Opportunities removed' });
+					});
 				}
-                res.send(200, { success: 'Opportunities removed' });
             }
         });
     }// end remove

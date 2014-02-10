@@ -88,7 +88,7 @@
                   }
               },
               hideNewSelect: function (e) {
-                  $(".newSelectList").hide();;
+                  $(".newSelectList").hide();
               },
               addNote: function (e) {
                   e.preventDefault();
@@ -354,7 +354,10 @@
                           StartDate: $.trim(holder.find("#StartDate").val())
                       },
                       estimated: estimated,
-                      logged: logged
+                      logged: logged,
+					  sequenceStart: this.currentModel.toJSON().sequence,
+					  sequence:-1,
+					  workflowStart:this.currentModel.toJSON().workflow._id,
                   };
 
 
@@ -362,7 +365,7 @@
                       headers: {
                           mid: mid
                       },
-                      wait: true,
+					  patch:true,
                       success: function (model) {
                           model = model.toJSON();
                           self.hideDialog();

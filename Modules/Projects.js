@@ -85,7 +85,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-        }
+        },
+        sequence: { type: Number, default: 0 },
     }, { collection: 'Tasks' });
 
     var PrioritySchema = mongoose.Schema({
@@ -1326,9 +1327,67 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             }
         });
     };
+    function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
+        var query;
+        var objFind = {};
+        var objChange = {};
+        if (workflowStart == workflowEnd) {//on one workflow
+
+            if (!(isCreate || isDelete)) {
+                var inc = -1;
+                if (start > end) {
+                    inc = 1;
+                    var c = end;
+                    end = start;
+                    start = c;
+                } else {
+                    end -= 1;
+                }
+                objChange = {};
+                objFind = { "workflow": workflowStart };
+                objFind[sequenceField] = { $gte: start, $lte: end };
+                objChange[sequenceField] = inc;
+                query = model.update(objFind, { $inc: objChange }, { multi: true });
+                query.exec(function (err, res) {
+                    if (callback) callback((inc == -1) ? end : start);
+                });
+            } else {
+                if (isCreate) {
+                    query = model.count({ "workflow": workflowStart }).exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+                if (isDelete) {
+                    objChange = {};
+                    objFind = { "workflow": workflowStart };
+                    objFind[sequenceField] = { $gt: start };
+                    objChange[sequenceField] = -1;
+                    query = model.update(objFind, { $inc: objChange }, { multi: true });
+                    query.exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+            }
+        } else {//between workflow
+            objChange = {};
+            objFind = { "workflow": workflowStart };
+            objFind[sequenceField] = { $gte: start };
+            objChange[sequenceField] = -1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec();
+            objFind = { "workflow": workflowEnd };
+            objFind[sequenceField] = { $gte: end };
+            objChange[sequenceField] = 1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec(function (err, res) {
+                if (callback) callback(end);
+            });
+
+
+        }
+    }
 
     function taskUpdateOnlySelectedFields(req, _id, data, res) {
-        delete data._id;
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
             obj._id = mongoose.Types.ObjectId();
@@ -1336,16 +1395,39 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             obj.author = req.session.uName;
             data.notes[data.notes.length - 1] = obj;
         }
-        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, tasks) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js update project.update " + err);
-                res.send(500, { error: "Can't update Project" });
-            } else {
-                res.send(200, tasks);
-            }
-        });
-    };
+        if (data.sequence == -1) {
+            updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                    data.sequence = sequence;
+                    if (data.workflow == data.workflowStart)
+                        data.sequence -= 1;
+                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                        if (!err) {
+                            res.send(200, { success: 'Tasks updated' });
+                        } else {
+                            res.send(500, { error: "Can't update Tasks" });
+                        }
+
+                    });
+
+                });
+            });
+        } else {
+            updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                delete data.sequenceStart;
+                delete data.workflowStart;
+                data.sequence = sequence;
+                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                    if (!err) {
+                        res.send(200, { success: 'Tasks updated' });
+                    } else {
+                        res.send(500, { error: "Can't update Tasks" });
+                    }
+
+                });
+            });
+        }
+    }
 
     function remove(req, _id, res) {
         models.get(req.session.lastDb - 1, 'Project', ProjectSchema).remove({ _id: _id }, function (err, projects) {
@@ -1478,21 +1560,24 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         _task.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
                         _task.extrainfo.duration = returnDuration(StartDate, _task.extrainfo.EndDate);
                     }
-                    _task.save(function (err, _task) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Project.js createTask saveTaskToBd _task.save " + err);
-                            res.send(500, { error: 'Task.save BD error' });
-                        } else {
-                            models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(_task.project, { $push: { task: _task._id } }, function (err, doc) {
-                                if (err) {
-                                    console.log(err);
-                                    res.send(500, { error: 'Project.save BD error' });
-                                }
-                            });
-                            updateProjectTime(req, _task);
-                            res.send(201, { success: 'An new Task crate success', task: _task });
-                        }
+                    updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", 0, 0, _task.workflow, _task.workflow, true, false, function (sequence) {
+                        _task.sequence = sequence;
+                        _task.save(function (err, _task) {
+                            if (err) {
+                                console.log(err);
+                                logWriter.log("Project.js createTask saveTaskToBd _task.save " + err);
+                                res.send(500, { error: 'Task.save BD error' });
+                            } else {
+                                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(_task.project, { $push: { task: _task._id } }, function (err, doc) {
+                                    if (err) {
+                                        console.log(err);
+                                        res.send(500, { error: 'Project.save BD error' });
+                                    }
+                                });
+                                updateProjectTime(req, _task);
+                                res.send(201, { success: 'An new Task crate success', task: _task });
+                            }
+                        });
                     });
                 }
                 catch (error) {
@@ -1601,14 +1686,18 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 res.send(500, { error: "Can't remove Task" });
             } else {
                 models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndRemove(_id, function (err) {
-                    if (err) {
-                        console.log(err);
-                        logWriter.log("Project.js remove task.remove " + err);
-                        res.send(500, { error: "Can't remove Task" });
-                    } else {
-                        event.emit('updateContent', req, res, task.project, "remove", [task._id]);
+            if (err) {
+                console.log(err);
+                logWriter.log("Project.js remove task.remove " + err);
+                res.send(500, { error: "Can't remove Task" });
+            } else {
+                event.emit('updateContent', req, res, task.project, "remove", [task._id]);
+                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                    res.send(200, { success: 'Task removed' });
+                });
                     }
                 });
+					
             }
         });
     };
@@ -1759,11 +1848,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                   where('project').in(projectsId.objectID()).
                                   where('workflow', newObjectId(data.workflowId)).
-                                  select("_id assignedTo workflow editedBy.date deadline project taskCount summary type remaining extrainfo.priority").
+                                  select("_id assignedTo workflow editedBy.date deadline project taskCount summary type remaining extrainfo.priority sequence").
                                   populate('assignedTo', 'name imageSrc').
                                   populate('project', 'projectShortDesc').
                                   populate('workflow', '_id').
-                                  sort({ 'editedBy.date': -1 }).
+                                  sort({ 'sequence': -1 }).
                                   limit(req.session.kanbanSettings.tasks.countPerPage).
                                   exec(function (err, result) {
                                       if (!err) {
