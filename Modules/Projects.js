@@ -1686,18 +1686,16 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 res.send(500, { error: "Can't remove Task" });
             } else {
                 models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndRemove(_id, function (err) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js remove task.remove " + err);
-                res.send(500, { error: "Can't remove Task" });
-            } else {
-                event.emit('updateContent', req, res, task.project, "remove", [task._id]);
-                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
-                    res.send(200, { success: 'Task removed' });
-                });
+                    if (err) {
+                        console.log(err);
+                        logWriter.log("Project.js remove task.remove " + err);
+                        res.send(500, { error: "Can't remove Task" });
+                    } else {
+                        event.emit('updateContent', req, res, task.project, "remove", [task._id]);
+                        updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true);
                     }
                 });
-					
+
             }
         });
     };
