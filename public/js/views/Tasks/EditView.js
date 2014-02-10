@@ -391,6 +391,9 @@
                                       kanban_holder.find("#shortDesc" + model._id).text(editHolder.find('#projectDd').data("shortdesc"));
                                       kanban_holder.find("#summary" + model._id).text(summary);
                                       kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
+									  
+									  kanban_holder.parent().find(".columnNameDiv").after(kanban_holder);
+									  
                                   }
                           }
                       },
