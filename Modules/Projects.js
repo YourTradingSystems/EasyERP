@@ -106,18 +106,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
 
     mongoose.model('Priority', PrioritySchema);
 
-    //var toHoursMinutes = function (ticks) {
-    //    var realHours = ((ticks / 1000) / 60) / 60;
-    //    var hours = Math.floor(((ticks / 1000) / 60) / 60);
-    //    var minutes = Math.ceil((realHours - hours) * 60);
-    //    return hours + ':' + minutes;
-    //};
-    //var toDays = function (ticks) {
-    //    var realDays = (((ticks / 1000) / 60) / 60) / 24;
-    //    var days = realDays.toFixed(1);
-    //    return days;
-    //};
-
     var returnDuration = function (StartDate, EndDate) {
         var days = 0;
         if (StartDate && EndDate) {
@@ -129,24 +117,6 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
         }
         return days;
     };
-
-    //var returnTotalTime = function (tasksArray) {
-    //    var total = 0;
-    //    var now = new Date();
-    //    for (var i in tasksArray) {
-    //        if ((tasksArray[i].workflow.status != 'Cancelled')
-    //            && (tasksArray[i].extrainfo.StartDate)
-    //            && (tasksArray[i].extrainfo.EndDate)) {
-    //            try {
-    //                total += (tasksArray[i].extrainfo.EndDate - tasksArray[i].extrainfo.StartDate);
-    //            }
-    //            catch (err) {
-    //                logWriter.log("Project.js getProjects project.find calculate " + Exception);
-    //            }
-    //        }
-    //    }
-    //    return toHoursMinutes(total);
-    //};
 
     var returnProgress = function (tasksArray) {
         var result = {};
@@ -682,8 +652,7 @@ var Project = function (logWriter, mongoose, department, models, workflow) {
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                query.select("projectName").
-
+                                query.select("projectName projectShortDesc").
                                 exec(function (error, _res) {
                                     if (!error) {
                                         res['data'] = _res;

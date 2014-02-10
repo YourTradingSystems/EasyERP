@@ -12,7 +12,7 @@ define([
                        content.responseObj[id].push({ _id: "", name: "Select" });
                    }
                    content.responseObj[id] = content.responseObj[id].concat(_.map(response.data, function (item) {
-                       return { _id: item._id, name: item[field] };
+                       return { _id: item._id, name: item[field], level: item.projectShortDesc || ""};
                    }));
 
                    if (isCreate) {

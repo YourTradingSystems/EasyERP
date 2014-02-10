@@ -118,9 +118,11 @@ define([
             },
 
             chooseOption: function (e) {
+                var that = this;
                 var targetElement = $(e.target).parents("td");
                 var id = targetElement.attr("id");
                 var model = this.collection.get(id);
+                model.urlRoot = '/Tasks/form/';
                 model.save({ workflow: $(e.target).attr("id") }, {
                     headers:
                         {
@@ -129,7 +131,7 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-                        targetElement.find(".stageSelect").text($(e.target).text());
+                        that.showFilteredPage();
                     }
                 });
 

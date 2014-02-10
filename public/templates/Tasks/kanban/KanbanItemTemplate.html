@@ -5,7 +5,7 @@
         </div>
 
         <div class="left">
-            <div class="left"><%=model.project.projectShortDesc%>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
+            <div class="left"><span id="shortDesc<%=model._id%>"><%=model.project.projectShortDesc%></span>-<%=model.taskCount%>&nbsp;|&nbsp;</div>
             <div class="taskSelect left">
                 <a id="priority<%=model._id%>" data-id="<%=model.extrainfo.priority%>" class="current-selected" href="javascript:;"><%=model.extrainfo.priority%></a>
             </div>
@@ -14,13 +14,13 @@
     </div>
     <div class="task-content">
         <div class="info">
-            <p><%=model.summary%></p>
+            <p id="summary<%=model._id%>"><%=model.summary%></p>
             <% _.each(model.tags,function(tag){ %>
             <% });%>
         </div>
         <div class="avatar-small right"><img class="person" src="<%=(model.assignedTo && model.assignedTo.name) ? model.assignedTo.imageSrc : ''%>" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
 
-        <div class="bottom"><p class="bold"><%=model.type%></p></div>
+        <div class="bottom"><p id="type<%=model._id%>" class="bold"><%=model.type%></p></div>
         <div class="clearfix">
         </div>
     </div>
