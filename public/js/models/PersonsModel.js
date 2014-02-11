@@ -22,6 +22,8 @@ function (common, Validation) {
                     response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
                 if (response.editedBy)
                     response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+                if (response.dateBirth)
+                    response.dateBirth = common.utcDateToLocaleDate(response.dateBirth);
                 if (response.notes) {
                     _.map(response.notes, function (note) {
                         note.date = common.utcDateToLocaleDate(note.date);
