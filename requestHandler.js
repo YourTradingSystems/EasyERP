@@ -28,7 +28,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             if (typeof this[i] == 'object' && this[i].hasOwnProperty('_id')) {
                 _arrayOfID.push(this[i]._id);
             } else {
-                if(typeof this[i] == 'string' && this[i].length === 24) {
+                if (typeof this[i] == 'string' && this[i].length === 24) {
                     _arrayOfID.push(newObjectId(this[i]));
                 }
             }
