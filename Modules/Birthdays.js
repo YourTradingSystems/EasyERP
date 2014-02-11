@@ -25,7 +25,7 @@
             //Next week
             var FirstDateNxtWeek =  new Date(now.getFullYear(), now.getMonth(), now.getDate() + RightOffset +1 ).valueOf();
             var LastDateNxtWeek =  new Date(now.getFullYear(), now.getMonth(), now.getDate() + RightOffset * 2+1 ).valueOf();
-            console.log(LastDateNxtWeek)
+            //console.log(LastDateNxtWeek)
             /* var forecast = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             forecast.setDate(now.getDate() + daysToAdd); 
             var nowForecast = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -36,11 +36,11 @@
 
             var currentEmployees = {};
             function getDaysToBirthday(birthday) {
-                var today = new Date(),
-                    days,
-                    firstDayOfYear = new Date(today.getFullYear() + 1, 0, 1),
-                    lastDayOfYear = new Date(today.getFullYear(), 11, 31),
-                    birthdayDate = birthday.getDate();
+                var today = new Date();
+                var days;
+                var firstDayOfYear = new Date(today.getFullYear() + 1, 0, 1);
+                var lastDayOfYear = new Date(today.getFullYear(), 11, 31);
+                //var birthdayDate = birthday.getDate();
                 if (birthday.getMonth() >= today.getMonth()) {
                     birthday.setFullYear(today.getFullYear());
                     days = Math.round((birthday - today) / 1000 / 60 / 60 / 24);
@@ -114,7 +114,6 @@
 
         var now = new Date();
         var day = 0;
-        console.log(day);
         var _month = now.getMonth() + 1;
         var NUMBER_OF_MONTH = 1;
         var tempMonthLength = _month + NUMBER_OF_MONTH;

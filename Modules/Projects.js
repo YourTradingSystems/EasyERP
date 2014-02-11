@@ -107,7 +107,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
     mongoose.model('Priority', PrioritySchema);
 
-    event.on('updateContent', updateContent);//binding for Event (при видаленні тасків, оновленні та створенні)
+    event.on('updateContent', updateContent);//binding for Event 
 
     function updateContent(request, response, projectId, eventType, tasksArray) {
         switch (eventType) {
@@ -128,36 +128,46 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 break;
             case "update":
                 {
-                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findOne({ task: tasksArray },
+                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findOne({ task: { $in: tasksArray } },
                     function (findError, project) {
+                        console.log(typeof tasksArray);
+                        console.log(tasksArray);
+                        for (var k in tasksArray) {
+                            console.log('k = ' + k);
+                        }
                         if (findError) {
+                            console.log(findError);
                             logWriter.log('updateContent in Projects module eventType="' + eventType + '" by tasksArray="' + tasksArray + '" error=' + findError);
                             response.send(500, { error: "Can't remove Task" });
-                        } else {
+                        } else if (project) {
                             models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(project._id, {
                                 $pullAll: { task: tasksArray }
                             },
-                            function (updateError) {
-                                if (updateError) {
-                                    logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + updateError);
-                                    response.send(500, { error: "Can't remove Task" });
-                                } else {
-                                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(projectId, {
-                                        $addToSet: { task: { $each: tasksArray } }
-                                    },
-                                    function (error) {
-                                        if (error) {
-                                            logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + updateError);
-                                            response.send(500, { error: "Can't remove Task" });
-                                        } else {
-                                            response.send(200, { success: 'Task remove success' });
-                                        }
-                                    });
-                                }
-                            });
+                                function (updateError) {
+                                    if (updateError) {
+                                        console.log(updateError);
+                                        logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + updateError);
+                                        response.send(500, { error: "Can't remove Task" });
+                                    } else {
+                                        models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(projectId, {
+                                            $addToSet: { task: { $each: tasksArray } }
+                                        },
+                                            function (error) {
+                                                if (error) {
+                                                    console.log(error);
+                                                    logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + error);
+                                                    response.send(500, { error: "Can't remove Task" });
+                                                } else {
+                                                    response.send(200, { success: 'Task remove success' });
+                                                }
+                                            });
+                                    }
+                                });
+                        } else {
+                            console.log('Castom Error');
+                            response.send(500, { error: "Can't remove Task" });
                         }
                     });
-
                 }
         }
     };
@@ -1327,6 +1337,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             }
         });
     };
+
     function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
         var query;
         var objFind = {};
@@ -1388,10 +1399,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     }
 
     function taskUpdateOnlySelectedFields(req, _id, data, res) {
-		if (data.workflow&&data.workflow._id){
-			data.workflow = data.workflow._id;
-		}
-		
+        delete data._id;
+        delete data.createdBy;
+
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
             obj._id = mongoose.Types.ObjectId();
@@ -1399,37 +1409,97 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             obj.author = req.session.uName;
             data.notes[data.notes.length - 1] = obj;
         }
-        if (data.sequence == -1) {
-            updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+        if (data.estimated && data.logged)
+            data['remaining'] = data.estimated - data.logged;
+        if (data.extrainfo)
+            data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+        if (data.estimated != 0 && data.extrainfo) {
+            data.progress = Math.round((data.logged / data.estimated) * 100);
+            var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
+            if (data.extrainfo) {
+                data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
+                data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+            }
+        }
+        if (data.project) {
+            var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: data.project });
+            query.sort({ taskCount: -1 });
+            query.exec(function (error, _tasks) {
+                if (error) {
+                    console.log(error);
+                    logWriter.log("Project.js updateTask tasks.find " + error);
+                    res.send(500, { error: 'Task find error' });
+                } else {
+
+                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log("Project.js updateTask tasks.findById " + err);
+                            res.send(500, { error: 'Task find error' });
+                        } else {
+
+                            if (!_tasks[0] || (!task || (task.project != data.project))) {
+                                var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+                                data.taskCount = n;
+                            }
+
+                            if (data.assignedTo && typeof (data.assignedTo) == 'object') {
+                                data.assignedTo = data.assignedTo._id;
+                            }
+                            if (data.extrainfo.customer && typeof (data.extrainfo.customer) == 'object') {
+                                data.extrainfo.customer = data.extrainfo.customer._id;
+                            }
+
+                            sequenceUpdate();
+                        }
+                    });
+                }
+            });
+        } else {
+            sequenceUpdate();
+        }
+        function sequenceUpdate() {
+            if (data.sequence == -1) {
+                console.log('sequence == -1');
+                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function () {
+                    updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                        data.sequence = sequence;
+                        if (data.workflow == data.workflowStart)
+                            data.sequence -= 1;
+                        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                            if (!err) {
+                                console.log(result);
+                                //res.send(200, { success: 'Tasks updated', result: result.sequence });
+                                event.emit('updateContent', req, res, result.project, 'update', [result._id]);
+                            } else {
+                                res.send(500, { error: "Can't update Tasks" });
+                                console.log(err);
+                                logWriter.log("Project.js taskUpdateOnlySelectedFields data.sequence == -1 " + err);
+                            }
+
+                        });
+
+                    });
+                });
+            } else {
+                console.log('sequence != -1');
+                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                    delete data.sequenceStart;
+                    delete data.workflowStart;
                     data.sequence = sequence;
-                    if (data.workflow == data.workflowStart)
-                        data.sequence -= 1;
                     models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
-                            res.send(200, { success: 'Tasks updated' ,result:result});
+                            //res.send(200, { success: 'Tasks updated' });
+                            event.emit('updateContent', req, res, result.project, 'update', [result._id]);
                         } else {
                             res.send(500, { error: "Can't update Tasks" });
+                            console.log(err);
+                            logWriter.log("Project.js taskUpdateOnlySelectedFields " + err);
                         }
 
                     });
-
                 });
-            });
-        } else {
-            updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
-                delete data.sequenceStart;
-                delete data.workflowStart;
-                data.sequence = sequence;
-                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-                    if (!err) {
-                        res.send(200, { success: 'Tasks updated' });
-                    } else {
-                        res.send(500, { error: "Can't update Tasks" });
-                    }
-
-                });
-            });
+            }
         }
     }
 
@@ -1598,90 +1668,91 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }
     };
 
-    function updateTask(req, _id, data, res) {
-        delete data._id;
-        delete data.createdBy;
+    //function updateTask(req, _id, data, res) {//����� ���������� ����� �� updateOnlySelectedFields
+    //    console.log(">>>>>>>>>>>>>>>>!!!!!!!!!<<<<<<<<<<<<<<");
+    //    delete data._id;
+    //    delete data.createdBy;
 
-        data.remaining = data.estimated - data.logged;
-        if (data.extrainfo)
-            data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-        if (data.estimated != 0 && data.extrainfo) {
-            data.progress = Math.round((data.logged / data.estimated) * 100);
-            var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
-            if (data.extrainfo) {
-                data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
-                data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
-            }
-        }
-        if (data.project && data.project._id) {
-            data.project = data.project._id;
-        }
+    //    data.remaining = data.estimated - data.logged;
+    //    if (data.extrainfo)
+    //        data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+    //    if (data.estimated != 0 && data.extrainfo) {
+    //        data.progress = Math.round((data.logged / data.estimated) * 100);
+    //        var StartDate = (data.extrainfo.StartDate) ? new Date(data.extrainfo.StartDate) : new Date();
+    //        if (data.extrainfo) {
+    //            data.extrainfo.EndDate = calculateTaskEndDate(StartDate, data.estimated);
+    //            data.extrainfo.duration = returnDuration(data.extrainfo.StartDate, data.extrainfo.EndDate);
+    //        }
+    //    }
+    //    if (data.project && data.project._id) {
+    //        data.project = data.project._id;
+    //    }
 
-        if (data.project) {
-            var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: data.project });
-            query.sort({ taskCount: -1 });
-            query.exec(function (error, _tasks) {
-                if (error) {
-                    console.log(error);
-                    logWriter.log("Project.js updateTask tasks.find " + error);
-                    res.send(500, { error: 'Task find error' });
-                } else {
+    //    if (data.project) {
+    //        var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: data.project });
+    //        query.sort({ taskCount: -1 });
+    //        query.exec(function (error, _tasks) {
+    //            if (error) {
+    //                console.log(error);
+    //                logWriter.log("Project.js updateTask tasks.find " + error);
+    //                res.send(500, { error: 'Task find error' });
+    //            } else {
 
-                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Project.js updateTask tasks.findById " + err);
-                            res.send(500, { error: 'Task find error' });
-                        } else {
+    //                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
+    //                    if (err) {
+    //                        console.log(err);
+    //                        logWriter.log("Project.js updateTask tasks.findById " + err);
+    //                        res.send(500, { error: 'Task find error' });
+    //                    } else {
 
-                            if (!_tasks[0] || (!task || (task.project != data.project))) {
-                                var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
-                                data.taskCount = n;
-                            }
-                            if (data.project && typeof (data.project) == 'object') {
-                                data.project = data.project._id;
-                            }
-                            if (data.assignedTo && typeof (data.assignedTo) == 'object') {
-                                data.assignedTo = data.assignedTo._id;
-                            }
-                            if (data.extrainfo.customer && typeof (data.extrainfo.customer) == 'object') {
-                                data.extrainfo.customer = data.extrainfo.customer._id;
-                            }
-                            if (data.workflow && typeof (data.workflow) == 'object') {
-                                data.workflow = data.workflow._id;
-                            }
-                            if (data.workflowForList || data.workflowForKanban) {
-                                data = {
-                                    $set: {
-                                        workflow: data.workflow
-                                    }
-                                }
-                            }
-                            if (data.notes && data.notes.length != 0 && !remove) {
-                                var obj = data.notes[data.notes.length - 1];
-                                obj._id = mongoose.Types.ObjectId();
-                                obj.date = new Date();
-                                obj.author = req.session.uName;
-                                data.notes[data.notes.length - 1] = obj;
-                            }
+    //                        if (!_tasks[0] || (!task || (task.project != data.project))) {
+    //                            var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+    //                            data.taskCount = n;
+    //                        }
+    //                        if (data.project && typeof (data.project) == 'object') {
+    //                            data.project = data.project._id;
+    //                        }
+    //                        if (data.assignedTo && typeof (data.assignedTo) == 'object') {
+    //                            data.assignedTo = data.assignedTo._id;
+    //                        }
+    //                        if (data.extrainfo.customer && typeof (data.extrainfo.customer) == 'object') {
+    //                            data.extrainfo.customer = data.extrainfo.customer._id;
+    //                        }
+    //                        if (data.workflow && typeof (data.workflow) == 'object') {
+    //                            data.workflow = data.workflow._id;
+    //                        }
+    //                        if (data.workflowForList || data.workflowForKanban) {
+    //                            data = {
+    //                                $set: {
+    //                                    workflow: data.workflow
+    //                                }
+    //                            }
+    //                        }
+    //                        if (data.notes && data.notes.length != 0 && !remove) {
+    //                            var obj = data.notes[data.notes.length - 1];
+    //                            obj._id = mongoose.Types.ObjectId();
+    //                            obj.date = new Date();
+    //                            obj.author = req.session.uName;
+    //                            data.notes[data.notes.length - 1] = obj;
+    //                        }
 
-                            models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, data, function (err, taskk) {
-                                if (err) {
-                                    console.log(err);
-                                    logWriter.log("Project.js updateTask tasks.update " + err);
-                                    res.send(500, { error: "Can't update Task" });
-                                } else {
-                                    res.send(200, taskk);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        } else {
-            res.send(500, { error: "Can't update Task" });
-        }
-    };
+    //                        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate({ _id: _id }, data, function (err, taskk) {
+    //                            if (err) {
+    //                                console.log(err);
+    //                                logWriter.log("Project.js updateTask tasks.update " + err);
+    //                                res.send(500, { error: "Can't update Task" });
+    //                            } else {
+    //                                res.send(200, taskk);
+    //                            }
+    //                        });
+    //                    }
+    //                });
+    //            }
+    //        });
+    //    } else {
+    //        res.send(500, { error: "Can't update Task" });
+    //    }
+    //};
 
     function removeTask(req, _id, res) {//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Використовується
         models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
@@ -2016,7 +2087,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
         createTask: createTask,
 
-        updateTask: updateTask,
+        //updateTask: updateTask,
 
         removeTask: removeTask,
 

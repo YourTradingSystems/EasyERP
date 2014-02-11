@@ -349,9 +349,9 @@
                       },
                       estimated: estimated,
                       logged: logged,
-					  sequenceStart: this.currentModel.toJSON().sequence,
-					  sequence:-1,
-					  workflowStart:this.currentModel.toJSON().workflow._id
+                      sequenceStart: this.currentModel.toJSON().sequence,
+                      sequence: -1,
+                      workflowStart: this.currentModel.toJSON().workflow._id
                   };
 
 
@@ -359,14 +359,14 @@
                       headers: {
                           mid: mid
                       },
-					  patch:true,
-                      success: function (model,res) {
+                      patch: true,
+                      success: function (model, res) {
                           model = model.toJSON();
                           var ids = [];
                           ids.push(assignedTo);
                           ids['task_id'] = model._id;
                           common.getImages(ids, "/getEmployeesImages");
-						  result = res.result;
+                          result = res.result;
                           self.hideDialog();
                           switch (viewType) {
                               case 'list':
@@ -390,21 +390,21 @@
                                       kanban_holder.find("#shortDesc" + model._id).text(editHolder.find('#projectDd').data("shortdesc"));
                                       kanban_holder.find("#summary" + model._id).text(summary);
                                       kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
-									  $("#"+data.workflowStart).find(".item").each(function(){
-										  var seq = $(this).find(".inner").data("sequence");
-										  if (seq>data.sequenceStart){
-											  $(this).find(".inner").attr("data-sequence",seq-1);
-										  }
-									  });
-									  kanban_holder.find(".inner").attr("data-sequence",result.sequence);
-									  
-									  $("#"+data.workflow).find(".columnNameDiv").after(kanban_holder);
-									  
+                                      $("#" + data.workflowStart).find(".item").each(function () {
+                                          var seq = $(this).find(".inner").data("sequence");
+                                          if (seq > data.sequenceStart) {
+                                              $(this).find(".inner").attr("data-sequence", seq - 1);
+                                          }
+                                      });
+                                      kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+
+                                      $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+
                                   }
                           }
                       },
                       error: function () {
-                          Backbone.history.navigate("easyErp", { trigger: true });
+                          Backbone.history.navigate("#easyErp/Tasks", { trigger: true });
                       }
                   });
               },
