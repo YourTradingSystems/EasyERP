@@ -1,10 +1,12 @@
 ﻿define([
     "text!templates/Opportunities/EditTemplate.html",
     "text!templates/Opportunities/editSelectTemplate.html",
+    'text!templates/Notes/AddAttachments.html',
+    'text!templates/Notes/AddNote.html',
     "common",
     "custom"
 ],
-    function (EditTemplate, editSelectTemplate, common) {
+    function (EditTemplate, editSelectTemplate,addAttachTemplate, addNoteTemplate, common) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -12,8 +14,7 @@
             template: _.template(EditTemplate),
 
             initialize: function (options) {
-                _.bindAll(this, "saveItem");
-                _.bindAll(this, "render", "deleteItem");
+            	_.bindAll(this, "render", "saveItem", "deleteItem");
                 this.currentModel = options.model;
                 this.page=1;
                 this.pageG=1;
@@ -31,7 +32,15 @@
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
                 'click #addUsers':'addUsers',
-                'click #removeUsers':'removeUsers'
+                'click #removeUsers':'removeUsers',
+                "click .deleteAttach": "deleteAttach",
+                "change .inputAttach": "addAttach",
+                "click #addNote": "addNote",
+                "click .editDelNote": "editDelNote",
+                "click #cancelNote": "cancelNote",
+                "click #noteArea": "expandNote",
+                "click .addTitle": "showTitle",
+                "click .editNote": "editNote",
             },
             changeTab:function(e){
                 var holder = $(e.target);
@@ -201,6 +210,226 @@
                 }
                 var index = link.index($(e.target).addClass("selected"));
                 this.$(".tab").hide().eq(index).show();
+            },
+            //Notes (add Vasya)
+            editDelNote: function (e) {
+                var id = e.target.id;
+                var k = id.indexOf('_');
+                var type = id.substr(0, k);
+                var id_int = id.substr(k + 1);
+                var currentModel = this.currentModel;
+                var notes = currentModel.get('notes');
+
+                switch (type) {
+                    case "edit": {
+                        var id_int_holder = $('#' + id_int);
+                        $('#noteArea').val(id_int_holder.find('.noteText').text());
+                        $('#noteTitleArea').val(id_int_holder.find('.noteTitle').text());
+                        $('#getNoteKey').attr("value", id_int);
+                        break;
+                    }
+                    case "del": {
+                        var newNotes = _.filter(notes, function (note) {
+                            if (note._id != id_int) {
+                                return note;
+                            }
+                        });
+                        currentModel.save({ 'notes': newNotes },
+                                {
+                                    headers: {
+                                        mid: 39
+                                    },
+                                    patch: true,
+                                    success: function () {
+                                        $('#' + id_int).remove();
+                                    }
+                                });
+                        break;
+                    }
+                }
+            },
+
+            addNote: function (e) {
+                e.preventDefault();
+                var noteArea_holder = $('#noteArea');
+                var noteTitleArea_holder = $('#noteTitleArea');
+                var val = noteArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var title = noteTitleArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                if (val || title) {
+                    var notes = this.currentModel.get('notes');
+                    var arrKeyStr = $('#getNoteKey').attr("value");
+                    var noteObj = {
+                        note: '',
+                        title: ''
+                    };
+                    if (arrKeyStr) {
+                        var editNotes = _.map(notes, function (note) {
+                            if (note._id == arrKeyStr) {
+                                note.note = val;
+                                note.title = title;
+                            }
+                            return note;
+                        });
+                        this.currentModel.save({ 'notes': editNotes },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function () {
+                                    var arrKeyStr_holder = $('#' + arrKeyStr);
+                                    var noteBody_holder = $('#noteBody');
+                                    noteBody_holder.val(arrKeyStr_holder.find('.noteText').html(val));
+                                    noteBody_holder.val(arrKeyStr_holder.find('.noteTitle').html(title));
+                                    $('#getNoteKey').attr("value", '');
+                                }
+                            });
+                    } else {
+                        noteObj.note = val;
+                        noteObj.title = title;
+                        notes.push(noteObj);
+                        this.currentModel.set();
+                        this.currentModel.save({ 'notes': notes },
+                            {
+                                headers: {
+                                    mid: 39
+                                },
+                                patch: true,
+                                success: function (models, data) {
+                                    $('#noteBody').empty();
+                                    data.result.notes.forEach(function (item) {
+                                        var date = common.utcDateToLocaleDate(item.date);
+                                        $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
+                                    });
+                                }
+                            });
+                    }
+                    noteArea_holder.val('');
+                    noteTitleArea_holder.val('');
+                }
+            },
+
+            editNote: function () {
+                $(".title-wrapper").show();
+                $("#noteArea").attr("placeholder", "").parents(".addNote").addClass("active");
+            },
+
+            expandNote: function (e) {
+                if (!$(e.target).parents(".addNote").hasClass("active")) {
+                    $(e.target).attr("placeholder", "").parents(".addNote").addClass("active");
+                    $(".addTitle").show();
+                }
+            },
+
+            cancelNote: function (e) {
+                $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                $(".title-wrapper").hide();
+                $(".addTitle").hide();
+            },
+
+            saveNote: function (e) {
+                if (!($(e.target).parents(".addNote").find("#noteArea").val() == "" && $(e.target).parents(".addNote").find("#noteTitleArea").val() == "")) {
+                    $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                    $(".title-wrapper").hide();
+                    $(".addTitle").hide();
+                }
+                else {
+                    $(e.target).parents(".addNote").find("#noteArea").focus();
+                }
+            },
+
+            showTitle: function (e) {
+                $(e.target).hide().parents(".addNote").find(".title-wrapper").show().find("input").focus();
+            },
+            //attachments (add Vasya)
+            fileSizeIsAcceptable: function (file) {
+                if (!file) { return false; }
+                return file.size < App.File.MAXSIZE;
+            },
+
+            addAttach: function (event) {
+                event.preventDefault();
+                var currentModel = this.currentModel;
+                var currentModelID = currentModel["id"];
+                var addFrmAttach = $("#editOpportunities");
+                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
+                if (!this.fileSizeIsAcceptable(addInptAttach)) {
+                    alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
+                    return;
+                }
+                addFrmAttach.submit(function (e) {
+                    e.preventDefault();
+                    var bar = $('.bar');
+                    var status = $('.progress_status');
+                    var formURL = "http://" + window.location.host + "/uploadOpportunitiesFiles";
+                    addFrmAttach.ajaxSubmit({
+                        url: formURL,
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: [addInptAttach],
+
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("id", currentModelID);
+                            status.show();
+                            var statusVal = '0%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+
+                        uploadProgress: function (event, position, total, statusComplete) {
+                            var statusVal = statusComplete + '%';
+                            bar.width(statusVal);
+                            status.html(statusVal);
+                        },
+
+                        success: function (data) {
+                            var attachments = currentModel.get('attachments');
+                            attachments.length = 0;
+                            $('.attachContainer').empty();
+
+                            data.result.attachments.forEach(function (item) {
+                                var date = common.utcDateToLocaleDate(item.uploadDate);
+                                attachments.push(item);
+                                $('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+                            });
+                            addFrmAttach[0].reset();
+                            status.hide();
+                        },
+
+                        error: function (model, xhr) {
+                            alert(xhr.status);
+                        }
+                    });
+                });
+                addFrmAttach.submit();
+                addFrmAttach.off('submit');
+            },
+
+            deleteAttach: function (e) {
+                var target = $(e.target);
+                if (target.closest("li").hasClass("attachFile")) {
+                    target.closest(".attachFile").remove();
+                } else {
+                    var id = e.target.id;
+                    var currentModel = this.currentModel;
+                    var attachments = currentModel.get('attachments');
+                    var newAttachments = _.filter(attachments, function (attach) {
+                        if (attach._id != id) {
+                            return attach;
+                        }
+                    });
+                    currentModel.save({ 'attachments': newAttachments },
+                        {
+                            headers: {
+                                mid: 39
+                            },
+                            patch: true,
+                            success: function () {
+                                $('.attachFile_' + id).remove();
+                            }
+                        });
+                }
             },
 
             saveItem: function () {

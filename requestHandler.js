@@ -1908,7 +1908,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
-    function updateOpportunitie(req, res, id, data) {
+    function updateOpportunitie(req, res, id, data,remove) {
         var date = Date.now();
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             data.opportunitie['editedBy'] = {
@@ -1959,6 +1959,22 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+    
+    function uploadOpportunitiesFiles(req, res, id, file) {
+        console.log("File Uploading to Project");
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 39, function (access) {
+                if (access) {
+                    console.log(file);
+                    opportunities.update(req, id, { $push: { attachments: { $each: file } } }, res);
+                } else {
+                    res.send(403);
+                }
+            });
+        } else {
+            res.send(401);
+        }
+    };
 
     //--------------------Events--------------------------------
     function createEvent(req, res, data) {
@@ -2316,6 +2332,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateOpportunitie: updateOpportunitie,
         removeOpportunitie: removeOpportunitie,
 		opportunitieUpdateOnlySelectedFields: opportunitieUpdateOnlySelectedFields,
+		uploadOpportunitiesFiles:uploadOpportunitiesFiles,
 
         createEvent: createEvent,
         getEvents: getEvents,

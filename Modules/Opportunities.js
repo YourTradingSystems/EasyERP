@@ -75,6 +75,15 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         source: { type: String, default: '' },
         isConverted: { type: Boolean, default: false },
         convertedDate: { type: Date, default: Date.now },
+        notes: { type: Array, default: [] },
+        attachments: [{
+            id: { type: Number, default: '' },
+            name: { type: String, default: '' },
+            path: { type: String, default: '' },
+            size: Number,
+            uploaderName: { type: String, default: '' },
+            uploadDate: { type: Date, default: Date.now }
+        }],
     }, { collection: 'Opportunities' });
 
     mongoose.model('Opportunities', opportunitiesSchema);
@@ -378,7 +387,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 								console.log("Opportunities.js create savetoDB _opportunitie.save " + err);
 								res.send(500, { error: 'Opportunities.save BD error' });
 							} else {
-								res.send(201, { success: { massage: 'A new Opportunities create success', id: result._id } });
+								res.send(201, { success: { massage: 'A new Opportunities create success', id: result._id, } });
 							}
 						});
 					});
@@ -680,7 +689,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             });
     };
 
-    function update(req, _id, data, res) {
+    function update(req, _id, data, res, remove) {
         function updateOpp() {
             var createPersonCustomer = function (company) {
                 if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
@@ -759,10 +768,18 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                 };
             }
+            
+            if (data.notes && data.notes.length != 0 && !remove) {
+                var obj = data.notes[data.notes.length - 1];
+                obj._id = mongoose.Types.ObjectId();
+                obj.date = new Date();
+                obj.author = req.session.uName;
+                data.notes[data.notes.length - 1] = obj;
+            }
 			updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "info.sequence", 0,0,data.workflow, data.workflow, true, false, function(sequence){
 				if (!data.info)data.info = {};
 				data.info.sequence = sequence;
-				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).update({ _id: _id }, data, function (err, result) {
+				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate({ _id: _id }, data, function (err, result) {
 					
 					if (err) {
 						console.log(err);
@@ -822,7 +839,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 								createPersonCustomer({});
 							}
 						}
-						res.send(200, { success: 'Opportunities updated success' });
+						res.send(200, { success: 'Opportunities updated success',result:result });
 					}
 				});
 			});
@@ -916,9 +933,16 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 					data.info.sequence = sequence;
 					if (data.workflow==data.workflowStart)
 						data.info.sequence-=1;
-					models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
+			        if (data.notes && data.notes.length != 0) {
+			            var obj = data.notes[data.notes.length - 1];
+			            obj._id = mongoose.Types.ObjectId();
+			            obj.date = new Date();
+			            obj.author = req.session.uName;
+			            data.notes[data.notes.length - 1] = obj;
+			        }
+					models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, result) {
 						if (!err) {
-							res.send(200, { success: 'Opportunities updated' });
+							res.send(200, { success: 'Opportunities updated', result:result});
 						} else {
 							res.send(500, { error: "Can't update Opportunitie" });
 						}

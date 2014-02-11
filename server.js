@@ -395,6 +395,40 @@ app.post('/uploadTasksFiles', function (req, res, next) {
         }
     });
 });
+// upload files Opportunities (add Vasya);
+app.post('/uploadOpportunitiesFiles', function (req, res, next) {
+    console.log('>>>>>>>>>>>Uploading File Opportunities<<<<<<<<<<<<<<<<<<<<<<<');
+    //data = {};
+    var os = require("os");
+    var osType = (os.type().split('_')[0]);
+	var dir;
+	switch(osType) {
+	case "Windows":
+		{
+			dir = __dirname + "\\uploads";
+		}
+		break;
+	case "Linux":
+		{
+			dir = __dirname + "\/uploads";
+		}
+	}
+	fs.readdir(dir,function(err,files){
+		if (err){
+			fs.mkdir(dir, function (errr){
+				uploadFileArray(req,res,function(files){
+                    requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+				});
+				
+			});
+		}else{
+			uploadFileArray(req,res,function(files){
+                requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+			});
+        }
+    });
+});
+
 
 app.get('/logout', function (req, res, next) {
     console.log('>>>>>>>>>>>logut<<<<<<<<<<<<<<');
@@ -1601,7 +1635,7 @@ app.put('/Opportunities/:_id', function (req, res) {
     data.mid = req.headers.mid;
     data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
-    requestHandler.updateOpportunitie(req, res, id, data);
+    requestHandler.updateOpportunitie(req, res, id, data, remove);
 });
 
 app.put('/Opportunities/:viewType/:_id', function (req, res) {
@@ -1612,6 +1646,7 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
 });
+
 app.patch('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
