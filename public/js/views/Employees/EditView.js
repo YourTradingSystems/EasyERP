@@ -54,7 +54,7 @@ define([
                 var currentModel = this.currentModel;
                 var currentModelID = currentModel["id"];
                 var addFrmAttach = $("#editEmployeeForm");
-                var addInptAttach = $(".input-file .inputAttach")[0].files[0];
+                var addInptAttach = $("#editEmployeeForm .input-file .inputAttach")[0].files[0];
                 if(!this.fileSizeIsAcceptable(addInptAttach)){
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
@@ -452,7 +452,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-employee-dialog",
-                    width: 800,
+                    width: 1000,
                     buttons:{
                         save:{
                             text: "Save",
