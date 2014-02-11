@@ -4,54 +4,35 @@
           <div class="inner">
               <ul class="dialog-tabs">
                   <li><a class="active" href="javascript:;">Main</a></li>
+                  <li><a href="javascript:;">Lead</a></li>
                   <li><a href="javascript:;">Assignees</a></li>
               </ul>
               <div class="clearfix"></div>
               <div class="dialog-tabs-items">
                   <div class="dialog-tabs-item active">
-                      <div class="half-block left">
-                        <dl class="opp-info">
+                        <dl class="subject-info">
                           <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="48"/></dd>
-                          <dt><label for="expectedRevenue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" maxlength="32"/><%=model.expectedRevenue.currency%></dd>
+						</dl>
+                      <div class="half-block left withPaddingLeft">
+                        <textarea id="internalNotes" class="opp-internal"><%=model.internalNotes%></textarea>
+                      </div>
+                      <div class="half-block left">
+                        <dl class="opprtunitie-info">
+                          <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="48"/></dd>
+                          <dt><label for="expectedRevenue">Expected Revenue</label></dt><dd><input type="text"  class="date-min" id="expectedRevenueValue" value="<%=(model.expectedRevenue) ? model.expectedRevenue.value : ''%>" maxlength="32"/></dd>
                           <!--<dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="<%=model.expectedRevenue.progress%>" maxlength="32"/>%</dd>-->
                           <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
                           <dt><label for="salesPersonDd">Salesperson</label></dt><dd><select id="salesPersonDd"></select></dd>
                           <dt><label for="salesTeamDd">Sales Team</label></dt><dd><select id="salesTeamDd"></select></dd>
-
-                        </dl>
-                      </div>
-                      <div class="half-block left">
-                        <dl class="opp-info">
                           <dt><label for="workflowDd">Stages </label></dt><dd><select id="workflowDd"></select></dd>
-                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" readonly /></dd>
+                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" class="date-min" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" readonly /></dd>
                           <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=(model.nextAction) ? model.nextAction.desc : ''%>" /></dd>
-                          <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing" value="<%=model.expectedClosing%>" maxlength="32" readonly/></dd>
+                          <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing"  class="date-min" value="<%=model.expectedClosing%>" maxlength="32" readonly/></dd>
                           <dt><label for="priorityDd">Priority </label></dt><dd><select id="priorityDd"></select></dd>
 
                         </dl>
                       </div>
                       <div class="clearfix"></div>
-                      <div class="half-block left withPaddingLeft">
-                        <div class="formTitle">
-                          <h3 class="left">Lead</h3>
-                          <div class="clearfix"></div>
-                        </div>
-                        <dl class="opp-info">
-<!--                       <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=(model.company && model.company.name) ? model.company.name.first : ''%>" disabled maxlength="32" /></dd> -->
-                          <dt><label for="address">Address</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
-                          <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
-                          <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
-                          <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" maxlength="32"/></dd>
-                          <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" maxlength="32"/></dd>
-                        </dl>
-                      </div>
-                      <div class="half-block left withPaddingLeft">
-                        <div class="formTitle">
-                          <h3 class="left">Internal Notes</h3>
-                          <div class="clearfix"></div>
-                        </div>
-                        <textarea id="internalNotes"><%=model.internalNotes%></textarea>
-                      </div>
 <div class="noteWrapper projects-dialog">
 			  <label>Note</label>
 			  <div id="noteBody">
@@ -123,8 +104,26 @@
             </div>
 		  </div>
 			
-		  <div class="clearfix"></div>
+<div class="clearfix"></div>
                   </div>
+<div class="clearfix"></div>
+                  <div class="dialog-tabs-item">
+                      <div class="half-block left withPaddingLeft">
+                        <dl class="opprtunitie-lead-info">
+						  <!--                       <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%=(model.company && model.company.name) ? model.company.name.first : ''%>" disabled maxlength="32" /></dd> -->
+                          <dt><label for="address">Street</label></dt><dd><input type="text" id="street" class="address" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
+						  <dt><label for="city">City</label></dt><dd><input type="text" id="city" class="address" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
+						  <dt><label for="state">State</label></dt><dd><input type="text" id="state" class="address" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
+                        </dl>
+                      </div>
+                      <div class="half-block left">
+                        <dl class="opprtunitie-lead-info">
+                          <dt><label for="zip">Address</label></dt><dd><input type="text" id="zip" class="address" name="zip" value="<%=model.address.zip%>" maxlength="32"/></dd>
+                          <dt><label for="country">Country</label></dt><dd><input type="text" id="country" class="address" name="country" value="<%=model.address.country%>" maxlength="32"/></dd>
+                        </dl>
+                      </div>
+
+				  </div>
                   <div class="dialog-tabs-item">
                       <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
                       <div class="clearfix"></div>
