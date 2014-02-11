@@ -15,21 +15,26 @@ function (common, Validation){
         },
         parse:true,
         parse: function (response) {
+            if (!response.data) {
+                if (response.createdBy)
+                    response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
+                if (response.editedBy)
+                    response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+                if (response.notes) {
+                    _.map(response.notes, function (note) {
+                        note.date = common.utcDateToLocaleDate(note.date);
+                        return note;
+                    });
+                }
 
-                    if (response.notes) {
-                        _.map(response.notes, function (note) {
-                        	note.date = common.utcDateToLocaleDate(note.date);
-                            return note;
-                        });
-                    }
-                  
-                    if (response.attachments) {
-                        _.map(response.attachments, function (attachment) {
-                            attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                            return attachment;
-                        });
-                    }
-            return response;
+                if (response.attachments) {
+                    _.map(response.attachments, function (attachment) {
+                        attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                        return attachment;
+                    });
+                }
+                return response;
+            }
         },
 
         validate: function(attrs){

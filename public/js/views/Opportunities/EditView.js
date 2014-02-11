@@ -601,6 +601,7 @@
                 }
             },
             render: function () {
+				console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });var self = this;

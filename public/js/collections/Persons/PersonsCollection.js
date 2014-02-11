@@ -29,30 +29,8 @@ define([
                 return new PersonsCollection(filtered);
             },
 
-            parse:true,
-
+            parse: true,
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (person) {
-                        person.createdBy.date = common.utcDateToLocaleDateTime(person.createdBy.date);
-                        person.editedBy.date = person.editedBy.user ? common.utcDateToLocaleDateTime(person.editedBy.date) :  null;
-                        person.dateBirth = common.utcDateToLocaleDate(person.dateBirth);
-                        if (person.notes) {
-                            _.map(person.notes, function (note) {
-                            	note.date = common.utcDateToLocaleDate(note.date);
-                                return note;
-                            });
-                        }
-                      
-                        if (person.attachments) {
-                            _.map(person.attachments, function (attachment) {
-                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                                return attachment;
-                            });
-                        }
-                         return person;
-                    });
-                }
                 return response.data;
             },
 

@@ -32,7 +32,7 @@ define([
                    'keydown': 'keydownHandler',
                    "change .inputAttach": "addAttach",
                    "click .deleteAttach": "deleteAttach",
-				   "keypress #logged, #estimated": "isNumberKey"
+                   "keypress #logged, #estimated": "isNumberKey"
                },
 
                addAttach: function (event) {
@@ -126,11 +126,9 @@ define([
                        tags: tags,
                        deadline: deadline,
                        description: description,
-                       extrainfo: {
-                           priority: priority,
-                           sequence: sequence,
-                           StartDate: StartDate
-                       },
+                       priority: priority,
+                       sequence: sequence,
+                       StartDate: StartDate,
                        estimated: estimated,
                        logged: logged,
                    },
@@ -228,12 +226,12 @@ define([
                chooseOption: function (e) {
                    $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
                },
-			   isNumberKey: function(evt){
-				   var charCode = (evt.which) ? evt.which : event.keyCode;
-				   if (charCode > 31 && (charCode < 48 || charCode > 57))
-					   return false;
-				   return true;
-			   },
+               isNumberKey: function (evt) {
+                   var charCode = (evt.which) ? evt.which : event.keyCode;
+                   if (charCode > 31 && (charCode < 48 || charCode > 57))
+                       return false;
+                   return true;
+               },
                render: function () {
                    var projectID = (window.location.hash).split('/')[3];
                    var formString = this.template();
@@ -255,11 +253,11 @@ define([
                            }
                        }
                    });
-				   if (projectID){
-					   populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, false, false, projectID);
-				   }else{
-					   populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, true);
-				   }
+                   if (projectID) {
+                       populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, false, false, projectID);
+                   } else {
+                       populate.get("#projectDd", "/getProjectsForDd", {}, "projectName", this, true);
+                   }
                    populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Tasks" }, "name", this, true);
                    populate.get2name("#assignedToDd", "/getPersonsForDd", {}, this, true);
                    populate.getPriority("#priorityDd", this, true);

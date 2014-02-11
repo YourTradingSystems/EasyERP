@@ -338,22 +338,25 @@
                       type: holder.find("#type").data("id"),
                       summary: summary,
                       assignedTo: assignedTo ? assignedTo : null,
-                      workflow: workflow ? workflow : null,
+                      //workflow: workflow ? workflow : null,
                       project: project,
                       tags: tags,
                       description: $.trim(holder.find("#description").val()),
-                      extrainfo: {
-                          priority: priority,
-                          sequence: sequence,
-                          StartDate: $.trim(holder.find("#StartDate").val())
-                      },
+                      priority: priority,
+                      //sequence: sequence,
+                      StartDate: $.trim(holder.find("#StartDate").val()),
                       estimated: estimated,
                       logged: logged,
                       sequenceStart: this.currentModel.toJSON().sequence,
-                      sequence: -1,
-                      workflowStart: this.currentModel.toJSON().workflow._id
+                      //sequence: -1,
+                      //workflowStart: this.currentModel.toJSON().workflow._id
                   };
-
+                  var currentWorkflow = this.currentModel.get('workflow');
+                  if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
+                      data['workflow'] = workflow;
+                      data['sequence'] = -1;
+                      data['workflowStart'] = this.currentModel.toJSON().workflow._id
+                  };
 
                   this.currentModel.save(data, {
                       headers: {
@@ -396,7 +399,8 @@
                                               $(this).find(".inner").attr("data-sequence", seq - 1);
                                           }
                                       });
-                                      kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+                                      if (result && result.sequence)
+                                          kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 
                                       $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
 

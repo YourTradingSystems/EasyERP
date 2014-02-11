@@ -58,21 +58,6 @@
 
             parse: true,
             parse: function (response) {
-            	 if (response.data) {
-                     _.map(response.data, function (opportunity) {
-                         if (opportunity.creationDate)
-                             opportunity.creationDate = common.utcDateToLocaleDate(opportunity.creationDate);
-                         if (opportunity.expectedClosing)
-                            opportunity.expectedClosing = common.utcDateToLocaleDate(opportunity.expectedClosing);
-						 if (opportunity.nextAction)
-							 opportunity.nextAction.date = ( opportunity.nextAction) ? common.utcDateToLocaleDate(opportunity.nextAction.date):'';
-						 if (opportunity.createdBy)
-                            opportunity.createdBy.date = common.utcDateToLocaleDateTime(opportunity.createdBy.date);
-						 if (opportunity.editedBy)
-                            opportunity.editedBy.date = common.utcDateToLocaleDateTime(opportunity.editedBy.date);
-                         return opportunity;
-                     });
-                 }
                 return response.data;
             }
         });

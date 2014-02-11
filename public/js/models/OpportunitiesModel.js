@@ -17,11 +17,38 @@ function (common, Validation) {
         parse: true,
 
         parse: function (response) {
-            if (response && response.nextAction) {
-                response.creationDate = common.utcDateToLocaleDate(response.creationDate);
-                response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
-                response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
-                response.convertedDate = common.utcDateToLocaleDate(response.convertedDate);
+        	 if (!response.data) {
+        	   if (response.creationDate)
+	                response.creationDate = common.utcDateToLocaleDate(response.creationDate);
+        	   
+        	   if (response.expectedClosing)
+	                response.expectedClosing = common.utcDateToLocaleDate(response.expectedClosing);
+        	  
+        	   if (response.nextAction)
+	                response.nextAction.date = common.utcDateToLocaleDate(response.nextAction.date);
+        	   
+        	   if (response.convertedDate)
+	                response.convertedDate = common.utcDateToLocaleDate(response.convertedDate);
+        	   
+        	   if (response.createdBy)
+        		   response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
+        	   
+        	   if (response.editedBy)
+					response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+               
+        	   if (response.notes) {
+                    _.map(response.notes, function (note) {
+                        note.date = common.utcDateToLocaleDate(note.date);
+                        return note;
+                    });
+                }
+
+                if (response.attachments) {
+                    _.map(response.attachments, function (attachment) {
+                        attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                        return attachment;
+                    });
+                }
             }
             return response;
         },

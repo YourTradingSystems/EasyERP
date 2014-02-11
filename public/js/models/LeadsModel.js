@@ -1,4 +1,4 @@
-﻿define(['Validation'],function (Validation) {
+﻿define(['Validation','common'],function (Validation,common) {
     var LeadModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
@@ -29,6 +29,17 @@
 
             if(errors.length > 0)
                 return errors;
+        },
+        
+        parse:true,
+        parse: function (response) {
+            if (!response.data) {
+                if (response.createdBy)
+                    response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
+                if (response.editedBy)
+                    response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+                return response;
+            }
         },
         defaults: {
             isOpportunitie: false,

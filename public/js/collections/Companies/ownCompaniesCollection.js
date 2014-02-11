@@ -26,12 +26,6 @@
             parse: true,
 
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (company) {
-                        company.salesPurchases.date = common.utcDateToLocaleDate(company.salesPurchases.date);
-                        return company;
-                    });
-                }
                 return response.data;
             },
 

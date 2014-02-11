@@ -33,26 +33,6 @@ define([
             parse: true,
 
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (company) {
-                        if (company.notes) {
-                            _.map(company.notes, function (note) {
-                            	note.date = common.utcDateToLocaleDate(note.date);
-                                return note;
-                            });
-                        }
-                      
-                        if (company.attachments) {
-                            _.map(company.attachments, function (attachment) {
-                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                                return attachment;
-                            });
-                        }
-                        //return company.notes;
-                        //return company.attachments;
-                        return company;
-                    });
-                }
                 return response.data;
             },
 

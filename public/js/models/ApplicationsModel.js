@@ -15,10 +15,19 @@ function (common, Validation) {
         
         parse: true,
         parse: function (response) {
-            if (response) {
-            	response.creationDate = common.utcDateToLocaleDate(response.creationDate);
-            	response.nextAction = common.utcDateToLocaleDate(response.nextAction);
-            	
+            if (!response.data) {
+            	if(response.creationDate){
+            		response.creationDate = common.utcDateToLocaleDate(response.creationDate);
+            	}
+            	if(response.nextAction) {
+            		response.nextAction = common.utcDateToLocaleDate(response.nextAction);
+            	}
+            	if (response.createdBy)
+            		response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
+				
+            	if (response.editedBy)
+					response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+
                 if (response.attachments) {
                     _.map(response.attachments, function (attachment) {
                         attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
