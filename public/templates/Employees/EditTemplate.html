@@ -6,6 +6,15 @@
           <li><a class="active" href="javascript:;">Main</a></li>
 		  <li><a href="javascript:;" class="">Personal Information</a></li>
           <li><a href="javascript:;">Assignees</a></li>
+		  <li class="right withEndContract">
+			<span class="arrow">7</span><span class="endContractReasonList">End Contract</span>
+			<ul class="newSelectList">
+			  <li>End Contract</li>
+			  <li>Fired</li>
+			  <li>Personal Issues</li>
+			  <li>Other</li>
+			</ul>
+		  </li>
         </ul>
         <div class="clearfix"></div>
         <div class="dialog-tabs-items">
@@ -46,12 +55,6 @@
 					<select id="projectManagerDD">
 					</select>
                   </dd>
-				  <!--                <dt><label for="coachDd">Coach</label></dt>
-									  <dd>
-										<select id="coachDd">
-										</select>
-									  </dd>-->
-
                   <dt><label for="jobTypeDd">Job type</label></dt>
                   <dd>
 					<select id="jobTypeDd">
@@ -152,14 +155,6 @@
             <div class="half-block left withPaddingLeft">
 
 			  <dl class="edit-employee-info">
-                <dt><label for="genderDd">Gender</label>
-				  <dd>
-                    <select id="genderDd">
-					  <option value="male">male</option>
-					  <option value="female" <%=(model.gender=="female")? 'selected="selected"' :'' %>>female</option>
-                    </select>
-				  </dd>
-                </dt>
                 <dt><label for="maritalDd">Marital status</label>
 				  <dd>
                     <select id="maritalDd">

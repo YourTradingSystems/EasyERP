@@ -43,8 +43,33 @@ define([
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
                 'click #addUsers':'addUsers',
-                'click #removeUsers':'removeUsers'
+                'click #removeUsers':'removeUsers',
+                'click .endContractReasonList, .withEndContract .arrow': 'showEndContractSelect',
+                'click .withEndContract .newSelectList li': 'endContract',
+				'click':'hideSelect'
             },
+			hideSelect:function(){
+				$(".newSelectList").hide();
+			},
+            showEndContractSelect: function (e) {
+                e.preventDefault();
+				$(e.target).parent().find(".newSelectList").toggle();
+				return false;
+            },
+            endContract: function (e) {
+                var wfId = $('.endContractReasonList').attr('data-id');
+                var contractEndReason = $(e.target).text();
+                this.currentModel.set({ workflow: wfId, contractEndReason: contractEndReason, workflowContractEnd: true });
+                this.currentModel.save({}, {
+                    success: function () {
+                        Backbone.history.navigate("easyErp/Applications/kanban", { trigger: true });
+                    },
+                    error: function () {
+                        Backbone.history.navigate("home", { trigger: true });
+					}
+                });
+            },
+
             fileSizeIsAcceptable: function(file){
                 if(!file){return false;}
                 return file.size < App.File.MAXSIZE;
@@ -481,6 +506,11 @@ define([
                 common.populateCoachDd("#coachDd", "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
+                common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function (workflow) {
+                    console.log(workflow);
+                    $('.endContractReasonList').attr('data-id', workflow[0]._id);
+                });
+
                 $('#dateBirth').datepicker({
                     changeMonth : true,
                     changeYear : true,
@@ -498,7 +528,7 @@ define([
                         model.groups.users.forEach(function(item){
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
-                        })
+                        });
 
                     }
                 this.delegateEvents(this.events);

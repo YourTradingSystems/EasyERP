@@ -2604,6 +2604,7 @@ dl {
 		max-width:190px !important;
 	}
 }
+
 .half-block {
     width: 50%;
 	&.projectNote{
@@ -3471,6 +3472,50 @@ ul.dialog-tabs {
 
 ul.dialog-tabs {
     .tabs;
+	.withEndContract{
+		position:relative;
+		.newSelectList{
+			display:none;
+			width:112px;
+			margin-top:22px;
+			right:0px;
+			li{
+				padding-left:10px;
+				float:none;
+			}
+		}
+		.endContractReasonList, .arrow{
+			float:right;
+			width:80px;
+			.btn;
+			height:15px;
+			border-radius:0;
+			.gradient(#A02422);
+			-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+			-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+			color: white;
+
+			&:hover {
+				.gradient(#b24444);
+			}
+		}
+		.arrow{
+			border-left: 1px solid #ABABAB;
+			height: 24px;
+			width: 24px;
+			font-family: Icons;
+			color: white;
+			font-weight: 500;
+			font-size: 10px;
+			line-height: 20px;
+			width:8px;
+			margin-left:-2px;
+			height:15px;
+			display:block;
+		}
+	}
+
 }
 
 .dialog-tabs-items {
@@ -3911,4 +3956,13 @@ h3.dashboard {
 	}
 }
 
+}
+.form-holder form .create-employee-info {
+	.dl-auto(200px,40%);
+	input{
+		max-width:117px !important;
+	}
+	select{
+		max-width:130px !important;
+	}
 }
