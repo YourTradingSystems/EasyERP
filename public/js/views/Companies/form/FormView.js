@@ -124,6 +124,7 @@ define([
 				var self = this;
             	var formModel = this.formModel.toJSON();
 				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,false,function(collection){
+					console.log(collection);
 					var isLast = self.pageMiniPersons==self.allPagesPersons?true:false;
                     var perElem = self.$el.find('#persons');
                     perElem.empty();
@@ -153,7 +154,7 @@ define([
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
 //				this.$el.find('.formRightColumn').empty();
 				this.renderMiniOpp();
-//				this.renderMiniPersons();
+				this.renderMiniPersons();
 /*                this.$el.find('.formRightColumn').append(
                                 new opportunitiesCompactContentView({
                                     collection: this.opportunitiesCollection,

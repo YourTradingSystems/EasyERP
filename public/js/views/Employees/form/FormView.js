@@ -12,11 +12,19 @@ define([
             },
             events: {
                 'click .chart-tabs a': 'changeTab',
-                'change .endContractReasonList': 'endContract'
+                'click .endContractReasonList, .withEndContract .arrow': 'showEndContractSelect',
+                'click .withEndContract .newSelectList li': 'endContract',
+				'click':'hideSelect'
             },
-            
-            endContract: function (e) {
+			hideSelect:function(){
+				$(".newSelectList").hide();
+			},
+            showEndContractSelect: function (e) {
                 e.preventDefault();
+				$(e.target).parent().find(".newSelectList").toggle();
+				return false;
+            },            
+            endContract: function (e) {
                 var wfId = $('.endContractReasonList').attr('data-id');
                 var contractEndReason = $(e.target).text();
                 this.formModel.set({ workflow: wfId, contractEndReason: contractEndReason, workflowContractEnd: true });
@@ -26,7 +34,7 @@ define([
                     },
                     error: function () {
                         Backbone.history.navigate("home", { trigger: true });
-                    }
+					}
                 });
             },
             changeTab: function (e) {

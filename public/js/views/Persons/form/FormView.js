@@ -215,7 +215,11 @@ define([
                     headers: {
                         mid: 39
                     },
-					patch:true
+					patch:true,
+                    success: function (model) {
+                    	Backbone.history.fragment = "";
+                        Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
+                    }
                 });
             },
 

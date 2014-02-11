@@ -953,39 +953,50 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         }
     }
     function updateOnlySelectedFields(req, _id, data, res) {
-        if (data.sequence == -1) {
-            console.log(data);
-            updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-                updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
-                    data.sequence = sequence;
-                    if (data.workflow == data.workflowStart)
-                        data.sequence -= 1;
-                    models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-                        if (!err) {
-                            res.send(200, { success: 'Employees updated' });
-                        } else {
-                            res.send(500, { error: "Can't update Employees" });
-                        }
+		if (data.sequenceStart&&data.workflowStart){
+			if (data.sequence == -1) {
+				console.log(data);
+				updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+					updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+						data.sequence = sequence;
+						if (data.workflow == data.workflowStart)
+							data.sequence -= 1;
+						models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+							if (!err) {
+								res.send(200, { success: 'Employees updated' });
+							} else {
+								res.send(500, { error: "Can't update Employees" });
+							}
 
-                    });
+						});
 
-                });
+					});
+				});
+			} else {
+				updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+					delete data.sequenceStart;
+					delete data.workflowStart;
+					data.sequence = sequence;
+					models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+						if (!err) {
+							res.send(200, { success: 'Employees updated' });
+						} else {
+							res.send(500, { error: "Can't update Employees" });
+						}
+
+					});
+				});
+			}
+		}else{
+            models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                if (!err) {
+                    res.send(200, { success: 'Employees updated', result:result });
+                } else {
+                    res.send(500, { error: "Can't update Employees" });
+                }
+
             });
-        } else {
-            updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
-                delete data.sequenceStart;
-                delete data.workflowStart;
-                data.sequence = sequence;
-                models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-                    if (!err) {
-                        res.send(200, { success: 'Employees updated' });
-                    } else {
-                        res.send(500, { error: "Can't update Employees" });
-                    }
-
-                });
-            });
-        }
+		}
     }
     function update(req, _id, data, res) {
         try {

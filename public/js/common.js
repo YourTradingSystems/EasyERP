@@ -62,7 +62,7 @@
             img.onload = function () {
                 var ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, 120, 120);
-            }
+            };
             img.src = model.imageSrc;
             context.imageSrc = model.imageSrc;
         };
