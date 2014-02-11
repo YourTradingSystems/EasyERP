@@ -40,7 +40,7 @@
 				<dd>
 				  <a id="projectTypeDD" data-id="<%=model.projecttype?model.projecttype:''%>" class="current-selected" href="javascript:;"><%=model.projecttype?model.projecttype:'Select'%></a>			  
 				</dd>
-                <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.info.StartDate%>" readonly /></dd>
+                <dt><label for="StartDate">Start Date </label></dt><dd><input class="extrainfo blueback" type="text" name="StartDate" id="StartDate" value="<%=model.StartDate%>" readonly /></dd>
               </dl>
               <dl class="profile-edit-info">
                 <dt>
@@ -76,9 +76,9 @@
                           </li>
                       </ul>
                   </dd>
- 				<dt><label for="EndDate">End Date </label></dt><dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.info.StartDate%>" readonly /></dd>
+ 				<dt><label for="EndDate">End Date </label></dt><dd><input class="info blueback" type="text" name="EndDate" id="EndDate" value="<%=model.StartDate%>" readonly /></dd>
                   <dt><label for="targetEndDate">Target End Date</label></dt>
-                  <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.info.TargetEndDate%>" readonly /></dd>
+                  <dd><input class="info blueback" type="text" name="TargetEndtDate" id="EndDateTarget" value="<%=model.TargetEndDate%>" readonly /></dd>
               </dl>
             </div>
             <div class="clearfix"></div>

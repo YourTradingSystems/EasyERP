@@ -420,7 +420,6 @@
             } else {
                 optionsObject['type'] = 'Person';
             };
-
             models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
                 {
                     $match: {

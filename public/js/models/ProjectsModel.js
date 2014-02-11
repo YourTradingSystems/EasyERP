@@ -52,11 +52,12 @@ define(['Validation', 'common'],
                         response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
                     if (response.editedBy)
                         response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
-                    if (response.info) {
-                        response.info.StartDate = common.utcDateToLocaleDate(response.info.StartDate);
-                        response.info.EndDate = common.utcDateToLocaleDate(response.info.EndDate);
-                        response.info.TargetEndDate = common.utcDateToLocaleDate(response.info.TargetEndDate);
-                    }
+                    if (response.StartDate)
+                        response.StartDate = common.utcDateToLocaleDate(response.StartDate);
+                    if (response.EndDate)
+                        response.EndDate = common.utcDateToLocaleDate(response.EndDate);
+                    if (response.TargetEndDate)
+                        response.TargetEndDate = common.utcDateToLocaleDate(response.TargetEndDate);
                     //response.deadline = common.utcDateToLocaleDate(response.deadline);
                     if (response.notes) {
                         _.map(response.notes, function (note) {

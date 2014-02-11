@@ -85,17 +85,18 @@
                         <dl class="customer-info company long">
                             <dt>Sales Person</dt>
                             <dd title="<%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%>"><%=(salesPurchases.salesPerson) ? salesPurchases.salesPerson.name.first + ' ' + salesPurchases.salesPerson.name.last: ''%></dd>
-                            <!--<dt>Sales Team</dt><dd title="<%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%>"><%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%></dd>-->
-                            <dt>Reference</dt>
-                            <dd title="<%=salesPurchases.reference%>"><%=salesPurchases.reference%></dd>
-                            <dt>Language</dt>
-                            <dd title="<%=salesPurchases.language%>"><%=salesPurchases.language%></dd>
+                            <dt>Sales Team</dt><dd title="<%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%>"><%=(salesPurchases.salesTeam) ? salesPurchases.salesTeam.departmentName : ''%></dd>
+
                         </dl>
                     </div>
                     <div class="half-block left">
 
                         <dl class="customer-info company long">
-                            <dt>Customer</dt>
+                            <dt>Reference</dt>
+                            <dd title="<%=salesPurchases.reference%>"><%=salesPurchases.reference%></dd>
+                            <dt>Language</dt>
+								<dd title="<%=salesPurchases.language%>"><%=salesPurchases.language%></dd>
+<!--                            <dt>Customer</dt>
                             <dd id="salesPurchases_isCustomer" class="with-checkbox">
                                 <input class="left" type="checkbox" <%=((salesPurchases.isCustomer)? 'checked' : '') %>/>
                             </dd>
@@ -106,7 +107,7 @@
                             <dt>Active </dt>
                             <dd id="salesPurchases_active" class="with-checkbox">
                                 <input class="left" type="checkbox" <%=((salesPurchases.active)? 'checked' : '') %> />
-                            </dd>
+                            </dd>-->
                         </dl>
                     </div>
                     <div class="clearfix"></div>

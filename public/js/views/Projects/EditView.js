@@ -489,10 +489,10 @@ define([
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var health = this.$el.find('#health a').data('value');
-                var targetEndDate = $.trim(this.$el.find("#EndDateTarget").val());
+                var _targetEndDate = $.trim(this.$el.find("#EndDateTarget").val());
                 var description = $.trim(this.$el.find("#description").val());
-                var info = this.currentModel.get('info');
-                info['TargetEndDate'] = targetEndDate || info.TargetEndDate;
+                var currentTargetEndDate = this.currentModel.get('TargetEndDate');
+                var TargetEndDate = _targetEndDate || currentTargetEndDate;
                 var data = {
                     projectName: projectName,
                     projectShortDesc: projectShortDesc,
@@ -511,7 +511,7 @@ define([
                     },
                     whoCanRW: whoCanRW,
                     health: health,
-                    info: info
+                    TargetEndDate: TargetEndDate
                 };
                 this.currentModel.save(data, {
                     headers: {
