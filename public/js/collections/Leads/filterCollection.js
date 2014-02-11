@@ -58,15 +58,6 @@
 
             parse: true,
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (lead) {
-						if(lead.createdBy)
-							lead.createdBy.date = common.utcDateToLocaleDateTime(lead.createdBy.date);
-						if(lead.editedBy)
-							lead.editedBy.date = common.utcDateToLocaleDateTime(lead.editedBy.date);
-                        return lead;
-                    });
-                }
                 return response.data;
             }
         });

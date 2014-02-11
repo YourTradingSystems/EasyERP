@@ -16,27 +16,29 @@ define([
         parse: true,
 
         parse: function (response) {
-            if (response && response.extrainfo) {
-                response.extrainfo.StartDate = common.utcDateToLocaleDate(response.extrainfo.StartDate);
-                response.extrainfo.EndDate = common.utcDateToLocaleDate(response.extrainfo.EndDate);
-                response.deadline = common.utcDateToLocaleDate(response.deadline);
-            }
-            if (response && response.attachments) {
-                _.map(response.attachments, function (attachment) {
-                    attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
-                    return attachment;
-                });
-            }
-            if (response.createdBy)
-                response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
-            if (response.editedBy)
-                response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
-            if (response &&  response.notes) {
-                _.map(response.notes, function (notes) {
-                	notes.date = common.utcDateToLocaleDate(notes.date);
-                    return notes;
-                });
-            }
+        	if (!response.data) {
+	            if (response && response.extrainfo) {
+	                response.extrainfo.StartDate = common.utcDateToLocaleDate(response.extrainfo.StartDate);
+	                response.extrainfo.EndDate = common.utcDateToLocaleDate(response.extrainfo.EndDate);
+	                response.deadline = common.utcDateToLocaleDate(response.deadline);
+	            }
+	            if (response && response.attachments) {
+	                _.map(response.attachments, function (attachment) {
+	                    attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+	                    return attachment;
+	                });
+	            }
+	            if (response.createdBy)
+	                response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
+	            if (response.editedBy)
+	                response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+	            if (response &&  response.notes) {
+	                _.map(response.notes, function (notes) {
+	                	notes.date = common.utcDateToLocaleDate(notes.date);
+	                    return notes;
+	                });
+	            }
+        	}
             return response;
         },
 

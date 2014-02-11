@@ -14,7 +14,13 @@
         
         parse: true,
         parse: function (response) {
-            if (response) {
+            if (!response.data) {
+                if (response.createdBy)
+	                response.createdBy.date = common.utcDateToLocaleDateTime(response.createdBy.date);
+	            if (response.editedBy)
+	                response.editedBy.date = common.utcDateToLocaleDateTime(response.editedBy.date);
+	            if (response.dateBirth)
+	            	response.dateBirth = common.utcDateToLocaleDateTime(response.dateBirth, true);
                 if (response.attachments) {
                     _.map(response.attachments, function (attachment) {
                         attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);

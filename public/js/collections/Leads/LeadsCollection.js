@@ -28,12 +28,6 @@ define([
             parse: true,
 
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (lead) {
-                        lead.creationDate = common.utcDateToLocaleDate(lead.creationDate);
-                        return lead;
-                    });
-                }
                 return response.data;
             },
 

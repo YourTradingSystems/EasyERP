@@ -97,15 +97,6 @@
 
             parse: true,
             parse: function (response) {
-                if (response.data) {
-                    _.map(response.data, function (company) {
-                        if (company.createdBy)
-                            company.createdBy.date = common.utcDateToLocaleDateTime(company.createdBy.date);
-                        if (company.editedBy)
-                            company.editedBy.date = company.editedBy.user ? common.utcDateToLocaleDateTime(company.editedBy.date) : null;
-                        return company;
-                    });
-                }
                 return response.data;
             }
 

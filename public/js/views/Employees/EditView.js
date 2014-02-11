@@ -93,7 +93,7 @@ define([
 								var date = common.utcDateToLocaleDate(item.uploadDate);
 								attachments.push(item);
 								$('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
-});
+							});
                             console.log('Attach file');
                             addFrmAttach[0].reset();
                             status.hide();
