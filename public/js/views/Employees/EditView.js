@@ -132,7 +132,7 @@ define([
 				addFrmAttach.submit();
 				addFrmAttach.off('submit');
 			},
-				deleteAttach: function (e) {
+ 				deleteAttach: function (e) {
 					if ($(e.target).closest("li").hasClass("attachFile")){
 						$(e.target).closest(".attachFile").remove();
 					}
