@@ -46,7 +46,6 @@ function (ListTemplate, FormTemplate, DepartmentsCollection, Custom, common, Edi
                     {
 						var currentModel = this.collection.getElement();
 						if (currentModel) {
-							var extrainfo = currentModel.get('extrainfo');
 							this.$el.html(_.template(FormTemplate, currentModel.toJSON()));
 						} else {
 							this.$el.html('<h2>No departments found</h2>');

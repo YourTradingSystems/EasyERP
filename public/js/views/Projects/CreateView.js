@@ -30,22 +30,22 @@ define([
                 "click .deleteAttach": "deleteAttach",
                 "click #health a": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-				"click": "hideHealth"
-				
+                "click": "hideHealth"
+
             },
 
-			hideHealth:function(){
-				$("#health ul").hide();
-			},
+            hideHealth: function () {
+                $("#health ul").hide();
+            },
 
-			chooseHealthDd:function(e){
-				$(e.target).parents("#health").find("a").attr("class",$(e.target).attr("class")).attr("data-value",$(e.target).attr("class").replace("health","")).parent().find("ul").toggle();
-			},
+            chooseHealthDd: function (e) {
+                $(e.target).parents("#health").find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
+            },
 
-			showHealthDd:function(e){
-				$(e.target).parent().find("ul").toggle();
-				return false;
-			},
+            showHealthDd: function (e) {
+                $(e.target).parent().find("ul").toggle();
+                return false;
+            },
 
             addAttach: function () {
                 var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];
@@ -258,7 +258,7 @@ define([
                     projectmanager: projectmanager ? projectmanager : "",
                     workflow: workflow ? workflow : "",
                     projecttype: projecttype ? projecttype : "",
-					description:description,
+                    description: description,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
@@ -266,10 +266,8 @@ define([
                     },
                     whoCanRW: whoCanRW,
                     health: health,
-                    info: {
-                         targetEndDate: targetEndDate
-                    }
-                    },
+                    targetEndDate: targetEndDate
+                },
                 {
                     headers: {
                         mid: mid

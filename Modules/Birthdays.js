@@ -89,16 +89,16 @@
             });
             currentEmployees.monthly.sort(function (a, b) {
                 if (a.daysForBirth > b.daysForBirth)
-                    return 1
+                    return 1;
                 if (a.daysForBirth < b.daysForBirth)
-                    return -1
+                    return -1;
                 return 0;
             });
             currentEmployees.weekly.sort(function (a, b) {
                 if (a.daysForBirth > b.daysForBirth)
-                    return 1
+                    return 1;
                 if (a.daysForBirth < b.daysForBirth)
-                    return -1
+                    return -1;
                 return 0;
             });
             

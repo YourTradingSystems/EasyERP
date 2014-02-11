@@ -12,9 +12,11 @@
 
             initialize: function (options) {
                 this.startTime = new Date();
-                this.parrentContentId = options.parrentContentId;
-                this.namberToShow = options.count;
-                this.count = options.count;
+                this.parrentContentId = (options) ? options.parrentContentId : null;
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                    this.count = options.count;
+                }
                 var that = this;
                 if (options && options.viewType) {
                     this.url += options.viewType;
@@ -30,7 +32,7 @@
                     }
                 });
             },
-            
+
             showMore: function (options) {
                 var that = this;
 

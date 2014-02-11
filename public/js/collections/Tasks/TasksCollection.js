@@ -10,53 +10,40 @@ define([
             },
 
             initialize: function () {
-              /*  var mid = 39;
 
-                this.fetch({
-                    data: $.param({
-                        mid: mid
-                    }),
-                    type: 'GET',
-                    reset: true,
-                    success: this.fetchSuccess,
-                    error: this.fetchError
-
-              });
-              */
             },
 
             parse: true,
-
-            filterByWorkflow: function(workflow){
-                return this.filter(function(data){
-                    return data.get("workflow").name == workflow;
-                });
-
-            },
-
-            filterByProject: function(projectId){
-                var filtered = this.filter(function(data){
-                    return data.get("project").id == projectId;
-                });
-                return new TasksCollection(filtered);
-            },
-
             parse: function (response) {
                 if (response.data) {
                     _.map(response.data, function (task) {
-                        if (task.extrainfo) {
-                            task.extrainfo.StartDate = common.utcDateToLocaleDate(task.extrainfo.StartDate);
-                            task.extrainfo.EndDate = common.utcDateToLocaleDate(task.extrainfo.EndDate);
+                        if (task.StartDate)
+                            task.StartDate = common.utcDateToLocaleDate(task.StartDate);
+                        if (task.EndDate)
+                            task.EndDate = common.utcDateToLocaleDate(task.EndDate);
+                        if (task && task.attachments) {
+                            _.map(task.attachments, function (attachment) {
+                                attachment.uploadDate = common.utcDateToLocaleDate(attachment.uploadDate);
+                                return attachment;
+                            });
                         }
-                        if (task.deadline)
-                            task.deadline = common.utcDateToLocaleDate(task.deadline);
+                        if (task.createdBy)
+                            task.createdBy.date = common.utcDateToLocaleDateTime(task.createdBy.date);
+                        if (task.editedBy)
+                            task.editedBy.date = common.utcDateToLocaleDateTime(task.editedBy.date);
+                        if (task && task.notes) {
+                            _.map(task.notes, function (notes) {
+                                notes.date = common.utcDateToLocaleDate(notes.date);
+                                return notes;
+                            });
+                        }
                         return task;
                     });
                 }
                 return response.data;
             },
 
-            fetchSuccess:function(){
+            fetchSuccess: function () {
                 console.log("Tasks fetchSuccess");
             },
             fetchError: function (error) {

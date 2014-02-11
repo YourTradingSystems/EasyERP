@@ -56,39 +56,48 @@
             },
 
             chooseOption: function (e) {
-                $(e.target).parents(".taskSelect").find(".current-selected").text($(e.target).text());
-                var selectType =$(e.target).parents(".taskSelect").find(".current-selected").attr("id").split('_')[0]; 
-                if (selectType == 'priority'){
-	                var id = $(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("priority", "");
-	                var obj = collection.get(id);
-	                var extr = obj.get('extrainfo');
-	                if (extr.customer == "") {
-	                    extr.customer = null;
-	                }
-	                extr.priority = $(e.target).parents(".taskSelect").find(".current-selected").text();
-	                obj.set({ "extrainfo": extr });
-	                obj.save({}, {
-	                    headers: {
-	                        mid: 39
-	                    },
-	                    success: function () {
-	                    }
-	                });
-                }
-                //type task drop down 
-                else if (selectType == 'type'){
-	                var id = $(e.target).parents(".taskSelect").find(".current-selected").attr("id").replace("type_", "");
-	                var obj = collection.get(id);
-	                var type = obj.get('type');
-	                type = $(e.target).parents(".taskSelect").find(".current-selected").text();
-	                obj.set({ "type": type });
-	                obj.save({}, {
-	                    headers: {
-	                        mid: 39
-	                    },
-	                    success: function () {
-	                    }
-	                });
+                var currentSelected = $(e.target).parents(".taskSelect").find(".current-selected");
+                var selectType = currentSelected.attr("id").split('_')[0];
+                var model;
+                var id;
+                currentSelected.text($(e.target).text());
+                if (selectType == 'priority') {
+                    id = currentSelected.attr("id").replace("priority_", "");
+                    model = collection.get(id);
+                    var priority = currentSelected.text();
+                    model.save({
+                        priority: priority
+                        //sequence: -1,
+                        //sequenceStart: model.toJSON().sequence,
+                        //workflowStart: model.toJSON().workflow._id
+                    },
+                    {
+                        headers: {
+                            mid: 39
+                        },
+                        patch: true,
+                        success: function () {
+                        }
+                    });
+                } else if (selectType == 'type') {
+                    var type = currentSelected.text();
+                    id = currentSelected.attr("id").replace("type_", "");
+                    model = collection.get(id);
+                    model.save({
+                        type: type
+                        //sequence: -1,
+                        //sequenceStart: model.toJSON().sequence,
+                        //workflowStart: model.toJSON().workflow._id
+                    },
+                    {
+                        headers: {
+                            mid: 39
+                        },
+                        patch: true,
+                        success: function () {
+
+                        }
+                    });
                 }
                 this.hideNewSelect();
                 return false;
@@ -104,7 +113,7 @@
             saveKanbanSettings: function () {
                 var countPerPage = $(this).find('#cPerPage').val();
                 var id = window.location.hash.split('/')[3];
-                var url = (id && id.length === 24) ? "easyErp/Tasks/kanban/" + id : "easyErp/Tasks"; 
+                var url = (id && id.length === 24) ? "easyErp/Tasks/kanban/" + id : "easyErp/Tasks";
                 dataService.postData('/currentUser', { 'kanbanSettings.tasks.countPerPage': countPerPage }, function (seccess, error) {
                     if (seccess) {
                         $(".edit-dialog").remove();
@@ -209,40 +218,40 @@
                 //create editView in dialog here
                 new CreateView();
             },
-			updateSequence:function(item, workflow, sequence, workflowStart, sequenceStart ){
-				if (workflow==workflowStart){
-					if (sequence>sequenceStart)
-						sequence-=1;
-					var a = sequenceStart;
-					var b = sequence;
-					var inc = -1;
-					if (a>b){
-						a = sequence;
-						b = sequenceStart;
-						inc = 1;
-					}
-					$("#"+workflow).find(".item").each(function(){
-						var sec = parseInt($(this).find(".inner").attr("data-sequence"));
-						if (sec>=a&&sec<=b)
-							$(this).find(".inner").attr("data-sequence",sec+inc);
-					});
-					item.find(".inner").attr("data-sequence",sequence);
-					
-				}else{
-					$("#"+workflow).find(".item").each(function(){
-						if (parseInt($(this).find(".inner").attr("data-sequence"))>=sequence)
-							$(this).find(".inner").attr("data-sequence",parseInt($(this).find(".inner").attr("data-sequence"))+1);
-					});
-					$("#"+workflowStart).find(".item").each(function(){
-						if (parseInt($(this).find(".inner").attr("data-sequence"))>sequenceStart)
-							$(this).find(".inner").attr("data-sequence",parseInt($(this).find(".inner").attr("data-sequence"))-1);
-					});
-					item.find(".inner").attr("data-sequence",sequence);
+            updateSequence: function (item, workflow, sequence, workflowStart, sequenceStart) {
+                if (workflow == workflowStart) {
+                    if (sequence > sequenceStart)
+                        sequence -= 1;
+                    var a = sequenceStart;
+                    var b = sequence;
+                    var inc = -1;
+                    if (a > b) {
+                        a = sequence;
+                        b = sequenceStart;
+                        inc = 1;
+                    }
+                    $("#" + workflow).find(".item").each(function () {
+                        var sec = parseInt($(this).find(".inner").attr("data-sequence"));
+                        if (sec >= a && sec <= b)
+                            $(this).find(".inner").attr("data-sequence", sec + inc);
+                    });
+                    item.find(".inner").attr("data-sequence", sequence);
 
-				}
-			},
+                } else {
+                    $("#" + workflow).find(".item").each(function () {
+                        if (parseInt($(this).find(".inner").attr("data-sequence")) >= sequence)
+                            $(this).find(".inner").attr("data-sequence", parseInt($(this).find(".inner").attr("data-sequence")) + 1);
+                    });
+                    $("#" + workflowStart).find(".item").each(function () {
+                        if (parseInt($(this).find(".inner").attr("data-sequence")) > sequenceStart)
+                            $(this).find(".inner").attr("data-sequence", parseInt($(this).find(".inner").attr("data-sequence")) - 1);
+                    });
+                    item.find(".inner").attr("data-sequence", sequence);
+
+                }
+            },
             render: function () {
-				var self = this;
+                var self = this;
                 var workflows = this.workflowsCollection.toJSON();
                 this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
                 $(".column").last().addClass("lastColumn");
@@ -279,27 +288,30 @@
                         var id = ui.item.context.id;
                         var model = collection.get(id);
                         var column = ui.item.closest(".column");
-						var sequence = 0;
-						if (ui.item.next().hasClass("item")){
-							sequence = parseInt(ui.item.next().find(".inner").attr("data-sequence"))+1;
-						}
-
-//						self.updateSequence(ui.item, column.attr("id"), sequence, model.toJSON().workflow._id,model.toJSON().sequence );
-						
+                        var sequence = 0;
+                        if (ui.item.next().hasClass("item")) {
+                            sequence = parseInt(ui.item.next().find(".inner").attr("data-sequence")) + 1;
+                        }
                         if (model) {
-							var secStart = parseInt($(".inner[data-id='"+model.toJSON()._id+"']").attr("data-sequence"));
-							var workStart =  model.toJSON().workflow._id?model.toJSON().workflow._id:model.toJSON().workflow;
-							model.save({ workflow: column.attr('id'), sequenceStart:parseInt($(".inner[data-id='"+model.toJSON()._id+"']").attr("data-sequence")), sequence:sequence, workflowStart : model.toJSON().workflow._id?model.toJSON().workflow._id:model.toJSON().workflow}, {
-								patch:true,
-								validate: false,
-								success: function (model2) {
-									console.log(model2.toJSON());
-									
-									self.updateSequence(ui.item, column.attr("id"), sequence, workStart,secStart );
+                            var secStart = parseInt($(".inner[data-id='" + model.toJSON()._id + "']").attr("data-sequence"));
+                            var workStart = model.toJSON().workflow._id ? model.toJSON().workflow._id : model.toJSON().workflow;
+                            model.save({
+                                workflow: column.attr('id'),
+                                sequenceStart: parseInt($(".inner[data-id='" + model.toJSON()._id + "']").attr("data-sequence")),
+                                sequence: sequence,
+                                workflowStart: model.toJSON().workflow._id ? model.toJSON().workflow._id : model.toJSON().workflow
+                            },
+                            {
+                                patch: true,
+                                validate: false,
+                                success: function (model2) {
+                                    console.log(model2.toJSON());
 
-									collection.add(model2,{merge:true});
-								}
-							});
+                                    self.updateSequence(ui.item, column.attr("id"), sequence, workStart, secStart);
+
+                                    collection.add(model2, { merge: true });
+                                }
+                            });
                             column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
                             column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
                             column.find(".remaining").html(parseInt(column.find(".remaining").html()) + parseInt(model.get('remaining')));
