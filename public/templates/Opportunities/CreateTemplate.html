@@ -5,24 +5,26 @@
          <div class="inner">
             <ul class="dialog-tabs">
                 <li><a class="active" href="javascript:;">Main</a></li>
+                  <li><a href="javascript:;">Lead</a></li>
                 <li><a href="javascript:;">Assignees</a></li>
             </ul>
             <div class="clearfix"></div>
             <div class="dialog-tabs-items">
                <div class="dialog-tabs-item active">
-                  <div class="half-block left">
-                    <dl class="opp-info">
+                 <dl class="subject-info">
                       <dt><label for="name">Subject</label></dt><dd><input type="text" class="title-input blueback" id="name" required maxlength="48"/></dd>
+				 </dl>
+
+                  <div class="half-block left">
+                    <textarea id="internalNotes" class="opp-internal-create"></textarea>
+                  </div>
+                  <div class="half-block left">
+                    <dl class="opprtunitie-info">
                       <dt><label for="expectedRevenueValue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="0.00" maxlength="32"/></dd>
                       <!--<dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="0" maxlength="32"/>%</dd>-->
                       <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
                       <dt><label for="salesPersonDd">Salesperson</label></dt><dd><select id="salesPersonDd"></select></dd>
                       <dt><label for="salesTeamDd">Sales Team</label></dt><dd><select id="salesTeamDd"></select></dd>
-
-                    </dl>
-                  </div>
-                  <div class="half-block left">
-                    <dl class="opp-info">
                       <dt><label for="workflowDd">Stages</label></dt><dd id="selectWorkflow"><select id="workflowDd"></select></dd>
 
                       <dt><label for="nextActionDate">Next Action</label></dt><dd><input type="text" id="nextActionDate" maxlength="32" readonly/></dd>
@@ -33,28 +35,6 @@
                   </div>
                   <div class="clearfix"></div>
 
-                  <div class="half-block left withPaddingLeft">
-                    <div class="formTitle">
-                      <h3 class="left">Lead</h3>
-                      <div class="clearfix"></div>
-                    </div>
-                    <dl class="opp-info">
-<!--                      <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" /></dd> -->
-                      <dt><label for="street">Address</label></dt><dd><input type="text" class="address" id="street" name="street" placeholder="Street" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input type="text" class="address" id="city" name="city" placeholder="City" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input type="text" class="address" id="state" name="state" placeholder="State" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" maxlength="32"/></dd>
-                      <dt>&nbsp;</dt><dd><input type="text" class="address" id="country" name="country" placeholder="Country" maxlength="32"/></dd>
-                    </dl>
-                  </div>
-                  <div class="half-block left withPaddingLeft">
-                    <div class="formTitle">
-                      <h3 class="left">Internal Notes</h3>
-                      <div class="clearfix"></div>
-                    </div>
-                    <textarea id="internalNotes"></textarea>
-                  </div>
-                  <div class="clearfix"></div>
 			                      <label>Attachments</label>
 
                       <div id="attachBody">
@@ -101,6 +81,22 @@
                   </div>-->
                   <div class="clearfix"></div>
                </div>
+               <div class="dialog-tabs-item">
+                  <div class="half-block left withPaddingLeft">
+                    <dl class="opprtunitie-lead-info">
+                      <dt><label for="street">Street</label></dt><dd><input type="text" class="address" id="street" name="street" placeholder="Street" maxlength="32"/></dd>
+                      <dt><label for="city">City</label></dt><dd><input type="text" class="address" id="city" name="city" placeholder="City" maxlength="32"/></dd>
+                      <dt><label for="state">State</label></dt><dd><input type="text" class="address" id="state" name="state" placeholder="State" maxlength="32"/></dd>
+                    </dl>
+                  </div>
+                  <div class="half-block left withPaddingLeft">
+                    <dl class="opprtunitie-lead-info">
+                      <dt><label for="ZIP">Zip</label></dt><dd><input type="text" class="address" id="zip" name="zip" placeholder="ZIP" maxlength="32"/></dd>
+                      <dt><label for="country">Country</label></dt><dd><input type="text" class="address" id="country" name="country" placeholder="Country" maxlength="32"/></dd>
+                    </dl>
+                  </div>
+
+			   </div>
                <div class="dialog-tabs-item">
                 <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
                 <div class="clearfix"></div>
