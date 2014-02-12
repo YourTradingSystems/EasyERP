@@ -631,8 +631,7 @@ define([
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
-                    changeYear: true,
-                    minDate: new Date()
+                    changeYear: true
                 });
                 this.delegateEvents(this.events);
 

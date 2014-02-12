@@ -146,17 +146,17 @@ define([
                         sequenceStart: model.toJSON().sequence,
                         workflowStart: model.toJSON().workflow._id
                     },
-                        {
-                            headers:
-                                {
-                                    mid: 39
-                                },
-                            patch: true,
-                            validate: false,
-                            success: function () {
-                                that.showFilteredPage();
-                            }
-                        });
+                    {
+                        headers:
+                            {
+                                mid: 39
+                            },
+                        patch: true,
+                        validate: false,
+                        success: function () {
+                            that.showFilteredPage();
+                        }
+                    });
                 } else if (selectType == 'type') {
                     id = targetParrentElement.attr("id").replace("type_", "");
                     model = this.collection.get(id);
@@ -168,18 +168,18 @@ define([
                         sequenceStart: model.toJSON().sequence,
                         workflowStart: model.toJSON().workflow._id
                     },
-                        {
-                            headers:
-                                {
-                                    mid: 39
-                                },
-                            patch: true,
-                            validate: false,
-                            success: function (model) {
-                                //that.showFilteredPage();//When add filter by Type, then uncoment this code
-                                targetParrentElement.find('#' + model.id).text(type);
-                            }
-                        });
+                    {
+                        headers:
+                            {
+                                mid: 39
+                            },
+                        patch: true,
+                        validate: false,
+                        success: function (model) {
+                            //that.showFilteredPage();//When add filter by Type, then uncoment this code
+                            targetParrentElement.find('#' + model.id).text(type);
+                        }
+                    });
                 }
                 this.hideNewSelect();
                 return false;

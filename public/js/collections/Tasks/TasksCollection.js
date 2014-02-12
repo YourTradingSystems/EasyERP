@@ -5,9 +5,9 @@ define([
     function (TaskModel, common) {
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
-            url: function () {
-                return "/Tasks";
-            },
+            //url: function () {
+            //    return "/Tasks";
+            //},
 
             initialize: function () {
 

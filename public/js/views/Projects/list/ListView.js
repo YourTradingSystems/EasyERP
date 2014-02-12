@@ -47,7 +47,7 @@ define([
                 "click .newSelectList li": "chooseOption",
                 "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-                "click tr": "goToEditDialog"
+                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog"
             },
 
             goToEditDialog: function (e) {

@@ -1103,7 +1103,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         query.where('_id').in(data.ids).
 			select('_id imageSrc').
             exec(function (error, response) {
-                res.send(200, { data: response });
+                if (error) {
+                    console.log(error);
+                    logWriter.log("Employees.js remove employee.remove " + error);
+                    res.send(500, { error: "Can't find Employees Imgs" });
+                } else res.send(200, { data: response });
             });
 
     };

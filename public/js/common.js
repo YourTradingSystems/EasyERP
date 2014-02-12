@@ -887,6 +887,7 @@
                         $("#" + item._id + " img").attr("src", item.imageSrc);
                         $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
                         $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
+                        $(".avatar-small.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
                     });
                 }
                 if (callback) callback(response);

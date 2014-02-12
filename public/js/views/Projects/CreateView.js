@@ -250,6 +250,7 @@ define([
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 var health = this.$el.find('#health a').data('value');
+                var startDate = $.trim(this.$el.find("#StartDate").val());
                 var targetEndDate = $.trim(this.$el.find("#EndDateTarget").val());
                 this.model.save({
                     projectName: $.trim(this.$el.find("#projectName").val()),
@@ -266,6 +267,7 @@ define([
                     },
                     whoCanRW: whoCanRW,
                     health: health,
+                    StartDate: startDate,
                     targetEndDate: targetEndDate
                 },
                 {
@@ -384,7 +386,11 @@ define([
                 common.populateEmployeesDd("#userEditDd", "/getPersonsForDd");
                 common.populateWorkflows("Projects", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
 
-                $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
+                $('#StartDate').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true
+                });
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,

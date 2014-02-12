@@ -838,10 +838,11 @@ app.post('/Tasks', function (req, res) {
     requestHandler.createTask(req, res, data);
 });
 
-app.get('/Tasks', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getTasks(req, res, data);
+app.get('/Tasks', function (req, res) {//---------------Remove this method in future
+    //data = {};
+    //data.mid = req.param('mid');
+    //requestHandler.getTasks(req, res, data);
+    console.log('------------>--------->-----chackingGetTasks----<-----');
 });
 
 app.get('/Tasks/:viewType', function (req, res) {
@@ -1394,7 +1395,7 @@ app.get('/getEmployeesAlphabet', function (req, res) {
 
 app.get('/getEmployeesImages', function (req, res) {
     data = {};
-    data.ids = req.param('ids');
+    data.ids = req.param('ids') || [];
     requestHandler.getEmployeesImages(req, res, data);
 });
 
