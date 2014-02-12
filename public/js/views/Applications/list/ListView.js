@@ -465,11 +465,13 @@ define([
     'text!templates/Applications/list/ListHeader.html',
     'views/Applications/CreateView',
     'views/Applications/list/ListItemView',
+    'views/Applications/EditView',
+    'models/ApplicationsModel',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
         var ApplicationsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -495,7 +497,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click .list td:not(.notForm)": "gotoForm",
+                "click .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
@@ -625,12 +627,19 @@ define([
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
 
-            gotoForm: function (e) {
-                App.ownContentType = true;
-                var id = $(e.target).closest("tr").data("id");
-                window.location.hash = "#easyErp/Applications/form/" + id;
+             goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/Applications/form';
+                model.fetch({
+                    data: { id: id },
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             },
-
             createItem: function () {
                 //create editView in dialog here
                 new createView();

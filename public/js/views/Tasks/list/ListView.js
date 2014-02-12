@@ -164,9 +164,6 @@ define([
                     var type = target.attr("id");
                     model.save({
                         type: type,
-                        sequence: -1,
-                        sequenceStart: model.toJSON().sequence,
-                        workflowStart: model.toJSON().workflow._id
                     },
                     {
                         headers:

@@ -49,10 +49,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         age: { type: Number, default: 0 },
         daysForBirth: Number,
         nextAction: Date,
-        source: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        source: {type: String, default: '' },
         referredBy: { type: String, default: '' },
         active: { type: Boolean, default: true },
         workflow: { type: ObjectId, ref: 'workflows', default: null },
@@ -382,13 +379,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 if (data.nextAction) {
                     _employee.nextAction = data.nextAction;
                 }
+                //new source (add Vasya)
                 if (data.source) {
-                    if (data.source._id) {
-                        _employee.source.id = data.source._id;
-                    }
-                    if (data.source.name) {
-                        _employee.source.name = data.source.name;
-                    }
+                    _employee.source = data.source;
                 }
                 if (data.referredBy) {
                     _employee.referredBy = data.referredBy;
@@ -418,7 +411,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     _employee.jobType = data.jobType;
                 }
                 ///////////////////////////////////////////////////
-                updateSequence(models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", 0, 0, _employee.workflow, _employee.workflow, true, false, function (sequence) {
                     _employee.sequence = sequence;
                     _employee.save(function (err, result) {
                         if (err) {
@@ -647,7 +640,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     case ('Employees'):
                                         switch (viewType) {
                                             case ('list'): {
-                                                query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones').
+                                                query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones jobType').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
                                                     populate('createdBy.user', 'login').
@@ -667,7 +660,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     case ('Applications'):
                                         switch (viewType) {
                                             case ('list'): {
-                                                query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow email department').
+                                                query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
                                                     populate('createdBy.user', 'login').
@@ -893,77 +886,18 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         });
 
     }
-    function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
-        var query;
-        var objFind = {};
-        var objChange = {};
-        if (workflowStart == workflowEnd) {//on one workflow
 
-            if (!(isCreate || isDelete)) {
-                var inc = -1;
-                if (start > end) {
-                    inc = 1;
-                    var c = end;
-                    end = start;
-                    start = c;
-                } else {
-                    end -= 1;
-                }
-                objChange = {};
-                objFind = { "workflow": workflowStart };
-                objFind[sequenceField] = { $gte: start, $lte: end };
-                objChange[sequenceField] = inc;
-                query = model.update(objFind, { $inc: objChange }, { multi: true });
-                query.exec(function (err, res) {
-                    if (callback) callback((inc == -1) ? end : start);
-                });
-            } else {
-                if (isCreate) {
-                    query = model.count({ "workflow": workflowStart }).exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-                if (isDelete) {
-                    objChange = {};
-                    objFind = { "workflow": workflowStart };
-                    objFind[sequenceField] = { $gt: start };
-                    objChange[sequenceField] = -1;
-                    query = model.update(objFind, { $inc: objChange }, { multi: true });
-                    query.exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-            }
-        } else {//between workflow
-            objChange = {};
-            objFind = { "workflow": workflowStart };
-            objFind[sequenceField] = { $gte: start };
-            objChange[sequenceField] = -1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec();
-            objFind = { "workflow": workflowEnd };
-            objFind[sequenceField] = { $gte: end };
-            objChange[sequenceField] = 1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec(function (err, res) {
-                if (callback) callback(end);
-            });
-
-
-        }
-    }
     function updateOnlySelectedFields(req, _id, data, res) {
-		if (data.sequenceStart&&data.workflowStart){
+		if (data.workflow&&data.sequenceStart&&data.workflowStart){
 			if (data.sequence == -1) {
-				console.log(data);
-				updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-					updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+				event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+					event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
 						data.sequence = sequence;
 						if (data.workflow == data.workflowStart)
 							data.sequence -= 1;
 						models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
 							if (!err) {
-								res.send(200, { success: 'Employees updated' });
+								res.send(200, { success: 'Employees updated', sequence:result.sequence });
 							} else {
 								res.send(500, { error: "Can't update Employees" });
 							}
@@ -973,7 +907,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 					});
 				});
 			} else {
-				updateSequence(models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+				event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
 					delete data.sequenceStart;
 					delete data.workflowStart;
 					data.sequence = sequence;
@@ -1040,7 +974,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     $set: {
                         workflow: data.workflow
                     }
-                }
+                };
             }
 
             if (data.workflowContractEnd) {
@@ -1051,7 +985,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         'contractEnd.date': new Date(),
                         isEmployee: false
                     }
-                }
+                };
             }
 
 
@@ -1089,7 +1023,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 res.send(500, { error: "Can't remove Employees" });
             } else {
                 if (!result.isEmployee) {
-                    updateSequence(models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Employees", employeeSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
                         res.send(200, { success: 'Employees removed' });
                     });
                 }

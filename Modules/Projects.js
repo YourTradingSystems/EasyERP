@@ -81,8 +81,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
-        },
-        sequence: { type: Number, default: 0 },
+        }
     }, { collection: 'Tasks' });
 
     var PrioritySchema = mongoose.Schema({
@@ -102,7 +101,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     mongoose.model('Tasks', TasksSchema);
 
     mongoose.model('Priority', PrioritySchema);
-
+	
     event.on('updateContent', updateContent);//binding for Event 
 
     function updateContent(request, response, projectId, eventType, tasksArray) {
@@ -1332,66 +1331,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         });
     };
 
-    function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
-        var query;
-        var objFind = {};
-        var objChange = {};
-        if (workflowStart == workflowEnd) {//on one workflow
-
-            if (!(isCreate || isDelete)) {
-                var inc = -1;
-                if (start > end) {
-                    inc = 1;
-                    var c = end;
-                    end = start;
-                    start = c;
-                } else {
-                    end -= 1;
-                }
-                objChange = {};
-                objFind = { "workflow": workflowStart };
-                objFind[sequenceField] = { $gte: start, $lte: end };
-                objChange[sequenceField] = inc;
-                query = model.update(objFind, { $inc: objChange }, { multi: true });
-                query.exec(function (err, res) {
-                    if (callback) callback((inc == -1) ? end : start);
-                });
-            } else {
-                if (isCreate) {
-                    query = model.count({ "workflow": workflowStart }).exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-                if (isDelete) {
-                    objChange = {};
-                    objFind = { "workflow": workflowStart };
-                    objFind[sequenceField] = { $gt: start };
-                    objChange[sequenceField] = -1;
-                    query = model.update(objFind, { $inc: objChange }, { multi: true });
-                    query.exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-            }
-        } else {//between workflow
-            objChange = {};
-            objFind = { "workflow": workflowStart };
-            objFind[sequenceField] = { $gte: start };
-            objChange[sequenceField] = -1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec();
-            objFind = { "workflow": workflowEnd };
-            objFind[sequenceField] = { $gte: end };
-            objChange[sequenceField] = 1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec(function (err, res) {
-                if (callback) callback(end);
-            });
-
-
-        }
-    }
-
     function taskUpdateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
         delete data.createdBy;
@@ -1464,8 +1403,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }
         function sequenceUpdate() {
             if (data.sequence == -1) {
-                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function () {
-                    updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function () {
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
                         data.sequence = sequence;
                         if (data.workflow == data.workflowStart)
                             data.sequence -= 1;
@@ -1473,7 +1412,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     });
                 });
             } else {
-                updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+					console.log("sequence");
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+					console.log("sequence");
+					console.log(sequence);
                     delete data.sequenceStart;
                     delete data.workflowStart;
                     data.sequence = sequence;
@@ -1485,7 +1427,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         function updateTask() {
             models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
-                    res.send(200, { success: 'Tasks updated', notes: result.notes });
+                    res.send(200, { success: 'Tasks updated', notes: result.notes, sequence:result.sequence });
                 } else {
                     res.send(500, { error: "Can't update Tasks" });
                     console.log(err);
@@ -1625,7 +1567,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         _task.EndDate = calculateTaskEndDate(StartDate, data.estimated);
                         _task.duration = returnDuration(StartDate, _task.EndDate);
                     }
-                    updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", 0, 0, _task.workflow, _task.workflow, true, false, function (sequence) {
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", 0, 0, _task.workflow, _task.workflow, true, false, function (sequence) {
                         _task.sequence = sequence;
                         _task.save(function (err, _task) {
                             if (err) {
@@ -1665,14 +1607,14 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 logWriter.log("Project.js remove task.remove " + err);
                 res.send(500, { error: "Can't remove Task" });
             } else {
-                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndRemove(_id, function (err) {
+                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndRemove(_id, function (err,result) {
                     if (err) {
                         console.log(err);
                         logWriter.log("Project.js remove task.remove " + err);
                         res.send(500, { error: "Can't remove Task" });
                     } else {
                         event.emit('updateContent', req, res, task.project, "remove", [task._id]);
-                        updateSequence(models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true);
+                        event.emit('updateSequence',models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", task.sequence, 0, task.workflow, task.workflow, false, true);
                     }
                 });
 
