@@ -1480,7 +1480,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         function updateTask() {
             models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
-                    res.send(200, { success: 'Tasks updated', result: result.sequence });
+                    res.send(200, { success: 'Tasks updated', notes: result.notes });
                 } else {
                     res.send(500, { error: "Can't update Tasks" });
                     console.log(err);
@@ -1955,6 +1955,19 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             }
         );
     };
+    
+    function addAtachments(req, id, data, res) {
+        models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(id, data, function (err, result) {
+            if (!err) {
+                res.send(200, { success: 'Tasks updated', attachments: result.attachments });
+            } else {
+                res.send(500, { error: "Can't update Tasks" });
+                console.log(err);
+                logWriter.log("Project.js addAtachments " + err);
+            }
+
+        });
+    };
 
     return {
         create: create,//End create
@@ -1987,7 +2000,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
         createTask: createTask,
 
-        //updateTask: updateTask,
+        addAtachments: addAtachments,//For Task Project?
 
         removeTask: removeTask,
 

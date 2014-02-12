@@ -185,9 +185,9 @@
                 _.each(workflows, function (workflow, i) {
                     itemCount = 0;
                     var column = this.$(".column").eq(i);
-                    var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
-                    var total = " <span><span class='totalCount'>" + itemCount + "</span> )</span>";
-                    column.find(".columnNameDiv h2").append(count).append(total);
+                    //var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
+                    var total = " <span><span class='totalCount'>" + itemCount + "</span> </span>";
+                    column.find(".columnNameDiv h2").append(total);
                 }, this);
 
                 this.$(".column").sortable({
@@ -201,7 +201,7 @@
 
                     start: function (event, ui) {
                         var column = ui.item.closest(".column");
-                        column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
+                        //column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                         column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) - 1);
                     },
 
