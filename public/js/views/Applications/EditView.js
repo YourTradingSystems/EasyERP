@@ -382,9 +382,7 @@
                     degree: this.$el.find("#degreesDd option:selected").val(),
                     relatedUser: relatedUser,
                     nextAction: nextAction,
-                    source: {
-                        id: this.$el.find("#sourceDd").data("id")
-                    },
+                    source: this.$el.find("#sourceDd").data("id"),
                     jobType: this.$el.find("#jobTypeDd").data("id"),
                     referredBy: $.trim(this.$el.find("#referredBy").val()),
                     department: department,

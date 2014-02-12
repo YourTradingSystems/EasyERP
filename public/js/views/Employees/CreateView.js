@@ -272,7 +272,7 @@ define([
                     dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
                 }
                 var active = ($("#active").is(":checked")) ? true : false;
-
+                var sourceId = $("#sourceDd option:selected").val();
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -308,6 +308,7 @@ define([
                     homeAddress: homeAddress,
                     dateBirth: dateBirth,
                     active: active,
+                    source:sourceId,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
