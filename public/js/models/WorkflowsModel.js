@@ -18,7 +18,6 @@ function (common, Validation){
             var errors = [];
 
             Validation.checkNameField(errors, true, attrs.value[0].name);
-            Validation.checkNameField(errors, true, attrs.name);
             if (attrs.wName){
             	Validation.checkNameField(errors, true, attrs.wName);
         	}
