@@ -227,6 +227,13 @@ define([
 				   _.each(values, function (value) {
 					   this.$("#sub-details tbody").append(new ListItemView({ model: value }).render().el);
 				   }, this);
+     this.$("#workflows tr").sortable({
+                    cancel: "h2",
+                    cursor: "move",
+                    items: ".item",
+                    opacity: 0.7,
+                    revert: true,
+                    helper: 'clone'});
 			   },
 
 			   render: function () {
@@ -236,6 +243,7 @@ define([
 				   var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName'), false);
 				   this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds }));
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+ 
 				   return this;
 			   },
 
