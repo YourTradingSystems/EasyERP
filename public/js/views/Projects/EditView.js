@@ -18,7 +18,7 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.page = 1;
                 this.pageG = 1;
-                this.responseObj = {}
+                this.responseObj = {};
                 this.render();
             },
 
@@ -566,9 +566,21 @@ define([
                         headers: {
                             mid: mid
                         },
-                        success: function () {
-                            $('.edit-project-dialog').remove();
-                            Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        success: function (model) {
+							model= model.toJSON();
+							var viewType = custom.getCurrentVT();
+							switch (viewType) {
+							case 'list':
+								{
+									$("tr[data-id='" + model._id + "'] td").remove();
+								}
+								break;
+							case 'thumbnails':
+								{
+									$("#" + model._id).remove();
+								}
+							}
+							self.hideDialog();
                         },
                         error: function () {
                             $('.edit-project-dialog').remove();

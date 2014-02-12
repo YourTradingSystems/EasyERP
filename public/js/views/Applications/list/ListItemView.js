@@ -35,13 +35,14 @@ function (ApplicationsListTemplate,common, stagesTamplate) {
              var targetElement = $(e.target).parents("td");
              var id = targetElement.attr("id");
              var obj = this.collection.get(id);
-             obj.set({ workflow: $(e.target).attr("id"), workflowForList:true});
-             obj.save({}, {
+             obj.save({ workflow: $(e.target).attr("id"), workflowStart: targetElement.find(".stageSelect").attr("data-id"), sequence:-1, sequenceStart:targetElement.attr("data-sequence")}, {
                  headers: {
                      mid: 39
                  },
-                 success: function () {
-                     targetElement.find(".stageSelect").text($(e.target).text());
+				 patch:true,
+                 success: function (err, model) {
+					 targetElement.attr("data-sequence",model.sequence);
+                     targetElement.find(".stageSelect").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
                  }
              });
 

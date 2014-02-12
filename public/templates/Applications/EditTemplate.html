@@ -5,7 +5,7 @@
             <ul class="dialog-tabs">
                 <li><a class="active" href="javascript:;">Main</a></li>
                 <li><a href="javascript:;">Assignees</a></li>
-                <li class="right"><button class="red hireEmployee"><span>Hire & Create Employee</span></button></li>
+                <li class="right"><button class="red hireEmployee"><span>Hire & Create Employee</span></button>  <button class="red refuseEmployee"><span>Refuse</span></button></li>
             </ul>
             <div class="clearfix"></div>
             <div class="dialog-tabs-items">
@@ -46,15 +46,15 @@
                     <dl class="person-info">
                       <dt><label for="jobPositionDd">Applied Job </label></dt>
                       <dd>
-						<a id="jobPositionDd" data-id="<%=model.jobPosition._id%>" class="current-selected" href="javascript:;"><%=model.jobPosition.name%></a>
+						<a id="jobPositionDd" data-id="<%=model.jobPosition?model.jobPosition._id:""%>" class="current-selected" href="javascript:;"><%=model.jobPosition?model.jobPosition.name:"Select"%></a>
                       </dd>
                       <dt><label for="departmentDd">Department</label></dt>
                       <dd>
-						<a id="departmentDd" data-id="<%=model.department._id%>" class="current-selected" href="javascript:;"><%=model.department.departmentName%></a>
+						<a id="departmentDd" data-id="<%=model.department?model.department._id:""%>" class="current-selected" href="javascript:;"><%=model.department?model.department.departmentName:"Select"%></a>
                       </dd>
                       <dt><label for="sourceDd">Source </label></dt>
                       <dd>
-						<a id="sourceDd" data-id="www.rabota.ua" class="current-selected" href="javascript:;"><%=model.source%></a>
+						<a id="sourceDd" data-id="<%=model.source%>" class="current-selected" href="javascript:;"><%=model.source?model.source:"Select"%></a>
 						<ul class="newSelectList hidden">
                           <li id="www.rabota.ua">www.rabota.ua</li>
                           <li id="www.work.ua">www.work.ua</li>

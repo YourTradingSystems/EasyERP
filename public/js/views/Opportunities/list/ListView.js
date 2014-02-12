@@ -2,11 +2,13 @@ define([
     'text!templates/Opportunities/list/ListHeader.html',
     'views/Opportunities/CreateView',
     'views/Opportunities/list/ListItemView',
+    'views/Opportunities/EditView',
+    'models/OpportunitiesModel',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
         var OpportunitiesListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -33,7 +35,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click .list td:not(.notForm)": "gotoForm",
+                "click .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
@@ -42,7 +44,7 @@ define([
 
             checkCheckbox: function (e) {
                 if (!$(e.target).is("input")) {
-                    $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
+                    $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
                 }
             },
 
@@ -57,7 +59,7 @@ define([
                     } else {
                         workflowIdArray.push($(this).val());
                     }
-                })
+                });
                 this.convertedStatus = isConverted;
                 this.wfStatus = workflowIdArray;
 
@@ -166,13 +168,20 @@ define([
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-
-            gotoForm: function (e) {
-                App.ownContentType = true;
-                var id = $(e.target).closest("tr").data("id");
-                window.location.hash = "#easyErp/Opportunities/form/" + id;
+             goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/Opportunities/form';
+                model.fetch({
+                    data: { id: id },
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             },
-
+ 
             createItem: function () {
                 //create editView in dialog here
                 new createView();

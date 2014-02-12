@@ -14,11 +14,72 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         jobPosition = require("./Modules/JobPosition.js")(logWriter, mongoose, employee, department, models),
         degrees = require("./Modules/Degrees.js")(logWriter, mongoose, models),
         campaigns = require("./Modules/Campaigns.js")(logWriter, mongoose, models),
-        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models),
+        opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models, event),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
         jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
+
+	//binding for Sequence
+	event.on('updateSequence',function (model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
+        var query;
+        var objFind = {};
+        var objChange = {};
+        if (workflowStart == workflowEnd) {//on one workflow
+
+            if (!(isCreate || isDelete)) {
+                var inc = -1;
+                if (start > end) {
+                    inc = 1;
+                    var c = end;
+                    end = start;
+                    start = c;
+                } else {
+                    end -= 1;
+                }
+                objChange = {};
+                objFind = { "workflow": workflowStart };
+                objFind[sequenceField] = { $gte: start, $lte: end };
+                objChange[sequenceField] = inc;
+                query = model.update(objFind, { $inc: objChange }, { multi: true });
+                query.exec(function (err, res) {
+                    if (callback) callback((inc == -1) ? end : start);
+                });
+            } else {
+                if (isCreate) {
+                    query = model.count({ "workflow": workflowStart }).exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+                if (isDelete) {
+                    objChange = {};
+                    objFind = { "workflow": workflowStart };
+                    objFind[sequenceField] = { $gt: start };
+                    objChange[sequenceField] = -1;
+                    query = model.update(objFind, { $inc: objChange }, { multi: true });
+                    query.exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+            }
+        } else {//between workflow
+            objChange = {};
+            objFind = { "workflow": workflowStart };
+            objFind[sequenceField] = { $gte: start };
+            objChange[sequenceField] = -1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec();
+            objFind = { "workflow": workflowEnd };
+            objFind[sequenceField] = { $gte: end };
+            objChange[sequenceField] = 1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec(function (err, res) {
+                if (callback) callback(end);
+            });
+
+
+        }
+    });
 
     Array.prototype.objectID = function () {
 

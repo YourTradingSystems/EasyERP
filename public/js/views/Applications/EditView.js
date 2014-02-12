@@ -1,11 +1,13 @@
 ﻿define([
     "text!templates/Applications/EditTemplate.html",
     'text!templates/Notes/AddAttachments.html',
+    'collections/Workflows/WorkflowsCollection',
     "common",
     "custom",
-	"populate"
+	"populate",
+	"custom"
 ],
-    function (EditTemplate, addAttachTemplate, common, Custom, populate) {
+    function (EditTemplate, addAttachTemplate, WorkflowsCollection, common, Custom, populate, custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,6 +17,7 @@
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
+                this.workflowsCollection = new WorkflowsCollection({id:'Applications'});
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.page = 1;
@@ -46,7 +49,43 @@
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-				"click .hireEmployee": "isEmployee"
+				"click .hireEmployee": "isEmployee",
+                "click .refuseEmployee": "refuseEmployee",
+            },
+			refuseEmployee:function (e) {
+				var self = this;
+                var workflow = this.workflowsCollection.findWhere({name: "Refused"});
+                if(!workflow)
+                {
+                    throw new Error('Workflow "Refused" not found');
+                    return;
+                }
+                var id = workflow.get('_id');
+                this.currentModel.save({
+                    workflow:id
+                }, {
+                    success: function (model) {
+						model = model.toJSON();
+						var viewType = custom.getCurrentVT();
+						switch (viewType) {
+						case 'list':
+							{
+                                $("tr[data-id='" + model._id + "'] td").eq(6).find("a").text("Refused");
+							}
+							break;
+						case 'kanban':
+							{
+								$(".column[data-id='"+id+"']").find(".columnNameDiv").after($("#" + model._id));
+							}
+						}
+						self.hideDialog();
+                    },
+                    error: function (model, xhr, options) {
+                        Backbone.history.navigate("easyErp", { trigger: true });
+                    }
+                });
+				return false;
+
             },
             isEmployee: function (e) {
 				e.preventDefault();
@@ -56,6 +95,7 @@
                     headers: {
                         mid: 39
                     },
+					patch:true,
                     success: function () {
                         Backbone.history.navigate("easyErp/Employees", { trigger: true });
                     }
@@ -342,7 +382,7 @@
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-
+                var viewType = custom.getCurrentVT();
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
@@ -367,6 +407,7 @@
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
+                var workflow= this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null;
                 var data = {
                     //subject: this.$el.find("#subject").val(),
                     imageSrc: this.imageSrc,
@@ -391,10 +432,6 @@
                     proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
-					sequenceStart: this.currentModel.toJSON().sequence,
-					sequence:-1,
-					workflowStart:this.currentModel.toJSON().workflow._id,
-                    workflow: this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
@@ -402,14 +439,57 @@
                     },
                     whoCanRW: whoCanRW
                 };
-
+                var currentWorkflow = this.currentModel.get('workflow');
+                if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
+                    data['workflow'] = workflow;
+                    data['sequence'] = -1;
+                    data['sequenceStart'] =  this.currentModel.toJSON().sequence;
+                    data['workflowStart'] = currentWorkflow._id;
+                };
                 this.currentModel.save(data, {
                     headers: {
                         mid: mid
                     },
                     patch: true,
-                    success: function () {
-                        Backbone.history.navigate("easyErp/Applications", { trigger: true });
+                    success: function (model, result) {
+                        model = model.toJSON();
+						result = result.result;
+                        var editHolder = self.$el;
+						switch (viewType) {
+                        case 'list':
+                            {
+								var tr_holder = $("tr[data-id='" + model._id + "'] td");
+                                tr_holder.eq(2).text(data.name.first+" "+data.name.last);
+                                tr_holder.eq(3).text(data.personalEmail);
+                                tr_holder.eq(4).find("a").text(data.workPhones.phone).attr("href","skype:"+data.workPhones.phone+"?call");
+                                tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
+                                tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
+                                tr_holder.eq(7).text(data.jobType);
+                            }
+                            break;
+                        case 'kanban':
+                            {
+                                var kanban_holder = $("#" + model._id);
+                                kanban_holder.find(".application-header .left").text(data.name.first+" "+data.name.last);
+								if (parseInt(data.proposedSalary))
+									kanban_holder.find(".application-header .right").text(data.proposedSalary+"$");
+                                kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
+                                kanban_holder.find(".application-content p.right").text(nextAction);
+
+                                if (result && result.sequence){
+									$("#" + data.workflowStart).find(".item").each(function () {
+										var seq = $(this).find(".inner").data("sequence");
+										if (seq > data.sequenceStart) {
+											$(this).find(".inner").attr("data-sequence", seq - 1);
+										}
+									});
+                                    kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+								}
+
+                                $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+
+                            }
+                        }
                         self.hideDialog();
                     },
                     error: function () {
@@ -429,9 +509,22 @@
                         headers: {
                             mid: mid
                         },
-                        success: function () {
-                            $('.applications-edit-dialog').remove();
-                            Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                        success: function (model) {
+							model = model.toJSON();
+							var viewType = custom.getCurrentVT();
+							switch (viewType) {
+							case 'list':
+								{
+									$("tr[data-id='" + model._id + "'] td").remove();
+								}
+								break;
+							case 'kanban':
+								{
+									$("#" + model._id).remove();
+								}
+							}
+							self.hideDialog();
+
                         },
                         error: function () {
                             $('.applications-edit-dialog').remove();
