@@ -79,10 +79,7 @@ function (common, Validation) {
                 name: ''
             },
             nextAction: null,
-            source: {
-                id: '',
-                name: ''
-            },
+            source: '',
             referredBy: '',
             expectedSalary: 0,
             proposedSalary: 0,

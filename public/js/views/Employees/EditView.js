@@ -365,7 +365,7 @@ define([
                 var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
 
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
-
+                var sourceId = $("#sourceDd option:selected").val();
                 var self = this;
 
                 var usersId=[];
@@ -416,6 +416,7 @@ define([
                     homeAddress: homeAddress,
                     dateBirth: dateBirth,
                     active: active,
+                    source: sourceId,
                     imageSrc: this.imageSrc,
                     recalculate: recalculate,
                     groups: {
@@ -507,10 +508,9 @@ define([
                 common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function (workflow) {
-                    console.log(workflow);
                     $('.endContractReasonList').attr('data-id', workflow[0]._id);
                 });
-
+                
                 $('#dateBirth').datepicker({
                     changeMonth : true,
                     changeYear : true,
@@ -518,6 +518,8 @@ define([
                     maxDate: '-1d'
                 });
                 var model = this.currentModel.toJSON();
+             
+                console.log(model.source);
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){
                         $(".groupsAndUser").show();

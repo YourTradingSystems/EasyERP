@@ -49,10 +49,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         age: { type: Number, default: 0 },
         daysForBirth: Number,
         nextAction: Date,
-        source: {
-            id: { type: String, default: '' },
-            name: { type: String, default: '' }
-        },
+        source: {type: String, default: '' },
         referredBy: { type: String, default: '' },
         active: { type: Boolean, default: true },
         workflow: { type: ObjectId, ref: 'workflows', default: null },
@@ -382,13 +379,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                 if (data.nextAction) {
                     _employee.nextAction = data.nextAction;
                 }
+                //new source (add Vasya)
                 if (data.source) {
-                    if (data.source._id) {
-                        _employee.source.id = data.source._id;
-                    }
-                    if (data.source.name) {
-                        _employee.source.name = data.source.name;
-                    }
+                    _employee.source = data.source;
                 }
                 if (data.referredBy) {
                     _employee.referredBy = data.referredBy;
