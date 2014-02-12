@@ -414,16 +414,23 @@
                     patch: true,
                     success: function (model, result) {
                         model = model.toJSON();
+						result = result.result;
+                        var editHolder = self.$el;
 						switch (viewType) {
                         case 'list':
                             {
-
+								var tr_holder = $("tr[data-id='" + model._id + "'] td");
+                                tr_holder.eq(2).text(data.name.first+" "+data.name.last);
+                                tr_holder.eq(3).text(data.personalEmail);
+                                tr_holder.eq(4).find("a").text(data.workPhones.phone).attr("href","skype:"+data.workPhones.phone+"?call");
+                                tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
+                                tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
+                                tr_holder.eq(7).text(data.jobType);
                             }
                             break;
                         case 'kanban':
                             {
                                 var kanban_holder = $("#" + model._id);
-                                var editHolder = self.$el;
                                 kanban_holder.find(".application-header .left").text(data.name.first+" "+data.name.last);
 								if (parseInt(data.proposedSalary))
 									kanban_holder.find(".application-header .right").text(data.proposedSalary+"$");

@@ -565,20 +565,31 @@
 					   patch:true,
                        success: function (model, result) {
                         model = model.toJSON();
+						result = result.result;
+                        var editHolder = self.$el;
 						switch (viewType) {
                         case 'list':
                             {
+								var tr_holder = $("tr[data-id='" + model._id + "'] td");
+                                tr_holder.eq(3).text(name);
+                                tr_holder.eq(4).text(expectedRevenueValue);
+                                tr_holder.eq(5).text(self.$("#customerDd option:selected").text());
+                                tr_holder.eq(6).text(nextAction.date);
+                                tr_holder.eq(7).text(nextAction.desc);
+                                tr_holder.eq(8).find("a").text(self.$("#workflowDd option:selected").text());
+                                tr_holder.eq(9).text(self.$("#salesPersonDd option:selected").text());
 
+								
                             }
                             break;
                         case 'kanban':
                             {
                                 var kanban_holder = $("#" + model._id);
-                                var editHolder = self.$el;
                                 kanban_holder.find(".opportunity-header h4").text(name);
                                 kanban_holder.find(".opportunity-header h3").text("$"+expectedRevenueValue);
                                 kanban_holder.find(".opportunity-content p.right").text(nextAction.date);
-                                kanban_holder.find(".opportunity-content p.left").eq(0).text(self.$("#salesPersonDd option:selected").text());
+                                kanban_holder.find(".opportunity-content p.left").eq(0).text(self.$("#customerDd option:selected").text());
+                                kanban_holder.find(".opportunity-content p.left").eq(1).text(self.$("#salesPersonDd option:selected").text());
 
                                 if (result && result.sequence){
 									$("#" + data.workflowStart).find(".item").each(function () {

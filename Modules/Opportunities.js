@@ -650,6 +650,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     case ('Opportunities'): {
                                         query.populate('customer', 'name').
                                             populate('workflow', '_id name').
+                                            populate('salesPerson', 'name').
                                             populate('createdBy.user', 'login').
                                             populate('editedBy.user', 'login');
                                     }

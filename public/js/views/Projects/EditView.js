@@ -18,7 +18,7 @@ define([
                 this.currentModel.urlRoot = '/Projects/';
                 this.page = 1;
                 this.pageG = 1;
-                this.responseObj = {}
+                this.responseObj = {};
                 this.render();
             },
 
