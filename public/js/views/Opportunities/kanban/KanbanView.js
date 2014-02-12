@@ -173,6 +173,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 
 			}
 		},
+        
         render: function () {
 			var self = this;
             var workflows = this.workflowsCollection.toJSON();
@@ -182,9 +183,9 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             _.each(workflows, function (workflow, i) {
                 itemCount = 0;
                 var column = this.$(".column").eq(i);
-                var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
-                var total = " <span><span class='totalCount'>" + itemCount + "</span> )</span>";
-                column.find(".columnNameDiv h2").append(count).append(total);
+                //var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
+                var total = " <span><span class='totalCount'>" + itemCount + "</span></span>";
+                column.find(".columnNameDiv h2").append(total);
             }, this);
             
             this.$(".column").sortable({

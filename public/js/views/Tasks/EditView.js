@@ -38,12 +38,14 @@
                   "click .editNote": "editNote",
                   "keypress #logged, #estimated": "isNumberKey"
               },
+
               isNumberKey: function (evt) {
                   var charCode = (evt.which) ? evt.which : event.keyCode;
                   if (charCode > 31 && (charCode < 48 || charCode > 57))
                       return false;
                   return true;
               },
+
               editDelNote: function (e) {
                   var id = e.target.id;
                   var k = id.indexOf('_');
@@ -81,9 +83,11 @@
                       }
                   }
               },
+
               hideNewSelect: function (e) {
                   $(".newSelectList").hide();
               },
+
               addNote: function (e) {
                   e.preventDefault();
                   var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
@@ -97,7 +101,7 @@
                           title: ''
                       };
                       if (arr_key_str) {
-                          var edit_notes = _.filter(notes, function (note) {
+                          var editNotes = _.filter(notes, function (note) {
                               if (note._id == arr_key_str) {
                                   note.note = val;
                                   note.title = title;
@@ -105,17 +109,20 @@
                               }
                           });
                           currentModel.save({ 'notes': editNotes },
-                                            {
-                                                headers: {
-                                                    mid: 40
-                                                },
-                                                patch: true,
-                                                success: function (model, response, options) {
-                                                    $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
-                                                    $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
-                                                    $('#getNoteKey').attr("value", '');
-                                                }
-                                            });
+                              {
+                                  headers: {
+                                      mid: 40
+                                  },
+                                  patch: true,
+                                  success: function () {
+                                      $('#noteBody').val($('#' + arr_key_str).find('.noteText').html(val));
+                                      $('#noteBody').val($('#' + arr_key_str).find('.noteTitle').html(title));
+                                      $('#getNoteKey').attr("value", '');
+                                      $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                                      $(".title-wrapper").hide();
+                                      $(".addTitle").hide();
+                                  }
+                              });
 
 
 
@@ -124,24 +131,25 @@
                           note_obj.note = val;
                           note_obj.title = title;
                           notes.push(note_obj);
-                          currentModel.set();
                           currentModel.save({ 'notes': notes },
-                                            {
-                                                headers: {
-                                                    mid: 40
-                                                },
-                                                patch: true,
-                                                wait: true,
-                                                success: function (models, data, response) {
+                             {
+                                 headers: {
+                                     mid: 40
+                                 },
+                                 patch: true,
+                                 wait: true,
+                                 success: function (models, data) {
 
-                                                    $('#noteBody').empty();
-                                                    data.notes.forEach(function (item) {
-                                                        var date = common.utcDateToLocaleDate(item.date);
-                                                        //notes.push(item);
-                                                        $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
-                                                    });
-                                                }
-                                            });
+                                     $('#noteBody').empty();
+                                     data.notes.forEach(function (item) {
+                                         var date = common.utcDateToLocaleDate(item.date);
+                                         $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
+                                         $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                                         $(".title-wrapper").hide();
+                                         $(".addTitle").hide();
+                                     });
+                                 }
+                             });
 
                       }
                       $('#noteArea').val('');

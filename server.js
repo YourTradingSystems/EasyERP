@@ -28,7 +28,7 @@ mainDb.once('open', function callback() {
     var main = mainDb.model('easyErpDBS', mainDBSchema);
     main.find().exec(function (err, result) {
         if (!err) {
-            
+
             result.forEach(function (_db, index) {
                 var dbInfo = {
                     DBname: '',
@@ -148,7 +148,7 @@ app.post('/uploadFiles', function (req, res, next) {
         var dir;
         var os = require("os");
         var osType = (os.type().split('_')[0]);
-        switch(osType) {
+        switch (osType) {
             case "Windows":
                 {
                     path = __dirname + "\\uploads\\" + req.files.attachfile.name;
@@ -161,7 +161,7 @@ app.post('/uploadFiles', function (req, res, next) {
                     dir = __dirname + "\/uploads";
                 }
         }
-        
+
         fs.writeFile(path, data, function (err) {
             if (!err) {
                 file._id = mongoose.Types.ObjectId();
@@ -208,7 +208,7 @@ app.get('/download/:name', function (req, res) {
     res.download(__dirname + "\\uploads\\" + name);
 });
 
-function uploadFileArray(req,res,callback){
+function uploadFileArray(req, res, callback) {
     var files = [];
     if (req.files && !req.files.attachfile.length) {
         req.files.attachfile = [req.files.attachfile];
@@ -220,79 +220,79 @@ function uploadFileArray(req,res,callback){
 
     req.files.attachfile.forEach(function (item) {
         fs.readFile(item.path, function (err, data) {
-			switch(osType) {
-			case "Windows":
-				{
-					path = __dirname + "\\uploads\\" + item.name;
-					dir = __dirname + "\\uploads";
-				}
-				break;
-			case "Linux":
-				{
-					path = __dirname + "\/uploads\/" + item.name;
-					dir = __dirname + "\/uploads";
-				}
-			}
+            switch (osType) {
+                case "Windows":
+                    {
+                        path = __dirname + "\\uploads\\" + item.name;
+                        dir = __dirname + "\\uploads";
+                    }
+                    break;
+                case "Linux":
+                    {
+                        path = __dirname + "\/uploads\/" + item.name;
+                        dir = __dirname + "\/uploads";
+                    }
+            }
             fs.writeFile(path, data, function (err) {
-				if (!err) {
-                var file = {};
-                file._id = mongoose.Types.ObjectId();
-                file.name = item.name;
-					console.log(osType);
-					
+                if (!err) {
+                    var file = {};
+                    file._id = mongoose.Types.ObjectId();
+                    file.name = item.name;
+                    console.log(osType);
 
-                file.path = path;
-                file.size = item.size;
-                file.uploadDate = new Date();
-                file.uploaderName = req.session.uName;
-                files.push(file);
 
-                if (files.length == req.files.attachfile.length) {
-						if (callback){
-							callback(files);
-						}
-					}
-				} else {
-					console.log(err);
-					res.send(500);
-				}
-				
+                    file.path = path;
+                    file.size = item.size;
+                    file.uploadDate = new Date();
+                    file.uploaderName = req.session.uName;
+                    files.push(file);
+
+                    if (files.length == req.files.attachfile.length) {
+                        if (callback) {
+                            callback(files);
+                        }
+                    }
+                } else {
+                    console.log(err);
+                    res.send(500);
+                }
+
             });
         });
     });
-	
+
 }
 
 app.post('/uploadApplicationFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     var os = require("os");
     var osType = (os.type().split('_')[0]);
-	var dir;
-	switch(osType) {
-	case "Windows":
-		{
-			dir = __dirname + "\\uploads";
-		}
-		break;
-	case "Linux":
-		{
-			dir = __dirname + "\/uploads";
-		}
-	}
-	fs.readdir(dir,function(err,files){
-		if (err){
-			fs.mkdir(dir, function (errr){
-				uploadFileArray(req,res,function(files){
-					requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
-				});
-				
-			});
-		}else{
-			uploadFileArray(req,res,function(files){
-				requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
-			});
-		}
-	});
+    var dir;
+    switch (osType) {
+        case "Windows":
+            {
+                dir = __dirname + "\\uploads";
+            }
+            break;
+        case "Linux":
+            {
+                dir = __dirname + "\/uploads";
+            }
+    }
+    fs.readdir(dir, function (err, files) {
+        if (err) {
+            fs.mkdir(dir, function (errr) {
+                uploadFileArray(req, res, function (files) {
+                    requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                });
+
+            });
+        } else {
+            uploadFileArray(req, res, function (files) {
+                requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+            });
+        }
+    });
 
 });
 
@@ -301,30 +301,30 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
     //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
-	var dir;
-	switch(osType) {
-	case "Windows":
-		{
-			dir = __dirname + "\\uploads";
-		}
-		break;
-	case "Linux":
-		{
-			dir = __dirname + "\/uploads";
-		}
-	}
-	fs.readdir(dir,function(err,files){
-		if (err){
-			fs.mkdir(dir, function (errr){
-				uploadFileArray(req,res,function(files){
-					requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
-				});
-				
-			});
-		}else{
-			uploadFileArray(req,res,function(files){
+    var dir;
+    switch (osType) {
+        case "Windows":
+            {
+                dir = __dirname + "\\uploads";
+            }
+            break;
+        case "Linux":
+            {
+                dir = __dirname + "\/uploads";
+            }
+    }
+    fs.readdir(dir, function (err, files) {
+        if (err) {
+            fs.mkdir(dir, function (errr) {
+                uploadFileArray(req, res, function (files) {
+                    requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+                });
+
+            });
+        } else {
+            uploadFileArray(req, res, function (files) {
                 requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
-			});
+            });
         }
     });
 
@@ -335,30 +335,30 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
     //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
-	var dir;
-	switch(osType) {
-	case "Windows":
-		{
-			dir = __dirname + "\\uploads";
-		}
-		break;
-	case "Linux":
-		{
-			dir = __dirname + "\/uploads";
-		}
-	}
-	fs.readdir(dir,function(err,files){
-		if (err){
-			fs.mkdir(dir, function (errr){
-				uploadFileArray(req,res,function(files){
+    var dir;
+    switch (osType) {
+        case "Windows":
+            {
+                dir = __dirname + "\\uploads";
+            }
+            break;
+        case "Linux":
+            {
+                dir = __dirname + "\/uploads";
+            }
+    }
+    fs.readdir(dir, function (err, files) {
+        if (err) {
+            fs.mkdir(dir, function (errr) {
+                uploadFileArray(req, res, function (files) {
                     requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
-				});
-				
-			});
-		}else{
-			uploadFileArray(req,res,function(files){
+                });
+
+            });
+        } else {
+            uploadFileArray(req, res, function (files) {
                 requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
-			});
+            });
         }
     });
 });
@@ -368,30 +368,30 @@ app.post('/uploadTasksFiles', function (req, res, next) {
     //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
-	var dir;
-	switch(osType) {
-	case "Windows":
-		{
-			dir = __dirname + "\\uploads";
-		}
-		break;
-	case "Linux":
-		{
-			dir = __dirname + "\/uploads";
-		}
-	}
-	fs.readdir(dir,function(err,files){
-		if (err){
-			fs.mkdir(dir, function (errr){
-				uploadFileArray(req,res,function(files){
+    var dir;
+    switch (osType) {
+        case "Windows":
+            {
+                dir = __dirname + "\\uploads";
+            }
+            break;
+        case "Linux":
+            {
+                dir = __dirname + "\/uploads";
+            }
+    }
+    fs.readdir(dir, function (err, files) {
+        if (err) {
+            fs.mkdir(dir, function (errr) {
+                uploadFileArray(req, res, function (files) {
                     requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
-				});
-				
-			});
-		}else{
-			uploadFileArray(req,res,function(files){
-                    requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
-			});
+                });
+
+            });
+        } else {
+            uploadFileArray(req, res, function (files) {
+                requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
+            });
         }
     });
 });
@@ -401,30 +401,30 @@ app.post('/uploadOpportunitiesFiles', function (req, res, next) {
     //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
-	var dir;
-	switch(osType) {
-	case "Windows":
-		{
-			dir = __dirname + "\\uploads";
-		}
-		break;
-	case "Linux":
-		{
-			dir = __dirname + "\/uploads";
-		}
-	}
-	fs.readdir(dir,function(err,files){
-		if (err){
-			fs.mkdir(dir, function (errr){
-				uploadFileArray(req,res,function(files){
+    var dir;
+    switch (osType) {
+        case "Windows":
+            {
+                dir = __dirname + "\\uploads";
+            }
+            break;
+        case "Linux":
+            {
+                dir = __dirname + "\/uploads";
+            }
+    }
+    fs.readdir(dir, function (err, files) {
+        if (err) {
+            fs.mkdir(dir, function (errr) {
+                uploadFileArray(req, res, function (files) {
                     requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
-				});
-				
-			});
-		}else{
-			uploadFileArray(req,res,function(files){
+                });
+
+            });
+        } else {
+            uploadFileArray(req, res, function (files) {
                 requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
-			});
+            });
         }
     });
 });

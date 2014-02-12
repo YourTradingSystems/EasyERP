@@ -260,9 +260,10 @@
                     itemCount = 0;
                     var column = this.$(".column").eq(i);
                     var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
-                    var total = " <span><span class='totalCount'>" + itemCount + "</span> )</span>";
+                    var total = " <span><span class='totalCount'>" + itemCount + "</span> </span>";
                     var remaining = " <span><span class='remaining'>" + itemCount + "</span> </span>";
-                    column.find(".columnNameDiv h2").append(count).append(total).append(remaining);
+                    //column.find(".columnNameDiv h2").append(count).append(total).append(remaining);
+                    column.find(".columnNameDiv h2").append(total);
                 }, this);
                 populate.getPriority("#priority", this);
 

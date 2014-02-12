@@ -847,7 +847,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             access.getEditWritAccess(req, req.session.uId, 40, function (access) {
                 if (access) {
                     console.log(file);
-                    project.updateTask(req, id, { $push: { attachments: { $each: file } } }, res);
+                    project.addAtachments(req, id, { $push: { attachments: { $each: file } } }, res);
                 } else {
                     res.send(403);
                 }
