@@ -518,8 +518,6 @@ define([
                     maxDate: '-1d'
                 });
                 var model = this.currentModel.toJSON();
-             
-                console.log(model.source);
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){
                         $(".groupsAndUser").show();

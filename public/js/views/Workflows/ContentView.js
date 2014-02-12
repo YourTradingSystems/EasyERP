@@ -27,7 +27,7 @@ define([
 				   //"click td:not(:has('input[type='checkbox']'))": "gotoForm",
 				   "click a.workflow": "chooseWorkflowNames",
 				   "click .workflow-sub": "chooseWorkflowDetailes",
-				   "click .workflow-list li": "chooseWorkflowNames",
+				   "click .workflow-list li": "chooseWorkflowDetailes",
 				   "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
 				   "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
 				   "click #workflowNames span": "chooseWorkflowDetailes",
@@ -154,7 +154,7 @@ define([
 				   alert($(e.target).hasClass("workflow-sub"));
 
 			   },
-			   chooseWorkflowNames: function (e) {
+			   /*chooseWorkflowNames: function (e) {
 				   e.preventDefault();
 				   this.$(".workflow-sub-list>*").remove();
 				   this.$("#details").addClass("active").show();
@@ -192,33 +192,23 @@ define([
 						   this.$(".workflow-sub-list").append("<li id='" + name + "' data-id='" + name + "'><a class='workflow-sub' id='" + wName + "' data-id='" + name + "' href='javascript:;'>" + name + "</a></li>");
 					   }
 				   }, this);
-			   },
+			   },*/
 			   chooseWorkflowDetailes: function (e) {
-
-				   $(e.target).parents(".workflow-sub-list").find(".active").removeClass("active");
+				   e.preventDefault();
+				   this.$(".workflow-sub-list>*").remove();
+				   this.$("#details").addClass("active").show();
+				   this.$("#workflows").empty();
+				   this.$("#workflowNames").html("");
 				   $("#addNewStatus").show();
-				   if ($(e.target).hasClass("workflow-sub")) {
+				   if ($(e.target).hasClass("workflow")) {
+					   wId = $(e.target).text();
+					   $(wId).removeClass("active");
 					   $(e.target).parent().addClass("active");
-				   } else {
-					   $(e.target).addClass("active");
 				   }
-				   //this.$("#sub-details").html("");
 				   var name = $(e.target).data("id");
-				   var nameDetails = this.$("#sub-details").attr("data-id");
-				   if (name == nameDetails && this.$("#sub-details").hasClass("active")) {
-					   this.$("#details").hide(150, function () {
-						   $(this).removeClass("active");
-					   })
-					   return;
-				   }
-				   else {
-					   this.$("#details").show(150, function () {
-						   $(this).addClass("active");
-					   })
-				   }
 				   var values = [];
 				   _.each(this.collection.models, function (model) {
-					   if (model.get('wName') == name) {
+					   if (model.get('wId') == name) {
 						   values.push({ id: model.get("_id"), name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
 					   }
 				   }, this);
@@ -233,8 +223,8 @@ define([
 				   Custom.setCurrentCL(this.collection.models.length);
 				   console.log('Render Workflows View');
 				   var workflowsWIds = _.uniq(_.pluck(this.collection.toJSON(), 'wId'), false);
-				   var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName'), false);
-				   this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds }));
+				   var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName', 'wId'), false);
+				   this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds}));
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
 				   return this;
 			   },
@@ -284,19 +274,28 @@ define([
 				   e.preventDefault();
 				   var mid = 39;
 				   var workflowsModel = new WorkflowsModel();
-				   var wId = $(".workflow-list li.active").text();
+				   var wIds = $(".workflow-list li.active").text();
+				   var workflowCollection = this.collection.toJSON();
+				   
+				   
+                   var workflowArray = _.filter(workflowCollection, function (workflow) {
+                       if (workflow.wId == wIds) {
+                           return workflow;
+                       }
+                   });
+                   lenght = workflowArray.length;
+                   
 				   var name = $(".workflow-sub-list li.active a").text();
-
 				   var value = [];
 				   var names = [],
                    statuses = [];
 				   names.push($.trim($(".nameStatus").val()));
 				   statuses.push($("#statusesDd option:selected").val());
 				   for (var i = 0; i < names.length; i++) {
-					   value.push({ name: names[i], status: statuses[i], sequence: i });
+					   value.push({ name: names[i], status: statuses[i], sequence: lenght+1 });
 				   }
 				   workflowsModel.save({
-					   wId: wId,
+					   wId: wIds,
 					   name: name,
 					   value: value
 				   },{
