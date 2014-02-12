@@ -16,7 +16,7 @@ define([
         var FormApplicationsView = Backbone.View.extend({
             el: '#content-holder',
             initialize: function (options) {
-                this.workflowsCollection = new WorkflowsCollection({id:'Application'});
+                this.workflowsCollection = new WorkflowsCollection({id:'Applications'});
                 this.formModel = options.model;
             },
             events:{

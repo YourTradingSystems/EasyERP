@@ -630,9 +630,21 @@
                            headers: {
                                mid: mid
                            },
-                           success: function () {
-                               $('.edit-opportunity-dialog').remove();
-                               Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
+                           success: function (model) {
+							   model = model.toJSON();
+							   var viewType = custom.getCurrentVT();
+							   switch (viewType) {
+							   case 'list':
+								   {
+									   $("tr[data-id='" + model._id + "'] td").remove();
+								   }
+								   break;
+							   case 'kanban':
+								   {
+									   $("#" + model._id).remove();
+								   }
+							   }
+							   self.hideDialog();
                            },
                            error: function () {
                                $('.edit-opportunity-dialog').remove();
