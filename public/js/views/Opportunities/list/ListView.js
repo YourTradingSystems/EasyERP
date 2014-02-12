@@ -57,7 +57,7 @@ define([
                     } else {
                         workflowIdArray.push($(this).val());
                     }
-                })
+                });
                 this.convertedStatus = isConverted;
                 this.wfStatus = workflowIdArray;
 

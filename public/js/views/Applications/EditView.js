@@ -3,9 +3,10 @@
     'text!templates/Notes/AddAttachments.html',
     "common",
     "custom",
-	"populate"
+	"populate",
+	"custom"
 ],
-    function (EditTemplate, addAttachTemplate, common, Custom, populate) {
+    function (EditTemplate, addAttachTemplate, common, Custom, populate, custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -342,7 +343,7 @@
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-
+                var viewType = custom.getCurrentVT();
                 var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
                 relatedUser = relatedUser ? relatedUser : null;
 
@@ -367,6 +368,7 @@
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
+                var workflow= this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null;
                 var data = {
                     //subject: this.$el.find("#subject").val(),
                     imageSrc: this.imageSrc,
@@ -393,10 +395,6 @@
                     proposedSalary: $.trim(this.$el.find("#proposedSalary").val()),
                     tags: $.trim(this.$el.find("#tags").val()).split(','),
                     otherInfo: this.$el.find("#otherInfo").val(),
-					sequenceStart: this.currentModel.toJSON().sequence,
-					sequence:-1,
-					workflowStart:this.currentModel.toJSON().workflow._id,
-                    workflow: this.$el.find("#workflowsDd").data("id") ? this.$el.find("#workflowsDd").data("id") : null,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
@@ -404,14 +402,50 @@
                     },
                     whoCanRW: whoCanRW
                 };
-
+                var currentWorkflow = this.currentModel.get('workflow');
+                if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
+                    data['workflow'] = workflow;
+                    data['sequence'] = -1;
+                    data['sequenceStart'] =  this.currentModel.toJSON().sequence;
+                    data['workflowStart'] = currentWorkflow._id;
+                };
                 this.currentModel.save(data, {
                     headers: {
                         mid: mid
                     },
                     patch: true,
-                    success: function () {
-                        Backbone.history.navigate("easyErp/Applications", { trigger: true });
+                    success: function (model, result) {
+                        model = model.toJSON();
+						switch (viewType) {
+                        case 'list':
+                            {
+
+                            }
+                            break;
+                        case 'kanban':
+                            {
+                                var kanban_holder = $("#" + model._id);
+                                var editHolder = self.$el;
+                                kanban_holder.find(".application-header .left").text(data.name.first+" "+data.name.last);
+								if (parseInt(data.proposedSalary))
+									kanban_holder.find(".application-header .right").text(data.proposedSalary+"$");
+                                kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());
+                                kanban_holder.find(".application-content p.right").text(nextAction);
+
+                                if (result && result.sequence){
+									$("#" + data.workflowStart).find(".item").each(function () {
+										var seq = $(this).find(".inner").data("sequence");
+										if (seq > data.sequenceStart) {
+											$(this).find(".inner").attr("data-sequence", seq - 1);
+										}
+									});
+                                    kanban_holder.find(".inner").attr("data-sequence", result.sequence);
+								}
+
+                                $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+
+                            }
+                        }
                         self.hideDialog();
                     },
                     error: function () {

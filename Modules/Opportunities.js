@@ -1,4 +1,4 @@
-var Opportunities = function (logWriter, mongoose, customer, workflow, department, models) {
+var Opportunities = function (logWriter, mongoose, customer, workflow, department, models, event) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var opportunitiesSchema = mongoose.Schema({
@@ -374,7 +374,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     if (data.source) {
                         _opportunitie.source = data.source;
                     }
-                    updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, _opportunitie.workflow, _opportunitie.workflow, true, false, function (sequence) {
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, _opportunitie.workflow, _opportunitie.workflow, true, false, function (sequence) {
                         _opportunitie.sequence = sequence;
                         _opportunitie.save(function (err, result) {
                             if (err) {
@@ -763,7 +763,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                 };
             }
-            updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, data.workflow, data.workflow, true, false, function (sequence) {
+            event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, data.workflow, data.workflow, true, false, function (sequence) {
                 if (!data.info) data.info = {};
                 data.sequence = sequence;
                 models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate( _id, data, function (err, result) {
@@ -854,76 +854,17 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         }
     }// end update
 
-    function updateSequence(model, sequenceField, start, end, workflowStart, workflowEnd, isCreate, isDelete, callback) {
-        var query;
-        var objFind = {};
-        var objChange = {};
-        if (workflowStart == workflowEnd) {//on one workflow
-
-            if (!(isCreate || isDelete)) {
-                var inc = -1;
-                if (start > end) {
-                    inc = 1;
-                    var c = end;
-                    end = start;
-                    start = c;
-                } else {
-                    end -= 1;
-                }
-                objChange = {};
-                objFind = { "workflow": workflowStart };
-                objFind[sequenceField] = { $gte: start, $lte: end };
-                objChange[sequenceField] = inc;
-                query = model.update(objFind, { $inc: objChange }, { multi: true });
-                query.exec(function (err, res) {
-                    if (callback) callback((inc == -1) ? end : start);
-                });
-            } else {
-                if (isCreate) {
-                    query = model.count({ "workflow": workflowStart }).exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-                if (isDelete) {
-                    objChange = {};
-                    objFind = { "workflow": workflowStart };
-                    objFind[sequenceField] = { $gt: start };
-                    objChange[sequenceField] = -1;
-                    query = model.update(objFind, { $inc: objChange }, { multi: true });
-                    query.exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-            }
-        } else {//between workflow
-            objChange = {};
-            objFind = { "workflow": workflowStart };
-            objFind[sequenceField] = { $gte: start };
-            objChange[sequenceField] = -1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec();
-            objFind = { "workflow": workflowEnd };
-            objFind[sequenceField] = { $gte: end };
-            objChange[sequenceField] = 1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec(function (err, res) {
-                if (callback) callback(end);
-            });
-
-
-        }
-    }
     function updateOnlySelectedFields(req, _id, data, res) {
-		if (data.sequenceStart&&data.workflowStart){
+		if (data.workflow&&data.sequenceStart&&data.workflowStart){
         if (data.sequence == -1) {
-            updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-                updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+            event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
                     data.sequence = sequence;
                     if (data.workflow == data.workflowStart)
                         data.sequence -= 1;
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
-                            res.send(200, { success: 'Opportunities updated' });
+                            res.send(200, { success: 'Opportunities updated', sequence:result.sequence  });
                         } else {
                             res.send(500, { error: "Can't update Opportunitie" });
                         }
@@ -933,7 +874,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 });
             });
         } else {
-            updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+            event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
                 delete data.sequenceStart;
                 delete data.workflowStart;
                 data.info = {};
@@ -1274,7 +1215,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             } else {
                 console.log(result);
                 if (result.isOpportunitie) {
-                    updateSequence(models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
                         res.send(200, { success: 'Opportunities removed' });
                     });
                 }
