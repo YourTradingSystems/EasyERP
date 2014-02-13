@@ -107,7 +107,7 @@ require(['app'], function (app) {
             }
         }
     };
-    
+
     Backbone.View.prototype.prevP = function (dataObject) {
         this.startTime = new Date();
         var itemsNumber = $("#itemsNumber").text();
@@ -132,7 +132,7 @@ require(['app'], function (app) {
             page: page,
             letter: this.selectedLetter
         };
-        if (dataObject) _.extend(serchObject,dataObject);
+        if (dataObject) _.extend(serchObject, dataObject);
         this.collection.showMore(serchObject);
     };
 
@@ -157,7 +157,7 @@ require(['app'], function (app) {
             page: page,
             letter: this.selectedLetter
         };
-        if (dataObject) _.extend(serchObject,dataObject);
+        if (dataObject) _.extend(serchObject, dataObject);
         this.collection.showMore(serchObject);
     };
 
@@ -205,7 +205,7 @@ require(['app'], function (app) {
                 page: page,
                 letter: this.selectedLetter
             };
-            if (dataObject) _.extend(serchObject,dataObject);
+            if (dataObject) _.extend(serchObject, dataObject);
             this.collection.showMore(serchObject);
         }
     };
@@ -270,7 +270,7 @@ require(['app'], function (app) {
                     count: itemsNumber,
                     page: deletePage
                 };
-                if (dataObject) _.extend(serchObject,dataObject);
+                if (dataObject) _.extend(serchObject, dataObject);
                 this.collection.showMore(serchObject);
             }
             $('#check_all').prop('checked', false);
