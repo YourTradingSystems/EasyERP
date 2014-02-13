@@ -356,11 +356,17 @@ define([
                     var el = $(this);
                     homeAddress[el.attr("name")] = $.trim(el.val());
                 });
-
-                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
+                // date parse 
+                var dateBirthSt = $.trim($("#dateBirth").val());
                 var dateBirth = "";
                 if (dateBirthSt) {
-                    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
+                	dateBirthArr = dateBirthSt.split("/");
+                    var newDateBirt = new Date();  
+                    newDateBirt.setFullYear(dateBirthArr[2]);
+                    newDateBirt.setMonth(dateBirthArr[1]-1);    
+                    newDateBirt.setDate(dateBirthArr[0]); 
+                    var fullDateBirt = newDateBirt.toUTCString();
+                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
                 }
                 var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
 
@@ -512,6 +518,7 @@ define([
                 });
                 
                 $('#dateBirth').datepicker({
+                	dateFormat: "d/m/yy",
                     changeMonth : true,
                     changeYear : true,
                     yearRange: '-100y:c+nn',
