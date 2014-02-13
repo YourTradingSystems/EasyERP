@@ -335,7 +335,6 @@ define([
 					dialogClass:"edit-dialog",
 					title: "Edit Company",
 					width:"800",
-					height:690,
                     buttons: [
                         {
                             text: "Create",
