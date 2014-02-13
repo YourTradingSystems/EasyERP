@@ -33,14 +33,14 @@ define([
             this.on('all', function () {
                 $(".ui-dialog").remove();
             });
-            this.on('all', function () {
-                $(".ui-dialog").remove();
-            });
-			$(document).on("keydown",function (e) {
+  			$(document).on("keydown",".ui-dialog",function (e) {
                 switch (e.which) {
                     case 27:
 					    $(".edit-dialog").remove();
                         break;
+					case 13:
+					    $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
+					    break;
                     default:
                         break;
                 }
