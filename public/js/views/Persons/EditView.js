@@ -49,10 +49,10 @@ define([
 				return false;
             },
 			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
+				this.showNewSelect(e,false,true);
 			},
 			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
+				this.showNewSelect(e,true,false);
 			},
             changeTab:function(e){
                 var holder = $(e.target);
@@ -364,7 +364,7 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
-				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,false,true);
+//				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,false,true);
 /*
                 common.populateCompanies(App.ID.companiesDd, "/CompaniesForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
                 common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
@@ -387,7 +387,7 @@ define([
                         model.groups.users.forEach(function(item){
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
-                        })
+                        });
 
                     }
                 return this;

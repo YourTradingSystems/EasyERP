@@ -3,9 +3,10 @@ define([
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
     "models/PersonsModel",
-    "common"
+    "common",
+	"populate"
 ],
-    function (CreateTemplate, PersonsCollection, DepartmentsCollection, PersonModel, common) {
+    function (CreateTemplate, PersonsCollection, DepartmentsCollection, PersonModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -19,6 +20,7 @@ define([
                 this.models = (options && options.model) ? options.model : null;
                 this.page = 1;
                 this.pageG = 1;
+				this.responseObj = {};
                 this.render();
             },
 
@@ -32,9 +34,34 @@ define([
                 'click .unassign': 'unassign',
                 "click .prevUserList": "prevUserList",
                 "click .nextUserList": "nextUserList",
-				"click .details":"showDetailsBox"
+				"click .details":"showDetailsBox",
+                "click .current-selected": "showNewSelect",
+                "click": "hideNewSelect",
+				"click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
             },
-
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+                
+            },
+            notHide: function () {
+				return false;
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+            },
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true);
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false);
+			},
 			showDetailsBox:function(e){
 				$(e.target).parent().find(".details-box").toggle();
 			},
@@ -203,7 +230,7 @@ define([
                 var self = this;
                 var mid = 39;
 
-                var company = $('#companiesDd option:selected').val();
+                var company = $('#companiesDd').data("id");
                 var dateBirth = $(".dateBirth").val();
                 var department = $("#departmentDd option:selected").val();
 
@@ -316,6 +343,7 @@ define([
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", null, null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, this.pageG);
+				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 this.$el.find('.dateBirth').datepicker({
                     dateFormat: "d M, yy",

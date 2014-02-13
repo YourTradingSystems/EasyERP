@@ -387,7 +387,7 @@ define([
                         model.groups.users.forEach(function(item){
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
-                        })
+                        });
 
                     }
                 this.delegateEvents(this.events);
