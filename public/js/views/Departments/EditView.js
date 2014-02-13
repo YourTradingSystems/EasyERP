@@ -17,12 +17,12 @@ define([
                 this.departmentsCollection = new DepartmentsCollection();
                 _.bindAll(this, "render", "deleteItem");
 				if (options.myModel){
-					this.currentModel = options.myModel
+					this.currentModel = options.myModel;
 				}
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
-				this.responseObj = {}
+				this.responseObj = {};
 				this.page=1;
                 this.render();
             },
@@ -182,9 +182,10 @@ define([
                 });
 				var self=this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen: true,
                     resizable: false,
-                    dialogClass: "create-dialog",
+                    dialogClass: "edit-dialog",
                     width: "950px",
                     title: "Edit Department",
                     buttons: [{

@@ -440,6 +440,7 @@ define([
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     dialogClass: "edit-dialog",
                     width: "900",
                     title: "Create Opportunity",

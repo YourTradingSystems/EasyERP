@@ -331,9 +331,10 @@ define([
                     model: this.currentModel.toJSON()
                 });
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen: true,
                     resizable: true,
-                    dialogClass: "edit-person-dialog",
+                    dialogClass: "edit-dialog",
                     title: "Edit Person",
                     width: "80%",
                     buttons: [

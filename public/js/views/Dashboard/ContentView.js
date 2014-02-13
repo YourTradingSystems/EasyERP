@@ -86,6 +86,17 @@ define([
                },
 
                render: function () {
+				   var self = this;
+				   $(window).resize(function(){
+					   if ($(window).width()<1370){
+						   $(".legend-box").css("margin-top","10px");
+					   }else{
+						   $(".legend-box").css("margin-top","-39px");
+					   }
+					   self.renderPopulate();
+					   self.renderPopulateSource();
+
+				   });
                    this.$el.html(this.template());
 				   this.renderPopulate();
                    this.renderPopulateSource();
@@ -99,7 +110,7 @@ define([
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
 					   
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
-					   width = $(document).width() - margin.left - margin.right,
+					   width = $(window).width() - margin.left - margin.right,
 					   height = 600 - margin.top - margin.bottom;
 
                        var y = d3.scale.ordinal()
@@ -188,7 +199,7 @@ define([
                    common.getLeadsForChart(null, this.dateRange, this.dateItem, function (data) {
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
                        var margin = { top: 20, right: 160, bottom: 190, left: 160 },
-					   width = $(document).width() - margin.left - margin.right,
+					   width = $(window).width() - margin.left - margin.right,
 					   height = 500 - margin.top - margin.bottom;
                        var x = d3.scale.ordinal()
 						   .rangeRoundBands([0, width], .6);

@@ -19,7 +19,7 @@ define([
                 this.departmentsCollection = new DepartmentsCollection();
                 this.model = new DepartmentsModel();
 				this.page = 1;
-				this.responseObj = {}
+				this.responseObj = {};
                 this.render();
             },
 			events:{
@@ -40,10 +40,10 @@ define([
             },
 
 			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
+				this.showNewSelect(e,false,true);
 			},
 			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
+				this.showNewSelect(e,true,false);
 			},
 			nextUserList:function(e){
 				this.page+=1;
@@ -135,9 +135,10 @@ define([
                 var formString = this.template({});
 
                    this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
-					dialogClass:"create-dialog",
+					dialogClass:"edit-dialog",
 					title: "Edit department",
 					width:"950px",
                     buttons: [
