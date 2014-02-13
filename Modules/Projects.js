@@ -213,19 +213,32 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                         updatePr(project._id);
                                     }
                                 });
-                            console.log(data);
-                            models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(tasks, {
-                                $set: data
-                            }, function (err, res) {
-                                if (err) {
-                                    console.log(findError);
-                                    logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + findError);
-                                    response.send(500, { error: 'Task update error' });
-                                } else if (res) {
-                                    updatePr(res.project);
-                                    response.send(200, { success: 'Task update success' });
+                            var query = models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: projectId });
+                            query.sort({ taskCount: -1 });
+                            query.exec(function (error, _tasks) {
+                                if (error) {
+                                    console.log(error);
+                                    logWriter.log("Project.js updateTask tasks.find doc.length === 0" + error);
+                                    res.send(500, { error: 'Task find error' });
                                 } else {
-                                    response.send(500, { error: 'Task update error' });
+                                    if (!_tasks[0] || (task.project != projectId)) {
+                                        var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
+                                        data.taskCount = n;
+                                    }
+                                    models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(tasks, {
+                                        $set: data
+                                    }, function (err, res) {
+                                        if (err) {
+                                            console.log(findError);
+                                            logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + findError);
+                                            response.send(500, { error: 'Task update error' });
+                                        } else if (res) {
+                                            updatePr(res.project);
+                                            response.send(200, { success: 'Task update success' });
+                                        } else {
+                                            response.send(500, { error: 'Task update error' });
+                                        }
+                                    });
                                 }
                             });
                         } else {
