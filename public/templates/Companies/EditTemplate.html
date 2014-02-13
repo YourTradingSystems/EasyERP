@@ -73,9 +73,7 @@
                     <dt><label for="reference">Reference </label></dt><dd><input class="blueback" type="text" id="reference" value="<%=model.salesPurchases.reference%>" maxlength="32"/></dd>
                     <dt><label for="language">Language </label></dt>
                     <dd>
-                      <select id="language">
-                        <option>English</option>
-                      </select>
+					  <a id="language" data-id="<%=(model.salesPurchases.salesTeam)?model.salesPurchases.language:""%>" class="current-selected" href="javascript:;"><%=(model.salesPurchases.language)?(model.salesPurchases.language):"Select"%></a>
                     </dd>
 
 <!--                    <dt><label for="isCustomer">Customer </label></dt><dd><input type="checkbox" id="isCustomer" <%=(model.salesPurchases.isCustomer)? "checked='checked'":''%>/></dd>

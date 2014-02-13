@@ -544,6 +544,7 @@
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).findById(id);
             query.populate('department', '_id departmentName').
             	  populate('salesPurchases.salesPerson', '_id name').
+            	  populate('salesPurchases.salesTeam', '_id departmentName').
                   populate('createdBy.user').
                   populate('editedBy.user').
                   populate('groups.users').

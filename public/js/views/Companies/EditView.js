@@ -42,9 +42,31 @@ define([
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
                 'click #addUsers':'addUsers',
-                'click #removeUsers':'removeUsers'
+                'click #removeUsers':'removeUsers',
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
             },
-
+			notHide: function () {
+				return false;
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true);
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false);
+			},
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+            },
+			chooseOption:function(e){
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+			},
             changeTab:function(e){
                 var holder = $(e.target);
                 holder.closest(".dialog-tabs").find("a.active").removeClass("active");
@@ -259,10 +281,10 @@ define([
                         isCustomer: this.$el.find("#isCustomer").is(":checked"),
                         isSupplier: this.$el.find("#isSupplier").is(":checked"),
                         active: this.$el.find("#active").is(":checked"),
-                        salesPerson: this.$el.find('#employeesDd option:selected').val()===""?null:this.$el.find('#employeesDd option:selected').val(),
-                        salesTeam: this.$el.find("#departmentDd option:selected").val()===""?null:this.$el.find("#departmentDd option:selected").val(),
+                        salesPerson: this.$el.find('#employeesDd').data("id")===""?null:this.$el.find('#employeesDd').data("id"),
+                        salesTeam: this.$el.find("#departmentDd").data("id")===""?null:this.$el.find("#departmentDd").data("id"),
                         reference: this.$el.find("#reference").val(),
-                        language: this.$el.find("#language").val()
+                        language: this.$el.find("#language").text()
                     },
                     groups: {
                         owner: $("#allUsers").val(),
@@ -288,31 +310,6 @@ define([
                         Backbone.history.navigate("easyErp/Companies", { trigger: true });
                     }
                 });
-            },
-            showNewSelect: function (e) {
-                var s = "<ul class='newSelectList'>";
-                $(e.target).parent().find("select option").each(function () {
-                    s += "<li>" + $(this).text() + "</li>";
-                });
-                s += "</ul>";
-                $(".newSelectList").hide();
-                $(e.target).parent().append(s);
-                return false;
-            },
-
-            hideNewSelect: function () {
-                $(".newSelectList").hide();
-            },
-            chooseOption: function (e) {
-                var k = $(e.target).parent().find("li").index($(e.target));
-                $(e.target).parents("dd").find("select option:selected").removeAttr("selected");
-                $(e.target).parents("dd").find("select option").eq(k).attr("selected", "selected");
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text());
-            },
-            styleSelect: function (id) {
-                var text = $(id).find("option:selected").length == 0 ? $(id).find("option").eq(0).text() : $(id).find("option:selected").text();
-                $(id).parent().append("<a class='current-selected' href='javascript:;'>" + text + "</a>");
-                $(id).hide();
             },
 
             template: _.template(EditTemplate),
