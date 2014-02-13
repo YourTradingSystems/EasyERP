@@ -1028,6 +1028,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                     });
                 }
                 event.emit('recalculate', req);
+                res.send(200, { success: 'Employees removed' });
             }
         });
     }// end remove

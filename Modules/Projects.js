@@ -17,7 +17,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         StartDate: Date,
         EndDate: Date,
         TargetEndDate: Date,
-        duration: Number,
         sequence: { type: Number, default: 0 },
         parent: { type: String, default: null },
         workflow: { type: ObjectId, ref: 'workflows', default: null },
@@ -101,61 +100,136 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     mongoose.model('Tasks', TasksSchema);
 
     mongoose.model('Priority', PrioritySchema);
-	
+
     event.on('updateContent', updateContent);//binding for Event 
 
-    function updateContent(request, response, projectId, eventType, tasksArray) {
+    function updateContent(request, response, projectId, eventType, tasks, data) {
+        function updatePr(projectId) {
+            models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).aggregate(
+                       {
+                           $match: { project: projectId }
+                       },
+                       {
+                           $group: {
+                               _id: "$project",
+                               progress: { $sum: '$progress' },
+                               count: { $sum: 1 },
+                               endDate: { $max: '$EndDate' },
+                               tasks: { $addToSet: '$_id' }
+                           }
+                       },
+                       function (err, result) {
+                           if (err) {
+                               console.log(err);
+                               logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + err);
+                               return;
+                           } else {
+                               var progress = 0;
+                               var tasks = [];
+                               var EndDate = null;
+
+                               if (result.length !== 0) {
+                                   progress = (result[0].count !== 0) ? (result[0].progress / result[0].count) : 0;
+                                   tasks = result[0].tasks;
+                                   EndDate = result[0].endDate;
+                               }
+
+                               models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(projectId, {
+                                   $set: {
+                                       task: tasks,
+                                       EndDate: EndDate,
+                                       progress: progress
+                                   }
+                               },
+                                   function (updateError) {
+                                       if (updateError) {
+                                           console.log(updateError);
+                                           logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + updateError);
+                                       }
+                                       return;
+                                   });
+                           }
+                       });
+        };
         switch (eventType) {
+            case "create":
+                {
+                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findById(projectId,
+                        function (error, result) {
+                            if (error) {
+                                console.log(error);
+                                logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + error);
+                                response.send(500, { error: "Can't update Project" });
+                            } else {
+                                //tasks - singleTask, not array in this method
+                                if (result) {
+                                    var updateCondition = {};
+                                    if (!result.EndDate || (result.EndDate < tasks.EndDate)) {
+                                        updateCondition['EndDate'] = tasks.EndDate;
+                                    }
+                                    updateCondition['progress'] = (result.progress + tasks.progress) / (result.task.length + 1);
+                                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(
+                                        projectId,
+                                        {
+                                            $set: updateCondition,
+                                            $push: { task: tasks._id }
+                                        },
+                                        function (err) {
+                                            if (err) {
+                                                console.log(err);
+                                                logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + err);
+                                            }
+                                            return;
+                                        });
+                                } else {
+                                    return;
+                                }
+                            }
+                        });
+                }
+                break;
             case "remove":
                 {
-                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(projectId, {
-                        $pullAll: { task: tasksArray }
-                    },
-                    function (updateError) {
-                        if (updateError) {
-                            logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + updateError);
-                            response.send(500, { error: "Can't remove Task" });
-                        } else {
-                            response.send(200, { success: 'Task remove success' });
-                        }
-                    });
+                    updatePr(projectId);
                 }
                 break;
             case "update":
                 {
-                    models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findOne({ task: { $in: tasksArray } },
-                    function (findError, project) {
-                        if (findError) {
-                            console.log(findError);
-                            logWriter.log('updateContent in Projects module eventType="' + eventType + '" by tasksArray="' + tasksArray + '" error=' + findError);
-                            response.send(500, { error: "Can't remove Task" });
-                        } else if (project) {
-                            models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(project._id, {
-                                $pullAll: { task: tasksArray }
-                            },
-                                function (updateError) {
-                                    if (updateError) {
-                                        console.log(updateError);
-                                        logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + updateError);
-                                        response.send(500, { error: "Can't remove Task" });
+                    models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).findById(tasks, function (err, task) {
+                        if (err) {
+                            console.log(err);
+                            logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + err);
+                            response.send(500, { error: 'Task update error' });
+                        } else if (task) {
+                            var oldProjectId = task.project;
+                            models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(oldProjectId,
+                                { $pull: { 'task': task._id } },
+                                function (findError, project) {
+                                    if (findError) {
+                                        console.log(findError);
+                                        logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + findError);
+                                        response.send(500, { error: 'Task update error' });
                                     } else {
-                                        models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(projectId, {
-                                            $addToSet: { task: { $each: tasksArray } }
-                                        },
-                                            function (error) {
-                                                if (error) {
-                                                    console.log(error);
-                                                    logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + error);
-                                                    response.send(500, { error: "Can't remove Task" });
-                                                } else {
-                                                    response.send(200, { success: 'Task remove success' });
-                                                }
-                                            });
+                                        updatePr(project._id);
                                     }
                                 });
+                            console.log(data);
+                            models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(tasks, {
+                                $set: data
+                            }, function (err, res) {
+                                if (err) {
+                                    console.log(findError);
+                                    logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + findError);
+                                    response.send(500, { error: 'Task update error' });
+                                } else if (res) {
+                                    updatePr(res.project);
+                                    response.send(200, { success: 'Task update success' });
+                                } else {
+                                    response.send(500, { error: 'Task update error' });
+                                }
+                            });
                         } else {
-                            console.log('Castom Error');
-                            response.send(500, { error: "Can't remove Task" });
+                            response.send(204, { error: 'Task update error' });
                         }
                     });
                 }
@@ -168,157 +242,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             var startDate = new Date(StartDate);
             var endDate = new Date(EndDate);
             var tck = endDate - startDate;
-            var realDays = (((tck / 1000) / 60) / 60) / 24;
+            var realDays = (((tck / 1000) / 60) / 60) / 8;
             days = realDays.toFixed(1);
         }
         return days;
-    };
-
-    var returnProgress = function (tasksArray) {
-        var result = {};
-        result.estimated = 0;
-        result.remaining = 0;
-        result.progress = 0;
-        for (var i = 0; i < tasksArray.length; i++) {
-            if (tasksArray[i].length != 0 && tasksArray[i].workflow && tasksArray[i].workflow.status != 'Cancelled') {
-                try {
-                    result.estimated += tasksArray[i].estimated;
-                    result.remaining += tasksArray[i].remaining;
-                }
-                catch (err) {
-                    logWriter.log("Project.js getProjects project.find calculate " + Exception);
-                }
-            }
-        }
-        result.progress = (result.estimated != 0) ? Math.round((1 - (result.remaining / result.estimated)) * 100) : 0;
-        return result;
-    };
-
-    var updateProjectTime = function (req, task) {
-        if (!task.EndDate) {
-            return false;
-        } else {
-            try {
-                console.log('+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-');
-                var id = (task.project._id) ? task.project._id : task.project;
-                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findById(id)
-                    //.where('info.EndDate')
-                    //.lte(task.extrainfo.EndDate)
-                    //.or([{ 'info.EndDate': { $lt: task.extrainfo.EndDate } },
-                    //     { 'info.StartDate': { $gt: task.extrainfo.StartDate } }])
-                    .exec(function (err, _project) {
-                        if (_project) {
-                            if (!_project.StartDate && !_project.EndDate) {
-                                console.log('--------Not project start Date------');
-                                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
-                                    {
-                                        _id: _project._id
-                                    },
-                                    {
-                                        $set: {
-                                            'StartDate': task.StartDate,
-                                            'EndDate': task.EndDate,
-                                            'duration': returnDuration(task.StartDate, task.EndDate)
-                                        }
-                                    },
-                                    function (err, success) {
-                                        if (!err) {
-                                            return true;
-                                        } else {
-                                            return false;
-                                        }
-                                    });
-                            } else {
-                                //if (_project.EndDate < task.EndDate) {
-                                if (!_project.EndDate || (_project.EndDate < task.EndDate)) {
-                                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
-                                        {
-                                            _id: _project._id
-                                        },
-                                        {
-                                            $set: {
-                                                'EndDate': task.EndDate,
-                                                'duration': returnDuration(_project.StartDate, task.EndDate)
-                                            }
-                                        },
-                                        function (err, success) {
-                                            if (!err) {
-                                                //if (_project.StartDate > task.StartDate) {
-                                                //    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
-                                                //        {
-                                                //            _id: _project._id
-                                                //        },
-                                                //        {
-                                                //            $set: {
-                                                //                'StartDate': task.StartDate,
-                                                //                'duration': returnDuration(task.StartDate, _project.EndDate)
-                                                //            }
-                                                //        },
-                                                //        function (err, success) {
-                                                //            if (!err) {
-                                                //                return true;
-                                                //            } else {
-                                                //                return false;
-                                                //            }
-                                                //        });
-                                                //} else return false;
-                                                return true;
-                                            } else {
-                                                return false;
-                                            }
-                                        });
-                                }
-                                //if (_project.StartDate > task.StartDate) {
-                                //    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
-                                //        {
-                                //            _id: _project._id
-                                //        },
-                                //        {
-                                //            $set: {
-                                //                'StartDate': task.StartDate,
-                                //                'duration': returnDuration(task.StartDate, _project.EndDate)
-                                //            }
-                                //        },
-                                //        function (err, success) {
-                                //            if (!err) {
-                                //                if (_project.EndDate < task.EndDate) {
-                                //                    models.get(req.session.lastDb - 1, 'Project', ProjectSchema).update(
-                                //                        {
-                                //                            _id: _project._id
-                                //                        },
-                                //                        {
-                                //                            $set: {
-                                //                                'EndDate': task.EndDate,
-                                //                                'duration': returnDuration(_project.StartDate, task.EndDate)
-                                //                            }
-                                //                        },
-                                //                        function (err, success) {
-                                //                            if (!err) {
-                                //                                return true;
-                                //                            } else {
-                                //                                return false;
-                                //                            }
-                                //                        });
-                                //                } else return false;
-                                //            } else {
-                                //                return false;
-                                //            }
-                                //        });
-                                //}
-                                return true;
-                            }
-                        } else if (err) {
-                            logWriter.log('Error in updateProjectEndDate project.findById ' + err);
-                            return false;
-                        }
-                    });
-            }
-
-            catch (exc) {
-                logWriter.log('Error in updateProjectEndDate ' + exc);
-                return false;
-            }
-        }
     };
 
     var calculateTaskEndDate = function (startDate, estimated) {
@@ -342,14 +269,14 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         iWeekday1 = (iWeekday1 <= 5) ? 0 : 1;    // only count weekdays
         iWeekday2 = (iWeekday2 <= 5) ? 0 : 1;
         // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
-        iWeeks = Math.floor((endDate.getTime() - startDate.getTime()) / 604800000)
+        iWeeks = Math.floor((endDate.getTime() - startDate.getTime()) / 604800000);
 
         if (iWeekday1 < iWeekday2) {
             iDateDiff = (iWeeks * 2) + 2 * (iWeekday2 - iWeekday1);
         } else if ((iWeekday1 == iWeekday2) && (iWeekday1 == 0)) {
             iDateDiff = (iWeeks * 2) + 2 * iAdjust;
         } else {
-            iDateDiff = (iWeeks * 2) + 2 * (iWeekday1 - iWeekday2)
+            iDateDiff = (iWeeks * 2) + 2 * (iWeekday1 - iWeekday2);
         }
 
 
@@ -478,83 +405,83 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).findOne({ status: "In Progress", "wId": "Projects" }).exec(function (error, res) {
             if (!error) {
                 models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
-					{
-					    $match: {
-					        users: newObjectId(req.session.uId)
-					    }
-					}, {
-					    $project: {
-					        _id: 1
-					    }
-					},
-					function (err, deps) {
-					    if (!err) {
+                    {
+                        $match: {
+                            users: newObjectId(req.session.uId)
+                        }
+                    }, {
+                        $project: {
+                            _id: 1
+                        }
+                    },
+                    function (err, deps) {
+                        if (!err) {
 
-					        var arrOfObjectId = deps.objectID();
-					        models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
-								{
-								    $match: {
-								        $and: [
-											{ workflow: newObjectId(res._id.toString()) },
+                            var arrOfObjectId = deps.objectID();
+                            models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                                {
+                                    $match: {
+                                        $and: [
+                                            { workflow: newObjectId(res._id.toString()) },
 
-											{
-											    $or: [
-													{
-													    $or: [
-															{
-															    $and: [
-																	{ whoCanRW: 'group' },
-																	{ 'groups.users': newObjectId(req.session.uId) }
-															    ]
-															},
-															{
-															    $and: [
-																	{ whoCanRW: 'group' },
-																	{ 'groups.group': { $in: arrOfObjectId } }
-															    ]
-															}
-													    ]
-													},
-													{
-													    $and: [
-															{ whoCanRW: 'owner' },
-															{ 'groups.owner': newObjectId(req.session.uId) }
-													    ]
-													},
-													{ whoCanRW: "everyOne" }
-											    ]
-											}
-								        ]
-								    }
-								},
-								{
-								    $project: {
-								        _id: 1
-								    }
-								},
-								function (err, result) {
-								    if (!err) {
-								        var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-								        query.select("projectName projectmanager _id health").
-											populate('projectmanager', 'name _id').
-											exec(function (error, _res) {
-											    if (!error) {
-											        res = {}
-											        res['data'] = _res;
-											        response.send(res);
-											    } else {
-											        console.log(error);
-											    }
-											});
-								    } else {
-								        console.log(err);
-								    }
-								}
-							);
-					    } else {
-					        console.log(error);
-					    }
-					});
+                                            {
+                                                $or: [
+                                                    {
+                                                        $or: [
+                                                            {
+                                                                $and: [
+                                                                    { whoCanRW: 'group' },
+                                                                    { 'groups.users': newObjectId(req.session.uId) }
+                                                                ]
+                                                            },
+                                                            {
+                                                                $and: [
+                                                                    { whoCanRW: 'group' },
+                                                                    { 'groups.group': { $in: arrOfObjectId } }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            { whoCanRW: 'owner' },
+                                                            { 'groups.owner': newObjectId(req.session.uId) }
+                                                        ]
+                                                    },
+                                                    { whoCanRW: "everyOne" }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        _id: 1
+                                    }
+                                },
+                                function (err, result) {
+                                    if (!err) {
+                                        var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
+                                        query.select("projectName projectmanager _id health").
+                                            populate('projectmanager', 'name _id').
+                                            exec(function (error, _res) {
+                                                if (!error) {
+                                                    res = {}
+                                                    res['data'] = _res;
+                                                    response.send(res);
+                                                } else {
+                                                    console.log(error);
+                                                }
+                                            });
+                                    } else {
+                                        console.log(err);
+                                    }
+                                }
+                            );
+                        } else {
+                            console.log(error);
+                        }
+                    });
             }
         });
 
@@ -564,22 +491,22 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         models.get(req.session.lastDb - 1, "Workflows", workflow.workflowSchema).find({ "wId": "Projects" }).select("_id status").exec(function (error, resWorkflow) {
             if (!error) {
                 models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
-					{
-					    $match: {
-					        users: newObjectId(req.session.uId)
-					    }
-					}, {
-					    $project: {
-					        _id: 1
-					    }
-					},
-					function (err, deps) {
-					    if (!err) {
-					        var arrOfObjectId = deps.objectID();
-					        models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
-								{
-								    $match: {
-								        $or: [
+                    {
+                        $match: {
+                            users: newObjectId(req.session.uId)
+                        }
+                    }, {
+                        $project: {
+                            _id: 1
+                        }
+                    },
+                    function (err, deps) {
+                        if (!err) {
+                            var arrOfObjectId = deps.objectID();
+                            models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                                {
+                                    $match: {
+                                        $or: [
                                             {
                                                 $or: [
                                                     {
@@ -603,55 +530,55 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                                 ]
                                             },
                                             { whoCanRW: "everyOne" }
-								        ]
-								    }
-								},
-								{
-								    $project: {
-								        _id: 1
-								    }
-								},
-								function (err, result) {
-								    if (!err) {
-								        var result1 = result.map(function (item) {
-								            return item._id
-								        });
-								        var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
-											{
-											    $match: {
-											        "_id": {
-											            $in: result1
-											        }
-											    }
-											},
-											{
-											    $group: {
-											        _id: "$workflow",
-											        count: { $sum: 1 }
+                                        ]
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        _id: 1
+                                    }
+                                },
+                                function (err, result) {
+                                    if (!err) {
+                                        var result1 = result.map(function (item) {
+                                            return item._id
+                                        });
+                                        var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                                            {
+                                                $match: {
+                                                    "_id": {
+                                                        $in: result1
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                $group: {
+                                                    _id: "$workflow",
+                                                    count: { $sum: 1 }
 
-											    }
-											}
+                                                }
+                                            }
 
-										)
-								        query.exec(function (error, _res) {
-								            if (!error) {
-								                res = {}
-								                res['data'] = _res;
-								                res['workflow'] = resWorkflow;
-								                response.send(res);
-								            } else {
-								                console.log(error);
-								            }
-								        });
-								    } else {
-								        console.log(err);
-								    }
-								}
-							);
-					    } else {
-					        console.log(error);
-					    }
-					});
+                                        )
+                                        query.exec(function (error, _res) {
+                                            if (!error) {
+                                                res = {}
+                                                res['data'] = _res;
+                                                res['workflow'] = resWorkflow;
+                                                response.send(res);
+                                            } else {
+                                                console.log(error);
+                                            }
+                                        });
+                                    } else {
+                                        console.log(err);
+                                    }
+                                }
+                            );
+                        } else {
+                            console.log(error);
+                        }
+                    });
             }
         });
 
@@ -791,13 +718,13 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     query.where('workflow').in([]);
                                 }
                                 query.select("_id createdBy editedBy workflow projectName health customer progress StartDate EndDate TargetEndDate").
-									populate('createdBy.user', 'login').
-									populate('editedBy.user', 'login').
-									populate('projectmanager', 'name').
-									populate('customer', 'name').
+                                    populate('createdBy.user', 'login').
+                                    populate('editedBy.user', 'login').
+                                    populate('projectmanager', 'name').
+                                    populate('customer', 'name').
                                     populate('workflow').
-									skip((data.page - 1) * data.count).
-									limit(data.count).
+                                    skip((data.page - 1) * data.count).
+                                    limit(data.count).
                                 exec(function (error, _res) {
                                     if (!error) {
                                         res['data'] = _res;
@@ -890,7 +817,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 if (data && data.status && data.status.length > 0)
                                     query.where('workflow').in(data.status);
                                 query.select("_id TargetEndDate projectmanager projectName health").
-									populate('projectmanager', 'name _id').
+                                    populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {
                                     if (!error) {
                                         var endThisWeek = new Date();
@@ -950,11 +877,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     _id: 1
                 }
             },
-	        function (err, deps) {
-	            if (!err) {
-	                var arrOfObjectId = deps.objectID();
+            function (err, deps) {
+                if (!err) {
+                    var arrOfObjectId = deps.objectID();
 
-	                models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
+                    models.get(req.session.lastDb - 1, "Project", ProjectSchema).aggregate(
                     {
                         $match: {
                             $or: [
@@ -1014,10 +941,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         }
                     }
         );
-	            } else {
-	                console.log(err);
-	            }
-	        });
+                } else {
+                    console.log(err);
+                }
+            });
 
     };
 
@@ -1029,8 +956,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             populate('createdBy.user', '_id login').
             populate('editedBy.user', '_id login').
             populate('groups.owner', '_id name').
-			populate('groups.users', '_id login').
-			populate('groups.group', '_id departmentName');
+            populate('groups.users', '_id login').
+            populate('groups.group', '_id departmentName');
         query.exec(function (err, project) {
             if (err) {
                 logWriter.log("Project.js getProjectById project.find " + err);
@@ -1351,51 +1278,15 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             data.EndDate = calculateTaskEndDate(StartDate, data.estimated);
             data.duration = returnDuration(data.StartDate, data.EndDate);
         }
+        if (data.assignedTo && typeof (data.assignedTo) == 'object') {
+            data.assignedTo = data.assignedTo._id;
+        }
+        if (data.customer && typeof (data.customer) == 'object') {
+            data.customer = data.customer._id;
+        }
         if (data.project) {
-            var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: data.project });
-            query.sort({ taskCount: -1 });
-            query.exec(function (error, _tasks) {
-                if (error) {
-                    console.log(error);
-                    logWriter.log("Project.js updateTask tasks.find " + error);
-                    res.send(500, { error: 'Task find error' });
-                } else {
-
-                    models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findById(_id, function (err, task) {
-                        if (err) {
-                            console.log(err);
-                            logWriter.log("Project.js updateTask tasks.findById " + err);
-                            res.send(500, { error: 'Task find error' });
-                        } else {
-
-                            if (!_tasks[0] || (!task || (task.project != data.project))) {
-                                var n = (_tasks[0]) ? ++_tasks[0].taskCount : 1;
-                                data.taskCount = n;
-                            }
-
-                            if (data.assignedTo && typeof (data.assignedTo) == 'object') {
-                                data.assignedTo = data.assignedTo._id;
-                            }
-                            if (data.customer && typeof (data.customer) == 'object') {
-                                data.customer = data.customer._id;
-                            }
-
-                            models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-                                if (!err) {
-                                    console.log(result);
-                                    //res.send(200, { success: 'Tasks updated', result: result.sequence });
-                                    event.emit('updateContent', req, res, result.project, 'update', [result._id]);
-                                } else {
-                                    res.send(500, { error: "Can't update Tasks" });
-                                    console.log(err);
-                                    logWriter.log("Project.js taskUpdateOnlySelectedFields data.sequence == -1 " + err);
-                                }
-
-                            });
-                        }
-                    });
-                }
-            });
+            console.log(data.project);
+            event.emit('updateContent', req, res, data.project, 'update', _id, data);
         } else if (data.workflow) {
             sequenceUpdate();
         } else {
@@ -1404,7 +1295,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         function sequenceUpdate() {
             if (data.sequence == -1) {
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function () {
-                    event.emit('updateSequence',models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
                         data.sequence = sequence;
                         if (data.workflow == data.workflowStart)
                             data.sequence -= 1;
@@ -1412,10 +1303,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     });
                 });
             } else {
-					console.log("sequence");
+                console.log("sequence");
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
-					console.log("sequence");
-					console.log(sequence);
+                    console.log("sequence");
+                    console.log(sequence);
                     delete data.sequenceStart;
                     delete data.workflowStart;
                     data.sequence = sequence;
@@ -1427,7 +1318,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         function updateTask() {
             models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
-                    res.send(200, { success: 'Tasks updated', notes: result.notes, sequence:result.sequence });
+                    res.send(200, { success: 'Tasks updated', notes: result.notes, sequence: result.sequence });
                 } else {
                     res.send(500, { error: "Can't update Tasks" });
                     console.log(err);
@@ -1567,7 +1458,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         _task.EndDate = calculateTaskEndDate(StartDate, data.estimated);
                         _task.duration = returnDuration(StartDate, _task.EndDate);
                     }
-                    event.emit('updateSequence',models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", 0, 0, _task.workflow, _task.workflow, true, false, function (sequence) {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", 0, 0, _task.workflow, _task.workflow, true, false, function (sequence) {
                         _task.sequence = sequence;
                         _task.save(function (err, _task) {
                             if (err) {
@@ -1575,13 +1466,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 logWriter.log("Project.js createTask saveTaskToBd _task.save " + err);
                                 res.send(500, { error: 'Task.save BD error' });
                             } else {
-                                models.get(req.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(_task.project, { $push: { task: _task._id } }, function (err, doc) {
-                                    if (err) {
-                                        console.log(err);
-                                        res.send(500, { error: 'Project.save BD error' });
-                                    }
-                                });
-                                updateProjectTime(req, _task);
+                                event.emit('updateContent', req, res, _task.project, 'create', _task);
                                 res.send(201, { success: 'An new Task crate success', task: _task });
                             }
                         });
@@ -1607,43 +1492,21 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 logWriter.log("Project.js remove task.remove " + err);
                 res.send(500, { error: "Can't remove Task" });
             } else {
-                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndRemove(_id, function (err,result) {
+                models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndRemove(_id, function (err) {
                     if (err) {
                         console.log(err);
                         logWriter.log("Project.js remove task.remove " + err);
                         res.send(500, { error: "Can't remove Task" });
                     } else {
-                        event.emit('updateContent', req, res, task.project, "remove", [task._id]);
-                        event.emit('updateSequence',models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", task.sequence, 0, task.workflow, task.workflow, false, true);
+                        event.emit('updateContent', req, res, task.project, "remove");
+                        event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Tasks', TasksSchema), "sequence", task.sequence, 0, task.workflow, task.workflow, false, true);
+                        res.send(200, { success: "Success removed" });
                     }
                 });
 
             }
         });
     };
-
-    function getTasks(req, response) {
-        var res = {};
-        res['data'] = [];
-        var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).find({});
-        query.populate('project assignedTo customer workflow createdBy.user editedBy.user').
-            populate('createdBy.user').
-            populate('editedBy.user');
-
-        query.sort({ summary: 1 });
-        query.exec(function (err, _tasks) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Project.js getTasks project.find " + err);
-                response.send(500, { error: "Can't find Tasks" });
-            } else {
-                //res['data'] = taskFormatDate(_tasks, 0);
-                res['data'] = _tasks;
-                //console.log(res['data']);
-                response.send(res);
-            }
-        });
-    };//--------------Remove this Method in future
 
     function getTasksPriority(req, response) {
         var res = {};
@@ -1873,7 +1736,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     populate('editedBy.user', 'login').
                                     populate('createdBy.user', 'login').
                                     populate('workflow', 'name _id').
-									sort({ 'editedBy.date': -1 }).
+                                    sort({ 'editedBy.date': -1 }).
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (err, result) {
@@ -1946,8 +1809,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         addAtachments: addAtachments,//For Task Project?
 
         removeTask: removeTask,
-
-        getTasks: getTasks,//to REMOVE from Code---------------------------???
 
         getTaskById: getTaskById,//For Form/EditView
 

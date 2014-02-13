@@ -270,6 +270,15 @@ define([
                 }
             },
 
+            deleteItemsRender: function (deleteCounter, deletePage) {
+                this.deleteRender(deleteCounter, deletePage);
+                if (deleteCounter !== this.collectionLength) {
+                    var holder = this.$el;
+                    var created = holder.find('#timeRecivingDataFromServer');
+                    created.before(new listItemView({ collection: this.collection }).render());
+                }
+            },
+
             deleteItems: function () {
                 var that = this,
                     mid = 39,

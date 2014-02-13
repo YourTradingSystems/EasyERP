@@ -346,24 +346,23 @@
                       type: holder.find("#type").data("id"),
                       summary: summary,
                       assignedTo: assignedTo ? assignedTo : null,
-                      //workflow: workflow ? workflow : null,
-                      project: project,
                       tags: tags,
                       description: $.trim(holder.find("#description").val()),
                       priority: priority,
-                      //sequence: sequence,
                       StartDate: $.trim(holder.find("#StartDate").val()),
                       estimated: estimated,
                       logged: logged,
-                      sequenceStart: this.currentModel.toJSON().sequence,
-                      //sequence: -1,
-                      //workflowStart: this.currentModel.toJSON().workflow._id
+                      sequenceStart: this.currentModel.toJSON().sequence
                   };
                   var currentWorkflow = this.currentModel.get('workflow');
                   if (currentWorkflow._id && (currentWorkflow._id != workflow)) {
                       data['workflow'] = workflow;
                       data['sequence'] = -1;
                       data['workflowStart'] = this.currentModel.toJSON().workflow._id
+                  };
+                  var currentProject = this.currentModel.get('project');
+                  if (currentProject._id && (currentProject._id != project)) {
+                      data['project'] = project;
                   };
 
                   this.currentModel.save(data, {
