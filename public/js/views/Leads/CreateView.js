@@ -329,6 +329,7 @@ define([
 				var self=this;
                 var formString = this.template();
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
 					dialogClass:"edit-dialog",

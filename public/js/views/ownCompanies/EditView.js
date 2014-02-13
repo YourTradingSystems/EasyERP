@@ -178,7 +178,7 @@ define([
 				$("#details-dialog").toggle();
 			},
             hideDialog: function () {
-                $(".edit-companies-dialog").remove();
+                $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },
@@ -346,9 +346,10 @@ define([
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen: true,
                     resizable: false,
-                    dialogClass: "edit-companies-dialog",
+                    dialogClass: "edit-dialog",
                     width: "800",
                     //height: 513,
                     title: 'Edit Company',

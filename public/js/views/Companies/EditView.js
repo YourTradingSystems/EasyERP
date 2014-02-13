@@ -344,9 +344,10 @@ define([
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen: true,
                     resizable: false,
-                    dialogClass: "edit-companies-dialog",
+                    dialogClass: "edit-dialog",
                     width: "80%",
                     //height: 513,
                     title: 'Edit Company',

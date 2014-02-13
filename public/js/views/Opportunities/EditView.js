@@ -615,7 +615,7 @@
                },
 
                hideDialog: function () {
-                   $(".edit-opportunity-dialog").remove();
+                   $(".edit-dialog").remove();
                    $(".add-group-dialog").remove();
                    $(".add-user-dialog").remove();
                },
@@ -659,7 +659,8 @@
                        model: this.currentModel.toJSON()
                    });var self = this;
                    this.$el = $(formString).dialog({
-                       dialogClass: "edit-opportunity-dialog",
+					   closeOnEscape: false,
+                       dialogClass: "edit-dialog",
                        width: 900,
                        buttons: {
                            save: {

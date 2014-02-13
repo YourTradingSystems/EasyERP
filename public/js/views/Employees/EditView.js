@@ -477,6 +477,7 @@ define([
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     dialogClass: "edit-employee-dialog",
                     width: 1000,
                     buttons:{

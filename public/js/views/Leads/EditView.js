@@ -192,7 +192,7 @@ define([
             },
 
             hideDialog: function () {
-                $(".edit-leads-dialog").remove();
+                $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },
@@ -368,7 +368,8 @@ define([
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "edit-leads-dialog",
+					closeOnEscape: false,
+                    dialogClass: "edit-dialog",
                     width: 800,
                     buttons: {
                         save: {

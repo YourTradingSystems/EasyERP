@@ -284,7 +284,7 @@ define([
 				   var mid = 39;
 				   e.preventDefault();
 				   $("#addNewStatus").hide();
-				   $("#workflows").append("<div class='addnew'><div><input type='text' class='nameStatus' maxlength='32' required /></div><div><select id='statusesDd'></select></div></div><div class='SaveCancel'><div><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></div></div>");
+				   $("#workflows").append("<div class='addnew row'><div><input type='text' class='nameStatus' maxlength='32' required /></div><div><select id='statusesDd'></select></div><div class='SaveCancel'><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></div></div>");
 				   var targetParent = $(e.target).parent();
 				   var target = $(e.target);
 				   var td = target.parent();

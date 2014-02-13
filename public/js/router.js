@@ -33,6 +33,18 @@ define([
             this.on('all', function () {
                 $(".ui-dialog").remove();
             });
+            this.on('all', function () {
+                $(".ui-dialog").remove();
+            });
+			$(document).on("keydown",function (e) {
+                switch (e.which) {
+                    case 27:
+					    $(".edit-dialog").remove();
+                        break;
+                    default:
+                        break;
+                }
+            });
         },
 
         goToProfiles: function () {
