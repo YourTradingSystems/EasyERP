@@ -22,15 +22,16 @@
                     <dl class="opprtunitie-info">
                       <dt><label for="expectedRevenueValue">Expected Revenue</label></dt><dd><input type="text" id="expectedRevenueValue" value="0.00" maxlength="32"/></dd>
                       <!--<dt>&nbsp;</dt><dd><input type="text" id="expectedRevenueProgress" value="0" maxlength="32"/>%</dd>-->
-                      <dt><label for="customerDd">Customer</label></dt><dd><select id="customerDd"></select></dd>
-                      <dt><label for="salesPersonDd">Salesperson</label></dt><dd><select id="salesPersonDd"></select></dd>
-                      <dt><label for="salesTeamDd">Sales Team</label></dt><dd><select id="salesTeamDd"></select></dd>
-                      <dt><label for="workflowDd">Stages</label></dt><dd id="selectWorkflow"><select id="workflowDd"></select></dd>
+                      <dt><label for="customerDd">Customer</label></dt><dd><a id="customerDd" class="current-selected" href="javascript:;"></a></dd>
+                      <dt><label for="salesPersonDd">Salesperson</label></dt><dd><a id="salesPersonDd" class="current-selected" href="javascript:;"></a></dd>
+                      <dt><label for="salesTeamDd">Sales Team</label></dt><dd><a id="salesTeamDd" class="current-selected" href="javascript:;"></a></dd>
+                      <dt><label for="workflowDd">Stages</label></dt><dd id="selectWorkflow"><a id="workflowDd" class="current-selected" href="javascript:;"></a></dd>
 
                       <dt><label for="nextActionDate">Next Action</label></dt><dd><input type="text" id="nextActionDate" maxlength="32" readonly/></dd>
                       <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" placeholder="Next Action Description" maxlength="32"/></dd>
                       <dt><label for="expectedClosing">Expected Closing</label></dt><dd><input type="text" id="expectedClosing" maxlength="32" readonly /></dd>
-                      <dt><label for="priorityDd">Priority</label></dt><dd><select id="priorityDd"></select></dd>
+                      <dt><label for="priorityDd">Priority</label></dt><dd>
+					  <a id="priorityDd" class="current-selected" href="javascript:;"></a></dd>
                     </dl>
                   </div>
                   <div class="clearfix"></div>

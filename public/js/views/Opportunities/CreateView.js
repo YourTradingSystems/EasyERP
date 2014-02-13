@@ -1,9 +1,10 @@
 define([
     "text!templates/Opportunities/CreateTemplate.html",
     "models/OpportunitiesModel",
-    "common"
+    "common",
+	"populate"
 ],
-    function (CreateTemplate, OpportunityModel, common) {
+    function (CreateTemplate, OpportunityModel, common, populate) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
@@ -14,6 +15,7 @@ define([
                 //var model = (options && options.model) ? options.model : null;
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {};
                 this.render();
             },
 
@@ -31,7 +33,32 @@ define([
                 "click .nextUserList":"nextUserList",
                 "change .inputAttach": "addAttach",
                 "click .deleteAttach": "deleteAttach",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click .current-selected": "showNewSelect",
+                "click": "hideNewSelect"
             },
+			notHide: function () {
+				return false;
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true);
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false);
+			},
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+            },
+			chooseOption:function(e){
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+			},
             
 
             keydownHandler: function(e){
@@ -264,13 +291,13 @@ define([
                     };
                 }
 
-                var customerId = this.$("#customerDd option:selected").val();
+                var customerId = this.$("#customerDd").data("id");
                 var email = $.trim($("#email").val());
 
 
-                var salesPersonId = this.$("#salesPersonDd option:selected").val();
+                var salesPersonId = this.$("#salesPersonDd").data("id");
                 
-                var salesTeamId = this.$("#salesTeamDd option:selected").val();
+                var salesTeamId = this.$("#salesTeamDd").data("id");
                 
                 var nextAct = $.trim(this.$el.find("#nextActionDate").val());
                 var nextActionDesc = $.trim(this.$el.find("#nextActionDescription").val());
@@ -281,7 +308,7 @@ define([
 
                 var expectedClosing = $.trim($("#expectedClosing").val());
                 
-                var priority = $("#priorityDd").val();
+                var priority = $("#priorityDd").text();
 
                 var company = $.trim($("#company").val());
 
@@ -311,7 +338,7 @@ define([
                     fax: fax
                 };
 
-                var workflow = this.$("#workflowDd option:selected").data('id');
+                var workflow = this.$("#workflowDd").data('id');
 
                 var active = ($("#active").is(":checked")) ? true : false;
 
@@ -466,12 +493,19 @@ define([
 
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
-                common.populateCustomers("#customerDd", "/Customer",this.model);
+				populate.getPriority("#priorityDd",this,true);
+				populate.get2name("#customerDd", "/Customer",{},this,true,true);
+				populate.get2name("#salesPersonDd", "/getForDdByRelatedUser",{},this,true,true);
+				populate.getWorkflow("#workflowDd","#workflowNamesDd","/WorkflowsForDd",{id:"Opportunities"},"name",this,true);
+				populate.get("#salesTeamDd", "/DepartmentsForDd",{},"departmentName",this,true,true);
+			
+/*                common.populateCustomers("#customerDd", "/Customer",this.model);
                 //common.populateEmployeesDd("#salesPerson"Dd, "/getSalesPerson");
                 common.populateEmployeesDd("#salesPersonDd", "/getForDdByRelatedUser", this.model);
                 common.populateDepartments("#salesTeamDd", "/DepartmentsForDd");
                 common.populatePriority("#priorityDd", "/Priority");
-                common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/WorkflowsForDd');
+                common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/WorkflowsForDd');*/
+				
                 this.delegateEvents(this.events);
                 return this;
             }
