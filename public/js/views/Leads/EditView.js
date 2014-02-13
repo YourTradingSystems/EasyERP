@@ -192,7 +192,7 @@ define([
             },
 
             hideDialog: function () {
-                $(".edit-leads-dialog").remove();
+                $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },
@@ -241,7 +241,7 @@ define([
                     last: last
                 };
 
-                var email = $.trim(this.$el.find("#mail").val());
+                var email = $.trim(this.$el.find("#email_person").val());
                 var func = $.trim(this.$el.find("#func").val());
 
                 var phone = $.trim(this.$el.find("#phone").val());
@@ -363,13 +363,13 @@ define([
 			},
 
             render: function () {
-				console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "edit-leads-dialog",
+					closeOnEscape: false,
+                    dialogClass: "edit-dialog",
                     width: 800,
                     buttons: {
                         save: {

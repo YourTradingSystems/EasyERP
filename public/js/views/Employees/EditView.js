@@ -163,7 +163,7 @@ define([
                 holder.closest(".dialog-tabs").find("a.active").removeClass("active");
                 holder.addClass("active");
                 var n = holder.parents(".dialog-tabs").find("li").index(holder.parent());
-                var dialog_holder = $(".dialog-tabs-items");
+                var dialog_holder = holder.closest(".dialog-tabs").parent().find(".dialog-tabs-items");
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
@@ -356,11 +356,17 @@ define([
                     var el = $(this);
                     homeAddress[el.attr("name")] = $.trim(el.val());
                 });
-
-                var dateBirthSt = $.trim(this.$el.find("#dateBirth").val());
+                // date parse 
+                var dateBirthSt = $.trim($("#dateBirth").val());
                 var dateBirth = "";
                 if (dateBirthSt) {
-                    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
+                	dateBirthArr = dateBirthSt.split("/");
+                    var newDateBirt = new Date();  
+                    newDateBirt.setFullYear(dateBirthArr[2]);
+                    newDateBirt.setMonth(dateBirthArr[1]-1);    
+                    newDateBirt.setDate(dateBirthArr[0]); 
+                    var fullDateBirt = newDateBirt.toUTCString();
+                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
                 }
                 var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
 
@@ -477,6 +483,7 @@ define([
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     dialogClass: "edit-employee-dialog",
                     width: 1000,
                     buttons:{
@@ -512,14 +519,13 @@ define([
                 });
                 
                 $('#dateBirth').datepicker({
+                	dateFormat: "d/m/yy",
                     changeMonth : true,
                     changeYear : true,
                     yearRange: '-100y:c+nn',
                     maxDate: '-1d'
                 });
                 var model = this.currentModel.toJSON();
-             
-                console.log(model.source);
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){
                         $(".groupsAndUser").show();

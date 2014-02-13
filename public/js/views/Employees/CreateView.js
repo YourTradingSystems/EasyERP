@@ -266,10 +266,18 @@ define([
                     var el = $(this);
                     homeAddress[el.attr("name")] = el.val();
                 });
+                // date parse 
                 var dateBirthSt = $.trim($("#dateBirth").val());
+               
                 var dateBirth = "";
                 if (dateBirthSt) {
-                    dateBirth = new Date(Date.parse(dateBirthSt)).toISOString();
+                	dateBirthArr = dateBirthSt.split("/");
+                    var newDateBirt = new Date();  
+                    newDateBirt.setFullYear(dateBirthArr[2]);
+                    newDateBirt.setMonth(dateBirthArr[1]-1);    
+                    newDateBirt.setDate(dateBirthArr[0]); 
+                    var fullDateBirt = newDateBirt.toUTCString();
+                    dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
                 }
                 var active = ($("#active").is(":checked")) ? true : false;
                 var sourceId = $("#sourceDd option:selected").val();
@@ -424,12 +432,11 @@ define([
                 common.populateDepartments("#departmentsDd", "/DepartmentsForDd");
                 common.populateJobPositions("#jobPositionDd", "/JobPositionForDd");
                 common.populateJobTypeDd("#jobTypeDd", "/jobType");
-                console.log(this.model.toJSON());
                 common.populateEmployeesDd("#coachDd", "/getPersonsForDd");
                 common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
-                    dateFormat: "d M, yy",
+                	dateFormat: "d/m/yy",
                     changeMonth: true,
                     changeYear: true,
                     yearRange: '-100y:c+nn',

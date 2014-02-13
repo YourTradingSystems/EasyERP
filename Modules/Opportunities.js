@@ -689,9 +689,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         function updateOpp() {
             var createPersonCustomer = function (company) {
                 if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
-                    var _person = {
+                	//add "phones:data.phones" convert phones (Vasya)
+                	var _person = {
                         name: data.contactName,
                         email: data.email,
+                        phones:data.phones,
                         company: company._id,
                         salesPurchases: {
                             isCustomer: true,
@@ -776,15 +778,17 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     } else {
                         if (data.createCustomer) {                       //�������� ���������
                             console.log('************Cre Cust***********');
-                            console.log(data.tempCompanyField);
+                            console.log(data);
                             console.log('*******************************');
                             if (data.tempCompanyField) {                          //�������� �������
-                                var _company = {
+                            	//add " address:data.address" convert address (Vasya)
+                            	var _company = {
                                     name: {
                                         first: data.tempCompanyField,
                                         last: ''
                                     },
-                                    email: data.email,
+                                    address:data.address,
+                                    //email: data.email,
                                     salesPurchases: {
                                         isCustomer: true,
                                         salesPerson: data.salesPerson

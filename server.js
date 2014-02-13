@@ -990,7 +990,6 @@ app.put('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
     data = {};
     var _id = req.param('_id');
-    data.mid = req.headers.mid;
     data.status = req.body.status;
     data.name = req.body.name;
     data.wName = req.body.wName;
@@ -998,6 +997,15 @@ app.put('/Workflows/:_id', function (req, res) {
     requestHandler.updateWorkflow(req, res, _id, data);
 });
 
+app.patch('/Workflows/:_id', function (req, res) {
+    console.log('Request for update Workflow');
+    data = {};
+    var _id = req.param('_id');
+	for (var i in req.body) {
+        data[i] = req.body[i];
+    }
+    requestHandler.updateWorkflowOnlySelectedField(req, res, _id, data);
+});
 app.delete('/Workflows/:_id', function (req, res) {
     data = {};
     var _id = req.param('_id');

@@ -393,7 +393,7 @@
         .bold;
         width: 90%;
         height: 30px;
-        line-height: 23px;
+        line-height: 26px;
     }
 
     input {
@@ -1066,11 +1066,17 @@
 
             .inner {
                 padding: 5px;
-              .application-header{
-
-              }
                 p{
                     width: 100%;
+					&.width-auto{
+						width:auto;
+					}
+					&.text-right{
+						text-align:right;
+					}
+					&.red{
+						color:#FF2121;
+					}
                 }
             }
 
@@ -1456,10 +1462,10 @@
 				margin-top:5px !important;
 			}
 			&.taskDescriptionCreate{
-				height:255px;
+				height:250px;
 			}
 			&.projectDescriptionCreate{
-				height:270px;
+				height:200px;
 			}
 
 		}
@@ -1495,7 +1501,7 @@
             margin-top: 11px;
 
             input {
-                width: 100% !important;
+                width: 95% !important;
 					}
 				}
 				}
@@ -2594,6 +2600,9 @@ dl {
 
 .person-info, .customer-info {
     .dl-auto;
+}
+.project-edit-info{
+	.dl-auto(200px,40%);
 }
 .edit-employee-info {
 	.dl-auto(200px,40%);
@@ -3958,6 +3967,27 @@ h3.dashboard {
 
 }
 .form-holder form{
+	.project-edit-info{
+		.dl-auto(200px,42%);
+		input{
+			width:220px;
+		}
+		select{
+			width:232px;
+		}
+
+	}
+	.job-create-info{
+		.dl-auto(200px,42%);
+		input{
+			width:205px !important;
+		}
+		select{
+			width:212px;
+		}
+
+	}
+
 	.create-employee-info {
 		.dl-auto(200px,40%);
 		input{
@@ -4016,4 +4046,54 @@ h3.dashboard {
 		margin-top:5px;
 	}
 
+}
+#workflows{
+	width:603px;
+	.row{			
+		width:403px;
+		height:30px;
+		line-height:30px;
+		margin:2px 0;
+		border: 1px solid #CCC;
+		background: #F5F5F5;
+		font-weight: bold;
+		.edit-status{
+			display:none;
+		}
+
+		&:hover{
+			background: #FFF;
+			width:403px;
+			display:block;
+			.edit-status{
+				float:right;
+				width:80px;
+				display:block;
+				text-align:right;
+				a{
+					padding-right:5px;
+				}
+			}
+			div.status, {
+				width:90px;
+			}
+		}
+		>div{
+			padding-left:10px;
+			width:190px;
+			float:left;
+		}
+		.status-edit{
+			width:90px;
+		}
+		.SaveCancel{
+			float:right;
+			width:80px;
+			display:block;
+			text-align:right;
+			a{
+				padding-right:5px;
+			}
+		}
+	}
 }
