@@ -46,10 +46,10 @@ define([
             },
 
 			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
+				this.showNewSelect(e,false,true);
 			},
 			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
+				this.showNewSelect(e,true,false);
 			},
             keydownHandler: function(e){
                 switch (e.which){
@@ -429,6 +429,7 @@ define([
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     dialogClass: "edit-dialog create-app-dialog",
                     width: 690,
                     title: "Create Application",

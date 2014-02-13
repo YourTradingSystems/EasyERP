@@ -60,15 +60,11 @@
                   <dl class="person-info">
                     <dt><label for="employeesDd">Sales Person </label></dt>
                     <dd>
-                      <select id="employeesDd">
-
-                      </select>
+					  <a id="employeesDd" data-id="<%=(model.salesPurchases.salesPerson)?model.salesPurchases.salesPerson._id:""%>" class="current-selected" href="javascript:;"><%=(model.salesPurchases.salesPerson)?(model.salesPurchases.salesPerson.name.first+" "+model.salesPurchases.salesPerson.name.last):"Select"%></a>
                     </dd>
                     <dt><label for="departmentDd">Sales Team </label></dt>
                     <dd>
-                      <select id="departmentDd">
-
-                      </select>
+					  <a id="departmentDd" data-id="<%=(model.salesPurchases.salesTeam)?model.salesPurchases.salesTeam._id:""%>" class="current-selected" href="javascript:;"><%=(model.salesPurchases.salesTeam)?(model.salesPurchases.salesTeam.departmentName):"Select"%></a>
                     </dd>
                   </dl>
                 </div>

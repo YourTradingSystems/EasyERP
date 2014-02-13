@@ -41,12 +41,11 @@ define([
 			notHide: function () {
 				return false;
             },
-
 			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
+				this.showNewSelect(e,false,true);
 			},
 			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
+				this.showNewSelect(e,true,false);
 			},
             showNewSelect:function(e,prev,next){
                 populate.showSelect(e,prev,next,this);

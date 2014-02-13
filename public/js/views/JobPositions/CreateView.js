@@ -255,9 +255,10 @@ define([
                 var formString = this.template({});
 
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
-                    dialogClass:"create-dialog",
+                    dialogClass:"edit-dialog",
                     title: "Edit Job position",
                     width:"900",
                     buttons: [

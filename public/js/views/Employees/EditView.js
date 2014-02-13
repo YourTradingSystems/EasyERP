@@ -34,7 +34,6 @@ define([
                 "click #tabList a": "switchTab",
                 "mouseenter .avatar": "showEdit",
                 "mouseleave .avatar": "hideEdit",
-                'keydown': 'keydownHandler',
                 "click .deleteAttach": "deleteAttach",
                 "change .inputAttach": "addAttach",
                 'click .dialog-tabs a': 'changeTab',
@@ -484,7 +483,7 @@ define([
                 var self = this;
                 this.$el = $(formString).dialog({
 					closeOnEscape: false,
-                    dialogClass: "edit-employee-dialog",
+                    dialogClass: "edit-dialog",
                     width: 1000,
                     buttons:{
                         save:{

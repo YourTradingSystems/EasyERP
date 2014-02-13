@@ -151,6 +151,9 @@ define([
                 var formString = this.template({profilesCollection:this.getProfilesForDropDown()});
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
+                    autoOpen: true,
+                    resizable: true,
                     dialogClass: "edit-dialog",
                     width: 600,
                     title: "Create Profile",

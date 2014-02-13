@@ -4,9 +4,10 @@ define([
     "collections/Employees/EmployeesCollection",
     "collections/Persons/PersonsCollection",
     "collections/Departments/DepartmentsCollection",
-    "common"
+    "common",
+	"populate"
 ],
-    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common) {
+    function (EditTemplate, CompaniesCollection, EmployeesCollection, PersonsCollection, DepartmentsCollection, common, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -19,6 +20,7 @@ define([
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {};
                 this.render();
             },
 
@@ -367,14 +369,20 @@ define([
                     //closeOnEscape: false,
                     modal: true
                 });
-			    $('#text').datepicker({ dateFormat: "d M, yy" });
+				$('#text').datepicker({ dateFormat: "d M, yy" });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+
+				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this);
+				populate.get("#language", "/Languages",{},"name",this);
+				populate.get2name("#employeesDd", "/getSalesPerson",{},this);
+				/*
                 common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect("#departmentDd"); });
 			    common.populateEmployeesDd("#employeesDd", "/getSalesPerson", this.currentModel.toJSON(), function () { self.styleSelect("#employeesDd"); });
-			    this.styleSelect('#language');
-			    this.delegateEvents(this.events);
+			    this.styleSelect('#language');*/
+				
+				this.delegateEvents(this.events);
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
                 var model = this.currentModel.toJSON();
                 if (model.groups)

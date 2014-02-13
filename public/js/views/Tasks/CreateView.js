@@ -29,7 +29,6 @@ define([
                    "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                    "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                    "click": "hideNewSelect",
-                   'keydown': 'keydownHandler',
                    "change .inputAttach": "addAttach",
                    "click .deleteAttach": "deleteAttach",
                    "keypress #logged, #estimated": "isNumberKey"
@@ -237,6 +236,7 @@ define([
                    var formString = this.template();
                    var self = this;
                    this.$el = $(formString).dialog({
+					   closeOnEscape: false,
                        dialogClass: "edit-dialog",
                        width: 500,
                        title: "Create Task",

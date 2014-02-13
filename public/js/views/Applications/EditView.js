@@ -553,7 +553,8 @@
                 });
                 var self = this;
                 this.$el = $(formString).dialog({
-                    dialogClass: "applications-edit-dialog",
+					closeOnEscape: false,
+                    dialogClass: "edit-dialog",
                     width: 690,
                     title: "Edit Application",
                     buttons: {

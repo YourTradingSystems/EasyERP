@@ -1526,6 +1526,9 @@ app.get('/Campaigns', function (req, res) {
 app.get('/sources', function (req, res) {
     requestHandler.getSources(req, res);
 });
+app.get('/Languages', function (req, res) {
+    requestHandler.getLanguages(req, res);
+});
 
 //----------------------Leads----------------------------------------------------------------
 app.get('/LeadsForChart', function (req, res) {

@@ -68,8 +68,11 @@ define([
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
+                    autoOpen: true,
                     dialogClass: "edit-dialog",
                     width: "800",
+                    resizable: true,
                     title: "Create User",
                     buttons:{
                         save:{

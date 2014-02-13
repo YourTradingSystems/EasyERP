@@ -321,9 +321,10 @@ define([
                 var formString = this.template({});
 				var self = this;
                 this.$el = $(formString).dialog({
+					closeOnEscape: false,
                     autoOpen:true,
                     resizable:true,
-					dialogClass:"create-dialog",
+					dialogClass:"edit-dialog",
 					title: "Edit Company",
 					width:"800",
                     buttons: [

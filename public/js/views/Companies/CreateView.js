@@ -4,9 +4,10 @@ define([
     "collections/Employees/EmployeesCollection",
     "collections/Departments/DepartmentsCollection",
     "models/CompaniesModel",
-    "common"
+    "common",
+	"populate"
 ],
-    function (CreateTemplate, CompaniesCollection, EmployeesCollection, DepartmentsCollection, CompanyModel, common) {
+    function (CreateTemplate, CompaniesCollection, EmployeesCollection, DepartmentsCollection, CompanyModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -18,6 +19,7 @@ define([
                 this.model = new CompanyModel();
                 this.page=1;
                 this.pageG=1;
+				this.responseObj = {};
                 this.render();
             },
 
@@ -33,9 +35,34 @@ define([
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
                 "click .prevUserList":"prevUserList",
-                "click .nextUserList":"nextUserList"
-            },
+                "click .nextUserList":"nextUserList",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click .current-selected": "showNewSelect",
+                "click": "hideNewSelect",
 
+            },
+			notHide: function () {
+				return false;
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+			nextSelect:function(e){
+				this.showNewSelect(e,false,true);
+			},
+			prevSelect:function(e){
+				this.showNewSelect(e,true,false);
+			},
+            showNewSelect:function(e,prev,next){
+                populate.showSelect(e,prev,next,this);
+                return false;
+            },
+			chooseOption:function(e){
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+			},
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -240,15 +267,15 @@ define([
 
                 var internalNotes = $.trim(this.$el.find("#internalNotes").val());
 
-                var salesPerson = this.$("#employeesDd option:selected").val();
+                var salesPerson = this.$("#employeesDd").data("id");
                 //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
-                var salesTeam = this.$("#departmentDd option:selected").val();
+                var salesTeam = this.$("#departmentDd").data("id");
                 //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var reference = $.trim(this.$el.find("#reference").val());
 
-                var language = $.trim(this.$el.find("#language").val());
+                var language = $.trim(this.$el.find("#language").text());
 
                 var isCustomer = (this.$el.find("#isCustomer").is(":checked")) ? true : false;
 
@@ -341,9 +368,9 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateDepartments("#departmentDd", "/DepartmentsForDd");
-                common.populateEmployeesDd("#employeesDd", "/getSalesPerson");
-                common.canvasDraw({ model: companyModel.toJSON() }, this);
+				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,true,true);
+				populate.get("#language", "/Languages",{},"name",this,true,false);
+				populate.get2name("#employeesDd", "/getSalesPerson",{},this,true,false);
                 this.$el.find('#date').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,

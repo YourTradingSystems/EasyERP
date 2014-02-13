@@ -17,6 +17,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         opportunities = require("./Modules/Opportunities.js")(logWriter, mongoose, customer, workflow, department, models, event),
         modules = require("./Modules/Module.js")(logWriter, mongoose, profile, models),
         sources = require("./Modules/Sources.js")(logWriter, mongoose, models),
+        languages = require("./Modules/Languages.js")(logWriter, mongoose, models),
         jobType = require("./Modules/JobType.js")(logWriter, mongoose, models),
         birthdays = require("./Modules/Birthdays.js")(logWriter, mongoose, employee, models, event);
 
@@ -2247,6 +2248,13 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     }
+    function getLanguages(req, res) {
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            languages.getForDd(req, res);
+        } else {
+            res.send(401);
+        }
+    }
 
     // Get  Persons or Companies or ownCompanies total count
     function customerTotalCollectionLength(req, res) {
@@ -2429,6 +2437,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         changeSyncCalendar: changeSyncCalendar,
 
         getSources: getSources,
+		getLanguages:getLanguages,
         getJobType: getJobType,
         customerTotalCollectionLength: customerTotalCollectionLength
 
