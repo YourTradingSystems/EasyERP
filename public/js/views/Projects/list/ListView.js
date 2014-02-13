@@ -293,7 +293,7 @@ define([
                         }
                     });
                     that.listLength--;
-                    localCounter++
+                    localCounter++;
                 });
                 this.defaultItemsNumber = $("#itemsNumber").text();
                 this.deleteCounter = localCounter;
