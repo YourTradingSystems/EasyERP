@@ -241,7 +241,7 @@ define([
                     last: last
                 };
 
-                var email = $.trim(this.$el.find("#mail").val());
+                var email = $.trim(this.$el.find("#email_person").val());
                 var func = $.trim(this.$el.find("#func").val());
 
                 var phone = $.trim(this.$el.find("#phone").val());
@@ -363,7 +363,6 @@ define([
 			},
 
             render: function () {
-				console.log(this.currentModel.toJSON());
                 var formString = this.template({
                     model: this.currentModel.toJSON()
                 });

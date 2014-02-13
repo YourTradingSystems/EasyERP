@@ -240,7 +240,7 @@ define([
                     first: first,
                     last: last
                 };
-                var email = $.trim(this.$el.find("#mail").val());
+                var email = $.trim(this.$el.find("#email").val());
                 var func = $.trim(this.$el.find("#func").val());
 
                 var phone = $.trim(this.$el.find("#phone").val());
