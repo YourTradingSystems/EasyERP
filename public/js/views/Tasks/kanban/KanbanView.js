@@ -306,8 +306,6 @@
                                 patch: true,
                                 validate: false,
                                 success: function (model2) {
-                                    console.log(model2.toJSON());
-
                                     self.updateSequence(ui.item, column.attr("id"), sequence, workStart, secStart);
 
                                     collection.add(model2, { merge: true });
