@@ -10,7 +10,8 @@ define([
                template: _.template(DashboardTemplate),
                el: '#content-holder',
                initialize: function (options) {
-                   this.render();
+            	   this.startTime = options.startTime;
+            	   this.render();
                },
                events: {
                    "click .choseDateRange .item": "newRange"
@@ -109,6 +110,7 @@ define([
 				   this.renderProjectPM();
 				   this.renderProjectStatus();
 				   this.renderProjectEnd();
+				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
                }
 		   });
            return ContentView;
