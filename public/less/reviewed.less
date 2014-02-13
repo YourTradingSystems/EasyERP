@@ -4025,20 +4025,51 @@ h3.dashboard {
 }
 #workflows{
 	width:603px;
-	.row{
+	.row{			
+		width:403px;
 		height:30px;
 		line-height:30px;
 		margin:2px 0;
 		border: 1px solid #CCC;
 		background: #F5F5F5;
 		font-weight: bold;
+		.edit-status{
+			display:none;
+		}
+
 		&:hover{
 			background: #FFF;
+			width:403px;
+			display:block;
+			.edit-status{
+				float:right;
+				width:80px;
+				display:block;
+				text-align:right;
+				a{
+					padding-right:5px;
+				}
+			}
+			div.status, {
+				width:90px;
+			}
 		}
 		>div{
-			text-align:center;
-			width:200px;
+			padding-left:10px;
+			width:190px;
 			float:left;
+		}
+		.status-edit{
+			width:90px;
+		}
+		.SaveCancel{
+			float:right;
+			width:80px;
+			display:block;
+			text-align:right;
+			a{
+				padding-right:5px;
+			}
 		}
 	}
 }

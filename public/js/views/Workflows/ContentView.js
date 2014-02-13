@@ -284,7 +284,7 @@ define([
 				   var mid = 39;
 				   e.preventDefault();
 				   $("#addNewStatus").hide();
-				   $("#workflows").append("<div class='addnew row'><div><input type='text' class='nameStatus' maxlength='32' required /></div><div><select id='statusesDd'></select></div><div class='SaveCancel'><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></div></div>");
+				   $("#workflows").append("<div class='addnew row'><div><input type='text' class='nameStatus' maxlength='32' required /></div><div class='status-edit'><select id='statusesDd'></select></div><div class='SaveCancel'><a href='javascript:;' id='saveStatus'>Save</a><a  href='javascript:;' id='cancelStatus'>Cancel</a></div></div>");
 				   var targetParent = $(e.target).parent();
 				   var target = $(e.target);
 				   var td = target.parent();
@@ -369,13 +369,13 @@ define([
 				   targetInput.closest("li").append(
                        $("<input class='wNameEdit' maxlength='32' type='text' value = '"+text+"' required />")
 				   );
-				   targetInput.closest("li").append("<span class='save-status'><a href='#' class='saveAll'>Save</a> <a href='#' class='cancelAll'>Cancel</a></span>");
+				   targetInput.closest("li").append("<span class='save-status'><a href='#' class='saveAll'>Save</a><a href='#' class='cancelAll'>Cancel</a></span>");
 				   
 			   },
 			   
 			   quickEdit:function(e){
 
-        		   $(".workflow-sub-list li#" + e.target.id).append("<span class='edit-holder'><a href='#' class='editAll'>Edit</a>&nbsp;<a href='#' class='deleteAll'>Delete</a></span>");
+        		   $(".workflow-sub-list li#" + e.target.id).append("<span class='edit-holder'><a href='#' class='editAll'>Edit</a><a href='#' class='deleteAll'>Delete</a></span>");
 			   },
 			   removeEdit:function(){
         		   $(".edit-holder").remove();
