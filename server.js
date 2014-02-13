@@ -1679,6 +1679,12 @@ app.delete('/Opportunities/:viewType/:_id', function (req, res) {
     data.mid = req.headers.mid;
     requestHandler.removeOpportunitie(req, res, id, data);
 });
+app.delete('/Opportunities/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeOpportunitie(req, res, id, data);
+});
 //-------------------Events--------------------------------
 //---------------------Opportunities---------------------
 app.post('/Events', function (req, res) {
