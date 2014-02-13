@@ -47,7 +47,7 @@ define([
                 "click .newSelectList li": "chooseOption",
                 "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-                "click tr": "goToEditDialog"
+                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog"
             },
 
             goToEditDialog: function (e) {
@@ -267,6 +267,15 @@ define([
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);
                     }
+                }
+            },
+
+            deleteItemsRender: function (deleteCounter, deletePage) {
+                this.deleteRender(deleteCounter, deletePage);
+                if (deleteCounter !== this.collectionLength) {
+                    var holder = this.$el;
+                    var created = holder.find('#timeRecivingDataFromServer');
+                    created.before(new listItemView({ collection: this.collection }).render());
                 }
             },
 

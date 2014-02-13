@@ -146,17 +146,17 @@ define([
                         sequenceStart: model.toJSON().sequence,
                         workflowStart: model.toJSON().workflow._id
                     },
-                        {
-                            headers:
-                                {
-                                    mid: 39
-                                },
-                            patch: true,
-                            validate: false,
-                            success: function () {
-                                that.showFilteredPage();
-                            }
-                        });
+                    {
+                        headers:
+                            {
+                                mid: 39
+                            },
+                        patch: true,
+                        validate: false,
+                        success: function () {
+                            that.showFilteredPage();
+                        }
+                    });
                 } else if (selectType == 'type') {
                     id = targetParrentElement.attr("id").replace("type_", "");
                     model = this.collection.get(id);
@@ -165,18 +165,18 @@ define([
                     model.save({
                         type: type,
                     },
-                        {
-                            headers:
-                                {
-                                    mid: 39
-                                },
-                            patch: true,
-                            validate: false,
-                            success: function (model) {
-                                //that.showFilteredPage();//When add filter by Type, then uncoment this code
-                                targetParrentElement.find('#' + model.id).text(type);
-                            }
-                        });
+                    {
+                        headers:
+                            {
+                                mid: 39
+                            },
+                        patch: true,
+                        validate: false,
+                        success: function (model) {
+                            //that.showFilteredPage();//When add filter by Type, then uncoment this code
+                            targetParrentElement.find('#' + model.id).text(type);
+                        }
+                    });
                 }
                 this.hideNewSelect();
                 return false;
@@ -216,100 +216,11 @@ define([
             },
 
             deleteItemsRender: function (deleteCounter, deletePage) {
-                this.startTime = new Date();
-                var self = this;
-                $('.task-list').find("input").prop("checked", false);
-                $("#top-bar-deleteBtn").hide();
-                var itemsNumber = parseInt($("#itemsNumber").text());
-
-                if (deleteCounter == this.collectionLength) {
-                    var pageNumber = Math.ceil(this.listLength / itemsNumber);
-                    if (deletePage > 1) {
-                        deletePage = deletePage - 1;
-                    }
-                    if ((deletePage == 1) && (pageNumber > 1)) {
-                        deletePage = 1
-                    }
-                    if (((deletePage == 1) && (pageNumber == 0)) || (deletePage == 0)) {
-                        deletePage = 0
-                    }
-
-                    if (deletePage == 0) {
-                        $("#grid-start").text(0);
-                        $("#grid-end").text(0);
-                        $("#grid-count").text(0);
-                        $("#previousPage").prop("disabled", true);
-                        $("#nextPage").prop("disabled", true);
-                        $("#currentShowPage").val(0);
-                        $("#lastPage").text(0);
-                        $("#pageList").empty();
-                        $("#listTable").empty();
-                    } else {
-                        $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
-                        $("#grid-end").text(deletePage * itemsNumber);
-                        $("#grid-count").text(this.listLength);
-                        $("#currentShowPage").val(deletePage);
-                        $("#pageList").empty();
-
-                        for (var i = 1; i <= pageNumber; i++) {
-                            $("#pageList").append('<li class="showPage">' + i + '</li>')
-                        }
-                        $("#lastPage").text(pageNumber);
-
-                        if (deletePage <= 1) {
-                            $("#previousPage").prop("disabled", true);
-                            $("#nextPage").prop("disabled", false);
-                        }
-                        if (deletePage >= pageNumber) {
-                            $("#nextPage").prop("disabled", true);
-                            $("#previousPage").prop("disabled", false);
-                        }
-                        if ((1 < deletePage) && (deletePage < pageNumber)) {
-                            $("#nextPage").prop("disabled", false);
-                            $("#previousPage").prop("disabled", false);
-                        }
-                        if ((deletePage == pageNumber) && (pageNumber == 1)) {
-                            $("#previousPage").prop("disabled", true);
-                            $("#nextPage").prop("disabled", true);
-                        }
-
-                        _.bind(this.collection.showMore, this.collection);
-                        this.collection.showMore({ count: itemsNumber, page: deletePage, parrentContentId: this.parrentContentId });
-                    }
-                } else {
-                    $("#listTable").empty()
-                    this.$el.append(new listItemView({ collection: this.collection }).render());
-
-                    $("#grid-start").text((deletePage - 1) * itemsNumber + 1);
-                    $("#grid-end").text((deletePage - 1) * itemsNumber + this.collectionLength - deleteCounter);
-                    $("#grid-count").text(this.listLength);
-                    $("#currentShowPage").val(deletePage);
-
-                    $("#pageList").empty();
-                    var pageNumber = Math.ceil(this.listLength / itemsNumber);
-                    for (var i = 1; i <= pageNumber; i++) {
-                        $("#pageList").append('<li class="showPage">' + i + '</li>')
-                    }
-                    $("#lastPage").text(pageNumber);
-
-                    if (deletePage <= 1) {
-                        $("#previousPage").prop("disabled", true);
-                        $("#nextPage").prop("disabled", false);
-                    }
-                    if (deletePage >= pageNumber) {
-                        $("#nextPage").prop("disabled", true);
-                        $("#previousPage").prop("disabled", false);
-                    }
-                    if ((1 < deletePage) && (deletePage < pageNumber)) {
-                        $("#nextPage").prop("disabled", false);
-                        $("#previousPage").prop("disabled", false);
-                    }
-                    if ((deletePage == pageNumber) && (pageNumber == 1)) {
-                        $("#previousPage").prop("disabled", true);
-                        $("#nextPage").prop("disabled", true);
-                    }
-                    $('#timeRecivingDataFromServer').remove();
-                    this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+                this.deleteRender(deleteCounter, deletePage);
+                if (deleteCounter !== this.collectionLength) {
+                    var holder = this.$el;
+                    var created = holder.find('#timeRecivingDataFromServer');
+                    created.before(new listItemView({ collection: this.collection }).render());
                 }
             },
 

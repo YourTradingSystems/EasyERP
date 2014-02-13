@@ -8,9 +8,10 @@
     'collections/Tasks/TasksCollection',
     'models/TasksModel',
     'dataService',
+    'common',
 	'populate'
 ],
-    function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, TasksCollection, CurrentModel, dataService, populate) {
+    function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, KanbanItemView, EditView, CreateView, TasksCollection, CurrentModel, dataService, common, populate) {
         var collection = new TasksCollection();
         var TasksKanbanView = Backbone.View.extend({
             el: '#content-holder',
@@ -190,6 +191,16 @@
                 }, this);
             },
 
+            asyncLoadImgs: function (collection) {
+                var arr = _.filter(collection, function (item) {
+                    return item.assignedTo !== undefined;
+                });
+                var ids = _.map(arr, function (item) {
+                    return item.assignedTo._id;
+                });
+                common.getImages(ids, "/getEmployeesImages");
+            },
+
             asyncRender: function (response, context) {
                 var contentCollection = new TasksCollection();
                 contentCollection.set(contentCollection.parse(response));
@@ -207,6 +218,7 @@
                     var curEl = kanbanItemView.render().el;
                     column.append(curEl);
                 }, this);
+                context.asyncLoadImgs(response.data);
             },
 
             editItem: function () {
@@ -259,9 +271,9 @@
                 _.each(workflows, function (workflow, i) {
                     itemCount = 0;
                     var column = this.$(".column").eq(i);
-                    var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
+                    //var count = " <span>(<span class='counter'>" + itemCount + "</span> / </span>";
                     var total = " <span><span class='totalCount'>" + itemCount + "</span> </span>";
-                    var remaining = " <span><span class='remaining'>" + itemCount + "</span> </span>";
+                    //var remaining = " <span><span class='remaining'>" + itemCount + "</span> </span>";
                     //column.find(".columnNameDiv h2").append(count).append(total).append(remaining);
                     column.find(".columnNameDiv h2").append(total);
                 }, this);

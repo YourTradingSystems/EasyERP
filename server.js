@@ -838,10 +838,11 @@ app.post('/Tasks', function (req, res) {
     requestHandler.createTask(req, res, data);
 });
 
-app.get('/Tasks', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getTasks(req, res, data);
+app.get('/Tasks', function (req, res) {//---------------Remove this method in future
+    //data = {};
+    //data.mid = req.param('mid');
+    //requestHandler.getTasks(req, res, data);
+    console.log('------------>--------->-----chackingGetTasks----<-----');
 });
 
 app.get('/Tasks/:viewType', function (req, res) {
@@ -1402,7 +1403,7 @@ app.get('/getEmployeesAlphabet', function (req, res) {
 
 app.get('/getEmployeesImages', function (req, res) {
     data = {};
-    data.ids = req.param('ids');
+    data.ids = req.param('ids') || [];
     requestHandler.getEmployeesImages(req, res, data);
 });
 
@@ -1676,6 +1677,12 @@ app.patch('/Opportunities/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Opportunities/:viewType/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    data.mid = req.headers.mid;
+    requestHandler.removeOpportunitie(req, res, id, data);
+});
+app.delete('/Opportunities/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;

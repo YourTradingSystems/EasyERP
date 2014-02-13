@@ -1218,12 +1218,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 logWriter.log("Opportunities.js remove opportunitie.remove " + err);
                 res.send(500, { error: "Can't remove Opportunities" });
             } else {
-                console.log(result);
                 if (result.isOpportunitie) {
-                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true, function () {
-                        res.send(200, { success: 'Opportunities removed' });
-                    });
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true);
                 }
+                res.send(200, { success: 'Opportunities removed' });
             }
         });
     }// end remove
