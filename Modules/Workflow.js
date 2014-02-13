@@ -16,7 +16,49 @@ var Workflow = function (logWriter, mongoose, models) {
 
     mongoose.model('workflows', workflowSchema);
     mongoose.model('relatedStatus', relatedStatusSchema);
+	function updateSequence (model, sequenceField, start, end, wId, isCreate, isDelete, callback) {
+        var query;
+        var objFind = {};
+        var objChange = {};
 
+        if (!(isCreate || isDelete)) {
+            var inc = -1;
+            if (start > end) {
+                inc = 1;
+                var c = end;
+                end = start;
+                start = c;
+            } else {
+                end -= 1;
+            }
+            objChange = {};
+            objFind = { "wId": wId };
+            objFind[sequenceField] = { $gte: start, $lte: end };
+            objChange[sequenceField] = inc;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec(function (err, res) {
+				console.log(res);
+                if (callback) callback((inc == -1) ? end : start);
+            });
+        } else {
+            if (isCreate) {
+                query = model.count({ "wId": wId }).exec(function (err, res) {
+                    if (callback) callback(res);
+                });
+            }
+            if (isDelete) {
+                objChange = {};
+                objFind = { "wId": wId };
+                objFind[sequenceField] = { $gt: start };
+                objChange[sequenceField] = -1;
+                query = model.update(objFind, { $inc: objChange }, { multi: true });
+                query.exec(function (err, res) {
+                    if (callback) callback(res);
+                });
+            }
+        }
+
+    }
     return {
         create: function (req, data, result) {
             try {
@@ -30,12 +72,14 @@ var Workflow = function (logWriter, mongoose, models) {
                             return;
                         } else {
                             for (var i = 0; i < data.value.length; i++) {
-                                _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
+								var _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
                                 _workflow.wId = data._id;
                                 _workflow.wName = data.wName;
                                 _workflow.name = data.value[i].name;
                                 _workflow.status = data.value[i].status;
-                                _workflow.sequence = data.value[i].sequence;
+								updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", 0, 0, data._id, true, false, function(sequence){
+                                    _workflow.sequence = sequence;
+
                                 _workflow.save(function (err, workfloww) {
                                     if (err) {
                                         console.log(err);
@@ -46,9 +90,9 @@ var Workflow = function (logWriter, mongoose, models) {
                                         console.log(workfloww);
                                     }
                                 });
-                            }
-                        }
-
+								});
+							}
+						}
                     });
                 }
             }
@@ -80,7 +124,30 @@ var Workflow = function (logWriter, mongoose, models) {
                 logWriter.log("Workflow.js  create " + exception);
             }
         },
-
+        updateOnlySelectedFields: function (req, _id, data, result) {
+			console.log('>>>>>>>Incoming Workflow Update>>>>>>>');
+            try {
+                if (data) {
+					updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", data.sequenceStart, data.sequence, data.wId, false, false, function(sequence){
+						data.sequence = sequence;
+						models.get(req.session.lastDb - 1, "workflows", workflowSchema).findByIdAndUpdate( _id, {$set:data}, function (err, res) {
+							if (err) {
+								console.log(err);
+								logWriter.log('WorkFlow.js update workflow.update ' + err);
+								result.send(400, { error: 'WorkFlow.js update workflow error ' });
+								return;
+							} else {
+								console.log(res);
+								result.send(200, { success: 'WorkFlow update success' });
+							}
+						});
+					});
+                }
+            }
+            catch (exception) {
+                logWriter.log("Workflow.js  create " + exception);
+            }
+        },
         getWorkflowsForDd: function (req, data, response) {
             var res = {};
             res['data'] = [];
@@ -109,7 +176,7 @@ var Workflow = function (logWriter, mongoose, models) {
                     var query = (data.id) ? { wId: data.id } : {};
                     if (data.name) query['name'] = data.name
                     var query2 = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find(query);
-                    query2.sort({ 'sequence': 1 });
+                    query2.sort({ 'sequence': -1 });
                     query2.exec(query, function (err, result) {
                         if (err) {
                             console.log(err);
@@ -181,13 +248,15 @@ var Workflow = function (logWriter, mongoose, models) {
         },
 
         remove: function (req, _id, res) {
-            models.get(req.session.lastDb - 1, "workflows", workflowSchema).remove({ _id: _id }, function (err, workflow) {
+            models.get(req.session.lastDb - 1, "workflows", workflowSchema).findByIdAndRemove( _id, function (err, workflow) {
                 if (err) {
                     console.log(err);
                     logWriter.log("workflow.js remove workflow.remove " + err);
                     res.send(500, { error: "Can't remove Company" });
                 } else {
-                    res.send(200, { success: 'workflow removed' });
+					updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", workflow.sequence, workflow.sequence, workflow.wId, false, true, function(sequence){
+						res.send(200, { success: 'workflow removed' });
+					});
                 }
             });
         },

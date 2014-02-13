@@ -163,7 +163,7 @@ define([
                 holder.closest(".dialog-tabs").find("a.active").removeClass("active");
                 holder.addClass("active");
                 var n = holder.parents(".dialog-tabs").find("li").index(holder.parent());
-                var dialog_holder = $(".dialog-tabs-items");
+                var dialog_holder = holder.closest(".dialog-tabs").parent().find(".dialog-tabs-items");
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },

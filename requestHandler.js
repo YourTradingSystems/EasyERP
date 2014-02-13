@@ -997,6 +997,21 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+    function updateWorkflowOnlySelectedField(req, res, _id, data) {
+        console.log("Requst updateWorkflow is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 44, function (access) {
+                if (access) {
+                    workflow.updateOnlySelectedFields(req, _id, data, res);
+                } else {
+                    res.send(403);
+                }
+            });
+
+        } else {
+            res.send(401);
+        }
+    };
 
     function removeWorkflow(req, res, _id, data) {
         console.log("Requst removeWorkflow is success");
@@ -2322,6 +2337,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         updateWorkflow: updateWorkflow,
         getWorkflowsForDd: getWorkflowsForDd,
         removeWorkflow: removeWorkflow,
+		updateWorkflowOnlySelectedField:updateWorkflowOnlySelectedField,
 
         jobPositionsTotalCollectionLength: jobPositionsTotalCollectionLength,
         getJobPosition: getJobPosition,

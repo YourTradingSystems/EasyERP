@@ -1066,11 +1066,17 @@
 
             .inner {
                 padding: 5px;
-              .application-header{
-
-              }
                 p{
                     width: 100%;
+					&.width-auto{
+						width:auto;
+					}
+					&.text-right{
+						text-align:right;
+					}
+					&.red{
+						color:#FF2121;
+					}
                 }
             }
 
@@ -4016,4 +4022,23 @@ h3.dashboard {
 		margin-top:5px;
 	}
 
+}
+#workflows{
+	width:603px;
+	.row{
+		height:30px;
+		line-height:30px;
+		margin:2px 0;
+		border: 1px solid #CCC;
+		background: #F5F5F5;
+		font-weight: bold;
+		&:hover{
+			background: #FFF;
+		}
+		>div{
+			text-align:center;
+			width:200px;
+			float:left;
+		}
+	}
 }

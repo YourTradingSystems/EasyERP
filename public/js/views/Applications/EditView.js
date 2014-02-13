@@ -470,7 +470,7 @@
                         case 'kanban':
                             {
                                 var kanban_holder = $("#" + model._id);
-                                kanban_holder.find(".application-header .left").text(data.name.first+" "+data.name.last);
+                                kanban_holder.find(".application-header .left").html(data.name.first+"<br/>"+data.name.last);
 								if (parseInt(data.proposedSalary))
 									kanban_holder.find(".application-header .right").text(data.proposedSalary+"$");
                                 kanban_holder.find(".application-content p.center").text(self.$el.find("#jobPositionDd").text());

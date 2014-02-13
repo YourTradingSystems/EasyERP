@@ -31,8 +31,8 @@ define([
 				   "click #workflowNames div.cathegory a": "chooseWorkflowDetailes",
 				   "click #workflowSubNames div.cathegory a": "chooseWorkflowDetailes",
 				   "click #workflowNames span": "chooseWorkflowDetailes",
-				   "click td .edit": "edit",
-				   "click td .delete": "deleteItems",
+				   "click  .edit": "edit",
+				   "click  .delete": "deleteItems",
 				   "click #addNewStatus": "addNewStatus",
 				   "click a.cancel": "cancel",
 				   "click a.save": "save",
@@ -50,10 +50,10 @@ define([
 				   e.preventDefault();
 				   var mid = 39;
 				   $("#addNewStatus").show();
-				   var tr = $(e.target).closest("tr");
-				   var name = tr.find("td.name input").val();
-				   var status = tr.find("td.status option:selected").text();
-				   var tdName = tr.find("td.name");
+				   var tr = $(e.target).closest("div.row");
+				   var name = tr.find("div.name input").val();
+				   var status = tr.find("div.status option:selected").text();
+				   var tdName = tr.find("div.name");
 				   var id = tdName.data("id");
 				   var sequence = tdName.data("sequence");
 				   var model = this.collection.get(id);
@@ -97,10 +97,10 @@ define([
 				   var td = target.parent();
 				   var text = "<a href='#'>";
 				   var select = $("<select/>");
-				   target.closest("tr").find("span, .edit").addClass("hidden");
-				   target.closest("tr").find("span, .delete").addClass("hidden");
+				   target.closest("div.row").find("span, .edit").addClass("hidden");
+				   target.closest("div.row").find("span, .delete").addClass("hidden");
 				   td.siblings(".status").append(select);
-				   var statusText = td.siblings("td.status").text();
+				   var statusText = td.siblings("div.status").text();
 				   this.relatedStatusesCollection.forEach(function (status) {
 					   var statusJson = status.toJSON();
 					   (statusJson.status == statusText) ?
@@ -109,7 +109,7 @@ define([
 				   });
 
 				   td.siblings(".name").append(
-					   $("<input>").val(td.siblings("td.name").text()));
+					   $("<input>").val(td.siblings("div.name").text()));
 				   td.append(
 					   $(text).text("Save").addClass("save"),
 					   $(text).text("Cancel").addClass("cancel")
@@ -119,10 +119,10 @@ define([
 			   deleteItems: function (e) {
 				   var mid = 39;
 				   e.preventDefault();
-				   var tr = $(e.target).closest("tr");
-				   var name = tr.find("td.name input").val();
-				   var status = tr.find("td.status option:selected").text();
-				   var tdName = tr.find("td.name");
+				   var tr = $(e.target).closest("div.row");
+				   var name = tr.find("div.name input").val();
+				   var status = tr.find("div.status option:selected").text();
+				   var tdName = tr.find("div.name");
 				   var id = tdName.data("id");
 				   var sequence = tdName.data("sequence");
 				   var model = this.collection.get(id);
@@ -193,8 +193,15 @@ define([
 					   }
 				   }, this);
 			   },*/
+			   updateSequence: function(e){
+				   var n = $("#workflows .row").length;
+				   for (var i=n-1;i>=0;i--){
+					   $("#workflows .row").eq(i).find("div.name").attr("data-sequence",i);
+				   }
+			   },
 			   chooseWorkflowDetailes: function (e) {
 				   e.preventDefault();
+				   var self = this;
 				   this.$(".workflow-sub-list>*").remove();
 				   this.$("#details").addClass("active").show();
 				   this.$("#workflows").empty();
@@ -202,7 +209,7 @@ define([
 				   $("#addNewStatus").show();
 				   if ($(e.target).hasClass("workflow")) {
 					   wId = $(e.target).text();
-					   $(wId).removeClass("active");
+					   $(".workflow-list .active").removeClass("active");
 					   $(e.target).parent().addClass("active");
 				   }
 				   var name = $(e.target).data("id");
@@ -212,11 +219,34 @@ define([
 						   values.push({ id: model.get("_id"), name: model.get('name'), status: model.get('status'), sequence: model.get('sequence'), color: model.get('color') });
 					   }
 				   }, this);
-				   this.$("#sub-details").attr("data-id", name).find("#workflows").empty().append($("<thead />").append(
-					   $("<tr />").append($("<th />").text("Name"), $("<th />").text("Status"), $("<th />"))), $("<tbody/>"));
+				   //this.$("#sub-details").attr("data-id", name).find("#workflows").empty().append($("<thead />").append($("<tr />").append($("<th />").text("Name"), $("<th />").text("Status"), $("<th />"))), $("<tbody/>"));
 				   _.each(values, function (value) {
-					   this.$("#sub-details tbody").append(new ListItemView({ model: value }).render().el);
+					   this.$("#workflows").append(new ListItemView({ model: value }).render().el);
 				   }, this);
+				   this.$("#workflows").sortable({
+					   stop: function (event, ui) {
+						   var id = ui.item.find("div.name").attr("id");
+						   self.collection.url = "/Workflows";
+						   var model = self.collection.get(id);
+						   console.log(model.toJSON());
+                           var sequence = 0;
+                           if (ui.item.next().hasClass("row")) {
+                               sequence = parseInt(ui.item.next().find("div.name").attr("data-sequence")) + 1;
+                           }
+						   model.save({
+							   sequenceStart: parseInt(ui.item.find("div.name").attr("data-sequence")),
+							   wId: model.toJSON().wId,
+                               sequence: sequence,
+						   },{
+							   patch: true,
+							   success: function (model2) {
+                                   self.updateSequence();
+
+                                   self.collection.add(model2, { merge: true });
+                               }
+						   });
+					   },
+				   });
 			   },
 
 			   render: function () {
@@ -226,6 +256,7 @@ define([
 				   var workflowsWname = _.uniq(_.pluck(this.collection.toJSON(), 'wName', 'wId'), false);
 				   this.$el.html(_.template(ListTemplate, { workflowsWIds: workflowsWIds}));
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
+ 
 				   return this;
 			   },
 
@@ -253,7 +284,7 @@ define([
 				   var mid = 39;
 				   e.preventDefault();
 				   $("#addNewStatus").hide();
-				   $("#workflows").append("<tr class='addnew'><td><input type='text' class='nameStatus' maxlength='32' required /></td><td><select id='statusesDd'></select></td></tr><tr class='SaveCancel'><td><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></td></tr>");
+				   $("#workflows").append("<div class='addnew'><div><input type='text' class='nameStatus' maxlength='32' required /></div><div><select id='statusesDd'></select></div></div><div class='SaveCancel'><div><input type='button' value='Save' id='saveStatus' /><input type='button' value='Cancel' id='cancelStatus' /></div></div>");
 				   var targetParent = $(e.target).parent();
 				   var target = $(e.target);
 				   var td = target.parent();
