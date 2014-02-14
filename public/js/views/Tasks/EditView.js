@@ -506,7 +506,6 @@
                       changeYear: true,
                       minDate: new Date()
                   });
-                  $("#ui-datepicker-div").addClass("createFormDatepicker");
                   return this;
               }
 

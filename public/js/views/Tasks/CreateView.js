@@ -31,9 +31,8 @@ define([
                    "click": "hideNewSelect",
                    "change .inputAttach": "addAttach",
                    "click .deleteAttach": "deleteAttach",
-                   "keypress #logged, #estimated": "isNumberKey"
+                   "keypress #logged, #estimated": "isNumberKey",
                },
-
                addAttach: function (event) {
                    var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];
                    $(".attachContainer").append('<li class="attachFile">' +
@@ -56,15 +55,6 @@ define([
                notHide: function (e) {
                    return false;
                },
-               keydownHandler: function (e) {
-                   switch (e.which) {
-                       case 27:
-                           this.hideDialog();
-                           break;
-                       default:
-                           break;
-                   }
-               },
 
                getWorkflowValue: function (value) {
                    var workflows = [];
@@ -72,12 +62,6 @@ define([
                        workflows.push({ name: value[i].name, status: value[i].status, _id: value[i]._id });
                    }
                    return workflows;
-               },
-
-               changeWorkflows: function () {
-                   var name = this.$("#workflowNames option:selected").val();
-                   var value = this.workflowsDdCollection.findWhere({ name: name }).toJSON().value;
-                   $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
                },
 
                showDatePicker: function (e) {
