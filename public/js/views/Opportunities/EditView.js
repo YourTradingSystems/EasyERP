@@ -4,9 +4,10 @@
     'text!templates/Notes/AddAttachments.html',
     'text!templates/Notes/AddNote.html',
     "common",
-    "custom"
+    "custom",
+	"populate"
 ],
-       function (EditTemplate, editSelectTemplate,addAttachTemplate, addNoteTemplate, common, custom) {
+       function (EditTemplate, editSelectTemplate,addAttachTemplate, addNoteTemplate, common, custom, populate) {
 
            var EditView = Backbone.View.extend({
                el: "#content-holder",
@@ -18,6 +19,7 @@
                    this.currentModel = options.model;
                    this.page=1;
                    this.pageG=1;
+				   this.responseObj = {};
                    this.render();
                },
 
@@ -41,7 +43,34 @@
                    "click #noteArea": "expandNote",
                    "click .addTitle": "showTitle",
                    "click .editNote": "editNote",
+                   "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                   "click .newSelectList li.miniStylePagination": "notHide",
+                   "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                   "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                   "click .current-selected": "showNewSelect",
+                   "click": "hideNewSelect"
+
                },
+			   notHide: function () {
+				   return false;
+               },
+               hideNewSelect: function () {
+                   $(".newSelectList").hide();
+               },
+			   nextSelect:function(e){
+				   this.showNewSelect(e,false,true);
+			   },
+			   prevSelect:function(e){
+				   this.showNewSelect(e,true,false);
+			   },
+               showNewSelect:function(e,prev,next){
+                   populate.showSelect(e,prev,next,this);
+                   return false;
+               },
+			   chooseOption:function(e){
+                   $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+			   },
+
                changeTab:function(e){
                    var holder = $(e.target);
                    holder.closest(".dialog-tabs").find("a.active").removeClass("active");
@@ -449,15 +478,15 @@
                        };
                    }
 
-                   var customerId = this.$("#customerDd option:selected").val();
+                   var customerId = this.$("#customerDd").data("id");
                    customerId = customerId ? customerId : null;
 
                    var email = $.trim($("#email").val());
 
-                   var salesPersonId = this.$("#salesPersonDd option:selected").val();
+                   var salesPersonId = this.$("#salesPersonDd").data("id");
                    salesPersonId = salesPersonId ? salesPersonId : null;
 
-                   var salesTeamId = this.$("#salesTeamDd option:selected").val();
+                   var salesTeamId = this.$("#salesTeamDd").data("id");
                    salesTeamId = salesTeamId ? salesTeamId : null;
 
                    var nextActionDate = $.trim(this.$el.find("#nextActionDate").val());
@@ -477,7 +506,7 @@
                      expectedClosing = $.trim($("#expectedClosing").val());
                      };*/
 
-                   var priority = $("#priorityDd").val();
+                   var priority = $("#priorityDd").text();
 
                    var internalNotes = $.trim($("#internalNotes").val());
 
@@ -505,7 +534,7 @@
                        fax: fax
                    };
 
-                   var workflow = this.$("#workflowDd option:selected").val();
+                   var workflow = this.$("#workflowDd").data("id");
                    workflow = workflow ? workflow : null;
 
                    var active = ($("#active").is(":checked")) ? true : false;
@@ -600,8 +629,8 @@
 									});
                                     kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 								}
-
-                                $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+								console.log(data);
+                                $(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
 
                             }
                         }
@@ -688,12 +717,19 @@
                    common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                    common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 
-                   common.populateCustomers("#customerDd", "/Customer", model);
+				   populate.getPriority("#priorityDd",this);
+				   populate.get2name("#customerDd", "/Customer",{},this,false,true);
+				   populate.get2name("#salesPersonDd", "/getForDdByRelatedUser",{},this,false,true);
+				   populate.getWorkflow("#workflowDd","#workflowNamesDd","/WorkflowsForDd",{id:"Opportunities"},"name",this);
+				   populate.get("#salesTeamDd", "/DepartmentsForDd",{},"departmentName",this,false,true);
+
+
+/*                   common.populateCustomers("#customerDd", "/Customer", model);
                    //common.populateEmployeesDd("#salesPerson"Dd, "/getSalesPerson", model);
                    common.populateEmployeesDd("#salesPersonDd", "/getForDdByRelatedUser", model);
                    common.populateDepartments("#salesTeamDd", "/DepartmentsForDd", model);
                    common.populatePriority("#priorityDd", "/Priority", model);
-                   common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/Workflows', model);
+                   common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/Workflows', model);*/
 
                    if (model.groups)
                        if (model.groups.users.length>0||model.groups.group.length){

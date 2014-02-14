@@ -1,9 +1,10 @@
 define([
     "text!templates/Projects/CreateTemplate.html",
     "models/ProjectsModel",
-    "common"
+    "common",
+	"populate"
 ],
-    function (CreateTemplate, ProjectModel, common) {
+    function (CreateTemplate, ProjectModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,6 +16,7 @@ define([
                 this.model = new ProjectModel();
                 this.page = 1;
                 this.pageG = 1;
+                this.responseObj = {};
                 this.render();
             },
 
@@ -30,12 +32,36 @@ define([
                 "click .deleteAttach": "deleteAttach",
                 "click #health a": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-                "click": "hideHealth"
+                "click": "hideHealth",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click .current-selected": "showNewSelect"
 
             },
+            notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
 
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
             hideHealth: function () {
+                $(".newSelectList").hide();
                 $("#health ul").hide();
+
             },
 
             chooseHealthDd: function (e) {
@@ -224,10 +250,10 @@ define([
             saveItem: function () {
                 var self = this;
                 var mid = 39;
-                var customer = this.$el.find("#customerDd option:selected").val();
-                var projectmanager = this.$el.find("#projectManagerDD option:selected").val();
-                var projecttype = this.$el.find("#projectTypeDD option:selected").val();
-                var workflow = this.$el.find("#workflowsDd option:selected").data("id");
+                var customer = this.$el.find("#customerDd").data("id");
+                var projectmanager = this.$el.find("#projectManagerDD").data("id");
+                var projecttype = this.$el.find("#projectTypeDD").data("id");
+                var workflow = this.$el.find("#workflowsDd").data("id");
                 var description = $.trim(this.$el.find("#description").val());
                 var $userNodes = this.$el.find("#usereditDd option:selected"), users = [];
                 console.log(workflow);
@@ -383,9 +409,11 @@ define([
                 common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd");
                 common.populateCustomers("#customerDd", "/Customer");
                 common.populateUsers("#allUsers", "/Users", null, null, true);
-                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, this.pageG);
-                common.populateEmployeesDd("#userEditDd", "/getPersonsForDd");
-                common.populateWorkflows("Projects", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
+
+				populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);
+                populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
+                populate.get2name("#customerDd", "/Customer", {}, this, true, true);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Projects" }, "name", this, true);
 
                 $('#StartDate').datepicker({
                     dateFormat: "d M, yy",
