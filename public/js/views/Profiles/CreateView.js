@@ -2,9 +2,10 @@ define([
     "text!templates/Profiles/CreateProfileTemplate.html",
     "models/ProfilesModel",
     "text!templates/Profiles/ModulesAccessListTemplate.html",
-    "common"
+    "common",
+    "populate"
 ],
-    function (CreateProfileTemplate, ProfilesModel,  ModulesAccessTemplate, common) {
+    function (CreateProfileTemplate, ProfilesModel,  ModulesAccessTemplate, common, populate) {
         var CreateView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
@@ -13,15 +14,45 @@ define([
                 _.bindAll(this, "saveItem", "render");
                 this.model = new ProfilesModel();
                 this.profilesCollection = options.collection;
+                this.responseObj = {};
                 this.render();
             },
             events:{
                 'click .viewAll': 'toggleView',
                 'click .writeAll': 'toggleWrite',
                 'click .deleteAll': 'toggleDelete',
-                'keydown': 'keydownHandler'
+                'keydown': 'keydownHandler',
+				"click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect"
+            },
+            notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
             },
 
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -59,7 +90,7 @@ define([
                         this.selectedProfile = this.profilesCollection.findWhere({profileName:"baned"});
                         break;
                     case "base":
-                        var profileId = $('#profilesDd option:selected').val();
+                        var profileId = $('#profilesDd').data("id");
                         this.selectedProfile = this.profilesCollection.get(profileId);
                         break;
                 }
@@ -138,17 +169,8 @@ define([
             hideDialog: function () {
                 $(".edit-dialog").remove();
             },
-            getProfilesForDropDown: function(){
-                var arr = this.profilesCollection.toJSON().map(function(item){
-                    return {
-                        id: item.id || item._id,
-                        name: item.profileName
-                    }
-                });
-                return arr;
-            },
             render: function () {
-                var formString = this.template({profilesCollection:this.getProfilesForDropDown()});
+                var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
 					closeOnEscape: false,
@@ -179,6 +201,7 @@ define([
                     }
                 });
                 //$('#saveBtn').hide();
+				populate.get("#profilesDd", "ProfilesForDd", {}, "profileName", this, true);
                 this.delegateEvents(this.events);
                 //this.$el.html(this.template({ profilesCollection: this.getProfilesForDropDown() }));
                 return this;

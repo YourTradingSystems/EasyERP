@@ -6,9 +6,10 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Customers/AccountsDdCollection",
     "collections/Users/UsersCollection",
-    "common"
+    "common",
+    "populate"
 ],
-    function (EditTemplate, addAttachTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common) {
+    function (EditTemplate, addAttachTemplate, EmployeesCollection, JobPositionsCollection, DepartmentsCollection, AccountsDdCollection, UsersCollection, common, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -27,6 +28,7 @@ define([
             }
                 this.page=1;
                 this.pageG=1;
+                this.responseObj = {};
                 this.render();
             },
 
@@ -45,11 +47,34 @@ define([
                 'click #removeUsers':'removeUsers',
                 'click .endContractReasonList, .withEndContract .arrow': 'showEndContractSelect',
                 'click .withEndContract .newSelectList li': 'endContract',
-				'click':'hideSelect'
+				"click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect",
             },
-			hideSelect:function(){
-				$(".newSelectList").hide();
-			},
+
+            notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
             showEndContractSelect: function (e) {
                 e.preventDefault();
 				$(e.target).parent().find(".newSelectList").toggle();
@@ -326,28 +351,28 @@ define([
 
             saveItem: function () {
                 
-                var gender = $("#genderDd option:selected").val();
+                var gender = $("#genderDd").data("id");
                 gender = gender ? gender : null;
 
-                var jobType = $("#jobTypeDd option:selected").text();
+                var jobType = $("#jobTypeDd").data("id");
                 jobType = jobType ? jobType : null;
 
-                var marital = $("#maritalDd option:selected").val();
+                var marital = $("#maritalDd").data("id");
                 marital = marital ? marital : null;
 
-                var relatedUser = this.$el.find("#relatedUsersDd option:selected").val();
+                var relatedUser = this.$el.find("#relatedUsersDd").data("id");
                 relatedUser = relatedUser ? relatedUser : null;
 
-                var department = this.$el.find("#departmentsDd option:selected").val();
+                var department = this.$el.find("#departmentsDd").data("id");
                 department = department ? department : null;
 
-                var jobPosition = this.$el.find("#jobPositionDd option:selected").val();
+                var jobPosition = this.$el.find("#jobPositionDd").data("id");
                 jobPosition = jobPosition ? jobPosition : null;
 
-                var manager = this.$el.find("#projectManagerDD option:selected").val();
+                var manager = this.$el.find("#projectManagerDD").data("id");
                 manager = manager ? manager : null;
 
-                var coach = $.trim(this.$el.find("#coachDd option:selected").val());
+                var coach = $.trim(this.$el.find("#coachDd").data("id"));
                 coach = coach ? coach : null;
 
                 var homeAddress = {};
@@ -370,7 +395,7 @@ define([
                 var recalculate = (this.currentModel.attributes.dateBirth == dateBirthSt) ? false : true;
 
                 var active = (this.$el.find("#active").is(":checked")) ? true : false;
-                var sourceId = $("#sourceDd option:selected").val();
+                var sourceId = $("#sourceDd").data("id");
                 var self = this;
 
                 var usersId=[];
@@ -503,9 +528,20 @@ define([
                         }
                     }
                 });
+                common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function (workflow) {
+                    $('.endContractReasonList').attr('data-id', workflow[0]._id);
+                });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+
+				populate.get("#jobTypeDd", "/jobType", {}, "name", this);
+                populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this);
+				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, false, true);
+				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, false, true);
+				populate.get("#departmentsDd", "/DepartmentsForDd", {}, "departmentName", this);
+
+/*
                 common.populateJobTypeDd("#jobTypeDd", "/jobType", this.currentModel.toJSON());
                 common.populateUsers("#relatedUsersDd", "/UsersForDd", this.currentModel.toJSON());
                 common.populateDepartments("#departmentsDd", "/DepartmentsForDd",this.currentModel.toJSON());
@@ -513,9 +549,7 @@ define([
                 common.populateCoachDd("#coachDd", "/getPersonsForDd", this.currentModel.toJSON());
                 common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
-                common.getWorkflowContractEnd("Applications", null, null, "/Workflows", null, "Contract End", function (workflow) {
-                    $('.endContractReasonList').attr('data-id', workflow[0]._id);
-                });
+*/
                 
                 $('#dateBirth').datepicker({
                 	dateFormat: "d/m/yy",

@@ -4,9 +4,10 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     "custom",
-    'common'
+    'common',
+    "populate"
 ],
-    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common) {
+    function (EditTemplate, JobPositionsCollection, DepartmentsCollection, WorkflowsCollection, Custom, common, populate) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -24,6 +25,7 @@ define([
 				}
                 this.page=1;
                 this.pageG=1;
+                this.responseObj = {};
                 this.render();
             },
 
@@ -36,9 +38,34 @@ define([
                 'click .unassign': 'unassign',
                 'click #targetUsers li': 'chooseUser',
                 'click #addUsers':'addUsers',
-                'click #removeUsers':'removeUsers'
+                'click #removeUsers':'removeUsers',
+				"click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect",
             },
-
+			notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
             changeTab:function(e){
                 var holder = $(e.target);
                 holder.closest(".dialog-tabs").find("a.active").removeClass("active");
@@ -193,7 +220,7 @@ define([
 
                 var requirements = $.trim($("#requirements").val());
 
-                var department = this.$("#departmentDd option:selected").val();
+                var department = this.$("#departmentDd").data("id");
 				if (department==""){
 					department=null;
 				}
@@ -224,7 +251,7 @@ define([
                     name: this.$("#workflow option:selected").text(),
                     status: this.$("#workflow option:selected").val(),
                 };*/
-                var workflow = this.$("#workflowsDd option:selected").val();
+                var workflow = this.$("#workflowsDd").data("id");
                 this.currentModel.save({
                     name: name,
                     expectedRecruitment: expectedRecruitment,
@@ -292,7 +319,7 @@ define([
                     width: "1200",
                     height: 513,
                     title: "Edit Job Position",
-                    buttons: [ 
+                    buttons: [
 						{
                             text: "Save",
                             click: function () { self.saveItem(); }
@@ -311,9 +338,8 @@ define([
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
-
-                common.populateDepartments("#departmentDd", "/DepartmentsForDd", this.currentModel.toJSON());
-                common.populateWorkflows("Jobposition", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", this.currentModel.toJSON());
+				populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, false, true);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobposition" }, "name", this, false);
 
                 var model = this.currentModel.toJSON();
                 if (model.groups)
@@ -326,7 +352,7 @@ define([
                         model.groups.users.forEach(function(item){
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
-                        })
+                        });
 
                     }
                 return this;

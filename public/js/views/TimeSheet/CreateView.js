@@ -1,10 +1,9 @@
 define([
-    "text!templates/Users/CreateTemplate.html",
-    "models/UsersModel",
-    "common",
-    "populate"
+    "text!templates/TimeSheet/CreateTemplate.html",
+    "models/TimeSheetModel",
+    "common"
 ],
-    function (CreateTemplate, UsersModel, common, populate) {
+    function (CreateTemplate, TimeSheetModel, common) {
 
         var UsersCreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -13,43 +12,15 @@ define([
             imageSrc: '',
             initialize: function () {
                 _.bindAll(this, "saveItem");
-                this.model = new UsersModel();
-                this.responseObj = {};
+                this.model = new TimeSheetModel();
                 this.render();
             },
 
             events: {
                 "submit form": "submit",
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit",
-				"click .current-selected": "showNewSelect",
-                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
-                "click .newSelectList li.miniStylePagination": "notHide",
-                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
-                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-                "click": "hideNewSelect"
+                "mouseleave .avatar": "hideEdit"
             },
-            notHide: function () {
-                return false;
-            },
-            showNewSelect: function (e, prev, next) {
-                populate.showSelect(e, prev, next, this);
-                return false;
-            },
-            chooseOption: function (e) {
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
-                $(".newSelectList").hide();
-            },
-            nextSelect: function (e) {
-                this.showNewSelect(e, false, true);
-            },
-            prevSelect: function (e) {
-                this.showNewSelect(e, true, false);
-            },
-            hideNewSelect: function () {
-                $(".newSelectList").hide();
-            },
-
             hideDialog: function () {
                 $(".edit-dialog").remove();
             },
@@ -75,7 +46,7 @@ define([
                     email: $.trim(this.$el.find('#email').val()),
                     login: $.trim(this.$el.find('#login').val()),
                     pass: $.trim(this.$el.find('#password').val()),
-                    profile: $.trim(this.$el.find('#profilesDd').data("id"))
+                    profile: $.trim(this.$el.find('#profilesDd option:selected').val())
                 },
                 {
                     headers: {
@@ -97,11 +68,8 @@ define([
                 var formString = this.template();
                 var self = this;
                 this.$el = $(formString).dialog({
-					closeOnEscape: false,
-                    autoOpen: true,
                     dialogClass: "edit-dialog",
-                    width: "600",
-                    resizable: true,
+                    width: "800",
                     title: "Create User",
                     buttons:{
                         save:{
@@ -118,7 +86,7 @@ define([
                         }
                     }
                 });
-				populate.get("#profilesDd", "ProfilesForDd", {}, "profileName", this, true);
+                common.populateProfilesDd(App.ID.profilesDd, "/ProfilesForDd");
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }

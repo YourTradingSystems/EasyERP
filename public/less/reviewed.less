@@ -103,6 +103,7 @@
     -webkit-box-shadow: @arguments;
 }
 
+
 .dl-auto(@max-width: 120px,@with-dt: 35%, @line-height: 0px, @height: 16px, @margin-top: 0px) {
     clear: both;
     font-size: 14px;
@@ -717,7 +718,7 @@
         font-weight: 300 !important;
         font-size: @font-size;
         margin: 25px 0 35px 30px;
-                }
+    }
 
     .icon-pass,
     .icon-login {
@@ -778,6 +779,7 @@
         color: #555;
         margin-left: 30px;
         padding: 20px 0 0;
+		overflow:inherit;
     }
 
     span.text {
@@ -2661,7 +2663,7 @@ dl {
         float: left;
         display: block;
         text-align: center;
-        width: 49px;
+        width: 47px;
         height: 24px;
         line-height: 24px;
 
@@ -2678,7 +2680,7 @@ dl {
         font-family: @icon-font;
         color: @blue;
         font-weight: 900;
-        font-size: 18px;
+        font-size: 14px;
         line-height: 30px;
 
         &:hover {
@@ -3971,6 +3973,15 @@ h3.dashboard {
 
 }
 .form-holder form{
+	.profile-create{
+		.dl-auto(250px,50%);
+		input{
+			width:276px;
+		}
+		input[type='radio']{
+			width:auto !important;
+		}
+	}
 	.project-edit-info{
 		.dl-auto(200px,42%);
 		input{
@@ -4100,4 +4111,7 @@ h3.dashboard {
 			}
 		}
 	}
+}
+.full-width{
+	width:100%;
 }

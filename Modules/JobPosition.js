@@ -202,7 +202,10 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
     };//End create
 
     function getJobPositionById(req, id, res) {
-        models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).findById(id, function (err, response) {
+        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).findById(id);
+		query.populate("department","departmentName _id");
+		query.populate("workflow","name _id");
+		query.exec(function (err, response) {
             if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
@@ -613,7 +616,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
             delete data._id;
             delete data.createdBy;
             
-            if (data.workflow.status === 'New') {
+            if (data.workflow === '528ce71ef3f67bc40b00001d') {
                 data.expectedRecruitment = 0;
             } else {
                 if (data.expectedRecruitment === 0) {

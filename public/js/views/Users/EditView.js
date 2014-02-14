@@ -2,9 +2,10 @@
     "text!templates/Users/EditTemplate.html",
     "custom",
     "common",
-    "dataService"
+    "dataService",
+    "populate"
 ],
-    function (EditTemplate, Custom, common,dataService) {
+    function (EditTemplate, Custom, common, dataService, populate) {
         var EditView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Users",
@@ -15,18 +16,42 @@
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+                this.responseObj = {};
                 this.render();
             },
-            hideDialog: function () {3
-                $(".edit-dialog").remove();
-            },
-            
-
             events: {
                 "mouseenter .avatar": "showEdit",
-                "mouseleave .avatar": "hideEdit"
+                "mouseleave .avatar": "hideEdit",
+				"click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect"
             },
-            
+            notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
+            hideDialog: function () {
+                $(".edit-dialog").remove();
+            },
             showEdit: function () {
                 $(".upload").animate({
                     height: "20px",
@@ -50,7 +75,7 @@
                     imageSrc: this.imageSrc,
                     email: $('#email').val(),
                     login: $('#login').val(),
-                    profile: $('#profilesDd option:selected').val()
+                    profile: $('#profilesDd').data("id")
                 };
 
                 this.currentModel.save(data, {
@@ -98,7 +123,7 @@
                 var self = this;
                 this.$el = $(formString).dialog({
                     dialogClass: "edit-dialog",
-                    width: 800,
+                    width: 600,
                     title: "Edit User",
                     buttons:{
                         save:{
@@ -120,8 +145,8 @@
                         }
                     }
                 });
-				var p=this.currentModel.toJSON()
-                common.populateProfilesDd("#profilesDd", "/ProfilesForDd", this.currentModel.toJSON());
+				populate.get("#profilesDd", "ProfilesForDd", {}, "profileName", this);
+//                common.populateProfilesDd("#profilesDd", "/ProfilesForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 return this;
             }

@@ -360,7 +360,7 @@
             },
 
             hideDialog: function () {
-                $(".applications-edit-dialog").remove();
+                $(".edit-dialog").remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },

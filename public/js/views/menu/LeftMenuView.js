@@ -22,7 +22,6 @@ define([
                 this.leftMenu.render();
             },
             mouseOver: function (section, selectedId) {
-
                 if (this.leftMenu) {
                     this.leftMenu.currentSection = section;
                     this.leftMenu.render(true, selectedId);
@@ -37,10 +36,12 @@ define([
                 console.log("init MenuView");
                 if (!options.collection) throw "No collection specified!";
                 this.collection = options.collection;
-                if (options.currentRoot)
-                    this.currentSection = options.currentRoot[0].get('mname')
+                if (options.currentRoot){
+                    this.currentSection = options.currentRoot[0].get('mname');
+				}
                 this.currentChildren = options.currentChildren;
                 if (this.currentChildren && this.currentChildren.length > 0) {
+					this.selectedId = this.currentChildren[0].get("_id");
                     this.render(null, this.currentChildren[0].get("_id"));
                 } else {
                     this.render();

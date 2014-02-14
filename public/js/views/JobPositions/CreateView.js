@@ -3,9 +3,10 @@ define([
     "collections/Departments/DepartmentsCollection",
     "collections/Workflows/WorkflowsCollection",
     "models/JobPositionsModel",
-    "common"
+    "common",
+    "populate"
 ],
-    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionsModel, common) {
+    function (CreateTemplate, DepartmentsCollection, WorkflowsCollection, JobPositionsModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -17,6 +18,7 @@ define([
                 this.model = new JobPositionsModel();
                 this.page=1;
                 this.pageG=1;
+                this.responseObj = {};
                 this.render();
             },
 
@@ -28,9 +30,34 @@ define([
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
                 "click .prevUserList":"prevUserList",
-                "click .nextUserList":"nextUserList"
+                "click .nextUserList":"nextUserList",
+				"click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect"
             },
-
+            notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
+            },
             keydownHandler: function(e){
                 switch (e.which){
                     case 27:
@@ -200,8 +227,8 @@ define([
 
                 var requirements = $.trim($("#requirements").val());
 
-                var workflow = this.$("#workflowsDd option:selected").val();
-                var department = this.$("#departmentDd option:selected").val();
+                var workflow = this.$("#workflowsDd").data("id");
+                var department = this.$("#departmentDd").data("id");
 
                 var usersId=[];
                 var groupsId=[];
@@ -215,7 +242,6 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
                 this.model.save({
                     name: name,
                     expectedRecruitment: expectedRecruitment,
@@ -277,8 +303,10 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateDepartments("#departmentDd", "/Departments");
-                common.populateWorkflows("Jobposition", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");
+				populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobposition" }, "name", this, true);
+/*                common.populateDepartments("#departmentDd", "/Departments");
+                common.populateWorkflows("Jobposition", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");*/
                 this.delegateEvents(this.events);
                 return this;
             }
