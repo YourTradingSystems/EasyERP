@@ -82,11 +82,11 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-						$(e.target).parents("#health").find("ul").hide();
+                        $(e.target).parents("#health").find("ul").hide();
                     }
                 });
-				return false;
-				
+                return false;
+
             },
 
             showHealthDd: function (e) {
@@ -271,7 +271,17 @@ define([
             },
 
             deleteItemsRender: function (deleteCounter, deletePage) {
-                this.deleteRender(deleteCounter, deletePage);
+                dataService.getData('/totalCollectionLength/Projects', {
+                    status: this.wfStatus,
+                    newCollection: this.newCollection
+                },
+                    function (response, context) {
+                        context.listLength = response.count || 0;
+                    }, this);
+                this.deleteRender(deleteCounter, deletePage, {
+                    status: this.wfStatus,
+                    newCollection: this.newCollection
+                });
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');

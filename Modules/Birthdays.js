@@ -115,14 +115,13 @@
         //new query 
         
         var now = new Date();
-        //var day = 0;
+        var day = 0;
         var _month = now.getMonth() + 1;
-        //var NUMBER_OF_MONTH = 10;
-        //var tempMonthLength = _month + NUMBER_OF_MONTH;
-        //var realPart;
+        var NUMBER_OF_MONTH = 1;
+        var tempMonthLength = _month + NUMBER_OF_MONTH;
+        var realPart;
         var query;
-        query = {$and:[{ month: _month }]}
-        /*if (tempMonthLength / 12 < 1) {
+        if (tempMonthLength / 12 < 1) {
 
             query = {
                 $or: [
@@ -140,7 +139,7 @@
                         { $and: [{ month: realPart }, { days: { $lt: day } }] }
                 ]
             }
-        }*/
+        }
 
         models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).aggregate(
             {

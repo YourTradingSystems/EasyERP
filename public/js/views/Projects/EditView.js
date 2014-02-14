@@ -600,7 +600,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
-                    dialogClass: "edit-dialog",
+                    dialogClass: "edit-project-dialog",
                     width: "900px",
                     buttons: {
                         save: {

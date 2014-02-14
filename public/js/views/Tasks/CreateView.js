@@ -261,13 +261,17 @@ define([
                    populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Tasks" }, "name", this, true);
                    populate.get2name("#assignedToDd", "/getPersonsForDd", {}, this, true);
                    populate.getPriority("#priorityDd", this, true);
-                   $('#StartDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
-                   $('#deadline').datepicker({
+                   $('#StartDate').datepicker({
                        dateFormat: "d M, yy",
                        changeMonth: true,
-                       changeYear: true,
-                       minDate: new Date()
+                       changeYear: true
                    });
+                   //$('#deadline').datepicker({
+                   //    dateFormat: "d M, yy",
+                   //    changeMonth: true,
+                   //    changeYear: true,
+                   //    minDate: new Date()
+                   //});
                    //$("#ui-datepicker-div").addClass("createFormDatepicker");
 
                    this.delegateEvents(this.events);

@@ -216,7 +216,19 @@ define([
             },
 
             deleteItemsRender: function (deleteCounter, deletePage) {
-                this.deleteRender(deleteCounter, deletePage);
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+                this.deleteRender(deleteCounter, deletePage, {
+                    status: this.wfStatus,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
