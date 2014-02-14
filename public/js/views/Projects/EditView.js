@@ -67,10 +67,10 @@ define([
             },
 
             nextSelect: function (e) {
-                this.showNewSelect(e, false, true)
+                this.showNewSelect(e, false, true);
             },
             prevSelect: function (e) {
-                this.showNewSelect(e, true, false)
+                this.showNewSelect(e, true, false);
             },
             chooseHealthDd: function (e) {
                 $(e.target).parents("#health").find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
@@ -451,7 +451,7 @@ define([
             },
 
             hideDialog: function () {
-                $('.edit-project-dialog').remove();
+                $('.edit-dialog').remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },
@@ -623,9 +623,9 @@ define([
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
-                populate.get("#projectTypeDD", "/projectType", {}, "name", this);
+                populate.get("#projectTypeDD", "/projectType", {}, "name", this, false, true);
                 populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this);
-                populate.get2name("#customerDd", "/Customer", {}, this);
+                populate.get2name("#customerDd", "/Customer", {}, this, false, true);
                 populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Projects" }, "name", this);
                 var model = this.currentModel.toJSON();
                 if (model.groups)
