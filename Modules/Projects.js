@@ -203,14 +203,12 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         } else if (task) {
                             var oldProjectId = task.project;
                             models.get(request.session.lastDb - 1, 'Project', ProjectSchema).findByIdAndUpdate(oldProjectId,
-                                { $pull: { 'task': task._id } },
-                                function (findError, project) {
+                                { $pull: { task: task._id } },
+                                function (findError) {
                                     if (findError) {
                                         console.log(findError);
                                         logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + findError);
                                         response.send(500, { error: 'Task update error' });
-                                    } else {
-                                        updatePr(project._id);
                                     }
                                 });
                             var query = models.get(request.session.lastDb - 1, 'Tasks', TasksSchema).find({ project: projectId });
@@ -233,6 +231,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                             logWriter.log('updateContent in Projects module eventType="' + eventType + '" by ProjectId="' + projectId + '" error=' + findError);
                                             response.send(500, { error: 'Task update error' });
                                         } else if (res) {
+                                            updatePr(oldProjectId);
                                             updatePr(res.project);
                                             response.send(200, { success: 'Task update success' });
                                         } else {
