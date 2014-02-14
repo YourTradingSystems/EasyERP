@@ -34,7 +34,9 @@
                   <dt><label for="mobile">Personal Mobile</label></dt><dd><input type="text" name="mobile" id="mobile" value="<%=model.workPhones.mobile%>" required maxlength="32"/></dd>
                   <dt><label for="personalEmail">Personal Email</label></dt><dd><input type="text"  id="personalEmail" value="<%=model.personalEmail%>" required maxlength="48"/></dd>
                   <dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="32"/></dd>
-                  <dt><label for="relatedUsersDd">Related User</label></dt><dd><select id="relatedUsersDd"></select></dd>
+                  <dt><label for="relatedUsersDd">Related User</label></dt><dd>
+					<a id="relatedUsersDd" data-id="<%=model.relatedUser?model.relatedUser._id:''%>" class="current-selected" href="javascript:;"><%=model.relatedUser?(model.relatedUser.login):'Select'%></a>
+				  </dd>
 
 
 				</dl>
@@ -43,33 +45,29 @@
 				<dl class="edit-employee-info">
                   <dt><label for="jobPositionDd">Job</label></dt>
                   <dd>
-					<select id="jobPositionDd">
-					</select>
+					<a id="jobPositionDd" data-id="<%=model.jobPosition?model.jobPosition._id:''%>" class="current-selected" href="javascript:;"><%=model.jobPosition?(model.jobPosition.name):'Select'%></a>
                   </dd>
                   <dt><label for="departmentsDd">Department</label></dt><dd>
-					<select id="departmentsDd">
-					</select>
+					<a id="departmentsDd" data-id="<%=model.department?model.department._id:''%>" class="current-selected" href="javascript:;"><%=model.department?(model.department.departmentName):'Select'%></a>
                   </dd>
                   <dt><label for="projectManagerDD">Manager</label></dt>
                   <dd>
-					<select id="projectManagerDD">
-					</select>
+					<a id="projectManagerDD" data-id="<%=model.projectmanager?model.projectmanager._id:''%>" class="current-selected" href="javascript:;"><%=model.manager?(model.manager.name.first+' '+model.manager.name.last):'Select'%></a>
                   </dd>
                   <dt><label for="jobTypeDd">Job type</label></dt>
                   <dd>
-					<select id="jobTypeDd">
-					</select>
+					<a id="jobTypeDd" data-id="<%=model.jobType?model.jobType:''%>" class="current-selected" href="javascript:;"><%=model.jobType?(model.jobType):'Select'%></a>
                   </dd>
-                      <dt><label for="sourceDd">Source </label></dt>
-                      <dd>
-						<select id="sourceDd">
-						
-                          <option selected="selected" value="www.rabota.ua">www.rabota.ua</option>
-                          <option value="www.work.ua">www.work.ua</option>
-                          <option value="www.ain.net">www.ain.net</option>
-                          <option value="other">other</option>
-						</select>
-                  
+                  <dt><label for="sourceDd">Source </label></dt>
+                  <dd>
+					<a id="sourceDd" data-id="<%=model.source?model.source:''%>" class="current-selected" href="javascript:;"><%=model.source?(model.source):'Select'%></a>
+					<ul class="newSelectList hidden">
+                      <li id="www.rabota.ua">www.rabota.ua</li>
+                      <li id="www.work.ua">www.work.ua</li>
+                      <li id="www.ain.net">www.ain.net</li>
+                      <li id="other">other</li>
+					</ul>
+				  </dd>
                   <dt><label for="workEmail">Work Email</label></dt><dd><input type="text"  id="workEmail" value="<%=model.workEmail%>" required maxlength="48"/></dd>
                   <dt><label for="phone">Work Phone</label></dt><dd><input type="text" name="phone" id="phone" value="<%=model.workPhones.phone%>" required maxlength="32"/></dd>
 
@@ -90,116 +88,118 @@
 			</div>
 		  </div>
 		  <div class="dialog-tabs-item">
-		<div class="avatar left">
-          <img alt="" src="<%=model.imageSrc%>" />
-		</div>
-		<div class="avatarInfoContainer employee">
-			<div class="formTitle left">
-              <h3 class="left">Citizenship &amp; Other Info</h3>
-              <div class="clearfix"></div>
+			<div class="avatar left">
+			  <img alt="" src="<%=model.imageSrc%>" />
 			</div>
-            <div class="half-block left">
-			  <dl class="edit-employee-info">
-                <dt><label for="nationality">Nationality</label></dt>
-                <dd>
-				  <select id="nationality">
-                    <option selected="selected" value="0">Select...</option>
-				  </select>
-                </dd>
-                <dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required maxlength="32"/></dd>
-                <dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required maxlength="32"/></dd>
-			  </dl>
-
-			</div>
-            <div class="half-block left">
-			  <dl class="edit-employee-info">
-                <dt><label for="bankAccountNo">Bank Account №</label></dt>
-                <dd>
-				  <select id="bankAccountNo">
-                    <option selected="selected" value="0">Select...</option>
-				  </select>
-
-                </dd>
-                <dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required maxlength="32"/></dd>
-			  </dl>
-			</div>
-            <div class="clearfix">
-            </div>
-			<div class="formTitle left">
-              <h3 class="left">Contact Information</h3>
-              <div class="clearfix"></div>
-			</div>
-            <div class="half-block left">
-			  <dl class="edit-employee-info">
-                <dt><label>Street</label></dt><dd><input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" maxlength="32"/></dd>
-                <dt><label>City</label></dt><dd><input type="text" class="homeAddress" name="city" value="<%=model.homeAddress.city%>" maxlength="32"/></dd>
-                <dt><label>State</label></dt><dd><input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>" maxlength="32"/></dd>
-			  </dl>
-
-			</div>
-            <div class="half-block left">
-			  <dl class="edit-employee-info">
-                <dt><label>Zip</label></dt><dd><input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>" maxlength="32"/></dd>
-                <dt><label>Country</label></dt><dd><input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>" maxlength="32"/></dd>
-			  </dl>
-			</div>
-            <div class="clearfix">
-            </div>
-            <div class="formTitle">
-              <h3 class="left">Status</h3>
-              <div class="clearfix"></div>
-            </div>
-            <div class="half-block left withPaddingLeft">
-			  <dl class="edit-employee-info">
-                <dt><label for="genderDd">Gender</label>
-				  <dd>
-                    <select id="genderDd">
-					  <option value="male">male</option>
-					  <option value="female" <%=(model.gender=="female")? 'selected="selected"' :'' %>>female</option>
-                    </select>
-				  </dd>
-                </dt>
-			  </dl>
-
-			</div>
-            <div class="half-block left withPaddingLeft">
-
-			  <dl class="edit-employee-info">
-                <dt><label for="maritalDd">Marital status</label>
-				  <dd>
-                    <select id="maritalDd">
-					  <option value="married">married</option>
-					  <option value="unmarried"<%=(model.marital=="unmarried")? 'selected="selected"' :'' %>>unmarried</option>
-                    </select>
-				  </dd>
-                </dt>
-			  </dl>
-            </div>
-            <div class="clearfix"></div>
-            <div class="formTitle">
-              <h3 class="left">Resume</h3>
-              <div class="clearfix"></div>
-            </div>
-
-            <div id="attachBody">
-			  <ul class="attachContainer">
-                <% var n = model.attachments.length-1;
-				   model.attachments.reverse();
-				   _.each(model.attachments, function(data,key){ %>
-                <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
-				  <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
-                </li>
-                <% }); model.attachments.reverse(); %>
-			  </ul>
-            </div>
-            <div class="clearfix"></div>
-            <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
-            <div class="progress" style="float:left;">
-			  <div class="bar">
-                <span class="status"></span>
+			<div class="avatarInfoContainer employee">
+			  <div class="formTitle left">
+				<h3 class="left">Citizenship &amp; Other Info</h3>
+				<div class="clearfix"></div>
 			  </div>
-            </div>
-		  </div>
+              <div class="half-block left">
+				<dl class="edit-employee-info">
+                  <dt><label for="nationality">Nationality</label></dt>
+                  <dd>
+					<select id="nationality">
+                      <option selected="selected" value="0">Select...</option>
+					</select>
+                  </dd>
+                  <dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" value="<%=model.identNo%>" required maxlength="32"/></dd>
+                  <dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" value="<%=model.passportNo%>" required maxlength="32"/></dd>
+				</dl>
+
+			  </div>
+              <div class="half-block left">
+				<dl class="edit-employee-info">
+                  <dt><label for="bankAccountNo">Bank Account №</label></dt>
+                  <dd>
+					<a id="bankAccountNo" data-id="<%=model.bankAccountNo?model.bankAccountNo:''%>" class="current-selected" href="javascript:;"><%=model.bankAccountNo?(model.bankAccountNo):'Select'%></a>
+					<ul class="newSelectList hidden">
+                      <li id="">Select</li>
+					</ul>
+                  </dd>
+                  <dt><label for="otherId">Other Id</label></dt><dd><input type="text" name="otherId" id="otherId" value="<%=model.otherId%>" required maxlength="32"/></dd>
+				</dl>
+			  </div>
+              <div class="clearfix">
+              </div>
+			  <div class="formTitle left">
+				<h3 class="left">Contact Information</h3>
+				<div class="clearfix"></div>
+			  </div>
+              <div class="half-block left">
+				<dl class="edit-employee-info">
+                  <dt><label>Street</label></dt><dd><input type="text" class="homeAddress" name="street" value="<%=model.homeAddress.street%>" maxlength="32"/></dd>
+                  <dt><label>City</label></dt><dd><input type="text" class="homeAddress" name="city" value="<%=model.homeAddress.city%>" maxlength="32"/></dd>
+                  <dt><label>State</label></dt><dd><input type="text" class="homeAddress" name="state" value="<%=model.homeAddress.state%>" maxlength="32"/></dd>
+				</dl>
+
+			  </div>
+              <div class="half-block left">
+				<dl class="edit-employee-info">
+                  <dt><label>Zip</label></dt><dd><input type="text" class="homeAddress" name="zip" value="<%=model.homeAddress.zip%>" maxlength="32"/></dd>
+                  <dt><label>Country</label></dt><dd><input type="text" class="homeAddress" name="country" value="<%=model.homeAddress.country%>" maxlength="32"/></dd>
+				</dl>
+			  </div>
+              <div class="clearfix">
+              </div>
+              <div class="formTitle">
+				<h3 class="left">Status</h3>
+				<div class="clearfix"></div>
+              </div>
+              <div class="half-block left withPaddingLeft">
+				<dl class="edit-employee-info">
+                  <dt><label for="genderDd">Gender</label>
+					<dd>
+					  <a id="genderDd" data-id="<%=model.gender?model.gender:''%>" class="current-selected" href="javascript:;"><%=model.gender?(model.gender):'Select'%></a>
+					  <ul class="newSelectList hidden">
+						<li id="male">male</li>
+						<li id="female">female</li>
+					  </ul>
+					</dd>
+                  </dt>
+				</dl>
+
+			  </div>
+              <div class="half-block left withPaddingLeft">
+
+				<dl class="edit-employee-info">
+                  <dt><label for="maritalDd">Marital status</label>
+					<dd>
+					  <a id="maritalDd" data-id="<%=model.marital?model.marital:''%>" class="current-selected" href="javascript:;"><%=model.marital?(model.marital):'Select'%></a>
+					  <ul class="newSelectList hidden">
+						<li id="married">married</li>
+						<li id="unmarried">unmarried</li>
+					  </ul>
+					</dd>
+                  </dt>
+				</dl>
+              </div>
+              <div class="clearfix"></div>
+              <div class="formTitle">
+				<h3 class="left">Resume</h3>
+				<div class="clearfix"></div>
+              </div>
+
+              <div id="attachBody">
+				<ul class="attachContainer">
+                  <% var n = model.attachments.length-1;
+					 model.attachments.reverse();
+					 _.each(model.attachments, function(data,key){ %>
+                  <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+					<a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
+                  </li>
+                  <% }); model.attachments.reverse(); %>
+				</ul>
+              </div>
+              <div class="clearfix"></div>
+              <div class="input-file">Attach<input type="file" value="Choose File" class="inputAttach" name="attachfile"></div>
+              <div class="progress" style="float:left;">
+				<div class="bar">
+                  <span class="status"></span>
+				</div>
+              </div>
+			</div>
 		  </div>
 		  <div class="clearfix"></div>
           <div class="dialog-tabs-item">
@@ -243,7 +243,6 @@
                 </div>
                 <div class="left">
                   <ul id="targetUsers" class="target">
-
                   </ul>
                 </div>
               </div>
