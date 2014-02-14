@@ -2,7 +2,7 @@ define([
     "text!templates/Tasks/CreateTemplate.html",
     "models/TasksModel",
     "common",
-    "populate",
+    "populate"
 
 ],
        function (CreateTemplate, TaskModel, common, populate) {

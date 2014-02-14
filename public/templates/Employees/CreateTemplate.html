@@ -26,7 +26,7 @@
                   <dt><label for="skype">Skype</label></dt><dd><input type="text" id="skype" class="blueback" maxlength="32"/></dd>
                   <dt><label for="relatedUsersDd">Related User</label></dt>
                   <dd>
-                    <select id="relatedUsersDd"></select>
+					<a id="relatedUsersDd" class="current-selected" href="javascript:;"></a>
                   </dd>
                 </dl>
               </div>
@@ -34,37 +34,29 @@
                 <dl class="create-employee-info">
                   <dt><label for="jobPositionDd">Job</label></dt>
                   <dd>
-                    <select id="jobPositionDd">
-
-                    </select>
+					<a id="jobPositionDd" class="current-selected" href="javascript:;"></a>
                   </dd>
                   <dt><label for="departmentsDd">Department</label></dt>
                   <dd>
-                    <select id="departmentsDd">
-
-                    </select>
+					<a id="departmentsDd" class="current-selected" href="javascript:;"></a>
                   </dd>
                   <dt><label for="projectManagerDD">Manager</label></dt>
                   <dd>
-                    <select id="projectManagerDD">
-
-                    </select>
-
+					<a id="projectManagerDD" class="current-selected" href="javascript:;"></a>
                   </dd>
                   <dt><label for="jobTypeDd">Job type</label></dt>
                   <dd>
-                    <select id="jobTypeDd">
-                    </select>
+					<a id="jobTypeDd" class="current-selected" href="javascript:;"></a>
                   </dd>
                       <dt><label for="sourceDd">Source </label></dt>
                       <dd>
-						<select id="sourceDd">
-                          <option value="www.rabota.ua">www.rabota.ua</option>
-                          <option value="www.work.ua">www.work.ua</option>
-                          <option value="www.ain.net">www.ain.net</option>
-                          <option value="other">other</option>
-						</select>
-                  
+						<a id="sourceDd" data-id="www.rabota.ua" class="current-selected" href="javascript:;">www.rabota.ua</a>
+						<ul class="newSelectList hidden">
+                          <li id="www.rabota.ua">www.rabota.ua</li>
+                          <li id="www.work.ua">www.work.ua</li>
+                          <li id="www.ain.net">www.ain.net</li>
+                          <li id="other">other</li>
+						</ul>
                   <dt><label for="workEmail">Work Email </label></dt><dd><input type="text" id="workEmail" class="blueback" maxlength="48"/></dd>
                   <dt><label for="phone">Work Phone</label></dt><dd><input type="text" id="phone" class="blueback" maxlength="32"/></dd>
 
@@ -83,9 +75,10 @@
               <dl class="edit-employee-info">
                 <dt><label for="nationality">Nationality</label></dt>
                 <dd>
-                  <select id="nationality">
-                    <option selected="selected" value="">Select...</option>
-                  </select>
+				  <a id="nationality" data-id="" class="current-selected" href="javascript:;">Select</a>
+				  <ul class="newSelectList hidden">
+                    <li id="">Select</li>
+				  </ul>
                 </dd>
                 <dt><label for="identNo">Identification №</label></dt><dd><input type="text" name="identNo" id="identNo" class="blueback" maxlength="32"/></dd>
                 <dt><label for="passportNo">Passport №</label></dt><dd><input type="text" name="passportNo" id="passportNo" class="blueback" maxlength="32"/></dd>
@@ -96,9 +89,10 @@
               <dl class="edit-employee-info">
                 <dt><label for="bankAccountNo">Bank Account №</label></dt>
                 <dd>
-                  <select id="bankAccountNo">
-                    <option selected="selected" value="">Select...</option>
-                  </select>
+				  <a id="bankAccountNo" data-id="" class="current-selected" href="javascript:;">Select</a>
+				  <ul class="newSelectList hidden">
+                    <li id="">Select</li>
+				  </ul>
                 </dd>
                 <dt><label for="otherId">Other Id </label></dt><dd><input type="text" name="otherId" id="otherId" class="blueback" maxlength="32"/></dd>
               </dl>
@@ -134,10 +128,11 @@
               <dl class="edit-employee-info">
                 <dt><label for="genderDd">Gender</label>
                   <dd>
-                    <select id="genderDd">
-                      <option value="male">male</option>
-                      <option value="female">female</option>
-                    </select>
+					<a id="genderDd" data-id="male" class="current-selected" href="javascript:;">male</a>
+					<ul class="newSelectList hidden">
+                      <li id="male">male</li>
+                      <li id="female">female</li>
+					</ul>
                   </dd>
                 </dt>
               </dl>
@@ -147,10 +142,11 @@
               <dl class="edit-employee-info">
                 <dt><label for="maritalDd">Marital status</label>
                   <dd>
-                    <select id="maritalDd">
-                      <option value="married">married</option>
-                      <option value="unmarried">unmarried</option>
-                    </select>
+					<a id="maritalDd" data-id="married" class="current-selected" href="javascript:;">married</a>
+					<ul class="newSelectList hidden">
+                      <li id="married">married</li>
+                      <li id="unmarried">unmarried</li>
+					</ul>
                   </dd>
                 </dt>
               </dl>
@@ -167,6 +163,7 @@
             </div>
             <div class="clearfix">
             </div>
+			<br/>
             <div class="input-file">
               Attach
               <input type="file" value="Choose File" class="inputAttach" name="attachfile">

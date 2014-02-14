@@ -1,9 +1,10 @@
 define([
     "text!templates/Employees/CreateTemplate.html",
     "models/EmployeesModel",
-    "common"
+    "common",
+    "populate"
 ],
-    function (CreateTemplate, EmployeeModel, common) {
+    function (CreateTemplate, EmployeeModel, common, populate) {
 
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
@@ -15,6 +16,7 @@ define([
                 this.model = new EmployeeModel();
                 this.page=1;
                 this.pageG=1;
+                this.responseObj = {};
                 this.render();
             },
 
@@ -30,7 +32,33 @@ define([
                 'click .addGroup': 'addGroup',
                 'click .unassign': 'unassign',
                 "click .prevUserList":"prevUserList",
-                "click .nextUserList":"nextUserList"
+                "click .nextUserList":"nextUserList",
+                "click .current-selected": "showNewSelect",
+                "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
+                "click .newSelectList li.miniStylePagination": "notHide",
+                "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+                "click": "hideNewSelect",
+            },
+            notHide: function () {
+                return false;
+            },
+            showNewSelect: function (e, prev, next) {
+                populate.showSelect(e, prev, next, this);
+                return false;
+            },
+            chooseOption: function (e) {
+                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                $(".newSelectList").hide();
+            },
+            nextSelect: function (e) {
+                this.showNewSelect(e, false, true);
+            },
+            prevSelect: function (e) {
+                this.showNewSelect(e, true, false);
+            },
+            hideNewSelect: function () {
+                $(".newSelectList").hide();
             },
             addAttach: function (event) {
 				var s= $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length-1];
@@ -248,15 +276,15 @@ define([
                 };
 
 
-                var gender = $("#genderDd option:selected").val();
-                var jobType = $("#jobTypeDd option:selected").text();
-                var marital = $("#maritalDd option:selected").val();
+                var gender = $("#genderDd").data("id");
+                var jobType = $("#jobTypeDd").data("id");
+                var marital = $("#maritalDd").data("id");
                 var officeLocation = $.trim($("#officeLocation").val());
-                var relatedUser = $("#relatedUsersDd option:selected").val();
-                var department = $("#departmentsDd option:selected").val();
-                var jobPosition = $("#jobPositionDd option:selected").val();
-                var manager = $("#projectManagerDD option:selected").val();
-                var coach = $("#coachDd option:selected").val();
+                var relatedUser = $("#relatedUsersDd").data("id");
+                var department = $("#departmentsDd").data("id");
+                var jobPosition = $("#jobPositionDd").data("id");
+                var manager = $("#projectManagerDD").data("id");
+                var coach = $("#coachDd").data("id");
                 var identNo = $.trim($("#identNo").val());
 
                 var passportNo = $.trim($("#passportNo").val());
@@ -280,7 +308,7 @@ define([
                     dateBirth = new Date(Date.parse(fullDateBirt)).toISOString();
                 }
                 var active = ($("#active").is(":checked")) ? true : false;
-                var sourceId = $("#sourceDd option:selected").val();
+                var sourceId = $("#sourceDd").data("id");
                 var usersId=[];
                 var groupsId=[];
                 $(".groupsAndUser tr").each(function(){
@@ -428,12 +456,11 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
-                common.populateUsers("#relatedUsersDd", "/UsersForDd");
-                common.populateDepartments("#departmentsDd", "/DepartmentsForDd");
-                common.populateJobPositions("#jobPositionDd", "/JobPositionForDd");
-                common.populateJobTypeDd("#jobTypeDd", "/jobType");
-                common.populateEmployeesDd("#coachDd", "/getPersonsForDd");
-                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd");
+				populate.get("#jobTypeDd", "/jobType", {}, "name", this, true);
+                populate.get2name("#projectManagerDD", "/getPersonsForDd", {}, this, true);
+				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, true, true);
+				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, true, true);
+				populate.get("#departmentsDd", "/DepartmentsForDd", {}, "departmentName", this, true);
                 common.canvasDraw({ model: this.model.toJSON() }, this);
                 $('#dateBirth').datepicker({
                 	dateFormat: "d/m/yy",
