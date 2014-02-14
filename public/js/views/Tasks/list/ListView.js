@@ -189,6 +189,8 @@ define([
                     workflowIdArray.push($(this).val());
                 });
                 this.wfStatus = workflowIdArray;
+                var str = encodeURIComponent(workflowIdArray);
+                window.location.hash += '/' + str;
                 var itemsNumber = $("#itemsNumber").text();
                 this.collection.showMore({ count: itemsNumber, page: 1, status: workflowIdArray, parrentContentId: this.parrentContentId });
                 this.getTotalLength(null, itemsNumber);

@@ -19,7 +19,9 @@ define([
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "easyErp/:contentType/thumbnails": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
-            "easyErp/:contentType/list(/:parrentContentId)": "goToList",
+            "easyErp/:contentType/list/:parrentContentId/p:page/c:countPerPage/(s=:status)": "goToList",
+            "easyErp/:contentType/list/p:page/c:countPerPage/(s:status)": "goToList",
+            "easyErp/:contentType/list(/:parrentContentId/s:status)(/:parrentContentId)": "goToList",
             "easyErp/Profiles": "goToProfiles",
             "easyErp/myProfile": "goToUserPages",
             "easyErp/Workflows": "goToWorkflows",
@@ -33,14 +35,14 @@ define([
             this.on('all', function () {
                 $(".ui-dialog").remove();
             });
-  			$(document).on("keydown",".ui-dialog",function (e) {
+            $(document).on("keydown", ".ui-dialog", function (e) {
                 switch (e.which) {
                     case 27:
-					    $(".edit-dialog").remove();
+                        $(".edit-dialog").remove();
                         break;
-					case 13:
-					    $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
-					    break;
+                    case 13:
+                        $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
+                        break;
                     default:
                         break;
                 }
@@ -186,21 +188,23 @@ define([
             }
         },
 
-        goToList: function (contentType, parrentContentId) {
+        goToList: function (contentType, parrentContentId, navigatePage, countPerPage, filter) {
             var self = this;
             var startTime = new Date();
             var contentViewUrl = "views/" + contentType + "/list/ListView";
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = this.buildCollectionRoute(contentType);
-
+            var page = (navigatePage && navigatePage.length !== 24) ? parseInt(navigatePage) || 1 : 1;
+            var count = (countPerPage && countPerPage.length !== 24) ? parseInt(countPerPage) || 50 : 50;
+            var status = (filter) ? filter.split(',') : [];
             if (this.mainView == null) this.main(contentType);
 
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
                 var collection = new contentCollection({
                     viewType: 'list',
-                    page: 1,
-                    count: 50,
-                    status: [],
+                    page: page,
+                    count: count,
+                    status: status,
                     parrentContentId: parrentContentId,
                     contentType: contentType,
                     newCollection: true
@@ -212,7 +216,7 @@ define([
                     collection.unbind('reset');
                     var topbarView = new topBarView({ actionType: "Content", collection: collection });
                     var contentview = new contentView({ collection: collection, startTime: startTime });
-                   
+
                     topbarView.bind('createEvent', contentview.createItem, contentview);
                     topbarView.bind('editEvent', contentview.editItem, contentview);
                     topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
@@ -220,14 +224,6 @@ define([
                     collection.bind('showmore', contentview.showMoreContent, contentview);
                     this.changeView(contentview);
                     this.changeTopBarView(topbarView);
-                    var url;
-                    if (parrentContentId) {
-                         url = '#easyErp/' + contentType + '/list/' + parrentContentId;
-                    } else {
-                         url = '#easyErp/' + contentType + '/list';
-                    }
-
-                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -259,8 +255,8 @@ define([
                 getModel.fetch({
                     data: { id: modelId },
                     success: function (model) {
-						console.log(model);
-//                        self.convertModelDates(model);
+                        console.log(model);
+                        //                        self.convertModelDates(model);
                         var topbarView = new topBarView({ actionType: "Content" });
                         var contentView = new contentFormView({ model: model, startTime: startTime });
 
@@ -354,11 +350,11 @@ define([
 
                 var collection = (contentType !== 'Calendar') && (contentType !== 'Workflows')
                     ? new contentCollection({
-                            viewType: 'thumbnails',
-                            page: 1,
-                            count: 50,
-                            contentType: contentType
-                        })
+                        viewType: 'thumbnails',
+                        page: 1,
+                        count: 50,
+                        contentType: contentType
+                    })
 
                     : new contentCollection();
 
