@@ -343,7 +343,7 @@ define([
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page);
                 common.populateUsers("#allUsers", "/UsersForDd", null, null, true);
                 common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, this.pageG);
-				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
+				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true, (this.models)?this.models._id:null);
                 common.canvasDraw({ model: personModel.toJSON() }, this);
                 this.$el.find('.dateBirth').datepicker({
                     dateFormat: "d M, yy",
@@ -352,8 +352,6 @@ define([
                     yearRange: '-100y:c+nn',
                     maxDate: '-18y'
                 });
-                common.populateCompanies("#companiesDd", "/CompaniesForDd", this.models);
-                common.populateDepartments("#departmentDd", "/DepartmentsForDd");
                 this.delegateEvents(this.events);
                 return this;
             }
