@@ -1004,7 +1004,7 @@
 
 .kanban {
     .noPaddingMargin;
-    width: 100%;
+    min-width: 100%;
     table-layout: fixed;
 
     tbody {
@@ -1042,7 +1042,7 @@
         vertical-align: text-top;
         min-height: 100%;
         width: auto;
-        min-width: 150px;
+        min-width: 160px;
         height: auto;
         background: url("@{imagesfolder}/form_sheetbg.png");
 
@@ -1058,6 +1058,7 @@
             cursor: move;
             transition: box-shadow 1s ease;
             transition: border-color 1s ease;
+			min-width: 160px;
             .border-radius(0px);
 
             &.active {
@@ -2014,6 +2015,7 @@
     font-size: 13px;
 
     li {
+		.text-overflow;
         border: @thin-border rgba(0, 0, 0, 0);
         border-right-color: #ddd;
         height: 40px;
@@ -2566,8 +2568,9 @@ dl {
 }
 
 #wrapper {
-	.fullsize;
-    position: absolute;
+	//	width:inherit;
+    .fullsize;
+	position: absolute;
 
 	#content-holder {
 		position: inherit;

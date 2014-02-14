@@ -112,6 +112,7 @@
                 _.each(workflows.toJSON(), function (wfModel) {
                     dataService.getData('/Applications/kanban', { workflowId: wfModel._id }, this.asyncRender, this);
                 }, this);
+
             },
 
             asyncRender: function (response, context) {
@@ -132,6 +133,7 @@
                     var curEl = kanbanItemView.render().el;
                     column.append(curEl);
                 }, this);
+
             },
 
             editItem: function () {
@@ -174,6 +176,16 @@
 					});
 					item.find(".inner").attr("data-sequence",sequence);
 
+				}
+			},
+			resize:function(){
+				if ($(window).width()<$("table.kanban").width()){
+					$("#mainmenu-holder").width($("table.kanban").width());
+					$("#top-bar").width($("table.kanban").width());
+				}
+				else{
+					$("#mainmenu-holder").width($(window).width());
+					$("#top-bar").width($(window).width());
 				}
 			},
             render: function () {
@@ -232,7 +244,9 @@
                     }
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
-			$(document).on("keypress","#cPerPage",this.isNumberKey);
+				$(document).on("keypress","#cPerPage",this.isNumberKey);
+
+				$(window).on("resize",this.resize);
                 return this;
             }
         });

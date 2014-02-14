@@ -406,8 +406,6 @@ define([
                     }
                 });
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page);
-                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd");
-                common.populateCustomers("#customerDd", "/Customer");
                 common.populateUsers("#allUsers", "/Users", null, null, true);
 
 				populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);
