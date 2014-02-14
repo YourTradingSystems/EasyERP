@@ -103,6 +103,7 @@
     -webkit-box-shadow: @arguments;
 }
 
+
 .dl-auto(@max-width: 120px,@with-dt: 35%, @line-height: 0px, @height: 16px, @margin-top: 0px) {
     clear: both;
     font-size: 14px;
@@ -3971,6 +3972,15 @@ h3.dashboard {
 
 }
 .form-holder form{
+	.profile-create{
+		.dl-auto(250px,50%);
+		input{
+			width:276px;
+		}
+		input[type='radio']{
+			width:auto !important;
+		}
+	}
 	.project-edit-info{
 		.dl-auto(200px,42%);
 		input{
@@ -4100,4 +4110,7 @@ h3.dashboard {
 			}
 		}
 	}
+}
+.full-width{
+	width:100%;
 }

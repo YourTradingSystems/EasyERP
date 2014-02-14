@@ -1,130 +1,125 @@
 <div class="form-holder">
   <form method="post" action="" id="editJobPositionForm" class="form" data-id="<%=model._id%>">
     <fieldset>
-        <div class="inner">
-            <ul class="dialog-tabs">
-                <li><a class="active" href="javascript:;">Main</a></li>
-                <li><a href="javascript:;">Assignees</a></li>
-            </ul>
+      <div class="inner">
+        <ul class="dialog-tabs">
+          <li><a class="active" href="javascript:;">Main</a></li>
+          <li><a href="javascript:;">Assignees</a></li>
+        </ul>
+        <div class="clearfix"></div>
+        <div class="dialog-tabs-items">
+          <div class="dialog-tabs-item active">
+	        <div class="half-block left">
+			  <dl class="job-create-info">
+				<dt><label for="name">Job Name </label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" value="<%=model.name%>" required maxlength="32"/></dd>
+<!--				<dt><label for="currentNumberEmployees">Current Number of Employees</label></dt><dd><label><%= model.numberOfEmployees %></label></dd>-->
+<!--				<dt><label for="totalForecastedEmployees">Total Forecasted Employees</label></dt><dd><label>2</label></dd>-->
+				<dt><label for="departmentDd">Department</label></dt>
+				<dd>
+                  <a id="departmentDd" data-id="<%=(model.department) ? model.department._id : ''%>" class="current-selected" href="javascript:;"><%=(model.department)?model.department.departmentName:'Select'%></a>
+				</dd>
+			  </dl>
+			</div>
+	        <div class="half-block left">
+			  <dl class="job-create-info">
+				<dt><label for="expectedRecruitment">Expected in Recruitment</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" value="<%=model.expectedRecruitment%>" min="0" maxlength="32"/></dd>
+				<dt><label for="workflowsDd">State</label></dt><dd>
+                  <a id="workflowsDd" data-id="<%=(model.workflow) ? model.workflow._id : ''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?model.workflow.name:'Select'%></a>
+				</dd>
+			  </dl>
+			</div>
+	        <div class="half-block left">
+			  <dl class="job-create-info">
+				<dt><label for="description">Job Description</label></dt><dd><textarea id="description"><%=model.description%></textarea></dd>
+			  </dl>		
+			</div>
+	        <div class="half-block left">
+			  <dl class="job-create-info">
+				<dt><label for="requirements">Requirements</label></dt><dd><textarea id="requirements"><%=model.requirements%></textarea></dd>
+			  </dl>		
+			</div>
+          </div>
+          <div class="dialog-tabs-item">
+            <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
             <div class="clearfix"></div>
-            <div class="dialog-tabs-items">
-                <div class="dialog-tabs-item active">
-	               <div class="half-block left">
-		<dl class="job-create-info">
-		  <dt><label for="name">Job Name </label></dt><dd><input type="text" class="title-input blueback" name="name" id="name" value="<%=model.name%>" required maxlength="32"/></dd>
-		  <dt><label for="currentNumberEmployees">Current Number of Employees</label></dt><dd><label><%= model.numberOfEmployees %></label></dd>
-		  <dt><label for="expectedRecruitment">Expected in Recruitment</label></dt><dd><input type="number" name="expectedRecruitment" id="expectedRecruitment" value="<%=model.expectedRecruitment%>" min="0" maxlength="32"/></dd>
-		  <dt><label for="totalForecastedEmployees">Total Forecasted Employees</label></dt><dd><label>2</label></dd>
-		  <dt><label for="interviewForm">Interview Form :</label></dt>
-		  <dd>
-            <select id="interviewForm">
-              <option selected="selected" value="0">Select...</option>
-            </select>
-		  </dd>
-		  <dt><label for="workflowNamesDd">Workflow Names</label></dt>
-		  <dd>
-			<select id="workflowNamesDd">
-            </select>
-		  </dd>
-		  <dt><label for="workflowsDd">Workflow</label></dt><dd>
-            <select  id="workflowsDd">
-            </select>
-		  </dd>
-		  <dt><label for="departmentDd">Department</label></dt>
-		  <dd>
-			<select id="departmentDd">
-            </select>
-		  </dd>
-		</dl>
-	  </div>
-	               <div class="half-block left">
-		<dl class="job-create-info">
-		  <dt><label for="description">Job Description</label></dt><dd><textarea id="description"><%=model.description%></textarea></dd>
-		  <dt><label for="requirements">Requirements</label></dt><dd><textarea id="requirements"><%=model.requirements%></textarea></dd>
-		</dl>		
-	  </div>
-                </div>
-                <div class="dialog-tabs-item">
-                    <div class="addUserAndGroup"><a href="javascript:;" class="addUser">Manage User</a> | <a href="javascript:;" class="addGroup">Manage Group</a></div>
-                    <div class="clearfix"></div>
 
-                    <div class="half-block left">
-                        <div class="canReadAndWrite">
-                            <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
-                            <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
-                            <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
-                        </div>
-                    </div>
-                    <div class="half-block left">
-                        <dl class="project-owner-info">
-                            <dt><label for="allUsers">Owner</label></dt><dd>
-
-                            <select id="allUsers">
-
-                            </select>
-
-                        </dd>
-                        </dl>
-                    </div>
-
-
-                    <div class="addUserDialog">
-
-                        <div class="formTitle">
-                            <h3 class="left">Choose Users</h3>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="groupsChooser">
-                            <div class="left">
-                                <ul id="sourceUsers" class="source">
-
-                                </ul>
-                            </div>
-                            <div class="left">
-                                <div class="swich"></div>
-                            </div>
-                            <div class="left">
-                                <ul id="targetUsers" class="target">
-
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="addGroupDialog">
-                        <div class="formTitle">
-                            <h3 class="left">Choose Groups</h3>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="groupsChooser">
-                            <div class="left">
-                                <ul id="sourceGroups" class="source">
-
-                                </ul>
-                            </div>
-                            <div class="left">
-                                <div class="swich"></div>
-                            </div>
-                            <div class="left">
-                                <ul id="targetGroups" class="target">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <table class="groupsAndUser">
-                        <tr>
-                            <th>Groups and Users</th><th></th>
-                        </tr>
-                    </table>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="clearfix"></div>
+            <div class="half-block left">
+              <div class="canReadAndWrite">
+                <input type="radio" name="whoCanRW" value="everyOne" <%=(model.whoCanRW=="everyOne")?'checked="checked"':''%> checked="checked"/>Everyone<br>
+                <input type="radio" name="whoCanRW" value="owner" <%=(model.whoCanRW=="owner")?'checked="checked"':''%>/>Owner<br>
+                <input type="radio" name="whoCanRW" value="group" <%=(model.whoCanRW=="group")?'checked="checked"':''%>/>Owner, Users and Users in Groups
+              </div>
             </div>
+            <div class="half-block left">
+              <dl class="project-owner-info">
+                <dt><label for="allUsers">Owner</label></dt><dd>
+
+                  <select id="allUsers">
+
+                  </select>
+
+                </dd>
+              </dl>
+            </div>
+
+
+            <div class="addUserDialog">
+
+              <div class="formTitle">
+                <h3 class="left">Choose Users</h3>
+                <div class="clearfix"></div>
+              </div>
+              <div class="groupsChooser">
+                <div class="left">
+                  <ul id="sourceUsers" class="source">
+
+                  </ul>
+                </div>
+                <div class="left">
+                  <div class="swich"></div>
+                </div>
+                <div class="left">
+                  <ul id="targetUsers" class="target">
+
+                  </ul>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+            <div class="addGroupDialog">
+              <div class="formTitle">
+                <h3 class="left">Choose Groups</h3>
+                <div class="clearfix"></div>
+              </div>
+              <div class="groupsChooser">
+                <div class="left">
+                  <ul id="sourceGroups" class="source">
+
+                  </ul>
+                </div>
+                <div class="left">
+                  <div class="swich"></div>
+                </div>
+                <div class="left">
+                  <ul id="targetGroups" class="target">
+
+                  </ul>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+
+            <table class="groupsAndUser">
+              <tr>
+                <th>Groups and Users</th><th></th>
+              </tr>
+            </table>
+            <div class="clearfix"></div>
+          </div>
+          <div class="clearfix"></div>
         </div>
+      </div>
     </fieldset>
   </form>
 </div>
