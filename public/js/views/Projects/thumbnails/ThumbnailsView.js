@@ -61,7 +61,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                 patch: true,
                 validate: false,
                 success: function () {
-                    targetElement.find(".stageSelect").text($(e.target).text());
+                    targetElement.find(".stageSelect").text($(e.target).text()).attr("class","stageSelect "+$(e.target).text().replace(" ",'').toLowerCase());
                 }
             });
 

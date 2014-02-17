@@ -10,7 +10,11 @@
 
 @font-face {
     font-family: 'Icons';
-    src: url("../font/easyERP.ttf") format('truetype');
+    src: url("../font/easyERP.eot");
+    src:  url("../font/easyERP.eot?#iefix") format('embedded-opentype'),
+          url("../font/easyERP.woff") format('woff'),
+          url("../font/easyERP.ttf") format('truetype'),
+          url("../font/easyERP.svg#quartzregular") format('svg');
 }
 
 @font-face {
@@ -263,7 +267,8 @@
         }
 
         &.person {
-            margin-top: -45px;
+            margin-top: -30px;
+			margin-right:-15px;
             z-index: 100;
             position: relative;
         }
@@ -386,6 +391,9 @@
 
     span {
         padding: 3px 8px 3px 0;
+		&#editSpan{
+			width:50px;
+		}
     }
 
     label {
@@ -1006,7 +1014,9 @@
     .noPaddingMargin;
     min-width: 100%;
     table-layout: fixed;
-
+	&.opp{
+		width:100%;
+	}
     tbody {
         width: 100%;
     }
@@ -1058,7 +1068,6 @@
             cursor: move;
             transition: box-shadow 1s ease;
             transition: border-color 1s ease;
-			min-width: 160px;
             .border-radius(0px);
 
             &.active {
@@ -1744,6 +1753,19 @@
             dt, dd {
                 line-height: 17px;
             }
+			dd.editable{
+				a{
+					line-height:16px;
+					width:100%;
+				}
+			}
+			.no-long{
+				width:100%;
+				display:block;
+				line-height:11px;
+				float:left;
+				.text-overflow;
+			}
         }
     }
 }
@@ -3959,6 +3981,10 @@ h3.dashboard {
 	&.inprogress{
 		color:@lightblue;
 	}
+	&.closed{
+		color:green;
+	}
+
 }
 .form-holder form {
 .task-info{

@@ -195,8 +195,8 @@ define([
 			   },*/
 			   updateSequence: function(e){
 				   var n = $("#workflows .row").length;
-				   for (var i=n-1;i>=0;i--){
-					   $("#workflows .row").eq(i).find("div.name").attr("data-sequence",i);
+				   for (var i=0;i<n;i++){
+					   $("#workflows .row").eq(i).find("div.name").attr("data-sequence",n-i-1);
 				   }
 			   },
 			   chooseWorkflowDetailes: function (e) {
