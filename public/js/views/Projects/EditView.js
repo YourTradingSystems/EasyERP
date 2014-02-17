@@ -451,7 +451,7 @@ define([
             },
 
             hideDialog: function () {
-                $('.edit-dialog').remove();
+                $('.edit-project-dialog').remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },
@@ -578,6 +578,9 @@ define([
 							case 'thumbnails':
 								{
 									$("#" + model._id).remove();
+			                        $('.edit-project-dialog').remove();
+			                        $(".add-group-dialog").remove();
+			                        $(".add-user-dialog").remove();
 								}
 							}
 							self.hideDialog();
@@ -600,7 +603,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
-                    dialogClass: "edit-dialog",
+                    dialogClass: "edit-project-dialog",
                     width: "900px",
                     buttons: {
                         save: {
