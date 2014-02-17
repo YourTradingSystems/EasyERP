@@ -30,9 +30,9 @@
                             <li class="call" id="call">Call</li>
 						  </ul>
                             </dd>
-                            <dt><label for="campaignDd">Source</label></dt>
+                            <dt><label for="sourceDd">Source</label></dt>
                             <dd>
-							  <a id="campaignDd" data-id="<%=model.source?model.source:''%>" class="current-selected" href="javascript:;"><%=model.source?model.source:"Select"%></a>
+							  <a id="sourceDd" data-id="<%=model.source?model.source:''%>" class="current-selected" href="javascript:;"><%=model.source?model.source:"Select"%></a>
                             </dd>
                             <dt><label for="salesPerson">Salesperson</label></dt><dd>
 							<a id="salesPerson" data-id="<%=model.salesPerson?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=model.salesPerson?(model.salesPerson.name.first+' '+model.salesPerson.name.last):'Select'%></a>
