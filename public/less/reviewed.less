@@ -708,7 +708,18 @@
     border: @thin-border #ccc;
     padding: @defaultPadding;
     font-family: 'Open Sans', sans-serif;
-
+    input:focus{
+      outline: none;
+      .box-shadow(0,0,0,0);
+      border:0 !important;
+    }
+    .margin{
+      margin: 0 30px;
+    }
+    input[type="submit"]{
+      height: 0;
+      width:0;
+    }
     .loginImage(@x: 0, @y: 0) {
         background-image: url("@{imagesfolder}/login-sprite.png");
         background-repeat: no-repeat;
