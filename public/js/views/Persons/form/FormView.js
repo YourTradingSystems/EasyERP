@@ -193,7 +193,7 @@ define([
 			},
             saveClick: function (e) {
                 e.preventDefault();
-                var parent = $(event.target).parent().parent();
+                var parent = $(e.target).parent().parent();
                 var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
 
