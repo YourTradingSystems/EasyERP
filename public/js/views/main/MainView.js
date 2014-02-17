@@ -40,6 +40,13 @@ define([
                 this.topMenu.bind('changeSelection', this.leftMenu.setCurrentSection, { leftMenu: this.leftMenu });
                 this.topMenu.bind('mouseOver', this.leftMenu.mouseOver, { leftMenu: this.leftMenu });
             },
+			updateMenu:function(contentType){
+				var currentChildren = this.collection.where({href:contentType});
+				var currentRootId = currentChildren[0].get("parrent");
+				var currentRoot = this.collection.where({_id:currentRootId});
+				this.leftMenu.updateLeftMenu(currentChildren, currentRoot);
+				this.topMenu.updateTopMenu(currentRoot);
+			},
             showSelect: function(e) {
                 var select = this.$el.find('#loginSelect');
                 if (select.prop('hidden')) {

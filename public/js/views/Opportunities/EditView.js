@@ -629,7 +629,6 @@
 									});
                                     kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 								}
-								console.log(data);
                                 $(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
 
                             }
@@ -654,6 +653,7 @@
                    event.preventDefault();
                    var self = this;
                    var answer = confirm("Realy DELETE items ?!");
+                   
                    if (answer == true) {
                        this.currentModel.destroy({
                            headers: {
@@ -661,16 +661,22 @@
                            },
                            success: function (model) {
 							   model = model.toJSON();
+							   
 							   var viewType = custom.getCurrentVT();
 							   switch (viewType) {
 							   case 'list':
 								   {
 									   $("tr[data-id='" + model._id + "'] td").remove();
+	
 								   }
 								   break;
 							   case 'kanban':
 								   {
 									   $("#" + model._id).remove();
+									   //count kanban
+									   var wId = model.workflow._id;
+									   var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html()-1);
+									   $("td[data-id='" + wId + "'] .totalCount").html(newTotal);
 								   }
 							   }
 							   self.hideDialog();
@@ -683,7 +689,6 @@
                    }
                },
                render: function () {
-				   console.log(this.currentModel.toJSON());
                    var formString = this.template({
                        model: this.currentModel.toJSON()
                    });var self = this;

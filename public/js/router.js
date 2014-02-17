@@ -36,11 +36,11 @@ define([
             $(document).on("keydown", ".ui-dialog", function (e) {
                 switch (e.which) {
                     case 27:
-                        $(".edit-dialog").remove();
+					    $(".edit-dialog").remove();
                         break;
-                    case 13:
-                        $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
-                        break;
+					case 13:
+					    $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
+					    break;
                     default:
                         break;
                 }
@@ -49,7 +49,11 @@ define([
 
         goToProfiles: function () {
             var startTime = new Date();
-            if (this.mainView == null) this.main("Profiles");
+            if (this.mainView === null) {
+				this.main("Profiles");
+			}else{
+				this.mainView.updateMenu("Profiles");
+			}
 
             var contentViewUrl = 'views/Profiles/ContentView';
             var topBarViewUrl = 'views/Profiles/TopBarView';
@@ -86,8 +90,11 @@ define([
             var contentViewUrl = "views/myProfile/ContentView";
             var topBarViewUrl = "views/myProfile/TopBarView";
             var self = this;
-
-            if (this.mainView == null) this.main("Persons");
+            if (this.mainView === null) {
+				this.main("Persons");
+			}else{
+				this.mainView.updateMenu("Persons");
+			}
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -109,7 +116,11 @@ define([
             var topBarViewUrl = "views/Dashboard/TopBarView";
             var self = this;
 
-            if (this.mainView == null) this.main("Dashboard");
+            if (this.mainView === null) {
+				this.main("Dashboard");
+			}else{
+				this.mainView.updateMenu("Dashboard");
+			}
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -127,7 +138,11 @@ define([
             var topBarViewUrl = "views/projectDashboard/TopBarView";
             var self = this;
 
-            if (this.mainView == null) this.main("projectDashboard");
+            if (this.mainView === null) {
+				this.main("projectDashboard");
+			}else{
+				this.mainView.updateMenu("projectDashboard");
+			}
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -142,7 +157,12 @@ define([
 
         goToWorkflows: function () {
             var startTime = new Date();
-            if (this.mainView == null) this.main("Workflows");
+
+            if (this.mainView === null) {
+				this.main("Workflows");
+			}else{
+				this.mainView.updateMenu("Workflows");
+			}
 
             var contentViewUrl = "views/Workflows/ContentView",
                 topBarViewUrl = "views/Workflows/TopBarView",
@@ -195,8 +215,11 @@ define([
             var navigatePage = (page) ? parseInt(page) || 1 : 1;
             var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
             filter = filter || {};
-            if (this.mainView == null) this.main(contentType);
-
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
                 var collection = new contentCollection({
                     viewType: 'list',
@@ -214,7 +237,7 @@ define([
                     collection.unbind('reset');
                     var topbarView = new topBarView({ actionType: "Content", collection: collection });
                     var contentview = new contentView({ collection: collection, startTime: startTime });
-
+                   
                     topbarView.bind('createEvent', contentview.createItem, contentview);
                     topbarView.bind('editEvent', contentview.editItem, contentview);
                     topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
@@ -232,8 +255,11 @@ define([
             var contentFormModelUrl;
             var contentFormViewUrl;
             var topBarViewUrl;
-
-            if (this.mainView == null) this.main(contentType);
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
 
             if (contentType !== 'ownCompanies') {
                 contentFormModelUrl = "models/" + contentType + "Model";
@@ -253,8 +279,8 @@ define([
                 getModel.fetch({
                     data: { id: modelId },
                     success: function (model) {
-                        console.log(model);
-                        //                        self.convertModelDates(model);
+						console.log(model);
+//                        self.convertModelDates(model);
                         var topbarView = new topBarView({ actionType: "Content" });
                         var contentView = new contentFormView({ model: model, startTime: startTime });
 
@@ -294,7 +320,11 @@ define([
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = "collections/Workflows/WorkflowsCollection";
 
-            if (this.mainView == null) this.main(contentType);
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
             custom.setCurrentVT('kanban');
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, workflowsCollection) {
                 var startTime = new Date();
@@ -335,7 +365,12 @@ define([
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl;
 
-            if (this.mainView == null) this.main(contentType);
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
+
             if (contentType !== 'Calendar' && contentType !== 'Workflows') {
                 contentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
                 collectionUrl = this.buildCollectionRoute(contentType);
@@ -348,11 +383,11 @@ define([
 
                 var collection = (contentType !== 'Calendar') && (contentType !== 'Workflows')
                     ? new contentCollection({
-                        viewType: 'thumbnails',
-                        page: 1,
-                        count: 50,
-                        contentType: contentType
-                    })
+                            viewType: 'thumbnails',
+                            page: 1,
+                            count: 50,
+                            contentType: contentType
+                        })
 
                     : new contentCollection();
 
