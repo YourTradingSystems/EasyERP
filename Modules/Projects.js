@@ -935,7 +935,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                             if (data && data.status && data.status.length > 0)
                                 query.where('workflow').in(data.status);
                             query.select("_id projectName task workflow projectmanager customer health").
-                                populate('workflow', 'status').
+                                populate('workflow', 'name').
                                 populate('projectmanager', 'name').
                                 populate('customer', 'name').
                                 skip((data.page - 1) * data.count).

@@ -540,16 +540,8 @@ define([
 				populate.get("#jobPositionDd", "/JobPositionForDd", {}, "name", this, false, true);
 				populate.get("#relatedUsersDd", "/UsersForDd", {}, "login", this, false, true);
 				populate.get("#departmentsDd", "/DepartmentsForDd", {}, "departmentName", this);
-
-/*
-                common.populateJobTypeDd("#jobTypeDd", "/jobType", this.currentModel.toJSON());
-                common.populateUsers("#relatedUsersDd", "/UsersForDd", this.currentModel.toJSON());
-                common.populateDepartments("#departmentsDd", "/DepartmentsForDd",this.currentModel.toJSON());
-                common.populateJobPositions("#jobPositionDd", "/JobPositionForDd", this.currentModel.toJSON());
-                common.populateCoachDd("#coachDd", "/getPersonsForDd", this.currentModel.toJSON());
-                common.populateEmployeesDd("#projectManagerDD", "/getPersonsForDd", this.currentModel.toJSON());
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);
-*/
+
                 
                 $('#dateBirth').datepicker({
                 	dateFormat: "d/m/yy",

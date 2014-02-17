@@ -371,6 +371,7 @@ define([
 				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,true,true);
 				populate.get("#language", "/Languages",{},"name",this,true,false);
 				populate.get2name("#employeesDd", "/getSalesPerson",{},this,true,false);
+                common.canvasDraw({ model: companyModel.toJSON() }, this);
                 this.$el.find('#date').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
