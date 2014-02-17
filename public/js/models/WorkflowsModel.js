@@ -17,10 +17,14 @@ function (common, Validation){
         validate: function(attrs){
             var errors = [];
 
-            Validation.checkNameField(errors, true, attrs.value[0].name);
+            Validation.checkLoginField(errors, true, attrs.value[0].name);
+            Validation.checkLoginField(errors, true, attrs.name);
             if (attrs.wName){
-            	Validation.checkNameField(errors, true, attrs.wName);
+            	Validation.checkLoginField(errors, true, attrs.wName);
         	}
+            if (attrs.name){
+                Validation.checkLoginField(errors, true, attrs.name);
+            }
             if(errors.length > 0)
                 return errors;
 

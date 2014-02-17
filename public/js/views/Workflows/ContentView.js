@@ -51,7 +51,7 @@ define([
 				   var mid = 39;
 				   $("#addNewStatus").show();
 				   var tr = $(e.target).closest("div.row");
-				   var name = tr.find("div.name input").val();
+				   var name = tr.find("div.name input").val().trim();
 				   var status = tr.find("div.status option:selected").text();
 				   var tdName = tr.find("div.name");
 				   var id = tdName.data("id");
@@ -100,7 +100,7 @@ define([
 				   target.closest("div.row").find("span, .edit").addClass("hidden");
 				   target.closest("div.row").find("span, .delete").addClass("hidden");
 				   td.siblings(".status").append(select);
-				   var statusText = td.siblings("div.status").text();
+				   var statusText = td.siblings("div.status").text().trim();
 				   this.relatedStatusesCollection.forEach(function (status) {
 					   var statusJson = status.toJSON();
 					   (statusJson.status == statusText) ?
