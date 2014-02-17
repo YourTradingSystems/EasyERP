@@ -318,59 +318,64 @@ define([
                 e.preventDefault();
                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                if (val || title) {
-                    var notes = this.formModel.get('notes');
-                    var arrKeyStr = $('#getNoteKey').attr("value");
-                    var noteObj = {
-                        note: '',
-                        title: ''
-                    };
-                    if (arrKeyStr) {
-                        var editNotes = _.map(notes, function (note) {
-                            if (note._id == arrKeyStr) {
-                                note.note = val;
-                                note.title = title;
-                            }
-                            return note;
-                        });
-                        this.formModel.save({ 'notes': editNotes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function () {
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
-                                    $('#getNoteKey').attr("value", '');
-                                }
-                            });
-                    } else {
-                        noteObj.note = val;
-                        noteObj.title = title;
-                        notes.push(noteObj);
-                        this.formModel.set();
-                        this.formModel.save({ 'notes': notes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function (models, data) {
-                                    $('#noteBody').empty();
-                                    data.notes.forEach(function (item) {
-                                    	/*   var key = notes.length - 1;
-                                           var notes_data = response.notes;
-                                           var date = common.utcDateToLocaleDate(response.notes[key].date);
-                                           var author = currentModel.get('name').first;
-                                           var id = response.notes[key]._id;
-                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
-								var date = common.utcDateToLocaleDate(item.date);
-            							//notes.push(item);
-            							$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
-                                    });
-                                }
-                            });
+                if (!val) {//textarrea notes not be empty
+                	alert("Note Content can not be empty");
+                }
+                else {
+	                if (val || title) {
+	                    var notes = this.formModel.get('notes');
+	                    var arrKeyStr = $('#getNoteKey').attr("value");
+	                    var noteObj = {
+	                        note: '',
+	                        title: ''
+	                    };
+	                    if (arrKeyStr) {
+	                        var editNotes = _.map(notes, function (note) {
+	                            if (note._id == arrKeyStr) {
+	                                note.note = val;
+	                                note.title = title;
+	                            }
+	                            return note;
+	                        });
+	                        this.formModel.save({ 'notes': editNotes },
+	                            {
+	                                headers: {
+	                                    mid: 39
+	                                },
+	                                patch: true,
+	                                success: function () {
+	                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
+	                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+	                                    $('#getNoteKey').attr("value", '');
+	                                }
+	                            });
+	                    } else {
+	                        noteObj.note = val;
+	                        noteObj.title = title;
+	                        notes.push(noteObj);
+	                        this.formModel.set();
+	                        this.formModel.save({ 'notes': notes },
+	                            {
+	                                headers: {
+	                                    mid: 39
+	                                },
+	                                patch: true,
+	                                success: function (models, data) {
+	                                    $('#noteBody').empty();
+	                                    data.notes.forEach(function (item) {
+	                                    	/*   var key = notes.length - 1;
+	                                           var notes_data = response.notes;
+	                                           var date = common.utcDateToLocaleDate(response.notes[key].date);
+	                                           var author = currentModel.get('name').first;
+	                                           var id = response.notes[key]._id;
+	                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
+									var date = common.utcDateToLocaleDate(item.date);
+	            							//notes.push(item);
+	            							$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
+	                                    });
+	                                }
+	                            });
+	                    }
                     }
                     $('#noteArea').val('');
                     $('#noteTitleArea').val('');
