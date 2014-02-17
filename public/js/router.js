@@ -3,7 +3,7 @@ define([
   'views/main/MainView',
   'views/login/LoginView',
   'custom',
-    'common'
+  'common'
 ], function (mainView, loginView, custom, common) {
 
     var appRouter = Backbone.Router.extend({
