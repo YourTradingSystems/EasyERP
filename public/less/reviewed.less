@@ -1014,7 +1014,9 @@
     .noPaddingMargin;
     min-width: 100%;
     table-layout: fixed;
-
+	&.opp{
+		width:100%;
+	}
     tbody {
         width: 100%;
     }
@@ -1066,7 +1068,6 @@
             cursor: move;
             transition: box-shadow 1s ease;
             transition: border-color 1s ease;
-			min-width: 160px;
             .border-radius(0px);
 
             &.active {
@@ -3980,6 +3981,10 @@ h3.dashboard {
 	&.inprogress{
 		color:@lightblue;
 	}
+	&.closed{
+		color:green;
+	}
+
 }
 .form-holder form {
 .task-info{

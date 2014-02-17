@@ -304,7 +304,7 @@ define([
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
 				populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, true, true);
-                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobposition" }, "name", this, true);
+                populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobpositions" }, "name", this, true);
 /*                common.populateDepartments("#departmentDd", "/Departments");
                 common.populateWorkflows("Jobposition", "#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd");*/
                 this.delegateEvents(this.events);

@@ -351,7 +351,7 @@ define([
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
 
 				populate.getPriority("#priorityDd",this,true);
-				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Lead"},"name",this,true);			
+				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Leads"},"name",this,true);			
 				populate.get2name("#customerDd", "/Customer",{},this,true,true);	
 				populate.get("#sourceDd", "/sources",{},"name",this,true,true);	
 				populate.get("#campaignDd", "/Campaigns",{},"name",this,true,true);	

@@ -37,14 +37,18 @@ define([
                 event.preventDefault();
                 this.$el.find('.hover').removeClass('hover');
                 $(event.target).closest('li').addClass('hover');
-                this.selectedModule = $(event.target).text();             
-                
+                this.selectedModule = $(event.target).text();
                 this.trigger('mouseOver', this.selectedModule);
                 //this.render();
             },
-
+			updateTopMenu:function(currentRoot){
+				this.currentRoot = currentRoot;
+				this.selectedModule = (this.currentRoot[0]).get('mname');
+				this.$el.find(".selected").removeClass("selected");
+				this.$el.find("#"+this.selectedModule).parent().addClass("selected");
+			},
             render: function () {
-                if (this.selectedModule == null)
+                if (this.selectedModule === null)
 					if (this.currentRoot){
 						this.selectedModule = (this.currentRoot[0]).get('mname');
 					}else{

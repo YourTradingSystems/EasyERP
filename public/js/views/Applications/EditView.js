@@ -521,6 +521,10 @@
 							case 'kanban':
 								{
 									$("#" + model._id).remove();
+									//count kanban
+									var wId = model.workflow._id;
+									var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html()-1);
+									$("td[data-id='" + wId + "'] .totalCount").html(newTotal);
 								}
 							}
 							self.hideDialog();

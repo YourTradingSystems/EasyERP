@@ -119,7 +119,7 @@ define([
                     self.hideItemsNumber(e);
                 });
 
-                common.populateWorkflowsList("Lead", ".filter-check-list", ".filter-check-list", "/Workflows", null, function(stages) {
+                common.populateWorkflowsList("Leads", ".filter-check-list", ".filter-check-list", "/Workflows", null, function(stages) {
                     self.stages = stages;
                     itemView.trigger('incomingStages', stages);
                 });

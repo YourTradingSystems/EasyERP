@@ -19,6 +19,8 @@ define([
 
             setCurrentSection: function (section) {
                 this.leftMenu.currentSection = section;
+				this.leftMenu.lastClickedLeftMenuItem = null;
+				this.leftMenu.selectedId = null;
                 this.leftMenu.render();
             },
             mouseOver: function (section, selectedId) {
@@ -57,7 +59,7 @@ define([
                 $el.html('');
                 var currentModule = null;
                 var root = this.collection.root();
-                if (this.currentSection == null)
+                if (this.currentSection === null)
                     this.currentSection = root[0].get('mname');
                 for (var i = 0, len = root.length; i < len; i++) {
                     if (root[i].get('mname') == this.currentSection) {
@@ -65,17 +67,22 @@ define([
                         break;
                     }
                 }
-                if (currentModule == null) currentModule = root[0];
+                if (currentModule === null) currentModule = root[0];
                 var elem = $el.append(this.renderMenu(this.collection.children(currentModule), onMouseOver));
-                var currentSelElem =document.getElementById(selectedId);
-                if ($(currentSelElem).length == 0) {
+                var currentSelElem = document.getElementById(selectedId);
+                if ($(currentSelElem).length === 0) {
                     currentSelElem = $(this.lastClickedLeftMenuItem);
                 }
                 $(currentSelElem).closest("ul").find(".selected").removeClass("selected");
                 $(currentSelElem).addClass('selected');
                 return this;
             },
-
+			updateLeftMenu:function(currentChildren, currentRoot){
+                this.currentChildren = currentChildren;
+                this.currentSection = currentRoot[0].get('mname');
+				this.selectedId = this.currentChildren[0].get("_id");
+				this.render(null, this.selectedId);
+			},
             hoverItem: function (e) {
                 this.$el.find('li.hover').removeClass('hover');
                 $(e.target).closest('li').addClass('hover');
@@ -93,6 +100,7 @@ define([
                     }
                 }
             },
+
             mouseLeaveEl: function (option) {
                 var that = this;
                 var unSelect = function (section) {

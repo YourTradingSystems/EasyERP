@@ -49,7 +49,11 @@ define([
 
         goToProfiles: function () {
             var startTime = new Date();
-            if (this.mainView == null) this.main("Profiles");
+            if (this.mainView === null) {
+				this.main("Profiles");
+			}else{
+				this.mainView.updateMenu("Profiles");
+			}
 
             var contentViewUrl = 'views/Profiles/ContentView';
             var topBarViewUrl = 'views/Profiles/TopBarView';
@@ -86,8 +90,11 @@ define([
             var contentViewUrl = "views/myProfile/ContentView";
             var topBarViewUrl = "views/myProfile/TopBarView";
             var self = this;
-
-            if (this.mainView == null) this.main("Persons");
+            if (this.mainView === null) {
+				this.main("Persons");
+			}else{
+				this.mainView.updateMenu("Persons");
+			}
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -109,7 +116,11 @@ define([
             var topBarViewUrl = "views/Dashboard/TopBarView";
             var self = this;
 
-            if (this.mainView == null) this.main("Dashboard");
+            if (this.mainView === null) {
+				this.main("Dashboard");
+			}else{
+				this.mainView.updateMenu("Dashboard");
+			}
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -127,7 +138,11 @@ define([
             var topBarViewUrl = "views/projectDashboard/TopBarView";
             var self = this;
 
-            if (this.mainView == null) this.main("projectDashboard");
+            if (this.mainView === null) {
+				this.main("projectDashboard");
+			}else{
+				this.mainView.updateMenu("projectDashboard");
+			}
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -142,7 +157,12 @@ define([
 
         goToWorkflows: function () {
             var startTime = new Date();
-            if (this.mainView == null) this.main("Workflows");
+
+            if (this.mainView === null) {
+				this.main("Workflows");
+			}else{
+				this.mainView.updateMenu("Workflows");
+			}
 
             var contentViewUrl = "views/Workflows/ContentView",
                 topBarViewUrl = "views/Workflows/TopBarView",
@@ -192,9 +212,11 @@ define([
             var contentViewUrl = "views/" + contentType + "/list/ListView";
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = this.buildCollectionRoute(contentType);
-
-            if (this.mainView == null) this.main(contentType);
-
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
                 var collection = new contentCollection({
                     viewType: 'list',
@@ -238,8 +260,11 @@ define([
             var contentFormModelUrl;
             var contentFormViewUrl;
             var topBarViewUrl;
-
-            if (this.mainView == null) this.main(contentType);
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
 
             if (contentType !== 'ownCompanies') {
                 contentFormModelUrl = "models/" + contentType + "Model";
@@ -300,7 +325,11 @@ define([
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = "collections/Workflows/WorkflowsCollection";
 
-            if (this.mainView == null) this.main(contentType);
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
             custom.setCurrentVT('kanban');
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, workflowsCollection) {
                 var startTime = new Date();
@@ -341,7 +370,12 @@ define([
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl;
 
-            if (this.mainView == null) this.main(contentType);
+            if (this.mainView === null) {
+				this.main(contentType);
+			}else{
+				this.mainView.updateMenu(contentType);
+			}
+
             if (contentType !== 'Calendar' && contentType !== 'Workflows') {
                 contentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
                 collectionUrl = this.buildCollectionRoute(contentType);
