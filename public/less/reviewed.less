@@ -10,7 +10,15 @@
 
 @font-face {
     font-family: 'Icons';
-    src: url("../font/easyERP.ttf") format('truetype');
+    src: url("../font/easyERP.eot");
+    src:  url("../font/easyERP.eot?#iefix") format('embedded-opentype'),
+          url("../font/easyERP.woff") format('woff'),
+          url("../font/easyERP.ttf") format('truetype'),
+          url("../font/easyERP.svg#quartzregular") format('svg');
+
+		  
+
+	
 }
 
 @font-face {
@@ -386,6 +394,9 @@
 
     span {
         padding: 3px 8px 3px 0;
+		&#editSpan{
+			width:50px;
+		}
     }
 
     label {
