@@ -50,6 +50,7 @@
             },
 
             render: function () {
+                $('title').text(this.contentType);
                 var viewType = Custom.getCurrentVT();
                 this.$el.html(this.template({ viewType: viewType, contentType: this.contentType, contentHeader:this.contentHeader }));
                 Common.displayControlBtnsByActionType(this.actionType, viewType);

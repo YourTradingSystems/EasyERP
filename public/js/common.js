@@ -74,7 +74,8 @@
             var inputFile = context.$('#inputImg');
             inputFile.prop('accept', "image/*");
             var that = context;
-            inputFile.on('change', function () {
+            inputFile.on('change', function (e) {
+            	e.preventDefault();
                 var file = inputFile[0].files[0];
                 var fr = new FileReader();
                 fr.onload = function () {
@@ -97,24 +98,12 @@
                         if (parseInt(sellictions.w) > 0) {
                             var img = $('.image_input img')[0];
                             var canvasCrop = document.createElement('canvas');
-                            var heightImg = $('.image_input img').height();
-                            var widthImg = $('.image_input img').width();
-                            if (heightImg > 140) {
                             	canvasCrop.height = 140;
-                            }
-                            else {
-                            	canvasCrop.height = heightImg;
-                            }
-                            
-                            if (widthImg > 140) {
-                            	canvasCrop.width  = 140;
-                            }
-                            else {
-                            	canvasCrop.width = widthImg;
-                            }
+                            	canvasCrop.width = 140;
                             var ctx = canvasCrop.getContext('2d');
                             ctx.drawImage(img, sellictions.x, sellictions.y, sellictions.w, sellictions.h, 0, 0, canvasCrop.width, canvasCrop.height);
                             $('.image_output').attr('src', canvasCrop.toDataURL('image/jpeg'));
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
                         }
                     }
 
@@ -150,10 +139,13 @@
                         }
 
                     });
+                    
                 };
+                inputFile.val('');
                 fr.readAsBinaryString(file);
             });
             canvasDrawing({ model: model }, context);
+           
         };
         var displayControlBtnsByActionType = function (actionType, viewType) {
             $("#saveDiscardHolder").hide();
