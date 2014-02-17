@@ -993,8 +993,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         if (data && data.parrentContentId) {
             addObj['_id'] = newObjectId(data.parrentContentId);
         }
-        if (data && data.type !== 'Tasks' && data.status) {
-            addObj['workflow'] = { $in: data.status.objectID() };
+        if (data && data.type !== 'Tasks' && data.filter && data.filter.workflow) {
+            addObj['workflow'] = { $in: data.filter.workflow.objectID() };
         } else if (data && !data.newCollection) {
             addObj['workflow'] = { $in: [] };
         }
@@ -1056,8 +1056,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 if (data && data.type == 'Tasks') {
                                     var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                         where('project').in(projectsId.objectID());
-                                    if (data && data.status) {
-                                        query.where('workflow').in(data.status);
+                                    if (data && data.filter && data.filter.workflow) {
+                                        query.where('workflow').in(data.filter.workflow);
                                     } else if (data && !data.newCollection) {
                                         query.where('workflow').in([]);
                                     }
@@ -1737,8 +1737,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                     where('project').in(projectsId.objectID());
-                                if (data && data.status) {
-                                    query.where('workflow').in(data.status);
+                                if (data && data.filter && data.filter.workflow) {
+                                    query.where('workflow').in(data.filter.workflow);
                                 } else if (data && !data.newCollection) {
                                     query.where('workflow').in([]);
                                 }

@@ -71,7 +71,7 @@ require(['app'], function (app) {
 
     };
 
-    Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber) {
+    Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber, currentPage) {
         //var itemsNumber = this.defaultItemsNumber;
         $("#itemsNumber").text(itemsNumber);
 
@@ -93,9 +93,9 @@ require(['app'], function (app) {
             }
             $("#grid-count").text(totalCount);
             $("#pageList").empty();
-            var pageNumber = Math.ceil(totalCount / itemsNumber);
+            var pageNumber = (currentPage) ? currentPage : Math.ceil(totalCount / itemsNumber);
             for (var i = 1; i <= pageNumber; i++) {
-                $("#pageList").append('<li class="showPage">' + i + '</li>')
+                $("#pageList").append('<li class="showPage">' + i + '</li>');
             }
             $("#lastPage").text(pageNumber);
             $("#currentShowPage").val(1);
@@ -106,6 +106,34 @@ require(['app'], function (app) {
                 $("#nextPage").prop("disabled", false);
             }
         }
+    };
+
+    Backbone.View.prototype.changeLocationHash = function (page, count, filter) {
+        var location = window.location.hash;
+        var mainLocation = '#easyErp/' + this.contentType + '/' + this.viewType;
+        var pId = (location.split('/pId=')[1]) ? location.split('/pId=')[1].split('/')[0] : '';
+        if (!page) {
+            page = (location.split('/p=')[1]) ? location.split('/p=')[1].split('/')[0] : 1;
+        }
+        if (!count) {
+            count = (location.split('/c=')[1]) ? location.split('/c=')[1].split('/')[0] : 50;
+        }
+        var url = mainLocation;
+        if (pId)
+            url += '/pId=' + pId;
+        if (page)
+            url += '/p=' + page;
+        if (count)
+            url += '/c=' + count;
+        if (!filter) {
+            var locatioFilter = location.split('/filter=')[1];
+            filter = (locatioFilter) ? locatioFilter.split('/')[0] : '';
+        }
+        if (filter) {
+            url += '/filter=' + encodeURIComponent(JSON.stringify(filter));
+        }
+
+        Backbone.history.navigate(url);
     };
 
     Backbone.View.prototype.prevP = function (dataObject) {
@@ -134,6 +162,7 @@ require(['app'], function (app) {
         };
         if (dataObject) _.extend(serchObject, dataObject);
         this.collection.showMore(serchObject);
+        this.changeLocationHash(page, itemsNumber);
     };
 
     Backbone.View.prototype.nextP = function (dataObject) {
@@ -159,6 +188,7 @@ require(['app'], function (app) {
         };
         if (dataObject) _.extend(serchObject, dataObject);
         this.collection.showMore(serchObject);
+        this.changeLocationHash(page, itemsNumber);
     };
 
     Backbone.View.prototype.showP = function (event, dataObject) {
@@ -207,6 +237,7 @@ require(['app'], function (app) {
             };
             if (dataObject) _.extend(serchObject, dataObject);
             this.collection.showMore(serchObject);
+            this.changeLocationHash(page, itemsNumber);
         }
     };
 
@@ -272,6 +303,7 @@ require(['app'], function (app) {
                 };
                 if (dataObject) _.extend(serchObject, dataObject);
                 this.collection.showMore(serchObject);
+                this.changeLocationHash(deletePage, itemsNumber);
             }
             $('#check_all').prop('checked', false);
         } else {

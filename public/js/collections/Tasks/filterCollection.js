@@ -50,7 +50,7 @@
                 }
                 filterObject['page'] = this.page;
                 filterObject['count'] = this.namberToShow;
-                filterObject['status'] = (options && options.status) ? options.status : [];
+                filterObject['filter'] = (options && options.filter) ? options.filter : {};
 
                 this.fetch({
                     data: filterObject,

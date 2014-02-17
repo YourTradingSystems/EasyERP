@@ -19,16 +19,14 @@ define([
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "easyErp/:contentType/thumbnails": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
-            "easyErp/:contentType/list/:parrentContentId/p:page/c:countPerPage/(s=:status)": "goToList",
-            "easyErp/:contentType/list/p:page/c:countPerPage/(s:status)": "goToList",
-            "easyErp/:contentType/list(/:parrentContentId/s:status)(/:parrentContentId)": "goToList",
+            "easyErp/:contentType/list(/pId=:parrentContentId)(/p=:page)(/c=:countPerPage)(/filter=:filter)": "goToList",
             "easyErp/Profiles": "goToProfiles",
             "easyErp/myProfile": "goToUserPages",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
             "easyErp/projectDashboard": "goToProjectDashboard",
             "easyErp/:contentType": "getList",
-            "*eny": "main"
+            "*eny": "any"
         },
 
         initialize: function () {
@@ -188,23 +186,23 @@ define([
             }
         },
 
-        goToList: function (contentType, parrentContentId, navigatePage, countPerPage, filter) {
+        goToList: function (contentType, parrentContentId, page, countPerPage, filter) {
             var self = this;
             var startTime = new Date();
             var contentViewUrl = "views/" + contentType + "/list/ListView";
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = this.buildCollectionRoute(contentType);
-            var page = (navigatePage && navigatePage.length !== 24) ? parseInt(navigatePage) || 1 : 1;
-            var count = (countPerPage && countPerPage.length !== 24) ? parseInt(countPerPage) || 50 : 50;
-            var status = (filter) ? filter.split(',') : [];
+            var navigatePage = (page) ? parseInt(page) || 1 : 1;
+            var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
+            filter = filter || {};
             if (this.mainView == null) this.main(contentType);
 
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
                 var collection = new contentCollection({
                     viewType: 'list',
-                    page: page,
+                    page: navigatePage,
                     count: count,
-                    status: status,
+                    filter: filter,
                     parrentContentId: parrentContentId,
                     contentType: contentType,
                     newCollection: true
@@ -412,6 +410,11 @@ define([
 
         main: function (contentType) {
             this.mainView = new mainView({ contentType: contentType });
+            this.changeWrapperView(this.mainView);
+        },
+
+        any: function () {
+            this.mainView = new mainView();
             this.changeWrapperView(this.mainView);
         },
 

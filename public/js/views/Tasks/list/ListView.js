@@ -19,6 +19,8 @@ define([
             wfStatus: [],
             convertedStatus: null,
             newCollection: true,
+            contentType: 'Tasks',
+            viewType: 'list',
 
             initialize: function (options) {
                 $(document).off("click");
@@ -31,7 +33,7 @@ define([
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.deleteCounter = 0;
                 this.render();
-                this.getTotalLength(null, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, { workflow: workflowIdArray });
             },
 
             events: {
@@ -53,11 +55,11 @@ define([
                 "click .filter-check-list li": "checkCheckbox"
             },
 
-            getTotalLength: function (currentNumber, itemsNumber) {
+            getTotalLength: function (currentNumber, itemsNumber, filter) {
                 dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
                     currentNumber: currentNumber,
-                    status: this.wfStatus,
+                    filter: (filter) ? filter : { workflow: this.wfStatus },
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
@@ -189,11 +191,10 @@ define([
                     workflowIdArray.push($(this).val());
                 });
                 this.wfStatus = workflowIdArray;
-                var str = encodeURIComponent(workflowIdArray);
-                window.location.hash += '/' + str;
                 var itemsNumber = $("#itemsNumber").text();
-                this.collection.showMore({ count: itemsNumber, page: 1, status: workflowIdArray, parrentContentId: this.parrentContentId });
-                this.getTotalLength(null, itemsNumber);
+                this.changeLocationHash(1, itemsNumber, { workflow: encodeURIComponent(this.wfStatus) });
+                this.collection.showMore({ count: itemsNumber, page: 1, workflow: workflowIdArray, parrentContentId: this.parrentContentId });
+                this.getTotalLength(null, itemsNumber, { workflow: workflowIdArray });
             },
 
             hideItemsNumber: function (e) {
@@ -220,14 +221,14 @@ define([
             deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
-                    status: this.wfStatus,
+                    workflow: this.wfStatus,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
                 this.deleteRender(deleteCounter, deletePage, {
-                    status: this.wfStatus,
+                    workflow: this.wfStatus,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
@@ -242,9 +243,6 @@ define([
                 $('.ui-dialog ').remove();
                 var self = this;
                 var currentEl = this.$el;
-
-                currentEl.html('');
-                currentEl.append(_.template(listTemplate));
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
@@ -276,13 +274,13 @@ define([
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
-                    status: this.wfStatus,
+                    workflow: this.wfStatus,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
-                    status: this.wfStatus,
+                    workflow: this.wfStatus,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
@@ -293,13 +291,13 @@ define([
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
-                    status: this.wfStatus,
+                    workflow: this.wfStatus,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Projects', {
                     type: 'Tasks',
-                    status: this.wfStatus,
+                    workflow: this.wfStatus,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
@@ -311,19 +309,20 @@ define([
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
-                this.getTotalLength(null, itemsNumber);
+                this.getTotalLength(null, itemsNumber, { workflow: workflowIdArray });
                 this.collection.showMore({
                     count: itemsNumber,
                     page: 1,
-                    status: this.wfStatus,
+                    workflow: this.wfworkflow,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
+                this.changeLocationHash(1, itemsNumber);
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { status: this.wfStatus, newCollection: this.newCollection, parrentContentId: this.parrentContentId });
+                this.showP(event, { workflow: this.wfStatus, newCollection: this.newCollection, parrentContentId: this.parrentContentId });
             },
 
             showMoreContent: function (newModels) {
