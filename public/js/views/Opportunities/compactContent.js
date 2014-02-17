@@ -36,7 +36,6 @@
             },
 
             render: function (options) {
-				console.log(this.collection);
                 this.$el.html(this.template({
                     collection: this.collection,
 					options: options
