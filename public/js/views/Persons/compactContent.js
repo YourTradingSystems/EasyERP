@@ -20,7 +20,7 @@
             gotoPersonsForm: function (e) {
                 e.preventDefault();
                 var itemIndex = $(e.target).closest("a").attr("id");
-                window.location.hash = "#easyErp/Persons/form/" + itemIndex;
+                Backbone.history.navigate("#easyErp/Persons/form/" + itemIndex, { trigger: true });
             },
 
             render: function (options) {

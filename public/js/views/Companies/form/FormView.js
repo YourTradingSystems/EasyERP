@@ -194,7 +194,7 @@ define([
             addPersons: function (e) {
             	e.preventDefault();
             	var model = this.formModel.toJSON();
-            	new CreateViewPersons({model:model, });
+            	new CreateViewPersons({model:model});
             },
             
             removeEdit: function (e) {

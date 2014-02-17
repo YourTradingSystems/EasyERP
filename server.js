@@ -883,12 +883,7 @@ app.patch('/Tasks/:viewType/:_id', function (req, res) {
     console.log(req.body);
     requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
-app.patch('/Tasks/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    console.log(req.body);
-    requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
-});
+
 app.put('/Tasks/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
