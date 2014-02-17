@@ -44,7 +44,7 @@ define([
                 "click .editDelNote": "editDelNote",
                 "click #cancelNote": "cancelNote",
                 "click .deleteAttach": "deleteAttach",
-                "mouseenter .editable:not(.quickEdit)": "quickEdit",
+                "mouseenter .editable:not(.quickEdit), .editable .no-long:not(.quickEdit)": "quickEdit",
                 "mouseleave .editable": "removeEdit",
                 "click #editSpan": "editClick",
                 "click #cancelSpan": "cancelClick",
@@ -100,11 +100,16 @@ define([
             },
 
             quickEdit: function (e) {
-                $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+				var trId = $(e.target).closest("dd");
+				if ($("#" + trId.attr("id")).find("#editSpan").length==0){
+					$("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+					$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width()-40);
+				}
             },
 
-            removeEdit: function () {
+            removeEdit: function (e) {
                 $('#editSpan').remove();
+				$("dd .no-long").css({width:"auto"});
             },
 
             cancelClick: function (e) {
@@ -115,10 +120,11 @@ define([
                 if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                     $("#" + parent[0].id + " input").prop('disabled', true);
                 } else if (parent[0].id == 'email') {
-                    $("#" + parent[0].id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
+                    $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
                 } else {
-                    $("#" + parent[0].id).text(this.text);
+                    $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
                 }
+				$("#" + parent[0].id).find(".no-long").css({width:"auto"});
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
@@ -170,6 +176,7 @@ define([
                 this.prevQuickEdit = parent[0];
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
+				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-50);
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
@@ -202,9 +209,9 @@ define([
                 if ($("#" + parent[0].id).hasClass('with-checkbox')) {
                     $("#" + parent[0].id + " input").prop('disabled', true);
                 } else if (parent[0].id == 'email') {
-                    $("#" + parent[0].id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
+                    $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
                 } else {
-                    $("#" + parent[0].id).text(this.text);
+                    $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
                 }
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $('#editInput').remove();

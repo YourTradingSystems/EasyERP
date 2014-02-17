@@ -15,10 +15,6 @@
           url("../font/easyERP.woff") format('woff'),
           url("../font/easyERP.ttf") format('truetype'),
           url("../font/easyERP.svg#quartzregular") format('svg');
-
-		  
-
-	
 }
 
 @font-face {
@@ -271,7 +267,8 @@
         }
 
         &.person {
-            margin-top: -45px;
+            margin-top: -30px;
+			margin-right:-15px;
             z-index: 100;
             position: relative;
         }
@@ -1755,6 +1752,19 @@
             dt, dd {
                 line-height: 17px;
             }
+			dd.editable{
+				a{
+					line-height:16px;
+					width:100%;
+				}
+			}
+			.no-long{
+				width:100%;
+				display:block;
+				line-height:11px;
+				float:left;
+				.text-overflow;
+			}
         }
     }
 }

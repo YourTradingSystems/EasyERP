@@ -178,7 +178,11 @@ define([
             
             quickEdit: function (e) {
                 // alert(e.target.id);
-                $("#" + e.target.id).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+				var trId = $(e.target).closest("dd");
+				if ($("#" + trId.attr("id")).find("#editSpan").length==0){
+					$("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+					$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width()-40);
+				}
             },
             
             addOpportunities: function (e) {
@@ -195,13 +199,16 @@ define([
             
             removeEdit: function (e) {
                 $('#editSpan').remove();
+				$("dd .no-long").css({width:"100%"});
             },
             
             cancelClick: function (e) {
                 e.preventDefault();
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).removeClass('quickEdit');
-                $("#" + parent[0].id).text(this.text);
+//                $("#" + parent[0].id).text(this.text);
+                $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
+				$("#" + parent[0].id).find(".no-long").css({width:"100%"});
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
@@ -226,6 +233,7 @@ define([
                 $('#editInput').val(this.text);
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
+				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-50);
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
@@ -251,7 +259,7 @@ define([
                 obj[objIndex] = $('#editInput').val();
 
                 this.text = $('#editInput').val();
-                $("#" + parent[0].id).text(this.text);
+                $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
                 $("#" + parent[0].id).removeClass('quickEdit');
                 $('#editInput').remove();
                 $('#cancelSpan').remove();
