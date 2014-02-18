@@ -71,13 +71,15 @@ require(['app'], function (app) {
 
     };
 
-    Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber) {
+    Backbone.View.prototype.pageElementRender = function (totalCount, itemsNumber, currentPage) {
         //var itemsNumber = this.defaultItemsNumber;
         $("#itemsNumber").text(itemsNumber);
+        var start = $("#grid-start");
+        var end = $("#grid-end");
 
         if (totalCount == 0 || totalCount == undefined) {
-            $("#grid-start").text(0);
-            $("#grid-end").text(0);
+            start.text(0);
+            end.text(0);
             $("#grid-count").text(0);
             $("#previousPage").prop("disabled", true);
             $("#nextPage").prop("disabled", true);
@@ -85,27 +87,64 @@ require(['app'], function (app) {
             $("#currentShowPage").val(0);
             $("#lastPage").text(0);
         } else {
-            $("#grid-start").text(1);
-            if (totalCount <= itemsNumber) {
-                $("#grid-end").text(totalCount);
+            currentPage = currentPage || 1;
+            start.text(currentPage * itemsNumber - itemsNumber + 1);
+            if (totalCount <= itemsNumber || totalCount <= currentPage * itemsNumber) {
+                end.text(totalCount);
             } else {
-                $("#grid-end").text(itemsNumber);
+                end.text(currentPage * itemsNumber);
             }
             $("#grid-count").text(totalCount);
             $("#pageList").empty();
             var pageNumber = Math.ceil(totalCount / itemsNumber);
             for (var i = 1; i <= pageNumber; i++) {
-                $("#pageList").append('<li class="showPage">' + i + '</li>')
+                $("#pageList").append('<li class="showPage">' + i + '</li>');
             }
             $("#lastPage").text(pageNumber);
-            $("#currentShowPage").val(1);
-            $("#previousPage").prop("disabled", true);
+            $("#currentShowPage").val(currentPage);
+            $("#previousPage").prop("disabled", parseInt(start.text()) <= parseInt(currentPage));
             if (pageNumber <= 1) {
                 $("#nextPage").prop("disabled", true);
             } else {
-                $("#nextPage").prop("disabled", false);
+                $("#nextPage").prop("disabled", parseInt(end.text()) === parseInt(totalCount));
             }
         }
+    };
+
+    Backbone.View.prototype.changeLocationHash = function (page, count, filter) {
+        var location = window.location.hash;
+        var mainLocation = '#easyErp/' + this.contentType + '/' + this.viewType;
+        var pId = (location.split('/pId=')[1]) ? location.split('/pId=')[1].split('/')[0] : '';
+        if (!page) {
+            page = (location.split('/p=')[1]) ? location.split('/p=')[1].split('/')[0] : 1;
+        }
+        if (!count) {
+            count = (location.split('/c=')[1]) ? location.split('/c=')[1].split('/')[0] : 50;
+        }
+        var url = mainLocation;
+        if (pId)
+            url += '/pId=' + pId;
+        if (page)
+            url += '/p=' + page;
+        if (count)
+            url += '/c=' + count;
+        if (!filter) {
+            var locatioFilter = location.split('/filter=')[1];
+            filter = (locatioFilter) ? JSON.parse(decodeURIComponent(locatioFilter)) : null;
+        }
+        if (filter) {
+            var notEmptyFilter = false;
+            for (var i in filter) {
+                if (filter[i] && filter[i].length !== 0) {
+                    notEmptyFilter = true;
+                }
+            }
+            if (notEmptyFilter) {
+                url += '/filter=' + encodeURIComponent(JSON.stringify(filter));
+            } else url += '/filter=empty';
+        }
+
+        Backbone.history.navigate(url);
     };
 
     Backbone.View.prototype.prevP = function (dataObject) {
@@ -134,6 +173,7 @@ require(['app'], function (app) {
         };
         if (dataObject) _.extend(serchObject, dataObject);
         this.collection.showMore(serchObject);
+        this.changeLocationHash(page, itemsNumber);
     };
 
     Backbone.View.prototype.nextP = function (dataObject) {
@@ -159,6 +199,7 @@ require(['app'], function (app) {
         };
         if (dataObject) _.extend(serchObject, dataObject);
         this.collection.showMore(serchObject);
+        this.changeLocationHash(page, itemsNumber);
     };
 
     Backbone.View.prototype.showP = function (event, dataObject) {
@@ -207,6 +248,7 @@ require(['app'], function (app) {
             };
             if (dataObject) _.extend(serchObject, dataObject);
             this.collection.showMore(serchObject);
+            this.changeLocationHash(page, itemsNumber);
         }
     };
 
@@ -272,6 +314,7 @@ require(['app'], function (app) {
                 };
                 if (dataObject) _.extend(serchObject, dataObject);
                 this.collection.showMore(serchObject);
+                this.changeLocationHash(deletePage, itemsNumber);
             }
             $('#check_all').prop('checked', false);
         } else {

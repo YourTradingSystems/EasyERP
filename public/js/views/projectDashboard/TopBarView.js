@@ -6,7 +6,7 @@ define([
     function (TopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
-            contentType: "Profiles",
+            contentType: "Dashboard",
             actionType: null, //Content, Edit, Create
             template: _.template(TopBarTemplate),
             
@@ -60,6 +60,7 @@ define([
             },
 
             render: function(){
+                $('title').text(this.contentType);
                 this.$el.html(this.template({contentType: this.contentType}));
                 Common.displayControlBtnsByActionType(this.actionType);
 

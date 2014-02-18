@@ -3,7 +3,7 @@ define([
   'views/main/MainView',
   'views/login/LoginView',
   'custom',
-    'common'
+  'common'
 ], function (mainView, loginView, custom, common) {
 
     var appRouter = Backbone.Router.extend({
@@ -19,28 +19,28 @@ define([
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "easyErp/:contentType/thumbnails": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
-            "easyErp/:contentType/list(/:parrentContentId)": "goToList",
+            "easyErp/:contentType/list(/pId=:parrentContentId)(/p=:page)(/c=:countPerPage)(/filter=:filter)": "goToList",
             "easyErp/Profiles": "goToProfiles",
             "easyErp/myProfile": "goToUserPages",
             "easyErp/Workflows": "goToWorkflows",
             "easyErp/Dashboard": "goToDashboard",
             "easyErp/projectDashboard": "goToProjectDashboard",
             "easyErp/:contentType": "getList",
-            "*eny": "main"
+            "*eny": "any"
         },
 
         initialize: function () {
             this.on('all', function () {
                 $(".ui-dialog").remove();
             });
-  			$(document).on("keydown",".ui-dialog",function (e) {
+            $(document).on("keydown", ".ui-dialog", function (e) {
                 switch (e.which) {
                     case 27:
-					    $(".edit-dialog").remove();
+                        $(".edit-dialog").remove();
                         break;
-					case 13:
-					    $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
-					    break;
+                    case 13:
+                        $(".ui-dialog-buttonset .ui-button").eq(0).trigger("click");
+                        break;
                     default:
                         break;
                 }
@@ -50,10 +50,10 @@ define([
         goToProfiles: function () {
             var startTime = new Date();
             if (this.mainView === null) {
-				this.main("Profiles");
-			}else{
-				this.mainView.updateMenu("Profiles");
-			}
+                this.main("Profiles");
+            } else {
+                this.mainView.updateMenu("Profiles");
+            }
 
             var contentViewUrl = 'views/Profiles/ContentView';
             var topBarViewUrl = 'views/Profiles/TopBarView';
@@ -91,10 +91,10 @@ define([
             var topBarViewUrl = "views/myProfile/TopBarView";
             var self = this;
             if (this.mainView === null) {
-				this.main("Persons");
-			}else{
-				this.mainView.updateMenu("Persons");
-			}
+                this.main("Persons");
+            } else {
+                this.mainView.updateMenu("Persons");
+            }
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -117,10 +117,10 @@ define([
             var self = this;
 
             if (this.mainView === null) {
-				this.main("Dashboard");
-			}else{
-				this.mainView.updateMenu("Dashboard");
-			}
+                this.main("Dashboard");
+            } else {
+                this.mainView.updateMenu("Dashboard");
+            }
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -139,10 +139,10 @@ define([
             var self = this;
 
             if (this.mainView === null) {
-				this.main("projectDashboard");
-			}else{
-				this.mainView.updateMenu("projectDashboard");
-			}
+                this.main("projectDashboard");
+            } else {
+                this.mainView.updateMenu("projectDashboard");
+            }
 
             require([contentViewUrl, topBarViewUrl], function (contentView, topBarView) {
 
@@ -159,10 +159,10 @@ define([
             var startTime = new Date();
 
             if (this.mainView === null) {
-				this.main("Workflows");
-			}else{
-				this.mainView.updateMenu("Workflows");
-			}
+                this.main("Workflows");
+            } else {
+                this.mainView.updateMenu("Workflows");
+            }
 
             var contentViewUrl = "views/Workflows/ContentView",
                 topBarViewUrl = "views/Workflows/TopBarView",
@@ -206,35 +206,43 @@ define([
             }
         },
 
-        goToList: function (contentType, parrentContentId) {
+        goToList: function (contentType, parrentContentId, page, countPerPage, filter) {
+            var newCollection = true;
             var self = this;
             var startTime = new Date();
             var contentViewUrl = "views/" + contentType + "/list/ListView";
             var topBarViewUrl = "views/" + contentType + "/TopBarView";
             var collectionUrl = this.buildCollectionRoute(contentType);
+            var navigatePage = (page) ? parseInt(page) || 1 : 1;
+            var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
+            if (filter === 'empty') {
+                newCollection = false;
+            } else if (filter) {
+                filter = JSON.parse(filter);
+            }
             if (this.mainView === null) {
-				this.main(contentType);
-			}else{
-				this.mainView.updateMenu(contentType);
-			}
+                this.main(contentType);
+            } else {
+                this.mainView.updateMenu(contentType);
+            }
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
                 var collection = new contentCollection({
                     viewType: 'list',
-                    page: 1,
-                    count: 50,
-                    status: [],
+                    page: navigatePage,
+                    count: count,
+                    filter: filter,
                     parrentContentId: parrentContentId,
                     contentType: contentType,
-                    newCollection: true
-                });//status - to filter by workflows
+                    newCollection: newCollection
+                });
 
                 collection.bind('reset', _.bind(createViews, self));
                 custom.setCurrentVT('list');
                 function createViews() {
                     collection.unbind('reset');
                     var topbarView = new topBarView({ actionType: "Content", collection: collection });
-                    var contentview = new contentView({ collection: collection, startTime: startTime });
-                   
+                    var contentview = new contentView({ collection: collection, startTime: startTime, filter: filter, newCollection: newCollection });
+
                     topbarView.bind('createEvent', contentview.createItem, contentview);
                     topbarView.bind('editEvent', contentview.editItem, contentview);
                     topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
@@ -242,14 +250,6 @@ define([
                     collection.bind('showmore', contentview.showMoreContent, contentview);
                     this.changeView(contentview);
                     this.changeTopBarView(topbarView);
-                    var url;
-                    if (parrentContentId) {
-                         url = '#easyErp/' + contentType + '/list/' + parrentContentId;
-                    } else {
-                         url = '#easyErp/' + contentType + '/list';
-                    }
-
-                    Backbone.history.navigate(url, { replace: true });
                 }
             });
         },
@@ -261,10 +261,10 @@ define([
             var contentFormViewUrl;
             var topBarViewUrl;
             if (this.mainView === null) {
-				this.main(contentType);
-			}else{
-				this.mainView.updateMenu(contentType);
-			}
+                this.main(contentType);
+            } else {
+                this.mainView.updateMenu(contentType);
+            }
 
             if (contentType !== 'ownCompanies') {
                 contentFormModelUrl = "models/" + contentType + "Model";
@@ -284,8 +284,8 @@ define([
                 getModel.fetch({
                     data: { id: modelId },
                     success: function (model) {
-						console.log(model);
-//                        self.convertModelDates(model);
+                        console.log(model);
+                        //                        self.convertModelDates(model);
                         var topbarView = new topBarView({ actionType: "Content" });
                         var contentView = new contentFormView({ model: model, startTime: startTime });
 
@@ -326,10 +326,10 @@ define([
             var collectionUrl = "collections/Workflows/WorkflowsCollection";
 
             if (this.mainView === null) {
-				this.main(contentType);
-			}else{
-				this.mainView.updateMenu(contentType);
-			}
+                this.main(contentType);
+            } else {
+                this.mainView.updateMenu(contentType);
+            }
             custom.setCurrentVT('kanban');
             require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, workflowsCollection) {
                 var startTime = new Date();
@@ -371,10 +371,10 @@ define([
             var collectionUrl;
 
             if (this.mainView === null) {
-				this.main(contentType);
-			}else{
-				this.mainView.updateMenu(contentType);
-			}
+                this.main(contentType);
+            } else {
+                this.mainView.updateMenu(contentType);
+            }
 
             if (contentType !== 'Calendar' && contentType !== 'Workflows') {
                 contentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
@@ -388,11 +388,11 @@ define([
 
                 var collection = (contentType !== 'Calendar') && (contentType !== 'Workflows')
                     ? new contentCollection({
-                            viewType: 'thumbnails',
-                            page: 1,
-                            count: 50,
-                            contentType: contentType
-                        })
+                        viewType: 'thumbnails',
+                        page: 1,
+                        count: 50,
+                        contentType: contentType
+                    })
 
                     : new contentCollection();
 
@@ -450,6 +450,11 @@ define([
 
         main: function (contentType) {
             this.mainView = new mainView({ contentType: contentType });
+            this.changeWrapperView(this.mainView);
+        },
+
+        any: function () {
+            this.mainView = new mainView();
             this.changeWrapperView(this.mainView);
         },
 

@@ -117,6 +117,10 @@
                             }
                         }
                     });
+                    // for input type number
+                    context.$el.find('#cPerPage').spinner({
+                        min: 5
+                    });
                 }, this);
             },
 

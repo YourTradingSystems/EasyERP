@@ -340,7 +340,10 @@ define([
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 				populate.get("#departmentDd", "/DepartmentsForDd", {}, "departmentName", this, false, true);
                 populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobpositions" }, "name", this, false);
-
+                //for input type number
+                this.$el.find("#expectedRecruitment").spinner({
+                    min: 0
+                });
                 var model = this.currentModel.toJSON();
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){

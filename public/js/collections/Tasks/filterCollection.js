@@ -6,7 +6,7 @@
         var TasksCollection = Backbone.Collection.extend({
             model: TaskModel,
             url: "/Tasks/",
-            page: 1,
+            page: null,
             namberToShow: null,
             viewType: null,
 
@@ -16,6 +16,7 @@
                 if (options && options.count) {
                     this.namberToShow = options.count;
                     this.count = options.count;
+                    this.page = options.page || 1;
                 }
                 var that = this;
                 if (options && options.viewType) {
@@ -50,7 +51,7 @@
                 }
                 filterObject['page'] = this.page;
                 filterObject['count'] = this.namberToShow;
-                filterObject['status'] = (options && options.status) ? options.status : [];
+                filterObject['filter'] = (options) ? options.filter : {};
 
                 this.fetch({
                     data: filterObject,

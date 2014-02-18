@@ -16,9 +16,11 @@ define([
             el: '#content-holder',
             defaultItemsNumber: null,
             listLength: null,
-            wfStatus: [],
-            convertedStatus: null,
-            newCollection: true,
+            filter: null,
+            newCollection: null,
+            page: null, //if reload page, and in url is valid page
+            contentType: 'Tasks',//needs in view.prototype.changeLocationHash
+            viewType: 'list',//needs in view.prototype.changeLocationHash
 
             initialize: function (options) {
                 $(document).off("click");
@@ -27,11 +29,13 @@ define([
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
                 this.stages = [];
-                this.wfStatus = this.collection.wfStatus;
+                this.filter = options.filter;
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
+                this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
+                this.page = options.collection.page;
                 this.render();
-                this.getTotalLength(null, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
 
             events: {
@@ -53,16 +57,17 @@ define([
                 "click .filter-check-list li": "checkCheckbox"
             },
 
-            getTotalLength: function (currentNumber, itemsNumber) {
+            getTotalLength: function (currentNumber, itemsNumber, filter) {
                 dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
                     currentNumber: currentNumber,
-                    status: this.wfStatus,
+                    filter: filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber);//prototype in main.js
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
             },
 
@@ -184,14 +189,16 @@ define([
 
             showFilteredPage: function () {
                 this.startTime = new Date();
+                this.newCollection = false;
                 var workflowIdArray = [];
                 $('.filter-check-list input:checked').each(function () {
                     workflowIdArray.push($(this).val());
                 });
                 this.wfStatus = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
-                this.collection.showMore({ count: itemsNumber, page: 1, status: workflowIdArray, parrentContentId: this.parrentContentId });
-                this.getTotalLength(null, itemsNumber);
+                this.changeLocationHash(1, itemsNumber, { workflow: this.wfStatus });
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: { workflow: workflowIdArray }, parrentContentId: this.parrentContentId });
+                this.getTotalLength(null, itemsNumber, { workflow: workflowIdArray });
             },
 
             hideItemsNumber: function (e) {
@@ -218,14 +225,14 @@ define([
             deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
                 this.deleteRender(deleteCounter, deletePage, {
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
@@ -240,9 +247,6 @@ define([
                 $('.ui-dialog ').remove();
                 var self = this;
                 var currentEl = this.$el;
-
-                currentEl.html('');
-                currentEl.append(_.template(listTemplate));
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
@@ -261,6 +265,13 @@ define([
 
                 common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function (stages) {
                     self.stages = stages;
+                    var stage = (self.filter) ? self.filter.workflow : null;
+                    if (stage) {
+                        $('.filter-check-list input').each(function() {
+                            var target = $(this);
+                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                        });
+                    }
                     itemView.trigger('incomingStages', stages);
                 });
 
@@ -269,18 +280,24 @@ define([
                 });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+                var pagenation = this.$el.find('.pagination');
+                if (this.collection.length === 0) {
+                    pagenation.hide();
+                } else {
+                    pagenation.show();
+                }
             },
 
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Tasks', {
                     type: 'Tasks',
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
@@ -291,13 +308,13 @@ define([
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Projects', {
                     type: 'Tasks',
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 }, function (response, context) {
@@ -309,19 +326,20 @@ define([
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
-                this.getTotalLength(null, itemsNumber);
+                this.getTotalLength(null, itemsNumber, this.filter);
                 this.collection.showMore({
                     count: itemsNumber,
                     page: 1,
-                    status: this.wfStatus,
+                    filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
+                this.changeLocationHash(1, itemsNumber);
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { status: this.wfStatus, newCollection: this.newCollection, parrentContentId: this.parrentContentId });
+                this.showP(event, { filter: this.filter, newCollection: this.newCollection, parrentContentId: this.parrentContentId });
             },
 
             showMoreContent: function (newModels) {
@@ -330,7 +348,12 @@ define([
                 var itemView = new listItemView({ collection: newModels });
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
-
+                var pagenation = holder.find('.pagination');
+                if (newModels.length !== 0) {
+                    pagenation.show();
+                } else {
+                    pagenation.hide();
+                }
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },

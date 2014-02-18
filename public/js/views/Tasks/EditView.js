@@ -92,6 +92,10 @@
                   e.preventDefault();
                   var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                   var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                  if (!val) {//textarrea notes not be empty
+                  	alert("Note Content can not be empty");
+                  }
+                  else {
                   if (val || title) {
                       var currentModel = this.currentModel;
                       var notes = currentModel.get('notes');
@@ -152,6 +156,7 @@
                              });
 
                       }
+                  }
                       $('#noteArea').val('');
                       $('#noteTitleArea').val('');
                   }
@@ -396,10 +401,10 @@
                                   {
                                       var kanban_holder = $("#" + model._id);
                                       var editHolder = self.$el;
-                                      kanban_holder.find("#priority" + model._id).data("id", priority).text(priority);
+                                      kanban_holder.find("#priority_" + model._id).data("id", priority).text(priority);
                                       kanban_holder.find("#shortDesc" + model._id).text(editHolder.find('#projectDd').data("shortdesc"));
                                       kanban_holder.find("#summary" + model._id).text(summary);
-                                      kanban_holder.find("#type" + model._id).text(editHolder.find("#type").text());
+                                      kanban_holder.find("#type_" + model._id).text(editHolder.find("#type").text());
                                       $("#" + data.workflowStart).find(".item").each(function () {
                                           var seq = $(this).find(".inner").data("sequence");
                                           if (seq > data.sequenceStart) {
@@ -509,6 +514,15 @@
                       changeMonth: true,
                       changeYear: true,
                       minDate: new Date()
+                  });
+                  //for input type number
+                  this.$el.find("#logged").spinner({
+                      min: 0,
+                      max:1000
+                  });
+                  this.$el.find("#estimated").spinner({
+                      min: 0,
+                      max:1000
                   });
                   return this;
               }

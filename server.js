@@ -846,10 +846,8 @@ app.get('/Tasks', function (req, res) {//---------------Remove this method in fu
 });
 
 app.get('/Tasks/:viewType', function (req, res) {
-    var data = {};
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
+    var data = req.query;
+    console.log(req.query);
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getTaskById(req, res, data);
@@ -883,12 +881,7 @@ app.patch('/Tasks/:viewType/:_id', function (req, res) {
     console.log(req.body);
     requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
-app.patch('/Tasks/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    console.log(req.body);
-    requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
-});
+
 app.put('/Tasks/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');

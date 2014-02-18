@@ -123,6 +123,10 @@ define([
                 var noteTitleArea_holder = $('#noteTitleArea');
                 var val = noteArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = noteTitleArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                if (!val) {//textarrea notes not be empty
+                	alert("Note Content can not be empty");
+                }
+                else {
                 if (val || title) {
                     var notes = this.currentModel.get('notes');
                     var arrKeyStr = $('#getNoteKey').attr("value");
@@ -172,6 +176,7 @@ define([
                                 }
                             });
                     }
+                }
                     noteArea_holder.val('');
                     noteTitleArea_holder.val('');
                 }
@@ -451,7 +456,7 @@ define([
             },
 
             hideDialog: function () {
-                $('.edit-dialog').remove();
+                $('.edit-project-dialog').remove();
                 $(".add-group-dialog").remove();
                 $(".add-user-dialog").remove();
             },
@@ -468,6 +473,7 @@ define([
                 var workflow = this.$el.find("#workflowsDd").data("id");
                 var projecttype = this.$el.find("#projectTypeDD").data("id");
                 var $userNodes = $("#usereditDd option:selected");
+                var startDate = $.trim(this.$el.find("#StartDate").val());
                 var users = [];
                 $userNodes.each(function (key, val) {
                     users.push({
@@ -511,6 +517,7 @@ define([
                     },
                     whoCanRW: whoCanRW,
                     health: health,
+                    StartDate: startDate,
                     TargetEndDate: TargetEndDate
                 };
                 this.currentModel.save(data, {
@@ -578,6 +585,9 @@ define([
 							case 'thumbnails':
 								{
 									$("#" + model._id).remove();
+			                        $('.edit-project-dialog').remove();
+			                        $(".add-group-dialog").remove();
+			                        $(".add-user-dialog").remove();
 								}
 							}
 							self.hideDialog();
@@ -600,7 +610,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     title: "Edit Project",
-                    dialogClass: "edit-dialog",
+                    dialogClass: "edit-project-dialog",
                     width: "900px",
                     buttons: {
                         save: {
@@ -641,6 +651,11 @@ define([
                         });
 
                     }
+                $('#StartDate').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true
+                });
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
