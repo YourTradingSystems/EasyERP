@@ -265,11 +265,13 @@ define([
 
                 common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function (stages) {
                     self.stages = stages;
-                    var stage = (self.filter) ? self.filter.workflow : [];
-                    $('.filter-check-list input').each(function () {
-                        var target = $(this);
-                        target.attr('checked', $.inArray(target.val(), stage) > -1);
-                    });
+                    var stage = (self.filter) ? self.filter.workflow : null;
+                    if (stage) {
+                        $('.filter-check-list input').each(function() {
+                            var target = $(this);
+                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                        });
+                    }
                     itemView.trigger('incomingStages', stages);
                 });
 
