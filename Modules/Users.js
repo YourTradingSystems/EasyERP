@@ -18,13 +18,16 @@ var Users = function (logWriter, mongoose, models, department) {
         lastAccess: { type: Date },
         kanbanSettings: {
             opportunities: {
-                countPerPage: { type: Number, default: 10 }
+                countPerPage: { type: Number, default: 10 },
+				foldWorkflows: [{ type: String, default: '' }]
             },
             applications: {
-                countPerPage: { type: Number, default: 10 }
+                countPerPage: { type: Number, default: 10 },
+				foldWorkflows: [{ type: String, default: '' }]
             },
             tasks: {
-                countPerPage: { type: Number, default: 10 }
+                countPerPage: { type: Number, default: 10 },
+				foldWorkflows: [{ type: String, default: '' }]
             }
         },
         RelatedEmployee: { type: ObjectId, ref: 'Employees', default: null }
@@ -296,15 +299,12 @@ var Users = function (logWriter, mongoose, models, department) {
                     }
                 });
             } else updateUser();
-
-            
-
             function updateUser() {
                 for (var i in data) {
                     if (data[i]) {
                         updateFields[i] = data[i];
                     }
-                };
+                }
                 var _object = { $set: updateFields };
                 models.get(req.session.lastDb - 1, 'Users', userSchema).findByIdAndUpdate(_id, _object, function (err, result) {
 
@@ -313,7 +313,7 @@ var Users = function (logWriter, mongoose, models, department) {
                         logWriter.log("User.js update profile.update" + err);
                         res.send(500, { error: 'User.update BD error' });
                     } else {
-                        req.session.kanbanSettings = result.kanbanSettings
+                        req.session.kanbanSettings = result.kanbanSettings;
                         res.send(200, { success: 'User updated success' });
                     }
                 });

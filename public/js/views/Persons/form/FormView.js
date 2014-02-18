@@ -114,7 +114,7 @@ define([
 
             cancelClick: function (e) {
                 e.preventDefault();
-                console.log(this.formModel.id);
+
                 Backbone.history.fragment = "";
                 Backbone.history.navigate("#easyErp/Persons/form/" + this.formModel.id, { trigger: true });
                 /*       e.preventDefault();
@@ -491,7 +491,6 @@ define([
 
             render: function () {
                 var formModel = this.formModel.toJSON();
-                console.log(formModel);
                 var el = this.$el;
                 el.html(_.template(personFormTemplate, formModel));
                 this.renderMiniOpp();

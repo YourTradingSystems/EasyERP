@@ -842,6 +842,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                         if (!err) {
                                             res['data'] = result;
                                             res['time'] = (new Date() - startTime);
+											res['workflowId'] = data.workflowId;
+											res['fold'] = req.session.kanbanSettings.applications.foldWorkflows.indexOf(data.workflowId.toString())!==-1
+
                                             response.send(res);
                                         } else {
                                             logWriter.log("Opportunitie.js getApplicationsForKanban opportunitie.find" + err);
