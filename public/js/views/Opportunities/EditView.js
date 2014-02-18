@@ -321,7 +321,6 @@
                            noteObj.note = val;
                            noteObj.title = title;
                            notes.push(noteObj);
-                           this.currentModel.set();
                            this.currentModel.save({ 'notes': notes },
 												  {
 													  headers: {
