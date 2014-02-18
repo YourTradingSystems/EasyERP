@@ -18,7 +18,7 @@
             <% _.each(model.tags,function(tag){ %>
             <% });%>
         </div>
-        <div data-id="<%=model.assignedTo._id%>" class="avatar-small right"><img class="person" src="" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
+        <div data-id="<%=model.assignedTo?model.assignedTo._id:''%>" class="avatar-small right"><img class="person" src="" alt="<%=(model.assignedTo) ? model.assignedTo.name.first + ' ' + model.assignedTo.name.last : ''%>" /></div>
 
         <div class="bottom taskSelect">
             <a id="type_<%=model._id%>" data-id="<%=model.type%>" class="current-selected bold" href="javascript:;"><%=model.type%></a>
