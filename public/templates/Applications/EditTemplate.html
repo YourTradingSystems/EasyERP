@@ -39,7 +39,7 @@
                   </div>
                   <div class="clearfix"></div>
                   <div class="app-block left bottom">
-                    <textarea id="otherInfo" placeholder="Fedback of interviews..."><%=model.otherInfo%></textarea>
+                    <textarea id="otherInfo" class="edit-app" placeholder="Fedback of interviews..."><%=model.otherInfo%></textarea>
 
                   </div>
                   <div class="app-block right bottom">
@@ -70,6 +70,8 @@
 						<a id="jobTypeDd" data-id="<%=model.jobType?model.jobType:''%>" class="current-selected" href="javascript:;"><%=model.jobType?model.jobType:'Select'%></a>
                       </dd>
                     </dl>
+                  </div>
+                  <div class="clearfix">
                   </div>
                     <label>Attachments</label>
 
