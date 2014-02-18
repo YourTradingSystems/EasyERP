@@ -204,6 +204,10 @@ define([
             
             cancelClick: function (e) {
                 e.preventDefault();
+
+                Backbone.history.fragment = "";
+                Backbone.history.navigate("#easyErp/Companies/form/" + this.formModel.id, { trigger: true });
+                /*
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).removeClass('quickEdit');
 //                $("#" + parent[0].id).text(this.text);
@@ -213,7 +217,7 @@ define([
                 $('#cancelSpan').remove();
                 $('#saveSpan').remove();
                 var currentModel = this.model;
-                Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });
+                Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });*/
             },
 
             editClick: function (e) {
@@ -250,8 +254,36 @@ define([
 			},
 
             saveClick: function (e) {
-                e.preventDefault();
+            	  e.preventDefault();
+                  var parent = $(e.target).parent().parent();
+                  var objIndex = parent[0].id.split('_'); //replace change to split;
+                  var currentModel = this.model;
+                  var newModel = {};
 
+                  if (objIndex.length > 1) {
+                      var param = currentModel.get(objIndex[0]) || {};
+                      param[objIndex[1]] = $('#editInput').val();
+                      newModel = currentModel.set(objIndex[0], param);
+
+                  } else {
+                      newModel = currentModel.set(objIndex[0], $('#editInput').val());
+
+                  }
+                 this.formModel.save(newModel, {
+                      headers: {
+                          mid: 39
+                      },
+                      wait: true,
+
+                      success: function (model) {
+                          Backbone.history.fragment = "";
+                          Backbone.history.navigate("#easyErp/Companies/form/" + model.id, { trigger: true });
+                      }
+
+                  });
+                  Backbone.history.fragment = "";
+                  Backbone.history.navigate("#easyErp/Companies/form/" + this.formModel.id, { trigger: true });
+            	/*e.preventDefault();
                 var parent = $(event.target).parent().parent();
                 var objIndex = parent[0].id.replace('_','.');
                 var obj = {};
@@ -269,7 +301,7 @@ define([
                         mid: 39
                     },
 					patch:true
-                });
+                });*/
             },
 
 
