@@ -284,6 +284,10 @@
                    var noteTitleArea_holder = $('#noteTitleArea');
                    var val = noteArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                    var title = noteTitleArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                   if (!val) {//textarrea notes not be empty
+                   	alert("Note Content can not be empty");
+                   }
+                   else {
                    if (val || title) {
                        var notes = this.currentModel.get('notes');
                        var arrKeyStr = $('#getNoteKey').attr("value");
@@ -332,6 +336,7 @@
 													  }
 												  });
                        }
+                   }
                        noteArea_holder.val('');
                        noteTitleArea_holder.val('');
                    }

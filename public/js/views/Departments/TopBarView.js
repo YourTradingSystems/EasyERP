@@ -6,7 +6,7 @@ define([
     function (ContentTopBarTemplate, Custom, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
-            contentType: "Departments",
+            contentType: "Groups",
             actionType: null, //Content, Edit, Create
             template: _.template(ContentTopBarTemplate),
             
@@ -49,6 +49,7 @@ define([
             },
 
             render: function(){
+                $('title').text(this.contentType);
                 var viewType = Custom.getCurrentVT();
                 //var collectionLength = this.collection.length;
                 //var itemIndex = Custom.getCurrentII();

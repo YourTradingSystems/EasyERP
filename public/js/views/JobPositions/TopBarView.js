@@ -50,6 +50,7 @@ define([
             },
 
             render: function(){
+                $('title').text(this.contentType);
                 var viewType = Custom.getCurrentVT();
                 //var collectionLength = this.collection.length;
                 //var itemIndex = Custom.getCurrentII();

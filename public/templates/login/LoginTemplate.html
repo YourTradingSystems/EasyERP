@@ -1,6 +1,7 @@
 <div>
     <form id="loginForm">
-        <div>
+        <fieldset>
+        <div class="margin">
             <select id="dbs">
                 <% options.forEach(function(db, index){%>
                 <option data-id="<%=index + 1%>" <%if(db.DBname == 'EasyERP') {%>selected="selected"<%}%>><%=db.DBname%> (<%=db.url%>)</option>
@@ -34,5 +35,6 @@
         <div class="dotted-line"></div>
         <span class="text">Don't have an account yet ?  <a href="javascript;">Create an account</a></span>
         <div class="clear-fix"></div>
+        </fieldset>
     </form>
 </div>

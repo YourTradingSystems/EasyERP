@@ -15,6 +15,7 @@ define([
 
             initialize: function (options) {
                 this.formModel = options.model;
+                this.formModel.on("change", this.render, this);
                 this.pageMini = 1;
                 this.pageCount = 4;
                 this.allMiniOpp = 0;
@@ -84,12 +85,11 @@ define([
                     var isLast = self.pageMini == self.allPages ? true : false;
                     oppElem.append(
                         new opportunitiesCompactContentView({
-                            collection: collection.data,
+                            collection: collection.data
                         }).render({ first: self.pageMini == 1 ? true : false, last: isLast, all: self.allPages }).el
                     );
 
                 });
-
 
             },
 
@@ -100,37 +100,40 @@ define([
             },
 
             quickEdit: function (e) {
-				var trId = $(e.target).closest("dd");
-				if ($("#" + trId.attr("id")).find("#editSpan").length==0){
-					$("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
-					$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width()-40);
-				}
+                var trId = $(e.target).closest("dd");
+                if ($("#" + trId.attr("id")).find("#editSpan").length == 0) {
+                    $("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
+                    $("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 40);
+                }
             },
 
             removeEdit: function (e) {
                 $('#editSpan').remove();
-				$("dd .no-long").css({width:"auto"});
+                $("dd .no-long").css({width: "auto"});
             },
 
             cancelClick: function (e) {
                 e.preventDefault();
+                console.log(this.formModel.id);
+                Backbone.history.fragment = "";
+                Backbone.history.navigate("#easyErp/Persons/form/" + this.formModel.id, { trigger: true });
+                /*       e.preventDefault();
 
-                var parent = $(e.target).parent().parent();
+                 var parent = $(e.target).parent().parent();
 
-                if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                    $("#" + parent[0].id + " input").prop('disabled', true);
-                } else if (parent[0].id == 'email') {
-                    $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
-                } else {
-                    $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
-                }
-				$("#" + parent[0].id).find(".no-long").css({width:"auto"});
-                $("#" + parent[0].id).removeClass('quickEdit');
-                $('#editInput').remove();
-                $('#cancelSpan').remove();
-                $('#saveSpan').remove();
+                 if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                 $("#" + parent[0].id + " input").prop('disabled', true);
+                 } else if (parent[0].id == 'email') {
+                 $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
+                 } else {
+                 $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
+                 }
+                 $("#" + parent[0].id).find(".no-long").css({width:"auto"});
+                 $("#" + parent[0].id).removeClass('quickEdit');
+                 $('#editInput').remove();
+                 $('#cancelSpan').remove();
+                 $('#saveSpan').remove();*/
             },
-
 
             editClick: function (e) {
                 e.preventDefault();
@@ -153,8 +156,16 @@ define([
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).addClass('quickEdit');
                 $('#editSpan').remove();
-                this.text = $('#' + parent[0].id).text();
+                var objIndex = parent[0].id.split('_');
+                // this.text =  $('#' + parent[0].id).text();
+                //console.log(this.formModel.get("phones").phone);
 
+                if (objIndex.length > 1) {
+                    this.text = this.formModel.get(objIndex[0])[objIndex[1]];
+                    console.log(this.text);
+                } else {
+                    this.text = this.formModel.get(objIndex[0]);
+                }
 
                 if (parent[0].id == 'dateBirth') {
                     $("#" + parent[0].id).text('');
@@ -176,58 +187,58 @@ define([
                 this.prevQuickEdit = parent[0];
                 $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
                 $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
-				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-50);
+                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 50);
             },
-			saveCheckboxChange:function(e){
+            saveCheckboxChange: function (e) {
                 var parent = $(e.target).parent();
-                var objIndex = parent[0].id.replace('_','.');
-                var obj = {};
-                var currentModel = this.model;
-                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
-				this.formModel.save(obj, {
-					headers: {
-						mid: 39
-					},
-					patch:true
-				});
-			},
-            saveClick: function (e) {
-                e.preventDefault();
-                var parent = $(e.target).parent().parent();
-                var objIndex = parent[0].id.replace('_','.');
-                var obj = {};
-
-
-                if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                    obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
-                } else {
-                    obj[objIndex] = $('#editInput').val();
-                }
-				
-
-                this.text = $('#editInput').val();
-                if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                    $("#" + parent[0].id + " input").prop('disabled', true);
-                } else if (parent[0].id == 'email') {
-                    $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
-                } else {
-                    $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
-                }
-                $("#" + parent[0].id).removeClass('quickEdit');
-                $('#editInput').remove();
-                $('#cancelSpan').remove();
-                $('#saveSpan').remove();
-
-                this.formModel.save(obj, {
+                var objIndex = parent[0].id.replace('_', '.');
+                currentModel = this.model;
+                currentModel[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
+                this.formModel.save(currentModel, {
                     headers: {
                         mid: 39
                     },
-					patch:true,
+                    patch: true
+                });
+            },
+            saveClick: function (e) {
+                e.preventDefault();
+                var parent = $(e.target).parent().parent();
+                var objIndex = parent[0].id.split('_'); //replace change to split;
+                var currentModel = this.model;
+                var newModel = {};
+
+                if (objIndex.length > 1) {
+                    var param = currentModel.get(objIndex[0]) || {};
+                    param[objIndex[1]] = $('#editInput').val();
+                    newModel = currentModel.set(objIndex[0], param);
+
+                } else {
+                    newModel = currentModel.set(objIndex[0], $('#editInput').val());
+
+                }
+               this.formModel.save(newModel, {
+                    headers: {
+                        mid: 39
+                    },
+                    wait: true,
+
                     success: function (model) {
-                    	Backbone.history.fragment = "";
+                        Backbone.history.fragment = "";
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
                     }
+
                 });
+                Backbone.history.fragment = "";
+                Backbone.history.navigate("#easyErp/Persons/form/" + this.formModel.id, { trigger: true });
+                /*  if ($("#" + parent[0].id).hasClass('with-checkbox')) {
+                 $("#" + parent[0].id + " input").prop('disabled', true);
+                 } else if (parent[0].id == 'email') {
+                 $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
+                 } else {
+                 $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
+                 }*/
+
             },
 
 
@@ -238,101 +249,110 @@ define([
             },
 
             editDelNote: function (e) {
-            	  var id = e.target.id;
-                  var k = id.indexOf('_');
-                  var type = id.substr(0, k);
-                  var id_int = id.substr(k + 1);
-                  var currentModel = this.formModel;
-                  var notes = currentModel.get('notes');
+                var id = e.target.id;
+                var k = id.indexOf('_');
+                var type = id.substr(0, k);
+                var id_int = id.substr(k + 1);
+                var currentModel = this.formModel;
+                var notes = currentModel.get('notes');
 
-                  switch (type) {
-                      case "edit": {
-                          $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                          $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
-                          $('#getNoteKey').attr("value", id_int);
-                          break;
-                      }
-                      case "del": {
-                          var newNotes = _.filter(notes, function (note) {
-                              if (note._id != id_int) {
-                                  return note;
-                              }
-                          });
-                          currentModel.save({ 'notes': newNotes },
-                                  {
-                                      headers: {
-                                          mid: 39
-                                      },
-                                      patch: true,
-                                      success: function () {
-                                          $('#' + id_int).remove();
-                                      }
-                                  });
-                          break;
-                      }
-                  }
-            },
-
-            addNote: function (e) {
-                e.preventDefault();
-                var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
-                if (val || title) {
-                    var notes = this.formModel.get('notes');
-                    var arrKeyStr = $('#getNoteKey').attr("value");
-                    var noteObj = {
-                        note: '',
-                        title: ''
-                    };
-                    if (arrKeyStr) {
-                        var editNotes = _.map(notes, function (note) {
-                            if (note._id == arrKeyStr) {
-                                note.note = val;
-                                note.title = title;
+                switch (type) {
+                    case "edit":
+                    {
+                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                        $('#getNoteKey').attr("value", id_int);
+                        break;
+                    }
+                    case "del":
+                    {
+                        var newNotes = _.filter(notes, function (note) {
+                            if (note._id != id_int) {
+                                return note;
                             }
-                            return note;
                         });
-                        this.formModel.save({ 'notes': editNotes },
+                        currentModel.save({ 'notes': newNotes },
                             {
                                 headers: {
                                     mid: 39
                                 },
                                 patch: true,
                                 success: function () {
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
-                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
-                                    $('#getNoteKey').attr("value", '');
+                                    $('#' + id_int).remove();
                                 }
                             });
-                    } else {
-                        noteObj.note = val;
-                        noteObj.title = title;
-                        notes.push(noteObj);
-                        this.formModel.set();
-                        this.formModel.save({ 'notes': notes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function (models, data) {
-                                    $('#noteBody').empty();
-                                    data.notes.forEach(function (item) {
-/*                                    	   var key = notes.length - 1;
-                                           var notes_data = response.notes;
-                                           var date = common.utcDateToLocaleDate(response.notes[key].date);
-                                           var author = currentModel.get('name').first;
-                                           var id = response.notes[key]._id;
-                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
-										var date = common.utcDateToLocaleDate(item.date);
-            							//notes.push(item);
-            							$('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title:item.title, val:item.note, author:item.author, date: date }));
-                                    });
-                                }
-                            });
+                        break;
                     }
-                    $('#noteArea').val('');
-                    $('#noteTitleArea').val('');
+                }
+            },
+
+            addNote: function (e) {
+                e.preventDefault();
+                var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
+                
+                if (!val) {//textarrea notes not be empty
+                	alert("Note Content can not be empty");
+                }
+                else {
+	                if (val || title) {
+	                    var notes = this.formModel.get('notes');
+	                    var arrKeyStr = $('#getNoteKey').attr("value");
+	                    var noteObj = {
+	                        note: '',
+	                        title: ''
+	                    };
+	                    if (arrKeyStr) {
+	                        var editNotes = _.map(notes, function (note) {
+	                            if (note._id == arrKeyStr) {
+	                                note.note = val;
+	                                note.title = title;
+	                            }
+	                            return note;
+	                        });
+	                        this.formModel.save({ 'notes': editNotes },
+	                            {
+	                                headers: {
+	                                    mid: 39
+	                                },
+	                                patch: true,
+	                                success: function () {
+	                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteText').html(val));
+	                                    $('#noteBody').val($('#' + arrKeyStr).find('.noteTitle').html(title));
+	                                    $('#getNoteKey').attr("value", '');
+	                                }
+	                            });
+	                    } else {
+	                        noteObj.note = val;
+	                        noteObj.title = title;
+	                        notes.push(noteObj);
+	                        this.formModel.set();
+	                        this.formModel.save({ 'notes': notes },
+	                            {
+	                                headers: {
+	                                    mid: 39
+	                                },
+	                                patch: true,
+	                                success: function (models, data) {
+	                                    $('#noteBody').empty();
+	                                    data.notes.forEach(function (item) {
+	                                        /*                                    	   var key = notes.length - 1;
+	                                         var notes_data = response.notes;
+	                                         var date = common.utcDateToLocaleDate(response.notes[key].date);
+	                                         var author = currentModel.get('name').first;
+	                                         var id = response.notes[key]._id;
+	                                         $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
+	                                        var date = common.utcDateToLocaleDate(item.date);
+	                                        //notes.push(item);
+	                                        $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
+	                                        
+	                                    });
+	                                }
+	                            });
+	                    }
+	                }
+	                  $('#noteArea').val('');
+	                  $('#noteTitleArea').val('');
                 }
             },
 
@@ -394,7 +414,9 @@ define([
             },
 
             fileSizeIsAcceptable: function (file) {
-                if (!file) { return false; }
+                if (!file) {
+                    return false;
+                }
                 return file.size < App.File.MAXSIZE;
             },
 
@@ -456,17 +478,20 @@ define([
                 $(e.target).stop().animate({
                     'background-position-y': '-38px'
 
-                }, 300, function () { });
+                }, 300, function () {
+                });
             },
             socialNotActive: function (e) {
                 e.preventDefault();
                 $(e.target).stop().animate({
                     'background-position-y': '0px'
-                }, 300, function () { });
+                }, 300, function () {
+                });
             },
 
             render: function () {
                 var formModel = this.formModel.toJSON();
+                console.log(formModel);
                 var el = this.$el;
                 el.html(_.template(personFormTemplate, formModel));
                 this.renderMiniOpp();
