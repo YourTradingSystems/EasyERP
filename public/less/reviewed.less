@@ -4217,16 +4217,26 @@ span.ui-spinner{
   }
   .ui-spinner-up {
     position: absolute;
-    right: 15px;
-    top:5px;
+    right: 5px;
+    top:3px;
     padding: 0;
     cursor: pointer;
+    font-size:8px;
+    &:hover{
+      text-decoration: none;
+      color:@lightblue + #333;
+    }
   }
   .ui-spinner-down{
     position: absolute;
     padding: 0;
     right: 5px;
-    top:5px;
+    top:10px;
     cursor: pointer;
+    font-size:8px;
+    &:hover{
+      text-decoration: none;
+      color:@lightblue + #333;
+    }
   }
 }
