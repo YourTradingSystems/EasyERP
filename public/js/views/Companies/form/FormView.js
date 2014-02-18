@@ -179,7 +179,7 @@ define([
             quickEdit: function (e) {
                 // alert(e.target.id);
 				var trId = $(e.target).closest("dd");
-				if ($("#" + trId.attr("id")).find("#editSpan").length==0){
+				if ($("#" + trId.attr("id")).find("#editSpan").length===0){
 					$("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
 					$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width()-40);
 				}
