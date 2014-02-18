@@ -238,7 +238,7 @@
 
             asyncLoadImgs: function (collection) {
                 var arr = _.filter(collection, function (item) {
-                    return item.assignedTo !== undefined;
+                    return item.assignedTo !== null;
                 });
                 var ids = _.map(arr, function (item) {
                     return item.assignedTo._id;
