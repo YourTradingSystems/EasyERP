@@ -1795,7 +1795,6 @@
 
   #previousPage, #nextPage, .currentPageList {
     background-color: white;
-    color: white;
     background-image: none;
     line-height: 15px;
     width: 20px;
@@ -1809,36 +1808,45 @@
     background-repeat: no-repeat;
     float: left;
 
-    &:hover {
-      background-color: #F7F8F9;
-    }
 
-    &.disabled {
-      color: silver;
-    }
   }
 
   #previousPage {
-    background-image: url("@{imagesfolder}/arrow-left-1.png");
+  /*  background-image: url("@{imagesfolder}/arrow-left-1.png");*/
     margin: 0 3px;
+    font-size:12px;
   }
 
   #nextPage {
-    background-image: url("@{imagesfolder}/arrow-right-1.png");
+//    background-image: url("@{imagesfolder}/arrow-right-1.png");
     margin: 0 3px;
+    font-size:12px;
   }
 
   .allPage {
     position: relative;
   }
+  button{
 
+    color: rgba(0, 0, 0, 0.75);
+    &:hover {
+      background-color: #F7F8F9;
+      color: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.9);
+    }
+    &[disabled] {
+      color: rgba(0, 0, 0, 0.3);
+      border: @thin-border rgba(0, 0, 0, 0.3);
+      cursor: default;
+    }
+  }
   #currentShowPage {
     border: @thin-border rgba(0, 0, 0, 0.4);
     border-right: @thin-border rgba(0, 0, 0, 0);
     width: 21px;
     height: 12px;
     margin-left: 5px;
-    font-size: 12px;
+    font-size: 12px !important;
   }
 
   #pageList {
@@ -1867,7 +1875,7 @@
 
   .currentPageList {
     margin-right: 5px;
-
+    font-size:12px;
     .caret {
       display: block;
       height: 15px;
@@ -2415,6 +2423,12 @@ dl {
 
 .noteWrapper {
   width: 50%;
+  .noteText{
+    word-wrap: break-word;
+  }
+  .noteTitle{
+    word-wrap: break-word;
+  }
   &.projects-dialog {
     width: 98%;
     margin: 0 auto;
