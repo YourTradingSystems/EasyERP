@@ -515,6 +515,15 @@
                       changeYear: true,
                       minDate: new Date()
                   });
+                  //for input type number
+                  this.$el.find("#logged").spinner({
+                      min: 0,
+                      max:1000
+                  });
+                  this.$el.find("#estimated").spinner({
+                      min: 0,
+                      max:1000
+                  });
                   return this;
               }
 
