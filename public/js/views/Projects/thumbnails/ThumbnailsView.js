@@ -141,7 +141,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
 
         asyncLoadImgs: function (collection) {
             var arr = _.filter(collection.toJSON(), function (item) {
-                return item.projectmanager !== undefined;
+                return item.projectmanager !== null;
             });
             var ids = _.map(arr, function (item) {
                 return item.projectmanager._id;

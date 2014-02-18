@@ -299,6 +299,10 @@ define([
                         }]
 
                 });
+                //for input type number
+                this.$el.find("#expectedRecruitment").spinner({
+                    min: 0
+                });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);

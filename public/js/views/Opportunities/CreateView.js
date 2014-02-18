@@ -12,7 +12,7 @@ define([
 
             initialize: function (options) {
                 _.bindAll(this, "saveItem");
-                //var model = (options && options.model) ? options.model : null;
+                var model = (options && options.model) ? options.model : null;
                 this.page=1;
                 this.pageG=1;
 				this.responseObj = {};
@@ -494,7 +494,7 @@ define([
                 $('#nextActionDate').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                 $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
 				populate.getPriority("#priorityDd",this,true);
-				populate.get2name("#customerDd", "/Customer",{},this,true,true);
+				populate.get2name("#customerDd", "/Customer",{},this,true,true, (this.model)?this.model._id:null);
 				populate.get2name("#salesPersonDd", "/getForDdByRelatedUser",{},this,true,true);
 				populate.getWorkflow("#workflowDd","#workflowNamesDd","/WorkflowsForDd",{id:"Opportunities"},"name",this,true);
 				populate.get("#salesTeamDd", "/DepartmentsForDd",{},"departmentName",this,true,true);

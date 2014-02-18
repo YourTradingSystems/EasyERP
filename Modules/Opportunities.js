@@ -69,7 +69,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         source: { type: String, default: '' },
         isConverted: { type: Boolean, default: false },
         convertedDate: { type: Date, default: Date.now },
-		notes: { type: Array, default: [] },
+        notes: { type: Array, default: [] },
         attachments: [{
             id: { type: Number, default: '' },
             name: { type: String, default: '' },
@@ -374,7 +374,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     if (data.source) {
                         _opportunitie.source = data.source;
                     }
-                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, _opportunitie.workflow, _opportunitie.workflow, true, false, function (sequence) {
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, _opportunitie.workflow, _opportunitie.workflow, true, false, function (sequence) {
                         _opportunitie.sequence = sequence;
                         _opportunitie.save(function (err, result) {
                             if (err) {
@@ -689,11 +689,11 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         function updateOpp() {
             var createPersonCustomer = function (company) {
                 if (data.contactName && (data.contactName.first || data.contactName.last)) {                           //�������� Person
-                	//add "phones:data.phones" convert phones (Vasya)
-                	var _person = {
+                    //add "phones:data.phones" convert phones (Vasya)
+                    var _person = {
                         name: data.contactName,
                         email: data.email,
-                        phones:data.phones,
+                        phones: data.phones,
                         company: company._id,
                         salesPurchases: {
                             isCustomer: true,
@@ -766,10 +766,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                 };
             }
-            event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, data.workflow, data.workflow, true, false, function (sequence) {
+            event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", 0, 0, data.workflow, data.workflow, true, false, function (sequence) {
                 if (!data.info) data.info = {};
                 data.sequence = sequence;
-                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate( _id, data, function (err, result) {
+                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, data, function (err, result) {
 
                     if (err) {
                         console.log(err);
@@ -781,13 +781,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                             console.log(data);
                             console.log('*******************************');
                             if (data.tempCompanyField) {                          //�������� �������
-                            	//add " address:data.address" convert address (Vasya)
-                            	var _company = {
+                                //add " address:data.address" convert address (Vasya)
+                                var _company = {
                                     name: {
                                         first: data.tempCompanyField,
                                         last: ''
                                     },
-                                    address:data.address,
+                                    address: data.address,
                                     //email: data.email,
                                     salesPurchases: {
                                         isCustomer: true,
@@ -831,7 +831,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 createPersonCustomer({});
                             }
                         }
-                        res.send(200, { success: 'Opportunities updated success' , result:result});
+                        res.send(200, { success: 'Opportunities updated success', result: result });
                     }
                 });
             });
@@ -860,7 +860,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     }// end update
 
     function updateOnlySelectedFields(req, _id, data, res) {
-		if (data.workflow && data.sequenceStart && data.workflowStart) {
+        if (data.workflow && data.sequenceStart && data.workflowStart) {
             if (data.sequence == -1) {
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
                     event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
@@ -894,25 +894,25 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     });
                 });
             }
-		} else {
-			if (data.notes && data.notes.length != 0) {
- 			    var obj = data.notes[data.notes.length - 1];
- 			    obj._id = mongoose.Types.ObjectId();
- 			    obj.date = new Date();
- 			    obj.author = req.session.uName;
- 			    data.notes[data.notes.length - 1] = obj;
- 			}
+        } else {
+            if (data.notes && data.notes.length != 0) {
+                var obj = data.notes[data.notes.length - 1];
+                obj._id = mongoose.Types.ObjectId();
+                obj.date = new Date();
+                obj.author = req.session.uName;
+                data.notes[data.notes.length - 1] = obj;
+            }
             console.log(data.notes);
-			models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
-				if (!err) {
-					res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
-				} else {
-					res.send(500, { error: "Can't update Opportunitie" });
-				}
-				
-			});
-			
-		}
+            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
+                if (!err) {
+                    res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
+                } else {
+                    res.send(500, { error: "Can't update Opportunitie" });
+                }
+
+            });
+
+        }
 
     }
 
@@ -1110,6 +1110,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                 exec(function (err, result) {
                                     if (!err) {
                                         res['data'] = result;
+                                        res['workflowId'] = data.workflowId;
+										res['fold'] = req.session.kanbanSettings.opportunities.foldWorkflows.indexOf(data.workflowId.toString())!==-1
                                         response.send(res);
                                     } else {
                                         logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
@@ -1220,7 +1222,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 res.send(500, { error: "Can't remove Opportunities" });
             } else {
                 if (result.isOpportunitie) {
-                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true);
+                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", result.sequence, 0, result.workflow, result.workflow, false, true);
                 }
                 res.send(200, { success: 'Opportunities removed' });
             }

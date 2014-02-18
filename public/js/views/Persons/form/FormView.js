@@ -101,7 +101,7 @@ define([
 
             quickEdit: function (e) {
                 var trId = $(e.target).closest("dd");
-                if ($("#" + trId.attr("id")).find("#editSpan").length == 0) {
+                if ($("#" + trId.attr("id")).find("#editSpan").length === 0) {
                     $("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
                     $("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 40);
                 }
@@ -114,7 +114,7 @@ define([
 
             cancelClick: function (e) {
                 e.preventDefault();
-                console.log(this.formModel.id);
+
                 Backbone.history.fragment = "";
                 Backbone.history.navigate("#easyErp/Persons/form/" + this.formModel.id, { trigger: true });
                 /*       e.preventDefault();
@@ -330,7 +330,6 @@ define([
                                 patch: true,
                                 wait: true,
                                 success: function (models, data) {
-                                    debugger;
                                     $('#noteBody').empty();
                                     data.notes.forEach(function (item) {
                                         /*                                    	   var key = notes.length - 1;
@@ -343,9 +342,6 @@ define([
                                         //notes.push(item);
                                         $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
                                     });
-                                },
-                                error: function (models, data) {
-                                    alert('some error');
                                 }
                             });
                     }

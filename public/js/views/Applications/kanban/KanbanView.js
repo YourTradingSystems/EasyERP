@@ -15,7 +15,9 @@
             el: '#content-holder',
             events: {
                 "dblclick .item": "gotoEditForm",
-                "click .item": "selectItem"
+                "click .item": "selectItem",
+				"click .column.fold":"foldUnfoldKanban",
+				"click .fold-unfold": "foldUnfoldKanban",
             },
 
             columnTotalLength: null,
@@ -23,11 +25,52 @@
             initialize: function (options) {
                 this.startTime = options.startTime;
                 this.workflowsCollection = options.workflowCollection;
+				this.foldWorkflows = [];
                 this.render();
                 this.asyncFetc(options.workflowCollection);
                 this.getCollectionLengthByWorkflows(this);
             },
+			updateFoldWorkflow: function () {
+				if (this.foldWorkflows.length===0){
+					this.foldWorkflows =["Empty"];
+				}
+				dataService.postData('/currentUser', { 'kanbanSettings.applications.foldWorkflows': this.foldWorkflows }, function (seccess, error) {
+				});
+			},
 
+		foldUnfoldKanban:function(e,id){
+			var el;
+			if (id){
+				el = $("td.column[data-id='"+id+"']");
+			}else{
+				el=$(e.target).closest("td");
+			}
+			el.toggleClass("fold");
+			if (el.hasClass("fold")){
+				var w = el.find(".columnName .text").width();
+					var k = w/2-21;
+					if (k<0){
+						k=-2-k;
+					}
+					el.find(".columnName .text").css({"left":"-"+k+"px","top":Math.abs(w/2+47)+"px" });
+				this.foldWorkflows.push(el.attr("data-id"));
+			}else{
+				var idx = this.foldWorkflows.indexOf(el.attr("data-id"));
+				if (idx!==-1){
+					this.foldWorkflows.splice(idx,1);
+				}
+			}
+			if(!id)
+				this.updateFoldWorkflow();
+			if (el.closest("table").find(".fold").length==el.closest("table").find(".column").length){
+				el.closest("table").css({"min-width":"inherit"});
+				el.closest("table").css({"width":"auto"});
+			}
+			else{
+				el.closest("table").css({"min-width":"100%"});
+			}
+			el.closest("table").css({"min-height":($(window).height()-110)+"px"});
+		},
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode;
 				if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -74,6 +117,10 @@
                             }
                         }
                     });
+                    // for input type number
+                    context.$el.find('#cPerPage').spinner({
+                        min: 5
+                    });
                 }, this);
             },
 
@@ -116,7 +163,6 @@
             },
 
             asyncRender: function (response, context) {
-                console.log(response.time);
                 var contentCollection = new ApplicationsCollection();
                 contentCollection.set(contentCollection.parse(response));
                 if (collection) {
@@ -127,6 +173,9 @@
                 }
                 var kanbanItemView;
                 var column = this.$("[data-id='" + response.workflowId + "']");
+				if (response.fold){
+					context.foldUnfoldKanban(null,response.workflowId);
+				}
                 column.find(".counter").html(parseInt(column.find(".counter").html()) + contentCollection.models.length);
                 _.each(contentCollection.models, function (wfModel) {
                     kanbanItemView = new KanbanItemView({ model: wfModel });

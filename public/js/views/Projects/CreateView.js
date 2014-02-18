@@ -111,7 +111,7 @@ define([
             addUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-
+				$(e.target).closest(".ui-dialog").find(".target");
             },
 
             removeUsers: function (e) {

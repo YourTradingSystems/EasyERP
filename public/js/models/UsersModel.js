@@ -6,7 +6,7 @@ define(['Validation'],function (Validation) {
             login:"",
             email:"",
             profile:null,
-            RelatedEmployee:null,
+            RelatedEmployee:null
         },
         initialize: function(){
             this.on('invalid', function(model, errors){
@@ -23,6 +23,7 @@ define(['Validation'],function (Validation) {
 	            Validation.checkLoginField(errors, true, attrs.login, "Login");
 	            Validation.checkEmailField(errors, false, attrs.email, "Email");
             } else {
+                Validation.checkLoginField(errors, true, attrs.login, "Login");
                 Validation.checkPasswordField(errors, true, attrs.pass, "Password");
                 Validation.checkPasswordField(errors, true, options.confirmPass, "Confirm password");
                 Validation.comparePasswords(errors, attrs.pass, options.confirmPass);
