@@ -473,6 +473,7 @@ define([
                 var workflow = this.$el.find("#workflowsDd").data("id");
                 var projecttype = this.$el.find("#projectTypeDD").data("id");
                 var $userNodes = $("#usereditDd option:selected");
+                var startDate = $.trim(this.$el.find("#StartDate").val());
                 var users = [];
                 $userNodes.each(function (key, val) {
                     users.push({
@@ -516,6 +517,7 @@ define([
                     },
                     whoCanRW: whoCanRW,
                     health: health,
+                    StartDate: startDate,
                     TargetEndDate: TargetEndDate
                 };
                 this.currentModel.save(data, {
@@ -649,6 +651,11 @@ define([
                         });
 
                     }
+                $('#StartDate').datepicker({
+                    dateFormat: "d M, yy",
+                    changeMonth: true,
+                    changeYear: true
+                });
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
