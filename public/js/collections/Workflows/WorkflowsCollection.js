@@ -26,7 +26,6 @@ define(function () {
         },
 
         parse: true,
-
         parse: function (response) {
             return response.data;
         },

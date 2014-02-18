@@ -12,6 +12,7 @@ define([
 		   var ContentView = Backbone.View.extend({
 			   el: '#content-holder',
 			   initialize: function (options) {
+
 				   this.startTime = options.startTime;
 				   _.bindAll(this, "saveStatus", "render");
 				   this.relatedStatusesCollection = new RelatedStatusesCollection();
@@ -43,7 +44,7 @@ define([
 				   "click .saveAll": "saveAll",
 				   "click .cancelAll": "cancelAll",
 				   "mouseenter .workflow-sub-list li:not(.quickEdit)":"quickEdit",
-				   "mouseleave .workflow-sub-list li": "removeEdit",
+				   "mouseleave .workflow-sub-list li": "removeEdit"
 			   },
 
 			   save: function (e) {
@@ -56,22 +57,27 @@ define([
 				   var tdName = tr.find("div.name");
 				   var id = tdName.data("id");
 				   var sequence = tdName.data("sequence");
-				   var model = this.collection.get(id);
-				   this.collection.url = "/Workflows";
-				   var obj = {
-					   name: name,
-					   status: status,
-					   sequence: sequence
-				   };
 
-				   model.set(obj, {validate : true});
-				   model.save({}, {
+                   var model =this.collection.get(id);
+                   this.collection.url = "/Workflows";
+                   console.log(model);
+//				   var obj = {
+//					   name: name,
+//					   status: status,
+//					   sequence: sequence
+//				   };
+                    //console.log(obj);
+				   //model.set();
+				   model.save({'name': name}, {
 					   headers: {
 						   mid: mid
 					   },
 					   success: function (model) {
 						   common.checkBackboneFragment("easyErp/Workflows");
-					   }
+					   },
+                       error: function (error){
+                            console.log(error);
+                   }
 				   });
 			   },
 
@@ -109,7 +115,7 @@ define([
 				   });
 
 				   td.siblings(".name").append(
-					   $("<input>").val(td.siblings("div.name").text()));
+					   $("<input>").val(td.siblings("div.name").text().trim()));
 				   td.append(
 					   $(text).text("Save").addClass("save"),
 					   $(text).text("Cancel").addClass("cancel")
@@ -236,7 +242,7 @@ define([
 						   model.save({
 							   sequenceStart: parseInt(ui.item.find("div.name").attr("data-sequence")),
 							   wId: model.toJSON().wId,
-                               sequence: sequence,
+                               sequence: sequence
 						   },{
 							   patch: true,
 							   success: function (model2) {
@@ -245,7 +251,7 @@ define([
                                    self.collection.add(model2, { merge: true });
                                }
 						   });
-					   },
+					   }
 				   });
 			   },
 

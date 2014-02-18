@@ -6,7 +6,6 @@ function (common, Validation){
     var WorkflowsModel = Backbone.Model.extend({
         idAttribute: "_id",
         initialize: function(){
-
         	this.on('invalid', function(model, errors){
                 if(errors.length > 0){
                     var msg = errors.join('\n');
@@ -14,11 +13,13 @@ function (common, Validation){
                 }
             });
         },
-        validate: function(attrs){
+        validate: function(attrs, options){
             var errors = [];
 
-            Validation.checkLoginField(errors, true, attrs.value[0].name);
+          //  Validation.checkLoginField(errors, true, attrs.value[0].name);
+            if(options.editMode){
             Validation.checkLoginField(errors, true, attrs.name);
+            }
             if (attrs.wName){
             	Validation.checkLoginField(errors, true, attrs.wName);
         	}
