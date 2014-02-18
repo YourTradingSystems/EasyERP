@@ -1053,12 +1053,13 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         },
                         function (err, projectsId) {
                             if (!err) {
+                                console.log(data);
                                 if (data && data.type == 'Tasks') {
                                     var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                         where('project').in(projectsId.objectID());
                                     if (data && data.filter && data.filter.workflow) {
                                         query.where('workflow').in(data.filter.workflow);
-                                    } else if (data && !data.newCollection) {
+                                    } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                         query.where('workflow').in([]);
                                     }
                                     query.exec(function (err, result) {
@@ -1738,10 +1739,12 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 var query = models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).
                                     where('project').in(projectsId.objectID());
                                 if (data && data.filter && data.filter.workflow) {
+                                    console.log(data.filter.workflow);
                                     query.where('workflow').in(data.filter.workflow);
-                                } else if (data && !data.newCollection) {
+                                } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
                                 }
+                                console.log(data);
                                 query.select("-attachments -notes").
                                     populate('project', 'projectShortDesc projectName').
                                     populate('assignedTo', 'name').
@@ -1756,6 +1759,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                             res['data'] = result;
                                             res['time'] = (new Date() - startTime);
                                             response.send(res);
+                                            console.log(res);
                                         } else {
                                             logWriter.log("Projects.js getTasksForList task.find" + err);
                                             response.send(500, { error: "Can't find Tasks" });
