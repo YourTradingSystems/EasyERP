@@ -279,13 +279,15 @@
                },
 
                addNote: function (e) {
+                   debugger;
                    e.preventDefault();
                    var noteArea_holder = $('#noteArea');
                    var noteTitleArea_holder = $('#noteTitleArea');
                    var val = noteArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                    var title = noteTitleArea_holder.val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                    if (val || title) {
-                       var notes = this.currentModel.get('notes');
+                       var currentModel = this.currentModel;
+                       var notes = currentModel.get('notes');
                        var arrKeyStr = $('#getNoteKey').attr("value");
                        var noteObj = {
                            note: '',
@@ -299,7 +301,7 @@
                                }
                                return note;
                            });
-                           this.currentModel.save({ 'notes': editNotes },
+                           currentModel.save({ 'notes': editNotes },
 												  {
 													  headers: {
 														  mid: 39
@@ -317,16 +319,16 @@
                            noteObj.note = val;
                            noteObj.title = title;
                            notes.push(noteObj);
-                           this.currentModel.set();
-                           this.currentModel.save({ 'notes': notes },
+                           currentModel.save({ 'notes': notes },
 												  {
 													  headers: {
 														  mid: 39
 													  },
 													  patch: true,
+                                                      wait: true,
 													  success: function (models, data) {
 														  $('#noteBody').empty();
-														  data.result.notes.forEach(function (item) {
+														  data.notes.forEach(function (item) {
 															  var date = common.utcDateToLocaleDate(item.date);
 															  $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
 														  });

@@ -291,7 +291,8 @@ define([
                 var val = $('#noteArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 var title = $('#noteTitleArea').val().replace(/</g, "&#60;").replace(/>/g, "&#62;");
                 if (val || title) {
-                    var notes = this.formModel.get('notes');
+                    var formModel = this.formModel;
+                    var notes = formModel.get('notes');
                     var arrKeyStr = $('#getNoteKey').attr("value");
                     var noteObj = {
                         note: '',
@@ -305,7 +306,7 @@ define([
                             }
                             return note;
                         });
-                        this.formModel.save({ 'notes': editNotes },
+                        formModel.save({ 'notes': editNotes },
                             {
                                 headers: {
                                     mid: 39
@@ -321,14 +322,15 @@ define([
                         noteObj.note = val;
                         noteObj.title = title;
                         notes.push(noteObj);
-                        this.formModel.set();
-                        this.formModel.save({ 'notes': notes },
+                        formModel.save({ 'notes': notes },
                             {
                                 headers: {
                                     mid: 39
                                 },
                                 patch: true,
+                                wait: true,
                                 success: function (models, data) {
+                                    debugger;
                                     $('#noteBody').empty();
                                     data.notes.forEach(function (item) {
                                         /*                                    	   var key = notes.length - 1;
@@ -341,6 +343,9 @@ define([
                                         //notes.push(item);
                                         $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
                                     });
+                                },
+                                error: function (models, data) {
+                                    alert('some error');
                                 }
                             });
                     }

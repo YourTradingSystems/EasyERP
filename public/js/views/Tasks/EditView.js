@@ -124,8 +124,6 @@
                                   }
                               });
 
-
-
                       } else {
 
                           note_obj.note = val;
@@ -139,7 +137,6 @@
                                  patch: true,
                                  wait: true,
                                  success: function (models, data) {
-
                                      $('#noteBody').empty();
                                      data.notes.forEach(function (item) {
                                          var date = common.utcDateToLocaleDate(item.date);

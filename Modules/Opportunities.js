@@ -77,7 +77,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             size: Number,
             uploaderName: { type: String, default: '' },
             uploadDate: { type: Date, default: Date.now }
-        }],
+        }]
 
     }, { collection: 'Opportunities' });
 
@@ -860,41 +860,41 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     }// end update
 
     function updateOnlySelectedFields(req, _id, data, res) {
-		if (data.workflow&&data.sequenceStart&&data.workflowStart){
-        if (data.sequence == -1) {
-            event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-                event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+		if (data.workflow && data.sequenceStart && data.workflowStart) {
+            if (data.sequence == -1) {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                        data.sequence = sequence;
+                        if (data.workflow == data.workflowStart)
+                            data.sequence -= 1;
+                        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+                            if (!err) {
+                                res.send(200, { success: 'Opportunities updated', sequence:result.sequence  });
+                            } else {
+                                res.send(500, { error: "Can't update Opportunitie" });
+                            }
+
+                        });
+
+                    });
+                });
+            } else {
+                event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                    delete data.sequenceStart;
+                    delete data.workflowStart;
+                    data.info = {};
                     data.sequence = sequence;
-                    if (data.workflow == data.workflowStart)
-                        data.sequence -= 1;
                     models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                         if (!err) {
-                            res.send(200, { success: 'Opportunities updated', sequence:result.sequence  });
+                            res.send(200, { success: 'Opportunities updated' });
                         } else {
                             res.send(500, { error: "Can't update Opportunitie" });
                         }
 
                     });
-
                 });
-            });
-        } else {
-            event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
-                delete data.sequenceStart;
-                delete data.workflowStart;
-                data.info = {};
-                data.sequence = sequence;
-                models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
-                    if (!err) {
-                        res.send(200, { success: 'Opportunities updated' });
-                    } else {
-                        res.send(500, { error: "Can't update Opportunitie" });
-                    }
-
-                });
-            });
-        }
-		}else{
+            }
+		} else {
 			if (data.notes && data.notes.length != 0) {
  			    var obj = data.notes[data.notes.length - 1];
  			    obj._id = mongoose.Types.ObjectId();
@@ -902,9 +902,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
  			    obj.author = req.session.uName;
  			    data.notes[data.notes.length - 1] = obj;
  			}
+            console.log(data.notes);
 			models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
 				if (!err) {
-					res.send(200, { success: 'Opportunities updated', result:result});
+					res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
 				} else {
 					res.send(500, { error: "Can't update Opportunitie" });
 				}
