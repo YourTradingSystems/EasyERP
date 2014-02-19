@@ -1128,7 +1128,8 @@
                 res.send(500, { error: 'customer updated error' });
             }
         },
-		 updateOnlySelectedFields:function(req, _id, data, res) {
+
+		updateOnlySelectedFields:function(req, _id, data, res) {
 			delete data._id;
 			if (data.notes && data.notes.length != 0) {
 				var obj = data.notes[data.notes.length - 1];
@@ -1138,13 +1139,13 @@
 				data.notes[data.notes.length - 1] = obj;
 			}
 			 
-			models.get(req.session.lastDb - 1, 'Customers', customerSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, tasks) {
+			models.get(req.session.lastDb - 1, 'Customers', customerSchema).findByIdAndUpdate({ _id: _id }, { $set: data }, function (err, result) {
 				if (err) {
 					console.log(err);
 					logWriter.log("Customer.js update customer.update " + err);
 					res.send(500, { error: "Can't update Customer" });
 				} else {
-					res.send(200, tasks);
+					res.send(200,{ success: 'Customer update', notes: result.notes } );
 				}
 			});
 		},

@@ -23,6 +23,7 @@ define([
         	"click .remember-me": "checkClick"
         },
         render: function(options){
+            $('title').text('Login');
             if (options) {
                 this.$el.html(_.template(LoginTemplate, { options: options.dbs }));
             } else {
