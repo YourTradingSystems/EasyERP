@@ -1,6 +1,6 @@
 define(['libs/date.format', 'common'], function (dateformat, common) {
 
-    var runApplication = function (success, description) {
+    var runApplication = function (success) {
         if (!Backbone.history.fragment)
             Backbone.history.start({ silent: true });
         if (success) {

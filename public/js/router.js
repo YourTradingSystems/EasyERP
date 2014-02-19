@@ -14,7 +14,7 @@ define([
         view: null,
 
         routes: {
-            "home": "main",
+            "home": "any",
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
             "easyErp/:contentType/thumbnails": "goToThumbnails",
