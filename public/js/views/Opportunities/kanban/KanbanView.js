@@ -49,9 +49,9 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 			el.toggleClass("fold");
 			if (el.hasClass("fold")){
 				var w = el.find(".columnName .text").width();
-				var k = w/2-21;
+				var k = w/2-20;
 				if (k<=0){
-					k=-2-k;
+					k= 20-w/2;
 				}
 				k=-k;
 				el.find(".columnName .text").css({"left":k+"px","top":Math.abs(w/2+47)+"px" });

@@ -103,7 +103,13 @@
   -moz-box-shadow: @arguments;
   -webkit-box-shadow: @arguments;
 }
-
+.rotate(@deg){
+	-webkit-transform: rotate(@deg);
+    -moz-transform: rotate(@deg);
+    -o-transform: rotate(@deg);
+    -ms-transform: rotate(@deg);
+    transform: rotate(@deg);
+}
 .dl-auto(@max-width: 120px,@with-dt: 35%, @line-height: 0px, @height: 16px, @margin-top: 0px) {
   clear: both;
   font-size: 14px;
@@ -1168,26 +1174,45 @@
       .columnName {
         padding-bottom: 5px;
         margin-bottom: 5px;
+		.totalCount{
+			float: right;
+			padding: 2px 5px;
+			border: 1px solid #000;
+		}
+		.fold-unfold{
+			display: block;
+			float: right;
+			width: 15px;
+			height: 17px;
+			border-radius: 17px;
+			border: 1px solid #000;
+			padding-left: 2px;
+			font-family: Icons;
+			line-height: 18px;
+			font-weight: bold;
+			margin: 0 2px 0 4px;
+			cursor: pointer;
+		}
       }
 
       &.cancelled .columnName {
-        border-bottom: 2px solid #FF5454;
+        border-bottom: 2px solid #FF5454 !important;
       }
 
       &.inprogress .columnName {
-        border-bottom: 2px solid #ffea73;
+        border-bottom: 2px solid #ffea73 !important;
       }
 
       &.fixed .columnName {
-        border-bottom: 2px solid #bef624;
+        border-bottom: 2px solid #bef624 !important;
       }
 
       &.done .columnName {
-        border-bottom: 2px solid #BDEA74;
+        border-bottom: 2px solid #BDEA74 !important;
       }
 
       &.testing .columnName {
-        border-bottom: 2px solid #D9FFC8;
+        border-bottom: 2px solid #D9FFC8 !important;
       }
 
       &.merge .columnName {
@@ -1243,6 +1268,71 @@
     &.lastColumn .dropDownOpened {
       right: 0;
     }
+		&.fold{
+			width:40px;
+			min-width:40px;
+			min-height:100px;
+
+			.columnNameDiv{
+				position:absolute;
+				background-color:white;
+				width:40px;
+				height:42px;
+				z-index:100;
+				.columnName{
+					position:relative;
+					border-width:0px;
+					text-align:center;
+					height:17px;
+					border-bottom:2px solid silver;
+			
+					.fold-unfold{
+						display:none;
+					}
+					.totalCount{
+						position:absolute;
+						display:block;
+						width:40px;
+						border:0px;
+						color:@lightblue;
+						font-size:18px;
+						line-height:26px;
+						float:none;
+						text-align:center;
+						display:block;
+						top:0px;
+						left:0px;
+						padding:0;
+					}
+					.text{
+						color:@lightblue;
+						margin:0 auto;
+						text-align:center;
+						position:absolute;
+						.rotate(90deg);
+
+						font-size:18px !important;
+					}
+				}
+			}
+
+			.item{
+				display:none;
+			}
+			&:hover{
+			.columnNameDiv{
+				.columnName{
+					.totalCount, .text{
+						color:@lightblue+22;
+					}
+				}
+			}
+				cursor:pointer;
+				.text{
+					color:white;
+				}
+			}
+		}
   }
 
   .dropDownMenu {

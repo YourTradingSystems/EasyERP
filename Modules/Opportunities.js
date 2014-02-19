@@ -77,7 +77,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
             size: Number,
             uploaderName: { type: String, default: '' },
             uploadDate: { type: Date, default: Date.now }
-        }],
+        }]
 
     }, { collection: 'Opportunities' });
 
@@ -534,9 +534,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 response.send(500, { error: "Can't find Opportunities" });
             } else {
                 response.send(result);
-                console.log('----------------------//----------------');
-                console.log(JSON.stringify(result.notes));
-                console.log('----------------------//----------------');
             }
         });
     };
@@ -866,13 +863,13 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         if (data.workflow && data.sequenceStart && data.workflowStart) {
             if (data.sequence == -1) {
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
-                    event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
+                    event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
                         data.sequence = sequence;
                         if (data.workflow == data.workflowStart)
                             data.sequence -= 1;
                         models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                             if (!err) {
-                                res.send(200, { success: 'Opportunities updated', sequence: result.sequence });
+                                res.send(200, { success: 'Opportunities updated', sequence:result.sequence  });
                             } else {
                                 res.send(500, { error: "Can't update Opportunitie" });
                             }
@@ -882,7 +879,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     });
                 });
             } else {
-                event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
                     delete data.sequenceStart;
                     delete data.workflowStart;
                     data.info = {};
@@ -905,9 +902,10 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 obj.author = req.session.uName;
                 data.notes[data.notes.length - 1] = obj;
             }
-            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
+            console.log(data.notes);
+            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
                 if (!err) {
-                    res.send(200, { success: 'Opportunities updated', result: result });
+                    res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
                 } else {
                     res.send(500, { error: "Can't update Opportunitie" });
                 }

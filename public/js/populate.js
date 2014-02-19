@@ -75,7 +75,7 @@ define([
                });
            };
 
-           var get2name = function (id, url, data, content, isCreate, canBeEmpty) {
+           var get2name = function (id, url, data, content, isCreate, canBeEmpty, parrrentContentId) {
                dataService.getData(url, data, function (response) {
                    content.responseObj[id] = [];
                    if (canBeEmpty) {
@@ -87,6 +87,12 @@ define([
 
                    if (isCreate) {
                        $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
+                   }
+                   if (parrrentContentId) {
+                       var current = _.filter(response.data, function(item) {
+                           return item._id == parrrentContentId;
+                       });
+                       $(id).text(current[0].name.first+" "+current[0].name.last).attr("data-id", current[0]._id);
                    }
                });
            };

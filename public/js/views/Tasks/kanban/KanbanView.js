@@ -63,7 +63,8 @@
 					if (k<0){
 						k=-2-k;
 					}
-					el.find(".columnName .text").css({"left":"-"+k+"px","top":Math.abs(w/2+47)+"px" });
+					k=-k;
+					el.find(".columnName .text").css({"left":k+"px","top":Math.abs(w/2+47)+"px" });
 					this.foldWorkflows.push(el.attr("id"));
 				}else{
 					var idx = this.foldWorkflows.indexOf(el.attr("id"));
