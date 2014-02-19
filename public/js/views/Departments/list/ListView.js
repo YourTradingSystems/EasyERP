@@ -44,7 +44,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
         deleteItem: function(e){
 			var myModel=this.collection.get($(e.target).closest("li").data("id"))
             var mid = 39;
-            event.preventDefault();
+            e.preventDefault();
             var self = this;
             var answer = confirm("Realy DELETE items ?!");
             if (answer == true) {
