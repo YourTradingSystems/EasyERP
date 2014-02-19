@@ -49,6 +49,7 @@ define([
 		},
 
         login: function(event){
+            console.log('Login Clicked');
         	event.preventDefault();
 			$("#loginForm").removeClass("notRegister");
             var data = {
@@ -56,6 +57,7 @@ define([
                 pass: this.$("#upass").val(),
                 dbId: this.$el.find("#dbs :selected").data("id")
             };
+            if(data.login == ""){$("#loginForm").addClass("notRegister");}
         	$.ajax({
         	    url: "/login",
         	    type: "POST",

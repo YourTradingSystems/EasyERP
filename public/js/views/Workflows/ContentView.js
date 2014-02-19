@@ -61,14 +61,17 @@ define([
                    var model =this.collection.get(id);
                    this.collection.url = "/Workflows";
                    console.log(model);
-//				   var obj = {
-//					   name: name,
-//					   status: status,
-//					   sequence: sequence
-//				   };
-                    //console.log(obj);
+				   var obj = {
+					   name: name,
+					   status: status,
+					   sequence: sequence
+				   };
+
+                   //console.log(obj);
 				   //model.set();
-				   model.save({'name': name}, {
+                   model.set(obj);
+                   console.log(model.isValid());
+				   model.save({}, {
 					   headers: {
 						   mid: mid
 					   },
