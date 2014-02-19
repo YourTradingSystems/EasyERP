@@ -716,6 +716,11 @@
   .margin {
     margin: 0 30px;
   }
+  input {
+    &:not([type="checkbox"]) {
+      background: transparent;
+    }
+  }
   input[type="submit"] {
     height: 0;
     width: 0;
@@ -1820,7 +1825,7 @@
     border-top-color: #CBD3E2;
     max-width: 280px;
     height: 18px;
-    background-color: white;
+    background-color: transparent;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     padding: 2px;
