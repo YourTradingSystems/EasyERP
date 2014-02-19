@@ -64,7 +64,7 @@ define([
         	    type: "POST",
         	    data: data,
         	    success: function () {
-        	            Custom.runApplication(true);
+        	        Custom.runApplication(true);
         	    },
         	    error: function () {
         	        //Custom.runApplication(false, "Server is unavailable...");

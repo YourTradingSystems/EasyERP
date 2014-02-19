@@ -241,7 +241,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         res.send(500, { error: 'Employees.create find error' });
                     }
                     if (doc.length > 0) {
-                        if (doc[0].name === data.name) {
+
+                        if (doc[0].name.first == data.name.first && doc[0].name.last == data.name.last) {
+                            //change conditions (never triggered)
                             res.send(400, { error: 'An Employees with the same Name already exists' });
                         }
                     } else if (doc.length === 0) {
