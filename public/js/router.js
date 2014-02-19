@@ -32,6 +32,7 @@ define([
         initialize: function () {
             this.on('all', function () {
                 $(".ui-dialog").remove();
+                $("#ui-datepicker-div").remove();
             });
             $(document).on("keydown", ".ui-dialog", function (e) {
                 switch (e.which) {
