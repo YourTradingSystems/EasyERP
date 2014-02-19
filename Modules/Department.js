@@ -13,7 +13,8 @@ var Department = function (logWriter, mongoose, models) {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date }
         },
-        nestingLevel: { type: Number, default: 0 }
+        nestingLevel: { type: Number, default: 0 },
+        sequence: { type: Number, default: 0 }
 
     }, { collection: 'Department' });
 
@@ -44,7 +45,7 @@ var Department = function (logWriter, mongoose, models) {
             }
             function saveToDb(data) {
                 try {
-                    _department = new models.get(req.session.lastDb - 1, 'Department', DepartmentSchema)();
+                    var _department = new models.get(req.session.lastDb - 1, 'Department', DepartmentSchema)();
 
                     if (data.departmentName) {
                         _department.departmentName = data.departmentName;
@@ -64,6 +65,10 @@ var Department = function (logWriter, mongoose, models) {
                     }
                     if (data.nestingLevel) {
                         _department.nestingLevel = data.nestingLevel;
+
+                    }
+                    if (data.sequence) {
+                        _department.sequence = data.sequence;
 
                     }
                     _department.save(function (err, result) {
@@ -114,7 +119,7 @@ var Department = function (logWriter, mongoose, models) {
         var res = {};
         res['data'] = [ ];
         var query = models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find();
-        query.select('_id departmentName nestingLevel');
+        query.select('_id departmentName nestingLevel parentDepartment');
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
             if (err) {
@@ -200,6 +205,7 @@ var Department = function (logWriter, mongoose, models) {
 		query.populate("parentDepartment","departmentName _id");
 		query.populate("departmentManager","name _id");
 		query.populate("users","login _id");
+        query.sort({ nestingLevel: 1, sequence:-1 });
         query.exec(function (err, departments) {
             if (err) {
                 console.log(err);
@@ -207,11 +213,7 @@ var Department = function (logWriter, mongoose, models) {
                 response.send(500, { error: "Can't find Department" });
             } else {
                 res['data'] = departments;
-                res['data'].sort(function (a, b) {
-                    if (a.nestingLevel < b.nestingLevel) return -1;
-                    if (a.nestingLevel > b.nestingLevel) return 1;
-                    return 0;
-                });
+
                 response.send(res);
             }
         });

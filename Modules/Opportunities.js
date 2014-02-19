@@ -891,17 +891,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 });
 					}});
             } else {
-				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
-				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
-					if (error) {
-                        console.log(error);
-                        logWriter.log('Opprtunities.js. create opportunitie.find' + error);
-                        res.send(500, { error: 'Opprtunities.create find error' });
-                    }
-                    if (doc.length > 0&&doc[0]._id!=_id) {
-						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
-                        res.send(400, { error: 'An Opprtunities with the same Name already exists' });
-					}else{
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
                     delete data.sequenceStart;
                     delete data.workflowStart;
@@ -917,8 +906,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     });
                 });
 					}
-                });
-            }
         } else {
 				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
 				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {

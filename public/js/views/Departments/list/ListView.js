@@ -34,7 +34,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 				'</tr>');
 		},*/
 		createDepartmentListRow:function(department,index,className){
-		    return ('<li class="' + className + '" data-id="' + department._id + '"data-level="' + department.nestingLevel + '"><span class="dotted-line" style="width:' + (20 * (department.nestingLevel + 1)) + 'px"></span><span class="text" style="margin-left:' + (20 * (department.nestingLevel + 1)) + 'px">' + department.departmentName + ' (' + department.users.length + ')<span title="delete" class="trash icon">1</span><span title="edit" class="edit icon">e</span></span></li>');
+		    return ('<li class="' + className + '" data-id="' + department._id + '" data-level="' + department.nestingLevel + '" data-sequence="' + department.sequence + '"><span class="content"><span class="dotted-line"></span><span class="text">' + department.departmentName + '<span title="delete" class="trash icon">1</span><span title="edit" class="edit icon">e</span></span></span></li>');
 		},
         editItem: function(e){
             //create editView in dialog here
@@ -63,22 +63,58 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 
 			return false;
         },
-
+		groupMove:function (){
+			$("#groupList li").each(function(){
+				if ($(this).find("li").length>0){
+					$(this).attr("class","parent");
+				}
+				else{
+					$(this).attr("class","child");
+				}
+			});
+		},
         render: function () {
             console.log('Departments render');
             $('.ui-dialog ').remove();
             this.$el.html(_.template(ListTemplate));
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             var departments = this.collection.toJSON();
-            var self = this;
 			console.log(departments);
+            var self = this;
             departments.forEach(function(elm, i) {
                 if (!elm.parentDepartment) {
-                    self.$el.find("#groupList").append(self.createDepartmentListRow(elm, i + 1, "parent"));
+                    self.$el.find("#groupList").append(self.createDepartmentListRow(elm, i + 1, "child"));
                 } else {
-                    self.$el.find("[data-id='" + elm.parentDepartment._id + "']").removeClass('child').addClass('parent').after(self.createDepartmentListRow(elm, i + 1, "child"));
-                };
+                    var par = self.$el.find("[data-id='" + elm.parentDepartment._id + "']").removeClass('child').addClass('parent')
+					if (par.find("ul").length===0){
+						par.append("<ul style='margin-left:20px'></ul>");
+					}
+					par.find("ul").append(self.createDepartmentListRow(elm, i + 1, "child"));
+					
+
+						
+                }
             });
+//			this.groupMove();
+			self = this;
+			this.$("ul").sortable({
+				connectWith: 'ul',
+                stop: function (event, ui) {
+					self.groupMove();
+					console.log(ui.item.attr("data-id"));
+					var model = self.collection.get(ui.item.attr("data-id"));
+					var sequence=0;
+					var nestingLevel=0;
+					if (ui.item.next().hasClass("parent")||ui.item.next().hasClass("child")){
+						sequence = parseInt(ui.item.next().attr("data-sequence"))+1;
+						nestingLevel=parseInt(ui.item.parents("li").attr("data-level"))+1;
+					}
+					model.set({"parentDepartment":ui.item.parents("li").attr("data-id"), "nestingLevel":nestingLevel, departmentManager:model.toJSON.departmentManager?model.toJSON.departmentManager._id:null, sequence:sequence});
+					model.save();
+					ui.item.attr("data-sequence",sequence);
+					console.log(ui.item.parents("li").attr("data-id"));
+				}
+			});
 //            this.$el.append(new ListItemView({ collection: this.collection, startNumber: this.startNumber }).render());
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
