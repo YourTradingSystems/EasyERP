@@ -73,7 +73,6 @@
             var canvas = context.$('#avatar')[0];
             var inputFile = context.$('#inputImg');
             inputFile.prop('accept', "image/*");
-            var that = context;
             inputFile.on('change', function (e) {
             	e.preventDefault();
                 var file = inputFile[0].files[0];
