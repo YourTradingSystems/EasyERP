@@ -170,7 +170,10 @@ var Users = function (logWriter, mongoose, models, department) {
                             res.send(500);
                         }
                     }); //End find method
-                }
+                } else {
+					console.log("Incorect Incoming Data");
+					res.send(400);
+				}
                 //End Validating input data for login
             }
             else {

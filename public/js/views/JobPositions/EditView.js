@@ -18,7 +18,7 @@ define([
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
 				if (options.myModel){
-					this.currentModel = options.myModel
+					this.currentModel = options.myModel;
 				}
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();

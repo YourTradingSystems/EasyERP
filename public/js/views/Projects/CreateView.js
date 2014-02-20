@@ -111,12 +111,27 @@ define([
             addUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
-				$(e.target).closest(".ui-dialog").find(".target");
+				var s = "";
+				var k = $(".userPagination .text").text().split(" ")[0];
+				s+=k.split("-")[0];
+				s+="-";
+				s+=parseInt(k.split("-")[1])-1;
+				var p = $(".userPagination .text").text().split(" ")[2];
+				s+=" of "+p;
+				$(".userPagination .text").text(s);
             },
 
             removeUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
+				var s = "";
+				var k = $(".userPagination .text").text().split(" ")[0];
+				s+=k.split("-")[0];
+				s+="-";
+				s+=parseInt(k.split("-")[1])+1;
+				var p = $(".userPagination .text").text().split(" ")[2];
+				s+=" of "+p;
+				$(".userPagination .text").text(s);
             },
 
             unassign: function (e) {
@@ -147,6 +162,7 @@ define([
                 if (groupsAndUserTr_holder.length < 2) {
                     groupsAndUser_holder.hide();
                 }
+
             },
 
             addUser: function () {
@@ -185,6 +201,7 @@ define([
                     self.page -= 1;
                     self.prevUserList(e, self.page);
                 });
+
             },
 
             addGroup: function () {
@@ -405,7 +422,9 @@ define([
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page);
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page, function(arr){
+					console.log(arr);
+				});
                 common.populateUsers("#allUsers", "/Users", null, null, true);
 
 				populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);

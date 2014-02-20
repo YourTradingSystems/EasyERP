@@ -457,8 +457,12 @@ define([
                         addFrmAttach.off('submit');
 
                     },
-                    error: function () {
-                        Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
+                    error: function (model, error) {
+						if (error.status === 400&&error&&error.responseJSON){
+							alert(error.responseJSON.error);
+						}else{
+							Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
+						}
                     }
                 });
             },

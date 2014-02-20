@@ -38,7 +38,7 @@ define([
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-                "click": "hideNewSelect",
+                "click": "hideNewSelect"
             },
             notHide: function () {
                 return false;
@@ -423,9 +423,13 @@ define([
 
                     },
 
-                    error: function () {
-                        self.hideDialog();
-                        Backbone.history.navigate("home", { trigger: true });
+                    error: function (model, res) {
+                       /* self.hideDialog();
+                        Backbone.history.navigate("home", { trigger: true });*/
+
+                        //added alert
+                        alert(JSON.parse(res.responseText).error);
+
                     }
                 });
             },

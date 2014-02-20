@@ -98,7 +98,7 @@ define([
                 var mid = 39;
                 var departmentName = $.trim($("#departmentName").val());
                 
-                var parentDepartment = this.$("#parentDepartment").data("id");
+                var parentDepartment = this.$("#parentDepartment").data("id")?this.$("#parentDepartment").data("id"):null;
 				if (parentDepartment==""){
 					parentDepartment = null;
 				}
@@ -112,9 +112,10 @@ define([
 				if (!nestingLevel){
 					nestingLevel=0;
 				}
-				console.log(nestingLevel);
-
                 var users = this.$el.find("#targetUsers li");
+				var res = _.filter(this.responseObj["#parentDepartment"],function(item){
+					return item.parentDepartment===parentDepartment;
+				});
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
                 });
@@ -133,7 +134,8 @@ define([
                     departmentManager: departmentManager,
                     nestingLevel: nestingLevel,
                     users: users,
-					isAllUpdate:nestingLevel!=this.currentModel.toJSON().nestingLevel
+					isAllUpdate:nestingLevel!=this.currentModel.toJSON().nestingLevel,
+					sequence:res.length
                 });
 
                 this.currentModel.save({}, {

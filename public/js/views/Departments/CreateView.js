@@ -84,11 +84,14 @@ define([
                 var mid = 39;
                 var departmentName = $.trim($("#departmentName").val());
                 
-                var parentDepartment = this.$("#parentDepartment").data("id");
+                var parentDepartment = this.$("#parentDepartment").data("id")?this.$("#parentDepartment").data("id"):null;
                 //var _parentDepartment = common.toObject(departmentId, this.departmentsCollection);
                 var nestingLevel = this.$("#parentDepartment").data('level');
                 var departmentManager = this.$("#departmentManager").data("id");
                 var users = this.$el.find("#targetUsers li");
+				var res = _.filter(this.responseObj["#parentDepartment"],function(item){
+					return item.parentDepartment===parentDepartment;
+				});
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
                 });
@@ -97,7 +100,8 @@ define([
                     parentDepartment: parentDepartment,
                     departmentManager: departmentManager,
                     nestingLevel: ++nestingLevel,
-                    users: users
+                    users: users,
+					sequence:res.length
                 },
                 {
                     headers: {
@@ -117,9 +121,9 @@ define([
                 $(".create-dialog").remove();
             },
 			hideNewSelect:function(e){
-				$(".newSelectList").hide();;
+				$(".newSelectList").hide();
 			},
-	        showNewSelect:function(e,prev,next){
+			showNewSelect:function(e,prev,next){
                 populate.showSelect(e,prev,next,this);
                 return false;
                 

@@ -29,6 +29,9 @@ define([
                         $(".miniPagination .next").addClass("not-active");
                         $(".miniPagination .last").addClass("not-active");
                     }
+					if (self.allPages===1){
+						$(".miniPagination").hide();
+					}
                 });
 
             },

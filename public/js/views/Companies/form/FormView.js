@@ -38,13 +38,19 @@ define([
 						$(".miniPagination .next").addClass("not-active");
 						$(".miniPagination .last").addClass("not-active");
 					}
+					if (self.allPages===1){
+						$(".miniPagination").hide();
+					}
 				});
 				this.populatePersonsForMiniView("/getPersonsForMiniView",formModel._id, this.pageMiniPersons,this.pageCountPersons,true,function(count){
 					self.allMiniPersons = count.listLength;
 					self.allPagesPersons = Math.ceil(self.allMiniPersons/self.pageCountPersons);
 					if (self.allPagesPersons == self.pageMiniPersons){
-						$(".miniPagination .next").addClass("not-active");
-						$(".miniPagination .last").addClass("not-active");
+						$(".miniPaginationPersons .next").addClass("not-active");
+						$(".miniPaginationPersons .last").addClass("not-active");
+					}
+					if (self.allPagesPersons===1){
+						$(".miniPaginationPersons").hide();
 					}
 				});
 
