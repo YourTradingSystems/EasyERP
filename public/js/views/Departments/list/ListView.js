@@ -111,7 +111,7 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 					if (ui.item.parents("li").length>0){
 						nestingLevel=parseInt(ui.item.parents("li").attr("data-level"));
 					}
-					model.set({"parentDepartmentStart":model.toJSON().parentDepartment,"sequenceStart":parseInt(ui.item.attr("data-sequence")),"parentDepartment":ui.item.parents("li").attr("data-id"), "nestingLevel":nestingLevel, departmentManager:model.toJSON.departmentManager?model.toJSON.departmentManager._id:null, sequence:sequence});
+					model.set({"parentDepartmentStart":model.toJSON().parentDepartment,"sequenceStart":parseInt(ui.item.attr("data-sequence")),"parentDepartment":ui.item.parents("li").attr("data-id")?ui.item.parents("li").attr("data-id"):null, "nestingLevel":nestingLevel, departmentManager:model.toJSON.departmentManager?model.toJSON.departmentManager._id:null, sequence:sequence});
 					model.save();
 					ui.item.attr("data-sequence",sequence);
 					console.log(ui.item.parents("li").attr("data-id"));

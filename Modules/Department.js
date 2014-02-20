@@ -150,66 +150,6 @@ var Department = function (logWriter, mongoose, models) {
             }
         });
     }
-	function updateSequence(model, sequenceField, start, end, parentDepartmentStart, parentDepartmentEnd, isCreate, isDelete, callback) {
-        var query;
-        var objFind = {};
-        var objChange = {};
-        if (parentDepartmentStart == parentDepartmentEnd) {//on one workflow
-
-            if (!(isCreate || isDelete)) {
-                var inc = -1;
-                if (start > end) {
-                    inc = 1;
-                    var c = end;
-                    end = start;
-                    start = c;
-                } else {
-                    end -= 1;
-                }
-                objChange = {};
-                objFind = { "parentDepartment": parentDepartmentStart };
-                objFind[sequenceField] = { $gte: start, $lte: end };
-                objChange[sequenceField] = inc;
-                query = model.update(objFind, { $inc: objChange }, { multi: true });
-                query.exec(function (err, res) {
-                    if (callback) callback((inc == -1) ? end : start);
-                });
-            } else {
-                if (isCreate) {
-                    query = model.count({ "parentDepartment": parentDepartmentStart }).exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-                if (isDelete) {
-                    objChange = {};
-                    objFind = { "parentDepartment": parentDepartmentStart };
-                    objFind[sequenceField] = { $gt: start };
-                    objChange[sequenceField] = -1;
-                    query = model.update(objFind, { $inc: objChange }, { multi: true });
-                    query.exec(function (err, res) {
-                        if (callback) callback(res);
-                    });
-                }
-            }
-        } else {//between workflow
-            objChange = {};
-            objFind = { "parentDepartment": parentDepartmentStart };
-            objFind[sequenceField] = { $gte: start };
-            objChange[sequenceField] = -1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec();
-            objFind = { "parentDepartment": parentDepartmentEnd };
-            objFind[sequenceField] = { $gte: end };
-            objChange[sequenceField] = 1;
-            query = model.update(objFind, { $inc: objChange }, { multi: true });
-            query.exec(function (err, res) {
-                if (callback) callback(end);
-            });
-
-
-        }
-    }
-
     function getForEditDd(req, id, response) {
         var res = {};
         res['data'] = [];
@@ -299,12 +239,76 @@ var Department = function (logWriter, mongoose, models) {
             }
         });
     }
+	function updateSequence(model, sequenceField, start, end, parentDepartmentStart, parentDepartmentEnd, isCreate, isDelete, callback) {
+		console.log(parentDepartmentStart);
+		console.log(parentDepartmentEnd);
+        var query;
+        var objFind = {};
+        var objChange = {};
+        if (parentDepartmentStart == parentDepartmentEnd) {//on one workflow
+
+            if (!(isCreate || isDelete)) {
+                var inc = -1;
+                if (start > end) {
+                    inc = 1;
+                    var c = end;
+                    end = start;
+                    start = c;
+                } else {
+                    end -= 1;
+                }
+                objChange = {};
+				console.log("zahoditttttttttttttttttt");
+                objFind = { "parentDepartment": parentDepartmentStart };
+                objFind[sequenceField] = { $gte: start, $lte: end };
+                objChange[sequenceField] = inc;
+                query = model.update(objFind, { $inc: objChange }, { multi: true });
+                query.exec(function (err, res) {
+                    if (callback) callback((inc == -1) ? end : start);
+                });
+            } else {
+                if (isCreate) {
+                    query = model.count({ "parentDepartment": parentDepartmentStart }).exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+                if (isDelete) {
+                    objChange = {};
+                    objFind = { "parentDepartment": parentDepartmentStart };
+                    objFind[sequenceField] = { $gt: start };
+                    objChange[sequenceField] = -1;
+                    query = model.update(objFind, { $inc: objChange }, { multi: true });
+                    query.exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+            }
+        } else {//between workflow
+            objChange = {};
+            objFind = { "parentDepartment": parentDepartmentStart };
+            objFind[sequenceField] = { $gte: start };
+            objChange[sequenceField] = -1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec();
+            objFind = { "parentDepartment": parentDepartmentEnd };
+            objFind[sequenceField] = { $gte: end };
+            objChange[sequenceField] = 1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec(function (err, res) {
+                if (callback) callback(end);
+            });
+
+
+        }
+    }
+
+
     function update(req, _id, data, res) {
         try {
             delete data._id;
             delete data.createdBy;
 			if (data.sequenceStart) {
-                updateSequence(models.get(req.session.lastDb - 1, "Department", DepartmentSchema), "sequence", data.sequenceStart, data.sequence, data.parentDepartmentStart, data.parentDepartmentEnd, false, true, function (sequence) {
+                updateSequence(models.get(req.session.lastDb - 1, "Department", DepartmentSchema), "sequence", data.sequenceStart, data.sequence, data.parentDepartmentStart, data.parentDepartment, false, false, function (sequence) {
 					data.sequence = sequence;
 					models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).update({ _id: _id }, data, function (err, result) {
 						if (err) {
