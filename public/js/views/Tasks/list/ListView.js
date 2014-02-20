@@ -194,11 +194,11 @@ define([
                 $('.filter-check-list input:checked').each(function () {
                     workflowIdArray.push($(this).val());
                 });
-                this.wfStatus = workflowIdArray;
+                this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
                 this.changeLocationHash(1, itemsNumber, { workflow: this.wfStatus });
-                this.collection.showMore({ count: itemsNumber, page: 1, filter: { workflow: workflowIdArray }, parrentContentId: this.parrentContentId });
-                this.getTotalLength(null, itemsNumber, { workflow: workflowIdArray });
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter, parrentContentId: this.parrentContentId });
+                this.getTotalLength(null, itemsNumber, this.filter);
             },
 
             hideItemsNumber: function (e) {
