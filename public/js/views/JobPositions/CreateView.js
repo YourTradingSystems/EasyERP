@@ -108,11 +108,11 @@ define([
                 $("#sourceUsers").unbind().on("click","li",this.addUsers);
                 $(".nextUserList").unbind().on("click",function(e){
                     self.page+=1;
-                    self.nextUserList(e,self.page)
+                    self.nextUserList(e,self.page);
                 });
                 $(".prevUserList").unbind().on("click",function(e){
                     self.page-=1;
-                    self.prevUserList(e,self.page)
+                    self.prevUserList(e,self.page);
                 });
             },
 
@@ -228,7 +228,7 @@ define([
                 var requirements = $.trim($("#requirements").val());
 
                 var workflow = this.$("#workflowsDd").data("id");
-                var department = this.$("#departmentDd").data("id");
+                var department = this.$("#departmentDd").data("id")?this.$("#departmentDd").data("id"):null;
 
                 var usersId=[];
                 var groupsId=[];

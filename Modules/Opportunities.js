@@ -840,7 +840,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         try {
             delete data._id;
             delete data.createdBy;
-            if (data.workflow && data.workflow.wId == 'Lead') {
+            if (data.workflow && data.workflow.wId == 'Leads') {
                 models.get(req.session.lastDb - 1, 'workflows', workflow.workflowSchema).findOne({ $and: [{ wId: 'Opportunities' }, { sequence: 0 }] }, function (err, _workflow) {
                     if (_workflow) {
                         data.workflow._id = _workflow._id;
