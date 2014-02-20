@@ -244,7 +244,8 @@
                 var ids = _.map(arr, function (item) {
                     return item.assignedTo._id;
                 });
-                common.getImages(ids, "/getEmployeesImages");
+                //added condition(ids.length>0)  if no ids don't run common code)
+                if(ids.length>0)common.getImages(ids, "/getEmployeesImages");
             },
 
             asyncRender: function (response, context) {
