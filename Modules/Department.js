@@ -154,7 +154,7 @@ var Department = function (logWriter, mongoose, models) {
         var res = {};
         res['data'] = [];
         var query = models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).find({});
-        query.select('_id departmentName nestingLevel');
+        query.select('_id departmentName nestingLevel parentDepartment');
         query.sort({ departmentName: 1 });
         query.exec(function (err, departments) {
             if (err) {

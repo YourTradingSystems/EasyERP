@@ -706,13 +706,27 @@
                             return (ids.indexOf(filteredItem._id) == -1);
                         });
 
-                        options = $.map(tt.slice(0,20), function (item) {
-                            return $('<li/>').text(item.login).attr('id', item._id);
+						var k=0
+                        options = $.map(tt, function (item) {
+							if (k<20){
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id);
+							}else{
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id).hide();
+							}
                         });
                     }
                     else {
-                        options = $.map(response.data.slice(0,20), function (item) {
-                            return $('<li/>').text(item.login).attr('id', item._id);
+						var k=0
+                        options = $.map(response.data, function (item) {
+							if (k<20){
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id);
+							}else{
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id).attr("style","display:none");
+							}
                         });
                     }
                 }

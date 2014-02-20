@@ -92,7 +92,6 @@ define([
 				var res = _.filter(this.responseObj["#parentDepartment"],function(item){
 					return item.parentDepartment===parentDepartment;
 				});
-				console.log(res);
                 users = _.map(users, function(elm) {
                     return $(elm).attr('id');
                 });

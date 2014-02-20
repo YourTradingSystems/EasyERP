@@ -107,7 +107,9 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 					var nestingLevel=0;
 					if (ui.item.next().hasClass("parent")||ui.item.next().hasClass("child")){
 						sequence = parseInt(ui.item.next().attr("data-sequence"))+1;
-						nestingLevel=parseInt(ui.item.parents("li").attr("data-level"))+1;
+					}
+					if (ui.item.parents("li").length>0){
+						nestingLevel=parseInt(ui.item.parents("li").attr("data-level"));
 					}
 					model.set({"parentDepartment":ui.item.parents("li").attr("data-id"), "nestingLevel":nestingLevel, departmentManager:model.toJSON.departmentManager?model.toJSON.departmentManager._id:null, sequence:sequence});
 					model.save();

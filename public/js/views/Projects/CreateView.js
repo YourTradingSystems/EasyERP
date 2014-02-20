@@ -422,7 +422,9 @@ define([
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page, );
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page, function(arr){
+					console.log(arr);
+				});
                 common.populateUsers("#allUsers", "/Users", null, null, true);
 
 				populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);
