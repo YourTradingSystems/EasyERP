@@ -16,7 +16,7 @@
 <!--				<dt><label for="totalForecastedEmployees">Total Forecasted Employees</label></dt><dd><label>2</label></dd>-->
 				<dt><label for="departmentDd">Department</label></dt>
 				<dd>
-                  <a id="departmentDd" data-id="<%=(model.department) ? model.department._id : ''%>" class="current-selected" href="javascript:;"><%=(model.department)?model.department.departmentName:'Select'%></a>
+                  <a id="departmentDd" data-id="<%=(model.department) ? model.department._id : ''%>" class="current-selected" href="javascript:;"><%=(model.department&&model.department.departmentName)?model.department.departmentName:'Select'%></a>
 				</dd>
 			  </dl>
 			</div>

@@ -840,7 +840,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         try {
             delete data._id;
             delete data.createdBy;
-            if (data.workflow && data.workflow.wId == 'Lead') {
+            if (data.workflow && data.workflow.wId == 'Leads') {
                 models.get(req.session.lastDb - 1, 'workflows', workflow.workflowSchema).findOne({ $and: [{ wId: 'Opportunities' }, { sequence: 0 }] }, function (err, _workflow) {
                     if (_workflow) {
                         data.workflow._id = _workflow._id;
@@ -862,6 +862,17 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     function updateOnlySelectedFields(req, _id, data, res) {
         if (data.workflow && data.sequenceStart && data.workflowStart) {
             if (data.sequence == -1) {
+				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
+				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
+					if (error) {
+                        console.log(error);
+                        logWriter.log('Opprtunities.js. create opportunitie.find' + error);
+                        res.send(500, { error: 'Opprtunities.create find error' });
+                    }
+                    if (doc.length > 0&&doc[0]._id!=_id) {
+						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
+                        res.send(400, { error: 'An Opprtunities with the same Name already exists' });
+					}else{
                 event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
                     event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflow, data.workflow, true, false, function (sequence) {
                         data.sequence = sequence;
@@ -878,8 +889,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
                     });
                 });
+					}});
             } else {
-                event.emit('updateSequence',models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
+                event.emit('updateSequence', models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflow, false, false, function (sequence) {
                     delete data.sequenceStart;
                     delete data.workflowStart;
                     data.info = {};
@@ -893,8 +905,19 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
                     });
                 });
-            }
+					}
         } else {
+				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
+				models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find(query, function (error, doc) {
+					if (error) {
+                        console.log(error);
+                        logWriter.log('Opprtunities.js. create opportunitie.find' + error);
+                        res.send(500, { error: 'Opprtunities.create find error' });
+                    }
+                    if (doc.length > 0&&doc[0]._id!=_id) {
+						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
+                        res.send(400, { error: 'An Opprtunities with the same Name already exists' });
+					}else{
             if (data.notes && data.notes.length != 0) {
                 var obj = data.notes[data.notes.length - 1];
                 obj._id = mongoose.Types.ObjectId();
@@ -911,6 +934,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 }
 
             });
+					}});
 
         }
 

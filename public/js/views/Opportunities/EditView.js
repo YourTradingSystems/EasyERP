@@ -611,8 +611,8 @@
                                 tr_holder.eq(5).text(self.$("#customerDd option:selected").text());
                                 tr_holder.eq(6).text(nextAction.date);
                                 tr_holder.eq(7).text(nextAction.desc);
-                                tr_holder.eq(8).find("a").text(self.$("#workflowDd option:selected").text());
-                                tr_holder.eq(9).text(self.$("#salesPersonDd option:selected").text());
+                                tr_holder.eq(8).find("a").text(self.$("#workflowDd").text());
+                                tr_holder.eq(9).text(self.$("#salesPersonDd").text());
 
 								
                             }
@@ -638,12 +638,23 @@
                                 $(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
 
                             }
+							break;
+                        case 'form':{
+							var holder = $("#opportunities .compactList");
+							holder.find("p a#"+model._id).text(name);
+							holder.find("div").eq(0).find("p").eq(1).text("$"+expectedRevenueValue);
+							holder.find("div").eq(1).find("p").eq(0).text(nextAction.date);
+							holder.find("div").eq(1).find("p").eq(1).text(self.$("#workflowDd").text());
+						}
                         }
                            self.hideDialog();
                        },
-                       error: function (data,data2) {
-                           self.hideDialog();
-                           Backbone.history.navigate("home", { trigger: true });
+                       error: function (model, error) {
+						   if (error.status === 400&&error&&error.responseJSON){
+							   alert(error.responseJSON.error);
+						   }else{
+							   Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
+						   }
                        }
                    });
                },

@@ -439,7 +439,7 @@ app.get('/logout', function (req, res, next) {
 });
 app.post('/login', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
-    data = {};
+    var data = {};
     data = req.body;
     req.session.lastDb = data.dbId;
     requestHandler.login(req, res, data);
@@ -885,7 +885,6 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
 app.patch('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-    console.log(req.body);
     requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
 

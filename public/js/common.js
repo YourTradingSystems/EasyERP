@@ -678,7 +678,7 @@
             selectList.empty();
             selectList.next(".userPagination").remove();
             var self = this;
-            dataService.getData('/UsersForDd', { mid: 39, page: page, count: 20 }, function (response) {
+            dataService.getData('/UsersForDd', { mid: 39 }, function (response) {
                 var options = [];
                 if (model) {
                     var users = [];
@@ -690,41 +690,55 @@
                     }
 
                     var ids = $.map(users, function (item) {
-                        return item._id
+                        return item._id;
                     });
                     options = $.map(
 						_.filter(response.data, function (filteredItem) {
-						    return (ids.indexOf(filteredItem._id) == -1);
+							return (ids.indexOf(filteredItem._id) == -1);
 						}),
 						function (item) {
-						    return $('<li/>').attr('id', item._id).text(item.login);
+							return $('<li/>').attr('id', item._id).text(item.login);
 						});
                 } else {
                     if (targetList.length) {
-                        var ids = [];
+						var ids = [];
                         targetList.find('li').each(function (item) {
                             ids.push($(this).attr("id"));
-                        })
+                        });
                         var tt = _.filter(response.data, function (filteredItem) {
                             return (ids.indexOf(filteredItem._id) == -1);
                         });
 
+						var k=0
                         options = $.map(tt, function (item) {
-                            return $('<li/>').text(item.login).attr('id', item._id);
+							if (k<20){
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id);
+							}else{
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id).hide();
+							}
                         });
                     }
                     else {
+						var k=0
                         options = $.map(response.data, function (item) {
-                            return $('<li/>').text(item.login).attr('id', item._id);
+							if (k<20){
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id);
+							}else{
+								k++;
+								return $('<li/>').text(item.login).attr('id', item._id).attr("style","display:none");
+							}
                         });
                     }
                 }
                 selectList.append(options);
                 if (response.data.length >= 20) {
                     if (page == 1) {
-                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
+                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (response.data.length) + "</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
                     } else {
-                        selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
+                        selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (response.data.length) + "</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
                     }
                 } else {
                     if (page == 1) {
@@ -734,7 +748,7 @@
                         selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
                     }
                 }
-                if (callback) callback();
+                if (callback) callback(response.data);
             });
         }
 

@@ -24,7 +24,7 @@
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-				"click .column.fold":"foldUnfoldKanban",
+                "click .column.fold": "foldUnfoldKanban",
                 "click": "hideNewSelect"
             },
 
@@ -37,51 +37,51 @@
                 this.asyncFetch(options.workflowCollection, options.parrentContentId);
                 this.getCollectionLengthByWorkflows(this, options.parrentContentId);
                 this.responseObj = {};
-				this.foldWorkflows = [];
+                this.foldWorkflows = [];
             },
             notHide: function (e) {
                 return false;
             },
             updateFoldWorkflow: function () {
-				if (this.foldWorkflows.length===0){
-					this.foldWorkflows =["Empty"];
-				}
+                if (this.foldWorkflows.length === 0) {
+                    this.foldWorkflows = ["Empty"];
+                }
                 dataService.postData('/currentUser', { 'kanbanSettings.tasks.foldWorkflows': this.foldWorkflows }, function (seccess, error) {
                 });
             },
-			foldUnfoldKanban:function(e,id){
-				var el;
-				if (id){
-					el = $("#"+id);
-				}else{
-					el=$(e.target).closest("td");
-				}
-				el.toggleClass("fold");
-				if (el.hasClass("fold")){
-					var w = el.find(".columnName .text").width();
-					var k = w/2-21;
-					if (k<0){
-						k=-2-k;
-					}
-					k=-k;
-					el.find(".columnName .text").css({"left":k+"px","top":Math.abs(w/2+47)+"px" });
-					this.foldWorkflows.push(el.attr("id"));
-				}else{
-					var idx = this.foldWorkflows.indexOf(el.attr("id"));
-					if (idx!==-1){
-						this.foldWorkflows.splice(idx,1);
-					}
-				}
-				if(!id)
-					this.updateFoldWorkflow();
-				if (el.closest("table").find(".fold").length==el.closest("table").find(".column").length){
-					el.closest("table").css({"min-width":"inherit"});
-				}
-				else{
-					el.closest("table").css({"min-width":"100%"});
-				}
-				el.closest("table").css({"min-height":($(window).height()-110)+"px"});
-			},
+            foldUnfoldKanban: function (e, id) {
+                var el;
+                if (id) {
+                    el = $("#" + id);
+                } else {
+                    el = $(e.target).closest("td");
+                }
+                el.toggleClass("fold");
+                if (el.hasClass("fold")) {
+                    var w = el.find(".columnName .text").width();
+                    var k = w / 2 - 21;
+                    if (k < 0) {
+                        k = -2 - k;
+                    }
+                    k = -k;
+                    el.find(".columnName .text").css({ "left": k + "px", "top": Math.abs(w / 2 + 47) + "px" });
+                    this.foldWorkflows.push(el.attr("id"));
+                } else {
+                    var idx = this.foldWorkflows.indexOf(el.attr("id"));
+                    if (idx !== -1) {
+                        this.foldWorkflows.splice(idx, 1);
+                    }
+                }
+                if (!id)
+                    this.updateFoldWorkflow();
+                if (el.closest("table").find(".fold").length == el.closest("table").find(".column").length) {
+                    el.closest("table").css({ "min-width": "inherit" });
+                }
+                else {
+                    el.closest("table").css({ "min-width": "100%" });
+                }
+                el.closest("table").css({ "min-height": ($(window).height() - 110) + "px" });
+            },
             nextSelect: function (e) {
                 this.showNewSelect(e, false, true);
             },
@@ -259,9 +259,9 @@
                 }
                 var kanbanItemView;
                 var column = context.$el.find("#" + response.workflowId);
-				if (response.fold){
-					context.foldUnfoldKanban(null,response.workflowId);
-				}
+                if (response.fold) {
+                    context.foldUnfoldKanban(null, response.workflowId);
+                }
                 column.find(".counter").html(parseInt(column.find(".counter").html()) + contentCollection.models.length);
                 _.each(contentCollection.models, function (wfModel) {
                     kanbanItemView = new KanbanItemView({ model: wfModel });
