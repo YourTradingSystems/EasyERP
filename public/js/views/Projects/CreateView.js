@@ -159,7 +159,7 @@ define([
                 $(id).find("li").each(function () {
                     groupsAndUser_holder.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if (groupsAndUserTr_holder.length < 2) {
+                if ($(".groupsAndUser tr").length <2) {
                     groupsAndUser_holder.hide();
                 }
 
@@ -425,6 +425,7 @@ define([
                 common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, this.page, function(arr){
 					console.log(arr);
 				});
+                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", null, this.pageG);
                 common.populateUsers("#allUsers", "/Users", null, null, true);
 
 				populate.get("#projectTypeDD", "/projectType", {}, "name", this, true, true);

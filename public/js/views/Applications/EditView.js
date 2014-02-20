@@ -486,7 +486,7 @@
                                     kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 								}
 
-                                $("#" + data.workflow).find(".columnNameDiv").after(kanban_holder);
+                                $(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
 
                             }
                         }
