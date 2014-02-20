@@ -150,6 +150,66 @@ var Department = function (logWriter, mongoose, models) {
             }
         });
     }
+	function updateSequence(model, sequenceField, start, end, parentDepartmentStart, parentDepartmentEnd, isCreate, isDelete, callback) {
+        var query;
+        var objFind = {};
+        var objChange = {};
+        if (parentDepartmentStart == parentDepartmentEnd) {//on one workflow
+
+            if (!(isCreate || isDelete)) {
+                var inc = -1;
+                if (start > end) {
+                    inc = 1;
+                    var c = end;
+                    end = start;
+                    start = c;
+                } else {
+                    end -= 1;
+                }
+                objChange = {};
+                objFind = { "parentDepartment": parentDepartmentStart };
+                objFind[sequenceField] = { $gte: start, $lte: end };
+                objChange[sequenceField] = inc;
+                query = model.update(objFind, { $inc: objChange }, { multi: true });
+                query.exec(function (err, res) {
+                    if (callback) callback((inc == -1) ? end : start);
+                });
+            } else {
+                if (isCreate) {
+                    query = model.count({ "parentDepartment": parentDepartmentStart }).exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+                if (isDelete) {
+                    objChange = {};
+                    objFind = { "parentDepartment": parentDepartmentStart };
+                    objFind[sequenceField] = { $gt: start };
+                    objChange[sequenceField] = -1;
+                    query = model.update(objFind, { $inc: objChange }, { multi: true });
+                    query.exec(function (err, res) {
+                        if (callback) callback(res);
+                    });
+                }
+            }
+        } else {//between workflow
+            objChange = {};
+            objFind = { "parentDepartment": parentDepartmentStart };
+            objFind[sequenceField] = { $gte: start };
+            objChange[sequenceField] = -1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec();
+            objFind = { "parentDepartment": parentDepartmentEnd };
+            objFind[sequenceField] = { $gte: end };
+            objChange[sequenceField] = 1;
+            query = model.update(objFind, { $inc: objChange }, { multi: true });
+            query.exec(function (err, res) {
+                if (callback) callback(end);
+            });
+
+
+        }
+    }
+
     function getForEditDd(req, id, response) {
         var res = {};
         res['data'] = [];
@@ -243,29 +303,52 @@ var Department = function (logWriter, mongoose, models) {
         try {
             delete data._id;
             delete data.createdBy;
-            models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).update({ _id: _id }, data, function (err, result) {
-                if (err) {
-                    console.log(err);
-                    logWriter.log("Department.js update Department.update " + err);
-                    res.send(500, { error: "Can't update Department" });
-                } else {
-                    if (data.isAllUpdate) {
-                        updateNestingLevel(req, _id, data.nestingLevel, function () {
-                            res.send(200, { success: 'Department updated success' });
-                        });
-                    }
-                    else {
-                        res.send(200, { success: 'Department updated success' });
-                    }
-                }
-            });
+			if (data.sequenceStart) {
+                updateSequence(models.get(req.session.lastDb - 1, "Department", DepartmentSchema), "sequence", data.sequenceStart, data.sequence, data.parentDepartmentStart, data.parentDepartmentEnd, false, true, function (sequence) {
+					data.sequence = sequence;
+					models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).update({ _id: _id }, data, function (err, result) {
+						if (err) {
+							console.log(err);
+							logWriter.log("Department.js update Department.update " + err);
+							res.send(500, { error: "Can't update Department" });
+						} else {
+							if (data.isAllUpdate) {
+								updateNestingLevel(req, _id, data.nestingLevel, function () {
+									res.send(200, { success: 'Department updated success' });
+								});
+							}
+							else {
+								res.send(200, { success: 'Department updated success' });
+							}
+						}
+					});
+				});
+			}else{
+				models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).update({ _id: _id }, data, function (err, result) {
+					if (err) {
+						console.log(err);
+						logWriter.log("Department.js update Department.update " + err);
+						res.send(500, { error: "Can't update Department" });
+					} else {
+						if (data.isAllUpdate) {
+							updateNestingLevel(req, _id, data.nestingLevel, function () {
+								res.send(200, { success: 'Department updated success' });
+							});
+						}
+						else {
+							res.send(200, { success: 'Department updated success' });
+						}
+					}
+				});
+				
+			}
         }
         catch (exception) {
             console.log(exception);
             logWriter.log("Department.js update " + exception);
             res.send(500, { error: 'Department updated error' });
         }
-    };
+    }
 
     function remove(req, _id, res) {
         models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).remove({ _id: _id }, function (err, result) {

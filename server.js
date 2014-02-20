@@ -439,7 +439,7 @@ app.get('/logout', function (req, res, next) {
 });
 app.post('/login', function (req, res, next) {
     console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
-    data = {};
+    var data = {};
     data = req.body;
     req.session.lastDb = data.dbId;
     requestHandler.login(req, res, data);
