@@ -154,7 +154,7 @@ define([
                             $("#" + this.prevQuickEdit.id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
                             $('.quickEdit').removeClass('quickEdit');
                         } else {
-                            $('.quickEdit').text(this.text).removeClass('quickEdit');
+                            $('.quickEdit').text(this.text?this.text:"").removeClass('quickEdit');
                         }
                     }
                 }
@@ -190,9 +190,9 @@ define([
                 }
                 $('#editInput').val(this.text);
                 this.prevQuickEdit = parent[0];
-                $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
-                $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
-                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 50);
+                $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
+                $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
+                $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 15);
             },
             saveCheckboxChange: function (e) {
                 var parent = $(e.target).parent();

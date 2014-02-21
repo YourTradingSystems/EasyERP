@@ -397,10 +397,11 @@
   span {
     padding: 3px 8px 3px 0;
     &#editSpan {
-		width: 50px;
 		a{
+			margin-left:5px;
 			width: 16px;
 			height: 25px;
+			line-height:15px;
 			color: #4D5A75;
 			font-size: 16px;
 			background-position: 0 50%;
@@ -409,6 +410,35 @@
 			font-family: Icons;
 	  }
     }
+    &#saveSpan {
+		a{
+			margin-left:5px;
+			width: 16px;
+			height: 25px;
+			line-height:27px;
+			color: #4D5A75;
+			font-size: 16px;
+			background-position: 0 50%;
+			background-repeat: no-repeat;
+			margin-right: 5px;
+			font-family: Icons;
+	  }
+    }
+    &#cancelSpan {
+		a{
+			margin-left:5px;
+			width: 16px;
+			height: 25px;
+			line-height:27px;
+			color: #4D5A75;
+			font-size: 16px;
+			background-position: 0 50%;
+			background-repeat: no-repeat;
+			margin-right: 5px;
+			font-family: Icons;
+	  }
+    }
+
   }
 
   label {
@@ -1864,15 +1894,16 @@
       }
       dd.editable {
         a {
-          line-height: 16px;
+          line-height: 17px;
           width: 100%;
         }
       }
       .no-long {
         width: auto;
 //        display: block;
-        line-height: 11px;
+        line-height: 17px;
         float: left;
+		max-width:95%;
         .text-overflow;
       }
     }
@@ -2760,7 +2791,13 @@ dl {
 	  padding:0 !important;
   }
 }
-
+.customer-info {
+	dt{
+		span{
+//			line-height:25px;
+		}
+	}
+}
 .project-edit-info {
   .dl-auto(200px, 40%);
 }
