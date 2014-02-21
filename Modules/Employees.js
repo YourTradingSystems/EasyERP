@@ -845,7 +845,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                             res['data'] = result;
                                             res['time'] = (new Date() - startTime);
 											res['workflowId'] = data.workflowId;
-											res['fold'] = req.session.kanbanSettings.applications.foldWorkflows.indexOf(data.workflowId.toString())!==-1
+											res['fold'] = (req.session.kanbanSettings.applications.foldWorkflows&&req.session.kanbanSettings.applications.foldWorkflows.indexOf(data.workflowId.toString())!==-1);
 
                                             response.send(res);
                                         } else {

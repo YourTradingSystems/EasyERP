@@ -35,6 +35,9 @@ define([
                 $("#ui-datepicker-div").remove();
             });
             $(document).on("keydown", ".ui-dialog", function (e) {
+				if ($(e.target).get(0).tagName.toLowerCase()=="textarea"){
+					return;
+				}
                 switch (e.which) {
                     case 27:
                         $(".edit-dialog").remove();

@@ -1135,7 +1135,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     if (!err) {
                                         res['data'] = result;
                                         res['workflowId'] = data.workflowId;
-										res['fold'] = req.session.kanbanSettings.opportunities.foldWorkflows.indexOf(data.workflowId.toString())!==-1
+										res['fold'] = (req.session.kanbanSettings.opportunities.foldWorkflows&&req.session.kanbanSettings.opportunities.foldWorkflows.indexOf(data.workflowId.toString())!==-1);
                                         response.send(res);
                                     } else {
                                         logWriter.log("Opportunitie.js getFilterOpportunitiesForKanban opportunitie.find" + err);
