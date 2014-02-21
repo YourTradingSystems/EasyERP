@@ -59,6 +59,10 @@ function (common, Validation) {
             Validation.checkNameField(errors, true, attrs.name, "Subject");
             if (attrs.expectedClosing && attrs.nextAction)
                 Validation.checkFirstDateIsGreater(errors, attrs.expectedClosing, "expected closing date", attrs.nextAction.date, "Next action date");
+            //Country State City Validations like in Persons
+            Validation.checkCountryCityStateField(errors, false, attrs.address.country, "Country");
+            Validation.checkCountryCityStateField(errors, false, attrs.address.state, "State");
+            Validation.checkCountryCityStateField(errors, false, attrs.address.city, "City");
             Validation.checkMoneyField(errors, false, attrs.expectedRevenue.value, "Expected revenue");
             if (errors.length > 0)
                 return errors;

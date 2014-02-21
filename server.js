@@ -837,6 +837,13 @@ app.post('/Tasks', function (req, res) {
     data.task = req.body;
     requestHandler.createTask(req, res, data);
 });
+//Patch recover
+app.patch('/Tasks/:_id', function (req, res) {
+    data = {};
+    var id = req.param('_id');
+    console.log(req.body);
+    requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
+});
 
 app.get('/Tasks', function (req, res) {//---------------Remove this method in future
     //data = {};
@@ -878,7 +885,6 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
 app.patch('/Tasks/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
-    console.log(req.body);
     requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
 

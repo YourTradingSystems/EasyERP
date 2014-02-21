@@ -11,7 +11,7 @@
                 <div class="dialog-tabs-item active">
                     <dl class="summary-info">
                         <dt><label>Subject </label></dt><dd>
-                        <input type="text" class="title-input blueback" id="name" value="<%=model.name%>" required maxlength="32"/>
+                        <input type="text" class="title-input" id="name" value="<%=model.name%>" placeholder="Subject" required maxlength="32"/>
                     </dd>
                     
                     </dl>
@@ -32,36 +32,36 @@
                             </dd>
                             <dt><label for="sourceDd">Source</label></dt>
                             <dd>
-							  <a id="sourceDd" data-id="<%=model.source?model.source:''%>" class="current-selected" href="javascript:;"><%=model.source?model.source:"Select"%></a>
+						        <a id="sourceDd" data-id="<%=model.source?model.source:''%>" class="current-selected" href="javascript:;"><%=model.source?model.source:"Select"%></a>
                             </dd>
                             <dt><label for="salesPerson">Salesperson</label></dt><dd>
-							<a id="salesPerson" data-id="<%=model.salesPerson?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=model.salesPerson?(model.salesPerson.name.first+' '+model.salesPerson.name.last):'Select'%></a>
+							    <a id="salesPerson" data-id="<%=model.salesPerson?model.salesPerson._id:''%>" class="current-selected" href="javascript:;"><%=model.salesPerson?(model.salesPerson.name.first+' '+model.salesPerson.name.last):'Select'%></a>
 							</dd>
 <!--                            <dt><label for="workflowNamesDd">Workflow Names </label></dt><dd>
 							<a id="workflowNamesDd" data-id="<%=model.workflow.wName%>" class="current-selected" href="javascript:;"><%=model.workflow.wName%></a>
 							</dd>-->
-                            <dt><label for="selectWorkflow">Status </label></dt><dd id="selectWorkflow">
-							<a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
+                            <dt><label for="selectWorkflow">Stage </label></dt><dd id="selectWorkflow">
+							    <a id="workflowsDd" data-id="<%=model.workflow._id%>" class="current-selected" href="javascript:;"><%=model.workflow.name%></a>
 							</dd>
 
                         </dl>
                     </div>
                     <div class="half-block left">
                         <dl class="person-info">
-                            <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= model.tempCompanyField %>" maxlength="32" /></dd>
+                            <dt><label for="company">Company Name</label></dt><dd><input type="text" id="company" value="<%= model.tempCompanyField %>" placeholder="Company name" maxlength="32" /></dd>
                             <dt><label for="customerDd">Customer</label></dt><dd>
 							<a id="customerDd" data-id="<%=model.customer?model.customer._id:''%>" class="current-selected" href="javascript:;"><%=model.customer?(model.customer.name.first+' '+model.customer.name.last):'Select'%></a>
 							</dd>
-                            <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street" name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
+                            <dt><label for="name">Address</label></dt><dd><input type="text" id="street" class="address" placeholder="Street..." name="street" value="<%=model.address.street%>" maxlength="32"/></dd>
                             <dt>&nbsp;</dt><dd><input type="text" id="city" class="address" placeholder="City" name="city" value="<%=model.address.city%>" maxlength="32"/></dd>
                             <dt>&nbsp;</dt><dd><input type="text" id="state" class="address" placeholder="State" name="state" value="<%=model.address.state%>" maxlength="32"/></dd>
                             <dt>&nbsp;</dt><dd><input type="text" id="zip" class="address" name="zip" placeholder="Zip" value="<%=model.address.zip%>" maxlength="32"/></dd>
                             <dt>&nbsp;</dt><dd><input type="text" id="country" class="address" name="country" placeholder="Country" value="<%=model.address.country%>" maxlength="32"/></dd>
-                            <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="First" value="<%=(model.contactName) ? model.contactName.first : ''%>" maxlength="32"/></dd>
-                            <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Last" value="<%=(model.contactName) ? model.contactName.last : ''%>" maxlength="32"/></dd>
-                            <dt><label for="email">Email</label></dt><dd><input type="text" id="email_person" value="<%=model.email%>" maxlength="48"/></dd>
-                            <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" maxlength="32"/></dd>
-                            <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" maxlength="32"/></dd>
+                            <dt><label for="name">Contact name</label></dt><dd><input type="text" class="name" id="first" placeholder="Name" value="<%=(model.contactName) ? model.contactName.first : ''%>" maxlength="32"/></dd>
+                            <dt>&nbsp;</dt><dd><input type="text" class="name" id="last" placeholder="Surname" value="<%=(model.contactName) ? model.contactName.last : ''%>" maxlength="32"/></dd>
+                            <dt><label for="email">Email</label></dt><dd><input type="text" id="email_person" value="<%=model.email%>" placeholder="e.g. email@site.com" maxlength="48"/></dd>
+                            <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" value="<%=model.phones.phone%>" placeholder="Phone number" maxlength="32"/></dd>
+                            <dt><label for="mobile">Mobile </label></dt><dd><input type="text" id="mobile" value="<%=model.phones.mobile%>" placeholder="Mobile number" maxlength="32"/></dd>
                             <dt><label for="priorityDd">Priority </label></dt>
 							<dd>
 							  <a id="priorityDd" data-id="<%=model.priority%>" class="current-selected" href="javascript:;"><%=model.priority%></a>

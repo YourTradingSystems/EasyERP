@@ -24,23 +24,23 @@
                             <div class="half-block left">
                                 <dl class="person-info">
                                     <dt><label for="firstName">First Name</label></dt>
-                                    <dd><input type="text" name="firstName" id="firstName" value="<%= model.name.first %>"  required maxlength="32"/></dd>
+                                    <dd><input type="text" name="firstName" id="firstName" value="<%= model.name.first %>" placeholder="Name"  required maxlength="32"/></dd>
                                     <dt><label for="lastName">Last Name</label></dt>
-                                    <dd><input type="text" name="lastName" id="lastName" value="<%= model.name.last %>" required maxlength="32"/></dd>
+                                    <dd><input type="text" name="lastName" id="lastName" value="<%= model.name.last %>" placeholder="Surname" required maxlength="32"/></dd>
                                     <dt><label for="jobPositionInput">Job Position</label></dt>
                                     <dd><input type="text" id="jobPositionInput" value="<%= model.jobPosition%>" placeholder="e.g. Sales Manager" maxlength="32"/></dd>
 
                                     <dt><label for="dateBirth">Date Of Birth</label></dt>
-                                    <dd><input class="blueback dateBirth" type="text" value="<%= model.dateBirth%>" readonly /></dd>
+                                    <dd><input id="dateBirth" class="dateBirth" type="text" value="<%= model.dateBirth%>" placeholder="Birthday" readonly /></dd>
                                     <dt><label for="emailInput">Email</label></dt>
-                                    <dd><input type="text" id="emailInput" value="<%= model.email%>" maxlength="48"/></dd>
+                                    <dd><input type="text" id="emailInput" value="<%= model.email%>" placeholder="e.g. email@site.com" maxlength="48"/></dd>
                                     <dt><label for="skype">Skype</label></dt>
-                                    <dd><input type="text" id="skype" value="<%=model.skype%>" maxlength="32"/></dd>
+                                    <dd><input type="text" id="skype" value="<%=model.skype%>" placeholder="Skype login" maxlength="32"/></dd>
 
 
                                     <dt><label for="companiesDd">Company</label></dt>
                                     <dd>
-									  <a id="companiesDd" data-id="<%=(model.company)?model.company._id:""%>" class="current-selected" href="javascript:;"><%=(model.company)?(model.company.name.first):"Select"%></a>
+									  <a id="companiesDd" data-id="<%=(model.company)?model.company._id:''%>" class="current-selected" href="javascript:;"><%=(model.company)?(model.company.name.first):"Select"%></a>
                                     </dd>
 <!--                                    <dt><label for="tagsDd">Tags</label></dt>
                                     <dd>
@@ -67,9 +67,9 @@
                                     <dt><label for="zipInput">Zip</label></dt>
                                     <dd><input type="text" id="zipInput" value="<%= model.address.zip%>" placeholder="Zip" maxlength="32"/></dd>
                                     <dt><label for="phoneInput">Phone </label></dt>
-                                    <dd><input type="text" id="phoneInput" value="<%= model.phones.phone%>" maxlength="32"/></dd>
+                                    <dd><input type="text" id="phoneInput" value="<%= model.phones.phone%>" placeholder="Phone number" maxlength="32"/></dd>
                                                                         <dt><label for="mobileInput">Mobile</label></dt>
-                                    <dd><input type="text" id="mobileInput" value="<%= model.phones.mobile%>" maxlength="32"/></dd>
+                                    <dd><input type="text" id="mobileInput" value="<%= model.phones.mobile%>" placeholder="Mobile number" maxlength="32"/></dd>
 
                                 </dl>
                             </div>
@@ -89,7 +89,7 @@
 
                                     <dt><label for="departmentDd">Department</label></dt>
                                     <dd>
-									  <a id="departmentDd" data-id="<%=(model.department)?model.department._id:""%>" class="current-selected" href="javascript:;"><%=(model.department)?(model.department.departmentName):"Select"%></a>									  
+									  <a id="departmentDd" data-id="<%=(model.department)?model.department._id:'' %>" class="current-selected" href="javascript:;"><%=(model.department)?(model.department.departmentName):"Select"%></a>
                                     </dd>-->
 <!--                                    <dt><label for="titleDd">Title</label></dt>
                                     <dd>
