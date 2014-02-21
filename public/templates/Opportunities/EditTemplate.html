@@ -14,7 +14,7 @@
                           <dt><label for="name">Subject </label></dt><dd><input type="text" class="title-input" id="name" value="<%=model.name%>" placeholder="Subject" required maxlength="48"/></dd>
 						</dl>
                       <div class="half-block left withPaddingLeft">
-                        <textarea id="internalNotes" placeholder="Internal notes..." class="opp-internal"><%=model.internalNotes%></textarea>
+                        <textarea id="internalNotes" placeholder="Internal notes..." maxlength="500" class="opp-internal"><%=model.internalNotes%></textarea>
                       </div>
                       <div class="half-block left">
                         <dl class="opprtunitie-info">
@@ -32,9 +32,9 @@
                           <dt><label for="workflowDd">Stages </label></dt><dd>
 							<a id="workflowDd" data-id="<%=(model.workflow)?model.workflow._id:''%>" class="current-selected" href="javascript:;"><%=(model.workflow)?(model.workflow.name):"Select"%></a>
 						  </dd>
-                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" class="date-min" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" placeholder="Date" readonly /></dd>
+                          <dt><label for="nextActionDate">Next Action </label></dt><dd><input type="text" class="date" id="nextActionDate" value="<%=(model.nextAction) ? model.nextAction.date : ''%>" maxlength="32" placeholder="Date" readonly /></dd>
                           <dt>&nbsp;</dt><dd><input type="text" id="nextActionDescription" value="<%=(model.nextAction) ? model.nextAction.desc : ''%>" placeholder="Description" /></dd>
-                          <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing"  class="date-min" value="<%=model.expectedClosing%>" maxlength="32" placeholder="Date" readonly/></dd>
+                          <dt><label for="expectedClosing">Expected Closing </label></dt><dd><input type="text" id="expectedClosing"  class="date" value="<%=model.expectedClosing%>" maxlength="32" placeholder="Date" readonly/></dd>
                           <dt><label for="priorityDd">Priority </label></dt><dd>
 							<a id="priorityDd" data-id="<%=(model.priority)?model.priority:''%>" class="current-selected" href="javascript:;"><%=(model.priority)?(model.priority):"Select"%></a>
 						  </dd>
