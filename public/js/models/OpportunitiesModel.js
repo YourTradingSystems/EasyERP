@@ -72,7 +72,7 @@ function (common, Validation) {
             isOpportunitie: true,
             name: '',
             expectedRevenue: {
-                value: 0.0,
+                value: 0,
                 currency: $,
                 progress: ''
             },

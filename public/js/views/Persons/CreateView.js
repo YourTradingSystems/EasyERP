@@ -321,7 +321,7 @@ define([
                     resizable: true,
                     dialogClass: "edit-dialog",
                     title: "Edit Person",
-                    width: "80%",
+                    width: "900px",
                     buttons: [
                         {
                             id: "create-person-dialog",

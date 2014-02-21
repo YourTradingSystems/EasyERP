@@ -1366,7 +1366,7 @@
   }
 }
 
-.thumbnailwithavatar(@defaultWidth: 180px, @minHeight: 200px, @font-size: 13px, @defaultMargin: 7px 0 0 7px) {
+.thumbnailwithavatar(@defaultWidth: 180px, @minHeight: 201px, @font-size: 13px, @defaultMargin: 7px 0 0 7px) {
   display: block;
   position: relative;
   width: @defaultWidth;
@@ -1380,6 +1380,10 @@
   .info {
     > * {
       .text-overflow;
+
+    }
+    p{
+      line-height: 15px;
     }
   }
   .title {
@@ -1808,9 +1812,10 @@
     font-size: 14px;
     display: inline;
     float: none;
+    min-width: 80px;
   }
 
-  .dl-auto(160px, 30%, 16px, 16px, 10px);
+  .dl-auto(160px, 40%, 16px, 16px, 10px);
 
   select {
     font-family: Arial, Helvetica, sans-serif;
@@ -3078,6 +3083,7 @@ button.red, a.red {
 
   .dropdown-button {
     text-indent: 5px;
+    cursor: pointer;
     #loginSelect {
       position: relative;
       z-index: 999;

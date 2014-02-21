@@ -88,6 +88,7 @@
             },
 
             gotoEditForm: function (e) {
+               this.$el.delegate('a', 'click', function(e){ e.stopPropagation(); e.default; });
                 var clas = $(e.target).parent().attr("class");
                 if ((clas === "dropDown") || (clas === "inner")) {
                 } else {
