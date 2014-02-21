@@ -108,9 +108,9 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
 						sequence = parseInt(ui.item.next().attr("data-sequence"))+1;
 					}
 					if (ui.item.parents("li").length>0){
-						nestingLevel=parseInt(ui.item.parents("li").attr("data-level"));
+						nestingLevel=parseInt(ui.item.parents("li").attr("data-level"))+1;
 					}
-					model.set({"parentDepartmentStart":model.toJSON().parentDepartment,"sequenceStart":parseInt(ui.item.attr("data-sequence")),"parentDepartment":ui.item.parents("li").attr("data-id")?ui.item.parents("li").attr("data-id"):null, "nestingLevel":nestingLevel, departmentManager:model.toJSON.departmentManager?model.toJSON.departmentManager._id:null, sequence:sequence});
+					model.set({"parentDepartmentStart":model.toJSON().parentDepartment?model.toJSON().parentDepartment._id:null,"sequenceStart":parseInt(ui.item.attr("data-sequence")),"parentDepartment":ui.item.parents("li").attr("data-id")?ui.item.parents("li").attr("data-id"):null, "nestingLevel":nestingLevel, departmentManager:model.toJSON.departmentManager?model.toJSON.departmentManager._id:null, sequence:sequence});
 					model.save();
 					ui.item.attr("data-sequence",sequence);
 				}
