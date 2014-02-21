@@ -256,9 +256,9 @@ require(['app'], function (app) {
         this.startTime = new Date();
         $("#top-bar-deleteBtn").hide();
         var itemsNumber = parseInt($("#itemsNumber").text());
-
+        var pageNumber;
         if (deleteCounter == this.collectionLength) {
-            var pageNumber = Math.ceil(this.listLength / itemsNumber);
+            pageNumber = Math.ceil(this.listLength / itemsNumber);
             if (deletePage > 1) {
                 deletePage = deletePage - 1;
             }
@@ -325,7 +325,7 @@ require(['app'], function (app) {
             $("#currentShowPage").val(deletePage);
 
             $("#pageList").empty();
-            var pageNumber = Math.ceil(this.listLength / itemsNumber);
+            pageNumber = Math.ceil(this.listLength / itemsNumber);
             for (var i = 1; i <= pageNumber; i++) {
                 $("#pageList").append('<li class="showPage">' + i + '</li>')
             }
