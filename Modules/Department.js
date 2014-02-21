@@ -228,14 +228,17 @@ var Department = function (logWriter, mongoose, models) {
                     n++;
 
                     models.get(req.session.lastDb - 1, 'Department', DepartmentSchema).findByIdAndUpdate(item._id, { nestingLevel: nestingLevel + 1 }, function (err, res) {
-                        updateNestingLevel(req, res._id, res.nestingLevel, function () {
-                            if (result.length == n)
+                        if (result.length == n){
+							updateNestingLevel(req, res._id, res.nestingLevel+1, function () {
                                 callback();
-                        });
+							});
+						}else{
+							updateNestingLevel(req, res._id, res.nestingLevel+1);
+						}
                     });
                 });
             } else {
-                callback();
+                if (callback)callback();
             }
         });
     }
@@ -258,7 +261,6 @@ var Department = function (logWriter, mongoose, models) {
                     end -= 1;
                 }
                 objChange = {};
-				console.log("zahoditttttttttttttttttt");
                 objFind = { "parentDepartment": parentDepartmentStart };
                 objFind[sequenceField] = { $gte: start, $lte: end };
                 objChange[sequenceField] = inc;
