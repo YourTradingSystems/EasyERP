@@ -81,6 +81,8 @@
                     el.closest("table").css({ "min-width": "100%" });
                 }
                 el.closest("table").css({ "min-height": ($(window).height() - 110) + "px" });
+				this.$(".column").sortable("enable");
+				this.$(".column.fold").sortable("disable");
             },
             nextSelect: function (e) {
                 this.showNewSelect(e, false, true);

@@ -70,6 +70,8 @@
 				el.closest("table").css({"min-width":"100%"});
 			}
 			el.closest("table").css({"min-height":($(window).height()-110)+"px"});
+            this.$(".column").sortable("enable");
+            this.$(".column.fold").sortable("disable");
 		},
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode;
