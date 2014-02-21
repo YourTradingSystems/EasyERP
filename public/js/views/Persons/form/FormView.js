@@ -271,11 +271,13 @@ define([
                     }
                     case "del":
                     {
+
                         var newNotes = _.filter(notes, function (note) {
                             if (note._id != id_int) {
                                 return note;
                             }
                         });
+                        if(confirm("You realy want to remove note? ")){
                         currentModel.save({ 'notes': newNotes },
                             {
                                 headers: {
@@ -286,6 +288,7 @@ define([
                                     $('#' + id_int).remove();
                                 }
                             });
+                        }
                         break;
                     }
                 }

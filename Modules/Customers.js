@@ -185,8 +185,8 @@
                     res.send(400, { error: 'Person.create Incorrect Incoming Data' });
                     return;
                 } else {
-                    var query = {};
-                    if (data.type) {
+                   var query = {};
+                 /*   if (data.type) {
                         switch (data.type) {
                             case "Person":
                                 {
@@ -211,7 +211,25 @@
                                 savetoBd(data);
                             }
                         }
-                    });
+                    });*/
+                    //Removed Persons same name Validation
+                    if (data.type == "Company") {
+                        query = { $and: [{ 'name.first': data.name.first }, { 'name.last': data.name.last }, { type: 'Company' }] };
+                        models.get(req.session.lastDb - 1, "Customers", customerSchema).find(query, function (error, doc) {
+                            if (error) {
+                                logWriter.log('Person.js. create Person.find' + error);
+                                res.send(500, { error: 'Person.create find error' });
+                            } else {
+                                if (doc.length > 0) {
+                                    res.send(500, { error: 'Person with same name alredy existds' });
+                                } else if (doc.length === 0) {
+                                    savetoBd(data);
+                                }
+                            }
+                        });
+
+                    }
+                    else savetoBd(data);
                 }
                 function savetoBd(data) {
                     try {
