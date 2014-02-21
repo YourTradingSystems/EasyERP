@@ -316,8 +316,7 @@ define([
                     autoOpen: true,
                     resizable: false,
                     dialogClass: "edit-dialog",
-                    width: "1200",
-                    height: 513,
+                    width: "900", //Changed size like on create
                     title: "Edit Job Position",
                     buttons: [
 						{
