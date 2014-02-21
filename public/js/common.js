@@ -899,6 +899,9 @@
                         $("#monthList #" + item._id + " img").attr("src", item.imageSrc);
                         $(".avatar.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
                         $(".avatar-small.right[data-id='" + item._id + "'] img").attr("src", item.imageSrc);
+                        //if no src hide image
+                        if(item.imageSrc == "")
+                            $(".avatar-small.right[data-id='" + item._id + "'] img").hide();
                     });
                 }
                 if (callback) callback(response);

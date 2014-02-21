@@ -194,6 +194,7 @@ define([
                 $('.filter-check-list input:checked').each(function () {
                     workflowIdArray.push($(this).val());
                 });
+                this.filter = this.filter || {};
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
                 this.changeLocationHash(1, itemsNumber, { workflow: this.wfStatus });
