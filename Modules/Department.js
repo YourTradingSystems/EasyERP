@@ -307,6 +307,11 @@ var Department = function (logWriter, mongoose, models) {
         try {
             delete data._id;
             delete data.createdBy;
+			if (data.users){
+				data.users=data.users.map(function(item){
+					return item._id;
+				});
+			}
 			if (data.sequenceStart) {
                 updateSequence(models.get(req.session.lastDb - 1, "Department", DepartmentSchema), "sequence", data.sequenceStart, data.sequence, data.parentDepartmentStart, data.parentDepartment, false, false, function (sequence) {
 					data.sequence = sequence;

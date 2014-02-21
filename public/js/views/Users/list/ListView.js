@@ -459,19 +459,40 @@ define([
                     model;
                 var localCounter = 0;
                 this.collectionLength = this.collection.length;
+				var count = $("#listTable input:checked").length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
-                        }
+                        },
+						wait:true,
+						success:function(){
+							that.listLength--;
+							localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+						},
+                    error: function (model, res) {
+						alert(JSON.parse(res.responseText).error);
+						$(checkbox).prop("checked",false);
+						that.listLength--;
+						localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+                    }
                     });
-                    that.listLength--;
-                    localCounter++;
                 });
-                this.deleteCounter = localCounter;
-                this.deletePage = $("#currentShowPage").val();
-                this.deleteItemsRender(this.deleteCounter, this.deletePage);
             }
 
         });

@@ -397,8 +397,48 @@
   span {
     padding: 3px 8px 3px 0;
     &#editSpan {
-      width: 50px;
+		a{
+			margin-left:5px;
+			width: 16px;
+			height: 25px;
+			line-height:15px;
+			color: #4D5A75;
+			font-size: 16px;
+			background-position: 0 50%;
+			background-repeat: no-repeat;
+			margin-right: 5px;
+			font-family: Icons;
+	  }
     }
+    &#saveSpan {
+		a{
+			margin-left:5px;
+			width: 16px;
+			height: 25px;
+			line-height:27px;
+			color: #4D5A75;
+			font-size: 16px;
+			background-position: 0 50%;
+			background-repeat: no-repeat;
+			margin-right: 5px;
+			font-family: Icons;
+	  }
+    }
+    &#cancelSpan {
+		a{
+			margin-left:5px;
+			width: 16px;
+			height: 25px;
+			line-height:27px;
+			color: #4D5A75;
+			font-size: 16px;
+			background-position: 0 50%;
+			background-repeat: no-repeat;
+			margin-right: 5px;
+			font-family: Icons;
+	  }
+    }
+
   }
 
   label {
@@ -1867,15 +1907,16 @@
       }
       dd.editable {
         a {
-          line-height: 16px;
+          line-height: 17px;
           width: 100%;
         }
       }
       .no-long {
-        width: 100%;
-        display: block;
-        line-height: 11px;
+        width: auto;
+//        display: block;
+        line-height: 17px;
         float: left;
+		max-width:95%;
         .text-overflow;
       }
     }
@@ -2759,8 +2800,17 @@ dl {
 
 .person-info, .customer-info {
   .dl-auto;
+  span{
+	  padding:0 !important;
+  }
 }
-
+.customer-info {
+	dt{
+		span{
+//			line-height:25px;
+		}
+	}
+}
 .project-edit-info {
   .dl-auto(200px, 40%);
 }
@@ -3278,7 +3328,14 @@ button.red, a.red {
     padding: 0;
   }
 }
-
+#targetUsers{
+	float:none !important;
+	height:150px !important; 
+}
+.userPagination.targetPagination {
+	margin-left:5px;
+	
+}
 .canReadAndWrite {
   margin: 10px 0 0 0;
   padding-bottom: 10px;
@@ -4267,6 +4324,7 @@ h3.dashboard {
     border: 1px solid #CCC;
     background: #F5F5F5;
     font-weight: bold;
+	cursor:pointer;
     .edit-status {
       display: none;
     }

@@ -110,9 +110,8 @@
                                 $('.edit-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function () {
-                                $('.edit-dialog').remove();
-                                Backbone.history.navigate("home", { trigger: true });
+                            error: function (model, res) {
+								alert(JSON.parse(res.responseText).error);
                             }
                         });
                 }

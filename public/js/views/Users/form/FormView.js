@@ -30,6 +30,9 @@ define([
                     },
                     success: function () {
                         Backbone.history.navigate("#easyErp/Users/list", { trigger: true });
+                    },
+                    error: function (model, res) {
+						alert(JSON.parse(res.responseText).error);
                     }
                 });
 

@@ -53,11 +53,24 @@ define([
             console.log('Login Clicked');
         	event.preventDefault();
 			$("#loginForm").removeClass("notRegister");
+			$("#loginForm").removeClass("notRegister");
             var data = {
                 login: this.$("#ulogin").val(),
                 pass: this.$("#upass").val(),
                 dbId: this.$el.find("#dbs :selected").data("id")
             };
+			var err = "";
+			if (data.login.length<3){
+				err+="Login must be longer than 3 characters<br/>";
+			}
+			if (data.pass.length<3){
+				err+="Password must be longer than 3 characters";
+			}
+			if (err){
+				$("#loginForm .error").html(err);
+				$("#loginForm").addClass("notRegister");
+				return;
+			}
             if(data.login == ""){$("#loginForm").addClass("notRegister");}
         	$.ajax({
         	    url: "/login",
@@ -69,6 +82,7 @@ define([
         	    error: function () {
         	        //Custom.runApplication(false, "Server is unavailable...");
 					$("#loginForm").addClass("notRegister");
+					$("#loginForm .error").text("Such user doesn't registered");
         	    }
         	});
         }

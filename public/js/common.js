@@ -748,6 +748,8 @@
                         selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
                     }
                 }
+				$(targetId).after("<div class='userPagination targetPagination'></div>");
+
                 if (callback) callback(response.data);
             });
         }

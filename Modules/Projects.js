@@ -1655,7 +1655,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                           res['remaining'] = localRemaining;
                                           res['data'] = result;
                                           res['time'] = (new Date() - startTime);
-										  res['fold'] = req.session.kanbanSettings.tasks.foldWorkflows.indexOf(data.workflowId.toString())!==-1
+										  res['fold'] = (req.session.kanbanSettings.tasks.foldWorkflows&&req.session.kanbanSettings.tasks.foldWorkflows.indexOf(data.workflowId.toString())!==-1)
                                           response.send(res);
                                       } else {
                                           logWriter.log("Projects.js getTasksForKanban task.find" + err);

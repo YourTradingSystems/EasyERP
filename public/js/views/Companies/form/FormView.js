@@ -186,8 +186,11 @@ define([
                 // alert(e.target.id);
 				var trId = $(e.target).closest("dd");
 				if ($("#" + trId.attr("id")).find("#editSpan").length===0){
-					$("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
-					$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width()-40);
+					$("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">e</a></span>');
+					if ($("#" + trId.attr("id")).width()-40<$("#" + trId.attr("id")).find(".no-long").width()){
+						$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 40);
+					}
+
 				}
             },
             
@@ -205,7 +208,7 @@ define([
             
             removeEdit: function (e) {
                 $('#editSpan').remove();
-				$("dd .no-long").css({width:"100%"});
+				$("dd .no-long").css({width:"auto"});
             },
             
             cancelClick: function (e) {
@@ -241,9 +244,10 @@ define([
                 $("#" + parent[0].id).text('');
                 $("#" + parent[0].id).append('<input id="editInput" maxlength="48" type="text" class="left"/>');
                 $('#editInput').val(this.text);
-                $("#" + parent[0].id).append('<span id="cancelSpan" class="right"><a href="#">Cancel</a></span>');
-                $("#" + parent[0].id).append('<span id="saveSpan" class="right"><a href="#">Save</a></span>');
-				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-50);
+                $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
+
+                $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
+				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-15);
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();

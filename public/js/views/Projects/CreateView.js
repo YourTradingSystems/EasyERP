@@ -93,7 +93,19 @@ define([
             },
 
             nextUserList: function (e, page) {
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, page);
+				var n = $(e.target).closest(".ui-dialog").find(".source li:visible").length;
+				var p = $(e.target).closest(".ui-dialog").find(".source li:visible").eq(n-1).next();
+				$(e.target).closest(".ui-dialog").find(".source li").hide();
+				$(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+				var k=0;
+				for (var i=0;i<20;i++){
+					if (p&&p.get(0)&&p.get(0).tagName=="LI"){
+						k++;
+						p.show();
+						p = p.next();
+					}
+				}
+				$(".userPagination .text").text((n+1)+"-"+(n+k)+" of "+$(e.target).closest(".ui-dialog").find(".source li").length);
             },
 
             prevUserList: function (e, page) {
@@ -110,28 +122,51 @@ define([
 
             addUsers: function (e) {
                 e.preventDefault();
+				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
 				var s = "";
-				var k = $(".userPagination .text").text().split(" ")[0];
-				s+=k.split("-")[0];
+				var k = $(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[0];
+				if ($(e.target).closest(".ui-dialog").find(".source li").length===0){
+					s+="0";
+				}else{
+					s+=k.split("-")[0];
+				}
 				s+="-";
-				s+=parseInt(k.split("-")[1])-1;
-				var p = $(".userPagination .text").text().split(" ")[2];
-				s+=" of "+p;
-				$(".userPagination .text").text(s);
+				var p = 0;
+				if (parseInt(k.split("-")[1])<=$(e.target).closest(".ui-dialog").find(".source li").length){
+					s+=parseInt(k.split("-")[1]);
+					p = parseInt($(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[2])-1;
+					$(e.target).closest(".ui-dialog").find(".userPagination .nextUserList").show();
+				}else{
+					s+=parseInt(k.split("-")[1])-1;
+					p = parseInt($(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[2])-1;
+					$(e.target).closest(".ui-dialog").find(".userPagination .nextUserList").hide();
+				}
+				s+=" of "+($(e.target).closest(".ui-dialog").find(".source li").length);
+				console.log($(e.target).attr("id"));
+				$(e.target).closest(".ui-dialog").find(".source").next(".userPagination").find(".text").text(s);
             },
 
             removeUsers: function (e) {
                 e.preventDefault();
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
 				var s = "";
-				var k = $(".userPagination .text").text().split(" ")[0];
+				var k = $(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[0];
 				s+=k.split("-")[0];
 				s+="-";
-				s+=parseInt(k.split("-")[1])+1;
-				var p = $(".userPagination .text").text().split(" ")[2];
+				$(e.target).closest(".ui-dialog").find(".userPagination .text").text(s);
+				var p = 0;
+				if (parseInt(k.split("-")[1])<parseInt($(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[2])){
+					s+=parseInt(k.split("-")[1]);
+					p = parseInt($(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[2])-1;
+					$(e.target).closest(".ui-dialog").find(".userPagination .nextUserList").show();
+				}else{
+					s+=parseInt(k.split("-")[1])-1;
+					p = parseInt($(e.target).closest(".ui-dialog").find(".userPagination .text").text().split(" ")[2])-1;
+					$(e.target).closest(".ui-dialog").find(".userPagination .nextUserList").hide();
+				}
 				s+=" of "+p;
-				$(".userPagination .text").text(s);
+
             },
 
             unassign: function (e) {

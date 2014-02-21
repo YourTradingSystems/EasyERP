@@ -330,11 +330,16 @@ var Users = function (logWriter, mongoose, models, department) {
     }
 
     function removeUser(req, _id, res) {
+		if (req.session.uId == _id){
+            res.send(400, { error: 'You cannot delete current user' });
+		}
+		else
         models.get(req.session.lastDb - 1, 'Users', userSchema).remove({ _id: _id }, function (err, result) {
             if (err) {
                 console.log(err);
                 logWriter.log("Users.js remove user.remove " + err);
-                res.send(500, { error: 'User.remove BD error' });
+				res.send(500, { error: 'User.remove BD error' });
+
             } else {
                 res.send(200, { success: 'User remove success' });
             }
