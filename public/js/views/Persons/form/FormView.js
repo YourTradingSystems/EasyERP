@@ -215,11 +215,11 @@ define([
 
                 if (objIndex.length > 1) {
                     var param = currentModel.get(objIndex[0]) || {};
-                    param[objIndex[1]] = $('#editInput').val();
+                    param[objIndex[1]] =  $.trim($('#editInput').val());
                     newModel = currentModel.set(objIndex[0], param);
 
                 } else {
-                    newModel = currentModel.set(objIndex[0], $('#editInput').val());
+                    newModel = currentModel.set(objIndex[0], $.trim($('#editInput').val()));
 
                 }
                this.formModel.save(newModel, {
