@@ -105,8 +105,10 @@ define([
             quickEdit: function (e) {
                 var trId = $(e.target).closest("dd");
                 if ($("#" + trId.attr("id")).find("#editSpan").length === 0) {
-                    $("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">Edit</a></span>');
-                    $("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 40);
+                    $("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">e</a></span>');
+					if ($("#" + trId.attr("id")).width()-40<$("#" + trId.attr("id")).find(".no-long").width()){
+						$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 40);
+					}
                 }
             },
 

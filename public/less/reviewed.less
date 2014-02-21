@@ -397,7 +397,17 @@
   span {
     padding: 3px 8px 3px 0;
     &#editSpan {
-      width: 50px;
+		width: 50px;
+		a{
+			width: 16px;
+			height: 25px;
+			color: #4D5A75;
+			font-size: 16px;
+			background-position: 0 50%;
+			background-repeat: no-repeat;
+			margin-right: 5px;
+			font-family: Icons;
+	  }
     }
   }
 
@@ -1859,8 +1869,8 @@
         }
       }
       .no-long {
-        width: 100%;
-        display: block;
+        width: auto;
+//        display: block;
         line-height: 11px;
         float: left;
         .text-overflow;
@@ -2746,6 +2756,9 @@ dl {
 
 .person-info, .customer-info {
   .dl-auto;
+  span{
+	  padding:0 !important;
+  }
 }
 
 .project-edit-info {
@@ -3264,7 +3277,14 @@ button.red, a.red {
     padding: 0;
   }
 }
-
+#targetUsers{
+	float:none !important;
+	height:150px !important; 
+}
+.userPagination.targetPagination {
+	margin-left:5px;
+	
+}
 .canReadAndWrite {
   margin: 10px 0 0 0;
   padding-bottom: 10px;
