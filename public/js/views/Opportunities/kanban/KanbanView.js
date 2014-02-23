@@ -46,8 +46,13 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 			}else{
 				el=$(e.target).closest("td");
 			}
-			el.toggleClass("fold");
 			if (el.hasClass("fold")){
+				el.addClass("fold");
+			}else{
+				el.removeClass("fold");
+			}
+			if (el.hasClass("fold")){
+
 				var w = el.find(".columnName .text").width();
 				var k = w/2-20;
 				if (k<=0){
@@ -82,12 +87,15 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 			return true;
 		},
 
-        saveKanbanSettings: function () {
+        saveKanbanSettings: function (context) {
+			console.log(context.$el.attr("id"));
+
             var countPerPage = $(this).find('#cPerPage').val();
             dataService.postData('/currentUser', { 'kanbanSettings.opportunities.countPerPage': countPerPage }, function (seccess, error) {
                 if (seccess) {
                     $(".edit-dialog").remove();
-                    Backbone.history.fragment = '';
+					context.undelegateEvents();
+					Backbone.history.fragment = '';
                     Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                 }
             });
@@ -98,8 +106,11 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         },
 
         editKanban: function(e){
+			var self = this;
+			console.log(self.$el.attr("id"));
             dataService.getData('/currentUser', null, function (user, context) {
                 var tempDom = _.template(kanbanSettingsTemplate, { opportunities: user.kanbanSettings.opportunities });
+			console.log(context.$el.attr("id"));
                 context.$el = $(tempDom).dialog({
                     dialogClass: "edit-dialog",
                     width: "400",
@@ -108,7 +119,11 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                         save: {
                             text: "Save",
                             class: "btn",
-                            click: context.saveKanbanSettings
+                            click:function(){
+								console.log(context.$el.attr("id"));
+								context.saveKanbanSettings(context);
+							}
+
                         },
                         cancel: {
                             text: "Cancel",

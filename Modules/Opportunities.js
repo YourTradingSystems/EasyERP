@@ -407,19 +407,19 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         if (!data.dataItem) data.dataItem = "M";
         switch (data.dataItem) {
             case "M":
-                data.dataItem = "$month"
+                data.dataItem = "$month";
                 break;
             case "W":
-                data.dataItem = "$week"
+                data.dataItem = "$week";
                 break;
             case "D":
-                data.dataItem = "$dayOfYear"
+                data.dataItem = "$dayOfYear";
                 break;
             case "DW":
-                data.dataItem = "$dayOfWeek"
+                data.dataItem = "$dayOfWeek";
                 break;
             case "DM":
-                data.dataItem = "$dayOfMonth"
+                data.dataItem = "$dayOfMonth";
                 break;
 
         }
@@ -427,7 +427,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
 
             var c = new Date() - data.dataRange * 24 * 60 * 60 * 1000;
             var a = new Date(c);
-            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null }, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
+            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).aggregate({ $match: { $and: [{ createdBy: { $ne: null },source: {$ne:""}, $or: [{ isConverted: true }, { isOpportunitie: false }] }, { 'createdBy.date': { $gte: a } }] } }, { $group: { _id: { source: "$source", isOpportunitie: "$isOpportunitie" }, count: { $sum: 1 } } }, { $project: { "source": "$_id.source", count: 1, "isOpp": "$_id.isOpportunitie", _id: 0 } }).exec(function (err, result) {
                 if (err) {
                     console.log(err);
                     logWriter.log('Opportunities.js chart' + err);
