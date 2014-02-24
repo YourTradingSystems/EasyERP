@@ -231,7 +231,7 @@
 				}
 			},
 			resize:function(){
-				if ($(window).width()<$("table.kanban").width()){
+				if ($("table.kanban").length!=0&&$(window).width()<$("table.kanban").width()){
 					$("#mainmenu-holder").width($("table.kanban").width());
 					$("#top-bar").width($("table.kanban").width());
 				}
@@ -298,7 +298,7 @@
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
 				$(document).on("keypress","#cPerPage",this.isNumberKey);
 				$(window).on("resize",this.resize);
-				this.resize;
+				this.resize();
 				this.$el.unbind();
                 return this;
             }
