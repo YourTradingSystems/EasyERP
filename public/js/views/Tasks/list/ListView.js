@@ -17,6 +17,7 @@ define([
             defaultItemsNumber: null,
             listLength: null,
             filter: null,
+            stages: null,
             newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'Tasks',//needs in view.prototype.changeLocationHash
@@ -28,8 +29,8 @@ define([
                 this.collection = options.collection;
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
-                this.stages = [];
                 this.filter = options.filter;
+                this.stages = [];
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
@@ -108,8 +109,7 @@ define([
             },
 
             pushStages: function (stages) {
-                this.filter = this.filter || {};
-                this.filter.workflow = stages;
+                this.stages = stages;
             },
 
             checkCheckbox: function (e) {
@@ -134,7 +134,7 @@ define([
                     this.hideNewSelect();
                     return false;
                 } else {
-                    $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+                    $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages}));
                     return false;
                 }
             },
@@ -252,7 +252,7 @@ define([
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
                 var itemView = new listItemView({ collection: this.collection });
-                itemView.bind('incomingStages', itemView.pushStages, itemView);
+                itemView.bind('incomingStages', this.pushStages, this);
                 currentEl.append(itemView.render());
 
                 $('#check_all').click(function () {
@@ -267,11 +267,10 @@ define([
                     if (self.filter && self.filter.workflow) {
                         $('.filter-check-list input').each(function() {
                             var target = $(this);
-                            target.attr('checked', $.inArray(target.val(), self.filter.workflow) > -1);
+                            target.attr('checked', $.inArray(target.val(), stages) > -1);
                         });
-                    } else {
-                        itemView.trigger('incomingStages', stages);
                     }
+                    itemView.trigger('incomingStages', stages);
                 });
 
                 $(document).on("click", function (e) {
