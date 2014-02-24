@@ -46,8 +46,13 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 			}else{
 				el=$(e.target).closest("td");
 			}
-			el.toggleClass("fold");
+			if (!el.hasClass("fold")){
+				el.addClass("fold");
+			}else{
+				el.removeClass("fold");
+			}
 			if (el.hasClass("fold")){
+
 				var w = el.find(".columnName .text").width();
 				var k = w/2-20;
 				if (k<=0){
@@ -82,12 +87,12 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 			return true;
 		},
 
-        saveKanbanSettings: function () {
-            var countPerPage = $(this).find('#cPerPage').val();
+        saveKanbanSettings: function (context) {
+            var countPerPage = context.$el.find('#cPerPage').val();
             dataService.postData('/currentUser', { 'kanbanSettings.opportunities.countPerPage': countPerPage }, function (seccess, error) {
                 if (seccess) {
                     $(".edit-dialog").remove();
-                    Backbone.history.fragment = '';
+					Backbone.history.fragment = '';
                     Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
                 }
             });
@@ -98,8 +103,10 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         },
 
         editKanban: function(e){
+			var self = this;
             dataService.getData('/currentUser', null, function (user, context) {
                 var tempDom = _.template(kanbanSettingsTemplate, { opportunities: user.kanbanSettings.opportunities });
+				var self = context;
                 context.$el = $(tempDom).dialog({
                     dialogClass: "edit-dialog",
                     width: "400",
@@ -108,7 +115,10 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                         save: {
                             text: "Save",
                             class: "btn",
-                            click: context.saveKanbanSettings
+                            click:function(){
+								context.saveKanbanSettings(context);
+							}
+
                         },
                         cancel: {
                             text: "Cancel",
@@ -139,6 +149,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         },
 
         selectItem: function (e) {
+			console.log("selected");
             $(e.target).parents(".item").parents("table").find(".active").removeClass("active");
             $(e.target).parents(".item").addClass("active");
         },
@@ -229,6 +240,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
         
         render: function () {
 			var self = this;
+			
             var workflows = this.workflowsCollection.toJSON();
             this.$el.html(_.template(WorkflowsTemplate, { workflowsCollection: workflows }));
             $(".column").last().addClass("lastColumn");
@@ -283,7 +295,9 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
             }).disableSelection();
             this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
 			$(document).on("keypress","#cPerPage",this.isNumberKey);
-            return this;
+
+			this.$el.unbind();
+			return this;
         }
     });
 	

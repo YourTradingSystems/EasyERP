@@ -72,6 +72,7 @@
 			el.closest("table").css({"min-height":($(window).height()-110)+"px"});
             this.$(".column").sortable("enable");
             this.$(".column.fold").sortable("disable");
+			this.resize();
 		},
 			isNumberKey: function(evt){
 				var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -296,8 +297,9 @@
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
 				$(document).on("keypress","#cPerPage",this.isNumberKey);
-
 				$(window).on("resize",this.resize);
+				this.resize;
+				this.$el.unbind();
                 return this;
             }
         });

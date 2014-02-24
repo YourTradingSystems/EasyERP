@@ -60,7 +60,6 @@ define([
 
                    var model =this.collection.get(id);
                    this.collection.url = "/Workflows";
-                   console.log(model);
 				   var obj = {
 					   name: name,
 					   status: status,
@@ -70,7 +69,6 @@ define([
                    //console.log(obj);
 				   //model.set();
                    model.set(obj);
-                   console.log(model.isValid());
 				   model.save({}, {
 					   headers: {
 						   mid: mid
@@ -237,7 +235,6 @@ define([
 						   var id = ui.item.find("div.name").attr("id");
 						   self.collection.url = "/Workflows";
 						   var model = self.collection.get(id);
-						   console.log(model.toJSON());
                            var sequence = 0;
                            if (ui.item.next().hasClass("row")) {
                                sequence = parseInt(ui.item.next().find("div.name").attr("data-sequence")) + 1;
