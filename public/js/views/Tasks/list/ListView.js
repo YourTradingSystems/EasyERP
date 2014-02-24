@@ -197,7 +197,7 @@ define([
                 this.filter = this.filter || {};
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
-                this.changeLocationHash(1, itemsNumber, { workflow: this.wfStatus });
+                this.changeLocationHash(1, itemsNumber, { workflow: workflowIdArray });
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter, parrentContentId: this.parrentContentId });
                 this.getTotalLength(null, itemsNumber, this.filter);
             },

@@ -11,22 +11,33 @@
 
 function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataService, currentModel, common, populate) {
     var ProjectThumbnalView = Backbone.View.extend({
-        el: '#content-holder',
-        countPerPage: 0,
-        template: _.template(thumbnailsItemTemplate),
-        newCollection: true,
-        wfStatus: [],
-        
+            el: '#content-holder',
+            countPerPage: 0,
+            template: _.template(thumbnailsItemTemplate),
+            newCollection: true,
+            //wfStatus: [],
+            filter: null,
+            defaultItemsNumber: null,
+            page: null, //if reload page, and in url is valid page
+            contentType: 'Projects',//needs in view.prototype.changeLocationHash
+            viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
+
         initialize: function (options) {
             $(document).off("click");
             this.startTime = options.startTime;
             this.collection = options.collection;
-            this.countPerPage = options.collection.length;
-            this.getTotalLength(this.countPerPage);
 			this.responseObj = {};
-            this.render();
             this.asyncLoadImgs(this.collection);
             _.bind(this.collection.showMore, this.collection);
+            this.countPerPage = options.collection.length;
+            this.stages = [];
+            this.filter = options.filter;
+            this.defaultItemsNumber = this.collection.namberToShow || 50;
+            this.newCollection = options.newCollection;
+            this.page = options.collection.page;
+            this.deleteCounter = 0;
+            this.render();
+            this.getTotalLength(this.defaultItemsNumber, this.filter);
         },
 
         events: {
@@ -85,7 +96,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
                 }
             });
         },
-          
+
 		hideHealth:function(){
 			$(".health-wrapper ul").hide();
             $(".newSelectList").hide();
@@ -109,22 +120,25 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             }
 
         },
-        
+
         showFilteredPage: function () {
             this.$el.find('.thumbnail').remove();
             this.startTime = new Date();
+            this.newCollection = false;
             var workflowIdArray = [];
             $('.filter-check-list input:checked').each(function () {
-                workflowIdArray.push($(this).val());
+                 workflowIdArray.push($(this).val());
             });
-            this.wfStatus = workflowIdArray;
-            this.countPerPage = 0;
-            this.collection.showMore({ count: 50, page: 1, status: workflowIdArray });
-            this.newCollection = false;
+            this.filter = this.filter || {};
+            this.filter['workflow'] = workflowIdArray;
+            this.defaultItemsNumber = 0;
+            this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+            this.collection.showMore({ count:this.defaultItemsNumber, page: 1, filter: this.filter });
+            this.getTotalLength(this.defaultItemsNumber, this.filter);
         },
-
-        getTotalLength: function (currentNumber) {
-            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, status: this.wfStatus, newCollection: this.newCollection }, function (response, context) {
+//modified for filter Vasya
+        getTotalLength: function(currentNumber,filter, newCollection) {
+            dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
                 var showMore = context.$el.find('#showMoreDiv');
                 if (response.showMore) {
                     if (showMore.length === 0) {
@@ -163,6 +177,13 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             }
             common.populateWorkflowsList("Projects", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
                 self.stages = stages;
+                                    var stage = (self.filter) ? self.filter.workflow : null;
+                                    if (stage) {
+                                        $('.filter-check-list input').each(function() {
+                                            var target = $(this);
+                                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                                        });
+                                    }
             });
             currentEl.append(createdInTag);
             $(document).on("click", function (e) {
@@ -190,24 +211,28 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             }
         },
 
-        showMore: function () {
-            this.collection.showMore({ status: this.wfStatus });
+        showMore: function (event) {
+            event.preventDefault();
+            this.collection.showMore({filter: this.filter, newCollection: this.newCollection });
         },
-
+//modified for filter Vasya
         showMoreContent: function (newModels) {
             var holder = this.$el;
             var content = holder.find("#thumbnailContent");
-            this.countPerPage += newModels.length;
             var showMore = holder.find('#showMoreDiv');
             var created = holder.find('#timeRecivingDataFromServer');
-            this.getTotalLength(this.countPerPage);
+            var content = holder.find(".thumbnailwithavatar");
+            this.defaultItemsNumber += newModels.length;
+            this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+            this.getTotalLength(this.defaultItemsNumber, this.filter);
+
             if (showMore.length != 0) {
-                showMore.before(this.template({ collection: this.collection.toJSON() }));
-                showMore.after(created);
-            } else {
-                content.html(this.template({ collection: this.collection.toJSON() }));
-            }
-            this.asyncLoadImgs(newModels);
+                     showMore.before(this.template({  collection: this.collection.toJSON() }));
+                     showMore.after(created);
+             } else {
+                     content.html(this.template({ collection: this.collection.toJSON() }));
+             }
+             this.asyncLoadImgs(newModels);
         },
 
         createItem: function () {

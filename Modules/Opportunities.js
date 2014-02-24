@@ -93,6 +93,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         var contentType = req.params.contentType;
 
         var optionsObject = {};
+         //modified for filter Vasya
+         if (data.filter && data.filter.workflow) {
+               optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
+         } else if (data && !data.newCollection) {
+               optionsObject['workflow'] = { $in: [] };
+         }
         switch (contentType) {
             case ('Opportunities'): {
                 optionsObject['isOpportunitie'] = true;
@@ -100,7 +106,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 break;
             case ('Leads'): {
                 optionsObject['isOpportunitie'] = false;
-                if (data.isConverted) {
+                if (data.filter.isConverted) {
                     optionsObject['isConverted'] = true;
                     optionsObject['isOpportunitie'] = true;
                 }
@@ -108,13 +114,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 break;
         }
 
-        var filterStatus = {};
-        if (data.status && data.status.length > 0) {
-            var filterStatusArray = data.status.objectID();
-            filterStatus = {
-                workflow: { $in: filterStatusArray }
-            };
-        }
+
 
         models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).aggregate(
             {
@@ -160,8 +160,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                             },
                                             { whoCanRW: "everyOne" }
                                         ]
-                                    },
-                                    filterStatus
+                                    }
                                 ]
                             }
                         },
@@ -176,6 +175,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     res['showMore'] = true;
                                 }
                                 res['count'] = result.length;
+                                console.log(result.length);
                                 response.send(res);
                             } else {
                                 console.log(err);
@@ -567,7 +567,6 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         for (var i in req.query) {
             data[i] = req.query[i];
         }
-
         var optionsObject = {};
         switch (data.contentType) {
             case ('Opportunities'): {
@@ -576,7 +575,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                 break;
             case ('Leads'): {
                 optionsObject['isOpportunitie'] = false;
-                if (data.isConverted) {
+                if (data.filter.isConverted) {
                     optionsObject['isConverted'] = true;
                     optionsObject['isOpportunitie'] = true;
                 }
@@ -644,10 +643,15 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
-                                if (data && data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
+
                                 switch (data.contentType) {
                                     case ('Opportunities'): {
+                                    if (data && data.filter && data.filter.workflow) {
+                                          console.log(data.filter.workflow);
+                                          query.where('workflow').in(data.filter.workflow);
+                                    } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                          query.where('workflow').in([]);
+                                    }
                                         query.populate('customer', 'name').
                                             populate('workflow', '_id name').
                                             populate('salesPerson', 'name').
@@ -656,6 +660,12 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     }
                                         break;
                                     case ('Leads'): {
+                                    if (data && data.filter && data.filter.workflow) {
+                                          console.log(data.filter.workflow);
+                                          query.where('workflow').in(data.filter.workflow);
+                                    } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                          query.where('workflow').in([]);
+                                    }
                                         query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
                                             populate('company', 'name').
                                             populate('workflow', "name").
@@ -664,7 +674,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     }
                                         break;
                                 }
-                                query.skip((data.page - 1) * data.count).
+                                    query.skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (error, _res) {
                                         if (!error) {

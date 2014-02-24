@@ -7,7 +7,7 @@
         var PersonsCollection = Backbone.Collection.extend({
             model: PersonModel,
             url: "/Persons/",
-            page: 1,
+            page:null,
             namberToShow: null,
             viewType: null,
             contentType: null,
@@ -24,7 +24,11 @@
                     this.url += options.viewType;
                     //delete options.viewType;
                 }
-
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                    this.count = options.count;
+                    this.page = options.page || 1;
+                }
                 this.fetch({
                     data: options,
                     reset: true,
@@ -46,6 +50,7 @@
                 filterObject['count'] = (options && options.count) ? options.count : this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
                 filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
+                filterObject['filter'] = (options) ? options.filter : {};
                 this.fetch({
                     data: filterObject,
                     waite: true,
@@ -67,6 +72,7 @@
                 filterObject['count'] = (options && options.count) ? options.count : this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;
                 filterObject['contentType'] = (options && options.contentType) ? options.contentType: this.contentType;
+                filterObject['filter'] = (options) ? options.filter : {};
                 this.fetch({
                     data: filterObject,
                     waite: true,

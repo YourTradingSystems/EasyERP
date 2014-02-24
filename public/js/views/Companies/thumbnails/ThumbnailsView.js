@@ -12,18 +12,29 @@
             el: '#content-holder',
             countPerPage: 0,
             template: _.template(ThumbnailsItemTemplate),
+            defaultItemsNumber: null,
+            listLength: null,
+            filter: null,
+            newCollection: null,
+            page: null, //if reload page, and in url is valid page
+            contentType: 'Companies',//needs in view.prototype.changeLocationHash
+            viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
 
             initialize: function (options) {
+                this.asyncLoadImgs(this.collection);
                 this.startTime = options.startTime;
                 this.collection = options.collection;
-                this.allAlphabeticArray = common.buildAllAphabeticArray();
-                this.selectedLetter = "";
-                _.bind(this.collection.showMoreAlphabet, this.collection);
-                this.countPerPage = options.collection.length;
-                this.getTotalLength(this.countPerPage);
-                this.render();
-                this.asyncLoadImgs(this.collection);
                 _.bind(this.collection.showMore, this.collection);
+                _.bind(this.collection.showMoreAlphabet, this.collection);
+                this.allAlphabeticArray = common.buildAllAphabeticArray();
+                this.filter = options.filter;
+                this.defaultItemsNumber = this.collection.namberToShow || 50;
+                this.newCollection = options.newCollection;
+                this.deleteCounter = 0;
+                this.page = options.collection.page;
+                this.render();
+                this.getTotalLength(this.defaultItemsNumber, this.filter);
+                this.asyncLoadImgs(this.collection);
             },
 
             events: {
@@ -38,9 +49,9 @@
                 });
                 common.getImages(ids, "/getCustomersImages");
             },
-
-            getTotalLength: function(currentNumber) {
-                dataService.getData('/totalCollectionLength/Companies', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
+//modified for filter Vasya
+            getTotalLength: function(currentNumber,filter, newCollection) {
+                dataService.getData('/totalCollectionLength/Companies', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
                     var showMore = context.$el.find('#showMoreDiv');
                     if (response.showMore) {
                         if (showMore.length === 0) {
@@ -54,18 +65,24 @@
                     }
                 }, this);
             },
-
+//modified for filter Vasya
             alpabeticalRender: function (e) {
-                this.startTime = new Date();
-                var target = $(e.target);
-                target.parent().find(".current").removeClass("current");
-                target.addClass("current");
-                this.selectedLetter = target.text();
-                if (target.text() == "All") {
-                    this.selectedLetter = "";
-                }
-                this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
+                    this.$el.find('.thumbnailwithavatar').remove();
+                    this.startTime = new Date();
+                    this.newCollection = false;
+
+                    var selectedLetter = $(e.target).text();
+                    if ($(e.target).text() == "All") {
+                        selectedLetter = "";
+                    }
+                    this.filter = this.filter || {};
+                    this.filter['letter'] = selectedLetter;
+                    this.defaultItemsNumber = 0;
+                    this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+                    this.collection.showMoreAlphabet({ count:this.defaultItemsNumber, page: 1, filter: this.filter });
+                    this.getTotalLength(this.defaultItemsNumber, this.filter);
             },
+
             gotoForm: function (e) {
                 e.preventDefault();
                 App.ownContentType = true;
@@ -98,40 +115,46 @@
                 return this;
             },
 
-            showMore: function () {
-                this.startTime = new Date();
-                this.collection.showMore({ letter: this.selectedLetter  });
+            showMore: function (event) {
+                event.preventDefault();
+                this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
             },
-
+//modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
-                this.countPerPage += newModels.length;
+                var content = holder.find("#thumbnailContent");
                 var showMore = holder.find('#showMoreDiv');
                 var created = holder.find('#timeRecivingDataFromServer');
-                created.text("Created in " + (new Date() - this.startTime) + " ms");
-                this.getTotalLength(this.countPerPage);
-                showMore.before(this.template({ collection: this.collection.toJSON() }));
-                showMore.after(created);
+                this.defaultItemsNumber += newModels.length;
+                this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+                this.getTotalLength(this.defaultItemsNumber, this.filter);
+
+                if (showMore.length != 0) {
+                     showMore.before(this.template({  collection: this.collection.toJSON() }));
+                     showMore.after(created);
+                } else {
+                     content.html(this.template({ collection: this.collection.toJSON() }));
+                }
                 this.asyncLoadImgs(newModels);
             },
-
+//modified for filter Vasya
             showMoreAlphabet: function (newModels) {
+
                 var holder = this.$el;
                 var alphaBet = holder.find('#startLetter');
                 var created = holder.find('#timeRecivingDataFromServer');
                 var showMore = holder.find('#showMoreDiv');
                 var content = holder.find(".thumbnailwithavatar");
-                var countPerPage = this.countPerPage = newModels.length;
+                this.defaultItemsNumber += newModels.length;
+                this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+                this.getTotalLength(this.defaultItemsNumber, this.filter);
 
-                content.remove();
-
-                holder.append(this.template({ collection: newModels.toJSON() }));
-
-                this.getTotalLength(countPerPage);
-                created.text("Created in " + (new Date() - this.startTime) + " ms");
-                holder.prepend(alphaBet);
-                holder.append(created);
-                created.before(showMore);
+                if (showMore.length != 0) {
+                     showMore.before(this.template({  collection: this.collection.toJSON() }));
+                     showMore.after(created);
+                } else {
+                     content.html(this.template({ collection: this.collection.toJSON() }));
+                }
                 this.asyncLoadImgs(newModels);
             },
 
