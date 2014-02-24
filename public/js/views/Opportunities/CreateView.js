@@ -477,7 +477,7 @@ define([
                     title: "Create Opportunity",
                     buttons: {
                         save: {
-                            text: "Save",
+                            text: "Create",
                             class: "btn",
                             click: self.saveItem
                         },

@@ -27,10 +27,14 @@
 
             events: {
                 "click #showMore": "showMore",
-                "click .thumbnailwithavatar": "gotoEditForm",
+                "click div.thumbnailwithavatar": "gotoEditForm",
+                "click div.thumbnailwithavatar a": "doDefault",
                 "click .letter:not(.empty)": "alpabeticalRender"
             },
-
+            doDefault: function(e){
+                //Call default event not the parents event
+                e.stopPropagation();
+            },
             getTotalLength: function (currentNumber) {
                 dataService.getData('/totalCollectionLength/Employees', { currentNumber: currentNumber, letter: this.selectedLetter  }, function (response, context) {
                     var showMore = context.$el.find('#showMoreDiv');
@@ -88,7 +92,6 @@
             },
 
             gotoEditForm: function (e) {
-               this.$el.delegate('a', 'click', function(e){ e.stopPropagation(); e.default; });
                 var clas = $(e.target).parent().attr("class");
                 if ((clas === "dropDown") || (clas === "inner")) {
                 } else {
