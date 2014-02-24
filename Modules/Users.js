@@ -35,6 +35,24 @@ var Users = function (logWriter, mongoose, models, department) {
 
     mongoose.model('Users', userSchema);
 
+    function getAllUserWithProfile(req, id, response) {
+        var res = {};
+        var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({profile:id}, {_id:0, login:1});
+        query.exec(function (err, result) {
+            if (!err) {
+                res.count = result.length;
+                res.data = result.map(function(item){
+					return item.login;
+				});
+				res.isOwnProfile = res.data.indexOf(req.session.uName)!=-1;
+                response.send(res);
+            } else {
+                logWriter.log("JobPosition.js getTotalCount JobPositions.find " + err);
+                response.send(500, { error: "Can't find JobPositions" });
+            }
+        });
+    };
+
     function getTotalCount(req, response) {
         var res = {};
         var query = models.get(req.session.lastDb - 1, 'Users', userSchema).find({}, { __v: 0, upass: 0 });
@@ -347,6 +365,8 @@ var Users = function (logWriter, mongoose, models, department) {
     }
 
     return {
+		getAllUserWithProfile:getAllUserWithProfile,
+		
         getTotalCount: getTotalCount,
 
         createUser: createUser,

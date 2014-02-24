@@ -688,6 +688,12 @@
 	
 								   }
 								   break;
+							   case 'form':
+								   {
+									   $("a#" + model._id).parents("li").remove();
+	
+								   }
+								   break;
 							   case 'kanban':
 								   {
 									   $("#" + model._id).remove();

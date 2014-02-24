@@ -13,28 +13,15 @@
             el: '#content-holder',
             countPerPage: 0,
             template: _.template(thumbnailsItemTemplate),
-            defaultItemsNumber: null,
-            listLength: null,
-            filter: null,
-            newCollection: null,
-            page: null, //if reload page, and in url is valid page
-            contentType: 'Employees',//needs in view.prototype.changeLocationHash
-            viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
 
             initialize: function (options) {
-                this.asyncLoadImgs(this.collection);
                 this.startTime = options.startTime;
                 this.collection = options.collection;
-                _.bind(this.collection.showMore, this.collection);
-                _.bind(this.collection.showMoreAlphabet, this.collection);
+                this.countPerPage = options.collection.length;
                 this.allAlphabeticArray = common.buildAllAphabeticArray();
-                this.filter = options.filter;
-                this.defaultItemsNumber = this.collection.namberToShow || 50;
-                this.newCollection = options.newCollection;
-                this.deleteCounter = 0;
-                this.page = options.collection.page;
+                this.selectedLetter = "";
+                this.getTotalLength(this.countPerPage);
                 this.render();
-                this.getTotalLength(this.defaultItemsNumber, this.filter);
                 this.asyncLoadImgs(this.collection);
             },
 
@@ -43,22 +30,22 @@
                 "click .thumbnailwithavatar": "gotoEditForm",
                 "click .letter:not(.empty)": "alpabeticalRender"
             },
-        //modified for filter Vasya
-        getTotalLength: function(currentNumber,filter, newCollection) {
-            dataService.getData('/totalCollectionLength/Employees', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
-                var showMore = context.$el.find('#showMoreDiv');
-                if (response.showMore) {
-                    if (showMore.length === 0) {
-                        var created = context.$el.find('#timeRecivingDataFromServer');
-                        created.before('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+
+            getTotalLength: function (currentNumber) {
+                dataService.getData('/totalCollectionLength/Employees', { currentNumber: currentNumber, letter: this.selectedLetter  }, function (response, context) {
+                    var showMore = context.$el.find('#showMoreDiv');
+                    if (response.showMore) {
+                        if (showMore.length === 0) {
+                            var created = context.$el.find('#timeRecivingDataFromServer');
+                            created.before('<div id="showMoreDiv"><input type="button" id="showMore" value="Show More"/></div>');
+                        } else {
+                            showMore.show();
+                        }
                     } else {
-                        showMore.show();
+                        showMore.hide();
                     }
-                } else {
-                    showMore.hide();
-                }
-            }, this);
-        },
+                }, this);
+            },
 
             asyncLoadImgs: function (collection) {
                 var ids = _.map(collection.toJSON(), function (item) {
@@ -66,22 +53,17 @@
                 });
                 common.getImages(ids, "/getEmployeesImages");
             },
-            //modified for filter Vasya
-            alpabeticalRender: function (e) {
-                this.$el.find('.thumbnailwithavatar').remove();
-                this.startTime = new Date();
-                this.newCollection = false;
 
-                var selectedLetter = $(e.target).text();
-                if ($(e.target).text() == "All") {
-                    selectedLetter = "";
+            alpabeticalRender: function (e) {
+                this.startTime = new Date();
+                var target = $(e.target);
+                target.parent().find(".current").removeClass("current");
+                target.addClass("current");
+                this.selectedLetter = target.text();
+                if (target.text() == "All") {
+                    this.selectedLetter = "";
                 }
-                this.filter = this.filter || {};
-                this.filter['letter'] = selectedLetter;
-                this.defaultItemsNumber = 0;
-                this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
-                this.collection.showMoreAlphabet({ count:this.defaultItemsNumber, page: 1, filter: this.filter });
-                this.getTotalLength(this.defaultItemsNumber, this.filter);
+                this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
             },
 
             render: function () {
@@ -124,46 +106,40 @@
                 }
             },
 
-            showMore: function (event) {
-                event.preventDefault();
-                this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
+            showMore: function () {
+                this.startTime = new Date();
+                this.collection.showMore({letter: this.selectedLetter });
             },
-        //modified for filter Vasya
+
             showMoreContent: function (newModels) {
                 var holder = this.$el;
-                var content = holder.find("#thumbnailContent");
+                this.countPerPage += newModels.length;
                 var showMore = holder.find('#showMoreDiv');
                 var created = holder.find('#timeRecivingDataFromServer');
-                this.defaultItemsNumber += newModels.length;
-                this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
-                this.getTotalLength(this.defaultItemsNumber, this.filter);
-
-                if (showMore.length != 0) {
-                     showMore.before(this.template({  collection: this.collection.toJSON() }));
-                     showMore.after(created);
-                } else {
-                     content.html(this.template({ collection: this.collection.toJSON() }));
-                }
+                this.getTotalLength(this.countPerPage);
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
+                showMore.before(this.template({ collection: this.collection.toJSON() }));
+                showMore.after(created);
                 this.asyncLoadImgs(newModels);
             },
-            //modified for filter Vasya
-            showMoreAlphabet: function (newModels) {
 
+            showMoreAlphabet: function (newModels) {
                 var holder = this.$el;
                 var alphaBet = holder.find('#startLetter');
                 var created = holder.find('#timeRecivingDataFromServer');
                 var showMore = holder.find('#showMoreDiv');
                 var content = holder.find(".thumbnailwithavatar");
-                this.defaultItemsNumber += newModels.length;
-                this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
-                this.getTotalLength(this.defaultItemsNumber, this.filter);
+                var countPerPage = this.countPerPage = newModels.length;
 
-                if (showMore.length != 0) {
-                     showMore.before(this.template({  collection: this.collection.toJSON() }));
-                     showMore.after(created);
-                } else {
-                     content.html(this.template({ collection: this.collection.toJSON() }));
-                }
+                content.remove();
+
+                holder.append(this.template({ collection: newModels.toJSON() }));
+
+                this.getTotalLength(countPerPage);
+                created.text("Created in " + (new Date() - this.startTime) + " ms");
+                holder.prepend(alphaBet);
+                holder.append(created);
+                created.before(showMore);
                 this.asyncLoadImgs(newModels);
             },
 

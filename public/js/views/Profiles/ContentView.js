@@ -2,9 +2,10 @@ define([
     "text!templates/Profiles/ProfileListTemplate.html",
     "views/Profiles/ModulesAccessView",
     "views/Profiles/CreateView",
+    'dataService',
     'common'
 ],
-    function (ProfileListTemplate, ModulesAccessView, CreateView, common) {
+    function (ProfileListTemplate, ModulesAccessView, CreateView, dataService, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
@@ -107,7 +108,12 @@ define([
 			viewProfileDetails:function(e){
                 $('#top-bar-editBtn').show();
                 $('#top-bar-deleteBtn').show();
-				e.preventDefault();
+
+                //Hide Save Button and disable inputs
+                $('#top-bar-saveBtn').hide();
+                $("#modulesAccessTable tr input").prop("disabled",true);
+
+                e.preventDefault();
 				$("#modulesAccessTable").hide();
 				var currentLi = $(e.target).closest("li");
 				$(currentLi).parent().find(".active").removeClass("active");
@@ -212,9 +218,10 @@ define([
             },
 
             deleteItems: function () {
+				var self =this;
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
                 if(!selectedProfileId) throw new Error("Could not delete profile. Id is undefined");
-                var model = this.profilesCollection.get(selectedProfileId);
+             var model = this.profilesCollection.get(selectedProfileId);
                 if(model)
                     model.destroy({
                         headers: {
@@ -222,6 +229,9 @@ define([
                         }
                     });
                 this.collection.trigger('reset');
+                //Navigate to page to hide the edit and delete buttons
+                Backbone.history.fragment = "";
+                Backbone.history.navigate("#easyErp/Profiles", { trigger: true });
             },
 
             viewProfile: function(event){

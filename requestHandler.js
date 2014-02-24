@@ -3,7 +3,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         models = require("./models.js")(dbsArray),
         department = require("./Modules/Department.js")(logWriter, mongoose, models),
         users = require("./Modules/Users.js")(logWriter, mongoose, models, department),
-        profile = require("./Modules/Profile.js")(logWriter, mongoose, models),
+        profile = require("./Modules/Profile.js")(logWriter, mongoose, models, users),
         access = require("./Modules/additions/access.js")(profile.schema, users, models, logWriter),
         employee = require("./Modules/Employees.js")(logWriter, mongoose, event, department, models),
         google = require("./Modules/Google.js")(users, models),
@@ -171,6 +171,15 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst getUsers is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             users.getUsers(req, res, data);
+        } else {
+            res.send(401);
+        }
+    };
+
+    function getAllUserWithProfile(req, id, res) {
+        console.log("Requst getUsers is success");
+        if (req.session && req.session.loggedIn && req.session.lastDb) {
+            users.getAllUserWithProfile(req, id, res);
         } else {
             res.send(401);
         }
@@ -2277,6 +2286,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getUsersForDd: getUsersForDd,
         getUserById: getUserById,
         getFilterUsers: getFilterUsers,
+		getAllUserWithProfile: getAllUserWithProfile,
         updateUser: updateUser,
         removeUser: removeUser,
         currentUser: currentUser,
