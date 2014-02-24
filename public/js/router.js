@@ -448,6 +448,7 @@ define([
             if (this.view) {
                 this.view.undelegateEvents();
             }
+			$(document).trigger("resize");
             this.view = view;
         },
 

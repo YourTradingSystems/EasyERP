@@ -30,11 +30,31 @@ define([
                 this.trigger('nextEvent');
             },
             deleteEvent: function(){
+				var self = this;
                 event.preventDefault();
-                if(confirm('Delete profile?'))
-                    this.trigger('deleteEvent');
+                var selectedProfileId = $('#profilesList > li.active > a').data('id');
+				console.log(selectedProfileId);
+				if (selectedProfileId=="1387275598000"||selectedProfileId=="1387275504000"){
+					alert("You cannot delete this profile");
+					return;
+				}
+                dataService.getData('/UserWithProfile', { _id: selectedProfileId }, function(res){
+					if (res.count==0){
+						if(confirm('Delete profile?'))
+							self.trigger('deleteEvent');
+					}else{
+						
+						if(confirm('Delete profile? Users '+ res.data.join(', ') + ' will be assigned to banned profile!')){
+							self.trigger('deleteEvent');
+							if (res.isOwnProfile)
+								window.location="/logout";
 
-            },
+						}
+					}
+ 
+				});
+   
+           },
 
             createEvent: function(event){
                 event.preventDefault();

@@ -17,6 +17,7 @@ define([
             defaultItemsNumber: null,
             listLength: null,
             filter: null,
+            stages: null,
             newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'Tasks',//needs in view.prototype.changeLocationHash
@@ -28,8 +29,8 @@ define([
                 this.collection = options.collection;
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
-                this.stages = [];
                 this.filter = options.filter;
+                this.stages = [];
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
@@ -107,6 +108,10 @@ define([
                 return false;
             },
 
+            pushStages: function (stages) {
+                this.stages = stages;
+            },
+
             checkCheckbox: function (e) {
                 if (!$(e.target).is("input")) {
                     $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
@@ -129,7 +134,7 @@ define([
                     this.hideNewSelect();
                     return false;
                 } else {
-                    $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+                    $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages}));
                     return false;
                 }
             },
@@ -197,7 +202,7 @@ define([
                 this.filter = this.filter || {};
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
-                this.changeLocationHash(1, itemsNumber, { workflow: this.wfStatus });
+                this.changeLocationHash(1, itemsNumber, { workflow: workflowIdArray });
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter, parrentContentId: this.parrentContentId });
                 this.getTotalLength(null, itemsNumber, this.filter);
             },
@@ -213,11 +218,6 @@ define([
                     }
                 }
             },
-
-            pushStages: function (stages) {
-                this.stages = stages;
-            },
-
             itemsNumber: function (e) {
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
@@ -252,9 +252,8 @@ define([
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
                 var itemView = new listItemView({ collection: this.collection });
+                itemView.bind('incomingStages', this.pushStages, this);
                 currentEl.append(itemView.render());
-
-                itemView.bind('incomingStages', itemView.pushStages, itemView);
 
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -265,12 +264,10 @@ define([
                 });
 
                 common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function (stages) {
-                    self.stages = stages;
-                    var stage = (self.filter) ? self.filter.workflow : null;
-                    if (stage) {
+                    if (self.filter && self.filter.workflow) {
                         $('.filter-check-list input').each(function() {
                             var target = $(this);
-                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                            target.attr('checked', $.inArray(target.val(), stages) > -1);
                         });
                     }
                     itemView.trigger('incomingStages', stages);

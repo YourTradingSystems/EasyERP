@@ -2,9 +2,10 @@ define([
     "text!templates/Profiles/ProfileListTemplate.html",
     "views/Profiles/ModulesAccessView",
     "views/Profiles/CreateView",
+    'dataService',
     'common'
 ],
-    function (ProfileListTemplate, ModulesAccessView, CreateView, common) {
+    function (ProfileListTemplate, ModulesAccessView, CreateView, dataService, common) {
         var ContentView = Backbone.View.extend({
             el: '#content-holder',
             contentType: "Profiles",
@@ -217,9 +218,10 @@ define([
             },
 
             deleteItems: function () {
+				var self =this;
                 var selectedProfileId = $('#profilesList > li.active > a').data('id');
                 if(!selectedProfileId) throw new Error("Could not delete profile. Id is undefined");
-                var model = this.profilesCollection.get(selectedProfileId);
+             var model = this.profilesCollection.get(selectedProfileId);
                 if(model)
                     model.destroy({
                         headers: {
