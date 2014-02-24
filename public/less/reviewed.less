@@ -539,11 +539,27 @@
       &:last-child {
         border-bottom: @thin-border @defaultBorderColor;
       }
-
+	  &.stage-cancelled{
+		  position:relative;
+		  .line-wrapper{
+			  left:0px;
+			  position:absolute;
+			  width:100%;
+			  margin-top:8px;
+			  height:2px;
+			  overflow-x:hidden;
+			  .line{
+				  position:absolute;
+				  margin-left:25px;
+				  width:100%;
+				  border-top:1px solid black;
+			  }
+		  }
+	  }
       td {
         cursor: pointer;
         padding: 4px 5px;
-        line-height: 18px;
+        line-height: 17px;
         font-size: @font-size - 2;
         text-align: left;
         &.red-border {

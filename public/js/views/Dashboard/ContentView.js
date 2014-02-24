@@ -107,6 +107,7 @@ define([
                    var self = this;
                    $(".chart").empty();
                    common.getLeadsForChart(true, this.dateRangeSource, this.dateItem, function (data) {
+					   console.log(data);
 					   $("#timeBuildingDataFromServer").text("Server response in " + self.buildTime + " ms");
 					   
                        var margin = { top: 20, right: 160, bottom: 30, left: 160 },
@@ -155,7 +156,7 @@ define([
                            return !item.isOpp;
                        });
                        for (var i = 0; i < data1.length; i++) {
-                           for (var j = 0; j < data1.length; j++) {
+                           for (var j = 0; j < data2.length; j++) {
                                if (data1[i].source == data2[j].source) {
                                    data1[i].value += data2[j].value;
                                    break;
