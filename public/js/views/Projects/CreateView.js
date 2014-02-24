@@ -471,7 +471,13 @@ define([
                 $('#StartDate').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
-                    changeYear: true
+                    changeYear: true,
+                    onSelect: function () {
+                        //Setting minimum of endDate to picked startDate
+                        var endDate = $('#StartDate').datepicker('getDate');
+                        endDate.setDate(endDate.getDate());
+                        $('#EndDateTarget').datepicker('option', 'minDate', endDate);
+                    }
                 });
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",

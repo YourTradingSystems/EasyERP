@@ -33,6 +33,7 @@ define([
                 event.preventDefault();
                 if(confirm('Delete profile?'))
                     this.trigger('deleteEvent');
+
             },
 
             createEvent: function(event){

@@ -107,7 +107,12 @@ define([
 			viewProfileDetails:function(e){
                 $('#top-bar-editBtn').show();
                 $('#top-bar-deleteBtn').show();
-				e.preventDefault();
+
+                //Hide Save Button and disable inputs
+                $('#top-bar-saveBtn').hide();
+                $("#modulesAccessTable tr input").prop("disabled",true);
+
+                e.preventDefault();
 				$("#modulesAccessTable").hide();
 				var currentLi = $(e.target).closest("li");
 				$(currentLi).parent().find(".active").removeClass("active");
@@ -222,6 +227,9 @@ define([
                         }
                     });
                 this.collection.trigger('reset');
+                //Navigate to page to hide the edit and delete buttons
+                Backbone.history.fragment = "";
+                Backbone.history.navigate("#easyErp/Profiles", { trigger: true });
             },
 
             viewProfile: function(event){

@@ -141,7 +141,7 @@ define(
                 }
             }
         }
-        
+
         var checkNumberField = function(errorArray, required, fieldValue, fieldName){
             if(required){
                 if(hasInvalidChars(fieldValue)) {
