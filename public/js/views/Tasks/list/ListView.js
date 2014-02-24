@@ -107,6 +107,11 @@ define([
                 return false;
             },
 
+            pushStages: function (stages) {
+                this.filter = this.filter || {};
+                this.filter.workflow = stages;
+            },
+
             checkCheckbox: function (e) {
                 if (!$(e.target).is("input")) {
                     $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
@@ -197,7 +202,7 @@ define([
                 this.filter = this.filter || {};
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
-                this.changeLocationHash(1, itemsNumber, { workflow: this.wfStatus });
+                this.changeLocationHash(1, itemsNumber, { workflow: workflowIdArray });
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter, parrentContentId: this.parrentContentId });
                 this.getTotalLength(null, itemsNumber, this.filter);
             },
@@ -213,11 +218,6 @@ define([
                     }
                 }
             },
-
-            pushStages: function (stages) {
-                this.stages = stages;
-            },
-
             itemsNumber: function (e) {
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
@@ -252,9 +252,8 @@ define([
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
                 var itemView = new listItemView({ collection: this.collection });
-                currentEl.append(itemView.render());
-
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
+                currentEl.append(itemView.render());
 
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -265,15 +264,14 @@ define([
                 });
 
                 common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function (stages) {
-                    self.stages = stages;
-                    var stage = (self.filter) ? self.filter.workflow : null;
-                    if (stage) {
+                    if (self.filter && self.filter.workflow) {
                         $('.filter-check-list input').each(function() {
                             var target = $(this);
-                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                            target.attr('checked', $.inArray(target.val(), self.filter.workflow) > -1);
                         });
+                    } else {
+                        itemView.trigger('incomingStages', stages);
                     }
-                    itemView.trigger('incomingStages', stages);
                 });
 
                 $(document).on("click", function (e) {
