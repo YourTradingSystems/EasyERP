@@ -13,7 +13,7 @@ define([
             },
 
             render: function(){
-                $('title').text(this.contentType);
+                $('title').text('Birthdays');
                 this.$el.html(this.template());
 
                 return this;
