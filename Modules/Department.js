@@ -304,12 +304,11 @@ var Department = function (logWriter, mongoose, models) {
         }
     }
 
-
     function update(req, _id, data, res) {
         try {
             delete data._id;
             delete data.createdBy;
-			if (data.users){
+			if (data.users&&data.users[0]&&data.users[0]._id){
 				data.users=data.users.map(function(item){
 					return item._id;
 				});

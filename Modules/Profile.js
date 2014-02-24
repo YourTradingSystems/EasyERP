@@ -1,4 +1,4 @@
-var Profile = function (logWriter, mongoose, models) {
+var Profile = function (logWriter, mongoose, models, users) {
     
     var ProfileSchema = mongoose.Schema({
         _id: Number,
@@ -154,15 +154,17 @@ var Profile = function (logWriter, mongoose, models) {
     };
 
     function removeProfile(req, _id, res) {
-        models.get(req.session.lastDb - 1, "Profile", ProfileSchema).remove({ _id: _id }, function (err, result) {
-            if (err) {
-                console.log(err);
-                logWriter.log("Profile.js remove profile.remove " + err);
-                res.send(500, { error: "Can't remove Profile" });
-            } else {
-                res.send(200, { success: 'Profile removed' });
-            }
-        });
+		models.get(req.session.lastDb - 1, 'Users', users.schema).update({ profile: _id}, {profile:"1387275504000"},{multi:true}, function (err, result) {
+			models.get(req.session.lastDb - 1, "Profile", ProfileSchema).remove({ _id: _id }, function (err, result) {
+				if (err) {
+					console.log(err);
+					logWriter.log("Profile.js remove profile.remove " + err);
+					res.send(500, { error: "Can't remove Profile" });
+				} else {
+					res.send(200, { success: 'Profile removed' });
+				}
+			});
+		});
     };
 
     return {
