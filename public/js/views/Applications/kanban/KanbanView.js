@@ -296,8 +296,8 @@
                 }).disableSelection();
                 this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
 				$(document).on("keypress","#cPerPage",this.isNumberKey);
-
 				$(window).on("resize",this.resize);
+				this.$el.unbind();
                 return this;
             }
         });
