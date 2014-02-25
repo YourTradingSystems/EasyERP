@@ -1,5 +1,5 @@
 var JobPosition = function (logWriter, mongoose, employee, department, models) {
-var ObjectId = mongoose.Schema.Types.ObjectId;
+    var ObjectId = mongoose.Schema.Types.ObjectId;
     var objectId = mongoose.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var jobPositionSchema = mongoose.Schema({
@@ -205,15 +205,15 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
     function getJobPositionById(req, id, res) {
         var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).findById(id);
-		query.populate("department","departmentName _id");
-		query.populate("workflow","name _id");
-		query.exec(function (err, response) {
+        query.populate("department", "departmentName _id");
+        query.populate("workflow", "name _id");
+        query.exec(function (err, response) {
             if (err) {
                 console.log(err);
                 logWriter.log('JobPosition.js get job.find' + err);
                 res.send(500, { error: "Can't find JobPosition" });
             } else {
-				console.log(response);
+                console.log(response);
                 var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
                    {
                        $match: {
@@ -223,7 +223,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                    function (err, result) {
                        if (err) {
                            logWriter.log('JobPosition.js getJobPositionById aggregate ' + err);
-                           res.send(500, {error:"Cant't find an JobPosition"});
+                           res.send(500, { error: "Cant't find an JobPosition" });
                        } else {
                            console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
                            response.numberOfEmployees = result.length;
@@ -297,67 +297,6 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
         //}
     }; //end get
 
-    //function getCustom(req, response) {
-    //    var res = {};
-    //    res['data'] = [];
-    //    var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
-    //    query.populate('department').
-	//		populate('createdBy.user').
-    //        populate('editedBy.user');
-    //    query.sort({ name: 1 });
-    //    query.exec(function (err, jobPos) {
-    //        if (err) {
-    //            console.log(err);
-    //            logWriter.log('JobPosition.js get job.find' + err);
-    //            response.send(500, { error: "Can't find JobPosition" });
-    //        } else {
-    //            //res['data'] = result;
-    //            //response.send(res);
-    //            getTotalEmployees(jobPos, 0);
-    //            //
-    //            //response.send(res);
-    //        }
-    //    });
-    //    var getTotalEmployees = function(jobPositions, count) {
-    //        if (jobPositions && jobPositions.length > count) {
-    //            var jobId = jobPositions[count]._id.toString();
-    //            console.log(jobId);
-    //            var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
-    //                {
-    //                    $match: {
-    //                        jobPosition: objectId(jobId)
-    //                    }
-    //                },
-    //                function(err, result) {
-    //                    if (result) {
-    //                        jobPositions[count].numberOfEmployees = result.length;
-    //                        jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
-    //                        count++;
-    //                        getTotalEmployees(jobPositions, count);
-    //                    }
-    //                }
-    //            );
-    //            //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
-    //            //        if (err) {
-    //            //            console.log(err);
-    //            //            res['data'] = jobPositions;
-    //            //            response.send(res);
-    //            //        } else {
-    //            //            jobPositions[count].numberOfEmployees = _employees.length;
-    //            //            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
-    //            //            count++;
-    //            //            getTotalEmployees(jobPositions, count);
-    //            //        }
-    //            //    });
-    //            //} else {
-    //            //    res['data'] = jobPositions;
-    //            //    response.send(res);
-    //        } else {
-    //            res['data'] = jobPositions;
-    //            response.send(res);
-    //        }
-    //    }
-    //}; //end get
 
     function getFilter(req, response) {
         var res = {};
@@ -381,36 +320,41 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
             function (err, deps) {
                 if (!err) {
                     var arrOfObjectId = deps.objectID();
-                    
                     models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).aggregate(
                         {
                             $match: {
+                                $or: [
+                                    {
                                         $or: [
                                             {
-                                                $or: [
-                                                    {
-                                                        $and: [
-                                                            { whoCanRW: 'group' },
-                                                            { 'groups.users': newObjectId(req.session.uId) }
-                                                        ]
-                                                    },
-                                                    {
-                                                        $and: [
-                                                            { whoCanRW: 'group' },
-                                                            { 'groups.group': { $in: arrOfObjectId } }
-                                                        ]
-                                                    }
+                                                $and: [
+                                                    { whoCanRW: 'group' },
+                                                    { 'groups.users': newObjectId(req.session.uId) }
                                                 ]
                                             },
                                             {
                                                 $and: [
-                                                    { whoCanRW: 'owner' },
-                                                    { 'groups.owner': newObjectId(req.session.uId) }
+                                                    { whoCanRW: 'group' },
+                                                    { 'groups.group': { $in: arrOfObjectId } }
                                                 ]
-                                            },
-                                            { whoCanRW: "everyOne" }
+                                            }
                                         ]
+                                    },
+                                    {
+                                        $and: [
+                                            { whoCanRW: 'owner' },
+                                            { 'groups.owner': newObjectId(req.session.uId) }
+                                        ]
+                                    },
+                                    { whoCanRW: "everyOne" }
+                                ]
                             }
+                        },
+                        {
+                            $skip: (data.page - 1) * data.count
+                        },
+                        {
+                            $limit: parseInt(data.count)
                         },
                         {
                             $project: {
@@ -421,26 +365,41 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).find().where('_id').in(result);
                                 query.select("_id createdBy editedBy name department totalForecastedEmployees numberOfEmployees expectedRecruitment workflow").
-									populate('createdBy.user', 'login').
-									populate('editedBy.user', 'login').
-									populate('department', 'departmentName').
-									skip((data.page - 1) * data.count).
-									limit(data.count).
+                                    populate('createdBy.user', 'login').
+                                    populate('editedBy.user', 'login').
+                                    populate('department', 'departmentName').
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
-                                            response.send(res);
+                                            _res.forEach(function (ellement, index) {
+                                                models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function (err, count) {
+                                                    if (count) {
+                                                        ellement.numberOfEmployees = count;
+
+                                                    } else if (err) {
+                                                        console.log(err);
+                                                        response.send(500, { error: 'Some error occured in JobPosition' });
+                                                    }
+                                                    if (index === result.length - 1)
+                                                        response.send(res);
+                                                }
+                );
+                                            });
+                                            //response.send(res);
                                         } else {
                                             console.log(error);
+                                            response.send(500, { error: 'Some error occured in JobPosition' });
                                         }
                                     });
                             } else {
                                 console.log(err);
+                                response.send(500, { error: 'Some error occured in JobPosition' });
                             }
                         }
                     );
                 } else {
                     console.log(err);
+                    response.send(500, { error: 'Some error occured in JobPosition' });
                 }
             });
     }
@@ -449,15 +408,15 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
         try {
             delete data._id;
             delete data.createdBy;
-            
+            console.log(data);
             if (data.workflow === '528ce71ef3f67bc40b00001d') {
-                data.expectedRecruitment = 0;
+                ++data.expectedRecruitment;
             } else {
-                if (data.expectedRecruitment === 0) {
-                    ++data.expectedRecruitment;
-                }
+                if (data.workflow && data.expectedRecruitment !== 0)
+                    --data.expectedRecruitment;
             }
-            
+            data.numberOfEmployees = data.numberOfEmployees || 0;
+            data.totalForecastedEmployees = data.expectedRecruitment + data.numberOfEmployees;
             if (data.department && data.department._id) {
                 data.department = data.department._id;
             }
@@ -510,10 +469,10 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
         remove: remove,
 
-        getJobPositionForDd:getJobPositionForDd,
+        getJobPositionForDd: getJobPositionForDd,
 
         jobPositionSchema: jobPositionSchema
     };
-    };
+};
 
-    module.exports = JobPosition;
+module.exports = JobPosition;
