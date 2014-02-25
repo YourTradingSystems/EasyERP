@@ -2,9 +2,10 @@ define([
     "text!templates/Opportunities/CreateTemplate.html",
     "models/OpportunitiesModel",
     "common",
-	"populate"
+	"populate",
+    "dataService"
 ],
-    function (CreateTemplate, OpportunityModel, common, populate) {
+    function (CreateTemplate, OpportunityModel, common, populate, dataService) {
         var CreateView = Backbone.View.extend({
             el: "#content-holder",
             contentType: "Opportunities",
@@ -21,7 +22,6 @@ define([
 
             events: {
                 "click #tabList a": "switchTab",
-                "change #customer": "selectCustomer",
                 "change #workflowNames": "changeWorkflows",
 
                 'keydown': 'keydownHandler',
@@ -57,7 +57,10 @@ define([
                 return false;
             },
 			chooseOption:function(e){
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+                var holder = $(e.target).parents("dd").find(".current-selected");
+                holder.text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                if (holder.attr("id") == 'customerDd')
+                    this.selectCustomer($(e.target).attr("id"));
 			},
             
 
@@ -220,23 +223,33 @@ define([
                 $("#selectWorkflow").html(_.template(selectTemplate, { workflows: this.getWorkflowValue(value) }));
             },
 
-            selectCustomer: function (e) {
-                e.preventDefault();
-                var id = $(e.target).val();
-                var customer = this.customersCollection.get(id).toJSON();
-                if (customer.type == 'Person') {
-                    this.$el.find('#company').val(customer.company.name);
-                } else {
-                    this.$el.find('#company').val(customer.name);
-                }
-                this.$el.find('#email').val(customer.email);
-                this.$el.find('#phone').val(customer.phones.phone);
-                this.$el.find('#mobile').val(customer.phones.mobile);
-                this.$el.find('#street').val(customer.address.street);
-                this.$el.find('#city').val(customer.address.city);
-                this.$el.find('#state').val(customer.address.state);
-                this.$el.find('#zip').val(customer.address.zip);
-                this.$el.find('#country').val(customer.address.country);
+            selectCustomer: function (id) {
+                dataService.getData('/Customer', {
+                    id: id
+                }, function (response, context) {
+                    var customer = response.data[0];
+                    if (customer.type == 'Person') {
+                        context.$el.find('#first').val(customer.name.first);
+                        context.$el.find('#last').val(customer.name.last);
+
+                        context.$el.find('#company').val('');
+                    } else {
+                        context.$el.find('#company').val(customer.name.first);
+
+                        context.$el.find('#first').val('');
+                        context.$el.find('#last').val('');
+
+                    }
+                    context.$el.find('#email').val(customer.email);
+                    context.$el.find('#phone').val(customer.phones.phone);
+                    context.$el.find('#mobile').val(customer.phones.mobile);
+                    context.$el.find('#street').val(customer.address.street);
+                    context.$el.find('#city').val(customer.address.city);
+                    context.$el.find('#state').val(customer.address.state);
+                    context.$el.find('#zip').val(customer.address.zip);
+                    context.$el.find('#country').val(customer.address.country);
+                }, this);
+
             },
 
             switchTab: function (e) {

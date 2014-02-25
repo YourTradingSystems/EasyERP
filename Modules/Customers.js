@@ -1095,11 +1095,12 @@
             }
         },
 
-        getCustomers: function (req, response) {
-
+        getCustomers: function (req, response, data) {
             var res = {};
             res['data'] = [];
             var query = models.get(req.session.lastDb - 1, "Customers", customerSchema).find({ 'salesPurchases.isCustomer': true });
+            if (data && data.id)
+                query.where({ _id: newObjectId(data.id) });
             query.sort({ "name.first": 1 });
             query.exec(function (err, customers) {
                 if (err) {

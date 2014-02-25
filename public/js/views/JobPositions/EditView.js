@@ -237,41 +237,30 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-                //var _department = common.toObject(departmentId, this.departmentsCollection);
-                //var department = {};
-                //if (_department) {
-                //    department.id = _department._id;
-                //    department.name = _department.departmentName;
-                //} else {
-                //    department = currentModel.defaults.department;
-                //}
-
-/*                var workflow = {
-                    wName: this.$("#workflowNames option:selected").text(),
-                    name: this.$("#workflow option:selected").text(),
-                    status: this.$("#workflow option:selected").val(),
-                };*/
                 var workflow = this.$("#workflowsDd").data("id");
-                this.currentModel.save({
+                var currentWorkflow = this.currentModel.get('workflow');
+                var data = {
                     name: name,
                     expectedRecruitment: expectedRecruitment,
                     description: description,
                     requirements: requirements,
                     department: department || null,
-                    workflow: workflow || null,
                     groups: {
                         owner: $("#allUsers").val(),
                         users: usersId,
                         group: groupsId
                     },
                     whoCanRW: whoCanRW
-                }, {
+                };
+                if (currentWorkflow._id && (currentWorkflow._id != workflow))
+                    data['workflow'] = workflow;
+                this.currentModel.save(data, {
                     headers: {
                         mid: mid
                     },
                     wait: true,
+                    patch: true,
                     success: function (model) {
-                        model = model.toJSON();
                         self.hideDialog();
                         Backbone.history.navigate("easyErp/JobPositions", { trigger: true });
                     },
