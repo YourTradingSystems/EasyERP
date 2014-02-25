@@ -128,6 +128,7 @@ define([
                     validate: false,
                     success: function () {
                         targetElement.find(".stageSelect").text($(e.target).text());
+						targetElement.parents("tr").attr("class","stage-"+$(e.target).text().toLowerCase().replace(' ',''));
                     }
                 });
 

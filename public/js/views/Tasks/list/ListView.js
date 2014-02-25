@@ -29,6 +29,8 @@ define([
                 this.collection = options.collection;
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
+				console.log("parrentContentId");
+				console.log(this.parrentContentId);
                 this.filter = options.filter;
                 this.stages = [];
                 this.defaultItemsNumber = this.collection.namberToShow || 50;

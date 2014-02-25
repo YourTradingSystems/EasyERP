@@ -532,7 +532,10 @@
       &:last-child {
         border-bottom: @thin-border @defaultBorderColor;
       }
-	  &.stage-cancelled{
+	  &.stage-cancelled,
+	  &.stage-refused,
+	  &.stage-contractend,
+	  &.stage-lost{
 		  position:relative;
 		  text-decoration:line-through;
 /*		  .line-wrapper{
@@ -1023,6 +1026,7 @@
       &:last-child {
         text-align: right;
       }
+
     }
   }
 
@@ -1604,7 +1608,7 @@
   left:auto: !important;
   margin:0 auto;
   .border-radius(0px);
-
+  
   .ui-widget-content {
     a {
       color: @tilte-color;
@@ -1650,10 +1654,14 @@
         margin-top: 5px !important;
       }
       &.taskDescriptionCreate {
-        height: 210px;
+        height: 209px;
+		margin-top:8px !important;
+		margin-left:1px;
+		width:210px;
       }
       &.taskDescriptionEdit {
         height: 210px;
+		margin-top:8px !important;
       }
       &.projectDescriptionCreate {
         height: 230px;
@@ -1678,6 +1686,9 @@
     position: relative;
     padding: .5em 1em;
     clear: both;
+	&.task-create-holder{
+		margin-bottom:-17px;
+	}
   }
 
   .app-empty-info {
@@ -1707,6 +1718,7 @@
 
       a {
         line-height: 22px;
+		margin-right:3px;
       }
     }
 
@@ -1748,6 +1760,19 @@
       width: 100%;
       max-width: none;
     }
+    &#summaryTask,
+    &#summaryEdit {
+		margin-top:17px;
+		margin-bottom:8px;
+		padding-left:2px;
+		padding-right:2px;
+		width:448px;
+		max-width:none;
+    }
+    &#summaryEdit {
+		margin-top:7px;
+	}
+
   }
 
   .ui-dialog-buttonpane {
@@ -1832,6 +1857,17 @@
     opacity: 0;
     filter: Alpha(Opacity=0);
   }
+  &.task-edit-dialog{
+	  .ui-dialog-buttonpane{
+		  margin-left:24px;
+		  margin-right:24px;
+		  button{
+			  margin-top:15px;
+			  margin-bottom:15px;
+		  }
+	  }
+  }
+
 }
 
 .dialog-buttons {
@@ -2859,6 +2895,18 @@ dl {
 
 .half-block {
   width: 50%;
+  &.withPaddingRightProject{
+	  .inner{
+		  padding-top:5px;
+		  padding-left:8px;
+		  padding-right:0px;
+	  }
+  }
+  &.withPaddingLeftProject{
+	  .inner{
+		  padding-left:0px;
+	  }
+  }
   &.projectNote {
     width: 45%;
     padding-right: 5%;
@@ -4243,7 +4291,7 @@ h3.dashboard {
   .task-info {
     .dl-auto(200px, 40%);
     input {
-      width: 70% !important;
+      width: 124px !important;
     }
   }
   .task-summary-info {
@@ -4466,4 +4514,7 @@ span.ui-spinner{
       color:@lightblue + #333;
     }
   }
+}
+#projectTopName{
+	line-height:24px;
 }
