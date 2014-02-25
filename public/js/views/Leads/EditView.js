@@ -359,8 +359,40 @@ define([
 			},
 
 			chooseOption:function(e){
-                $(e.target).parents("dd").find(".current-selected").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+                var holder = $(e.target).parents("dd").find(".current-selected");
+                holder.text($(e.target).text()).attr("data-id", $(e.target).attr("id"));
+                if (holder.attr("id") == 'customerDd')
+                    this.selectCustomer($(e.target).attr("id"));
 			},
+
+            selectCustomer: function (id) {
+                dataService.getData('/Customer', {
+                    id: id
+                }, function (response, context) {
+                    var customer = response.data[0];
+                    if (customer.type == 'Person') {
+                        context.$el.find('#first').val(customer.name.first);
+                        context.$el.find('#last').val(customer.name.last);
+
+                        context.$el.find('#company').val('');
+                    } else {
+                        context.$el.find('#company').val(customer.name.first);
+
+                        context.$el.find('#first').val('');
+                        context.$el.find('#last').val('');
+
+                    }
+                    context.$el.find('#email').val(customer.email);
+                    context.$el.find('#phone').val(customer.phones.phone);
+                    context.$el.find('#mobile').val(customer.phones.mobile);
+                    context.$el.find('#street').val(customer.address.street);
+                    context.$el.find('#city').val(customer.address.city);
+                    context.$el.find('#state').val(customer.address.state);
+                    context.$el.find('#zip').val(customer.address.zip);
+                    context.$el.find('#country').val(customer.address.country);
+                }, this);
+
+            },
 
             render: function () {
                 var formString = this.template({

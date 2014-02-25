@@ -73,7 +73,8 @@ define([
                 this.showNewSelect(e, true, false);
             },
             chooseHealthDd: function (e) {
-                $(e.target).parents("#health").find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
+                var target = $(e.target);
+                target.parents("#health").find("a").attr("class", target.attr("class")).attr("data-value", target.attr("class").replace("health", "")).parent().find("ul").toggle();
             },
             showHealthDd: function (e) {
                 $(e.target).parent().find("ul").toggle();
@@ -532,6 +533,7 @@ define([
                         $(".add-user-dialog").remove();
                         if (viewType == "list") {
                             var tr_holder = $("tr[data-id='" + self.currentModel.toJSON()._id + "'] td");
+                            $("a[data-id='" + self.currentModel.toJSON()._id + "']").text(projectName);
                             tr_holder.eq(2).text(projectName);
                             tr_holder.eq(3).text(self.$el.find("#customerDd").text());
                             tr_holder.eq(4).text(self.$el.find("#StartDate").val());
@@ -539,8 +541,7 @@ define([
                             tr_holder.eq(6).text(self.$el.find("#EndDateTarget").val());
                             if (new Date(self.$el.find("#EndDate").val()) < new Date(self.$el.find("#EndDateTarget").val())) {
                                 tr_holder.eq(5).addClass("red-border");
-                            }
-                            else {
+                            } else {
                                 tr_holder.eq(5).removeClass("red-border");
                             }
                             tr_holder.eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());

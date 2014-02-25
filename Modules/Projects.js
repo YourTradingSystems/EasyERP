@@ -1283,9 +1283,11 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         delete data.createdBy;
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
-            obj._id = mongoose.Types.ObjectId();
+            if (!obj._id)
+                obj._id = mongoose.Types.ObjectId();
             obj.date = new Date();
-            obj.author = req.session.uName;
+            if (!obj.author)
+                obj.author = req.session.uName;
             data.notes[data.notes.length - 1] = obj;
         }
         if (data.estimated && data.logged)

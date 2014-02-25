@@ -104,15 +104,16 @@
                           note: '',
                           title: ''
                       };
+
                       if (arr_key_str) {
-                          var editNotes = _.filter(notes, function (note) {
+                         _.filter(notes, function (note) {
                               if (note._id == arr_key_str) {
                                   note.note = val;
                                   note.title = title;
-                                  return note;
+                                  return notes;// note changed to notes to return an array of notes not a single one
                               }
                           });
-                          currentModel.save({ 'notes': editNotes },
+                          currentModel.save({ 'notes': notes },// save array of edited notes
                               {
                                   headers: {
                                       mid: 40
@@ -173,7 +174,8 @@
 
               cancelNote: function (e) {
                   $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
-                   $(e.target).parents(".addNote").find("#noteArea").val("");
+                  $(e.target).parents(".addNote").find("#noteArea").val("");
+                  $('#getNoteKey').val('');// remove id from hidden field if note editing is cancel
                   $(".title-wrapper").hide();
                   $(".addTitle").hide();
               },
@@ -392,7 +394,7 @@
                                       tr_holder.eq(6).text(editHolder.find("#assignedToDd").text());
                                       tr_holder.eq(7).text(editHolder.find("#estimated").val() || 0);
                                       tr_holder.eq(8).text(editHolder.find("#logged").val() || 0);
-                                      tr_holder.eq(9).text(editHolder.find("#type").text());
+                                      tr_holder.eq(9).find('a').text(editHolder.find("#type").text());
                                   }
                                   break;
                               case 'kanban':
