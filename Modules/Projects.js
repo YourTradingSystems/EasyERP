@@ -40,7 +40,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         },
         health: { type: Number, default: 1 }
     }, { collection: 'Project' });
@@ -79,7 +79,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         }
     }, { collection: 'Tasks' });
 
@@ -331,6 +331,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _project.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _project.editedBy.user = data.uId;
                     }
 
                     if (data.task) {
@@ -1437,6 +1439,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _task.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _task.editedBy.user = data.uId;
                     }
                     if (data.logged) {
                         _task.logged = data.logged;

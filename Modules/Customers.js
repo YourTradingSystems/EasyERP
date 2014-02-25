@@ -63,7 +63,7 @@
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         }
     }, { collection: 'Customers' });
 
@@ -237,6 +237,8 @@
                         _customer = new models.get(req.session.lastDb - 1, "Customers", customerSchema)();
                         if (data.uId) {
                             _customer.createdBy.user = data.uId;
+                            //on creation addded uId to editBy field user value
+                            _customer.editedBy.user = data.uId;
                         }
                         if (data.groups) {
                             _customer.groups = data.groups;
