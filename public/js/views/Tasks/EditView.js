@@ -392,7 +392,7 @@
                                       tr_holder.eq(6).text(editHolder.find("#assignedToDd").text());
                                       tr_holder.eq(7).text(editHolder.find("#estimated").val() || 0);
                                       tr_holder.eq(8).text(editHolder.find("#logged").val() || 0);
-                                      tr_holder.eq(9).text(editHolder.find("#type").text());
+                                      tr_holder.eq(9).find('a').text(editHolder.find("#type").text());
                                   }
                                   break;
                               case 'kanban':

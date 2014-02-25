@@ -1220,7 +1220,15 @@ app.get('/JobPosition/:_id', function (req, res) {
     //requestHandler.getJobPosition(req, res, data);
 });
 
-app.put('/JobPositions/:viewType/:_id', function (req, res) {
+//app.put('/JobPositions/:viewType/:_id', function (req, res) {
+//    data = {};
+//    var id = req.param('_id');
+//    data.mid = req.headers.mid;
+//    data.jobPosition = req.body;
+//    requestHandler.updateJobPosition(req, res, id, data);
+//});
+
+app.patch('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
