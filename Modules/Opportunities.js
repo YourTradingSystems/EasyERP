@@ -63,7 +63,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now  }
         },
         campaign: { type: String, default: '' },
         source: { type: String, default: '' },
@@ -367,6 +367,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     }
                     if (data.uId) {
                         _opportunitie.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _opportunitie.editedBy.user =data.uId;
                     }
                     if (data.campaign) {
                         _opportunitie.campaign = data.campaign;

@@ -16,7 +16,6 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
         listLength: null,
         filter: null,
         newCollection: null,
-        page: null, //if reload page, and in url is valid page
         contentType: 'Persons',//needs in view.prototype.changeLocationHash
         viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
 
@@ -31,7 +30,6 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             this.defaultItemsNumber = this.collection.namberToShow || 50;
             this.newCollection = options.newCollection;
             this.deleteCounter = 0;
-            this.page = options.collection.page;
             this.render();
             this.getTotalLength(this.defaultItemsNumber, this.filter);
             this.asyncLoadImgs(this.collection);
@@ -66,12 +64,14 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             });
             common.getImages(ids, "/getCustomersImages");
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         alpabeticalRender: function (e) {
                 this.$el.find('.thumbnailwithavatar').remove();
                 this.startTime = new Date();
                 this.newCollection = false;
-
+                var target = $(e.target);
+                target.parent().find(".current").removeClass("current");
+                target.addClass("current");
                 var selectedLetter = $(e.target).text();
                 if ($(e.target).text() == "All") {
                     selectedLetter = "";
@@ -79,7 +79,7 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
                 this.filter = this.filter || {};
                 this.filter['letter'] = selectedLetter;
                 this.defaultItemsNumber = 0;
-                this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+                this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
                 this.collection.showMoreAlphabet({ count:this.defaultItemsNumber, page: 1, filter: this.filter });
                 this.getTotalLength(this.defaultItemsNumber, this.filter);
         },
@@ -115,6 +115,15 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
                     selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter),
                     allAlphabeticArray: self.allAlphabeticArray
                 }));
+                 var currentLetter = (self.filter) ? self.filter.letter : null
+                    if (currentLetter) {
+                        $('#startLetter a').each(function() {
+                            var target = $(this);
+                            if (target.text() == currentLetter) {
+                                target.addClass("current");
+                            }
+                        });
+                    }
             });
             currentEl.append(createdInTag);
             return this;
@@ -124,14 +133,14 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             event.preventDefault();
             this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         showMoreContent: function (newModels) {
             var holder = this.$el;
             var content = holder.find("#thumbnailContent");
             var showMore = holder.find('#showMoreDiv');
             var created = holder.find('#timeRecivingDataFromServer');
             this.defaultItemsNumber += newModels.length;
-            this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+            this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
             this.getTotalLength(this.defaultItemsNumber, this.filter);
 
             if (showMore.length != 0) {
@@ -142,24 +151,22 @@ function (common, editView, createView, AphabeticTemplate, ThumbnailsItemTemplat
             }
             this.asyncLoadImgs(newModels);
         },
+
         //modified for filter Vasya
         showMoreAlphabet: function (newModels) {
-
             var holder = this.$el;
             var alphaBet = holder.find('#startLetter');
             var created = holder.find('#timeRecivingDataFromServer');
             var showMore = holder.find('#showMoreDiv');
             var content = holder.find(".thumbnailwithavatar");
             this.defaultItemsNumber += newModels.length;
-            this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+            this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
             this.getTotalLength(this.defaultItemsNumber, this.filter);
-
-            if (showMore.length != 0) {
-                 showMore.before(this.template({  collection: this.collection.toJSON() }));
-                 showMore.after(created);
-            } else {
-                 content.html(this.template({ collection: this.collection.toJSON() }));
-            }
+            holder.append(this.template({ collection: newModels.toJSON() }));
+            holder.prepend(alphaBet);
+            holder.append(created);
+            created.before(showMore);
+            this.asyncLoadImgs(newModels);
             this.asyncLoadImgs(newModels);
         },
 

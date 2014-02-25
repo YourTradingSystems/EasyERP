@@ -17,7 +17,7 @@ define([
             "home": "any",
             "login": "login",
             "easyErp/:contentType/kanban(/:parrentContentId)": "goToKanban",
-            "easyErp/:contentType/thumbnails(/p=:page)(/c=:countPerPage)(/filter=:filter)": "goToThumbnails",
+            "easyErp/:contentType/thumbnails(/c=:countPerPage)(/filter=:filter)": "goToThumbnails",
             "easyErp/:contentType/form/:modelId": "goToForm",
             "easyErp/:contentType/list(/pId=:parrentContentId)(/p=:page)(/c=:countPerPage)(/filter=:filter)": "goToList",
             "easyErp/Profiles": "goToProfiles",
@@ -35,9 +35,9 @@ define([
                 $("#ui-datepicker-div").hide().remove();
             });
             $(document).on("keydown", ".ui-dialog", function (e) {
-                if ($(e.target).get(0).tagName.toLowerCase() == "textarea") {
-                    return;
-                }
+				if ($(e.target).get(0).tagName.toLowerCase()=="textarea"){
+					return;
+				}
                 switch (e.which) {
                     case 27:
                         $(".edit-dialog").remove();
@@ -364,68 +364,62 @@ define([
             });
         },
 
-        goToThumbnails: function (contentType, page, countPerPage, filter) {
-            custom.setCurrentVT('thumbnails');
-            var newCollection = true;
-            var startTime = new Date();
-            var self = this;
-            var contentViewUrl;
-            var topBarViewUrl = "views/" + contentType + "/TopBarView";
-            var collectionUrl;
-            var navigatePage = (page) ? parseInt(page) || 1 : 1;
-            var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
-            if (filter === 'empty') {
-                newCollection = false;
-            } else if (filter) {
-                filter = JSON.parse(filter);
-            }
-            if (this.mainView === null) {
-                this.main(contentType);
-            } else {
-                this.mainView.updateMenu(contentType);
-            }
+               goToThumbnails: function (contentType, countPerPage, filter) {
 
-            contentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
-            collectionUrl = this.buildCollectionRoute(contentType);
+                   var newCollection = true;
+                   var startTime = new Date();
+                   var self = this;
+                   var contentViewUrl;
+                   var topBarViewUrl = "views/" + contentType + "/TopBarView";
+                   var collectionUrl;
+                   var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
+                   if (filter === 'empty') {
+                        newCollection = false;
+                   } else if (filter) {
+                        filter = JSON.parse(filter);
+                   }
+                   if (this.mainView === null) {
+                        this.main(contentType);
+                   } else {
+                        this.mainView.updateMenu(contentType);
+                   }
+                   contentViewUrl = "views/" + contentType + "/thumbnails/ThumbnailsView";
+                   collectionUrl = this.buildCollectionRoute(contentType);
+                   require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
 
+                       var collection = (contentType !== 'Calendar') && (contentType !== 'Workflows')
+                           ? new contentCollection({
+                               viewType: 'thumbnails',
+                               //page: 1,
+                               count: count,
+                               filter: filter,
+                               contentType: contentType,
+                               newCollection: newCollection
+                           })
 
-            require([contentViewUrl, topBarViewUrl, collectionUrl], function (contentView, topBarView, contentCollection) {
+                           : new contentCollection();
 
-                var collection = (contentType !== 'Calendar') && (contentType !== 'Workflows')
-                    ? new contentCollection({
-                        viewType: 'thumbnails',
-                        page: navigatePage,
-                        count: count,
-                        filter: filter,
-                        contentType: contentType,
-                        newCollection: newCollection
-                    })
+                       collection.bind('reset', _.bind(createViews, self));
+                       custom.setCurrentVT('thumbnails');
+                       function createViews() {
+                           collection.unbind('reset');
+                           var contentview = new contentView({ collection: collection, startTime: startTime, filter: filter, newCollection: newCollection });
+                           var topbarView = new topBarView({ actionType: "Content", collection: collection });
+                           //var url = '#easyErp/' + contentType + '/thumbnails';
+                           topbarView.bind('createEvent', contentview.createItem, contentview);
+                           topbarView.bind('editEvent', contentview.editItem, contentview);
+                           topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
 
-                    : new contentCollection();
+                           collection.bind('showmore', contentview.showMoreContent, contentview);
+                           collection.bind('showmoreAlphabet', contentview.showMoreAlphabet, contentview);
 
-                collection.bind('reset', _.bind(createViews, self));
+                           this.changeView(contentview);
+                           this.changeTopBarView(topbarView);
 
-                function createViews() {
-                    var contentview = new contentView({ collection: collection, startTime: startTime, filter: filter, newCollection: newCollection });
-                    var topbarView = new topBarView({ actionType: "Content", collection: collection });
-                    var url = '#easyErp/' + contentType + '/thumbnails';
-
-                    collection.unbind('reset');
-
-                    topbarView.bind('createEvent', contentview.createItem, contentview);
-                    topbarView.bind('editEvent', contentview.editItem, contentview);
-                    topbarView.bind('deleteEvent', contentview.deleteItems, contentview);
-
-                    collection.bind('showmore', contentview.showMoreContent, contentview);
-                    collection.bind('showmoreAlphabet', contentview.showMoreAlphabet, contentview);
-
-                    this.changeView(contentview);
-                    this.changeTopBarView(topbarView);
-
-                    //Backbone.history.navigate(url, { replace: true });
-                }
-            });
-        },
+                           //Backbone.history.navigate(url, { replace: true });
+                       }
+                   });
+               },
 
         getList: function (contentType) {
             if (contentType) {
@@ -452,7 +446,7 @@ define([
             if (this.view) {
                 this.view.undelegateEvents();
             }
-            $(document).trigger("resize");
+			$(document).trigger("resize");
             this.view = view;
         },
 

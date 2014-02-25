@@ -27,7 +27,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         }
 
     }, { collection: 'JobPosition' });
@@ -137,6 +137,8 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                     _job = new models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema)();
                     if (data.uId) {
                         _job.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _job.editedBy.user = data.uId;
                     }
                     if (data.name) {
                         _job.name = data.name;

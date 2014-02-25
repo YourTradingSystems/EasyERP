@@ -70,7 +70,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         },
         attachments: [{
             id: { type: Number, default: '' },
@@ -253,8 +253,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function savetoDb(data) {
                 _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
                 if (data.uId) {
-
                     _employee.createdBy.user = data.uId;
+                    //uId for edited by field on creation
+                    _employee.editedBy.user = data.uId;
                 }
                 if (data.isEmployee) {
                     _employee.isEmployee = data.isEmployee;
