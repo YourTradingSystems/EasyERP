@@ -1,19 +1,16 @@
-<div class="form-holder">
+<div class="form-holder task-create-holder">
   <form method="post" action="" id="createTaskForm" class="form notDialog">
     <fieldset>
       <div class="clearfix"></div>
-      <dl class="task-summary-info">
-        <dt><label>Summary</label></dt>
-        <dd><input type="text" name="summary" class="input-title blueback" id="summary" required maxlength="32" /></dd>
-      </dl>
-      <div class="half-block left withPaddingLeft">
+	  <input type="text" name="summary" class="" id="summaryTask" required maxlength="32" placeholder="Summary"/>
+      <div class="half-block left withPaddingLeftProject">
         <div class="inner">
           <div class="textarea-wrapper">
             <textarea type="text" class="taskDescriptionCreate" name="description" placeholder="Add a Description..." id="description" required />
           </div>
         </div>
       </div>
-      <div class="half-block left withPaddingLeft">
+      <div class="half-block left withPaddingRightProject">
         <div class="inner">
 
           <dl class="task-info">
@@ -88,7 +85,6 @@
           <span class="status"></span>
         </div>
       </div>
-      <div class="clearfix"></div>
     </fieldset>
   </form>
 

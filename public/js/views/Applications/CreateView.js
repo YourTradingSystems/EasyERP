@@ -274,7 +274,7 @@ define([
                     first: first,
                     last: last
                 };
-                var wemail = $.trim($("#wemail").val());
+                var pemail = $.trim($("#pemail").val());
                 var phone = $.trim($("#phone").val());
                 var mobile = $.trim($("#mobile").val());
                 var wphones = {
@@ -317,7 +317,7 @@ define([
                     //subject: subject,
                     imageSrc: this.imageSrc,
                     name: name,
-                    personalEmail: wemail,
+                    personalEmail: pemail,
                     workPhones: wphones,
                     relatedUser: relatedUserId,
                     nextAction: nextAction,

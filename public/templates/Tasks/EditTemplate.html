@@ -1,5 +1,5 @@
-﻿﻿<div class="form-holder">
-    <form method="post" action="" id="editTaskForm" class="form" data-id="<%=model._id%>">
+﻿﻿<div class="form-holder task-create-holder">
+    <form method="post" action="" id="createTaskForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <div class="half-block left withPaddingLeft">
                 <a id="projectTopName" href="#easyErp/Projects/form/<%=model.project._id%>"><%=model.project.projectShortDesc%></a>
@@ -13,14 +13,14 @@
             </div>
             <div class="clearfix">
             </div>
-            <input type="text" name="summary" class="input-title-long blueback projectSummary" id="summary" value="<%=model.summary%>" required maxlength="32" />
-            <div class="half-block left withPaddingLeft taskNote">
+            <input type="text" name="summary" class="input-title-long blueback projectSummary" id="summaryEdit" value="<%=model.summary%>" required maxlength="32" />
+            <div class="half-block left withPaddingLeftProject taskNote">
                 <div class="">
-                    <textarea type="text" name="description" class="taskDescriptionEdit" placeholder="Add a Description" id="description" required><%=model.description%> </textarea>
+                    <textarea type="text" name="description" class="taskDescriptionCreate" placeholder="Add a Description" id="description" required><%=model.description%> </textarea>
                 </div>
             </div>
-            <div class="half-block left">
-                <div class="">
+            <div class="half-block left withPaddingRightProject">
+                <div class="inner">
                     <dl class="task-info">
                         <dt><label>Project </label></dt>
                         <dd>
