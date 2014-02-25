@@ -1,10 +1,21 @@
 <div class="form-holder">
+<div id="convert-dialog-form">
+    <form>
+        <fieldset>
+            <select id="createCustomerOrNot">
+                <option value="true">Create a new customer</option>
+                <option value="">Do not create a new customer</option>
+            </select>
+        </fieldset>
+    </form>
+</div>
     <form method="post" action="" class="form edit-lead-form" id="leadForm" data-id="<%=model._id%>">
         <fieldset>
         <div class="inner">
             <ul class="dialog-tabs">
                 <li><a class="active" href="javascript:;">Main</a></li>
                 <li><a href="javascript:;">Assignees</a></li>
+                <li class="right"><button class="red" id="convertToOpportunity"><span>Convert to Opportunity</span></button></li>
             </ul>
             <div class="clearfix"></div>
             <div class="dialog-tabs-items">

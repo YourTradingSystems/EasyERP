@@ -22,6 +22,7 @@ define([
             },
 
             events: {
+                "click #convertToOpportunity": "openDialog",
                 "click #tabList a": "switchTab",
                 "click .breadcrumb a, #cancelCase, #reset": "changeWorkflow",
                 "change #customer": "selectCustomer",
@@ -39,17 +40,23 @@ define([
                 "click .newSelectList li:not(.miniStylePagination)": "chooseOption",
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
-                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect"
+                "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
+
             },
+            openDialog: function (e) {
+				e.preventDefault();
+                $("#convert-dialog-form").dialog("open");
+            },
+
             notHide: function () {
 				return false;
             },
 
 			nextSelect:function(e){
-				this.showNewSelect(e,false,true)
+				this.showNewSelect(e,false,true);
 			},
 			prevSelect:function(e){
-				this.showNewSelect(e,true,false)
+				this.showNewSelect(e,true,false);
 			},
             changeTab:function(e){
                 $(e.target).closest(".dialog-tabs").find("a.active").removeClass("active");
@@ -402,6 +409,51 @@ define([
                 this.delegateEvents(this.events);
 
                 var model = this.currentModel.toJSON();
+                var that = this;
+                $("#convert-dialog-form").dialog({
+                    autoOpen: false,
+                    height: 150,
+                    width: 350,
+                    modal: true,
+                    title: "Convert to opportunity",
+                    buttons: {
+                        "Create opportunity": function () {
+                            var self = this;
+                            var id = $("form").data("id");
+                            var createCustomer = ($("select#createCustomerOrNot option:selected").val()) ? true : false;
+                            that.currentModel.save({
+                                isOpportunitie: true,
+                                isConverted: true,
+								convertedDate:new Date(),
+                                createCustomer: createCustomer,
+                                expectedRevenue: {
+                                    currency: null,
+                                    progress: null,
+                                    value: null
+                                }
+                            }, {
+                                headers: {
+                                    mid: 39
+                                },
+                                success: function (model) {
+                                    $(self).dialog("close");
+                                    //that.opportunitiesCollection.add(model);
+                                    Backbone.history.navigate("easyErp/Opportunities", { trigger: true });
+                                }
+
+                            });
+
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    },
+
+                    close: function () {
+                        $(this).dialog('close');
+                    }
+                }, this);
+
                 if (model.groups)
                     if (model.groups.users.length>0||model.groups.group.length){
                         $(".groupsAndUser").show();
@@ -412,7 +464,7 @@ define([
                         model.groups.users.forEach(function(item){
                             $(".groupsAndUser").append("<tr data-type='targetUsers' data-id='"+ item._id+"'><td>"+item.login+"</td><td class='text-right'></td></tr>");
                             $("#targetUsers").append("<li id='"+item._id+"'>"+item.login+"</li>");
-                        })
+                        });
 
                     }
                 return this;
