@@ -374,7 +374,7 @@ define([
                    var collectionUrl;
                    var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
                    if (filter === 'empty') {
-                        newCollection = false;
+                        newCollection = true;
                    } else if (filter) {
                         filter = JSON.parse(filter);
                    }

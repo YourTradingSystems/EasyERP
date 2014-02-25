@@ -415,7 +415,7 @@
                         first: this.$el.find("#first").val(),
                         last: this.$el.find("#last").val()
                     },
-                    personalEmail: $.trim(this.$el.find("#wemail").val()),
+                    personalEmail: $.trim(this.$el.find("#pemail").val()),
                     workPhones: {
                         phone: $.trim(this.$el.find("#phone").val()),
                         mobile: $.trim(this.$el.find("#mobile").val())
