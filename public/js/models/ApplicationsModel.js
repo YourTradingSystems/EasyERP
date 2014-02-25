@@ -43,9 +43,9 @@ function (common, Validation) {
 
             Validation.checkNameField(errors, true, attrs.name.first, "First name");
             Validation.checkNameField(errors, true, attrs.name.last, "Last name");
+            Validation.checkEmailField(errors, false, attrs.personalEmail, "Email");
 			if (attrs.department)
             Validation.checkNameField(errors, true, attrs.department._id || attrs.department, "Department");
-            Validation.checkEmailField(errors, false, attrs.workEmail, "Email");
             Validation.checkPhoneField(errors, false, attrs.workPhones.phone, "Phone");
             Validation.checkPhoneField(errors, false, attrs.workPhones.mobile, "Mobile");
             Validation.checkMoneyField(errors, false, attrs.expectedSalary, "Expected salary");
@@ -63,7 +63,7 @@ function (common, Validation) {
                 last: 'Application'
             },
             tags: [],
-            workEmail: '',
+            personalEmail: '',
             workPhones: {
                 mobile: '',
                 phone: ''
