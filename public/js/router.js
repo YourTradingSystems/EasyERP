@@ -372,7 +372,7 @@ define([
                    var contentViewUrl;
                    var topBarViewUrl = "views/" + contentType + "/TopBarView";
                    var collectionUrl;
-                   var count = (countPerPage) ? parseInt(countPerPage) || 2 : 2;
+                   var count = (countPerPage) ? parseInt(countPerPage) || 50 : 50;
                    if (filter === 'empty') {
                         newCollection = false;
                    } else if (filter) {
