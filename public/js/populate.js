@@ -18,6 +18,9 @@ define([
                    if (isCreate) {
                        $(id).text(content.responseObj[id][0].name).attr("data-id", content.responseObj[id][0]._id);
                    }
+				   if (parrrentContentId&&parrrentContentId.split("=").length===2) {
+					   parrrentContentId = parrrentContentId.split("=")[1]
+				   }
                    if (parrrentContentId) {
                        var current = _.filter(response.data, function(item) {
                            return item._id == parrrentContentId;
@@ -29,7 +32,6 @@ define([
 
            var getParrentDepartment = function (id, url, data, content, isCreate, canBeEmpty) {
                dataService.getData(url, data, function (response) {
-				   console.log(response);
                    content.responseObj[id] = [];
                    if (canBeEmpty) {
                        content.responseObj[id].push({ _id: "", name: "Select" });
