@@ -73,7 +73,8 @@ define([
                 this.showNewSelect(e, true, false);
             },
             chooseHealthDd: function (e) {
-                $(e.target).parents("#health").find("a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parent().find("ul").toggle();
+                var target = $(e.target);
+                target.parents("#health").find("a").attr("class", target.attr("class")).attr("data-value", target.attr("class").replace("health", "")).parent().find("ul").toggle();
             },
             showHealthDd: function (e) {
                 $(e.target).parent().find("ul").toggle();
