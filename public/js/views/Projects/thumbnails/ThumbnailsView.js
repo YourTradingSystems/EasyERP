@@ -18,7 +18,6 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             //wfStatus: [],
             filter: null,
             defaultItemsNumber: null,
-            page: null, //if reload page, and in url is valid page
             contentType: 'Projects',//needs in view.prototype.changeLocationHash
             viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
 
@@ -34,7 +33,6 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             this.filter = options.filter;
             this.defaultItemsNumber = this.collection.namberToShow || 50;
             this.newCollection = options.newCollection;
-            this.page = options.collection.page;
             this.deleteCounter = 0;
             this.render();
             this.getTotalLength(this.defaultItemsNumber, this.filter);
@@ -132,11 +130,11 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             this.filter = this.filter || {};
             this.filter['workflow'] = workflowIdArray;
             this.defaultItemsNumber = 0;
-            this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+            this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
             this.collection.showMore({ count:this.defaultItemsNumber, page: 1, filter: this.filter });
             this.getTotalLength(this.defaultItemsNumber, this.filter);
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         getTotalLength: function(currentNumber,filter, newCollection) {
             dataService.getData('/totalCollectionLength/Projects', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
                 var showMore = context.$el.find('#showMoreDiv');
@@ -215,7 +213,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             event.preventDefault();
             this.collection.showMore({filter: this.filter, newCollection: this.newCollection });
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         showMoreContent: function (newModels) {
             var holder = this.$el;
             var content = holder.find("#thumbnailContent");
@@ -223,7 +221,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             var created = holder.find('#timeRecivingDataFromServer');
             var content = holder.find(".thumbnailwithavatar");
             this.defaultItemsNumber += newModels.length;
-            this.changeLocationHash(1, this.defaultItemsNumber, this.filter);
+            this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
             this.getTotalLength(this.defaultItemsNumber, this.filter);
 
             if (showMore.length != 0) {
