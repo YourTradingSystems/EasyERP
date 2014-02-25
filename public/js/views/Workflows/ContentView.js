@@ -43,7 +43,7 @@ define([
 				   "click .deleteAll": "deleteAll",
 				   "click .saveAll": "saveAll",
 				   "click .cancelAll": "cancelAll",
-				   "mouseenter .workflow-sub-list li:not(.quickEdit)":"quickEdit",
+				   "mouseenter #workflows .row:not(.quickEdit)":"quickEdit",
 				   "mouseleave .workflow-sub-list li": "removeEdit"
 			   },
 
@@ -348,9 +348,13 @@ define([
 						   $(".edit").removeClass("hidden");
 						   $(".delete").removeClass("hidden");
 					   },
-					   error: function () {
-						   Backbone.history.navigate("easyErp", { trigger: true });
-					   }
+                        error: function (model, xhr) {
+                            if (xhr && xhr.status === 401) {
+                                Backbone.history.navigate("login", { trigger: true });
+                            } else {
+                                alert(xhr.responseJSON.error);
+                            }
+                        }
 				   });
 			   },
 			   cancelAll:function(e) {
@@ -380,8 +384,10 @@ define([
 			   },
 			   
 			   quickEdit:function(e){
-
-        		   $(".workflow-sub-list li#" + e.target.id).append("<span class='edit-holder'><a href='#' class='editAll'>Edit</a><a href='#' class='deleteAll'>Delete</a></span>");
+			   var n = $("#workflows .row").length;
+			   if (n == 1) {
+                    $("a.delete").remove();
+			        }
 			   },
 			   removeEdit:function(){
         		   $(".edit-holder").remove();

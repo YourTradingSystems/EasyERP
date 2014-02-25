@@ -78,11 +78,14 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             return false;
 		},
         chooseHealthDd: function (e) {
-            var target = $(e.target).parents(".health-wrapper");
-            target.find(".health-container a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parents(".health-wrapper").find("ul").toggle();
+            var target$ = $(e.target);
+            var target = target$.parents(".health-wrapper");
+            var currTargHelth = target$.attr("class").replace("health", "");
+            target.find(".health-container a").attr("class", target$.attr("class")).attr("data-value", currTargHelth);
             var id = target.parents(".thumbnail").attr("id");
             var model = this.collection.get(id);
-            model.save({ health: target.find(".health-container a").data("value") }, {
+            var helth = parseInt(currTargHelth);
+            model.save({ health: helth }, {
                 headers:
                 {
                     mid: 39

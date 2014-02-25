@@ -643,6 +643,9 @@ app.get('/getPersonsForMiniView', function (req, res) {
 app.get('/Customer', function (req, res) {
     console.log('---------SERVER----Customer-------------------------------');
     data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
     data.mid = req.param('mid');
     requestHandler.getCustomer(req, res, data);
 });
@@ -1217,7 +1220,15 @@ app.get('/JobPosition/:_id', function (req, res) {
     //requestHandler.getJobPosition(req, res, data);
 });
 
-app.put('/JobPositions/:viewType/:_id', function (req, res) {
+//app.put('/JobPositions/:viewType/:_id', function (req, res) {
+//    data = {};
+//    var id = req.param('_id');
+//    data.mid = req.headers.mid;
+//    data.jobPosition = req.body;
+//    requestHandler.updateJobPosition(req, res, id, data);
+//});
+
+app.patch('/JobPositions/:viewType/:_id', function (req, res) {
     data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
