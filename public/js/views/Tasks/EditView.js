@@ -104,12 +104,13 @@
                           note: '',
                           title: ''
                       };
+
                       if (arr_key_str) {
                           var editNotes = _.filter(notes, function (note) {
                               if (note._id == arr_key_str) {
                                   note.note = val;
                                   note.title = title;
-                                  return note;
+                                  return notes;// note changed to notes to return an array of notes not a single one
                               }
                           });
                           currentModel.save({ 'notes': editNotes },
@@ -173,7 +174,8 @@
 
               cancelNote: function (e) {
                   $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
-                   $(e.target).parents(".addNote").find("#noteArea").val("");
+                  $(e.target).parents(".addNote").find("#noteArea").val("");
+                  $('#getNoteKey').val('');// remove id from hidden field if note editing is cancel
                   $(".title-wrapper").hide();
                   $(".addTitle").hide();
               },
