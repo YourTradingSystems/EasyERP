@@ -431,23 +431,36 @@
                         var tt = _.filter(response.data, function (filteredItem) {
                             return (ids.indexOf(filteredItem._id) == -1);
                         });
-
+						var k=0;
                         options = $.map(tt, function (item) {
-                            return $('<li/>').attr("id", item._id).text(item.departmentName);
+							if (k<20){
+								k++;
+								return $('<li/>').attr("id", item._id).text(item.departmentName);
+							}else{
+								k++;
+								return $('<li/>').attr("id", item._id).text(item.departmentName).attr("style","display:none");
+							}
                         });
                     }
                     else {
+						var k=0;
                         options = $.map(response.data, function (item) {
-                            return $('<li/>').attr("id", item._id).text(item.departmentName);
+							if (k<20){
+								k++;
+								return $('<li/>').attr("id", item._id).text(item.departmentName);
+							}else{
+								k++;
+								return $('<li/>').attr("id", item._id).text(item.departmentName).attr("style","display:none");
+							}
                         });
                     }
                 }
                 selectList.append(options);
                 if (response.data.length >= 20) {
                     if (page == 1) {
-                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
+                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * (page - 1) + response.data.length) + "</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
                     } else {
-                        selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * page) + "+</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
+                        selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (20 * (page - 1) + response.data.length) + "</span><a class='nextGroupList' href='javascript:;'>next »</a></div>");
                     }
                 } else {
                     if (page == 1) {
@@ -456,7 +469,9 @@
                         selectList.after("<div class='userPagination'><a class='prevGroupList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
                     }
                 }
-
+				selectList.attr("data-page",1);
+				targetList.attr("data-page",1);
+				$(targetId).after("<div class='userPagination targetPagination'><span class='text'>0-0 of 0</span></div>");
                 if (callback) callback();
             });
         };
@@ -677,6 +692,7 @@
             var targetList = $(targetId);
             selectList.empty();
             selectList.next(".userPagination").remove();
+            targetList.next(".targetPagination").remove();
             var self = this;
             dataService.getData('/UsersForDd', { mid: 39 }, function (response) {
                 var options = [];
@@ -709,7 +725,7 @@
                             return (ids.indexOf(filteredItem._id) == -1);
                         });
 
-						var k=0
+						var k=0;
                         options = $.map(tt, function (item) {
 							if (k<20){
 								k++;
@@ -721,7 +737,7 @@
                         });
                     }
                     else {
-						var k=0
+						var k=0;
                         options = $.map(response.data, function (item) {
 							if (k<20){
 								k++;
@@ -748,9 +764,11 @@
                         selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
                     }
                 }
-				$(targetId).after("<div class='userPagination targetPagination'></div>");
+				selectList.attr("data-page",1);
+				targetList.attr("data-page",1);
+				$(targetId).after("<div class='userPagination targetPagination'><span class='text'>0-0 of 0</span></div>");
 
-                if (callback) callback(response.data);
+                if (callback) callback();
             });
         }
 
@@ -848,7 +866,7 @@
                 if (callback) callback();
             });
 
-        }
+        };
         var buildAphabeticArray = function (collection, callback) {
             if (collection) {
                 collection.getAlphabet(function (arr) {
@@ -866,13 +884,13 @@
                 });
             }
             return [];
-        }
+        };
         var buildPagination = function (collection, callback) {
                 collection.getListLength(function (listLength) {
                     callback(listLength);
                 });
             return [];
-        }
+        };
 
         var getListLength = function (workflowType, filterLetter, filterArray, url, isConverted, callback) {
             dataService.getData(url, { mid: 39, type: workflowType, letter: filterLetter, status: filterArray, isConverted: isConverted }, function (response) {
