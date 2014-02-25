@@ -295,67 +295,67 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
         //}
     }; //end get
 
-    function getCustom(req, response) {
-        var res = {};
-        res['data'] = [];
-        var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
-        query.populate('department').
-			populate('createdBy.user').
-            populate('editedBy.user');
-        query.sort({ name: 1 });
-        query.exec(function (err, jobPos) {
-            if (err) {
-                console.log(err);
-                logWriter.log('JobPosition.js get job.find' + err);
-                response.send(500, { error: "Can't find JobPosition" });
-            } else {
-                //res['data'] = result;
-                //response.send(res);
-                getTotalEmployees(jobPos, 0);
-                //
-                //response.send(res);
-            }
-        });
-        var getTotalEmployees = function(jobPositions, count) {
-            if (jobPositions && jobPositions.length > count) {
-                var jobId = jobPositions[count]._id.toString();
-                console.log(jobId);
-                var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
-                    {
-                        $match: {
-                            jobPosition: objectId(jobId)
-                        }
-                    },
-                    function(err, result) {
-                        if (result) {
-                            jobPositions[count].numberOfEmployees = result.length;
-                            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
-                            count++;
-                            getTotalEmployees(jobPositions, count);
-                        }
-                    }
-                );
-                //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
-                //        if (err) {
-                //            console.log(err);
-                //            res['data'] = jobPositions;
-                //            response.send(res);
-                //        } else {
-                //            jobPositions[count].numberOfEmployees = _employees.length;
-                //            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
-                //            count++;
-                //            getTotalEmployees(jobPositions, count);
-                //        }
-                //    });
-                //} else {
-                //    res['data'] = jobPositions;
-                //    response.send(res);
-            } else {
-                res['data'] = jobPositions;
-                response.send(res);
-            }
-        }
-    }; //end get
+    //function getCustom(req, response) {
+    //    var res = {};
+    //    res['data'] = [];
+    //    var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
+    //    query.populate('department').
+	//		populate('createdBy.user').
+    //        populate('editedBy.user');
+    //    query.sort({ name: 1 });
+    //    query.exec(function (err, jobPos) {
+    //        if (err) {
+    //            console.log(err);
+    //            logWriter.log('JobPosition.js get job.find' + err);
+    //            response.send(500, { error: "Can't find JobPosition" });
+    //        } else {
+    //            //res['data'] = result;
+    //            //response.send(res);
+    //            getTotalEmployees(jobPos, 0);
+    //            //
+    //            //response.send(res);
+    //        }
+    //    });
+    //    var getTotalEmployees = function(jobPositions, count) {
+    //        if (jobPositions && jobPositions.length > count) {
+    //            var jobId = jobPositions[count]._id.toString();
+    //            console.log(jobId);
+    //            var aggregate = models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).aggregate(
+    //                {
+    //                    $match: {
+    //                        jobPosition: objectId(jobId)
+    //                    }
+    //                },
+    //                function(err, result) {
+    //                    if (result) {
+    //                        jobPositions[count].numberOfEmployees = result.length;
+    //                        jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + result.length;
+    //                        count++;
+    //                        getTotalEmployees(jobPositions, count);
+    //                    }
+    //                }
+    //            );
+    //            //    employee.employee.find({ 'jobPosition.name': jobPositions[count].name }, function (err, _employees) {
+    //            //        if (err) {
+    //            //            console.log(err);
+    //            //            res['data'] = jobPositions;
+    //            //            response.send(res);
+    //            //        } else {
+    //            //            jobPositions[count].numberOfEmployees = _employees.length;
+    //            //            jobPositions[count].totalForecastedEmployees = jobPositions[count].expectedRecruitment + _employees.length;
+    //            //            count++;
+    //            //            getTotalEmployees(jobPositions, count);
+    //            //        }
+    //            //    });
+    //            //} else {
+    //            //    res['data'] = jobPositions;
+    //            //    response.send(res);
+    //        } else {
+    //            res['data'] = jobPositions;
+    //            response.send(res);
+    //        }
+    //    }
+    //}; //end get
 
     function getFilter(req, response) {
         var res = {};
@@ -442,176 +442,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
                 }
             });
     }
-/*    function getJobPosition(req, data,response) {
-        var res = {};
-        res['data'] = [];
-        var i = 0;
-        var qeryEveryOne = function (arrayOfId, n, workflowsId) {
 
-            var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
-            if (workflowsId && workflowsId.length > 0)
-                query.where('workflow').in(workflowsId);
-            query.where('_id').in(arrayOfId).
-                populate('department').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        res['data'] = res['data'].concat(_res);
-                        if (i == n) getjobPositions(res['data'], 0);
-                    }
-                });
-        };
-
-        var qeryOwner = function (arrayOfId, n, workflowsId) {
-            var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
-            if (workflowsId && workflowsId.length > 0)
-                query.where('workflow').in(workflowsId);
-            query.where('_id').in(arrayOfId).
-                where({ 'groups.owner': data.uId }).
-                populate('department').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                exec(function (error, _res) {
-                    if (!error) {
-                        i++;
-                        console.log(i);
-                        console.log(n);
-                        res['data'] = res['data'].concat(_res);
-                        console.log(res['data']);
-                        if (i == n) getjobPositions(res['data'], 0);
-                    } else {
-                        console.log(error);
-                    }
-                });
-        };
-
-        var qeryByGroup = function (arrayOfId, n) {
-            var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
-            if (workflowsId && workflowsId.length > 0)
-                query.where('workflow').in(workflowsId);
-            query.where({ 'groups.users': data.uId }).
-                populate('department').
-                populate('createdBy.user').
-                populate('editedBy.user').
-                exec(function (error, _res1) {
-                    if (!error) {
-                        models.get(req.session.lastDb - 1, "Department", department.DepartmentSchema).find({ users: data.uId }, { _id: 1 },
-                            function (err, deps) {
-                                console.log(deps);
-                                if (!err) {
-                                    var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find();
-                                    query.where('_id').in(arrayOfId).
-                                        populate('department').
-                                        populate('createdBy.user').
-                                        populate('editedBy.user').
-                                        exec(function (error, _res) {
-                                            if (!error) {
-                                                i++;
-                                                console.log(i);
-                                                console.log(n);
-                                                res['data'] = res['data'].concat(_res1);
-                                                res['data'] = res['data'].concat(_res);
-                                                console.log(res['data']);
-                                                if (i == n) getjobPositions(res['data'], 0);;
-                                            } else {
-                                                console.log(error);
-                                            }
-                                        });
-                                }
-                            });
-                    } else {
-                        console.log(error);
-                    }
-                });
-        };
-
-        var workflowsId = data ? data.status : null;
-        models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).aggregate(
-            {
-                $group: {
-                    _id: "$whoCanRW",
-                    ID: { $push: "$_id" },
-                    groupId: { $push: "$groups.group" }
-                }
-            },
-            function (err, result) {
-                if (!err) {
-                    if (result.length != 0) {
-                        result.forEach(function(application) {
-                            switch (application._id) {
-                                case "everyOne":
-                                {
-                                    qeryEveryOne(application.ID, result.length, workflowsId);
-                                }
-                                    break;
-                                case "owner":
-                                {
-                                    qeryOwner(application.ID, result.length, workflowsId);
-                                }
-                                    break;
-
-                                case "group":
-                                {
-                                    qeryByGroup(application.ID, result.length, workflowsId);
-                                }
-                                    break;
-                            }
-                        });
-                    } else {
-                        response.send(res);
-                    }
-                } else {
-                    console.log(err);
-                }
-            }
-        );
-
-        var getjobPositions = function (jobPositions, count) {
-            var startIndex,endIndex;
-
-            if ((data.page-1)*data.count > jobPositions.length ) {
-                startIndex = jobPositions.length;
-            } else {
-                startIndex = (data.page-1)*data.count;
-            }
-
-            if (data.page*data.count > jobPositions.length ) {
-                endIndex = jobPositions.length;
-            } else {
-                endIndex = data.page*data.count;
-            }
-            res['listLength'] = jobPositions.length;
-            var jobPositionsSendArray = [];
-            getTotalEmployees(jobPositions, startIndex, endIndex, jobPositionsSendArray);
-        }
-        var getTotalEmployees = function(jobPositions, startIndex, endIndex, jobPositionsSendArray) {
-            if (jobPositions && (startIndex < endIndex)) {
-                var jobId = jobPositions[startIndex]._id.toString();
-                models.get(req.session.lastDb - 1, "Employees", employee.employeeSchema).aggregate(
-                    {
-                        $match: {
-                            jobPosition: objectId(jobId)
-                        }
-                    },
-                    function(err, result) {
-                        if (result) {
-                            jobPositions[startIndex].numberOfEmployees = result.length;
-                            jobPositions[startIndex].totalForecastedEmployees = jobPositions[startIndex].expectedRecruitment + result.length;
-                            jobPositionsSendArray.push( jobPositions[startIndex]);
-                            startIndex++;
-                            getTotalEmployees(jobPositions, startIndex, endIndex,jobPositionsSendArray);
-                        }
-                    }
-                );
-            } else {
-                res['data'] = jobPositionsSendArray;
-                response.send(res);
-            }
-        }
-    };
-*/
     function update(req, _id, data, res) {
         try {
             delete data._id;
@@ -665,7 +496,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
         getJobPositionById: getJobPositionById,
 
-        getCustom: getCustom,
+        //getCustom: getCustom,
 
         create: create,
 
