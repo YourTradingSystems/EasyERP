@@ -115,9 +115,10 @@ require(['app'], function (app) {
         var location = window.location.hash;
         var mainLocation = '#easyErp/' + this.contentType + '/' + this.viewType;
         var pId = (location.split('/pId=')[1]) ? location.split('/pId=')[1].split('/')[0] : '';
-        if (!page) {
+        if (!page && this.viewType == 'list') {
             page = (location.split('/p=')[1]) ? location.split('/p=')[1].split('/')[0] : 1;
         }
+
         if (!count) {
             count = (location.split('/c=')[1]) ? location.split('/c=')[1].split('/')[0] : 50;
         }

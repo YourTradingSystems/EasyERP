@@ -122,7 +122,8 @@
                     });
                     // for input type number
                     context.$el.find('#cPerPage').spinner({
-                        min: 5
+                        min: 5,
+                        max: 9999
                     });
                 }, this);
             },

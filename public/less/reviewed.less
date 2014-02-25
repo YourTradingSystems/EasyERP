@@ -125,7 +125,10 @@
     min-height: @height;
     margin-top: @margin-top;
     .text-overflow;
-
+    p{
+      word-wrap: break-word;
+      white-space: normal;
+    }
     &:first-child {
       margin-top: 0;
     }
@@ -137,6 +140,10 @@
     margin-top: @margin-top;
     line-height: @line-height;
     min-height: @height;
+    p{
+      word-wrap: break-word;
+      white-space: normal;
+    }
     .left;
     width: 100%-@with-dt;
     .text-overflow;
@@ -1441,6 +1448,7 @@
   border: @thin-border transparent;
   background: transparent !important;
   text-align: center;
+  cursor: pointer;
   .border-radius;
   .left;
   .info {
@@ -1451,6 +1459,21 @@
     p{
       line-height: 15px;
     }
+  }
+  h4{
+      color: @tilte-color;
+      font-size: @font-size;
+      .bold;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+      line-height: 18px;
+      font-family: @lucida-font;
+      white-space: normal;
+      span {
+        .text-overflow;
+        white-space: normal;
+        width: 182px;
+      }
+
   }
   .title {
     color: @tilte-color;
@@ -4488,15 +4511,20 @@ span.ui-spinner{
   width: 95%;
   padding: 0;
   span{
+    display: block;
+    width: 8px;
+    height: 8px;
+    text-align: center;
     padding: 0;
   }
   .ui-spinner-up {
     position: absolute;
     right: 5px;
-    top:3px;
+    top:2px;
     padding: 0;
     cursor: pointer;
     font-size:8px;
+    line-height: 8px;
     &:hover{
       text-decoration: none;
       color:@lightblue + #333;
@@ -4506,9 +4534,10 @@ span.ui-spinner{
     position: absolute;
     padding: 0;
     right: 5px;
-    top:10px;
+    top:11px;
     cursor: pointer;
     font-size:8px;
+    line-height: 8px;
     &:hover{
       text-decoration: none;
       color:@lightblue + #333;

@@ -358,6 +358,7 @@
 
                cancelNote: function (e) {
                    $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                    $(e.target).parents(".addNote").find("#noteArea").val("");
                    $(".title-wrapper").hide();
                    $(".addTitle").hide();
                },

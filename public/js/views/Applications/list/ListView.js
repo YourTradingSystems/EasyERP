@@ -476,18 +476,26 @@ define([
             el: '#content-holder',
             defaultItemsNumber: null,
             listLength: null,
-            wfStatus: [],
+            filter: null,
+            newCollection: null,
+            page: null, //if reload page, and in url is valid page
+            contentType: 'Applications',//needs in view.prototype.changeLocationHash
+            viewType: 'list',//needs in view.prototype.changeLocationHash
 
             initialize: function (options) {
                 $(document).off("click");
                 this.startTime = options.startTime;
                 this.collection = options.collection;
+                _.bind(this.collection.showMore, this.collection);
+                this.parrentContentId = options.collection.parrentContentId;
                 this.stages = [];
-                this.wfStatus = this.collection.wfStatus;
+                this.filter = options.filter;
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
+                this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
+                this.page = options.collection.page;
                 this.render();
-                this.getTotalLength(null, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
 
             events: {
@@ -509,21 +517,21 @@ define([
                     $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
                 }
             },
-
+//modified for filter Vasya
             showFilteredPage: function (event) {
-                var self = this;
                 this.startTime = new Date();
-
+                this.newCollection = false;
                 var workflowIdArray = [];
-                var isConverted = null;
+                this.filter = this.filter || {};
                 $('.filter-check-list input:checked').each(function () {
                         workflowIdArray.push($(this).val());
-                });
-                this.wfStatus = workflowIdArray;
+                })
+                this.filter['workflow'] = workflowIdArray;
 
                 var itemsNumber = $("#itemsNumber").text();
-                this.collection.showMore({ count: itemsNumber, page: 1, status: workflowIdArray});
-                this.getTotalLength(null, itemsNumber);
+                this.changeLocationHash(1, itemsNumber, this.filter);
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter, parrentContentId: this.parrentContentId });
+                this.getTotalLength(null, itemsNumber, this.filter);
             },
 
             showfilter: function (e) {
@@ -546,11 +554,16 @@ define([
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
             },
-
-            getTotalLength: function (currentNumber, itemsNumber) {
-                dataService.getData('/totalCollectionLength/Applications', { currentNumber: currentNumber, status: this.wfStatus}, function (response, context) {
+//modified for filter Vasya
+            getTotalLength: function (currentNumber, itemsNumber, filter) {
+                dataService.getData('/totalCollectionLength/Applications', {
+                    currentNumber: currentNumber,
+                    filter: filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber);//prototype in main.js
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
             },
 
@@ -581,48 +594,80 @@ define([
 
                 common.populateWorkflowsList("Applications", ".filter-check-list", ".filter-check-list", "/Workflows", null, function(stages) {
                     self.stages = stages;
+                    var stage = (self.filter) ? self.filter.workflow : null;
+                    if (stage) {
+                        $('.filter-check-list input').each(function() {
+                            var target = $(this);
+                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                        });
+                    }
                     itemView.trigger('incomingStages', stages);
                 });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-
+//modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
-                this.prevP({status: this.wfStatus});
-                dataService.getData('/totalCollectionLength/Applications', {status: this.wfStatus}, function (response, context) {
+                this.prevP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Applications', {
+                    type: 'Applications',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
             },
-
+//modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
-                this.nextP({status: this.wfStatus});
-                dataService.getData('/totalCollectionLength/Applications', {status: this.wfStatus}, function (response, context) {
+                this.nextP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Applications', {
+                    type: 'Applications',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
             },
-
+//modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
-                this.getTotalLength(null, itemsNumber);
-                this.collection.showMore({ count: itemsNumber, page: 1, status: this.wfStatus });
+                this.getTotalLength(null, itemsNumber, this.filter);
+                this.collection.showMore({
+                    count: itemsNumber,
+                    page: 1,
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                this.changeLocationHash(1, itemsNumber);
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event,{status: this.wfStatus});
+                this.showP(event, { filter: this.filter, newCollection: this.newCollection });
             },
-
+//modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
                 var itemView = new listItemView({ collection: newModels });
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
-
+                var pagenation = holder.find('.pagination');
+                if (newModels.length !== 0) {
+                    pagenation.show();
+                } else {
+                    pagenation.hide();
+                }
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -655,8 +700,21 @@ define([
                     }
                 }
             },
+            //modified for filter Vasya
             deleteItemsRender: function (deleteCounter, deletePage) {
-                this.deleteRender(deleteCounter, deletePage, {status: this.wfStatus});
+                dataService.getData('/totalCollectionLength/Applications', {
+                    type: 'Applications',
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+                this.deleteRender(deleteCounter, deletePage, {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');

@@ -301,7 +301,8 @@ define([
                 });
                 //for input type number
                 this.$el.find("#expectedRecruitment").spinner({
-                    min: 0
+                    min: 0,
+                    max: 9999
                 });
                 common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);

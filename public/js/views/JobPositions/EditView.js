@@ -341,7 +341,8 @@ define([
                 populate.getWorkflow("#workflowsDd", "#workflowNamesDd", "/WorkflowsForDd", { id: "Jobpositions" }, "name", this, false);
                 //for input type number
                 this.$el.find("#expectedRecruitment").spinner({
-                    min: 0
+                    min: 0,
+                    max: 9999
                 });
                 var model = this.currentModel.toJSON();
                 if (model.groups)

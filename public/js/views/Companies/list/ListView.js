@@ -12,16 +12,25 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
         el: '#content-holder',
         defaultItemsNumber: null,
         listLength: null,
+        filter: null,
+        newCollection: null,
+        page: null, //if reload page, and in url is valid page
+        contentType: 'Companies',//needs in view.prototype.changeLocationHash
+        viewType: 'list',//needs in view.prototype.changeLocationHash
 
         initialize: function (options) {
             this.startTime = options.startTime;
             this.collection = options.collection;
+            _.bind(this.collection.showMore, this.collection);
+            _.bind(this.collection.showMoreAlphabet, this.collection);
             this.allAlphabeticArray = common.buildAllAphabeticArray();
-            this.selectedLetter = "";
+            this.filter = options.filter;
             this.defaultItemsNumber = this.collection.namberToShow || 50;
+            this.newCollection = options.newCollection;
             this.deleteCounter = 0;
+            this.page = options.collection.page;
             this.render();
-            this.getTotalLength(null, this.defaultItemsNumber);
+            this.getTotalLength(null, this.defaultItemsNumber, this.filter);
         },
 
         events: {
@@ -37,18 +46,22 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             "click": "hideItemsNumber",
             "click .letter:not(.empty)": "alpabeticalRender"
         },
-
+//modified for filter Vasya
         alpabeticalRender: function (e) {
             this.startTime = new Date();
             $(e.target).parent().find(".current").removeClass("current");
             $(e.target).addClass("current");
-            var itemsNumber = $("#itemsNumber").text();
-            this.selectedLetter = $(e.target).text();
-            if ($(e.target).text() == "All") {
-                this.selectedLetter = "";
-            }
-            this.collection.showMore({ count: itemsNumber, page: 1, letter: this.selectedLetter });
-            this.getTotalLength(null, itemsNumber);
+                this.newCollection = false;
+                var selectedLetter = $(e.target).text();
+                if ($(e.target).text() == "All") {
+                    selectedLetter = "";
+                }
+                this.filter = this.filter || {};
+                this.filter['letter'] = selectedLetter;
+                var itemsNumber = $("#itemsNumber").text();
+                this.changeLocationHash(1, itemsNumber, this.filter);
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
+                this.getTotalLength(null, itemsNumber, this.filter);
         },
 
         hideItemsNumber: function (e) {
@@ -59,12 +72,17 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             $(e.target).closest("button").next("ul").toggle();
             return false;
         },
-
-        getTotalLength: function (currentNumber, itemsNumber) {
-            dataService.getData('/totalCollectionLength/Companies', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
-                context.listLength = response.count || 0;
-                context.pageElementRender(response.count, itemsNumber);//prototype in main.js
-            }, this);
+//modified for filter Vasya
+        getTotalLength: function (currentNumber, itemsNumber,filter) {
+                dataService.getData('/totalCollectionLength/Companies', {
+                    currentNumber: currentNumber,
+                    filter: filter,
+                    newCollection: this.newCollection,
+                }, function (response, context) {
+                    var page = context.page || 1;
+                    context.listLength = response.count || 0;
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
+                }, this);
         },
 
         render: function () {
@@ -97,43 +115,104 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
-
+//modified for filter Vasya
         previousPage: function (event) {
-            event.preventDefault();
-            this.prevP();
-            dataService.getData('/totalCollectionLength/Companies', null, function (response, context) {
-                context.listLength = response.count || 0;
-            }, this);
-        },
-
+                event.preventDefault();
+                this.prevP({
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
+                dataService.getData('/totalCollectionLength/Companies', {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+//modified for filter Vasya
         nextPage: function (event) {
-            event.preventDefault();
-            this.nextP();
-            dataService.getData('/totalCollectionLength/Companies', null, function (response, context) {
-                context.listLength = response.count || 0;
-            }, this);
+                event.preventDefault();
+                this.nextP({
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
+                dataService.getData('/totalCollectionLength/Companies', {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
         },
-
+//modified for filter Vasya
         switchPageCounter: function (event) {
-            event.preventDefault();
-            this.startTime = new Date();
-            var itemsNumber = event.target.textContent;
-            this.getTotalLength(null, itemsNumber);
-
-            this.collection.showMore({ count: itemsNumber, page: 1, letter: this.selectedLetter });
+                event.preventDefault();
+                this.startTime = new Date();
+                var itemsNumber = event.target.textContent;
+                this.getTotalLength(null, itemsNumber, this.filter);
+                this.collection.showMore({
+                    count: itemsNumber,
+                    page: 1,
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                });
+                this.changeLocationHash(1, itemsNumber);
         },
+//modified for filter Vasya
+        showFilteredPage: function (e) {
+                this.startTime = new Date();
+                this.newCollection = false;
 
+                var selectedLetter = $(e.target).text();
+                if ($(e.target).text() == "All") {
+                    selectedLetter = "";
+                }
+                this.filter = this.filter || {};
+                this.filter['letter'] = selectedLetter;
+                var itemsNumber = $("#itemsNumber").text();
+                this.changeLocationHash(1, itemsNumber, this.filter);
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
+                this.getTotalLength(null, itemsNumber, this.filter);
+            },
         showPage: function (event) {
-            event.preventDefault();
-            this.showP(event);
+                event.preventDefault();
+                this.showP(event,{filter: this.filter, newCollection: this.newCollection});
         },
-
+//modified for filter Vasya
         showMoreContent: function (newModels) {
+                var holder = this.$el;
+                holder.find("#listTable").empty();
+                var itemView = new listItemView({ collection: newModels });
+                holder.append(itemView.render());
+                itemView.undelegateEvents();
+                var pagenation = holder.find('.pagination');
+                if (newModels.length !== 0) {
+                    pagenation.show();
+                } else {
+                    pagenation.hide();
+                }
+                holder.find('#timeRecivingDataFromServer').remove();
+                holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+        },
+//modified for filter Vasya
+        showMoreAlphabet: function (newModels) {
             var holder = this.$el;
-            holder.find("#listTable").empty();
-            holder.append(new listItemView({ collection: newModels }).render());
-            holder.find('#timeRecivingDataFromServer').remove();
-            holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+            var alphaBet = holder.find('#startLetter');
+            var created = holder.find('#timeRecivingDataFromServer');
+            var countPerPage = this.countPerPage = newModels.length;
+
+            content.remove();
+
+            holder.append(this.template({ collection: newModels.toJSON() }));
+
+            this.getTotalLength(null, itemsNumber, this.filter);
+            created.text("Created in " + (new Date() - this.startTime) + " ms");
+            holder.prepend(alphaBet);
+            holder.append(created);
+            this.asyncLoadImgs(newModels);
         },
 
         gotoForm: function (e) {
@@ -157,13 +236,24 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 }
             }
         },
+        //modified for filter Vasya
         deleteItemsRender: function (deleteCounter, deletePage) {
-            this.deleteRender(deleteCounter, deletePage);
-            if (deleteCounter !== this.collectionLength) {
-                var holder = this.$el;
-                var created = holder.find('#timeRecivingDataFromServer');
-                created.before(new listItemView({ collection: this.collection }).render());
-            }
+                dataService.getData('/totalCollectionLength/Companies', {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+                this.deleteRender(deleteCounter, deletePage, {
+                    filter: this.filter,
+                    newCollection: this.newCollection,
+                    parrentContentId: this.parrentContentId
+                });
+                if (deleteCounter !== this.collectionLength) {
+                    var holder = this.$el;
+                    var created = holder.find('#timeRecivingDataFromServer');
+                    created.before(new listItemView({ collection: this.collection }).render());
+                }
         },
         deleteItems: function () {
             var that = this,
