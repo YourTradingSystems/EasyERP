@@ -106,14 +106,14 @@
                       };
 
                       if (arr_key_str) {
-                          var editNotes = _.filter(notes, function (note) {
+                         _.filter(notes, function (note) {
                               if (note._id == arr_key_str) {
                                   note.note = val;
                                   note.title = title;
                                   return notes;// note changed to notes to return an array of notes not a single one
                               }
                           });
-                          currentModel.save({ 'notes': editNotes },
+                          currentModel.save({ 'notes': notes },// save array of edited notes
                               {
                                   headers: {
                                       mid: 40
