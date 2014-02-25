@@ -564,11 +564,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         res['data'] = [];
         var optionsObject = {};
 
-        if (data.filter.letter)
-            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
         switch (contentType) {
             case ('Employees'): {
                 optionsObject['isEmployee'] = true;
+                        if (data.filter.letter)
+                            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
             }
                 break;
             case ('Applications'): {
