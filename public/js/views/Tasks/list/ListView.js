@@ -199,7 +199,7 @@ define([
                 $('.filter-check-list input:checked').each(function () {
                     workflowIdArray.push($(this).val());
                 });
-                this.filter = this.filter || {};
+                this.filter = (this.filter && this.filter !== 'empty') ? this.filter : {};
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
                 this.changeLocationHash(1, itemsNumber, { workflow: workflowIdArray });
@@ -264,10 +264,11 @@ define([
                 });
 
                 common.populateWorkflowsList("Tasks", ".filter-check-list", "#workflowNamesDd", "/Workflows", null, function (stages) {
-                    if (self.filter && self.filter.workflow) {
+                    var stage = (self.filter) ? self.filter.workflow || [] : [];
+                    if (self.filter && stage) {
                         $('.filter-check-list input').each(function() {
                             var target = $(this);
-                            target.attr('checked', $.inArray(target.val(), stages) > -1);
+                            target.attr('checked', $.inArray(target.val(), stage) > -1);
                         });
                     }
                     itemView.trigger('incomingStages', stages);
