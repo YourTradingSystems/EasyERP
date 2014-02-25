@@ -1,14 +1,15 @@
 define(
     function () {
+        //Removed cyrillic chars
         var phoneRegExp = /^[0-9\+]?([0-9-\s()])+[0-9()]$/,
             intNumberRegExp = /[0-9]+/,
-            nameRegExp = /^[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
-            groupsNameRegExp = /^[.!@#&]?[A-Za-zА-Яа-я0-9]+[A-Za-zА-Яа-я0-9-'\s()\+!@#&]+/,
+            nameRegExp = /[a-zA-Z0-9-,\s\.\/\s]+$/,
+            groupsNameRegExp = /^[.!@#&]?[A-Za-z0-9]+[A-Za-z0-9-'\s()\+!@#&]+/,
             loginRegExp = /^[\w\.@]{6,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
-            countryRegExp = /[a-zA-Zа-яА-Я\s-]+/,
-            zipRegExp = /[a-zA-Zа-яА-Я0-9\s-]+/,
-            streetRegExp = /^[a-zA-Zа-яА-Я0-9\s][a-zA-Zа-яА-Я0-9-,\s\.\/\s]+$/,
+            countryRegExp = /[a-zA-Z\s-]+/,
+            zipRegExp = /[a-zA-Z0-9\s-]+/,
+            streetRegExp = /^[a-zA-Z0-9\s][a-zA-Z0-9-,\s\.\/\s]+$/,
             moneyAmountRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/,
             emailRegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             loggedRegExp = /^([0-9]{1,9})\.?([0-9]{1,2})?$/;
@@ -140,7 +141,7 @@ define(
                 }
             }
         }
-        
+
         var checkNumberField = function(errorArray, required, fieldValue, fieldName){
             if(required){
                 if(hasInvalidChars(fieldValue)) {

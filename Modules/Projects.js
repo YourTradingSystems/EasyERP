@@ -40,7 +40,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         },
         health: { type: Number, default: 1 }
     }, { collection: 'Project' });
@@ -79,7 +79,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         }
     }, { collection: 'Tasks' });
 
@@ -331,6 +331,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _project.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _project.editedBy.user = data.uId;
                     }
 
                     if (data.task) {
@@ -724,9 +726,10 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                if (data && data.status) {
-                                    query.where('workflow').in(data.status);
-                                } else if (data && !data.newCollection) {
+                                if (data && data.filter && data.filter.workflow) {
+                                    console.log(data.filter.workflow);
+                                    query.where('workflow').in(data.filter.workflow);
+                                } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
                                 }
                                 query.select("_id createdBy editedBy workflow projectName health customer progress StartDate EndDate TargetEndDate").
@@ -932,8 +935,12 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         if (!err) {
 
                             var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                            if (data && data.status && data.status.length > 0)
-                                query.where('workflow').in(data.status);
+                                if (data && data.filter && data.filter.workflow) {
+                                    console.log(data.filter.workflow);
+                                    query.where('workflow').in(data.filter.workflow);
+                                } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                    query.where('workflow').in([]);
+                                }
                             query.select("_id projectName task workflow projectmanager customer health").
                                 populate('workflow', 'name').
                                 populate('projectmanager', 'name').
@@ -1432,6 +1439,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _task.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _task.editedBy.user = data.uId;
                     }
                     if (data.logged) {
                         _task.logged = data.logged;
@@ -1762,7 +1771,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                             response.send(res);
                                             console.log(res);
                                         } else {
-                                            logWriter.log("Projects.js getTasksForList task.find" + err);
+                                            logWriter.log("Projects.js Getist task.find" + err);
                                             response.send(500, { error: "Can't find Tasks" });
                                         }
                                     })

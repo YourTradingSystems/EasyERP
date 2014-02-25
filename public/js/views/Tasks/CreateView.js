@@ -86,7 +86,7 @@ define([
                saveItem: function () {
                    var self = this;
                    var mid = 39;
-                   var summary = $.trim(this.$el.find("#summary").val());
+                   var summary = $.trim(this.$el.find("#summaryTask").val());
                    var project = $("#projectDd").data("id");
                    var assignedTo = $("#assignedToDd").data("id");
                    var deadline = $.trim(this.$el.find("#deadline").val());
@@ -221,7 +221,7 @@ define([
                    var self = this;
                    this.$el = $(formString).dialog({
 					   closeOnEscape: false,
-                       dialogClass: "edit-dialog",
+                       dialogClass: "edit-dialog task-edit-dialog",
                        width: 500,
                        title: "Create Task",
                        buttons: {

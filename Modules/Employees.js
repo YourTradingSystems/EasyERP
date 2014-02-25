@@ -70,7 +70,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         },
         attachments: [{
             id: { type: Number, default: '' },
@@ -102,16 +102,15 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 
         var contentType = req.params.contentType;
         var optionsObject = {};
-        if (data.letter)
-            optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+        if (data.filter.letter)
+                 optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
 
-        var filterStatus = {};
-        if (data.status && data.status.length > 0) {
-            var filterStatusArray = data.status.objectID();
-            filterStatus = {
-                workflow: { $in: filterStatusArray }
-            };
-        }
+
+       if (data.filter && data.filter.workflow) {
+            optionsObject['workflow'] = { $in: data.filter.workflow.objectID() };
+       } else if (data && !data.newCollection) {
+            optionsObject['workflow'] = { $in: [] };
+       }
 
         switch (contentType) {
             case ('Employees'): {
@@ -169,8 +168,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                             },
                                             { whoCanRW: "everyOne" }
                                         ]
-                                    },
-                                    filterStatus
+                                    }
                                 ]
                             }
                         },
@@ -255,8 +253,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function savetoDb(data) {
                 _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
                 if (data.uId) {
-
                     _employee.createdBy.user = data.uId;
+                    //uId for edited by field on creation
+                    _employee.editedBy.user = data.uId;
                 }
                 if (data.isEmployee) {
                     _employee.isEmployee = data.isEmployee;
@@ -566,11 +565,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         res['data'] = [];
         var optionsObject = {};
 
-        if (data.letter)
-            optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
         switch (contentType) {
             case ('Employees'): {
                 optionsObject['isEmployee'] = true;
+                        if (data.filter.letter)
+                            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
             }
                 break;
             case ('Applications'): {
@@ -636,8 +635,6 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Employees", employeeSchema).find().where('_id').in(result);
-                                if (data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
                                 switch (contentType) {
                                     case ('Employees'):
                                         switch (viewType) {
@@ -662,6 +659,12 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     case ('Applications'):
                                         switch (viewType) {
                                             case ('list'): {
+                                                if (data && data.filter && data.filter.workflow) {
+                                                      console.log(data.filter.workflow);
+                                                      query.where('workflow').in(data.filter.workflow);
+                                                } else if (data && (!data.newCollection || data.newCollection === 'false')) {
+                                                      query.where('workflow').in([]);
+                                                }
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').

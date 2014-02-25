@@ -196,6 +196,7 @@ define([
 
             cancelNote: function (e) {
                 $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                $(e.target).parents(".addNote").find("#noteArea").val("");
                 $(".title-wrapper").hide();
                 $(".addTitle").hide();
             },
@@ -654,12 +655,19 @@ define([
                 $('#StartDate').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
-                    changeYear: true
+                    changeYear: true,
+                    onSelect: function () {
+                        //Setting minimum of endDate to picked startDate
+                        var endDate = $('#StartDate').datepicker('getDate');
+                        endDate.setDate(endDate.getDate());
+                        $('#EndDateTarget').datepicker('option', 'minDate', endDate);
+                    }
                 });
                 $('#EndDateTarget').datepicker({
                     dateFormat: "d M, yy",
                     changeMonth: true,
-                    changeYear: true
+                    changeYear: true,
+                    minDate: (model.StartDate)? model.StartDate : 0
                 });
                 this.delegateEvents(this.events);
 

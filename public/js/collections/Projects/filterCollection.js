@@ -5,7 +5,7 @@
         var ProjectsCollection = Backbone.Collection.extend({
             model: ProjectModel,
             url: "/Projects/",
-            page: 1,
+            page: null,
             namberToShow: null,
             viewType: null,
 
@@ -13,6 +13,11 @@
                 var that = this;
                 this.startTime = new Date();
                 this.namberToShow = options.count;
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                    this.count = options.count;
+                    this.page = options.page || 1;
+                }
                 if (options && options.viewType) {
                     this.url += options.viewType;
                 }
@@ -39,6 +44,10 @@
                 if (options && options.page) {
                     this.page = options.page;
                 }
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                }
+
                 if (options && options.count) {
                     this.namberToShow = options.count;
                 }

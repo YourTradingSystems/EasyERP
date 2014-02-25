@@ -41,7 +41,7 @@ define([
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
                 "click .current-selected": "showNewSelect",
-                "click": "hideNewSelect",
+                "click": "hideNewSelect"
 
             },
 			notHide: function () {
@@ -370,7 +370,7 @@ define([
 
 				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,true,true);
 				populate.get("#language", "/Languages",{},"name",this,true,false);
-				populate.get2name("#employeesDd", "/getSalesPerson",{},this,true,false);
+				populate.get2name("#employeesDd", "/getSalesPerson",{},this,true,true);
                 common.canvasDraw({ model: companyModel.toJSON() }, this);
                 this.$el.find('#date').datepicker({
                     dateFormat: "d M, yy",

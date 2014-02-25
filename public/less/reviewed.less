@@ -125,7 +125,10 @@
     min-height: @height;
     margin-top: @margin-top;
     .text-overflow;
-
+    p{
+      word-wrap: break-word;
+      white-space: normal;
+    }
     &:first-child {
       margin-top: 0;
     }
@@ -137,6 +140,10 @@
     margin-top: @margin-top;
     line-height: @line-height;
     min-height: @height;
+    p{
+      word-wrap: break-word;
+      white-space: normal;
+    }
     .left;
     width: 100%-@with-dt;
     .text-overflow;
@@ -532,9 +539,13 @@
       &:last-child {
         border-bottom: @thin-border @defaultBorderColor;
       }
-	  &.stage-cancelled{
+	  &.stage-cancelled,
+	  &.stage-refused,
+	  &.stage-contractend,
+	  &.stage-lost{
 		  position:relative;
-		  .line-wrapper{
+		  text-decoration:line-through;
+/*		  .line-wrapper{
 			  left:0px;
 			  position:absolute;
 			  width:100%;
@@ -547,7 +558,7 @@
 				  width:100%;
 				  border-top:1px solid black;
 			  }
-		  }
+		  }*/
 	  }
       td {
         cursor: pointer;
@@ -1022,6 +1033,7 @@
       &:last-child {
         text-align: right;
       }
+
     }
   }
 
@@ -1436,6 +1448,7 @@
   border: @thin-border transparent;
   background: transparent !important;
   text-align: center;
+  cursor: pointer;
   .border-radius;
   .left;
   .info {
@@ -1446,6 +1459,21 @@
     p{
       line-height: 15px;
     }
+  }
+  h4{
+      color: @tilte-color;
+      font-size: @font-size;
+      .bold;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+      line-height: 18px;
+      font-family: @lucida-font;
+      white-space: normal;
+      span {
+        .text-overflow;
+        white-space: normal;
+        width: 182px;
+      }
+
   }
   .title {
     color: @tilte-color;
@@ -1603,7 +1631,7 @@
   left:auto: !important;
   margin:0 auto;
   .border-radius(0px);
-
+  
   .ui-widget-content {
     a {
       color: @tilte-color;
@@ -1649,10 +1677,14 @@
         margin-top: 5px !important;
       }
       &.taskDescriptionCreate {
-        height: 210px;
+        height: 209px;
+		margin-top:8px !important;
+		margin-left:1px;
+		width:210px;
       }
       &.taskDescriptionEdit {
         height: 210px;
+		margin-top:8px !important;
       }
       &.projectDescriptionCreate {
         height: 230px;
@@ -1677,6 +1709,9 @@
     position: relative;
     padding: .5em 1em;
     clear: both;
+	&.task-create-holder{
+		margin-bottom:-17px;
+	}
   }
 
   .app-empty-info {
@@ -1706,6 +1741,7 @@
 
       a {
         line-height: 22px;
+		margin-right:3px;
       }
     }
 
@@ -1747,6 +1783,19 @@
       width: 100%;
       max-width: none;
     }
+    &#summaryTask,
+    &#summaryEdit {
+		margin-top:17px;
+		margin-bottom:8px;
+		padding-left:2px;
+		padding-right:2px;
+		width:448px;
+		max-width:none;
+    }
+    &#summaryEdit {
+		margin-top:7px;
+	}
+
   }
 
   .ui-dialog-buttonpane {
@@ -1831,6 +1880,17 @@
     opacity: 0;
     filter: Alpha(Opacity=0);
   }
+  &.task-edit-dialog{
+	  .ui-dialog-buttonpane{
+		  margin-left:24px;
+		  margin-right:24px;
+		  button{
+			  margin-top:15px;
+			  margin-bottom:15px;
+		  }
+	  }
+  }
+
 }
 
 .dialog-buttons {
@@ -2858,6 +2918,18 @@ dl {
 
 .half-block {
   width: 50%;
+  &.withPaddingRightProject{
+	  .inner{
+		  padding-top:5px;
+		  padding-left:8px;
+		  padding-right:0px;
+	  }
+  }
+  &.withPaddingLeftProject{
+	  .inner{
+		  padding-left:0px;
+	  }
+  }
   &.projectNote {
     width: 45%;
     padding-right: 5%;
@@ -4242,7 +4314,7 @@ h3.dashboard {
   .task-info {
     .dl-auto(200px, 40%);
     input {
-      width: 70% !important;
+      width: 124px !important;
     }
   }
   .task-summary-info {
@@ -4439,15 +4511,20 @@ span.ui-spinner{
   width: 95%;
   padding: 0;
   span{
+    display: block;
+    width: 8px;
+    height: 8px;
+    text-align: center;
     padding: 0;
   }
   .ui-spinner-up {
     position: absolute;
     right: 5px;
-    top:3px;
+    top:2px;
     padding: 0;
     cursor: pointer;
     font-size:8px;
+    line-height: 8px;
     &:hover{
       text-decoration: none;
       color:@lightblue + #333;
@@ -4457,12 +4534,16 @@ span.ui-spinner{
     position: absolute;
     padding: 0;
     right: 5px;
-    top:10px;
+    top:11px;
     cursor: pointer;
     font-size:8px;
+    line-height: 8px;
     &:hover{
       text-decoration: none;
       color:@lightblue + #333;
     }
   }
+}
+#projectTopName{
+	line-height:24px;
 }

@@ -13,15 +13,28 @@
             el: '#content-holder',
             countPerPage: 0,
             template: _.template(thumbnailsItemTemplate),
+            defaultItemsNumber: null,
+            listLength: null,
+            filter: null,
+            newCollection: null,
+            //page: null, //if reload page, and in url is valid page
+            contentType: 'Employees',//needs in view.prototype.changeLocationHash
+            viewType: 'thumbnails',//needs in view.prototype.changeLocationHash
 
             initialize: function (options) {
+                this.asyncLoadImgs(this.collection);
                 this.startTime = options.startTime;
                 this.collection = options.collection;
-                this.countPerPage = options.collection.length;
+                _.bind(this.collection.showMore, this.collection);
+                _.bind(this.collection.showMoreAlphabet, this.collection);
                 this.allAlphabeticArray = common.buildAllAphabeticArray();
-                this.selectedLetter = "";
-                this.getTotalLength(this.countPerPage);
+                this.filter = options.filter;
+                this.defaultItemsNumber = this.collection.namberToShow || 50;
+                this.newCollection = options.newCollection;
+                this.deleteCounter = 0;
+                this.page = options.collection.page;
                 this.render();
+                this.getTotalLength(this.defaultItemsNumber, this.filter);
                 this.asyncLoadImgs(this.collection);
             },
 
@@ -31,8 +44,9 @@
                 "click .letter:not(.empty)": "alpabeticalRender"
             },
 
-            getTotalLength: function (currentNumber) {
-                dataService.getData('/totalCollectionLength/Employees', { currentNumber: currentNumber, letter: this.selectedLetter  }, function (response, context) {
+            //modified for filter Vasya
+            getTotalLength: function(currentNumber,filter, newCollection) {
+                dataService.getData('/totalCollectionLength/Employees', { currentNumber: currentNumber, filter:this.filter, newCollection: this.newCollection }, function (response, context) {
                     var showMore = context.$el.find('#showMoreDiv');
                     if (response.showMore) {
                         if (showMore.length === 0) {
@@ -54,16 +68,24 @@
                 common.getImages(ids, "/getEmployeesImages");
             },
 
+            //modified for filter Vasya
             alpabeticalRender: function (e) {
-                this.startTime = new Date();
-                var target = $(e.target);
-                target.parent().find(".current").removeClass("current");
-                target.addClass("current");
-                this.selectedLetter = target.text();
-                if (target.text() == "All") {
-                    this.selectedLetter = "";
-                }
-                this.collection.showMoreAlphabet({page: 1, letter: this.selectedLetter });
+                    this.$el.find('.thumbnailwithavatar').remove();
+                    this.startTime = new Date();
+                    this.newCollection = false;
+                    var target = $(e.target);
+                    target.parent().find(".current").removeClass("current");
+                    target.addClass("current");
+                    var selectedLetter = $(e.target).text();
+                    if ($(e.target).text() == "All") {
+                        selectedLetter = "";
+                    }
+                    this.filter = this.filter || {};
+                    this.filter['letter'] = selectedLetter;
+                    this.defaultItemsNumber = 0;
+                    this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
+                    this.collection.showMoreAlphabet({ count:this.defaultItemsNumber, filter: this.filter });
+                    this.getTotalLength(this.defaultItemsNumber, this.filter);
             },
 
             render: function () {
@@ -76,6 +98,15 @@
                     $(".startLetter").remove();
                     self.alphabeticArray = arr;
                     self.$el.prepend(_.template(AphabeticTemplate, { alphabeticArray: self.alphabeticArray,selectedLetter: (self.selectedLetter==""?"All":self.selectedLetter),allAlphabeticArray:self.allAlphabeticArray}));
+                var currentLetter = (self.filter) ? self.filter.letter : null
+                    if (currentLetter) {
+                        $('#startLetter a').each(function() {
+                            var target = $(this);
+                            if (target.text() == currentLetter) {
+                                target.addClass("current");
+                            }
+                        });
+                    }
                 });
 
                 if (this.collection.length > 0) {
@@ -106,37 +137,41 @@
                 }
             },
 
-            showMore: function () {
-                this.startTime = new Date();
-                this.collection.showMore({letter: this.selectedLetter });
+            showMore: function (event) {
+                event.preventDefault();
+                this.collection.showMore({ filter: this.filter, newCollection: this.newCollection });
             },
 
+            //modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
-                this.countPerPage += newModels.length;
+                var content = holder.find("#thumbnailContent");
                 var showMore = holder.find('#showMoreDiv');
                 var created = holder.find('#timeRecivingDataFromServer');
-                this.getTotalLength(this.countPerPage);
-                created.text("Created in " + (new Date() - this.startTime) + " ms");
-                showMore.before(this.template({ collection: this.collection.toJSON() }));
-                showMore.after(created);
+                this.defaultItemsNumber += newModels.length;
+                this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
+                this.getTotalLength(this.defaultItemsNumber, this.filter);
+
+                if (showMore.length != 0) {
+                     showMore.before(this.template({  collection: this.collection.toJSON() }));
+                     showMore.after(created);
+                } else {
+                     content.html(this.template({ collection: this.collection.toJSON() }));
+                }
                 this.asyncLoadImgs(newModels);
             },
-
+            //modified for filter Vasya
             showMoreAlphabet: function (newModels) {
+
                 var holder = this.$el;
                 var alphaBet = holder.find('#startLetter');
                 var created = holder.find('#timeRecivingDataFromServer');
                 var showMore = holder.find('#showMoreDiv');
                 var content = holder.find(".thumbnailwithavatar");
-                var countPerPage = this.countPerPage = newModels.length;
-
-                content.remove();
-
+                this.defaultItemsNumber += newModels.length;
+                this.changeLocationHash(null, this.defaultItemsNumber, this.filter);
+                this.getTotalLength(this.defaultItemsNumber, this.filter);
                 holder.append(this.template({ collection: newModels.toJSON() }));
-
-                this.getTotalLength(countPerPage);
-                created.text("Created in " + (new Date() - this.startTime) + " ms");
                 holder.prepend(alphaBet);
                 holder.append(created);
                 created.before(showMore);

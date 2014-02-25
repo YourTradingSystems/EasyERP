@@ -173,6 +173,7 @@
 
               cancelNote: function (e) {
                   $(e.target).parents(".addNote").find("#noteArea").attr("placeholder", "Add a Note...").parents(".addNote").removeClass("active");
+                   $(e.target).parents(".addNote").find("#noteArea").val("");
                   $(".title-wrapper").hide();
                   $(".addTitle").hide();
               },
@@ -321,7 +322,7 @@
                   var viewType = custom.getCurrentVT();
                   var holder = this.$el;
                   var mid = 39;
-                  var summary = $.trim(holder.find("#summary").val());
+                  var summary = $.trim(holder.find("#summaryEdit").val());
                   var project = holder.find("#projectDd").data("id");
                   var assignedTo = holder.find("#assignedToDd").data("id");
 
@@ -479,7 +480,7 @@
                   });
                   var self = this;
                   this.$el = $(formString).dialog({
-                      dialogClass: "edit-dialog",
+                      dialogClass: "edit-dialog  task-edit-dialog",
                       width: 500,
                       title: this.currentModel.toJSON().project.projectShortDesc,
                       buttons: {

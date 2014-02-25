@@ -452,6 +452,13 @@ app.post('/Users', function (req, res) {
     requestHandler.createUser(req, res, data);
 });
 
+app.get('/UserWithProfile', function (req, res) {
+    console.log('---------------------getUsers-------------');
+    var id = req.param('_id');
+	console.log(id);
+    requestHandler.getAllUserWithProfile(req, id, res);
+});
+
 app.get('/Users', function (req, res) {
     console.log('---------------------getUsers-------------');
     data = {};

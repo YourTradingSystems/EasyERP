@@ -63,7 +63,7 @@
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         }
     }, { collection: 'Customers' });
 
@@ -81,17 +81,18 @@
 
             var contentType = req.params.contentType;
             var optionsObject = {};
+
             switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
-                    if (data.letter)
-                        optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                    if (data.filter.letter)
+                        optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
                     break;
                 case ('Companies'): {
                     optionsObject['type'] = 'Company';
-                    if (data.letter)
-                        optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                    if (data.filter.letter)
+                        optionsObject['name.first'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
                     break;
                 case ('ownCompanies'): {
@@ -236,6 +237,8 @@
                         _customer = new models.get(req.session.lastDb - 1, "Customers", customerSchema)();
                         if (data.uId) {
                             _customer.createdBy.user = data.uId;
+                            //on creation addded uId to editBy field user value
+                            _customer.editedBy.user = data.uId;
                         }
                         if (data.groups) {
                             _customer.groups = data.groups;
@@ -752,14 +755,15 @@
             switch (contentType) {
                 case ('Persons'): {
                     optionsObject['type'] = 'Person';
-                    if (data.letter)
-                        optionsObject['name.last'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                    console.log(data)
+                    if (data && data.filter && data.filter.letter)
+                             optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
                     break;
                 case ('Companies'): {
                     optionsObject['type'] = 'Company';
-                    if (data.letter)
-                        optionsObject['name.first'] = new RegExp('^[' + data.letter.toLowerCase() + data.letter.toUpperCase() + '].*');
+                    if (data && data.filter && data.filter.letter)
+                             optionsObject['name.first'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
                 }
                     break;
                 case ('ownCompanies'): {
@@ -835,8 +839,6 @@
                                         case ('Persons'):
                                             switch (viewType) {
                                                 case ('list'): {
-													console.log("ergergergr");
-
                                                     query.select("_id createdBy editedBy address.country email name phones.phone").
                                                         populate('createdBy.user', 'login').
                                                         populate('editedBy.user', 'login');
