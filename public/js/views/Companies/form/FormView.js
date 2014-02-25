@@ -136,7 +136,7 @@ define([
                     perElem.empty();
 					perElem.append(
                         new personsCompactContentView({
-                            collection: collection.data,
+                            collection: collection.data
                         }).render({first:self.pageMiniPersons==1?true:false,last:isLast,all:self.allPagesPersons}).el
                     );
 				});
@@ -150,7 +150,7 @@ define([
                     oppElem.empty();
 					oppElem.prepend(
                         new opportunitiesCompactContentView({
-                            collection: collection.data,
+                            collection: collection.data
                         }).render({first:self.pageMini==1?true:false,last:isLast,all:self.allPages}).el
                     );
 				});
@@ -349,6 +349,9 @@ define([
                                     patch: true,
                                     success: function () {
                                         $('#' + id_int).remove();
+                                    },
+                                    error: function () {
+                                        console.log('bot');
                                     }
                                 });
                         break;
