@@ -428,7 +428,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         try {
             console.log("Requst getCustomer is success");
             if (req.session && req.session.loggedIn && req.session.lastDb) {
-                customer.getCustomers(req, res);
+                customer.getCustomers(req, res, data);
             } else {
                 res.send(401);
             }

@@ -643,6 +643,9 @@ app.get('/getPersonsForMiniView', function (req, res) {
 app.get('/Customer', function (req, res) {
     console.log('---------SERVER----Customer-------------------------------');
     data = {};
+    for (var i in req.query) {
+        data[i] = req.query[i];
+    }
     data.mid = req.param('mid');
     requestHandler.getCustomer(req, res, data);
 });
