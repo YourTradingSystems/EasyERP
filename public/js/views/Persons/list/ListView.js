@@ -48,10 +48,10 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
         },
 
         alpabeticalRender: function (e) {
-            this.startTime = new Date();
-            $(e.target).parent().find(".current").removeClass("current");
-            $(e.target).addClass("current");
-                this.newCollection = false;
+                this.startTime = new Date();
+                $(e.target).parent().find(".current").removeClass("current");
+                $(e.target).addClass("current");
+
                 var selectedLetter = $(e.target).text();
                 if ($(e.target).text() == "All") {
                     selectedLetter = "";
@@ -111,6 +111,15 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 $("#startLetter").remove();
                 self.alphabeticArray = arr;
                 currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
+                 var currentLetter = (self.filter) ? self.filter.letter : null
+                    if (currentLetter) {
+                        $('#startLetter a').each(function() {
+                            var target = $(this);
+                            if (target.text() == currentLetter) {
+                                target.addClass("current");
+                            }
+                        });
+                    }
             });
 
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
@@ -159,7 +168,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     filter: this.filter,
                     newCollection: this.newCollection,
                 });
-                this.changeLocationHash(1, itemsNumber);
+                this.changeLocationHash(1, itemsNumber,this.filter);
         },
 
         showFilteredPage: function (e) {
@@ -168,7 +177,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 
                 var selectedLetter = $(e.target).text();
                 if ($(e.target).text() == "All") {
-                    selectedLetter = "";
+                    selectedLetter = '';
                 }
                 this.filter = this.filter || {};
                 this.filter['letter'] = selectedLetter;

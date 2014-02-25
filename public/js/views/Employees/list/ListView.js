@@ -111,6 +111,15 @@ define([
                     $("#startLetter").remove();
                     self.alphabeticArray = arr;
                     currentEl.prepend(_.template(aphabeticTemplate, { alphabeticArray: self.alphabeticArray, selectedLetter: (self.selectedLetter == "" ? "All" : self.selectedLetter), allAlphabeticArray: self.allAlphabeticArray }));
+                 var currentLetter = (self.filter) ? self.filter.letter : null
+                    if (currentLetter) {
+                        $('#startLetter a').each(function() {
+                            var target = $(this);
+                            if (target.text() == currentLetter) {
+                                target.addClass("current");
+                            }
+                        });
+                    }
                 });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
@@ -159,7 +168,7 @@ define([
                         filter: this.filter,
                         newCollection: this.newCollection,
                     });
-                    this.changeLocationHash(1, itemsNumber);
+                    this.changeLocationHash(1, itemsNumber, this.filter);
             },
 //modified for filter Vasya
             showFilteredPage: function (e) {

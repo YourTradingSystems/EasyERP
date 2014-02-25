@@ -42,6 +42,7 @@
 	                   success: function (err, model) {
 						   targetElement.attr("data-sequence",model.sequence);
 						   targetElement.find(".stageSelect").text($(e.target).text()).attr("data-id",$(e.target).attr("id"));
+						   targetElement.parents("tr").attr("class","stage-"+$(e.target).text().toLowerCase().replace(' ',''));
 	                   }
 	               });
 

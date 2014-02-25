@@ -63,7 +63,7 @@ var Workflow = function (logWriter, mongoose, models) {
         create: function (req, data, result) {
             try {
                 if (data) {
-                    
+
                     models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
