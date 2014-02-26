@@ -333,7 +333,7 @@ define([
                     },
                     error: function (model, xhr) {
                         self.hideDialog();
-                      if (xhr && (xhr.status === 401||xhr.status === 403)) {
+						if (xhr && (xhr.status === 401||xhr.status === 403)) {
 							if (xhr.status === 401){
 								Backbone.history.navigate("login", { trigger: true });
 							}else{

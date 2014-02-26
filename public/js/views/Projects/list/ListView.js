@@ -91,12 +91,14 @@ define([
                 switch (sortClass) {
                         case "sortDn":
                             {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
                                 target$.removeClass('sortDn').addClass('sortUp');
                                 sortConst = 1;
                             }
                             break;
                         case "sortUp":
                             {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
                                 target$.removeClass('sortUp').addClass('sortDn');
                                 sortConst = -1;
                             }
