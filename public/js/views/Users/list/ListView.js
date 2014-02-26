@@ -348,7 +348,9 @@ define([
                 "click  .list td:not(.notForm)": "gotoForm",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
-                "click": "hideItemsNumber"
+                "click": "hideItemsNumber",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
             },
 
             hideItemsNumber: function (e) {
@@ -415,6 +417,34 @@ define([
                         context.listLength = response.count || 0;
                     }, this);
             },
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Users', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Users', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
 
             switchPageCounter: function (event) {
                     event.preventDefault();

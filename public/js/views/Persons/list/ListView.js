@@ -44,7 +44,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             "click #itemsButton": "itemsNumber",
             "click .currentPageList": "itemsNumber",
             "click": "hideItemsNumber",
-            "click .letter:not(.empty)": "alpabeticalRender"
+            "click .letter:not(.empty)": "alpabeticalRender",
+            "click #firstShowPage": "firstPage",
+            "click #lastShowPage": "lastPage",
         },
 
         alpabeticalRender: function (e) {
@@ -156,6 +158,34 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     context.listLength = response.count || 0;
                 }, this);
         },
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Persons', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Persons', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
 
         switchPageCounter: function (event) {
                 event.preventDefault();

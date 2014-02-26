@@ -41,6 +41,8 @@ define([
                 "change #currentShowPage": "showPage",
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
                 "click .checkbox": "checked",
                 "click .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
@@ -59,7 +61,7 @@ define([
                     $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
                 }
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showFilteredPage: function (event) {
                 this.startTime = new Date();
                 this.newCollection = false;
@@ -104,7 +106,7 @@ define([
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             getTotalLength: function (currentNumber, itemsNumber, filter) {
                 dataService.getData('/totalCollectionLength/Leads', {
                     type: 'Leads',
@@ -157,7 +159,7 @@ define([
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
@@ -172,7 +174,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -187,7 +189,37 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Leads', {
+                    type: 'Leads',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+            //modified for filter Vasya
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Leads', {
+                    type: 'Leads',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -207,7 +239,7 @@ define([
                 event.preventDefault();
                 this.showP(event, { filter: this.filter, newCollection: this.newCollection });
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();

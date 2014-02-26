@@ -52,7 +52,9 @@ define([
                 "click .newSelectList li": "chooseOption",
                 "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog"
+                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
             },
 
             goToEditDialog: function (e) {
@@ -98,7 +100,7 @@ define([
                 $(e.target).parents("#health").find("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             getTotalLength: function (currentNumber, itemsNumber, filter) {
                 dataService.getData('/totalCollectionLength/Projects', {
                     type: 'Projects',
@@ -147,7 +149,7 @@ define([
                 this.hideNewSelect();
                 return false;
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showFilteredPage: function () {
                 this.startTime = new Date();
                 this.newCollection = false;
@@ -190,7 +192,7 @@ define([
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
@@ -207,7 +209,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -224,7 +226,66 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Projects', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Projects', {
+                    type: 'Projects',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Projects', {
+                    type: 'Projects',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Persons', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -242,7 +303,7 @@ define([
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { filter: this.filter, newCollection: this.newCollection });
+                this.showP(event, {page:1, filter: this.filter, newCollection: this.newCollection });
             },
 
             render: function () {
@@ -284,7 +345,7 @@ define([
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
@@ -323,7 +384,7 @@ define([
                     }
                 }
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Projects', {
                     filter: this.filter,

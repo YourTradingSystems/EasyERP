@@ -57,7 +57,9 @@ define([
                 "click .stageSelectType": "showNewSelectType",
                 "click .newSelectList li": "chooseOption",
                 "click .filterButton": "showfilter",
-                "click .filter-check-list li": "checkCheckbox"
+                "click .filter-check-list li": "checkCheckbox",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
             },
 
             getTotalLength: function (currentNumber, itemsNumber, filter) {
@@ -318,6 +320,36 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    filter: this.filter,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);

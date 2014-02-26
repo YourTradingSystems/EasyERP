@@ -509,7 +509,9 @@ define([
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
-                "click .filter-check-list li": "checkCheckbox"
+                "click .filter-check-list li": "checkCheckbox",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
             },
 
             checkCheckbox: function (e) {
@@ -636,6 +638,38 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
+            //first last page in paginations
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Applications', {
+                    type: 'Applications',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Applications', {
+                    type: 'Applications',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+
              //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();

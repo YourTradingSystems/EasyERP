@@ -83,6 +83,8 @@ require(['app'], function (app) {
             $("#grid-count").text(0);
             $("#previousPage").prop("disabled", true);
             $("#nextPage").prop("disabled", true);
+            $("#firstShowPage").prop("disabled", true);
+            $("#lastShowPage").prop("disabled", true);
             $("#pageList").empty();
             $("#currentShowPage").val(0);
             $("#lastPage").text(0);
@@ -103,10 +105,13 @@ require(['app'], function (app) {
             $("#lastPage").text(pageNumber);
             $("#currentShowPage").val(currentPage);
             $("#previousPage").prop("disabled", parseInt(start.text()) <= parseInt(currentPage));
+            $("#firstShowPage").prop("disabled", parseInt(start.text()) <= parseInt(currentPage));
             if (pageNumber <= 1) {
                 $("#nextPage").prop("disabled", true);
+                $("#lastShowPage").prop("disabled", true);
             } else {
                 $("#nextPage").prop("disabled", parseInt(end.text()) === parseInt(totalCount));
+                $("#lastShowPage").prop("disabled", parseInt(end.text()) === parseInt(totalCount));
             }
         }
     };
@@ -159,6 +164,7 @@ require(['app'], function (app) {
         currentShowPage.val(page);
         if (page === 1) {
             $("#previousPage").prop("disabled", true);
+            $("#firstShowPage").prop("disabled", true);
         }
         $("#grid-start").text((page - 1) * itemsNumber + 1);
         if (this.listLength <= page * itemsNumber) {
@@ -167,6 +173,7 @@ require(['app'], function (app) {
             $("#grid-end").text(page * itemsNumber);
         }
         $("#nextPage").prop("disabled", false);
+        $("#lastShowPage").prop("disabled", false);
         var serchObject = {
             count: itemsNumber,
             page: page,
@@ -189,10 +196,12 @@ require(['app'], function (app) {
         if (this.listLength <= page * itemsNumber) {
             $("#grid-end").text(this.listLength);
             $("#nextPage").prop("disabled", true);
+            $("#lastShowPage").prop("disabled", true);
         } else {
             $("#grid-end").text(page * itemsNumber);
         }
         $("#previousPage").prop("disabled", false);
+        $("#firstShowPage").prop("disabled", false);
         var serchObject = {
             count: itemsNumber,
             page: page,
@@ -202,6 +211,66 @@ require(['app'], function (app) {
         this.collection.showMore(serchObject);
         this.changeLocationHash(page, itemsNumber);
     };
+
+        Backbone.View.prototype.firstP = function (dataObject) {
+            this.startTime = new Date();
+            var itemsNumber = $("#itemsNumber").text();
+            var currentShowPage = $("#currentShowPage");
+            var page = 1;
+
+            this.startTime = new Date();
+
+            currentShowPage.val(page);
+            if (page === 1) {
+                $("#firstShowPage").prop("disabled", true);
+            }
+            $("#grid-start").text((page - 1) * itemsNumber + 1);
+            if (this.listLength <= page * itemsNumber) {
+                $("#grid-end").text(this.listLength);
+            } else {
+                $("#grid-end").text(page * itemsNumber);
+            }
+            $("#previousPage").prop("disabled", true);
+            $("#nextPage").prop("disabled", false);
+            $("#lastShowPage").prop("disabled", false);
+            var serchObject = {
+                count: itemsNumber,
+                page: page,
+                letter: this.selectedLetter
+            };
+            if (dataObject) _.extend(serchObject, dataObject);
+            this.collection.showMore(serchObject);
+            this.changeLocationHash(page, itemsNumber);
+        };
+
+        Backbone.View.prototype.lastP = function (dataObject) {
+            this.startTime = new Date();
+            var itemsNumber = $("#itemsNumber").text();
+            var page = $("#lastPage").text();
+            $("#firstShowPage").prop("disabled", true);
+            this.startTime = new Date();
+
+            $("#currentShowPage").val(page);
+            $("#grid-start").text((page - 1) * itemsNumber + 1);
+            if (this.listLength <= page * itemsNumber) {
+                $("#grid-end").text(this.listLength);
+                $("#nextPage").prop("disabled", true);
+            } else {
+                $("#grid-end").text(page * itemsNumber);
+            }
+            $("#nextPage").prop("disabled", true);
+            $("#lastShowPage").prop("disabled", true);
+            $("#previousPage").prop("disabled", false);
+            $("#firstShowPage").prop("disabled", false);
+            var serchObject = {
+                count: itemsNumber,
+                page: page,
+                letter: this.selectedLetter
+            };
+            if (dataObject) _.extend(serchObject, dataObject);
+            this.collection.showMore(serchObject);
+            this.changeLocationHash(page, itemsNumber);
+        };
 
     Backbone.View.prototype.showP = function (event, dataObject) {
         this.startTime = new Date();
@@ -229,18 +298,26 @@ require(['app'], function (app) {
             if (page <= 1) {
                 $("#previousPage").prop("disabled", true);
                 $("#nextPage").prop("disabled", false);
+                $("#firstShowPage").prop("disabled", true);
+                $("#lastShowPage").prop("disabled", false);
             }
             if (page >= lastPage) {
                 $("#nextPage").prop("disabled", true);
                 $("#previousPage").prop("disabled", false);
+                $("#lastShowPage").prop("disabled", true);
+                $("#firstShowPage").prop("disabled", false);
             }
             if ((1 < page) && (page < lastPage)) {
                 $("#nextPage").prop("disabled", false);
                 $("#previousPage").prop("disabled", false);
+                $("#lastShowPage").prop("disabled", false);
+                $("#firstShowPage").prop("disabled", false);
             }
             if ((page == lastPage) && (lastPage == 1)) {
                 $("#previousPage").prop("disabled", true);
                 $("#nextPage").prop("disabled", true);
+                $("#firstShowPage").prop("disabled", true);
+                $("#lastShowPage").prop("disabled", true);
             }
             var serchObject = {
                 count: itemsNumber,
@@ -296,18 +373,26 @@ require(['app'], function (app) {
                 if (deletePage <= 1) {
                     $("#previousPage").prop("disabled", true);
                     $("#nextPage").prop("disabled", false);
+                    $("#firstShowPage").prop("disabled", true);
+                    $("#lastShowPage").prop("disabled", false);
                 }
                 if (deletePage >= pageNumber) {
                     $("#nextPage").prop("disabled", true);
                     $("#previousPage").prop("disabled", false);
+                    $("#firstShowPage").prop("disabled", false);
+                    $("#lastShowPage").prop("disabled", true);
                 }
                 if ((1 < deletePage) && (deletePage < pageNumber)) {
                     $("#nextPage").prop("disabled", false);
                     $("#previousPage").prop("disabled", false);
+                    $("#firstShowPage").prop("disabled", false);
+                    $("#lastShowPage").prop("disabled", false);
                 }
                 if ((deletePage == pageNumber) && (pageNumber == 1)) {
                     $("#previousPage").prop("disabled", true);
                     $("#nextPage").prop("disabled", true);
+                    $("#firstShowPage").prop("disabled", true);
+                    $("#lastShowPage").prop("disabled", true);
                 }
                 var serchObject = {
                     count: itemsNumber,
@@ -335,18 +420,26 @@ require(['app'], function (app) {
             if (deletePage <= 1) {
                 $("#previousPage").prop("disabled", true);
                 $("#nextPage").prop("disabled", false);
+                $("#firstShowPage").prop("disabled", true);
+                $("#lastShowPage").prop("disabled", false);
             }
             if (deletePage >= pageNumber) {
                 $("#nextPage").prop("disabled", true);
                 $("#previousPage").prop("disabled", false);
+                $("#firstShowPage").prop("disabled", false);
+                $("#lastShowPage").prop("disabled", true);
             }
             if ((1 < deletePage) && (deletePage < pageNumber)) {
                 $("#nextPage").prop("disabled", false);
                 $("#previousPage").prop("disabled", false);
+                $("#firstShowPage").prop("disabled", false);
+                $("#lastShowPage").prop("disabled", false);
             }
             if ((deletePage == pageNumber) && (pageNumber == 1)) {
                 $("#previousPage").prop("disabled", true);
                 $("#nextPage").prop("disabled", true);
+                $("#firstShowPage").prop("disabled", true);
+                $("#lastShowPage").prop("disabled", true);
             }
             $('#timeRecivingDataFromServer').remove();
             this.$el.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
