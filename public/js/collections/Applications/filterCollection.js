@@ -6,7 +6,7 @@
         var TasksCollection = Backbone.Collection.extend({
             model: ApplicationModel,
             url: "/Applications/",
-            page: 1,
+            page: null,
             namberToShow: null,
             contentType: null,
             viewType: null,
@@ -24,7 +24,11 @@
                     this.url += options.viewType;
                    // delete options.viewType;
                 }
-
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                    this.count = options.count;
+                    this.page = options.page || 1;
+                }
                 this.fetch({
                     data: options,
                     reset: true,

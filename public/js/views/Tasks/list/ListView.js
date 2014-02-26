@@ -335,6 +335,7 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
 

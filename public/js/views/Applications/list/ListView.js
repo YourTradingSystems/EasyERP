@@ -621,7 +621,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -636,7 +636,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+             //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -648,6 +648,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
 
@@ -655,7 +656,7 @@ define([
                 event.preventDefault();
                 this.showP(event, { filter: this.filter, newCollection: this.newCollection });
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();

@@ -168,6 +168,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     filter: this.filter,
                     newCollection: this.newCollection,
                 });
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber,this.filter);
         },
 

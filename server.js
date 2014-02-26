@@ -167,7 +167,7 @@ app.post('/uploadFiles', function (req, res, next) {
                 file._id = mongoose.Types.ObjectId();
                 file.name = req.files.attachfile.name;
                 file.path = path;
-                file.size = req.files.attachfile.size;
+                file.size = Math.round(req.files.attachfile.size / 1024 / 2024 * 100 ) / 100;
                 file.uploadDate = new Date();
                 file.uploaderName = req.session.uName;
                 requestHandler.uploadFile(req, res, req.headers.id, file);
@@ -183,7 +183,7 @@ app.post('/uploadFiles', function (req, res, next) {
                                     file._id = mongoose.Types.ObjectId();
                                     file.name = req.files.attachfile.name;
                                     file.path = path;
-                                    file.size = req.files.attachfile.size;
+                                    file.size = Math.round(req.files.attachfile.size / 1024 / 2024 * 100 ) / 100;
                                     file.uploadDate = new Date();
                                     file.uploaderName = req.session.uName;
                                     requestHandler.uploadFile(req, res, req.headers.id, file);
@@ -242,7 +242,7 @@ function uploadFileArray(req, res, callback) {
 
 
                     file.path = path;
-                    file.size = item.size;
+                    file.size = Math.round(item.size / 1024 / 2024 * 100 ) / 100;
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;
                     files.push(file);

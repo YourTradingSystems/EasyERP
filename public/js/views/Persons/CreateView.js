@@ -85,6 +85,40 @@ define([
                 dialog_holder.find(".dialog-tabs-item.active").removeClass("active");
                 dialog_holder.find(".dialog-tabs-item").eq(n).addClass("active");
             },
+			updateAssigneesPagination:function(el){
+				var pag = el.find(".userPagination .text");
+				el.find(".userPagination .nextUserList").remove();
+				el.find(".userPagination .prevUserList").remove();
+				el.find(".userPagination .nextGroupList").remove();
+				el.find(".userPagination .prevGroupList").remove();
+
+				var list = el.find("ul");
+				var count = list.find("li").length;
+				var s ="";
+				var page  = parseInt(list.attr("data-page"));
+				if (page>1){
+					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
+				}
+				if (count===0){
+					s+="0-0 of 0";
+				}else{
+					if ((page)*20-1<count){
+						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
+					}else{
+						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
+					}
+				}
+				
+				if (page<count/20){
+					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
+				}
+				el.find("ul li").hide();
+				for (var i=(page-1)*20;i<20*page;i++){
+					el.find("ul li").eq(i).show();
+				}
+ 
+				pag.text(s);
+			},
 
             addUser: function () {
                 var self = this;
@@ -112,15 +146,15 @@ define([
                     }
 
                 });
-                $("#targetUsers").unbind().on("click", "li", this.removeUsers);
-                $("#sourceUsers").unbind().on("click", "li", this.addUsers);
-                $(".nextUserList").unbind().on("click", function (e) {
-                    self.page += 1;
-                    self.nextUserList(e, self.page);
+				this.updateAssigneesPagination($("#sourceUsers").closest(".left"));
+				this.updateAssigneesPagination($("#targetUsers").closest(".left"));
+                $("#targetUsers").on("click", "li", {self:this},this.removeUsers);
+                $("#sourceUsers").on("click", "li", {self:this},this.addUsers);
+                $(document).on("click", ".nextUserList",{self:this}, function (e) {
+                    self.nextUserList(e);
                 });
-                $(".prevUserList").unbind().on("click", function (e) {
-                    self.page -= 1;
-                    self.prevUserList(e, self.page);
+                $(document).on("click", ".prevUserList",{self:this}, function (e) {
+                    self.prevUserList(e);
                 });
             },
 
@@ -136,7 +170,7 @@ define([
                 $(id).find("li").each(function () {
                     groupsAndUser.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if (groupsAndUserTr.length < 2) {
+                if ($(".groupsAndUser tr").length <2) {
                     groupsAndUser.hide();
                 }
             },
@@ -165,17 +199,16 @@ define([
                     }
 
                 });
-                $("#targetGroups").unbind().on("click", "li", this.removeUsers);
-                $("#sourceGroups").unbind().on("click", "li", this.addUsers);
-                $(".nextGroupList").unbind().on("click", function (e) {
-                    self.pageG += 1;
-                    self.nextUserList(e, self.pageG);
+				this.updateAssigneesPagination($("#sourceGroups").closest(".left"));
+				this.updateAssigneesPagination($("#targetGroups").closest(".left"));
+                $("#targetGroups").on("click", "li", {self:this},this.removeUsers);
+                $("#sourceGroups").on("click", "li", {self:this},this.addUsers);
+                $(document).on("click", ".nextUserList",{self:this}, function (e) {
+                    self.nextUserList(e);
                 });
-                $(".prevGroupList").unbind().on("click", function (e) {
-                    self.pageG -= 1;
-                    self.prevUserList(e, self.pageG);
+                $(document).on("click", ".prevUserList",{self:this}, function (e) {
+                    self.prevUserList(e);
                 });
-
             },
 
             unassign: function (e) {
@@ -192,22 +225,33 @@ define([
             },
 
             nextUserList: function (e, page) {
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, page);
+				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
+				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             prevUserList: function (e, page) {
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', null, page);
+				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))-1);
+				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
             },
 
             addUsers: function (e) {
                 e.preventDefault();
+				$(e.target).parents("ul").find("li:not(:visible)").eq(0).show();
+				var div =$(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".target").append($(e.target));
+				e.data.self.updateAssigneesPagination(div);
+				div =$(e.target).parents(".left");
+				e.data.self.updateAssigneesPagination(div);
 
             },
 
             removeUsers: function (e) {
                 e.preventDefault();
+				var div =$(e.target).parents(".left");
                 $(e.target).closest(".ui-dialog").find(".source").append($(e.target));
+				e.data.self.updateAssigneesPagination(div);
+				div =$(e.target).parents(".left");
+				e.data.self.updateAssigneesPagination(div);
             },
 
             showEdit: function () {

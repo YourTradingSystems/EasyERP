@@ -46,7 +46,7 @@ define([
                 "click": "hideItemsNumber",
                 "click .letter:not(.empty)": "alpabeticalRender"
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             alpabeticalRender: function (e) {
                 this.startTime = new Date();
                 $(e.target).parent().find(".current").removeClass("current");
@@ -124,8 +124,8 @@ define([
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-//modified for filter Vasya
-        previousPage: function (event) {
+            //modified for filter Vasya
+            previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
                     filter: this.filter,
@@ -140,7 +140,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                     event.preventDefault();
                     this.nextP({
@@ -156,7 +156,7 @@ define([
                         context.listLength = response.count || 0;
                     }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                     event.preventDefault();
                     this.startTime = new Date();
@@ -168,9 +168,10 @@ define([
                         filter: this.filter,
                         newCollection: this.newCollection,
                     });
+                    $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber, this.filter);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showFilteredPage: function (e) {
                     this.startTime = new Date();
                     this.newCollection = false;
@@ -190,7 +191,7 @@ define([
                     event.preventDefault();
                     this.showP(event,{filter: this.filter, newCollection: this.newCollection});
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showMoreContent: function (newModels) {
                     var holder = this.$el;
                     holder.find("#listTable").empty();
@@ -206,7 +207,7 @@ define([
                     holder.find('#timeRecivingDataFromServer').remove();
                     holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showMoreAlphabet: function (newModels) {
                 var holder = this.$el;
                 var alphaBet = holder.find('#startLetter');
@@ -245,7 +246,7 @@ define([
                     }
                 }
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Employees', {
                     filter: this.filter,

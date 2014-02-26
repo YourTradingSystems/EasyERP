@@ -32,7 +32,7 @@
                   <div class="app-block right">
                     <dl class="app-normal-info">
                       <dt><label for="pemail">Email </label></dt><dd><input type="email" id="pemail" maxlength="48" value="<%=model.personalEmail%>"/></dd>
-                      <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32" value="<%=model.workPhones.mobile%>"/></dd>
+                      <dt><label for="phone">Phone </label></dt><dd><input type="text" id="phone" maxlength="32" value="<%=model.workPhones.phone%>"/></dd>
                       <dt><label for="tags">Tags </label></dt><dd><input type="text" id="tags" value="<%=model.tags%>" /></dd>
                       <dt><label for="nextAction">Next Action </label></dt><dd><input type="text" id="nextAction" maxlength="32" value="<%=model.nextAction%>" readonly/></dd>
                     </dl>
@@ -80,7 +80,7 @@
                            <% var n = model.attachments.length-1;
                               model.attachments.reverse();
                             _.each(model.attachments, function(data,key){ %>
-                   <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+                   <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
                           <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
                    </li>
                        <% }); model.attachments.reverse(); %>

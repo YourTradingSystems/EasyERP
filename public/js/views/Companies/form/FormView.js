@@ -136,7 +136,7 @@ define([
                     perElem.empty();
 					perElem.append(
                         new personsCompactContentView({
-                            collection: collection.data,
+                            collection: collection.data
                         }).render({first:self.pageMiniPersons==1?true:false,last:isLast,all:self.allPagesPersons}).el
                     );
 				});
@@ -150,7 +150,7 @@ define([
                     oppElem.empty();
 					oppElem.prepend(
                         new opportunitiesCompactContentView({
-                            collection: collection.data,
+                            collection: collection.data
                         }).render({first:self.pageMini==1?true:false,last:isLast,all:self.allPages}).el
                     );
 				});
@@ -247,7 +247,7 @@ define([
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
 
                 $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
-				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-15);
+				$("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width()-40);
             },
 			saveCheckboxChange:function(e){
                 var parent = $(e.target).parent();
@@ -349,6 +349,9 @@ define([
                                     patch: true,
                                     success: function () {
                                         $('#' + id_int).remove();
+                                    },
+                                    error: function () {
+                                        console.log('bot');
                                     }
                                 });
                         break;

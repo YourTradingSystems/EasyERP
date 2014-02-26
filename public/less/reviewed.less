@@ -3341,7 +3341,9 @@ button.red, a.red {
     vertical-align: top;
     position: relative;
     padding-left: 25px;
-
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
     .deleteAttach {
       .right;
       display: none;
@@ -4430,6 +4432,9 @@ h3.dashboard {
     background: #F5F5F5;
     font-weight: bold;
 	cursor:pointer;
+	div.name{
+		.text-overflow;
+	}
     .edit-status {
       display: none;
     }
@@ -4475,6 +4480,19 @@ h3.dashboard {
   .job-info {
     .dl-auto(300px, 30%,30px);
 
+  }
+  .opp-info {
+    .dl-auto(300px, 40%,30px);
+	input{
+		width:80% !important;
+	}
+
+  }
+  .internal-info {
+    .dl-auto(147px, 20%,30px);
+	textarea{
+		width:94%;
+	}
   }
 
 }
@@ -4553,4 +4571,7 @@ span.ui-spinner{
 }
 #projectTopName{
 	line-height:24px;
+}
+#convert-dialog-form{
+	display:none;
 }

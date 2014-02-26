@@ -63,34 +63,41 @@ var Workflow = function (logWriter, mongoose, models) {
         create: function (req, data, result) {
             try {
                 if (data) {
-
-                    models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
+                    models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id },{name: data.value[0].name}] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
                             result.send(400, { error: 'WorkFlow.js create workflow Incorrect Incoming Data' });
                             return;
                         } else {
-                            for (var i = 0; i < data.value.length; i++) {
-								var _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
-                                _workflow.wId = data._id;
-                                _workflow.wName = data.wName;
-                                _workflow.name = data.value[i].name;
-                                _workflow.status = data.value[i].status;
-								updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", 0, 0, data._id, true, false, function(sequence){
-                                    _workflow.sequence = sequence;
+                               //add vasya no not create workflow with the same name
+                               if (workflows.length > 0) {//add vasya no not create workflow with the same name
+                                     if (workflows[0].name === data.value[0].name) {//add vasya no not create workflow with the same name
+                                            result.send(400, { error: 'An Workflows with the same Name already exists' });//add vasya no not create workflow with the same name
+                                     }
+                               }
+                               else if(workflows.length === 0) {
 
-                                _workflow.save(function (err, workfloww) {
-                                    if (err) {
-                                        console.log(err);
-                                        logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
-                                        result.send(500, { error: 'WorkFlow.js create save error' });
-                                    } else {
-                                        result.send(201, { success: 'A new WorkFlow crate success' });
-                                        console.log(workfloww);
-                                    }
-                                });
-								});
+                               for (var i = 0; i < data.value.length; i++) {
+                                    var _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
+                                    _workflow.wId = data._id;
+                                    _workflow.wName = data.wName;
+                                    _workflow.name = data.value[i].name;
+                                    _workflow.status = data.value[i].status;
+                                    updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", 0, 0, data._id, true, false, function(sequence){
+                                        _workflow.sequence = sequence;
+                                    _workflow.save(function (err, workfloww) {
+                                        if (err) {
+                                            console.log(err);
+                                            logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
+                                            result.send(500, { error: 'WorkFlow.js create save error' });
+                                        } else {
+                                            result.send(201, { success: 'A new WorkFlow crate success' });
+                                            console.log(workfloww);
+                                        }
+                                    });
+                                    });
+							    }
 							}
 						}
                     });
