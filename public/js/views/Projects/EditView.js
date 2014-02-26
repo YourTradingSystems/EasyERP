@@ -20,6 +20,7 @@ define([
                 this.pageG = 1;
                 this.responseObj = {};
                 this.render();
+                console.log(this.currentModel);
             },
 
             events: {

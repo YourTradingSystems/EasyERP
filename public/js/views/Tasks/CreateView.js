@@ -32,6 +32,7 @@ define([
                    "change .inputAttach": "addAttach",
                    "click .deleteAttach": "deleteAttach",
                    "keypress #logged, #estimated": "isNumberKey",
+                   "paste #logged, #estimated": "preventPaste"
                },
                addAttach: function (event) {
                    var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];
@@ -113,7 +114,7 @@ define([
                        sequence: sequence,
                        StartDate: StartDate,
                        estimated: estimated,
-                       logged: logged,
+                       logged: logged
                    },
                    {
                        headers: {
@@ -214,6 +215,10 @@ define([
                    if (charCode > 31 && (charCode < 48 || charCode > 57))
                        return false;
                    return true;
+               },
+               preventPaste:function(e){
+                   //prevent paste event in #estimate and logged fields
+                   e.preventDefault();
                },
                render: function () {
                    var projectID = (window.location.hash).split('/')[3];
