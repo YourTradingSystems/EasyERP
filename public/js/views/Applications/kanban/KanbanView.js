@@ -83,6 +83,8 @@
 
             saveKanbanSettings: function () {
                 var countPerPage = $(this).find('#cPerPage').val();
+                if (countPerPage == 0)
+                    countPerPage = 5;
                 dataService.postData('/currentUser', { 'kanbanSettings.applications.countPerPage': countPerPage }, function (seccess, error) {
                     if (seccess) {
                         $(".edit-dialog").remove();
