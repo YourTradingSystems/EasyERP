@@ -437,7 +437,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     $match: {
                                         $and: [
                                             { workflow: newObjectId(res._id.toString()) },
-
                                             {
                                                 $or: [
                                                     {
@@ -731,6 +730,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     query.where('workflow').in(data.filter.workflow);
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
+                                }
+                                if (data.sort) {
+                                    query.sort(data.sort);
                                 }
                                 query.select("_id createdBy editedBy workflow projectName health customer progress StartDate EndDate TargetEndDate").
                                     populate('createdBy.user', 'login').

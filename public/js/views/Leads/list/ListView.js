@@ -2,11 +2,13 @@ define([
     'text!templates/Leads/list/ListHeader.html',
     'views/Leads/CreateView',
     'views/Leads/list/ListItemView',
+    'views/Leads/EditView',
+    'models/LeadsModel',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -40,11 +42,16 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click .list td:not(.notForm)": "gotoForm",
+                "click .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
-                "click .filter-check-list li": "checkCheckbox"
+                "click .filter-check-list li": "checkCheckbox",
+                "click #convertToOpportunity": "openDialog"
+            },
+
+            openDialog: function () {
+                $("#dialog-form").dialog("open");
             },
 
             checkCheckbox: function (e) {
@@ -192,6 +199,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
 
@@ -214,6 +222,19 @@ define([
                 }
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+            },
+             goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/Leads/form';
+                model.fetch({
+                    data: { id: id },
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             },
 
             gotoForm: function (e) {
@@ -263,20 +284,43 @@ define([
                     mid = 39,
                     model;
                 var localCounter = 0;
+				var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
-                        }
+                        },
+						wait:true,
+						success:function(){
+							that.listLength--;
+							localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+						},
+						error: function (model, res) {
+							if(res.status===403&&index===0){
+								alert("You do not have permission to perform this action");
+							}
+							that.listLength--;
+							localCounter++;
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+
+						}
                     });
-                    that.listLength--;
-                    localCounter++;
+
                 });
-                this.deleteCounter = localCounter;
-                this.deletePage = $("#currentShowPage").val();
-                this.deleteItemsRender(this.deleteCounter, this.deletePage);
             }
 
         });

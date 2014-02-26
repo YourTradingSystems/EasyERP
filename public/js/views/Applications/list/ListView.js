@@ -621,7 +621,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -636,7 +636,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+             //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -648,6 +648,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
 
@@ -655,7 +656,7 @@ define([
                 event.preventDefault();
                 this.showP(event, { filter: this.filter, newCollection: this.newCollection });
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
@@ -727,19 +728,41 @@ define([
                     model;
                 var localCounter = 0;
                 this.collectionLength = this.collection.length;
+				var count = $("#listTable input:checked").length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
-                        }
+                        },
+						wait:true,
+						success:function(){
+							that.listLength--;
+							localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+						},
+						error: function (model, res) {
+							if(res.status===403&&index===0){
+								alert("You do not have permission to perform this action");
+							}
+							that.listLength--;
+							localCounter++;
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+
+						}
                     });
-                    that.listLength--;
-                    localCounter++;
                 });
-                this.deleteCounter = localCounter;
-                this.deletePage = $("#currentShowPage").val();
-                this.deleteItemsRender(this.deleteCounter, this.deletePage);
             }
 
         });

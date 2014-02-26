@@ -32,7 +32,12 @@ define([
                         Backbone.history.navigate("#easyErp/Users/list", { trigger: true });
                     },
                     error: function (model, res) {
-						alert(JSON.parse(res.responseText).error);
+						if (res.status===403){
+							alert("You do not have permission to perform this action");
+						}else{
+
+							alert(JSON.parse(res.responseText).error);
+						}
                     }
                 });
 

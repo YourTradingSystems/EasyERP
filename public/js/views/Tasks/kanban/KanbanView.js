@@ -157,6 +157,8 @@
 
             saveKanbanSettings: function () {
                 var countPerPage = $(this).find('#cPerPage').val();
+                if (countPerPage == 0)
+                    countPerPage = 5;
                 var id = window.location.hash.split('/')[3];
                 var url = (id && id.length === 24) ? "easyErp/Tasks/kanban/" + id : "easyErp/Tasks/kanban";
                 dataService.postData('/currentUser', { 'kanbanSettings.tasks.countPerPage': countPerPage }, function (seccess, error) {

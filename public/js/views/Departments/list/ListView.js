@@ -52,11 +52,17 @@ function (ListTemplate, CreateView, ListItemView, EditView) {
                     headers: {
                         mid: mid
                     },
+					wait:true,
                     success: function () {
 						self.render();
                     },
-                    error: function () {
-                        Backbone.history.navigate("home", { trigger: true });
+                    error: function (model, err) {
+						if (err.status===403){
+							alert("You do not have permission to perform this action");
+						}else{
+
+							Backbone.history.navigate("home", { trigger: true });
+						}
                     }
                 });
             }

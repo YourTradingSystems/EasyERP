@@ -322,13 +322,18 @@ define([
             el: '#content-holder',
             defaultItemsNumber: null,
             listLength: null,
+            page: null, //if reload page, and in url is valid page
+            contentType: 'Users',//needs in view.prototype.changeLocationHash
+            viewType: 'list',//needs in view.prototype.changeLocationHash
 
             initialize: function (options) {
                 this.startTime = options.startTime;
                 this.collection = options.collection;
-                this.selectedLetter = "";
+                _.bind(this.collection.showMore, this.collection);
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
+                this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
+                this.page = options.collection.page;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber);
             },
@@ -356,9 +361,10 @@ define([
             },
 
             getTotalLength: function (currentNumber, itemsNumber) {
-                dataService.getData('/totalCollectionLength/Users', { currentNumber: currentNumber, letter: this.selectedLetter }, function (response, context) {
+                dataService.getData('/totalCollectionLength/Users', { currentNumber: currentNumber, newCollection: this.newCollection }, function (response, context) {
+                    var page = context.page || 1;
                     context.listLength = response.count || 0;
-                    context.pageElementRender(response.count, itemsNumber);//prototype in main.js
+                    context.pageElementRender(response.count, itemsNumber, page);//prototype in main.js
                 }, this);
             },
 
@@ -388,27 +394,40 @@ define([
 
             previousPage: function (event) {
                 event.preventDefault();
-                this.prevP();
-                dataService.getData('/totalCollectionLength/Users', null, function (response, context) {
+                this.prevP({
+                    newCollection: this.newCollection,
+                });
+                dataService.getData('/totalCollectionLength/Users', {
+                    newCollection: this.newCollection
+                }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
             },
-
+            //modified for filter Vasya
             nextPage: function (event) {
-                event.preventDefault();
-                this.nextP();
-                dataService.getData('/totalCollectionLength/Users', null, function (response, context) {
-                    context.listLength = response.count || 0;
-                }, this);
+                    event.preventDefault();
+                    this.nextP({
+                        newCollection: this.newCollection,
+                    });
+                    dataService.getData('/totalCollectionLength/Users', {
+                        newCollection: this.newCollection
+                    }, function (response, context) {
+                        context.listLength = response.count || 0;
+                    }, this);
             },
 
             switchPageCounter: function (event) {
-                event.preventDefault();
-                this.startTime = new Date();
-                var itemsNumber = event.target.textContent;
-                this.getTotalLength(null, itemsNumber);
-
-                this.collection.showMore({ count: itemsNumber, page: 1, letter: this.selectedLetter });
+                    event.preventDefault();
+                    this.startTime = new Date();
+                    var itemsNumber = event.target.textContent;
+                    this.getTotalLength(null, itemsNumber);
+                    this.collection.showMore({
+                        count: itemsNumber,
+                        page: 1,
+                        newCollection: this.newCollection,
+                    });
+                    $('#check_all').prop('checked', false);
+                    this.changeLocationHash(1, itemsNumber)
             },
 
             showPage: function (event) {
@@ -446,7 +465,15 @@ define([
                 }
             },
             deleteItemsRender: function (deleteCounter, deletePage) {
-                this.deleteRender(deleteCounter, deletePage);
+                dataService.getData('/totalCollectionLength/Users', {
+                    newCollection: this.newCollection
+                },
+                    function (response, context) {
+                        context.listLength = response.count || 0;
+                    }, this);
+                this.deleteRender(deleteCounter, deletePage, {
+                    newCollection: this.newCollection
+                });
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');

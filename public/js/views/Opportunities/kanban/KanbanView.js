@@ -89,6 +89,8 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 
         saveKanbanSettings: function (context) {
             var countPerPage = context.$el.find('#cPerPage').val();
+                if (countPerPage == 0)
+                    countPerPage = 5;
             dataService.postData('/currentUser', { 'kanbanSettings.opportunities.countPerPage': countPerPage }, function (seccess, error) {
                 if (seccess) {
                     $(".edit-dialog").remove();

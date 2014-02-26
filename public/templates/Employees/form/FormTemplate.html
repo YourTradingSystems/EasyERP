@@ -157,7 +157,7 @@
               <% var n = attachments.length-1;
                  attachments.reverse();
                  _.each(attachments, function(data,key){ %>
-              <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+              <li class="attachFile_<%=data['_id'] %>"><a href = "<%="download/"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
                 <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
               </li>
               <% }); attachments.reverse(); %>

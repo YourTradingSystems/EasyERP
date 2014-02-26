@@ -72,7 +72,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             $(e.target).closest("button").next("ul").toggle();
             return false;
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         getTotalLength: function (currentNumber, itemsNumber,filter) {
                 dataService.getData('/totalCollectionLength/Companies', {
                     currentNumber: currentNumber,
@@ -124,7 +124,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
@@ -140,7 +140,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+        //modified for filter Vasya
         nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -156,7 +156,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     context.listLength = response.count || 0;
                 }, this);
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -168,9 +168,10 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     filter: this.filter,
                     newCollection: this.newCollection,
                 });
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         showFilteredPage: function (e) {
                 this.startTime = new Date();
                 this.newCollection = false;
@@ -192,7 +193,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 event.preventDefault();
                 this.showP(event,{filter: this.filter, newCollection: this.newCollection});
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
@@ -208,7 +209,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         showMoreAlphabet: function (newModels) {
             var holder = this.$el;
             var alphaBet = holder.find('#startLetter');
@@ -272,19 +273,41 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 model;
             var localCounter = 0;
             this.collectionLength = this.collection.length;
+			var count = $("#listTable input:checked").length;
             $.each($("#listTable input:checked"), function (index, checkbox) {
                 model = that.collection.get(checkbox.value);
                 model.destroy({
                     headers: {
                         mid: mid
-                    }
+                    },
+						wait:true,
+						success:function(){
+							that.listLength--;
+							localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+						},
+						error: function (model, res) {
+							if(res.status===403&&index===0){
+								alert("You do not have permission to perform this action");
+							}
+							that.listLength--;
+							localCounter++;
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+
+						}
                 });
-                that.listLength--;
-                localCounter++;
             });
-            this.deleteCounter = localCounter;
-            this.deletePage = $("#currentShowPage").val();
-            this.deleteItemsRender(this.deleteCounter, this.deletePage);
         }
 
     });
