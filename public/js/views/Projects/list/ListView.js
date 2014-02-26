@@ -60,6 +60,7 @@ define([
             },
 
             fetchSortCollection: function (sortObject) {
+                this.sort = sortObject;
                 this.collection = new contentCollection({
                     viewType: 'list',
                     sort: sortObject,
@@ -105,6 +106,8 @@ define([
                 }
                 sortObject[sortBy] = sortConst;
                 this.fetchSortCollection(sortObject);
+                this.changeLocationHash(1, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
 
             goToEditDialog: function (e) {
@@ -246,6 +249,7 @@ define([
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
@@ -263,6 +267,7 @@ define([
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
@@ -281,6 +286,7 @@ define([
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
+                this.defaultItemsNumber = itemsNumber;
                 this.getTotalLength(null, itemsNumber, this.filter);
                 this.collection.showMore({
                     count: itemsNumber,
@@ -294,7 +300,7 @@ define([
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { filter: this.filter, newCollection: this.newCollection });
+                this.showP(event, { filter: this.filter, newCollection: this.newCollection, sort: this.sort });
             },
 
             render: function () {
