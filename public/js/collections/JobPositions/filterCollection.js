@@ -6,8 +6,10 @@
         var JobPositionsCollection = Backbone.Collection.extend({
             model: JobPositionsModel,
             url: "/JobPositions/",
-            page: 1,
+            page:null,
             namberToShow: null,
+            viewType: null,
+            contentType: null,
 
             initialize: function (options) {
 				this.startTime = new Date();
@@ -20,7 +22,11 @@
                     this.url += options.viewType;
                    // delete options.viewType;
                 }
-
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                    this.count = options.count;
+                    this.page = options.page || 1;
+                }
                 this.fetch({
                     data: options,
                     reset: true,

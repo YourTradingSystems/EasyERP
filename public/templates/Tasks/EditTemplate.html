@@ -1,5 +1,5 @@
 ﻿﻿<div class="form-holder task-create-holder">
-    <form method="post" action="" id="createTaskForm" class="form" data-id="<%=model._id%>">
+    <form method="post" action="" id="editTaskForm" class="form" data-id="<%=model._id%>">
         <fieldset>
             <div class="half-block left withPaddingLeft">
                 <a id="projectTopName" href="#easyErp/Projects/form/<%=model.project._id%>"><%=model.project.projectShortDesc%></a>
@@ -130,7 +130,7 @@
                     model.attachments.reverse();
                     _.each(model.attachments, function(data,key){ %>
                     <li class="attachFile_<%=data['_id'] %>">
-                        <a href="<%=" download />"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+                        <a href="<%=" download />"+data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
                         <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
                     </li>
                     <% }); model.attachments.reverse(); %>
