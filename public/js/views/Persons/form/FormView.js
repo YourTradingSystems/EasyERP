@@ -358,13 +358,13 @@ define([
                 }
             },
 
-
             addAttach: function (event) {
                 event.preventDefault();
                 var currentModel = this.formModel;
                 var currentModelId = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
+
                 if (!this.fileSizeIsAcceptable(addInptAttach)) {
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
@@ -380,7 +380,6 @@ define([
                         type: "POST",
                         processData: false,
                         contentType: false,
-                        data: [addInptAttach],
 
                         beforeSend: function (xhr) {
                             xhr.setRequestHeader("id", currentModelId);
