@@ -399,9 +399,10 @@ define([
                                 $('.edit-leads-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function () {
-                                $('.edit-leads-dialog').remove();
-                                Backbone.history.navigate("home", { trigger: true });
+                            error: function (model,err) {
+								if (err.status===403){
+									alert("You do not have permission to perform this action");
+								}
                             }
                         });
                 }

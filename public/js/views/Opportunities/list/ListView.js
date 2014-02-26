@@ -306,20 +306,43 @@ define([
                     mid = 39,
                     model;
                 var localCounter = 0;
+				var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
                 $.each($("#listTable input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
-                        }
+                        },
+						wait:true,
+						success:function(){
+							that.listLength--;
+							localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+						},
+						error: function (model, res) {
+							if(res.status===403&&index===0){
+								alert("You do not have permission to perform this action");
+							}
+							that.listLength--;
+							localCounter++;
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+
+						}
                     });
-                    that.listLength--;
-                    localCounter++;
                 });
-                this.deleteCounter = localCounter;
-                this.deletePage = $("#currentShowPage").val();
-                this.deleteItemsRender(this.deleteCounter, this.deletePage);
+
             }
 
         });
