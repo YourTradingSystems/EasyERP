@@ -328,10 +328,10 @@ define([
                                 $('.edit-companies-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function (models, xhr) {
-                                self.hideDialog();
-                                (xhr.status == 401) ? Backbone.history.navigate('#login', { trigger: true }):
-                                    Backbone.history.navigate("home", { trigger: true });
+                            error: function (models, err) {
+								if (err.status===403){
+									alert("You do not have permission to perform this action");
+								}
                             }
                         });
                 }

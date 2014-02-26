@@ -2033,7 +2033,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
     function removeOpportunitie(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getEditWritAccess(req, req.session.uId, 25, function (access) {
+            access.getDeleteAccess(req, req.session.uId, 25, function (access) {
                 if (access) {
                     opportunities.remove(req, id, res);
                 } else {

@@ -226,12 +226,23 @@ define([
                     model.destroy({
                         headers: {
                             mid: 39
-                        }
+                        },
+						wait:true,
+						   success: function () {
+							   this.collection.trigger('reset');
+							   Backbone.history.fragment = "";
+							   Backbone.history.navigate("#easyErp/Profiles", { trigger: true });
+						   },
+						   error: function (model, err) {
+							   if(err.status===403){
+								   alert("You do not have permission to perform this action");
+							   }else{
+								   Backbone.history.navigate("easyErp", { trigger: true });
+							   }
+						   }
                     });
-                this.collection.trigger('reset');
                 //Navigate to page to hide the edit and delete buttons
-                Backbone.history.fragment = "";
-                Backbone.history.navigate("#easyErp/Profiles", { trigger: true });
+
             },
 
             viewProfile: function(event){
