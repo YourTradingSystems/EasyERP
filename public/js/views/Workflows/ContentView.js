@@ -76,9 +76,19 @@ define([
 					   success: function (model) {
 						   common.checkBackboneFragment("easyErp/Workflows");
 					   },
-                       error: function (error){
-                            console.log(error);
-                   }
+                    error: function (model, xhr) {
+						if (xhr && (xhr.status === 401||xhr.status === 403)) {
+							if (xhr.status === 401){
+								Backbone.history.navigate("login", { trigger: true });
+							}else{
+								alert("You do not have permission to perform this action");	
+								common.checkBackboneFragment("easyErp/Workflows");
+
+							}
+                        } else {
+                            Backbone.history.navigate("home", { trigger: true });
+                        }
+                    }
 				   });
 			   },
 

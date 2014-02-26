@@ -467,14 +467,18 @@ define([
 						addFrmAttach.off('submit');
 
                     },
-
-                    error: function (model, res) {
-                       /* self.hideDialog();
-                        Backbone.history.navigate("home", { trigger: true });*/
-
-                        //added alert
-                        alert(JSON.parse(res.responseText).error);
-
+                    error: function (model, xhr) {
+                        self.hideDialog();
+						if (xhr && (xhr.status === 401||xhr.status === 403)) {
+							if (xhr.status === 401){
+								Backbone.history.navigate("login", { trigger: true });
+							}else{
+								alert("You do not have permission to perform this action");								
+							}
+                        } else {
+							if (xhr&&xhr.responseText)
+								alert(JSON.parse(xhr.responseText).error);
+                        }
                     }
                 });
             },

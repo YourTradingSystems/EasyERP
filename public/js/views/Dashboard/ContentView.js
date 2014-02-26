@@ -93,13 +93,11 @@ define([
 					   }else{
 						   $(".legend-box").css("margin-top","-39px");
 					   }
-					   self.renderPopulate();
-					   self.renderPopulateSource();
 
 				   });
                    this.$el.html(this.template());
-//				   this.renderPopulate();
-//                   this.renderPopulateSource();
+				   this.renderPopulate();
+                   this.renderPopulateSource();
 				   this.$el.append("<div id='timeRecivingDataFromServer'>Created in "+(new Date()-this.startTime)+" ms</div>");
                },
                renderPopulateSource: function () {
