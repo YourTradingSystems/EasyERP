@@ -86,8 +86,9 @@ define([
                 var sortObject = {};
                 if (!sortClass) {
                     target$.addClass('sortDn');
-                } else {
-                    switch (sortClass) {
+                    sortClass = "sortDn";
+                }
+                switch (sortClass) {
                         case "sortDn":
                             {
                                 target$.removeClass('sortDn').addClass('sortUp');
@@ -101,9 +102,6 @@ define([
                             }
                             break;
                     }
-
-
-                }
                 sortObject[sortBy] = sortConst;
                 this.fetchSortCollection(sortObject);
                 this.changeLocationHash(1, this.defaultItemsNumber);
@@ -124,14 +122,16 @@ define([
             },
 
             checkCheckbox: function (e) {
-                if (!$(e.target).is("input")) {
-                    $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"));
+                var target$ = $(e.target);
+                if (!target$.is("input")) {
+                    target$.closest("li").find("input").prop("checked", !target$.closest("li").find("input").prop("checked"));
                 }
             },
 
             chooseHealthDd: function (e) {
-                var target = $(e.target).parents("#health");
-                target.find("div a").attr("class", $(e.target).attr("class")).attr("data-value", $(e.target).attr("class").replace("health", "")).parents("#health").find("ul").toggle();
+                var target$ = $(e.target);
+                var target = target$.parents("#health");
+                target.find("div a").attr("class", target$.attr("class")).attr("data-value", target$.attr("class").replace("health", "")).parents("#health").find("ul").toggle();
                 var id = target.data("id");
                 var model = this.collection.get(id);
                 model.save({ health: target.find("div a").data("value") }, {
@@ -142,7 +142,7 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-                        $(e.target).parents("#health").find("ul").hide();
+                        target$.parents("#health").find("ul").hide();
                     }
                 });
                 return false;
@@ -183,10 +183,11 @@ define([
             },
 
             chooseOption: function (e) {
-                var targetElement = $(e.target).parents("td");
+                var target$ = $(e.target);
+                var targetElement = target$.parents("td");
                 var id = targetElement.attr("id");
                 var model = this.collection.get(id);
-                model.save({ workflow: $(e.target).attr("id") }, {
+                model.save({ workflow: target$.attr("id") }, {
                     headers:
                         {
                             mid: 39
@@ -194,8 +195,8 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-                        targetElement.find(".stageSelect").text($(e.target).text());
-                        targetElement.parents("tr").attr("class", "stage-" + $(e.target).text().toLowerCase().replace(' ', ''));
+                        targetElement.find(".stageSelect").text(target$.text());
+                        targetElement.parents("tr").attr("class", "stage-" + target$.text().toLowerCase().replace(' ', ''));
                     }
                 });
 
@@ -294,6 +295,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
