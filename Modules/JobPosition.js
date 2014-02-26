@@ -371,20 +371,24 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
-                                            _res.forEach(function (ellement, index) {
-                                                models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function (err, count) {
-                                                    if (count) {
-                                                        ellement.numberOfEmployees = count;
+                                            if (_res.length !== 0) {
+                                                _res.forEach(function(ellement, index) {
+                                                    models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function(err, count) {
+                                                        if (count) {
+                                                            ellement.numberOfEmployees = count;
 
-                                                    } else if (err) {
-                                                        console.log(err);
-                                                        response.send(500, { error: 'Some error occured in JobPosition' });
+                                                        } else if (err) {
+                                                            console.log(err);
+                                                            response.send(500, { error: 'Some error occured in JobPosition' });
+                                                        }
+                                                        if (index === result.length - 1)
+                                                            response.send(res);
                                                     }
-                                                    if (index === result.length - 1)
-                                                        response.send(res);
-                                                }
-                );
-                                            });
+                                                    );
+                                                });
+                                            } else {
+                                                response.send(res);
+                                            }
                                             //response.send(res);
                                         } else {
                                             console.log(error);

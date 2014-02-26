@@ -5,16 +5,18 @@ define([
     'views/Projects/list/ListItemView',
     'views/Projects/EditView',
     'models/ProjectsModel',
+    'collections/Projects/filterCollection',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, stagesTamplate, CreateView, listItemView, editView, currentModel, common, dataService) {
+    function (listTemplate, stagesTamplate, CreateView, listItemView, editView, currentModel, contentCollection, common, dataService) {
         var ProjectsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
             listLength: null,
             filter: null,
+            sort: null,
             newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'Projects',//needs in view.prototype.changeLocationHash
@@ -27,6 +29,7 @@ define([
                 _.bind(this.collection.showMore, this.collection);
                 this.parrentContentId = options.collection.parrentContentId;
                 this.stages = [];
+                this.sort = options.sort;
                 this.filter = options.filter;
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.newCollection = options.newCollection;
@@ -52,7 +55,56 @@ define([
                 "click .newSelectList li": "chooseOption",
                 "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
-                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog"
+                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog",
+                "click .oe_sortable": "goSort"
+            },
+
+            fetchSortCollection: function (sortObject) {
+                this.collection = new contentCollection({
+                    viewType: 'list',
+                    sort: sortObject,
+                    page: this.page,
+                    count: this.defaultItemsNumber,
+                    filter: this.filter,
+                    parrentContentId: this.parrentContentId,
+                    contentType: this.contentType,
+                    newCollection: this.newCollection
+                });
+                this.collection.bind('reset', this.renderContent, this);
+                this.collection.bind('showmore', this.showMoreContent, this);
+            },
+
+            goSort: function (e) {
+                this.collection.unbind('reset');
+                this.collection.unbind('showmore');
+                var target$ = $(e.target);
+                var currentParrentSortClass = target$.attr('class');
+                var sortClass = currentParrentSortClass.split(' ')[1];
+                var sortConst = 1;
+                var sortBy = target$.data('sort');
+                var sortObject = {};
+                if (!sortClass) {
+                    target$.addClass('sortDn');
+                } else {
+                    switch (sortClass) {
+                        case "sortDn":
+                            {
+                                target$.removeClass('sortDn').addClass('sortUp');
+                                sortConst = 1;
+                            }
+                            break;
+                        case "sortUp":
+                            {
+                                target$.removeClass('sortUp').addClass('sortDn');
+                                sortConst = -1;
+                            }
+                            break;
+                    }
+
+
+                }
+                sortObject[sortBy] = sortConst;
+                this.fetchSortCollection(sortObject);
             },
 
             goToEditDialog: function (e) {
@@ -140,7 +192,7 @@ define([
                     validate: false,
                     success: function () {
                         targetElement.find(".stageSelect").text($(e.target).text());
-						targetElement.parents("tr").attr("class","stage-"+$(e.target).text().toLowerCase().replace(' ',''));
+                        targetElement.parents("tr").attr("class", "stage-" + $(e.target).text().toLowerCase().replace(' ', ''));
                     }
                 });
 
@@ -159,7 +211,7 @@ define([
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
                 this.changeLocationHash(1, itemsNumber, this.filter);
-                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
+                this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter });
                 this.getTotalLength(null, itemsNumber, this.filter);
             },
 
@@ -246,16 +298,11 @@ define([
             },
 
             render: function () {
-                $('.ui-dialog ').remove();
                 var self = this;
+                $('.ui-dialog ').remove();
                 var currentEl = this.$el;
-
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                var itemView = new listItemView({ collection: this.collection });
-                currentEl.append(itemView.render());
-
-                itemView.bind('incomingStages', itemView.pushStages, itemView);
 
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -264,32 +311,43 @@ define([
                     else
                         $("#top-bar-deleteBtn").hide();
                 });
-
+                this.bind('incomingStages', this.pushStages, this);
+                common.populateWorkflowsList("Projects", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
+                    self.stages = stages;
+                    var stage = (self.filter) ? self.filter.workflow : null;
+                    if (stage) {
+                        $('.filter-check-list input').each(function () {
+                            var target = $(this);
+                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                        });
+                    }
+                    self.trigger('incomingStages', stages);
+                });
 
                 $(document).on("click", function (e) {
                     self.hideItemsNumber(e);
                 });
 
-                common.populateWorkflowsList("Projects", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
-                    self.stages = stages;
-                    var stage = (self.filter) ? self.filter.workflow : null;
-                    if (stage) {
-                        $('.filter-check-list input').each(function() {
-                            var target = $(this);
-                            target.attr('checked', $.inArray(target.val(), stage) > -1);
-                        });
-                    }
-                    itemView.trigger('incomingStages', stages);
-                });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+                this.renderContent();
+            },
+
+            renderContent: function () {
+                var currentEl = this.$el;
+                var tBody = currentEl.find('#listTable');
+                tBody.empty();
+                var itemView = new listItemView({ collection: this.collection });
+
+                tBody.append(itemView.render());
             },
 //modified for filter Vasya
             showMoreContent: function (newModels) {
                 var holder = this.$el;
-                holder.find("#listTable").empty();
+                var tBody = holder.find('#listTable');
+                tBody.empty();
                 var itemView = new listItemView({ collection: newModels });
-                holder.append(itemView.render());
+                tBody.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
                 if (newModels.length !== 0) {
