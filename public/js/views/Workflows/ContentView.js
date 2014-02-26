@@ -144,8 +144,12 @@ define([
 						   success: function () {
                     		   common.checkBackboneFragment("easyErp/Workflows", { trigger: true });
 						   },
-						   error: function () {
-							   Backbone.history.navigate("easyErp", { trigger: true });
+						   error: function (model, err) {
+							   if(err.status===403){
+								   alert("You do not have permission to perform this action");
+							   }else{
+								   Backbone.history.navigate("easyErp", { trigger: true });
+							   }
 						   }
 					   });
 				   }

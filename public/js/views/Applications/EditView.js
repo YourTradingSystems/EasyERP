@@ -583,9 +583,13 @@
 							self.hideDialog();
 
                         },
-                        error: function () {
-                            $('.applications-edit-dialog').remove();
-                            Backbone.history.navigate("home", { trigger: true });
+                        error: function (model, err) {
+							if (err.status===403){
+								alert("You do not have permission to perform this action");
+							}else{
+								$('.applications-edit-dialog').remove();
+								Backbone.history.navigate("home", { trigger: true });
+							}
                         }
                     });
                 }
