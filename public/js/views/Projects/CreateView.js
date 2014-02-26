@@ -136,7 +136,6 @@ define([
 				pag.text(s);
 			},
             nextUserList: function (e, page) {
-				
 				$(e.target).closest(".left").find("ul").attr("data-page",parseInt($(e.target).closest(".left").find("ul").attr("data-page"))+1);
 				e.data.self.updateAssigneesPagination($(e.target).closest(".left"));
 
