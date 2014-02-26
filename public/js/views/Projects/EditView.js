@@ -92,30 +92,20 @@ define([
 				var s ="";
 				var page  = parseInt(list.attr("data-page"));
 				if (page>1){
-					if (el.parents(".groupsChooser").length!=0){
-						el.find(".userPagination").prepend("<a class='prevGroupList' href='javascript:;'>« prev</a>");
-					}else{
-						el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
-
-					}
-
+					el.find(".userPagination").prepend("<a class='prevUserList' href='javascript:;'>« prev</a>");
 				}
 				if (count===0){
 					s+="0-0 of 0";
 				}else{
 					if ((page)*20-1<count){
-						s+=((page-1)*20+1)+"-"+((page)*20-1)+" of "+count;
+						s+=((page-1)*20+1)+"-"+((page)*20)+" of "+count;
 					}else{
 						s+=((page-1)*20+1)+"-"+(count)+" of "+count;
 					}
 				}
 				
 				if (page<count/20){
-					if (el.parents(".groupsChooser").length!=0){
-						el.find(".userPagination").append("<a class='nextGroupList' href='javascript:;'>next »</a>");
-					}else{
-						el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
-					}
+					el.find(".userPagination").append("<a class='nextUserList' href='javascript:;'>next »</a>");
 				}
 				el.find("ul li").hide();
 				for (var i=(page-1)*20;i<20*page;i++){
@@ -124,6 +114,7 @@ define([
  
 				pag.text(s);
 			},
+
 
             editDelNote: function (e) {
                 var id = e.target.id;
@@ -418,7 +409,7 @@ define([
                 $(id).find("li").each(function () {
                     groupsAndUser_holder.append("<tr data-type='" + id.replace("#", "") + "' data-id='" + $(this).attr("id") + "'><td>" + $(this).text() + "</td><td class='text-right'></td></tr>");
                 });
-                if (groupsAndUserTr_holder.length < 2) {
+                if ($(".groupsAndUser tr").length <2) {
                     groupsAndUser_holder.hide();
                 }
             },
