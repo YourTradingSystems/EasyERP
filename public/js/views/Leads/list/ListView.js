@@ -2,11 +2,13 @@ define([
     'text!templates/Leads/list/ListHeader.html',
     'views/Leads/CreateView',
     'views/Leads/list/ListItemView',
+    'views/Leads/EditView',
+    'models/LeadsModel',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -40,11 +42,16 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click .list td:not(.notForm)": "gotoForm",
+                "click .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
-                "click .filter-check-list li": "checkCheckbox"
+                "click .filter-check-list li": "checkCheckbox",
+                "click #convertToOpportunity": "openDialog"
+            },
+
+            openDialog: function () {
+                $("#dialog-form").dialog("open");
             },
 
             checkCheckbox: function (e) {
@@ -215,6 +222,19 @@ define([
                 }
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+            },
+             goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/Leads/form';
+                model.fetch({
+                    data: { id: id },
+                    success: function (model) {
+                        new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             },
 
             gotoForm: function (e) {

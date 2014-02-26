@@ -437,7 +437,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     $match: {
                                         $and: [
                                             { workflow: newObjectId(res._id.toString()) },
-
                                             {
                                                 $or: [
                                                     {
