@@ -351,7 +351,6 @@ define([
 					   headers: {
 						   mid: mid
 					   },
-					   wait: true,
 					   validate:true,
 					   success: function (model) {
 						   common.checkBackboneFragment("easyErp/Workflows");

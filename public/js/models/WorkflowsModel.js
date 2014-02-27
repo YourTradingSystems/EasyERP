@@ -24,6 +24,10 @@ function (common, Validation){
             if (attrs.name){
                 Validation.checkWorkflowNameField(errors, true, attrs.name,"Name");
             }
+            if (attrs.value&&attrs.value[0].name){
+                Validation.checkWorkflowNameField(errors, true, attrs.value[0].name,"Name");
+            }
+
             if(errors.length > 0)
                 return errors;
 
