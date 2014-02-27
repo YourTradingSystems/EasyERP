@@ -896,6 +896,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     }
 
     function updateOnlySelectedFields(req, _id, data, res) {
+        var fileName = data.fileName;
+        delete data.fileName;
 		if (data.workflow&&data.sequenceStart&&data.workflowStart){
 			if (data.sequence == -1) {
 				event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
@@ -929,9 +931,44 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 					});
 				});
 			}
-		}else{
+		} else {
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
+                    if (fileName) {
+                        var newDirname = __dirname.replace("\\Modules","");
+                        var os = require("os");
+                        var osType = (os.type().split('_')[0]);
+                        var path;
+                        var dir;
+                        switch (osType) {
+                            case "Windows":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                                break;
+                            case "Linux":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                        }
+
+                        logWriter.fs.unlink(path,function(){
+                            logWriter.fs.readdir(dir, function(err, files){
+                                if (files.length === 0) {
+                                    logWriter.fs.rmdir(dir,function(){});
+                                }
+                            });
+                        });
+
+                    }
                     res.send(200, { success: 'Employees updated', result:result });
                 } else {
                     res.send(500, { error: "Can't update Employees" });

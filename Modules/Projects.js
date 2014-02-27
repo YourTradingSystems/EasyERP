@@ -1259,6 +1259,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
     function updateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
+        var fileName = data.fileName;
+        delete data.fileName;
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
             obj._id = mongoose.Types.ObjectId();
@@ -1272,6 +1274,41 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 logWriter.log("Project.js update project.update " + err);
                 res.send(500, { error: "Can't update Project" });
             } else {
+                if (fileName) {
+                    var newDirname = __dirname.replace("\\Modules","");
+                    var os = require("os");
+                    var osType = (os.type().split('_')[0]);
+                    var path;
+                    var dir;
+                    switch (osType) {
+                        case "Windows":
+                        {
+                            while (newDirname.indexOf("\\") !== -1) {
+                                newDirname = newDirname.replace("\\","\/");
+                            }
+                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                            dir = newDirname + "\/uploads\/" + _id;
+                        }
+                            break;
+                        case "Linux":
+                        {
+                            while (newDirname.indexOf("\\") !== -1) {
+                                newDirname = newDirname.replace("\\","\/");
+                            }
+                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                            dir = newDirname + "\/uploads\/" + _id;
+                        }
+                    }
+
+                    logWriter.fs.unlink(path,function(){
+                        logWriter.fs.readdir(dir, function(err, files){
+                            if (files.length === 0) {
+                                logWriter.fs.rmdir(dir,function(){});
+                            }
+                        });
+                    });
+
+                }
                 res.send(200, projects);
             }
         });
@@ -1280,6 +1317,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     function taskUpdateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
         delete data.createdBy;
+        var fileName = data.fileName;
+        delete data.fileName;
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
             if (!obj._id)
@@ -1339,6 +1378,41 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         function updateTask() {
             models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
+                    if (fileName) {
+                        var newDirname = __dirname.replace("\\Modules","");
+                        var os = require("os");
+                        var osType = (os.type().split('_')[0]);
+                        var path;
+                        var dir;
+                        switch (osType) {
+                            case "Windows":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                                break;
+                            case "Linux":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                        }
+
+                        logWriter.fs.unlink(path,function(){
+                            logWriter.fs.readdir(dir, function(err, files){
+                                if (files.length === 0) {
+                                    logWriter.fs.rmdir(dir,function(){});
+                                }
+                            });
+                        });
+
+                    }
                     res.send(200, { success: 'Tasks updated', notes: result.notes, sequence: result.sequence });
                 } else {
                     res.send(500, { error: "Can't update Tasks" });

@@ -380,6 +380,7 @@ define([
                         type: "POST",
                         processData: false,
                         contentType: false,
+                        data: [addInptAttach],
 
                         beforeSend: function (xhr) {
                             xhr.setRequestHeader("id", currentModelId);
@@ -434,7 +435,8 @@ define([
                             return attach;
                         }
                     });
-                    currentModel.save({ 'attachments': newAttachments },
+                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                    currentModel.save({ 'attachments': newAttachments , fileName: fileName},
                         {
                             headers: {
                                 mid: 39
