@@ -50,7 +50,6 @@ define([
                 "click .filter-check-list li": "checkCheckbox",
                 "click #firstShowPage": "firstPage",
                 "click #lastShowPage": "lastPage",
-                "click .filter-check-list li": "checkCheckbox",
 				"click .stageSelect": "showNewSelect",
 				"click .newSelectList li": "chooseOption"
 
