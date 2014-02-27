@@ -841,6 +841,9 @@
                                         case ('Persons'):
                                             switch (viewType) {
                                                 case ('list'): {
+                                                                    if (data.sort) {
+                                                                         query.sort(data.sort);
+                                                                    }
                                                     query.select("_id createdBy editedBy address.country email name phones.phone").
                                                         populate('createdBy.user', 'login').
                                                         populate('editedBy.user', 'login');
