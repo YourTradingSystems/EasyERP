@@ -13,27 +13,20 @@ function (common, Validation){
                 }
             });
         },
-        validate: function(attrs, options){
+            parse: true,
+            parse: function (response) {
+				return response;
+			},
+        validate: function(attrs,options){
             var errors = [];
 
           //  Validation.checkLoginField(errors, true, attrs.value[0].name);
-            if(options.editMode){
-            Validation.checkLoginField(errors, true, attrs.name);
-            }
-            if (attrs.wName){
-            	Validation.checkLoginField(errors, true, attrs.wName);
-        	}
             if (attrs.name){
-                Validation.checkLoginField(errors, true, attrs.name);
+                Validation.checkWorkflowNameField(errors, true, attrs.name,"Name");
             }
             if(errors.length > 0)
                 return errors;
 
-        },
-        defaults: {
-            wId: '',
-            name: '',
-            value: []
         },
 
         urlRoot: function () {

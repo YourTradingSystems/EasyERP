@@ -1,10 +1,9 @@
-define(function () {
-    var WorkflowModel = Backbone.Model.extend({
-        idAttribute: '_id'
-    });
-
+define([
+    'models/WorkflowsModel',
+],
+	function (WorkflowsModel) {
     var WorkflowsCollection = Backbone.Collection.extend({
-        model: WorkflowModel,
+        model: WorkflowsModel,
         url: function () {
             var mid = 39,
                 url = "/Workflows?mid=" + mid + "&id=" + this.type;
