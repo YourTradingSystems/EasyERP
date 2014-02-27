@@ -469,7 +469,7 @@
                        addFrmAttach.ajaxSubmit({
                            url: formURL,
                            type: "POST",
-                           processData: false,
+                           //processData: false,
                            contentType: false,
                            data: [addInptAttach],
 
@@ -523,16 +523,17 @@
                                return attach;
                            }
                        });
-                       currentModel.save({ 'attachments': newAttachments },
-										 {
-											 headers: {
-												 mid: 39
-											 },
-											 patch: true,
-											 success: function () {
-												 $('.attachFile_' + id).remove();
-											 }
-										 });
+                       var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                       currentModel.save({ 'attachments': newAttachments, fileName: fileName},
+                             {
+                                 headers: {
+                                     mid: 39
+                                 },
+                                 patch: true,
+                                 success: function () {
+                                     $('.attachFile_' + id).remove();
+                                 }
+                             });
                    }
                },
 

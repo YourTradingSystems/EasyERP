@@ -1,8 +1,7 @@
 ﻿define([
-    'models/ApplicationsModel',
-    'common'
+    'models/ApplicationsModel'
 ],
-    function (ApplicationModel, common) {
+    function (ApplicationModel) {
         var TasksCollection = Backbone.Collection.extend({
             model: ApplicationModel,
             url: "/Applications/",
@@ -16,10 +15,8 @@
                 this.startTime = new Date();
                 this.contentType = options.contentType;
                 this.viewType = options.viewType;
-                this.wfStatus = [];
-                this.wfStatus = options.status;
-                this.namberToShow = options.count;
-
+                this.wfStatus = options.status || [];
+                
                 if (options && options.viewType) {
                     this.url += options.viewType;
                    // delete options.viewType;

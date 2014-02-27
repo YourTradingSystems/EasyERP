@@ -50,7 +50,7 @@
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
 				"click .hireEmployee": "isEmployee",
-                "click .refuseEmployee": "refuseEmployee",
+                "click .refuseEmployee": "refuseEmployee"
             },
 			refuseEmployee:function (e) {
 				var self = this;
@@ -371,7 +371,8 @@
                             return attach;
                         }
                     });
-                    currentModel.save({'attachments': new_attachments},
+                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                    currentModel.save({'attachments': new_attachments, fileName: fileName},
                                       {
                                           headers: {
                                               mid: 39

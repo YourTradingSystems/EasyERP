@@ -141,8 +141,41 @@ app.get('/getModules', function (req, res) {
 
 app.post('/uploadFiles', function (req, res, next) {
     console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
+
     //data = {};
     var file = {};
+    var localPath = __dirname + "\\uploads\\" + req.headers.id;
+    fs.readdir(localPath, function(err, files){
+        if (!err) {
+            var k = '';
+            var maxK = 0;
+            var checkIs = false;
+            var attachfileName = req.files.attachfile.name.slice(0,req.files.attachfile.name.lastIndexOf('.'));
+            files.forEach(function(fileName){
+                if (fileName == req.files.attachfile.name) {
+                   k = 1;
+                   checkIs = true;
+                } else {
+                    if ((fileName.indexOf(attachfileName) === 0) &&
+                        (fileName.lastIndexOf(attachfileName) === 0) &&
+                        (fileName.lastIndexOf(').') !== -1) &&
+                        (fileName.lastIndexOf('(') !== -1) &&
+                        (fileName.lastIndexOf('(') < fileName.lastIndexOf(').')) &&
+                        (attachfileName.length == fileName.lastIndexOf('('))) {
+                        var intVal = fileName.slice(fileName.lastIndexOf('(')+1,fileName.lastIndexOf(').'));
+                        k = parseInt(intVal) + 1;
+                    }
+                }
+                if (maxK < k) {
+                    maxK = k;
+                }
+            });
+            if (!(maxK == 0) && checkIs) {
+                req.files.attachfile.name = attachfileName + '(' + maxK + ')' + req.files.attachfile.name.slice(req.files.attachfile.name.lastIndexOf('.'));
+            }
+        }
+    });
+
     fs.readFile(req.files.attachfile.path, function (err, data) {
         var path;
         var dir;
@@ -151,14 +184,14 @@ app.post('/uploadFiles', function (req, res, next) {
         switch (osType) {
             case "Windows":
                 {
-                    path = __dirname + "\\uploads\\" + req.files.attachfile.name;
-                    dir = __dirname + "\\uploads";
+                    path = __dirname + "\\uploads\\" + req.headers.id + "\\" + req.files.attachfile.name;
+                    dir = __dirname + "\\uploads\\" + req.headers.id;
                 }
                 break;
             case "Linux":
                 {
-                    path = __dirname + "\/uploads\/" + req.files.attachfile.name;
-                    dir = __dirname + "\/uploads";
+                    path = __dirname + "\/uploads\/" + req.headers.id +"\/" + req.files.attachfile.name;
+                    dir = __dirname + "\/uploads\/" + req.headers.id;
                 }
         }
 
@@ -201,6 +234,7 @@ app.post('/uploadFiles', function (req, res, next) {
             }
         });
     });
+
 });
 
 app.get('/download/:name', function (req, res) {
@@ -217,21 +251,63 @@ function uploadFileArray(req, res, callback) {
     var dir;
     var os = require("os");
     var osType = (os.type().split('_')[0]);
-
     req.files.attachfile.forEach(function (item) {
+        var localPath;
+        switch (osType) {
+            case "Windows":
+            {
+                localPath = __dirname + "\\uploads\\" + req.headers.id;
+            }
+                break;
+            case "Linux":
+            {
+                localPath = __dirname + "\/uploads\/" + req.headers.id;
+            }
+        }
+        fs.readdir(localPath, function(err, files){
+            if (!err) {
+                var k = '';
+                var maxK = 0;
+                var checkIs = false;
+                var attachfileName = item.name.slice(0,item.name.lastIndexOf('.'));
+                files.forEach(function(fileName){
+                    if (fileName == item.name) {
+                        k = 1;
+                        checkIs = true;
+                    } else {
+                        if ((fileName.indexOf(attachfileName) === 0) &&
+                            (fileName.lastIndexOf(attachfileName) === 0) &&
+                            (fileName.lastIndexOf(').') !== -1) &&
+                            (fileName.lastIndexOf('(') !== -1) &&
+                            (fileName.lastIndexOf('(') < fileName.lastIndexOf(').')) &&
+                            (attachfileName.length == fileName.lastIndexOf('('))) {
+                            var intVal = fileName.slice(fileName.lastIndexOf('(')+1,fileName.lastIndexOf(').'));
+                            k = parseInt(intVal) + 1;
+                        }
+                    }
+                    if (maxK < k) {
+                        maxK = k;
+                    }
+                });
+                if (!(maxK == 0) && checkIs) {
+                    item.name = attachfileName + '(' + maxK + ')' + item.name.slice(item.name.lastIndexOf('.'));
+                }
+            }
+        });
+
         fs.readFile(item.path, function (err, data) {
             switch (osType) {
                 case "Windows":
-                    {
-                        path = __dirname + "\\uploads\\" + item.name;
-                        dir = __dirname + "\\uploads";
-                    }
+                {
+                    path = __dirname + "\\uploads\\" + req.headers.id + "\\" + item.name;
+                    dir = __dirname + "\\uploads\\" + req.headers.id;
+                }
                     break;
                 case "Linux":
-                    {
-                        path = __dirname + "\/uploads\/" + item.name;
-                        dir = __dirname + "\/uploads";
-                    }
+                {
+                    path = __dirname + "\/uploads\/" + req.headers.id +"\/" + item.name;
+                    dir = __dirname + "\/uploads\/" + req.headers.id;
+                }
             }
             fs.writeFile(path, data, function (err) {
                 if (!err) {
@@ -264,19 +340,18 @@ function uploadFileArray(req, res, callback) {
 }
 
 app.post('/uploadApplicationFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
     var os = require("os");
     var osType = (os.type().split('_')[0]);
     var dir;
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads";
+                dir = __dirname + "\\uploads\\" + req.headers.id;
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads";
+                dir = __dirname + "\/uploads\/" + req.headers.id;
             }
     }
     fs.readdir(dir, function (err, files) {
@@ -305,12 +380,12 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads";
+                dir = __dirname + "\\uploads\\" + req.headers.id;
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads";
+                dir = __dirname + "\/uploads\/" + req.headers.id;
             }
     }
     fs.readdir(dir, function (err, files) {
@@ -339,12 +414,12 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads";
+                dir = __dirname + "\\uploads\\" + req.headers.id;
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads";
+                dir = __dirname + "\/uploads\/" + req.headers.id;
             }
     }
     fs.readdir(dir, function (err, files) {
@@ -372,12 +447,12 @@ app.post('/uploadTasksFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads";
+                dir = __dirname + "\\uploads\\" + req.headers.id;
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads";
+                dir = __dirname + "\/uploads\/" + req.headers.id;
             }
     }
     fs.readdir(dir, function (err, files) {
@@ -405,12 +480,12 @@ app.post('/uploadOpportunitiesFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads";
+                dir = __dirname + "\\uploads\\" + req.headers.id;
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads";
+                dir = __dirname + "\/uploads\/" + req.headers.id;
             }
     }
     fs.readdir(dir, function (err, files) {

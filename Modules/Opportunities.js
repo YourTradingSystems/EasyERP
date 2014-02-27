@@ -875,6 +875,8 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
     }// end update
 
     function updateOnlySelectedFields(req, _id, data, res) {
+        var fileName = data.fileName;
+        delete data.fileName;
         if (data.workflow && data.sequenceStart && data.workflowStart) {
             if (data.sequence == -1) {
 				var query = (data.jobkey) ? { $and: [{ name: data.name }, { jobkey: data.jobkey }] } : { name: data.name };
@@ -932,25 +934,60 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                     if (doc.length > 0&&doc[0]._id!=_id) {
 						logWriter.log('Opprtunities.js. createLead Dublicate Leads' + data.name);
                         res.send(400, { error: 'An Opprtunities with the same Name already exists' });
-					}else{
-            if (data.notes && data.notes.length != 0) {
-                var obj = data.notes[data.notes.length - 1];
-                if (!obj._id)
-                    obj._id = mongoose.Types.ObjectId();
-                obj.date = new Date();
-                if (!obj.author)
-                    obj.author = req.session.uName;
-                data.notes[data.notes.length - 1] = obj;
-            }
-            console.log(data.notes);
-            models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
-                if (!err) {
-                    res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
-                } else {
-                    res.send(500, { error: "Can't update Opportunitie" });
-                }
+					} else {
+                        if (data.notes && data.notes.length != 0) {
+                            var obj = data.notes[data.notes.length - 1];
+                            if (!obj._id)
+                                obj._id = mongoose.Types.ObjectId();
+                            obj.date = new Date();
+                            if (!obj.author)
+                                obj.author = req.session.uName;
+                            data.notes[data.notes.length - 1] = obj;
+                        }
 
-            });
+                        models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).findByIdAndUpdate(_id,  { $set: data }, function (err, result) {
+                            if (!err) {
+                                if (fileName) {
+                                    var newDirname = __dirname.replace("\\Modules","");
+                                    var os = require("os");
+                                    var osType = (os.type().split('_')[0]);
+                                    var path;
+                                    var dir;
+                                    switch (osType) {
+                                        case "Windows":
+                                        {
+                                            while (newDirname.indexOf("\\") !== -1) {
+                                                newDirname = newDirname.replace("\\","\/");
+                                            }
+                                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                            dir = newDirname + "\/uploads\/" + _id;
+                                        }
+                                            break;
+                                        case "Linux":
+                                        {
+                                            while (newDirname.indexOf("\\") !== -1) {
+                                                newDirname = newDirname.replace("\\","\/");
+                                            }
+                                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                            dir = newDirname + "\/uploads\/" + _id;
+                                        }
+                                    }
+
+                                    logWriter.fs.unlink(path,function(){
+                                        logWriter.fs.readdir(dir, function(err, files){
+                                            if (files.length === 0) {
+                                                logWriter.fs.rmdir(dir,function(){});
+                                            }
+                                        });
+                                    });
+
+                                }
+                                res.send(200, { success: 'Opportunities updated',  notes: result.notes, sequence: result.sequence });
+                            } else {
+                                res.send(500, { error: "Can't update Opportunitie" });
+                            }
+
+                        });
 					}});
 
         }
