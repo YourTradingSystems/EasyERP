@@ -67,42 +67,15 @@ define([
                 new CreateView({collection: this.profilesCollection});
             },
             editProfileDetails: function(){
+                var selectedProfileId = $('#profilesList > li.active > a').data('id');
+				if (selectedProfileId=="1387275598000"||selectedProfileId=="1387275504000"){
+					alert("You cannot edit this Profile!");
+					return;
+				}
+
                 $('#top-bar-saveBtn').show();
                 $('#top-bar-editBtn').hide();
                 $("#modulesAccessTable tr input").prop("disabled",false);
-				return;
-
-                var selectedProfileId = $('#profilesList > li.active > a').data('id');
-                this.profile = this.profilesCollection.get(selectedProfileId);
-                $("#modulesAccessTable").find("tbody").empty();
-                $("#modulesAccessTable tr th input").removeAttr("disabled");;
-                var pr = this.profile.toJSON().profileAccess;
-				for (var i=0; i<pr.length;i++){
-					if (!pr[i].module.parrent){
-
-						var c1 = "";
-						var c2 = "";
-						var c3 = "";
-						if (pr[i].access.read){c1='checked="checked"'}else{b1=false;}
-						if (pr[i].access.editWrite){c2='checked="checked"'}else{b2=false;}
-						if (pr[i].access.del){c3='checked="checked"'}else{b3=false;}
-						$("#modulesAccessTable").find("tbody").append('<tr class="parent" data-i="'+i+'"><td class="mname">'+pr[i].module.mname+'</td><td><input type="checkbox" class="read" '+c1+' /></td><td><input type="checkbox" class="write" '+c2+' /></td><td><input type="checkbox" class="delete" '+c3+'/></td></tr>');
-						for (var j=0; j<pr.length;j++){
-							if (pr[i].module._id==pr[j].module.parrent){
-								var c1 = "";
-								var c2 = "";
-								var c3 = "";
-								if (pr[j].access.read){c1='checked="checked"'}else{b1=false;}
-								if (pr[j].access.editWrite){c2='checked="checked"'}else{b2=false;}
-								if (pr[j].access.del){c3='checked="checked"'}else{b3=false;}
-								$("#modulesAccessTable").find("tbody").append('<tr class="child" data-i="'+j+'"><td class="mname">'+pr[j].module.mname+'</td><td><input type="checkbox" class="read" '+c1+'  /></td><td><input type="checkbox" class="write" '+c2+'/></td><td><input type="checkbox" class="delete" '+c3+'/></td></tr>');
-							}
-						}
-					}
-				}
-                $("#modulesAccessTable").show();
-
-                return false;
             },
 
 			viewProfileDetails:function(e){
@@ -207,13 +180,19 @@ define([
                             $("#modulesAccessTable").show();
 							
                         },
-                        error: function (model, xhr, options) {
-                            if (xhr && xhr.status === 401) {
-                                Backbone.history.navigate("login", { trigger: true });
-                            } else {
-                                Backbone.history.navigate("home", { trigger: true });
-                            }
+                    error: function (model, xhr) {
+						if (xhr && (xhr.status === 401||xhr.status === 403)) {
+							if (xhr.status === 401){
+								Backbone.history.navigate("login", { trigger: true });
+							}else{
+								alert("You do not have permission to perform this action");
+								common.checkBackboneFragment("easyErp/Profiles");
+							}
+                        } else {
+                            Backbone.history.navigate("home", { trigger: true });
                         }
+                    }
+
                     });
             },
 

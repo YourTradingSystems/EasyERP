@@ -32,6 +32,7 @@ define([
                    "change .inputAttach": "addAttach",
                    "click .deleteAttach": "deleteAttach",
                    "keypress #logged, #estimated": "isNumberKey",
+                   "paste #logged, #estimated": "preventPaste"
                },
                addAttach: function (event) {
                    var s = $(".inputAttach:last").val().split("\\")[$(".inputAttach:last").val().split('\\').length - 1];
@@ -113,7 +114,7 @@ define([
                        sequence: sequence,
                        StartDate: StartDate,
                        estimated: estimated,
-                       logged: logged,
+                       logged: logged
                    },
                    {
                        headers: {
@@ -186,10 +187,19 @@ define([
                            Backbone.history.navigate("#easyErp/Tasks/kanban/" + model.attributes.project, { trigger: true });
                        },
 
-                       error: function () {
-                           self.hideDialog();
-                           Backbone.history.navigate("home", { trigger: true });
-                       }
+                    error: function (model, xhr) {
+                        self.hideDialog();
+						if (xhr && (xhr.status === 401||xhr.status === 403)) {
+							if (xhr.status === 401){
+								Backbone.history.navigate("login", { trigger: true });
+							}else{
+								alert("You do not have permission to perform this action");								
+							}
+                        } else {
+                            Backbone.history.navigate("home", { trigger: true });
+                        }
+                    }
+
                    });
                },
                nextSelect: function (e) {
@@ -214,6 +224,10 @@ define([
                    if (charCode > 31 && (charCode < 48 || charCode > 57))
                        return false;
                    return true;
+               },
+               preventPaste:function(e){
+                   //prevent paste event in #estimate and logged fields
+                   e.preventDefault();
                },
                render: function () {
                    var projectID = (window.location.hash).split('/')[3];

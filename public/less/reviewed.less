@@ -521,7 +521,33 @@
       input[type="checkbox"] {
         margin-top: 2.5px;
       }
-
+	  &.oe_sortable{
+		  position:relative;
+		  .arrow{
+			  display: none;
+			  padding: 0;
+			  padding-left:5px;
+			  margin: 0;
+			  text-align: center;
+			  width: 5px;
+			  height: 5px;
+			  font-weight: 100 !important;
+			  cursor: pointer;
+			  font-family: Icons;
+			  text-decoration: none;
+			  line-height: 23px;
+		  }
+		  &.sortUp{
+			  .up{
+				  display:inline-block;
+			  }
+		  }
+		  &.sortDn{
+			  .down{
+				  display:inline-block;
+			  }
+		  }
+	  }
       &:first-of-type {
         width: 12px;
 
@@ -4432,9 +4458,6 @@ h3.dashboard {
     background: #F5F5F5;
     font-weight: bold;
 	cursor:pointer;
-	div.name{
-		.text-overflow;
-	}
     .edit-status {
       display: none;
     }
@@ -4564,6 +4587,9 @@ span.ui-spinner{
     }
   }
 }
+.blue{
+  color:@lightblue;
+}
 .floatAvatar{
   margin-left: 160px;
   width: 80%;
@@ -4571,6 +4597,14 @@ span.ui-spinner{
 }
 #projectTopName{
 	line-height:24px;
+}
+#projectTypeDD{
+  text-transform:capitalize;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 #convert-dialog-form{
 	display:none;

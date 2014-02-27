@@ -898,6 +898,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
     function taskUpdateOnlySelectedFields(req, res, id, data) {
         console.log("Requst updateOnlySelectedFields is success");
         if (req.session && req.session.loggedIn && req.session.lastDb) {
+            access.getEditWritAccess(req, req.session.uId, 40, function (access) {
             if (access) {
                 data.editedBy = {
                     user: req.session.uId,
@@ -907,6 +908,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             } else {
                 res.send(403);
             }
+				});
         } else {
             res.send(401);
         }
@@ -2017,15 +2019,17 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         console.log("Requst updateOnlySelectedFields is success");
 		data = data.opportunitie;
         if (req.session && req.session.loggedIn && req.session.lastDb) {
-            if (access) {
-                data.editedBy = {
-                    user: req.session.uId,
-                    date: new Date().toISOString()
-                };
-                opportunities.updateOnlySelectedFields(req, id, data, res);
-            } else {
-                res.send(403);
-            }
+            access.getEditWritAccess(req, req.session.uId, 25, function (access) {
+				if (access) {
+					data.editedBy = {
+						user: req.session.uId,
+						date: new Date().toISOString()
+					};
+					opportunities.updateOnlySelectedFields(req, id, data, res);
+				} else {
+					res.send(403);
+				}
+			});
         } else {
             res.send(401);
         }

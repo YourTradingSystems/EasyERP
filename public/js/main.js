@@ -181,7 +181,6 @@ require(['app'], function (app) {
         var itemsNumber = $("#itemsNumber").text();
         var currentShowPage = $("#currentShowPage");
         var page = parseInt(currentShowPage.val()) - 1;
-
         this.startTime = new Date();
 
         currentShowPage.val(page);

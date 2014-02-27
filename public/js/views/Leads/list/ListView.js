@@ -5,10 +5,11 @@ define([
     'views/Leads/EditView',
     'models/LeadsModel',
     'common',
-    'dataService'
+    'dataService',
+    'text!templates/stages.html'
 ],
 
-    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService, stagesTamplate) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -49,8 +50,48 @@ define([
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
                 "click .filter-check-list li": "checkCheckbox",
-                "click #convertToOpportunity": "openDialog"
+                "click #convertToOpportunity": "openDialog",
+	            "click .stageSelect": "showNewSelect",
+	            "click .newSelectList li": "chooseOption"
+
             },
+	           hideNewSelect: function (e) {
+	               $(".newSelectList").hide();
+	           },
+	           showNewSelect: function (e) {
+	               if ($(".newSelectList").is(":visible")) {
+	                   this.hideNewSelect();
+	                   return false;
+	               } else {
+	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+	                   return false;
+	               }
+
+	           },
+
+	           chooseOption: function (e) {
+				   var self = this;
+	               var targetElement = $(e.target).parents("td");
+	               var id = targetElement.attr("id");
+	               var obj = this.collection.get(id);
+	               obj.set({ workflow: $(e.target).attr("id"), workflowForList:true});
+	               obj.save({}, {
+	                   headers: {
+	                       mid: 39
+	                   },
+	                   success: function () {
+						   self.showFilteredPage();
+	                   }
+	               });
+
+	               this.hideNewSelect();
+	               return false;
+	           },
+
+	           pushStages: function(stages) {
+	               this.stages = stages;
+	           },
+
 
             openDialog: function () {
                 $("#dialog-form").dialog("open");
