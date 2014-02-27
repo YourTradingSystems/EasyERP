@@ -183,7 +183,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-
+            //first last page in paginations
             firstPage: function (event) {
                 event.preventDefault();
                 this.firstP({
@@ -191,7 +191,7 @@ define([
                     newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Opportunities', {
-                    type: 'Opportunities'
+                    type: 'Opportunities',
                     filter: this.filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
@@ -206,7 +206,7 @@ define([
                     newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Opportunities', {
-                    type: 'Opportunities'
+                    type: 'Opportunities',
                     filter: this.filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
@@ -226,6 +226,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                 this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },

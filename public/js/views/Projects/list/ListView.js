@@ -10,7 +10,7 @@ define([
     'dataService'
 ],
 
-    function (listTemplate, stagesTamplate, CreateView, listItemView, editView, currentModel, common, dataService) {
+    function (listTemplate, stagesTamplate, CreateView, listItemView, editView, currentModel, contentCollection, common, dataService) {
         var ProjectsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -56,8 +56,7 @@ define([
                 "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
                 "click td:not(:has('input[type='checkbox']'))": "goToEditDialog",
-                "click .oe_sortable": "goSort"
-                "click td:not(:has('input[type='checkbox']'))": "goToEditDialog",
+                "click .oe_sortable": "goSort",
                 "click #firstShowPage": "firstPage",
                 "click #lastShowPage": "lastPage",
             },
@@ -292,6 +291,7 @@ define([
                     newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Projects', {
+                    type: 'Projects',
                     filter: this.filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
@@ -313,37 +313,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },  //end first last page in paginations
-
-            firstPage: function (event) {
-                event.preventDefault();
-                this.firstP({
-                    filter: this.filter,
-                    newCollection: this.newCollection
-                });
-                dataService.getData('/totalCollectionLength/Projects', {
-                    type: 'Projects',
-                    filter: this.filter,
-                    newCollection: this.newCollection
-                }, function (response, context) {
-                    context.listLength = response.count || 0;
-                }, this);
-            },
-
-            lastPage: function (event) {
-                event.preventDefault();
-                this.lastP({
-                    filter: this.filter,
-                    newCollection: this.newCollection
-                });
-                dataService.getData('/totalCollectionLength/Persons', {
-                    filter: this.filter,
-                    newCollection: this.newCollection
-                }, function (response, context) {
-                    context.listLength = response.count || 0;
-                }, this);
-            },  //end first last page in paginations
-
-            //modified for filter Vasya
+//modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -493,7 +463,7 @@ define([
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(this.deleteCounter, this.deletePage);
-								
+
 							}
 						},
 						error: function (model, res) {
@@ -507,7 +477,7 @@ define([
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(this.deleteCounter, this.deletePage);
-								
+
 							}
 
 						}

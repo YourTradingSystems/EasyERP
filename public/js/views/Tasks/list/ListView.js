@@ -367,6 +367,7 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
+                this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },

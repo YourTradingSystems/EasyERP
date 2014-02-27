@@ -97,11 +97,34 @@ require(['app'], function (app) {
                 end.text(currentPage * itemsNumber);
             }
             $("#grid-count").text(totalCount);
+
             $("#pageList").empty();
             var pageNumber = Math.ceil(totalCount / itemsNumber);
-            for (var i = 1; i <= pageNumber; i++) {
-                $("#pageList").append('<li class="showPage">' + i + '</li>');
+            //number page show (Vasya)
+            var itemsOnPage = 7;
+            if (pageNumber <= itemsOnPage){
+                for (var i = 1; i <= pageNumber; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
             }
+            else if (pageNumber >= itemsOnPage && currentPage <= itemsOnPage) {
+                 for (var i = 1; i <= itemsOnPage; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+            }
+
+            else if (pageNumber >= itemsOnPage && currentPage > 3 && currentPage <= pageNumber - 3) {
+                 for (var i = currentPage - 3; i <= currentPage + 3; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+            }
+
+            else if (currentPage >= pageNumber - 3) {
+                 for (var i = pageNumber - 6; i <= pageNumber; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+            }
+            //end number page show
             $("#lastPage").text(pageNumber);
             $("#currentShowPage").val(currentPage);
             $("#previousPage").prop("disabled", parseInt(start.text()) <= parseInt(currentPage));
@@ -166,6 +189,32 @@ require(['app'], function (app) {
             $("#previousPage").prop("disabled", true);
             $("#firstShowPage").prop("disabled", true);
         }
+
+        var pageNumber = $("#lastPage").text();
+        var itemsOnPage = 7;
+        $("#pageList").empty();
+        //number page show (Vasya)
+        if (pageNumber <= itemsOnPage){
+                for (var i = 1; i <= pageNumber; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
+        }
+        else if (pageNumber >= itemsOnPage && page <= itemsOnPage) {
+                 for (var i = 1; i <= itemsOnPage; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+        }
+        else if (pageNumber >= itemsOnPage && page > 3 && page <= pageNumber - 3) {
+                 for (var i = page - 3; i <= page + 3; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+        }
+        else if (page >= page - 3) {
+                 for (var i = pageNumber - 6; i <= pageNumber; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+        }
+        //end number page show (Vasya)
         $("#grid-start").text((page - 1) * itemsNumber + 1);
         if (this.listLength <= page * itemsNumber) {
             $("#grid-end").text(this.listLength);
@@ -190,7 +239,27 @@ require(['app'], function (app) {
         var page = parseInt($("#currentShowPage").val()) + 1;
 
         this.startTime = new Date();
+            var pageNumber = $("#lastPage").text();
+            var itemsOnPage = 7;
+            //number page show (Vasya)
+            $("#pageList").empty();
+            if (pageNumber <= itemsOnPage){
+                    for (var i = 1; i <= pageNumber; i++) {
+                        $("#pageList").append('<li class="showPage">' + i + '</li>');
+                    }
+            }
+            else if (pageNumber >= itemsOnPage && page > 3 && page < pageNumber - 3) {
+                     for (var i = page - 3; i <= page + 3; i++) {
+                         $("#pageList").append('<li class="showPage">' + i + '</li>');
+                     }
+            }
 
+            else if (page >= pageNumber - 3) {
+                     for (var i = pageNumber - 6; i <= pageNumber; i++) {
+                         $("#pageList").append('<li class="showPage">' + i + '</li>');
+                     }
+            }
+            //end number page show (Vasya)
         $("#currentShowPage").val(page);
         $("#grid-start").text((page - 1) * itemsNumber + 1);
         if (this.listLength <= page * itemsNumber) {
@@ -211,8 +280,8 @@ require(['app'], function (app) {
         this.collection.showMore(serchObject);
         this.changeLocationHash(page, itemsNumber);
     };
-
-        Backbone.View.prototype.firstP = function (dataObject) {
+    //first page pagination (Vasya)
+    Backbone.View.prototype.firstP = function (dataObject) {
             this.startTime = new Date();
             var itemsNumber = $("#itemsNumber").text();
             var currentShowPage = $("#currentShowPage");
@@ -221,8 +290,21 @@ require(['app'], function (app) {
             this.startTime = new Date();
 
             currentShowPage.val(page);
+            var lastPage = $("#lastPage").text()
             if (page === 1) {
                 $("#firstShowPage").prop("disabled", true);
+            }
+            //number page show
+            $("#pageList").empty();
+            if ( lastPage >= 7) {
+                for (var i = 1; i <= 7; i++) {
+                       $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
+            }
+            else {
+                for (var i = 1; i <= lastPage; i++) {
+                       $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
             }
             $("#grid-start").text((page - 1) * itemsNumber + 1);
             if (this.listLength <= page * itemsNumber) {
@@ -241,15 +323,27 @@ require(['app'], function (app) {
             if (dataObject) _.extend(serchObject, dataObject);
             this.collection.showMore(serchObject);
             this.changeLocationHash(page, itemsNumber);
-        };
-
-        Backbone.View.prototype.lastP = function (dataObject) {
+     };
+    //last page pagination (Vasya)
+     Backbone.View.prototype.lastP = function (dataObject) {
             this.startTime = new Date();
             var itemsNumber = $("#itemsNumber").text();
             var page = $("#lastPage").text();
             $("#firstShowPage").prop("disabled", true);
             this.startTime = new Date();
-
+            $("#pageList").empty();
+            //number page show
+            if ( page >= 7) {
+                for (var i = page - 6; i <= page; i++) {
+                       $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
+            }
+            else {
+                for (var i = 1; i <= page; i++) {
+                       $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
+            }
+            //end number page show (Vasya)
             $("#currentShowPage").val(page);
             $("#grid-start").text((page - 1) * itemsNumber + 1);
             if (this.listLength <= page * itemsNumber) {
@@ -288,6 +382,31 @@ require(['app'], function (app) {
             if (!adr.test(page) || (parseInt(page) <= 0) || (parseInt(page) > parseInt(lastPage))) {
                 page = 1;
             }
+            //number page show (Vasya)
+            var itemsOnPage = 7;
+            $("#pageList").empty();
+            if (lastPage <= itemsOnPage){
+                    for (var i = 1; i <= lastPage; i++) {
+                        $("#pageList").append('<li class="showPage">' + i + '</li>');
+                    }
+            }
+            else if(page >= 5 && page <= itemsOnPage ) {
+                   for (var i = page - 3; i <= page + 3; i++) {
+                         $("#pageList").append('<li class="showPage">' + i + '</li>');
+                   }
+            }
+            else if (lastPage >= itemsOnPage && page <= lastPage - 3) {
+                     for (var i = page - 3; i <= page + 3; i++) {
+                         $("#pageList").append('<li class="showPage">' + i + '</li>');
+                     }
+            }
+
+            else if (page >= lastPage - 3) {
+                     for (var i = lastPage - 6; i <= lastPage; i++) {
+                         $("#pageList").append('<li class="showPage">' + i + '</li>');
+                     }
+            }
+            //number page show
             $("#currentShowPage").val(page);
             $("#grid-start").text((page - 1) * itemsNumber + 1);
             if (this.listLength <= page * itemsNumber) {
