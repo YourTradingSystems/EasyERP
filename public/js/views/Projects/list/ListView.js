@@ -185,7 +185,7 @@ define([
             },
 
             chooseOption: function (e) {
-				var that = this;
+				var self = this;
                 var target$ = $(e.target);
                 var targetElement = target$.parents("td");
                 var id = targetElement.attr("id");
@@ -198,8 +198,7 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-                        targetElement.find(".stageSelect").text(target$.text());
-                        targetElement.parents("tr").attr("class", "stage-" + target$.text().toLowerCase().replace(' ', ''));
+						self.showFilteredPage();
                     }
                 });
 

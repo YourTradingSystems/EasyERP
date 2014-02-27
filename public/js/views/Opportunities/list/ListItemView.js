@@ -3,7 +3,7 @@
     "common"
 ],
 
-	   function (OpportunitiesListTemplate, common, stagesTamplate) {
+	   function (OpportunitiesListTemplate, common) {
 		   var OpportunitiesListItemView = Backbone.View.extend({
 			   el: '#listTable',
 

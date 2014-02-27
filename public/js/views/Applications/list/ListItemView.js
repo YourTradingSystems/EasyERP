@@ -1,10 +1,9 @@
 ﻿define([
     'text!templates/Applications/list/ListTemplate.html',
     "common",
-    'text!templates/stages.html'
 ],
 
-function (ApplicationsListTemplate,common, stagesTamplate) {
+function (ApplicationsListTemplate,common) {
     var ApplicationsListItemView = Backbone.View.extend({
         el: '#listTable',
 
