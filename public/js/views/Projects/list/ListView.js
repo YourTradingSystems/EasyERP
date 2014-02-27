@@ -290,6 +290,7 @@ define([
             firstPage: function (event) {
                 event.preventDefault();
                 this.firstP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -305,6 +306,7 @@ define([
             lastPage: function (event) {
                 event.preventDefault();
                 this.lastP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
