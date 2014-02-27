@@ -66,7 +66,7 @@ define([
 					   sequence: sequence
 				   };
 
-                   model.set(obj,{validate:true});
+                   model.set(obj);
 				   model.save({}, {
 					   headers: {
 						   mid: mid
@@ -352,6 +352,7 @@ define([
 						   mid: mid
 					   },
 					   wait: true,
+					   validate:true,
 					   success: function (model) {
 						   common.checkBackboneFragment("easyErp/Workflows");
 						   $(".addnew, .SaveCancel").remove();

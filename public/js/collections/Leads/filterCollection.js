@@ -16,7 +16,6 @@
                 this.parrentContentId = (options) ? options.parrentContentId : null;
                 if (options && options.count) {
                     this.namberToShow = options.count;
-                    this.count = options.count;
                     this.page = options.page || 1;
                 }
                 var that = this;

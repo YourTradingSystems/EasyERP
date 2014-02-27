@@ -14,20 +14,14 @@
 
             initialize: function (options) {
                 var that = this;
-
                 this.viewType = options.viewType;
                 this.contentType = options.contentType;
                 this.startTime = new Date();
                 this.namberToShow = options.count;
-
+                this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     //delete options.viewType;
-                }
-                if (options && options.count) {
-                    this.namberToShow = options.count;
-                    this.count = options.count;
-                    this.page = options.page || 1;
                 }
                 this.fetch({
                     data: options,
@@ -49,9 +43,7 @@
 
             showMore: function (options) {
                 var that = this;
-
                 var filterObject = options || {};
-
                 filterObject['page'] = (options && options.page) ? options.page: this.page;
                 filterObject['count'] = (options && options.count) ? options.count: this.namberToShow;
                 filterObject['viewType'] = (options && options.viewType) ? options.viewType: this.viewType;

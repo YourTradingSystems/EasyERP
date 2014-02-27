@@ -2057,7 +2057,7 @@
     margin-left: 5px;
   }
 
-  #previousPage, #nextPage, .currentPageList {
+  #previousPage, #nextPage, .currentPageList, #firstShowPage, #lastShowPage {
     background-color: white;
     background-image: none;
     line-height: 15px;
@@ -2071,10 +2071,13 @@
     background-position: 50% 50%;
     background-repeat: no-repeat;
     float: left;
-
-
   }
-
+  #firstShowPage, #lastShowPage {
+	  width: 30px;
+      height: 18px;
+      display: block;
+	  font-size:12px;
+  }
   #previousPage {
   /*  background-image: url("@{imagesfolder}/arrow-left-1.png");*/
     margin: 0 3px;

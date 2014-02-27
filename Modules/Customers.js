@@ -841,6 +841,9 @@
                                         case ('Persons'):
                                             switch (viewType) {
                                                 case ('list'): {
+                                                    if (data.sort) {
+                                                           query.sort(data.sort);
+                                                    }
                                                     query.select("_id createdBy editedBy address.country email name phones.phone").
                                                         populate('createdBy.user', 'login').
                                                         populate('editedBy.user', 'login');
@@ -860,6 +863,9 @@
                                         case ('Companies'):
                                             switch (viewType) {
                                                 case ('list'): {
+													if (data.sort) {
+														query.sort(data.sort);
+													}
                                                     query.select("_id editedBy createdBy salesPurchases name email phones.phone address.country").
                                                         populate('salesPurchases.salesPerson', '_id name').
                                                         populate('salesPurchases.salesTeam', '_id departmentName').

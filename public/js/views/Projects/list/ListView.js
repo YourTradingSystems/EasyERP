@@ -56,7 +56,9 @@ define([
                 "click #health .health-container": "showHealthDd",
                 "click #health ul li div": "chooseHealthDd",
                 "click td:not(:has('input[type='checkbox']'))": "goToEditDialog",
-                "click .oe_sortable": "goSort"
+                "click .oe_sortable": "goSort",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
             },
 
             fetchSortCollection: function (sortObject) {
@@ -185,6 +187,7 @@ define([
             },
 
             chooseOption: function (e) {
+				var self = this;
                 var target$ = $(e.target);
                 var targetElement = target$.parents("td");
                 var id = targetElement.attr("id");
@@ -197,8 +200,7 @@ define([
                     patch: true,
                     validate: false,
                     success: function () {
-                        targetElement.find(".stageSelect").text(target$.text());
-                        targetElement.parents("tr").attr("class", "stage-" + target$.text().toLowerCase().replace(' ', ''));
+						self.showFilteredPage();
                     }
                 });
 
@@ -284,6 +286,38 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    sort: this.sort,
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Projects', {
+                    type: 'Projects',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    sort: this.sort,
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Projects', {
+                    type: 'Projects',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
 //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
@@ -434,7 +468,7 @@ define([
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(this.deleteCounter, this.deletePage);
-								
+
 							}
 						},
 						error: function (model, res) {
@@ -448,7 +482,7 @@ define([
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
 								that.deleteItemsRender(this.deleteCounter, this.deletePage);
-								
+
 							}
 
 						}
