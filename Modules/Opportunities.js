@@ -645,7 +645,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Opportunities", opportunitiesSchema).find().where('_id').in(result);
-
+                                if (data.sort) {
+                                      query.sort(data.sort);
+                                }
                                 switch (data.contentType) {
                                     case ('Opportunities'): {
                                     if (data && data.filter && data.filter.workflow) {
@@ -668,9 +670,7 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                           query.where('workflow').in([]);
                                     }
-                                                    if (data.sort) {
-                                                           query.sort(data.sort);
-                                                    }
+
                                         query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
                                             populate('company', 'name').
                                             populate('workflow', "name").

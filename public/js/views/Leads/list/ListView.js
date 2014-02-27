@@ -254,7 +254,6 @@ define([
                 });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
-                this.renderContent();
             },
             renderContent: function () {
                     var currentEl = this.$el;

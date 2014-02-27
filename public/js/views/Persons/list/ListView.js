@@ -181,7 +181,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
             });
 
             currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
-            this.renderContent();
         },
 
         renderContent: function () {
