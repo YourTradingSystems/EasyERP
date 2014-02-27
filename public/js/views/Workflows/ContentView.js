@@ -66,9 +66,7 @@ define([
 					   sequence: sequence
 				   };
 
-                   //console.log(obj);
-				   //model.set();
-                   model.set(obj);
+                   model.set(obj,{validate:true});
 				   model.save({}, {
 					   headers: {
 						   mid: mid

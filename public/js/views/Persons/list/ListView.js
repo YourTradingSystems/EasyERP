@@ -31,6 +31,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             this.page = options.collection.page;
             this.render();
             this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+
         },
 
         events: {
@@ -77,7 +78,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 dataService.getData('/totalCollectionLength/Persons', {
                     currentNumber: currentNumber,
                     filter: filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     var page = context.page || 1;
                     context.listLength = response.count || 0;
@@ -92,7 +93,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 
             currentEl.html('');
             currentEl.append(_.template(listTemplate));
-            currentEl.append(new listItemView({ collection: this.collection }).render());
+            currentEl.append(new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow }).render());//added two parameters page and items number
 
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
@@ -147,7 +148,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
+
                 });
+
                 dataService.getData('/totalCollectionLength/Persons', {
                     filter: this.filter,
                     newCollection: this.newCollection,
@@ -166,7 +169,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     count: itemsNumber,
                     page: 1,
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 });
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber,this.filter);
@@ -195,7 +198,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
         showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
-                var itemView = new listItemView({ collection: newModels });
+                var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });//added two parameters page and items number
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
@@ -249,7 +252,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
         deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Persons', {
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
@@ -261,7 +264,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection, page: this.page, itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
                 }
         },
         deleteItems: function () {

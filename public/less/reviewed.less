@@ -4458,9 +4458,6 @@ h3.dashboard {
     background: #F5F5F5;
     font-weight: bold;
 	cursor:pointer;
-	div.name{
-		.text-overflow;
-	}
     .edit-status {
       display: none;
     }
@@ -4590,6 +4587,9 @@ span.ui-spinner{
     }
   }
 }
+.blue{
+  color:@lightblue;
+}
 .floatAvatar{
   margin-left: 160px;
   width: 80%;
@@ -4597,6 +4597,14 @@ span.ui-spinner{
 }
 #projectTopName{
 	line-height:24px;
+}
+#projectTypeDD{
+  text-transform:capitalize;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 #convert-dialog-form{
 	display:none;
