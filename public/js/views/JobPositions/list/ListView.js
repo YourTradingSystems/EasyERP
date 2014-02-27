@@ -233,6 +233,7 @@ define([
                         page: 1,
                         newCollection: this.newCollection,
                     });
+                     this.page = 1;
                     $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber)
             },

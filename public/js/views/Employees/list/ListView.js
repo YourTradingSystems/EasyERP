@@ -44,7 +44,9 @@ define([
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click": "hideItemsNumber",
-                "click .letter:not(.empty)": "alpabeticalRender"
+                "click .letter:not(.empty)": "alpabeticalRender",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
             },
             //modified for filter Vasya
             alpabeticalRender: function (e) {
@@ -156,6 +158,36 @@ define([
                         context.listLength = response.count || 0;
                     }, this);
             },
+
+            //first last page in paginations
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Employees', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Employees', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
             //modified for filter Vasya
             switchPageCounter: function (event) {
                     event.preventDefault();
@@ -168,6 +200,7 @@ define([
                         filter: this.filter,
                         newCollection: this.newCollection,
                     });
+                     this.page = 1;
                     $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber, this.filter);
             },

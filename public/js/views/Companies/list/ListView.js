@@ -44,9 +44,11 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
             "click #itemsButton": "itemsNumber",
             "click .currentPageList": "itemsNumber",
             "click": "hideItemsNumber",
-            "click .letter:not(.empty)": "alpabeticalRender"
+            "click .letter:not(.empty)": "alpabeticalRender",
+            "click #firstShowPage": "firstPage",
+            "click #lastShowPage": "lastPage",
         },
-//modified for filter Vasya
+        //modified for filter Vasya
         alpabeticalRender: function (e) {
                 this.startTime = new Date();
                 $(e.target).parent().find(".current").removeClass("current");
@@ -77,7 +79,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 dataService.getData('/totalCollectionLength/Companies', {
                     currentNumber: currentNumber,
                     filter: filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     var page = context.page || 1;
                     context.listLength = response.count || 0;
@@ -92,7 +94,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 
             currentEl.html('');
             currentEl.append(_.template(listTemplate));
-            currentEl.append(new listItemView({ collection: this.collection }).render());
+            currentEl.append(new listItemView({ collection: this.collection, page :this.page, itemsNumber: this.collection.namberToShow}).render());
 
             $('#check_all').click(function () {
                 $(':checkbox').prop('checked', this.checked);
@@ -156,6 +158,36 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     context.listLength = response.count || 0;
                 }, this);
         },
+
+            //first last page in paginations
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Companies', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Companies', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
         //modified for filter Vasya
         switchPageCounter: function (event) {
                 event.preventDefault();
@@ -166,8 +198,9 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                     count: itemsNumber,
                     page: 1,
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 });
+                this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
         },
@@ -194,10 +227,11 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 this.showP(event,{filter: this.filter, newCollection: this.newCollection});
         },
         //modified for filter Vasya
+        //added parmeters page and itemsNumber to listItemView by Andrew
         showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
-                var itemView = new listItemView({ collection: newModels });
+                var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
@@ -252,7 +286,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
         deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Companies', {
                     filter: this.filter,
-                    newCollection: this.newCollection,
+                    newCollection: this.newCollection
                 }, function (response, context) {
                     context.listLength = response.count || 0;
                 }, this);
@@ -264,7 +298,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection,  page: this.page, itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
         },
         deleteItems: function () {

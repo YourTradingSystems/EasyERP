@@ -10,7 +10,7 @@
 	           stages: null,
 	           initialize: function (options) {
                    this.collection = options.collection;
-	               this.startNumber = options.startNumber;
+	               this.startNumber = options.startNumber;//added start number and passing it to template Andrew
                },
 	           events: {
 	               "click .stageSelect": "showNewSelect",
@@ -24,7 +24,7 @@
 	                   this.hideNewSelect();
 	                   return false;
 	               } else {
-	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages, startNumber: this.startNumber }));
 	                   return false;
 	               }
 

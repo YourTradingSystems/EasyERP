@@ -48,6 +48,8 @@ define([
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
                 "click .filter-check-list li": "checkCheckbox",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
 				"click .stageSelect": "showNewSelect",
 				"click .newSelectList li": "chooseOption"
 
@@ -192,7 +194,7 @@ define([
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
@@ -207,7 +209,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -222,7 +224,38 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //first last page in paginations
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Opportunities', {
+                    type: 'Opportunities',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Opportunities', {
+                    type: 'Opportunities',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -234,6 +267,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                 this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
