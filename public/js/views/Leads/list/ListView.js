@@ -4,16 +4,18 @@ define([
     'views/Leads/list/ListItemView',
     'views/Leads/EditView',
     'models/LeadsModel',
+    'collections/Leads/filterCollection',
     'common',
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel,contentCollection, common, dataService) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
             listLength: null,
             filter: null,
+            sort: null,
             newCollection: null,
             page: null, //if reload page, and in url is valid page
             contentType: 'Leads',//needs in view.prototype.changeLocationHash
@@ -27,6 +29,7 @@ define([
                 this.parrentContentId = options.collection.parrentContentId;
                 this.stages = [];
                 this.filter = options.filter;
+                this.sort = options.sort;
                 this.defaultItemsNumber = this.collection.namberToShow || 50;
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
@@ -52,13 +55,65 @@ define([
                 "click .filter-check-list li": "checkCheckbox",
                 "click #convertToOpportunity": "openDialog",
 	            "click .stageSelect": "showNewSelect",
-	            "click .newSelectList li": "chooseOption"
-
+	            "click .newSelectList li": "chooseOption",
+	            "click .oe_sortable": "goSort",
             },
-	           hideNewSelect: function (e) {
+
+        fetchSortCollection: function (sortObject) {
+                this.sort = sortObject;
+                this.collection = new contentCollection({
+                    viewType: 'list',
+                    sort: sortObject,
+                    page: this.page,
+                    count: this.defaultItemsNumber,
+                    filter: this.filter,
+                    parrentContentId: this.parrentContentId,
+                    contentType: this.contentType,
+                    newCollection: this.newCollection
+                });
+                this.collection.bind('reset', this.renderContent, this);
+                this.collection.bind('showmore', this.showMoreContent, this);
+        },
+
+        goSort: function (e) {
+                this.collection.unbind('reset');
+                this.collection.unbind('showmore');
+                var target$ = $(e.target);
+                var currentParrentSortClass = target$.attr('class');
+                var sortClass = currentParrentSortClass.split(' ')[1];
+                var sortConst = 1;
+                var sortBy = target$.data('sort');
+                var sortObject = {};
+                if (!sortClass) {
+                    target$.addClass('sortDn');
+                    sortClass = "sortDn";
+                }
+                switch (sortClass) {
+                        case "sortDn":
+                            {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.removeClass('sortDn').addClass('sortUp');
+                                sortConst = 1;
+                            }
+                            break;
+                        case "sortUp":
+                            {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.removeClass('sortUp').addClass('sortDn');
+                                sortConst = -1;
+                            }
+                            break;
+                    }
+                sortObject[sortBy] = sortConst;
+                this.fetchSortCollection(sortObject);
+                this.changeLocationHash(1, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
+        },
+
+	        hideNewSelect: function (e) {
 	               $(".newSelectList").hide();
-	           },
-	           showNewSelect: function (e) {
+	        },
+	        showNewSelect: function (e) {
 	               if ($(".newSelectList").is(":visible")) {
 	                   this.hideNewSelect();
 	                   return false;
@@ -67,7 +122,7 @@ define([
 	                   return false;
 	               }
 
-	           },
+	        },
 
 	           chooseOption: function (e) {
 				   var self = this;
@@ -199,11 +254,21 @@ define([
                 });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
+                this.renderContent();
             },
-//modified for filter Vasya
+            renderContent: function () {
+                    var currentEl = this.$el;
+                    var tBody = currentEl.find('#listTable');
+                    tBody.empty();
+                    var itemView = new listItemView({ collection: this.collection });
+
+                    tBody.append(itemView.render());
+            },
+            //modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -219,6 +284,7 @@ define([
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -234,6 +300,7 @@ define([
             firstPage: function (event) {
                 event.preventDefault();
                 this.firstP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -249,6 +316,7 @@ define([
             lastPage: function (event) {
                 event.preventDefault();
                 this.lastP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });

@@ -668,6 +668,9 @@ var Opportunities = function (logWriter, mongoose, customer, workflow, departmen
                                     } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                           query.where('workflow').in([]);
                                     }
+                                                    if (data.sort) {
+                                                           query.sort(data.sort);
+                                                    }
                                         query.select("_id createdBy editedBy name workflow contactName phones campaign source email contactName").
                                             populate('company', 'name').
                                             populate('workflow', "name").
