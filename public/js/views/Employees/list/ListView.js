@@ -55,7 +55,7 @@ define([
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection });
+                var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
                 tBody.append(itemView.render());
             },
@@ -157,7 +157,7 @@ define([
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                currentEl.append(new listItemView({ collection: this.collection }).render());
+                currentEl.append(new listItemView({ collection: this.collection,page: this.page, itemsNumber: this.collection.namberToShow }).render());
 
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
@@ -291,7 +291,7 @@ define([
             showMoreContent: function (newModels) {
                     var holder = this.$el;
                     holder.find("#listTable").empty();
-                    var itemView = new listItemView({ collection: newModels });
+                    var itemView = new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
                     holder.append(itemView.render());
                     itemView.undelegateEvents();
                     var pagenation = holder.find('.pagination');
@@ -312,7 +312,7 @@ define([
 
                 content.remove();
 
-                holder.append(this.template({ collection: newModels.toJSON() }));
+                holder.append(this.template({ collection: newModels.toJSON(), page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }));
 
                 this.getTotalLength(null, itemsNumber, this.filter);
                 created.text("Created in " + (new Date() - this.startTime) + " ms");
@@ -358,7 +358,7 @@ define([
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
             },
 
@@ -383,7 +383,7 @@ define([
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 						},
@@ -396,7 +396,7 @@ define([
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 

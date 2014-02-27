@@ -346,8 +346,10 @@ define([
                 $('.ui-dialog ').remove();
                 var currentEl = this.$el;
                 currentEl.html('');
+
                 currentEl.append(_.template(listTemplate));
 
+                currentEl.append(new listItemView({ collection: this.collection, page: this.page, itemsNumber: this.collection.namberToShow }).render());//added two parameters page and items number
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -374,14 +376,14 @@ define([
 
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
-                this.renderContent();
+                //this.renderContent();
             },
 
             renderContent: function () {
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection });
+                var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text()});
 
                 tBody.append(itemView.render());
             },
@@ -390,7 +392,7 @@ define([
                 var holder = this.$el;
                 var tBody = holder.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: newModels });
+                var itemView = new listItemView({ collection: newModels,page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() });
                 tBody.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
@@ -441,7 +443,7 @@ define([
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
             },
 
@@ -467,7 +469,7 @@ define([
 								that.defaultItemsNumber = $("#itemsNumber").text();
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
 							}
 						},
@@ -481,7 +483,7 @@ define([
 								that.defaultItemsNumber = $("#itemsNumber").text();
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 
 							}
 

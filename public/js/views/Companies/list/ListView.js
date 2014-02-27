@@ -298,7 +298,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection,  page: this.page, itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
         },
         deleteItems: function () {
@@ -322,7 +322,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 						},
@@ -335,7 +335,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, common, dat
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 
