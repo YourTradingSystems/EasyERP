@@ -185,6 +185,7 @@ define([
             },
 
             chooseOption: function (e) {
+				var that = this;
                 var target$ = $(e.target);
                 var targetElement = target$.parents("td");
                 var id = targetElement.attr("id");
