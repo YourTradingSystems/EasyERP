@@ -1758,14 +1758,17 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
                                 }
-                                console.log(data);
+                                if (data.sort) {
+                                    query.sort(data.sort);
+                                }else{
+									query.sort({ 'editedBy.date': -1 });
+								}
                                 query.select("-attachments -notes").
                                     populate('project', 'projectShortDesc projectName').
                                     populate('assignedTo', 'name').
                                     populate('editedBy.user', 'login').
                                     populate('createdBy.user', 'login').
                                     populate('workflow', 'name _id').
-                                    sort({ 'editedBy.date': -1 }).
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (err, result) {
