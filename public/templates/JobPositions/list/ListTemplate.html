@@ -8,7 +8,9 @@
     <td><%=jobPosition.totalForecastedEmployees%></td>
     <td><%=jobPosition.numberOfEmployees%></td>
     <td><%=jobPosition.expectedRecruitment%></td>
-    <td><%= jobPosition.workflow?jobPosition.workflow.name:''%></td>
+    <td id='stages_<%=jobPosition._id%>'>
+        <a href="javascript:;" class="stageSelect"><%=(jobPosition.workflow) ? jobPosition.workflow.name : ''%></a>
+    </td>
     <td><%=(jobPosition.createdBy&&jobPosition.createdBy.user) ? jobPosition.createdBy.user.login + " (" + jobPosition.createdBy.date + ")" : ''%></td>
     <td><%=(jobPosition.editedBy&&jobPosition.editedBy.user) ? jobPosition.editedBy.user.login + " (" + jobPosition.editedBy.date + ")" : ''%></td>
 </tr>
