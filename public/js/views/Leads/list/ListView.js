@@ -42,14 +42,56 @@ define([
                 "change #currentShowPage": "showPage",
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
                 "click .checkbox": "checked",
                 "click .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
                 "click .filter-check-list li": "checkCheckbox",
-                "click #convertToOpportunity": "openDialog"
+                "click #convertToOpportunity": "openDialog",
+	            "click .stageSelect": "showNewSelect",
+	            "click .newSelectList li": "chooseOption"
+
             },
+	           hideNewSelect: function (e) {
+	               $(".newSelectList").hide();
+	           },
+	           showNewSelect: function (e) {
+	               if ($(".newSelectList").is(":visible")) {
+	                   this.hideNewSelect();
+	                   return false;
+	               } else {
+	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+	                   return false;
+	               }
+
+	           },
+
+	           chooseOption: function (e) {
+				   var self = this;
+	               var targetElement = $(e.target).parents("td");
+	               var id = targetElement.attr("id");
+	               var obj = this.collection.get(id);
+	               obj.set({ workflow: $(e.target).attr("id"), workflowForList:true});
+	               obj.save({}, {
+	                   headers: {
+	                       mid: 39
+	                   },
+	                   success: function () {
+						   self.showFilteredPage();
+	                   }
+	               });
+
+	               this.hideNewSelect();
+	               return false;
+	           },
+
+	           pushStages: function(stages) {
+	               this.stages = stages;
+	           },
+
 
             openDialog: function () {
                 $("#dialog-form").dialog("open");
@@ -105,7 +147,7 @@ define([
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             getTotalLength: function (currentNumber, itemsNumber, filter) {
                 dataService.getData('/totalCollectionLength/Leads', {
                     type: 'Leads',
@@ -123,10 +165,10 @@ define([
                 $('.ui-dialog ').remove();
                 var self = this;
                 var currentEl = this.$el;
-                var startNumber = (this.collection.page - 1) * this.collection.namberToShow;//StartNumber parameter added to listItem view Andrew;
+
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                var itemView = new listItemView({ collection: this.collection, startNumber: startNumber});
+                var itemView = new listItemView({ collection: this.collection });
                 currentEl.append(itemView.render());
 
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
@@ -173,7 +215,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -188,7 +230,37 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Leads', {
+                    type: 'Leads',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+            //modified for filter Vasya
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Leads', {
+                    type: 'Leads',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -200,6 +272,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },

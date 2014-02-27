@@ -5,10 +5,11 @@ define([
     'views/Opportunities/EditView',
     'models/OpportunitiesModel',
     'common',
-    'dataService'
+    'dataService',
+    'text!templates/stages.html'
 ],
 
-    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService, stagesTamplate) {
         var OpportunitiesListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -46,8 +47,50 @@ define([
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click .filterButton": "showfilter",
-                "click .filter-check-list li": "checkCheckbox"
+                "click .filter-check-list li": "checkCheckbox",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
+				"click .stageSelect": "showNewSelect",
+				"click .newSelectList li": "chooseOption"
+
             },
+
+	           hideNewSelect: function (e) {
+	               $(".newSelectList").hide();;
+	           },
+	           showNewSelect: function (e) {
+	               if ($(".newSelectList").is(":visible")) {
+	                   this.hideNewSelect();
+	                   return false;
+	               } else {
+	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+	                   return false;
+	               }
+
+	           },
+
+	           chooseOption: function (e) {
+				   var self = this;
+	               var targetElement = $(e.target).parents("td");
+	               var id = targetElement.attr("id");
+	               var obj = this.collection.get(id);
+				   obj.save({ workflow: $(e.target).attr("id"), workflowStart: targetElement.find(".stageSelect").attr("data-id"), sequence:-1, sequenceStart:targetElement.attr("data-sequence")}, {
+	                   headers: {
+	                       mid: 39
+	                   },
+					   patch:true,
+	                   success: function (err, model) {
+						   self.showFilteredPage();
+	                   }
+	               });
+
+	               this.hideNewSelect();
+	               return false;
+	           },
+
+	           pushStages: function(stages) {
+	               this.stages = stages;
+	           },
 
             checkCheckbox: function (e) {
                 if (!$(e.target).is("input")) {
@@ -151,7 +194,7 @@ define([
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
@@ -166,7 +209,7 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
                 this.nextP({
@@ -181,7 +224,38 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+            //first last page in paginations
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Opportunities', {
+                    type: 'Opportunities',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Opportunities', {
+                    type: 'Opportunities',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+            //modified for filter Vasya
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -193,6 +267,7 @@ define([
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
+                 this.page = 1;
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
