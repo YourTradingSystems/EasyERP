@@ -5,11 +5,10 @@ define([
     'views/Leads/EditView',
     'models/LeadsModel',
     'common',
-    'dataService',
-    'text!templates/stages.html'
+    'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService, stagesTamplate) {
+    function (listTemplate, createView, listItemView, editView, currentModel, common, dataService) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -32,6 +31,7 @@ define([
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
                 this.page = options.collection.page;
+                this.sartNumber = (this.page -1) * this.defaultItemsNumber;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
@@ -102,7 +102,7 @@ define([
                     $(e.target).closest("li").find("input").prop("checked", !$(e.target).closest("li").find("input").prop("checked"))
                 }
             },
-            //modified for filter Vasya
+//modified for filter Vasya
             showFilteredPage: function (event) {
                 this.startTime = new Date();
                 this.newCollection = false;
@@ -200,7 +200,7 @@ define([
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
-            //modified for filter Vasya
+//modified for filter Vasya
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
@@ -282,10 +282,12 @@ define([
                 this.showP(event, { filter: this.filter, newCollection: this.newCollection });
             },
             //modified for filter Vasya
+            //Added startNumber parameter to listItemView to show correct page index by Andrew
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
-                var itemView = new listItemView({ collection: newModels });
+                var startNumber = (this.collection.page -2) * this.collection.namberToShow;
+                var itemView = new listItemView({ collection: newModels, startNumber: startNumber});
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
@@ -333,7 +335,10 @@ define([
                 }
             },
             //modified for filter Vasya
+            //startNumber added to listViewItem by Andrew
             deleteItemsRender: function (deleteCounter, deletePage) {
+                var holder = this.$el;
+                var startNumber = (this.collection.page - 1)* this.collection.namberToShow;
                 dataService.getData('/totalCollectionLength/Leads', {
                     type: 'Leads',
                     filter: this.filter,
@@ -350,7 +355,7 @@ define([
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection, startNumber: startNumber }).render());
                 }
             },
             deleteItems: function () {

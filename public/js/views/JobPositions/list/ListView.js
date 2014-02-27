@@ -2,11 +2,13 @@ define([
     'text!templates/JobPositions/list/ListHeader.html',
     'views/JobPositions/CreateView',
     'views/JobPositions/list/ListItemView',
+    'collections/JobPositions/filterCollection',
     'common',
-    'dataService'
+    'dataService',
+    'text!templates/stages.html'
 ],
 
-    function (listTemplate, createView, listItemView, common, dataService) {
+    function (listTemplate, createView, listItemView, contentCollection, common, dataService, stagesTamplate) {
         var JobPositionsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -36,7 +38,112 @@ define([
                 "click  .list td:not(.notForm)": "gotoForm",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
-                "click": "hideItemsNumber"
+                "click": "hideItemsNumber",
+                "click .oe_sortable": "goSort",
+				"click .stageSelect": "showNewSelect",
+				"click .newSelectList li": "chooseOption"
+
+            },
+	           hideNewSelect: function (e) {
+	               $(".newSelectList").hide();;
+	           },
+	           showNewSelect: function (e) {
+	               if ($(".newSelectList").is(":visible")) {
+	                   this.hideNewSelect();
+	                   return false;
+	               } else {
+	                   $(e.target).parent().append(_.template(stagesTamplate, { stagesCollection: this.stages }));
+	                   return false;
+	               }
+
+	           },
+
+	           chooseOption: function (e) {
+				   var self = this;
+	               var targetElement = $(e.target).parents("td");
+	               var id = targetElement.attr("id").replace("stages_",'');
+	               var obj = this.collection.get(id);
+                   obj.urlRoot = '/JobPositions/form';
+				   obj.save({ workflow: $(e.target).attr("id"),
+							  expectedRecruitment:obj.toJSON().expectedRecruitment,
+							  totalForecastedEmployees:obj.toJSON().totalForecastedEmployees,
+							  numberOfEmployees:obj.toJSON().numberOfEmployees
+							}, {
+	                   headers: {
+	                       mid: 39
+	                   },
+					   patch:true,
+	                   success: function (err, model) {
+	                   }
+	               });
+
+	               this.hideNewSelect();
+	               return false;
+	           },
+
+	           pushStages: function(stages) {
+	               this.stages = stages;
+	           },
+
+            fetchSortCollection: function (sortObject) {
+                this.sort = sortObject;
+                this.collection = new contentCollection({
+                    viewType: 'list',
+                    sort: sortObject,
+                    page: this.page,
+                    count: this.defaultItemsNumber,
+                    filter: this.filter,
+                    parrentContentId: this.parrentContentId,
+                    contentType: this.contentType,
+                    newCollection: this.newCollection
+                });
+                this.collection.bind('reset', this.renderContent, this);
+                this.collection.bind('showmore', this.showMoreContent, this);
+            },
+
+            renderContent: function () {
+                var currentEl = this.$el;
+                var tBody = currentEl.find('#listTable');
+                tBody.empty();
+                var itemView = new listItemView({ collection: this.collection });
+
+                tBody.append(itemView.render());
+            },
+
+
+            goSort: function (e) {
+                this.collection.unbind('reset');
+                this.collection.unbind('showmore');
+                var target$ = $(e.target);
+                var currentParrentSortClass = target$.attr('class');
+                var sortClass = currentParrentSortClass.split(' ')[1];
+                var sortConst = 1;
+                var sortBy = target$.data('sort');
+                var sortObject = {};
+                if (!sortClass) {
+                    target$.addClass('sortDn');
+                    sortClass = "sortDn";
+                }
+                switch (sortClass) {
+                        case "sortDn":
+                            {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.removeClass('sortDn').addClass('sortUp');
+                                sortConst = 1;
+                            }
+                            break;
+                        case "sortUp":
+                            {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.removeClass('sortUp').addClass('sortDn');
+                                sortConst = -1;
+                            }
+                            break;
+                    }
+                sortObject[sortBy] = sortConst;
+                this.fetchSortCollection(sortObject);
+                this.changeLocationHash(1, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
 
             hideItemsNumber: function (e) {
@@ -63,8 +170,9 @@ define([
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                currentEl.append(new listItemView({ collection: this.collection }).render());
-
+                var itemView = new listItemView({ collection: this.collection });
+                currentEl.append(itemView.render());
+                itemView.bind('incomingStages', itemView.pushStages, itemView);
                 $('#check_all').click(function () {
                     $(':checkbox').prop('checked', this.checked);
                     if ($("input.checkbox:checked").length > 0)
@@ -75,6 +183,17 @@ define([
 
                 $(document).on("click", function () {
                     self.hideItemsNumber();
+                });
+                common.populateWorkflowsList("Jobpositions", ".filter-check-list", ".filter-check-list", "/Workflows", null, function(stages) {
+                    self.stages = stages;
+                    var stage = (self.filter) ? self.filter.workflow : null;
+                    if (stage) {
+                        $('.filter-check-list input').each(function() {
+                            var target = $(this);
+                            target.attr('checked', $.inArray(target.val(), stage) > -1);
+                        });
+                    }
+                    itemView.trigger('incomingStages', stages);
                 });
 
                 currentEl.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
