@@ -31,6 +31,7 @@ define([
                 this.newCollection = options.newCollection;
                 this.deleteCounter = 0;
                 this.page = options.collection.page;
+                this.sartNumber = (this.page -1) * this.defaultItemsNumber;
                 this.render();
                 this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
@@ -122,10 +123,10 @@ define([
                 $('.ui-dialog ').remove();
                 var self = this;
                 var currentEl = this.$el;
-
+                var startNumber = (this.collection.page - 1) * this.collection.namberToShow;//StartNumber parameter added to listItem view Andrew;
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                var itemView = new listItemView({ collection: this.collection });
+                var itemView = new listItemView({ collection: this.collection, startNumber: startNumber});
                 currentEl.append(itemView.render());
 
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
@@ -207,11 +208,13 @@ define([
                 event.preventDefault();
                 this.showP(event, { filter: this.filter, newCollection: this.newCollection });
             },
-//modified for filter Vasya
+            //modified for filter Vasya
+            //Added startNumber parameter to listItemView to show correct page index by Andrew
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
-                var itemView = new listItemView({ collection: newModels });
+                var startNumber = (this.collection.page -2) * this.collection.namberToShow;
+                var itemView = new listItemView({ collection: newModels, startNumber: startNumber});
                 holder.append(itemView.render());
                 itemView.undelegateEvents();
                 var pagenation = holder.find('.pagination');
@@ -259,7 +262,10 @@ define([
                 }
             },
             //modified for filter Vasya
+            //startNumber added to listViewItem by Andrew
             deleteItemsRender: function (deleteCounter, deletePage) {
+                var holder = this.$el;
+                var startNumber = (this.collection.page - 1)* this.collection.namberToShow;
                 dataService.getData('/totalCollectionLength/Leads', {
                     type: 'Leads',
                     filter: this.filter,
@@ -276,7 +282,7 @@ define([
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection, startNumber: startNumber }).render());
                 }
             },
             deleteItems: function () {
