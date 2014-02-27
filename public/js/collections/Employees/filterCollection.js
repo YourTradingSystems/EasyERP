@@ -19,15 +19,10 @@
                 this.namberToShow = options.count;
                 this.viewType = options.viewType;
                 this.contentType = options.contentType;
-
+                this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     //delete options.viewType;
-                }
-                if (options && options.count) {
-                    this.namberToShow = options.count;
-                    this.count = options.count;
-                    this.page = options.page || 1;
                 }
                 this.fetch({
                     data: options,

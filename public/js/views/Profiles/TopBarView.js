@@ -1,9 +1,10 @@
 define([
     'text!templates/Profiles/TopBarTemplate.html',
     'custom',
+    'dataService',
     "common"
 ],
-    function (TopBarTemplate, Custom, Common) {
+    function (TopBarTemplate, Custom, dataService, Common) {
         var TopBarView = Backbone.View.extend({
             el:'#top-bar',
             contentType: "Profiles",

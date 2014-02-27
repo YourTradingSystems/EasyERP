@@ -554,7 +554,13 @@ define([
                     },
                     success: function () {
                         Backbone.history.navigate("#easyErp/Companies/list", { trigger: true });
-                    }
+                    },
+					error:function(model,err){
+						if (err.status===403){
+							alert("You do not have permission to perform this action");
+						}
+					}
+
                 });
 
             }

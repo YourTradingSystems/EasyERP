@@ -7,11 +7,12 @@ define([
     'models/TasksModel',
     'views/Projects/EditView',
     'models/ProjectsModel',
+    'collections/Tasks/filterCollection',
 	'common',
     'dataService'
 ],
 
-    function (listTemplate, stagesTamplate, createView, listItemView, editView, currentModel, projectEditView, projectModel, common, dataService) {
+    function (listTemplate, stagesTamplate, createView, listItemView, editView, currentModel, projectEditView, projectModel, contentCollection, common, dataService) {
         var TasksListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -57,7 +58,71 @@ define([
                 "click .stageSelectType": "showNewSelectType",
                 "click .newSelectList li": "chooseOption",
                 "click .filterButton": "showfilter",
-                "click .filter-check-list li": "checkCheckbox"
+                "click .filter-check-list li": "checkCheckbox",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage",
+				"click .oe_sortable": "goSort"
+            },
+
+            fetchSortCollection: function (sortObject) {
+                this.sort = sortObject;
+                this.collection = new contentCollection({
+                    viewType: 'list',
+                    sort: sortObject,
+                    page: this.page,
+                    count: this.defaultItemsNumber,
+                    filter: this.filter,
+                    parrentContentId: this.parrentContentId,
+                    contentType: this.contentType,
+                    newCollection: this.newCollection
+                });
+                this.collection.bind('reset', this.renderContent, this);
+                this.collection.bind('showmore', this.showMoreContent, this);
+            },
+
+            renderContent: function () {
+                var currentEl = this.$el;
+                var tBody = currentEl.find('#listTable');
+                tBody.empty();
+                var itemView = new listItemView({ collection: this.collection, page :this.page, itemsNumber: this.collection.namberToShow });
+
+                tBody.append(itemView.render());
+            },
+
+
+            goSort: function (e) {
+                this.collection.unbind('reset');
+                this.collection.unbind('showmore');
+                var target$ = $(e.target);
+                var currentParrentSortClass = target$.attr('class');
+                var sortClass = currentParrentSortClass.split(' ')[1];
+                var sortConst = 1;
+                var sortBy = target$.data('sort');
+                var sortObject = {};
+                if (!sortClass) {
+                    target$.addClass('sortDn');
+                    sortClass = "sortDn";
+                }
+                switch (sortClass) {
+                        case "sortDn":
+                            {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.removeClass('sortDn').addClass('sortUp');
+                                sortConst = 1;
+                            }
+                            break;
+                        case "sortUp":
+                            {
+								target$.parent().find("th").removeClass('sortDn').removeClass('sortUp');
+                                target$.removeClass('sortUp').addClass('sortDn');
+                                sortConst = -1;
+                            }
+                            break;
+                    }
+                sortObject[sortBy] = sortConst;
+                this.fetchSortCollection(sortObject);
+                this.changeLocationHash(1, this.defaultItemsNumber);
+                this.getTotalLength(null, this.defaultItemsNumber, this.filter);
             },
 
             getTotalLength: function (currentNumber, itemsNumber, filter) {
@@ -323,6 +388,36 @@ define([
                 }, this);
             },
 
+            lastPage: function (event) {
+                event.preventDefault();
+                this.lastP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
+            firstPage: function (event) {
+                event.preventDefault();
+                this.firstP({
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/Tasks', {
+                    type: 'Tasks',
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
             switchPageCounter: function (event) {
                 event.preventDefault();
                 this.startTime = new Date();
@@ -335,6 +430,8 @@ define([
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
                 });
+                this.page = 1;
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
 
@@ -380,20 +477,44 @@ define([
                     mid = 39,
                     model;
                 var localCounter = 0;
+				var count = $("#listTable input:checked").length;
                 this.collectionLength = this.collection.length;
                 $.each($("tbody input:checked"), function (index, checkbox) {
                     model = that.collection.get(checkbox.value);
                     model.destroy({
                         headers: {
                             mid: mid
-                        }
+                        },
+						wait:true,
+						success:function(){
+							that.listLength--;
+							localCounter++;
+
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+						},
+						error: function (model, res) {
+							if(res.status===403&&index===0){
+								alert("You do not have permission to perform this action");
+							}
+							that.listLength--;
+							localCounter++;
+							if (index==count-1){
+								that.deleteCounter =localCounter;
+								that.deletePage = $("#currentShowPage").val();
+								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								
+							}
+
+						}
                     });
-                    that.listLength--;
-                    localCounter++
+
                 });
-                this.deleteCounter = localCounter;
-                this.deletePage = $("#currentShowPage").val();
-                this.deleteItemsRender(this.deleteCounter, this.deletePage);
+
             }
 
         });

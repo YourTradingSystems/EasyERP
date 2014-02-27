@@ -91,7 +91,9 @@
     }
   }
 }
-
+.oe_sortable{
+    cursor:pointer
+}
 .border-radius(@radius: 4px) {
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
@@ -519,7 +521,33 @@
       input[type="checkbox"] {
         margin-top: 2.5px;
       }
-
+	  &.oe_sortable{
+		  position:relative;
+		  .arrow{
+			  display: none;
+			  padding: 0;
+			  padding-left:5px;
+			  margin: 0;
+			  text-align: center;
+			  width: 5px;
+			  height: 5px;
+			  font-weight: 100 !important;
+			  cursor: pointer;
+			  font-family: Icons;
+			  text-decoration: none;
+			  line-height: 23px;
+		  }
+		  &.sortUp{
+			  .up{
+				  display:inline-block;
+			  }
+		  }
+		  &.sortDn{
+			  .down{
+				  display:inline-block;
+			  }
+		  }
+	  }
       &:first-of-type {
         width: 12px;
 
@@ -2029,7 +2057,7 @@
     margin-left: 5px;
   }
 
-  #previousPage, #nextPage, .currentPageList {
+  #previousPage, #nextPage, .currentPageList, #firstShowPage, #lastShowPage {
     background-color: white;
     background-image: none;
     line-height: 15px;
@@ -2043,10 +2071,13 @@
     background-position: 50% 50%;
     background-repeat: no-repeat;
     float: left;
-
-
   }
-
+  #firstShowPage, #lastShowPage {
+	  width: 30px;
+      height: 18px;
+      display: block;
+	  font-size:12px;
+  }
   #previousPage {
   /*  background-image: url("@{imagesfolder}/arrow-left-1.png");*/
     margin: 0 3px;
@@ -4479,6 +4510,19 @@ h3.dashboard {
     .dl-auto(300px, 30%,30px);
 
   }
+  .opp-info {
+    .dl-auto(300px, 40%,30px);
+	input{
+		width:80% !important;
+	}
+
+  }
+  .internal-info {
+    .dl-auto(147px, 20%,30px);
+	textarea{
+		width:94%;
+	}
+  }
 
 }
 
@@ -4549,6 +4593,9 @@ span.ui-spinner{
     }
   }
 }
+.blue{
+  color:@lightblue;
+}
 .floatAvatar{
   margin-left: 160px;
   width: 80%;
@@ -4556,6 +4603,14 @@ span.ui-spinner{
 }
 #projectTopName{
 	line-height:24px;
+}
+#projectTypeDD{
+  text-transform:capitalize;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 #convert-dialog-form{
 	display:none;

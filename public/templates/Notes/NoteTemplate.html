@@ -30,7 +30,7 @@
       <div class="noteTitle"><%=val['title'].replace(/</g,"&#60;").replace(/>/g,"&#62;")  %></div>
       <div class="noteText"><%=val['note'].replace(/</g,"&#60;").replace(/>/g,"&#62;") %></div>
       <div>
-		<a class="name" href="javascript:;"><%=val['author'] %></a><span class="date"><%=val['date'] %></span>
+		<!--<a class="name" href="javascript:;"><%=val['author'] %></a>--><span class="blue"><%=val['author']%> </span><span class="date"><%=val['date'] %></span>
         <div class="right">
           <span>
             <a href="javascript:;" id="edit_<%=val['_id']%>" data-id="<%=val['_id']%>" class="editDelNote editNote" >Edit</a>
@@ -53,7 +53,7 @@
                <% var n = attachments.length-1;
         		attachments.reverse();
         		_.each(attachments, function(data,key){ %>
-       <li class="attachFile_<%=data['_id'] %>"><a href = "download/<%=data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+       <li class="attachFile_<%=data['_id'] %>"><a href = "download/<%=data['name'] %>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
               <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
 	   </li>
            <% }); attachments.reverse(); %>

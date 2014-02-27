@@ -1,12 +1,11 @@
 ﻿define([
-    'models/ApplicationsModel',
-    'common'
+    'models/ApplicationsModel'
 ],
-    function (ApplicationModel, common) {
+    function (ApplicationModel) {
         var TasksCollection = Backbone.Collection.extend({
             model: ApplicationModel,
             url: "/Applications/",
-            page: 1,
+            page: null,
             namberToShow: null,
             contentType: null,
             viewType: null,
@@ -16,15 +15,17 @@
                 this.startTime = new Date();
                 this.contentType = options.contentType;
                 this.viewType = options.viewType;
-                this.wfStatus = [];
-                this.wfStatus = options.status;
-                this.namberToShow = options.count;
-
+                this.wfStatus = options.status || [];
+                
                 if (options && options.viewType) {
                     this.url += options.viewType;
                    // delete options.viewType;
                 }
-
+                if (options && options.count) {
+                    this.namberToShow = options.count;
+                    this.count = options.count;
+                    this.page = options.page || 1;
+                }
                 this.fetch({
                     data: options,
                     reset: true,

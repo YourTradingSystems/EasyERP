@@ -6,6 +6,7 @@ define(
             nameRegExp = /[a-zA-Z0-9-,\s\.\/\s]+$/,
             groupsNameRegExp = /^[.!@#&]?[A-Za-z0-9]+[A-Za-z0-9-'\s()\+!@#&]+/,
             loginRegExp = /^[\w\.@]{6,100}$/,
+            workflowRegExp = /^[a-zA-Z0-9\s]{3,100}$/,
             invalidCharsRegExp = /[~<>\^\*₴]/,
             countryRegExp = /[a-zA-Z\s-]+/,
             zipRegExp = /[a-zA-Z0-9\s-]+/,
@@ -41,7 +42,10 @@ define(
         }
         
         var validateGroupsName = function(validatedString){
-            return groupsNameRegExp.test(validatedString);
+            return nameRegExp.test(validatedString);
+        }
+        var validateWorkflowName = function(validatedString){
+            return workflowRegExp.test(validatedString);
         }
 
         var validateCountryName = function(validatedString){
@@ -174,7 +178,7 @@ define(
                     errorArray.push([fieldName, errorMessages.minLengthMsg(MIN_LENGTH)].join(' '));
                     return;
                 }
-                if(!validateGroupsName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
+                if(!validateWorkflowName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidNameMsg].join(' '));
             } else{
                 if(fieldValue){
                     if(hasInvalidChars(fieldValue)) {
@@ -201,6 +205,36 @@ define(
                     return;
                 }
                 if(!validateLogin(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+            } else{
+                if(fieldValue){
+                    if(hasInvalidChars(fieldValue)) {
+                        errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                        return;
+                    }
+                    if(fieldValue.length < MIN_LENGTH) {
+                        errorArray.push([fieldName, errorMessages.minLengthMsg(6)].join(' '));
+                        return;
+                    }
+                    if(!validateName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
+                }
+            }
+        }
+
+        var checkWorkflowNameField = function(errorArray, required, fieldValue, fieldName){
+            if(required){
+                if(!fieldValue){
+                    errorArray.push([fieldName, errorMessages.requiredMsg].join(' '));
+                    return;
+                }
+                if(hasInvalidChars(fieldValue)) {
+                    errorArray.push([fieldName, errorMessages.invalidCharsMsg].join(' '));
+                    return;
+                }
+                if(fieldValue.length < 3) {
+                    errorArray.push([fieldName, errorMessages.minLengthMsg(LOGIN_MIN_LENGTH)].join(' '));
+                    return;
+                }
+                if(!validateGroupsName(fieldValue)) errorArray.push([fieldName, errorMessages.invalidLoginMsg].join(' '));
             } else{
                 if(fieldValue){
                     if(hasInvalidChars(fieldValue)) {
@@ -415,6 +449,7 @@ define(
             validName: validateName,
             validGroupsName: validateGroupsName,
             validMoneyAmount: validateMoneyAmount,
-            checkLogedField:checkLogedField
+            checkLogedField:checkLogedField,
+			checkWorkflowNameField:checkWorkflowNameField
         }
     });

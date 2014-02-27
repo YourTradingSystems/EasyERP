@@ -305,10 +305,18 @@ define([
                         Backbone.history.fragment = "";
                         Backbone.history.navigate("#easyErp/Companies/form/" + model.id, { trigger: true });
                     },
-                    error: function () {
-                        $(".edit-companies-dialog").remove();
-                        Backbone.history.navigate("easyErp/Companies", { trigger: true });
+                    error: function (model, xhr) {
+						if (xhr && (xhr.status === 401||xhr.status === 403)) {
+							if (xhr.status === 401){
+								Backbone.history.navigate("login", { trigger: true });
+							}else{
+								alert("You do not have permission to perform this action");								
+							}
+                        } else {
+                            Backbone.history.navigate("home", { trigger: true });
+                        }
                     }
+
                 });
             },
 
@@ -328,10 +336,10 @@ define([
                                 $('.edit-companies-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
-                            error: function (models, xhr) {
-                                self.hideDialog();
-                                (xhr.status == 401) ? Backbone.history.navigate('#login', { trigger: true }):
-                                    Backbone.history.navigate("home", { trigger: true });
+                            error: function (models, err) {
+								if (err.status===403){
+									alert("You do not have permission to perform this action");
+								}
                             }
                         });
                 }

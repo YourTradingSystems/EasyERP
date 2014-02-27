@@ -261,7 +261,8 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
         var query = models.get(req.session.lastDb - 1, 'JobPosition', jobPositionSchema).find({});
         query.populate('department').
 			populate('createdBy.user').
-            populate('editedBy.user');
+            populate('editedBy.user').
+			populate('workflow','name _id');
         query.sort({ name: 1 });
         query.exec(function (err, result) {
             if (err) {
@@ -364,27 +365,36 @@ var JobPosition = function (logWriter, mongoose, employee, department, models) {
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "JobPosition", jobPositionSchema).find().where('_id').in(result);
+								console.log(data);
+                                if (data.sort) {
+                                    query.sort(data.sort);
+                                }
                                 query.select("_id createdBy editedBy name department totalForecastedEmployees numberOfEmployees expectedRecruitment workflow").
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
                                     populate('department', 'departmentName').
+									populate('workflow','name _id').
                                     exec(function (error, _res) {
                                         if (!error) {
                                             res['data'] = _res;
-                                            _res.forEach(function (ellement, index) {
-                                                models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function (err, count) {
-                                                    if (count) {
-                                                        ellement.numberOfEmployees = count;
+                                            if (_res.length !== 0) {
+                                                _res.forEach(function(ellement, index) {
+                                                    models.get(req.session.lastDb - 1, 'Employees', employee.employeeSchema).find({ jobPosition: ellement._id }).count(function(err, count) {
+                                                        if (count) {
+                                                            ellement.numberOfEmployees = count;
 
-                                                    } else if (err) {
-                                                        console.log(err);
-                                                        response.send(500, { error: 'Some error occured in JobPosition' });
+                                                        } else if (err) {
+                                                            console.log(err);
+                                                            response.send(500, { error: 'Some error occured in JobPosition' });
+                                                        }
+                                                        if (index === result.length - 1)
+                                                            response.send(res);
                                                     }
-                                                    if (index === result.length - 1)
-                                                        response.send(res);
-                                                }
-                );
-                                            });
+                                                    );
+                                                });
+                                            } else {
+                                                response.send(res);
+                                            }
                                             //response.send(res);
                                         } else {
                                             console.log(error);

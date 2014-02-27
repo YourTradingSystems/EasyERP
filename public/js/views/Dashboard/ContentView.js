@@ -93,8 +93,6 @@ define([
 					   }else{
 						   $(".legend-box").css("margin-top","-39px");
 					   }
-					   self.renderPopulate();
-					   self.renderPopulateSource();
 
 				   });
                    this.$el.html(this.template());
@@ -245,7 +243,7 @@ define([
                        var line = d3.svg.line()
 						   .x(function (d) { return x(d.source) + x.rangeBand() / 2; })
 						   .y(function (d) { return y(d.count); })
-						   .interpolate("cardinal");
+						   .interpolate("monotone");
 //                       data.sort(function (a, b) { return d3.ascending(a.source, b.source); });
 					   if(self.dateItem == "D"){
 						   data = _.map(data, function(item){
@@ -314,10 +312,11 @@ define([
 					   var maxval2 = d3.max(percent, function (d) { return d.count; });		
                        if (maxval2==0)maxval2=1;															
                        percent = _.map(percent, function (item) {
-                           item.count = (item.count) * maxval / maxval2;
+                           item.count = (item.count) / maxval2 *100;
                            return item;
 
                        });
+					   console.log(percent);
                        x.domain(data.map(function (d) { return d.source; }));
                        y.domain([0, d3.max(data, function (d) { return d.count; })]);
                        y2.domain([minval3 * 100, maxval3 * 100]);

@@ -878,7 +878,8 @@
                         }
                         return item._id.toUpperCase();
                     });
-                    filtered.push("All");
+					if (filtered.length)
+						filtered.push("All");
                     var letterArr = _.sortBy(_.uniq(filtered), function (a) { return a });
                     if (callback) callback(letterArr);
                 });

@@ -639,6 +639,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     case ('Employees'):
                                         switch (viewType) {
                                             case ('list'): {
+												if (data.sort) {
+													query.sort(data.sort);
+												}
+
                                                 query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones jobType').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
@@ -665,6 +669,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                                       query.where('workflow').in([]);
                                                 }
+
+                                                 if (data.sort) {
+                                                     query.sort(data.sort);
+                                                 }
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
