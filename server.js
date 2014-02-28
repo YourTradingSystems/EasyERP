@@ -116,13 +116,10 @@ app.get('/', function (req, res) {
 
 
 app.get('/getDBS', function (req, res) {
-    console.log('Get DBS is success');
     res.send(200, { dbsNames: dbsNames });
 });
 
 app.get('/account/authenticated', function (req, res, next) {
-    console.log('>>>>>>>>>>>>>>>>Request authenticate<<<<<<<<<<<<<<<<<<');
-    //if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
     if (req.session && req.session.loggedIn) {
         res.send(200);
     } else {
@@ -135,9 +132,6 @@ app.get('/getModules', function (req, res) {
 });
 
 app.post('/uploadFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Persons<<<<<<<<<<<<<<<<<<<<<<<');
-
-    //data = {};
     var file = {};
     var localPath = __dirname + "\\uploads\\" + req.headers.id;
     fs.readdir(localPath, function(err, files){
@@ -364,8 +358,6 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
 });
 
 app.post('/uploadEmployeesFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File employees<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
     var dir;
@@ -398,8 +390,6 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
 });
 
 app.post('/uploadProjectsFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Projects<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
     var dir;
@@ -431,8 +421,6 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
 });
 
 app.post('/uploadTasksFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Tasks<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
     var dir;
@@ -464,8 +452,6 @@ app.post('/uploadTasksFiles', function (req, res, next) {
 });
 // upload files Opportunities (add Vasya);
 app.post('/uploadOpportunitiesFiles', function (req, res, next) {
-    console.log('>>>>>>>>>>>Uploading File Opportunities<<<<<<<<<<<<<<<<<<<<<<<');
-    //data = {};
     var os = require("os");
     var osType = (os.type().split('_')[0]);
     var dir;
@@ -498,37 +484,30 @@ app.post('/uploadOpportunitiesFiles', function (req, res, next) {
 
 
 app.get('/logout', function (req, res, next) {
-    console.log('>>>>>>>>>>>logut<<<<<<<<<<<<<<');
     if (req.session) {
         req.session.destroy(function () { });
     }
     res.redirect('/#login');
 });
 app.post('/login', function (req, res, next) {
-    console.log('>>>>>>>>>>>Login<<<<<<<<<<<<<<');
-    var data = {};
-    data = req.body;
+    var data = req.body;
     req.session.lastDb = data.dbId;
     requestHandler.login(req, res, data);
 });
 
 app.post('/Users', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.user = req.body;
     requestHandler.createUser(req, res, data);
 });
 
 app.get('/UserWithProfile', function (req, res) {
-    console.log('---------------------getUsers-------------');
     var id = req.param('_id');
     requestHandler.getAllUserWithProfile(req, id, res);
 });
 
 app.get('/Users', function (req, res) {
-    console.log('---------------------getUsers-------------');
     var data = {};
-    data.mid = req.param('mid');
     data.page = req.param('page');
     data.count = req.param('count');
     requestHandler.getUsers(req, res, data);
@@ -547,12 +526,10 @@ app.post('/currentUser', function (req, res) {
 });
 
 app.get('/UsersForDd', function (req, res) {
-    console.log('---------------------getUsers-------------');
     requestHandler.getUsersForDd(req, res);
 });
 
 app.get('/Users/:viewType', function (req, res) {
-    console.log('-----------Filter-----getUsers-------------');
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -569,7 +546,6 @@ app.get('/Users/:viewType', function (req, res) {
 app.put('/Users/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.user = req.body;
     requestHandler.updateUser(req, res, id, data);
 });
@@ -581,33 +557,27 @@ app.delete('/Users/:_id', function (req, res) {
 
 app.post('/Profiles', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.profile = req.body;
     requestHandler.createProfile(req, res, data);
 });
 
 app.get('/Profiles', function (req, res) {
-    console.log('---------SERVER----getProfiles-------------------------------');
     requestHandler.getProfile(req, res);
 });
 
 app.get('/ProfilesForDd', function (req, res) {
-    console.log('---------SERVER----getProfiles-------------------------------');
     requestHandler.getProfileForDd(req, res);
 });
 
 app.put('/Profiles/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.profile = req.body;
     requestHandler.updateProfile(req, res, id, data);
 });
 
 app.delete('/Profiles/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     requestHandler.removeProfile(req, res, id);
 });
 
@@ -647,10 +617,7 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
 //----------------------Accounts----------------------------------------------------------------
 
 app.get('/getPersonsForDd', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersonsForDd(req, res, data);
+    requestHandler.getPersonsForDd(req, res);
 });
 
 app.get('/getPersonAlphabet', function (req, res) {
@@ -674,21 +641,18 @@ app.get('/Customer', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    data.mid = req.param('mid');
     requestHandler.getCustomer(req, res, data);
 });
 
 //Get images for persons or companies or owncompanies
 app.get('/getCustomersImages', function (req, res) {
     requestHandler.getCustomersImages(req, res);
-    console.log('-----------getCustomersImages');
 });
 
 //----------------------------Persons---------------------------------------------------------
 
 app.post('/Persons', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.person = req.body;
     requestHandler.createPerson(req, res, data);
 });
@@ -710,7 +674,6 @@ app.get('/Persons/:viewType', function (req, res) {
 app.put('/Persons/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     var remove = req.headers.remove;
     data.person = req.body;
     requestHandler.updatePerson(req, res, id, data, remove);
@@ -729,7 +692,6 @@ app.delete('/Persons/:_id', function (req, res) {
 //---------------------------Projects--------------------------------------------------------
 
 app.get('/projectType', function (req, res) {
-    console.log('Get getProjectType');
     requestHandler.getProjectType(req, res);
 });
 
@@ -737,35 +699,25 @@ app.get('/projectType', function (req, res) {
 app.get('/Projects/form/:_id', function (req, res) {
     var data = {};
     data.id = req.params._id;
-    data.mid = req.param('mid');
     requestHandler.getProjectsById(req, res, data);
 });
 
 app.get('/getProjectsForDd', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getProjectsForDd(req, res, data);
+    requestHandler.getProjectsForDd(req, res);
 });
 app.get('/getProjectPMForDashboard', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getProjectPMForDashboard(req, res, data);
+    requestHandler.getProjectPMForDashboard(req, res);
 });
 app.get('/getProjectStatusCountForDashboard', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getProjectStatusCountForDashboard(req, res, data);
+    requestHandler.getProjectStatusCountForDashboard(req, res);
 });
 
 app.get('/getProjectByEndDateForDashboard', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getProjectByEndDateForDashboard(req, res, data);
+    requestHandler.getProjectByEndDateForDashboard(req, res);
 });
 
 app.post('/Projects', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.project = req.body;
     requestHandler.createProject(req, res, data);
 });
@@ -778,7 +730,6 @@ app.patch('/Projects/:_id', function (req, res) {
 app.put('/Projects/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     var remove = req.headers.remove;
     data.project = req.body;
     requestHandler.updateProject(req, res, id, data, remove);
@@ -786,7 +737,6 @@ app.put('/Projects/:_id', function (req, res) {
 app.delete('/Projects/:_id', function (req, res) {
     var data = {};
     var id = req.params._id;
-    data.mid = req.headers.mid;
     data.project = req.body;
     requestHandler.removeProject(req, res, id, data);
 });
@@ -819,7 +769,6 @@ app.get('/getTasksLengthByWorkflows', function (req, res) {
 
 app.post('/Tasks', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.task = req.body;
     requestHandler.createTask(req, res, data);
 });
@@ -838,15 +787,12 @@ app.get('/Tasks/:viewType', function (req, res) {
 });
 
 app.get('/Priority', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getTasksPriority(req, res, data);
+    requestHandler.getTasksPriority(req, res);
 });
 
 app.put('/Tasks/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.task = req.body;
     var remove = req.headers.remove;
     requestHandler.updateTask(req, res, id, data, remove);
@@ -858,17 +804,14 @@ app.patch('/Tasks/:_id', function (req, res) {
 });
 
 app.delete('/Tasks/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeTask(req, res, id, data);
+    requestHandler.removeTask(req, res, id);
 });
 
 //------------------Workflows---------------------------------------------------
 
 app.get('/relatedStatus', function (req, res) {
     var data = {};
-    data.mid = req.param('mid');
     data.type = req.param('type');
     requestHandler.getRelatedStatus(req, res, data);
 });
@@ -884,14 +827,12 @@ app.get('/Workflows', function (req, res) {
 app.get('/WorkflowContractEnd', function (req, res) {
     var data = {};
     data.id = req.param('id');
-    data.mid = req.param('mid');
     requestHandler.getWorkflowContractEnd(req, res, data);
 });
 
 app.get('/WorkflowsForDd', function (req, res) {
     var data = {};
     var type = {};
-    data.mid = req.param('mid');
     type.id = req.param('id');
     data.type = type;
     requestHandler.getWorkflowsForDd(req, res, data);
@@ -900,9 +841,7 @@ app.get('/WorkflowsForDd', function (req, res) {
 app.get('/taskWorkflows', function (req, res) {
     var data = {};
     var type = {};
-    //data.id = req.param('id');
     data.mid = req.param('mid');
-    //type.name = 'task';
     type.id = "Task";
     data.type = type;
     requestHandler.getWorkflowsForDd(req, res, data);
@@ -911,8 +850,6 @@ app.get('/taskWorkflows', function (req, res) {
 app.get('/projectWorkflows', function (req, res) {
     var data = {};
     var type = {};
-    //data.id = req.param('id');
-    data.mid = req.param('mid');
     type.name = 'project';
     type.id = "Project";
     data.type = type;
@@ -947,24 +884,20 @@ app.patch('/Workflows/:_id', function (req, res) {
     }
     requestHandler.updateWorkflowOnlySelectedField(req, res, _id, data);
 });
+
 app.delete('/Workflows/:_id', function (req, res) {
-    var data = {};
     var _id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeWorkflow(req, res, _id, data);
+    requestHandler.removeWorkflow(req, res, _id);
 });
 //-------------------Companies--------------------------------------------------
 
 app.post('/Companies', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.company = req.body;
     requestHandler.createCompany(req, res, data);
 });
 app.get('/CompaniesForDd', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getCompaniesForDd(req, res, data);
+    requestHandler.getCompaniesForDd(req, res);
 });
 
 app.get('/Companies/:viewType', function (req, res) {
@@ -1005,10 +938,8 @@ app.patch('/Companies/:viewType/:_id', function (req, res) {
 });
 
 app.delete('/Companies/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeCompany(req, res, id, data);
+    requestHandler.removeCompany(req, res, id);
 });
 
 app.get('/getCompaniesAlphabet', function (req, res) {
@@ -1017,24 +948,17 @@ app.get('/getCompaniesAlphabet', function (req, res) {
 
 //------------------JobPositions---------------------------------------------------
 app.get('/jobType', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    //data._id = req.param('_id');
-    requestHandler.getJobType(req, res, data);
+    requestHandler.getJobType(req, res);
 });
 
 app.post('/JobPositions', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.jobPosition = req.body;
     requestHandler.createJobPosition(req, res, data);
 });
 
 app.get('/JobPositionForDd', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    //data._id = req.param('_id');
-    requestHandler.getJobPositionForDd(req, res, data);
+    requestHandler.getJobPositionForDd(req, res);
 });
 
 app.get('/JobPositions/:viewType', function (req, res) {
@@ -1055,7 +979,6 @@ app.get('/JobPositions/:viewType', function (req, res) {
 app.patch('/JobPositions/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.jobPosition = req.body;
     requestHandler.updateJobPosition(req, res, id, data);
 });
@@ -1063,35 +986,27 @@ app.patch('/JobPositions/:_id', function (req, res) {
 app.put('/JobPositions/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.jobPosition = req.body;
     requestHandler.updateJobPosition(req, res, id, data);
 });
 
 app.delete('/JobPositions/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeJobPosition(req, res, id, data);
+    requestHandler.removeJobPosition(req, res, id);
 });
 
 
 //------------------Departments---------------------------------------------------
 app.get('/Departments', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getDepartment(req, res, data);
+    requestHandler.getDepartment(req, res);
 });
 
 app.get('/DepartmentsForDd', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getDepartmentForDd(req, res, data);
+    requestHandler.getDepartmentForDd(req, res);
 });
 
 app.post('/Departments', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.createDepartment(req, res, data);
 });
@@ -1114,43 +1029,31 @@ app.get('/Departments/:viewType', function (req, res) {
 app.put('/Departments/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.updateDepartment(req, res, id, data);
 });
 
 app.delete('/Departments/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeDepartment(req, res, id, data);
+    requestHandler.removeDepartment(req, res, id);
 });
 app.get('/getDepartmentsForEditDd', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
     var id = req.param('id');
-    requestHandler.getDepartmentForEditDd(req, res, id, data);
+    requestHandler.getDepartmentForEditDd(req, res, id);
 });
 
 
 //------------------Employee---------------------------------------------------
 
 app.get('/Birthdays', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.Birthdays(req, res, data);
+    requestHandler.Birthdays(req, res);
 });
 
 app.get('/getForDdByRelatedUser', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
-    var data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getForDdByRelatedUser(req, res, data);
+    requestHandler.getForDdByRelatedUser(req, res);
 });
 
 app.get('/Employees/:viewType', function (req, res) {
-    console.log('-------------------------------');
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -1169,7 +1072,6 @@ app.get('/Employees/:viewType', function (req, res) {
 
 app.post('/Employees', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.createEmployee(req, res, data);
 });
@@ -1177,12 +1079,10 @@ app.post('/Employees', function (req, res) {
 app.put('/Employees/:_id', function (req, res) {
     var data = {};
     var id = req.body._id;
-    data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
 });
 app.patch('/Employees/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
     requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);
 });
@@ -1190,29 +1090,21 @@ app.patch('/Employees/:_id', function (req, res) {
 app.delete('/Employees/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.removeEmployees(req, res, id, data);
 });
 
 app.get('/getSalesPerson', function (req, res) {
     var data = {};
-    data.mid = req.param('mid');
     requestHandler.getPersonsForDd(req, res, data);
 });
 
 app.get('/getSalesTeam', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getDepartmentForDd(req, res, data);
+    requestHandler.getDepartmentForDd(req, res);
 });
 
 app.get('/getEmployeesAlphabet', function (req, res) {
-    console.log('------getAccountsForDd-----------------');
-    var data = {};
-    //data.ownUser = true;
-    data.mid = req.param('mid');
-    requestHandler.getEmployeesAlphabet(req, res, data);
+    requestHandler.getEmployeesAlphabet(req, res);
 });
 
 app.get('/getEmployeesImages', function (req, res) {
@@ -1246,18 +1138,14 @@ app.get('/Applications/:viewType', function (req, res) {
 });
 
 app.post('/Applications', function (req, res) {
-    console.log('-------------------/createEmployee-----------------------------');
     var data = {};
-    data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.createApplication(req, res, data);
 });
 
 app.put('/Applications/:_id', function (req, res) {
-    console.log('-----SERVER put Applications---------------');
     var data = {};
     var id = req.body._id;
-    data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateApplication(req, res, id, data);
 });
@@ -1268,21 +1156,16 @@ app.patch('/Applications/:_id', function (req, res) {
 });
 
 app.delete('/Applications/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeApplication(req, res, id, data);
+    requestHandler.removeApplication(req, res, id);
 });
 
 app.get('/Degrees', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getDegrees(req, res, data);
+    requestHandler.getDegrees(req, res);
 });
 
 app.post('/Degrees', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.degree = req.body;
     requestHandler.createDegree(req, res, data);
 });
@@ -1290,23 +1173,18 @@ app.post('/Degrees', function (req, res) {
 app.put('/Degrees/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.degree = req.body;
     requestHandler.updateDegree(req, res, id, data);
 });
 
 app.delete('/Degrees/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeDegree(req, res, id, data);
+    requestHandler.removeDegree(req, res, id);
 });
 
 //----------------------campaign----------------------------------------------------------------
 app.get('/Campaigns', function (req, res) {
-    var data = {};
-    data.mid = req.param('mid');
-    requestHandler.getCampaigns(req, res, data);
+    requestHandler.getCampaigns(req, res);
 });
 
 app.get('/sources', function (req, res) {
@@ -1319,7 +1197,6 @@ app.get('/Languages', function (req, res) {
 //----------------------Leads----------------------------------------------------------------
 app.get('/LeadsForChart', function (req, res) {
     var data = {};
-    data.mid = req.param('mid');
     data.source = req.param('source');
     data.dataRange = req.param('dataRange');
     data.dataItem = req.param('dataItem');
@@ -1331,7 +1208,6 @@ app.get('/Leads/:viewType', function (req, res) {
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    console.log('============== /Leads/:viewType=================');
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getLeadsById(req, res, data);
@@ -1343,7 +1219,6 @@ app.get('/Leads/:viewType', function (req, res) {
 
 app.post('/Leads', function (req, res) {
     var data = {};
-    data.mid = req.headers.mid;
     data.lead = req.body;
     requestHandler.createLead(req, res, data);
 });
@@ -1351,22 +1226,18 @@ app.post('/Leads', function (req, res) {
 app.put('/Leads/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.lead = req.body;
     requestHandler.updateLead(req, res, id, data);
 });
 
 app.delete('/Leads/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeLead(req, res, id, data);
+    requestHandler.removeLead(req, res, id);
 });
 
 //---------------------Opportunities---------------------
 app.post('/Opportunities', function (req, res) {
     var data = {};
-    data.mid = req.param('mid');
     data.opportunitie = req.body;
     requestHandler.createOpportunitie(req, res, data);
 });
@@ -1401,7 +1272,6 @@ app.get('/getLengthByWorkflows', function (req, res) {
 app.put('/Opportunities/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.updateOpportunitie(req, res, id, data);
@@ -1410,16 +1280,13 @@ app.put('/Opportunities/:_id', function (req, res) {
 app.patch('/Opportunities/:_id', function (req, res) {
     var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.opportunitieUpdateOnlySelectedFields(req, res, id, data);
 });
 app.delete('/Opportunities/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeOpportunitie(req, res, id, data);
+    requestHandler.removeOpportunitie(req, res, id);
 });
 app.get('/:id', function (req, res) {
     var id = req.param('id');
