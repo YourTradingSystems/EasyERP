@@ -762,7 +762,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             });
     }
 
-    function getProjectByEndDateForDashboard(req, data, response) {
+    function getProjectByEndDateForDashboard(req, response) {
         var res = {};
         res['data'] = [];
         var startDate = new Date();
@@ -831,8 +831,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                if (data && data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
                                 query.select("_id TargetEndDate projectmanager projectName health").
                                     populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {

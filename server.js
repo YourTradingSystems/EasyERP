@@ -735,10 +735,8 @@ app.put('/Projects/:_id', function (req, res) {
     requestHandler.updateProject(req, res, id, data, remove);
 });
 app.delete('/Projects/:_id', function (req, res) {
-    var data = {};
     var id = req.params._id;
-    data.project = req.body;
-    requestHandler.removeProject(req, res, id, data);
+    requestHandler.removeProject(req, res, id);
 });
 
 app.get('/Projects/:viewType', function (req, res, next) {
@@ -1088,10 +1086,8 @@ app.patch('/Employees/:_id', function (req, res) {
 });
 
 app.delete('/Employees/:_id', function (req, res) {
-    var data = {};
     var id = req.param('_id');
-    data.employee = req.body;
-    requestHandler.removeEmployees(req, res, id, data);
+    requestHandler.removeEmployees(req, res, id);
 });
 
 app.get('/getSalesPerson', function (req, res) {
