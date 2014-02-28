@@ -157,7 +157,7 @@ define([
                 $(e.target).parents("#health").find("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+
             getTotalLength: function (currentNumber, itemsNumber, filter) {
                 dataService.getData('/totalCollectionLength/Projects', {
                     type: 'Projects',
@@ -207,7 +207,7 @@ define([
                 this.hideNewSelect();
                 return false;
             },
-//modified for filter Vasya
+
             showFilteredPage: function () {
                 this.startTime = new Date();
                 this.newCollection = false;
@@ -218,6 +218,8 @@ define([
                 this.filter = this.filter || {};
                 this.filter['workflow'] = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter });
                 this.getTotalLength(null, itemsNumber, this.filter);
@@ -250,8 +252,10 @@ define([
                 $(e.target).closest("button").next("ul").toggle();
                 return false;
             },
-//modified for filter Vasya
+
             previousPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.prevP({
                     sort: this.sort,
@@ -268,8 +272,10 @@ define([
                     context.listLength = response.count || 0;
                 }, this);
             },
-//modified for filter Vasya
+
             nextPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.nextP({
                     sort: this.sort,
@@ -288,6 +294,8 @@ define([
             },
 
             firstPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.firstP({
                     sort: this.sort,
@@ -304,6 +312,8 @@ define([
             },
 
             lastPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.lastP({
                     sort: this.sort,
@@ -332,6 +342,7 @@ define([
                     newCollection: this.newCollection
                 });
                 this.page = 1;
+                $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
@@ -382,12 +393,14 @@ define([
             renderContent: function () {
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 tBody.empty();
                 var itemView = new listItemView({ collection: this.collection, page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text()});
 
                 tBody.append(itemView.render());
             },
-//modified for filter Vasya
+
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 var tBody = holder.find('#listTable');
@@ -401,7 +414,8 @@ define([
                 } else {
                     pagenation.hide();
                 }
-
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -419,15 +433,21 @@ define([
 
             checked: function () {
                 if (this.collection.length > 0) {
-                    if ($("input.checkbox:checked").length > 0)
+                    var checkLength = $("input.checkbox:checked").length;
+                    var itemsNumberShow = this.$el.find("span#itemsNumber").text()
+                    if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
+                            if (checkLength == itemsNumberShow) {
+                                    $('#check_all').prop('checked', true);
+                            }
+                    }
                     else {
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);
                     }
                 }
             },
-//modified for filter Vasya
+
             deleteItemsRender: function (deleteCounter, deletePage) {
                 dataService.getData('/totalCollectionLength/Projects', {
                     filter: this.filter,

@@ -162,8 +162,9 @@ define([
                         workflowIdArray.push($(this).val());
                 })
                 this.filter['workflow'] = workflowIdArray;
-
                 var itemsNumber = $("#itemsNumber").text();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter, parrentContentId: this.parrentContentId });
                 this.getTotalLength(null, itemsNumber, this.filter);
@@ -245,12 +246,16 @@ define([
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
                 tBody.append(itemView.render());
             },
             previousPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.prevP({
                     sort: this.sort,
                     filter: this.filter,
@@ -267,6 +272,8 @@ define([
             //modified for filter Vasya
             nextPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.nextP({
                     sort: this.sort,
                     filter: this.filter,
@@ -283,6 +290,8 @@ define([
 
             firstPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.firstP({
                     sort: this.sort,
                     filter: this.filter,
@@ -299,6 +308,8 @@ define([
 
             lastPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.lastP({
                     sort: this.sort,
                     filter: this.filter,
@@ -319,6 +330,7 @@ define([
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
+                this.defaultItemsNumber = itemsNumber;
                 this.getTotalLength(null, itemsNumber, this.filter);
                 this.collection.showMore({
                     count: itemsNumber,
@@ -327,13 +339,14 @@ define([
                     newCollection: this.newCollection
                 });
                 this.page = 1;
+                $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber);
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { filter: this.filter, newCollection: this.newCollection });
+                this.showP(event, { filter: this.filter, newCollection: this.newCollection,sort: this.sort });
             },
             //modified for filter Vasya
             showMoreContent: function (newModels) {
@@ -348,6 +361,8 @@ define([
                 } else {
                     pagenation.hide();
                 }
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -372,8 +387,14 @@ define([
 
             checked: function () {
                 if (this.collection.length > 0) {
-                    if ($("input.checkbox:checked").length > 0)
+                    var checkLength = $("input.checkbox:checked").length;
+                    var itemsNumberShow = this.$el.find("span#itemsNumber").text()
+                    if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
+                            if (checkLength == itemsNumberShow) {
+                                    $('#check_all').prop('checked', true);
+                            }
+                    }
                     else {
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);

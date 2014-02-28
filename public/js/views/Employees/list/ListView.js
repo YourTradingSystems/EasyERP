@@ -193,6 +193,7 @@ define([
             previousPage: function (event) {
                 event.preventDefault();
                 this.prevP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection,
                     parrentContentId: this.parrentContentId
@@ -209,6 +210,7 @@ define([
             nextPage: function (event) {
                     event.preventDefault();
                     this.nextP({
+                        sort: this.sort,
                         filter: this.filter,
                         newCollection: this.newCollection,
                         parrentContentId: this.parrentContentId
@@ -225,7 +227,10 @@ define([
             //first last page in paginations
             firstPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.firstP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -239,7 +244,10 @@ define([
 
             lastPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.lastP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -256,6 +264,7 @@ define([
                     event.preventDefault();
                     this.startTime = new Date();
                     var itemsNumber = event.target.textContent;
+                    this.defaultItemsNumber = itemsNumber;
                     this.getTotalLength(null, itemsNumber, this.filter);
                     this.collection.showMore({
                         count: itemsNumber,
@@ -263,7 +272,8 @@ define([
                         filter: this.filter,
                         newCollection: this.newCollection,
                     });
-                     this.page = 1;
+                    this.page = 1;
+                    $("#top-bar-deleteBtn").hide();
                     $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber, this.filter);
             },
@@ -279,13 +289,16 @@ define([
                     this.filter = this.filter || {};
                     this.filter['letter'] = selectedLetter;
                     var itemsNumber = $("#itemsNumber").text();
+
+                    $("#top-bar-deleteBtn").hide();
+                    $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber, this.filter);
                     this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
                     this.getTotalLength(null, itemsNumber, this.filter);
                 },
             showPage: function (event) {
                     event.preventDefault();
-                    this.showP(event,{filter: this.filter, newCollection: this.newCollection});
+                    this.showP(event,{filter: this.filter, newCollection: this.newCollection,sort: this.sort});
             },
             //modified for filter Vasya
             showMoreContent: function (newModels) {
@@ -300,6 +313,8 @@ define([
                     } else {
                         pagenation.hide();
                     }
+                    $("#top-bar-deleteBtn").hide();
+                    $('#check_all').prop('checked', false);
                     holder.find('#timeRecivingDataFromServer').remove();
                     holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -313,7 +328,8 @@ define([
                 content.remove();
 
                 holder.append(this.template({ collection: newModels.toJSON(), page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }));
-
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.getTotalLength(null, itemsNumber, this.filter);
                 created.text("Created in " + (new Date() - this.startTime) + " ms");
                 holder.prepend(alphaBet);
@@ -334,8 +350,14 @@ define([
 
             checked: function () {
                 if (this.collection.length > 0) {
-                    if ($("input.checkbox:checked").length > 0)
+                    var checkLength = $("input.checkbox:checked").length;
+                    var itemsNumberShow = this.$el.find("span#itemsNumber").text()
+                    if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
+                            if (checkLength == itemsNumberShow) {
+                                    $('#check_all').prop('checked', true);
+                            }
+                    }
                     else {
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);

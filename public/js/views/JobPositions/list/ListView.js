@@ -41,7 +41,9 @@ define([
                 "click": "hideItemsNumber",
                 "click .oe_sortable": "goSort",
 				"click .stageSelect": "showNewSelect",
-				"click .newSelectList li": "chooseOption"
+				"click .newSelectList li": "chooseOption",
+                "click #firstShowPage": "firstPage",
+                "click #lastShowPage": "lastPage"
 
             },
 	           hideNewSelect: function (e) {
@@ -104,6 +106,8 @@ define([
             renderContent: function () {
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 tBody.empty();
                 var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
@@ -201,7 +205,10 @@ define([
 
             previousPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.prevP({
+                    sort: this.sort,
                     newCollection: this.newCollection,
                 });
                 dataService.getData('/totalCollectionLength/JobPositions', {
@@ -213,7 +220,10 @@ define([
             //modified for filter Vasya
             nextPage: function (event) {
                     event.preventDefault();
+                    $("#top-bar-deleteBtn").hide();
+                    $('#check_all').prop('checked', false);
                     this.nextP({
+                        sort: this.sort,
                         newCollection: this.newCollection,
                     });
                     dataService.getData('/totalCollectionLength/JobPositions', {
@@ -223,30 +233,68 @@ define([
                     }, this);
             },
 
+            //first last page in paginations
+            firstPage: function (event) {
+                event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                this.firstP({
+                    sort: this.sort,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/JobPositions', {
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },
+
+            lastPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
+                event.preventDefault();
+                this.lastP({
+                    sort: this.sort,
+                    filter: this.filter,
+                    newCollection: this.newCollection
+                });
+                dataService.getData('/totalCollectionLength/JobPositions', {
+                    sort: this.sort,
+                    newCollection: this.newCollection
+                }, function (response, context) {
+                    context.listLength = response.count || 0;
+                }, this);
+            },  //end first last page in paginations
+
             switchPageCounter: function (event) {
                     event.preventDefault();
                     this.startTime = new Date();
                     var itemsNumber = event.target.textContent;
+                    this.defaultItemsNumber = itemsNumber;
                     this.getTotalLength(null, itemsNumber);
                     this.collection.showMore({
                         count: itemsNumber,
                         page: 1,
                         newCollection: this.newCollection,
                     });
-                     this.page = 1;
+                    this.page = 1;
+                    $("#top-bar-deleteBtn").hide();
                     $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber)
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event, { newCollection: this.newCollection });
+                this.showP(event, { newCollection: this.newCollection,sort: this.sort });
             },
 
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
                 holder.append(new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -264,8 +312,14 @@ define([
 
             checked: function () {
                 if (this.collection.length > 0) {
-                    if ($("input.checkbox:checked").length > 0)
+                    var checkLength = $("input.checkbox:checked").length;
+                    var itemsNumberShow = this.$el.find("span#itemsNumber").text()
+                    if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
+                            if (checkLength == itemsNumberShow) {
+                                    $('#check_all').prop('checked', true);
+                            }
+                    }
                     else {
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);

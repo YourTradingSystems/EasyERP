@@ -117,6 +117,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 this.filter = this.filter || {};
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
                 this.getTotalLength(null, itemsNumber, this.filter);
@@ -160,7 +162,6 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                     $("#top-bar-deleteBtn").hide();
             });
 
-
             $(document).on("click", function () {
                 self.hideItemsNumber();
             });
@@ -186,6 +187,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
         renderContent: function () {
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 tBody.empty();
                 var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
@@ -193,6 +196,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
         },
         previousPage: function (event) {
                 event.preventDefault();
+                $('#check_all').prop('checked', false);
+                $("#top-bar-deleteBtn").hide();
                 this.prevP({
                     sort: this.sort,
                     filter: this.filter,
@@ -210,6 +215,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 
         nextPage: function (event) {
                 event.preventDefault();
+                $('#check_all').prop('checked', false);
+                $("#top-bar-deleteBtn").hide();
                 this.nextP({
                     sort: this.sort,
                     filter: this.filter,
@@ -229,6 +236,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 
             firstPage: function (event) {
                 event.preventDefault();
+                $('#check_all').prop('checked', false);
+                $("#top-bar-deleteBtn").hide();
                 this.firstP({
                     sort: this.sort,
                     filter: this.filter,
@@ -244,6 +253,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 
             lastPage: function (event) {
                 event.preventDefault();
+                $('#check_all').prop('checked', false);
+                $("#top-bar-deleteBtn").hide();
                 this.lastP({
                     sort: this.sort,
                     filter: this.filter,
@@ -261,6 +272,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
+                this.defaultItemsNumber = itemsNumber;
                 this.getTotalLength(null, itemsNumber, this.filter);
                 this.collection.showMore({
                     count: itemsNumber,
@@ -269,6 +281,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                     newCollection: this.newCollection
                 });
                 this.page = 1;
+                $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber,this.filter);
         },
@@ -284,13 +297,15 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 this.filter = this.filter || {};
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
                 this.getTotalLength(null, itemsNumber, this.filter);
             },
         showPage: function (event) {
                 event.preventDefault();
-                this.showP(event,{filter: this.filter, newCollection: this.newCollection});
+                this.showP(event,{filter: this.filter, newCollection: this.newCollection,sort: this.sort});
         },
 
         showMoreContent: function (newModels) {
@@ -305,6 +320,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 } else {
                     pagenation.hide();
                 }
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
@@ -339,8 +356,14 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 
         checked: function () {
             if (this.collection.length > 0) {
-                if ($("input.checkbox:checked").length > 0)
+                var checkLength = $("input.checkbox:checked").length;
+                var itemsNumberShow = this.$el.find("span#itemsNumber").text()
+                if ($("input.checkbox:checked").length > 0) {
                     $("#top-bar-deleteBtn").show();
+                        if (checkLength == itemsNumberShow) {
+                                $('#check_all').prop('checked', true);
+                        }
+                }
                 else {
                     $("#top-bar-deleteBtn").hide();
                     $('#check_all').prop('checked', false);

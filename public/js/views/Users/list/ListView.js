@@ -114,6 +114,8 @@ define([
             renderContent: function () {
                     var currentEl = this.$el;
                     var tBody = currentEl.find('#listTable');
+                    $("#top-bar-deleteBtn").hide();
+                    $('#check_all').prop('checked', false);
                     tBody.empty();
                     var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
@@ -144,8 +146,11 @@ define([
             },
 
             previousPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.prevP({
+                    sort: this.sort,
                     newCollection: this.newCollection,
                 });
                 dataService.getData('/totalCollectionLength/Users', {
@@ -156,6 +161,8 @@ define([
             },
             //modified for filter Vasya
             nextPage: function (event) {
+                    $("#top-bar-deleteBtn").hide();
+                    $('#check_all').prop('checked', false);
                     event.preventDefault();
                     this.nextP({
                         sort: this.sort,
@@ -169,6 +176,8 @@ define([
             },
 
             firstPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.firstP({
                     sort: this.sort,
@@ -184,6 +193,8 @@ define([
             },
 
             lastPage: function (event) {
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 event.preventDefault();
                 this.lastP({
                     sort: this.sort,
@@ -202,6 +213,7 @@ define([
                     event.preventDefault();
                     this.startTime = new Date();
                     var itemsNumber = event.target.textContent;
+                    this.defaultItemsNumber = itemsNumber;
                     this.getTotalLength(null, itemsNumber);
                     this.collection.showMore({
                         count: itemsNumber,
@@ -209,19 +221,22 @@ define([
                         newCollection: this.newCollection,
                     });
                     this.page = 1;
+                    $("#top-bar-deleteBtn").hide();
                     $('#check_all').prop('checked', false);
                     this.changeLocationHash(1, itemsNumber)
             },
 
             showPage: function (event) {
                 event.preventDefault();
-                this.showP(event);
+                this.showP(event, {sort: this.sort});
             },
 
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
                 holder.append(new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -239,8 +254,14 @@ define([
 
             checked: function () {
                 if (this.collection.length > 0) {
-                    if ($("input.checkbox:checked").length > 0)
+                    var checkLength = $("input.checkbox:checked").length;
+                    var itemsNumberShow = this.$el.find("span#itemsNumber").text()
+                    if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
+                            if (checkLength == itemsNumberShow) {
+                                    $('#check_all').prop('checked', true);
+                            }
+                    }
                     else {
                         $("#top-bar-deleteBtn").hide();
                         $('#check_all').prop('checked', false);
