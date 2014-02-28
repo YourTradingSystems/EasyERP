@@ -11,14 +11,14 @@
             contentType: null,
 
             initialize: function (options) {
-				this.startTime = new Date();
-                this.contentType = options.contentType;
-                this.parrentContentId = (options) ? options.parrentContentId : null;
-                if (options && options.count) {
-                    this.namberToShow = options.count;
-                    this.page = options.page || 1;
-                }
+                this.startTime = new Date();
+
                 var that = this;
+                this.namberToShow = options.count;
+                this.viewType = options.viewType;
+                this.contentType = options.contentType;
+                this.count = options.count;
+                this.page = options.page || 1;
                 if (options && options.viewType) {
                     this.url += options.viewType;
                     //delete options.viewType;

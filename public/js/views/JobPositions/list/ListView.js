@@ -105,7 +105,7 @@ define([
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection });
+                var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
                 tBody.append(itemView.render());
             },
@@ -170,7 +170,7 @@ define([
 
                 currentEl.html('');
                 currentEl.append(_.template(listTemplate));
-                var itemView = new listItemView({ collection: this.collection });
+                var itemView = new listItemView({ collection: this.collection,page: this.page, itemsNumber: this.collection.namberToShow  });
                 currentEl.append(itemView.render());
                 itemView.bind('incomingStages', itemView.pushStages, itemView);
                 $('#check_all').click(function () {
@@ -246,7 +246,7 @@ define([
             showMoreContent: function (newModels) {
                 var holder = this.$el;
                 holder.find("#listTable").empty();
-                holder.append(new listItemView({ collection: newModels }).render());
+                holder.append(new listItemView({ collection: newModels, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
@@ -285,7 +285,7 @@ define([
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection }).render());
+                    created.before(new listItemView({ collection: this.collection,page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());
                 }
             },
             deleteItems: function () {
@@ -309,7 +309,7 @@ define([
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 						},
@@ -322,7 +322,7 @@ define([
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 

@@ -187,7 +187,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
-                var itemView = new listItemView({ collection: this.collection });
+                var itemView = new listItemView({ collection: this.collection,page: currentEl.find("#currentShowPage").val(), itemsNumber: currentEl.find("span#itemsNumber").text() });
 
                 tBody.append(itemView.render());
         },
@@ -317,7 +317,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 
             content.remove();
 
-            holder.append(this.template({ collection: newModels.toJSON() }));
+            holder.append(this.template({ collection: newModels.toJSON(),page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }));
 
             this.getTotalLength(null, itemsNumber, this.filter);
             created.text("Created in " + (new Date() - this.startTime) + " ms");
@@ -362,7 +362,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection, page: this.page, itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text()}).render());//added two parameters page and items number
                 }
         },
         deleteItems: function () {
@@ -386,7 +386,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 						},
@@ -399,7 +399,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate,contentColle
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 

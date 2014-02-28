@@ -529,9 +529,33 @@ require(['app'], function (app) {
 
             $("#pageList").empty();
             pageNumber = Math.ceil(this.listLength / itemsNumber);
-            for (var i = 1; i <= pageNumber; i++) {
-                $("#pageList").append('<li class="showPage">' + i + '</li>')
+            var currentPage = $("#currentShowPage").val()
+
+            //number page show (Vasya)
+            var itemsOnPage = 7;
+            if (pageNumber <= itemsOnPage){
+                for (var i = 1; i <= pageNumber; i++) {
+                    $("#pageList").append('<li class="showPage">' + i + '</li>');
+                }
             }
+            else if (pageNumber >= itemsOnPage && currentPage <= itemsOnPage) {
+                 for (var i = 1; i <= itemsOnPage; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+            }
+
+            else if (pageNumber >= itemsOnPage && currentPage > 3 && currentPage <= pageNumber - 3) {
+                 for (var i = currentPage - 3; i <= currentPage + 3; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+            }
+
+            else if (currentPage >= pageNumber - 3) {
+                 for (var i = pageNumber - 6; i <= pageNumber; i++) {
+                     $("#pageList").append('<li class="showPage">' + i + '</li>');
+                 }
+            }
+
             $("#lastPage").text(pageNumber);
 
             if (deletePage <= 1) {
