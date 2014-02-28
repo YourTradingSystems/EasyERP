@@ -255,10 +255,9 @@ define([
             checked: function () {
                 if (this.collection.length > 0) {
                     var checkLength = $("input.checkbox:checked").length;
-                    var itemsNumberShow = this.$el.find("span#itemsNumber").text()
                     if ($("input.checkbox:checked").length > 0) {
                         $("#top-bar-deleteBtn").show();
-                            if (checkLength == itemsNumberShow) {
+                            if (checkLength == this.collection.length) {
                                     $('#check_all').prop('checked', true);
                             }
                     }
