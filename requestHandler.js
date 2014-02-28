@@ -272,7 +272,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 } else {
                     res.send(403);
                 }
-            })
+            });
 
         } else {
             res.send(401);
@@ -320,7 +320,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 } else {
                     res.send(403);
                 }
-            })
+            });
         } else {
             res.send(401);
         }
@@ -544,14 +544,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     }
 
-    function getProjectsListLength(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            project.getListLength(req, data, res);
-        } else {
-            res.send(401);
-        }
-    }
-
     function getProjectType(req, res) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             project.getProjectType(req, res);
@@ -721,21 +713,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         project.getCollectionLengthByWorkflows(req, options, res);
     }
 
-    function getTasksByProjectId(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 40, function (access) {
-                if (access) {
-                    project.getTasksByProjectId(req, data, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
     function getTaskById(req, res, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getReadAccess(req, req.session.uId, 40, function (access) {
@@ -817,6 +794,7 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             res.send(401);
         }
     };
+
     function taskUpdateOnlySelectedFields(req, res, id, data) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 40, function (access) {
@@ -966,21 +944,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
             access.getReadAccess(req, req.session.uId, 50, function (access) {
                 if (access) {
                     customer.getCompanyById(req, data.id, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getOwnCompanies(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 5, function (access) {
-                if (access) {
-                    customer.getOwnCompanies(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1230,14 +1193,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         }
     };
 
-    function getEmployees(req, res) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            employee.get(req, res);
-        } else {
-            res.send(401);
-        }
-    };
-
     function uploadEmployeesFile(req, res, id, file) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 42, function (access) {
@@ -1362,21 +1317,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
                 if (access) {
                     data.employee.uId = req.session.uId;
                     employee.create(req, data.employee, res);
-                } else {
-                    res.send(403);
-                }
-            });
-
-        } else {
-            res.send(401);
-        }
-    };
-
-    function getApplicationsCustom(req, res, data) {
-        if (req.session && req.session.loggedIn && req.session.lastDb) {
-            access.getReadAccess(req, req.session.uId, 43, function (access) {
-                if (access) {
-                    employee.getEmployeeForList(req, data, res);
                 } else {
                     res.send(403);
                 }
@@ -1932,7 +1872,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         getPersonById: getPersonById,
         updatePerson: updatePerson,
         removePerson: removePerson,
-        // getPersonsForDd: getPersonsForDd,
         uploadFile: uploadFile,
         getCustomer: getCustomer,
         getFilterPersonsForMiniView: getFilterPersonsForMiniView,
@@ -1940,7 +1879,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         projectsTotalCollectionLength: projectsTotalCollectionLength,//for Showmore and Lists
         getProjects: getProjects,//for Thumbnails
-        getProjectsListLength: getProjectsListLength,
         getProjectsForList: getProjectsForList,
         getProjectsById: getProjectsById,//Used for Edit view
         getProjectsForDd: getProjectsForDd,
@@ -1957,7 +1895,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         createTask: createTask,
         getTasksLengthByWorkflows: getTasksLengthByWorkflows,
-        getTasksByProjectId: getTasksByProjectId,
         getTaskById: getTaskById,
         getTasksForList: getTasksForList,
         getTasksForKanban: getTasksForKanban,
@@ -1968,7 +1905,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         getCompaniesForDd: getCompaniesForDd,
         getCompanyById: getCompanyById,
-        getOwnCompanies: getOwnCompanies,
         removeCompany: removeCompany,
         createCompany: createCompany,
         updateCompany: updateCompany,
@@ -1994,7 +1930,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         createEmployee: createEmployee,
         getFilterJobPosition: getFilterJobPosition,
-        getEmployees: getEmployees,
         getForDdByRelatedUser: getForDdByRelatedUser,
         getEmployeesById: getEmployeesById,
         removeEmployees: removeEmployees,
@@ -2009,7 +1944,6 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
 
         getApplicationsLengthByWorkflows: getApplicationsLengthByWorkflows,
         createApplication: createApplication,
-        getApplicationsCustom: getApplicationsCustom,
         removeApplication: removeApplication,
         updateApplication: updateApplication,
         uploadApplicationFile: uploadApplicationFile,
