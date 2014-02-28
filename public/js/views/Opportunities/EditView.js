@@ -18,6 +18,8 @@
                initialize: function (options) {
             	   _.bindAll(this, "render", "saveItem", "deleteItem");
                    this.currentModel = options.model;
+				   this.currentModel.urlRoot = "/Opportunities";
+				   
                    this.page=1;
                    this.pageG=1;
 				   this.responseObj = {};
@@ -751,6 +753,7 @@
                    var answer = confirm("Realy DELETE items ?!");
                    
                    if (answer == true) {
+					   this.currentModel.urlRoot = "/Opportunities";
                        this.currentModel.destroy({
                            headers: {
                                mid: mid

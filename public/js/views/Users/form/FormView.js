@@ -8,6 +8,7 @@ define([
             el: '#content-holder',
             initialize: function (options) {
                 this.formModel = options.model;
+				this.formModel.urlRoot = "/Users";
             },
 
             render: function () {

@@ -26,6 +26,7 @@ define([
             } else {
                 this.currentModel = options.model;
             }
+                this.currentModel.urlRoot = '/Employees';
                 this.page=1;
                 this.pageG=1;
                 this.responseObj = {};
@@ -540,12 +541,13 @@ define([
                 var self = this;
                     var answer = confirm("Realy DELETE items ?!");
                     if (answer == true) {
+						this.currentModel.urlRoot = "/Employees";
                         this.currentModel.destroy({
                             headers: {
                                 mid: mid
                             },
                             success: function () {
-                                $('.edit-employee-dialog').remove();
+                                $('.edit-dialog').remove();
                                 Backbone.history.navigate("easyErp/" + self.contentType, { trigger: true });
                             },
                             error: function (model, err) {

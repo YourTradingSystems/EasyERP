@@ -15,6 +15,8 @@ define([
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				this.currentModel.urlRoot = "/Leads";
+				
                 this.page=1;
                 this.pageG=1;
 				this.responseObj = {};
@@ -342,7 +344,6 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
                 this.currentModel.save({
                     name: name,
                     company: company,
@@ -399,6 +400,7 @@ define([
                 var self = this;
                     var answer = confirm("Realy DELETE items ?!");
                     if (answer == true) {
+						this.currentModel.urlRoot = "/Leads";
                         this.currentModel.destroy({
                             headers: {
                                 mid: mid

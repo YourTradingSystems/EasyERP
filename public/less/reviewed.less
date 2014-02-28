@@ -91,9 +91,7 @@
     }
   }
 }
-.oe_sortable{
-    cursor:pointer
-}
+
 .border-radius(@radius: 4px) {
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
@@ -522,7 +520,8 @@
         margin-top: 2.5px;
       }
 	  &.oe_sortable{
-		  position:relative;
+		  cursor:pointer;
+//		  position:relative;
 		  .arrow{
 			  display: none;
 			  padding: 0;
@@ -536,6 +535,7 @@
 			  font-family: Icons;
 			  text-decoration: none;
 			  line-height: 23px;
+			  background:none;
 		  }
 		  &.sortUp{
 			  .up{
@@ -3269,6 +3269,7 @@ button.red, a.red {
     text-indent: 5px;
     cursor: pointer;
     #loginSelect {
+	  display:none;
       position: relative;
       z-index: 999;
       border: 1px solid silver;

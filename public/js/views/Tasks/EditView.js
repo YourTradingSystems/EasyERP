@@ -14,6 +14,7 @@
               initialize: function (options) {
                   _.bindAll(this, "render", "saveItem", "deleteItem");
                   this.currentModel = (options.model) ? options.model : options.collection.getElement();
+                  this.currentModel.urlRoot = '/Tasks';
                   this.responseObj = {};
                   this.render();
               },

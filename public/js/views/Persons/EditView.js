@@ -16,6 +16,7 @@ define([
                 _.bindAll(this, "render", "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				this.currentModel.urlRoot = "/Persons";
                 this.page=1;
                 this.pageG=1;
 				this.responseObj = {};

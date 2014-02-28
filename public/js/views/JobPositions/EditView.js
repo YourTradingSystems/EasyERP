@@ -23,6 +23,7 @@ define([
 				else{
 					this.currentModel = (options.model) ? options.model : options.collection.getElement();
 				}
+				this.currentModel.urlRoot = "/JobPositions";
                 this.page=1;
                 this.pageG=1;
                 this.responseObj = {};

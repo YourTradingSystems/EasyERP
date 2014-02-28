@@ -17,7 +17,7 @@ var mainDb = mongoose.createConnection('localhost', 'mainDB');
 mainDb.on('error', console.error.bind(console, 'connection error:'));
 mainDb.once('open', function callback() {
     console.log("Connection to mainDB is success");
-    mainDBSchema = mongoose.Schema({
+    var mainDBSchema = mongoose.Schema({
         _id: Number,
         url: { type: String, default: 'localhost' },
         DBname: { type: String, default: '' },
@@ -122,7 +122,6 @@ app.get('/getDBS', function (req, res) {
 
 app.get('/account/authenticated', function (req, res, next) {
     console.log('>>>>>>>>>>>>>>>>Request authenticate<<<<<<<<<<<<<<<<<<');
-    //console.log(req);
     //if ((req.session && req.cookies) && ((req.session.lastDb == req.cookies.lastDb) && req.session.loggedIn)) {
     if (req.session && req.session.loggedIn) {
         res.send(200);
@@ -130,10 +129,6 @@ app.get('/account/authenticated', function (req, res, next) {
         res.send(401);
     }
 });
-app.get('/getGoogleToken', function (req, res) {
-    requestHandler.getToken(req, res);
-});
-//---------------------Users--and Profiles------------------------------------------------
 
 app.get('/getModules', function (req, res) {
     requestHandler.getModules(req, res);
@@ -238,9 +233,6 @@ function uploadFileArray(req, res, callback) {
                     var file = {};
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
-                    console.log(osType);
-
-
                     file.path = path;
                     file.size = Math.round(item.size / 1024 / 2024 * 100 ) / 100;
                     file.uploadDate = new Date();
@@ -446,7 +438,7 @@ app.post('/login', function (req, res, next) {
 });
 
 app.post('/Users', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.user = req.body;
     requestHandler.createUser(req, res, data);
@@ -455,13 +447,12 @@ app.post('/Users', function (req, res) {
 app.get('/UserWithProfile', function (req, res) {
     console.log('---------------------getUsers-------------');
     var id = req.param('_id');
-	console.log(id);
     requestHandler.getAllUserWithProfile(req, id, res);
 });
 
 app.get('/Users', function (req, res) {
     console.log('---------------------getUsers-------------');
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     data.page = req.param('page');
     data.count = req.param('count');
@@ -474,15 +465,6 @@ app.get('/currentUser', function (req, res) {
 
 app.post('/currentUser', function (req, res) {
     var data = {};
-    if (req.body.oldpass && req.body.pass) {
-        data.changePass = true;
-    }
-    requestHandler.updateCurrentUser(req, res, data);
-});
-
-app.put('/currentUser/:id', function (req, res) {
-    var data = {};
-    var id = req.param('id');
     if (req.body.oldpass && req.body.pass) {
         data.changePass = true;
     }
@@ -509,30 +491,21 @@ app.get('/Users/:viewType', function (req, res) {
     }
 });
 
-app.put('/Users/:viewType/:_id', function (req, res) {
-    data = {};
+app.put('/Users/:_id', function (req, res) {
+    var data = {};
     var id = req.param('_id');
-    //data._id = req.params('_id');
     data.mid = req.headers.mid;
     data.user = req.body;
     requestHandler.updateUser(req, res, id, data);
 });
 
 app.delete('/Users/:_id', function (req, res) {
-    data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeUser(req, res, id);
-});
-app.delete('/Users/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
     requestHandler.removeUser(req, res, id);
 });
 
 app.post('/Profiles', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.profile = req.body;
     requestHandler.createProfile(req, res, data);
@@ -540,22 +513,16 @@ app.post('/Profiles', function (req, res) {
 
 app.get('/Profiles', function (req, res) {
     console.log('---------SERVER----getProfiles-------------------------------');
-    data = {};
-    data.mid = req.param('mid');
-    console.log('--------END SERVER-----getProfiles-------------------------------');
     requestHandler.getProfile(req, res);
 });
 
 app.get('/ProfilesForDd', function (req, res) {
     console.log('---------SERVER----getProfiles-------------------------------');
-    data = {};
-    data.mid = req.param('mid');
-    console.log('--------END SERVER-----getProfiles-------------------------------');
     requestHandler.getProfileForDd(req, res);
 });
 
 app.put('/Profiles/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.profile = req.body;
@@ -563,7 +530,7 @@ app.put('/Profiles/:_id', function (req, res) {
 });
 
 app.delete('/Profiles/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeProfile(req, res, id);
@@ -602,22 +569,11 @@ app.get('/totalCollectionLength/:contentType', function (req, res, next) {
 });
 //------------------------END--getTotalLength---------------------------------------------
 
-app.get('/getNewModules', function (req, res) {
-    //console.log(req.body);
-    //console.log(req.session);
-    data = {};
-    //data = req.body;
-    data.uid = req.param('uid');
-    data.hash = req.param('hash');
-    //if (req.session.loggedIn) console.log('We Are the BEST');
-    requestHandler.getNewModules(res, data);
-});
 //----------------------Accounts----------------------------------------------------------------
 
 app.get('/getPersonsForDd', function (req, res) {
     console.log('------getAccountsForDd-----------------');
-    data = {};
-    //data.ownUser = true;
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getPersonsForDd(req, res, data);
 });
@@ -627,7 +583,7 @@ app.get('/getPersonAlphabet', function (req, res) {
 });
 
 app.get('/getPersonsForMiniView', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
@@ -635,14 +591,11 @@ app.get('/getPersonsForMiniView', function (req, res) {
 
 });
 
-
-
-
 //--------------------------Customers----------------------------------------------------------     
 
 app.get('/Customer', function (req, res) {
     console.log('---------SERVER----Customer-------------------------------');
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
@@ -659,7 +612,7 @@ app.get('/getCustomersImages', function (req, res) {
 //----------------------------Persons---------------------------------------------------------
 
 app.post('/Persons', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.person = req.body;
     requestHandler.createPerson(req, res, data);
@@ -679,14 +632,8 @@ app.get('/Persons/:viewType', function (req, res) {
     }
 });
 
-app.get('/Persons', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getPersons(req, res, data);
-});
-
-app.put('/Persons/:viewType/:_id', function (req, res) {
-    data = {};
+app.put('/Persons/:_id', function (req, res) {
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     var remove = req.headers.remove;
@@ -695,118 +642,74 @@ app.put('/Persons/:viewType/:_id', function (req, res) {
 });
 
 app.patch('/Persons/:viewType/:_id', function (req, res) {
-    data = {};
     var id = req.param('_id');
     requestHandler.personUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
-app.delete('/Persons/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removePerson(req, res, id);
-});
-
 app.delete('/Persons/:_id', function (req, res) {
-    data = {};
     var id = req.param('_id');
-    data.mid = req.headers.mid;
     requestHandler.removePerson(req, res, id);
 });
 
 //---------------------------Projects--------------------------------------------------------
-app.get('/ProjectsListLength', function (req, res) {
-    data = {};
-    //data.mid = req.param('mid');
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    requestHandler.getProjectsListLength(req, res, data);
-});
 
 app.get('/projectType', function (req, res) {
     console.log('Get getProjectType');
     requestHandler.getProjectType(req, res);
 });
 
-app.get('/Projects', function (req, res) {
-    console.log('Get Projects');
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getProjects(req, res, data);
-});
 
 app.get('/Projects/form/:_id', function (req, res) {
-    data = {};
+    var data = {};
     data.id = req.params._id;
     data.mid = req.param('mid');
     requestHandler.getProjectsById(req, res, data);
 });
 
 app.get('/getProjectsForDd', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectsForDd(req, res, data);
 });
 app.get('/getProjectPMForDashboard', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectPMForDashboard(req, res, data);
 });
 app.get('/getProjectStatusCountForDashboard', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectStatusCountForDashboard(req, res, data);
 });
 
 app.get('/getProjectByEndDateForDashboard', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getProjectByEndDateForDashboard(req, res, data);
 });
 
 app.post('/Projects', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.project = req.body;
     requestHandler.createProject(req, res, data);
 });
 
-app.put('/Projects/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    var remove = req.headers.remove;
-    data.mid = req.headers.mid;
-    data.project = req.body;
-    requestHandler.updateProject(req, res, id, data, remove);
-});
-
 app.patch('/Projects/:_id', function (req, res) {
-    data = {};
     var id = req.param('_id');
-    console.log(req.body);
     requestHandler.updateOnlySelectedFields(req, res, id, req.body);
 });
 
 app.put('/Projects/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     var remove = req.headers.remove;
     data.project = req.body;
     requestHandler.updateProject(req, res, id, data, remove);
 });
-
-app.delete('/Projects/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.params._id;
-    data.mid = req.headers.mid;
-    data.project = req.body;
-    requestHandler.removeProject(req, res, id, data);
-});
-
 app.delete('/Projects/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.params._id;
     data.mid = req.headers.mid;
     data.project = req.body;
@@ -824,11 +727,9 @@ app.get('/Projects/:viewType', function (req, res, next) {
             break;
         case "list": requestHandler.getProjectsForList(req, res, data);
             break;
-
         default: requestHandler.getProjects(req, res, data, next);
             break;
     }
-
 });
 
 
@@ -842,29 +743,14 @@ app.get('/getTasksLengthByWorkflows', function (req, res) {
 });
 
 app.post('/Tasks', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.task = req.body;
     requestHandler.createTask(req, res, data);
 });
-//Patch recover
-app.patch('/Tasks/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    console.log(req.body);
-    requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
-});
-
-app.get('/Tasks', function (req, res) {//---------------Remove this method in future
-    //data = {};
-    //data.mid = req.param('mid');
-    //requestHandler.getTasks(req, res, data);
-    console.log('------------>--------->-----chackingGetTasks----<-----');
-});
 
 app.get('/Tasks/:viewType', function (req, res) {
     var data = req.query;
-    console.log(req.query);
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getTaskById(req, res, data);
@@ -874,17 +760,16 @@ app.get('/Tasks/:viewType', function (req, res) {
         case "kanban": requestHandler.getTasksForKanban(req, res, data);
             break;
     }
-
 });
 
 app.get('/Priority', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getTasksPriority(req, res, data);
 });
 
-app.put('/Tasks/:viewType/:_id', function (req, res) {
-    data = {};
+app.put('/Tasks/:_id', function (req, res) {
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.task = req.body;
@@ -892,52 +777,29 @@ app.put('/Tasks/:viewType/:_id', function (req, res) {
     requestHandler.updateTask(req, res, id, data, remove);
 });
 
-app.patch('/Tasks/:viewType/:_id', function (req, res) {
-    data = {};
+app.patch('/Tasks/:_id', function (req, res) {
     var id = req.param('_id');
     requestHandler.taskUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
-app.put('/Tasks/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.task = req.body;
-    var remove = req.headers.remove;
-    requestHandler.updateTask(req, res, id, data, remove);
-});
-
-app.delete('/Tasks/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeTask(req, res, id, data);
-});
-
 app.delete('/Tasks/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeTask(req, res, id, data);
 });
 
-app.delete('/Tasks/:contentType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeTask(req, res, id, data);
-});
 //------------------Workflows---------------------------------------------------
 
 app.get('/relatedStatus', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     data.type = req.param('type');
     requestHandler.getRelatedStatus(req, res, data);
 });
 
 app.get('/Workflows', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
@@ -945,27 +807,24 @@ app.get('/Workflows', function (req, res) {
 });
 
 app.get('/WorkflowContractEnd', function (req, res) {
-    data = {};
+    var data = {};
     data.id = req.param('id');
-    //console.log(req.body);
     data.mid = req.param('mid');
     requestHandler.getWorkflowContractEnd(req, res, data);
 });
 
 app.get('/WorkflowsForDd', function (req, res) {
-    data = {};
-    type = {};
-    //data.id = req.param('id');
+    var data = {};
+    var type = {};
     data.mid = req.param('mid');
-    //type.name = 'task';
     type.id = req.param('id');
     data.type = type;
     requestHandler.getWorkflowsForDd(req, res, data);
 });
 
 app.get('/taskWorkflows', function (req, res) {
-    data = {};
-    type = {};
+    var data = {};
+    var type = {};
     //data.id = req.param('id');
     data.mid = req.param('mid');
     //type.name = 'task';
@@ -975,8 +834,8 @@ app.get('/taskWorkflows', function (req, res) {
 });
 
 app.get('/projectWorkflows', function (req, res) {
-    data = {};
-    type = {};
+    var data = {};
+    var type = {};
     //data.id = req.param('id');
     data.mid = req.param('mid');
     type.name = 'project';
@@ -986,10 +845,9 @@ app.get('/projectWorkflows', function (req, res) {
 });
 
 app.post('/Workflows', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.value = req.body.value;
-    //data._id = req.headers.id;
     data._id = req.body.wId;
     data.wName = req.body.name;
     requestHandler.createWorkflow(req, res, data);
@@ -997,18 +855,17 @@ app.post('/Workflows', function (req, res) {
 
 app.put('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
-    data = {};
+    var data = {};
     var _id = req.param('_id');
     data.status = req.body.status;
     data.name = req.body.name;
     data.wName = req.body.wName;
-    //
     requestHandler.updateWorkflow(req, res, _id, data);
 });
 
 app.patch('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
-    data = {};
+    var data = {};
     var _id = req.param('_id');
 	for (var i in req.body) {
         data[i] = req.body[i];
@@ -1016,7 +873,7 @@ app.patch('/Workflows/:_id', function (req, res) {
     requestHandler.updateWorkflowOnlySelectedField(req, res, _id, data);
 });
 app.delete('/Workflows/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var _id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeWorkflow(req, res, _id, data);
@@ -1024,22 +881,17 @@ app.delete('/Workflows/:_id', function (req, res) {
 //-------------------Companies--------------------------------------------------
 
 app.post('/Companies', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.company = req.body;
     requestHandler.createCompany(req, res, data);
 });
 app.get('/CompaniesForDd', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getCompaniesForDd(req, res, data);
 });
 
-app.get('/ownCompanies', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getOwnCompanies(req, res, data);
-});
 app.get('/Companies/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
@@ -1054,21 +906,7 @@ app.get('/Companies/:viewType', function (req, res) {
     }
 });
 
-app.get('/ownCompanies/:viewType', function (req, res) {
-    var data = {};
-    for (var i in req.query) {
-        data[i] = req.query[i];
-    }
-    var viewType = req.params.viewType;
-    switch (viewType) {
-        case "form": requestHandler.getCompanyById(req, res, data);
-            break;
-        default: requestHandler.getFilterCustomers(req, res);
-            break;
-    }
-});
-
-app.put('/Companies/:viewType/:_id', function (req, res) {
+app.put('/Companies/:_id', function (req, res) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
@@ -1085,113 +923,40 @@ app.put('/Companies/:viewType/:_id', function (req, res) {
     }
     requestHandler.updateCompany(req, res, id, data, remove);
 });
+
 app.patch('/Companies/:viewType/:_id', function (req, res) {
-    data = {};
     var id = req.param('_id');
     requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
-});
-app.delete('/Companies/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeCompany(req, res, id, data);
 });
 
 app.delete('/Companies/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeCompany(req, res, id, data);
-});
-
-app.delete('/ownCompanies/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeCompany(req, res, id, data);
-});
-
-app.delete('/ownCompanies/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeCompany(req, res, id, data);
-});
-
-app.put('/ownCompanies/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.company = req.body;
-    var remove = req.headers.remove;
-    console.log("---------------UpdateCompany-------------------");
-    //console.log(data.company.salesPurchases.salesPerson);
-    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
-        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
-    }
-    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
-        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
-    }
-    //console.log(data.company.salesPurchases.salesPerson);
-    //console.log(data.company.address);
-    requestHandler.updateCompany(req, res, id, data, remove);
-});
-app.patch('/ownCompanies/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    requestHandler.companyUpdateOnlySelectedFields(req, res, id, req.body);
-});
-app.put('/ownCompanies/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.company = req.body;
-    var remove = req.headers.remove;
-    console.log("---------------UpdateCompany-------------------");
-    //console.log(data.company.salesPurchases.salesPerson);
-    if (data.company.salesPurchases.salesPerson && (typeof (data.company.salesPurchases.salesPerson) == 'object')) {
-        data.company.salesPurchases.salesPerson = data.company.salesPurchases.salesPerson._id;
-    }
-    if (data.company.salesPurchases.salesTeam && (typeof (data.company.salesPurchases.salesTeam) == 'object')) {
-        data.company.salesPurchases.salesTeam = data.company.salesPurchases.salesTeam._id;
-    }
-    //console.log(data.company.salesPurchases.salesPerson);
-    //console.log(data.company.address);
-    requestHandler.updateCompany(req, res, id, data, remove);
 });
 
 app.get('/getCompaniesAlphabet', function (req, res) {
     requestHandler.getCustomersAlphabet(req, res);
 });
 
-app.get('/getownCompaniesAlphabet', function (req, res) {
-    requestHandler.getCustomersAlphabet(req, res);
-});
-
 //------------------JobPositions---------------------------------------------------
 app.get('/jobType', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     //data._id = req.param('_id');
     requestHandler.getJobType(req, res, data);
 });
 
 app.post('/JobPositions', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.jobPosition = req.body;
     requestHandler.createJobPosition(req, res, data);
 });
 
-app.get('/JobPosition', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    //data._id = req.param('_id');
-    requestHandler.getJobPosition(req, res, data);
-});
-
 app.get('/JobPositionForDd', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     //data._id = req.param('_id');
     requestHandler.getJobPositionForDd(req, res, data);
@@ -1212,24 +977,8 @@ app.get('/JobPositions/:viewType', function (req, res) {
 
 });
 
-app.get('/JobPosition/:_id', function (req, res) {
-    data = {};
-    data._id = req.params._id;
-    //data._id = req.param('_id');
-    res.send(200, { success: 'ok' });
-    //requestHandler.getJobPosition(req, res, data);
-});
-
-//app.put('/JobPositions/:viewType/:_id', function (req, res) {
-//    data = {};
-//    var id = req.param('_id');
-//    data.mid = req.headers.mid;
-//    data.jobPosition = req.body;
-//    requestHandler.updateJobPosition(req, res, id, data);
-//});
-
-app.patch('/JobPositions/:viewType/:_id', function (req, res) {
-    data = {};
+app.patch('/JobPositions/:_id', function (req, res) {
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.jobPosition = req.body;
@@ -1237,41 +986,36 @@ app.patch('/JobPositions/:viewType/:_id', function (req, res) {
 });
 
 app.put('/JobPositions/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.jobPosition = req.body;
     requestHandler.updateJobPosition(req, res, id, data);
 });
 
-app.delete('/JobPositions/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeJobPosition(req, res, id, data);
-});
-
 app.delete('/JobPositions/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeJobPosition(req, res, id, data);
 });
 
+
+//------------------Departments---------------------------------------------------
 app.get('/Departments', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getDepartment(req, res, data);
 });
 
 app.get('/DepartmentsForDd', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getDepartmentForDd(req, res, data);
 });
 
 app.post('/Departments', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.createDepartment(req, res, data);
@@ -1281,7 +1025,7 @@ app.get('/Departments/:viewType', function (req, res) {
     var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
-    } 3
+    }
     var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getDepartmentById(req, res, data);
@@ -1293,28 +1037,21 @@ app.get('/Departments/:viewType', function (req, res) {
 });
 
 app.put('/Departments/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.department = req.body;
     requestHandler.updateDepartment(req, res, id, data);
 });
 
-app.delete('/Departments/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeDepartment(req, res, id, data);
-});
-
 app.delete('/Departments/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeDepartment(req, res, id, data);
 });
 app.get('/getDepartmentsForEditDd', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     var id = req.param('id');
     requestHandler.getDepartmentForEditDd(req, res, id, data);
@@ -1323,21 +1060,15 @@ app.get('/getDepartmentsForEditDd', function (req, res) {
 
 //------------------Employee---------------------------------------------------
 
-app.get('/Employees', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getEmployees(req, res, data);
-});
-
 app.get('/Birthdays', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.Birthdays(req, res, data);
 });
 
 app.get('/getForDdByRelatedUser', function (req, res) {
     console.log('------getAccountsForDd-----------------');
-    data = {};
+    var data = {};
     //data.ownUser = true;
     data.mid = req.param('mid');
     requestHandler.getForDdByRelatedUser(req, res, data);
@@ -1362,36 +1093,27 @@ app.get('/Employees/:viewType', function (req, res) {
 });
 
 app.post('/Employees', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.createEmployee(req, res, data);
 });
 
-app.put('/Employees/:viewType/:_id', function (req, res) {
+app.put('/Employees/:_id', function (req, res) {
     var data = {};
     var id = req.body._id;
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.updateEmployees(req, res, id, data);
 });
-app.patch('/Employees/:viewType/:_id', function (req, res) {
-    data = {};
+app.patch('/Employees/:_id', function (req, res) {
+    var data = {};
     var id = req.param('_id');
-    console.log(req.body);
     requestHandler.employeesUpdateOnlySelectedFields(req, res, id, req.body);
 });
 
-app.delete('/Employees/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.employee = req.body;
-    requestHandler.removeEmployees(req, res, id, data);
-});
-
 app.delete('/Employees/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.employee = req.body;
@@ -1399,27 +1121,27 @@ app.delete('/Employees/:_id', function (req, res) {
 });
 
 app.get('/getSalesPerson', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getPersonsForDd(req, res, data);
 });
 
 app.get('/getSalesTeam', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getDepartmentForDd(req, res, data);
 });
 
 app.get('/getEmployeesAlphabet', function (req, res) {
     console.log('------getAccountsForDd-----------------');
-    data = {};
+    var data = {};
     //data.ownUser = true;
     data.mid = req.param('mid');
     requestHandler.getEmployeesAlphabet(req, res, data);
 });
 
 app.get('/getEmployeesImages', function (req, res) {
-    data = {};
+    var data = {};
     data.ids = req.param('ids') || [];
     requestHandler.getEmployeesImages(req, res, data);
 });
@@ -1430,18 +1152,12 @@ app.get('/getApplicationsLengthByWorkflows', function (req, res) {
     requestHandler.getApplicationsLengthByWorkflows(req, res);
 });
 
-app.get('/Applications', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getApplications(req, res, data);
-});
-
 app.get('/Applications/:viewType', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    viewType = req.params.viewType;
+    var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getApplicationById(req, res, data);
             break;
@@ -1456,7 +1172,7 @@ app.get('/Applications/:viewType', function (req, res) {
 
 app.post('/Applications', function (req, res) {
     console.log('-------------------/createEmployee-----------------------------');
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.employee = req.body;
     requestHandler.createApplication(req, res, data);
@@ -1471,56 +1187,33 @@ app.put('/Applications/:_id', function (req, res) {
     requestHandler.updateApplication(req, res, id, data);
 });
 
-app.patch('/Applications/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    console.log(req.body);
-    requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
-});
 app.patch('/Applications/:_id', function (req, res) {
-    data = {};
     var id = req.param('_id');
-    console.log(req.body);
     requestHandler.aplicationUpdateOnlySelectedFields(req, res, id, req.body);
-});
-app.put('/Applications/:viewType/:_id', function (req, res) {
-    console.log('-----SERVER put Applications---------------');
-    var data = {};
-    var id = req.body._id;
-    data.mid = req.headers.mid;
-    data.employee = req.body;
-    requestHandler.updateApplication(req, res, id, data);
-});
-
-app.delete('/Applications/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeApplication(req, res, id, data);
 });
 
 app.delete('/Applications/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeApplication(req, res, id, data);
 });
 
 app.get('/Degrees', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getDegrees(req, res, data);
 });
 
 app.post('/Degrees', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.degree = req.body;
     requestHandler.createDegree(req, res, data);
 });
 
 app.put('/Degrees/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.degree = req.body;
@@ -1528,7 +1221,7 @@ app.put('/Degrees/:_id', function (req, res) {
 });
 
 app.delete('/Degrees/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeDegree(req, res, id, data);
@@ -1536,7 +1229,7 @@ app.delete('/Degrees/:_id', function (req, res) {
 
 //----------------------campaign----------------------------------------------------------------
 app.get('/Campaigns', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     requestHandler.getCampaigns(req, res, data);
 });
@@ -1550,18 +1243,12 @@ app.get('/Languages', function (req, res) {
 
 //----------------------Leads----------------------------------------------------------------
 app.get('/LeadsForChart', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     data.source = req.param('source');
     data.dataRange = req.param('dataRange');
     data.dataItem = req.param('dataItem');
     requestHandler.getLeadsForChart(req, res, data);
-});
-
-app.get('/Leads', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getLeads(req, res, data);
 });
 
 app.get('/Leads/:viewType', function (req, res) {
@@ -1580,37 +1267,22 @@ app.get('/Leads/:viewType', function (req, res) {
 });
 
 app.post('/Leads', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.headers.mid;
     data.lead = req.body;
     requestHandler.createLead(req, res, data);
 });
 
 app.put('/Leads/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.lead = req.body;
     requestHandler.updateLead(req, res, id, data);
-});
-
-app.put('/Leads/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.lead = req.body;
-    requestHandler.updateLead(req, res, id, data);
-});
-
-app.delete('/Leads/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeLead(req, res, id, data);
 });
 
 app.delete('/Leads/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeLead(req, res, id, data);
@@ -1618,18 +1290,18 @@ app.delete('/Leads/:_id', function (req, res) {
 
 //---------------------Opportunities---------------------
 app.post('/Opportunities', function (req, res) {
-    data = {};
+    var data = {};
     data.mid = req.param('mid');
     data.opportunitie = req.body;
     requestHandler.createOpportunitie(req, res, data);
 });
 
 app.get('/Opportunities/:viewType', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
-    viewType = req.params.viewType;
+    var viewType = req.params.viewType;
     switch (viewType) {
         case "form": requestHandler.getOpportunityById(req, res, data);
             break;
@@ -1640,35 +1312,19 @@ app.get('/Opportunities/:viewType', function (req, res) {
 });
 
 app.get('/OpportunitiesForMiniView', function (req, res) {
-    data = {};
+    var data = {};
     for (var i in req.query) {
         data[i] = req.query[i];
     }
     requestHandler.getFilterOpportunitiesForMiniView(req, res, data);
 
 });
-
-app.get('/Opportunities', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getOpportunities(req, res, data);
-});
-
 app.get('/getLengthByWorkflows', function (req, res) {
     requestHandler.getOpportunitiesLengthByWorkflows(req, res);
 });
 
 app.put('/Opportunities/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.toBeConvert = req.headers.toBeConvert;
-    data.opportunitie = req.body;
-    requestHandler.updateOpportunitie(req, res, id, data, remove);
-});
-
-app.put('/Opportunities/:viewType/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.toBeConvert = req.headers.toBeConvert;
@@ -1677,122 +1333,18 @@ app.put('/Opportunities/:viewType/:_id', function (req, res) {
 });
 
 app.patch('/Opportunities/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     data.toBeConvert = req.headers.toBeConvert;
     data.opportunitie = req.body;
     requestHandler.opportunitieUpdateOnlySelectedFields(req, res, id, data);
-});
-app.patch('/Opportunities/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.toBeConvert = req.headers.toBeConvert;
-    data.opportunitie = req.body;
-    requestHandler.opportunitieUpdateOnlySelectedFields(req, res, id, data);
-});
-
-app.delete('/Opportunities/:viewType/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeOpportunitie(req, res, id, data);
 });
 app.delete('/Opportunities/:_id', function (req, res) {
-    data = {};
+    var data = {};
     var id = req.param('_id');
     data.mid = req.headers.mid;
     requestHandler.removeOpportunitie(req, res, id, data);
-});
-//-------------------Events--------------------------------
-//---------------------Opportunities---------------------
-app.post('/Events', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    data.event = req.body;
-    requestHandler.createEvent(req, res, data);
-});
-
-app.get('/Events', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    data.idArray = req.param('idArray');
-    requestHandler.getEvents(req, res, data);
-});
-
-app.put('/Events/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.event = req.body;
-    requestHandler.updateEvent(req, res, id, data);
-});
-
-app.delete('/Events/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    //data.mid = req.headers.mid;
-    requestHandler.removeEvent(req, res, id, data);
-});
-
-app.post('/Calendars', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    data.calendar = req.body;
-    requestHandler.createCalendar(req, res, data);
-});
-
-app.get('/Calendars', function (req, res) {
-    data = {};
-    data.mid = req.param('mid');
-    requestHandler.getCalendars(req, res, data);
-});
-
-app.put('/Calendars/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    data.calendar = req.body;
-    requestHandler.updateCalendar(req, res, id, data);
-});
-
-app.delete('/Calendars/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeCalendar(req, res, id, data);
-});
-
-app.get('/getXML', function (req, res) {
-    data = {};
-    var link = req.param('link');
-    data.mid = req.body.mid;
-    data.calendars = req.body.calendars;
-    requestHandler.getXML(req, res, link, data);
-});
-app.delete('/Calendars/:_id', function (req, res) {
-    data = {};
-    var id = req.param('_id');
-    data.mid = req.headers.mid;
-    requestHandler.removeCalendar(req, res, id, data);
-});
-app.post('/GoogleCalSync', function (req, res) {
-    data = {};
-    data.mid = req.body.mid;
-    data.calendar = req.body.calendar;
-    requestHandler.googleCalSync(req, res, data);
-});
-app.get('/GoogleCalendars', function (req, res) {
-    requestHandler.googleCalendars(req, res);
-});
-app.post('/SendToGoogleCalendar', function (req, res) {
-    requestHandler.sendToGoogleCalendar(req, res);
-});
-app.get('/ChangeSyncCalendar', function (req, res) {
-    var id = req.param('id');
-    var isSync = req.param('isSync');
-    requestHandler.changeSyncCalendar(id, isSync, res, req);
 });
 app.get('/:id', function (req, res) {
     var id = req.param('id');

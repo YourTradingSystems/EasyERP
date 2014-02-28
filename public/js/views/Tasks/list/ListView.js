@@ -216,7 +216,7 @@ define([
                 if (selectType == 'stages') {
                     id = targetParrentElement.attr("id").replace("stages_", "");
                     model = this.collection.get(id);
-                    model.urlRoot = '/Tasks/form/';
+                    model.urlRoot = '/Tasks';
                     model.save({
                         workflow: target.attr("id"),
                         sequence: -1,
@@ -237,7 +237,7 @@ define([
                 } else if (selectType == 'type') {
                     id = targetParrentElement.attr("id").replace("type_", "");
                     model = this.collection.get(id);
-                    model.urlRoot = '/Tasks/form/';
+                    model.urlRoot = '/Tasks';
                     var type = target.attr("id");
                     model.save({
                         type: type,

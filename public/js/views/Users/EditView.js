@@ -16,6 +16,7 @@
                 _.bindAll(this, "saveItem");
                 _.bindAll(this, "render", "deleteItem");
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				this.currentModel.urlRoot = "/Users";
                 this.responseObj = {};
                 this.render();
             },

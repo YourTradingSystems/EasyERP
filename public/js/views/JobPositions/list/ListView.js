@@ -3,12 +3,14 @@ define([
     'views/JobPositions/CreateView',
     'views/JobPositions/list/ListItemView',
     'collections/JobPositions/filterCollection',
+    'models/JobPositionsModel',
+    'views/JobPositions/EditView',
     'common',
     'dataService',
     'text!templates/stages.html'
 ],
 
-    function (listTemplate, createView, listItemView, contentCollection, common, dataService, stagesTamplate) {
+    function (listTemplate, createView, listItemView, contentCollection, currentModel, editView, common, dataService, stagesTamplate) {
         var JobPositionsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,
@@ -35,7 +37,7 @@ define([
                 "click #previousPage": "previousPage",
                 "click #nextPage": "nextPage",
                 "click .checkbox": "checked",
-                "click  .list td:not(.notForm)": "gotoForm",
+                "click  .list td:not(.notForm)": "goToEditDialog",
                 "click #itemsButton": "itemsNumber",
                 "click .currentPageList": "itemsNumber",
                 "click": "hideItemsNumber",
@@ -63,7 +65,7 @@ define([
 	               var targetElement = $(e.target).parents("td");
 	               var id = targetElement.attr("id").replace("stages_",'');
 	               var obj = this.collection.get(id);
-                   obj.urlRoot = '/JobPositions/form';
+                   obj.urlRoot = '/JobPositions';
 				   obj.save({ workflow: $(e.target).attr("id"),
 							  expectedRecruitment:obj.toJSON().expectedRecruitment,
 							  totalForecastedEmployees:obj.toJSON().totalForecastedEmployees,
@@ -74,7 +76,8 @@ define([
 	                   },
 					   patch:true,
 	                   success: function (err, model) {
-	                   }
+                           targetElement.find('.stageSelect').text($(e.target).text());
+					   }
 	               });
 
 	               this.hideNewSelect();
@@ -251,12 +254,20 @@ define([
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
             },
 
-            gotoForm: function (e) {
-                App.ownContentType = true;
-                var id = $(e.target).closest("tr").data("id");
-                window.location.hash = "#easyErp/JobPositions/form/" + id;
+            goToEditDialog: function (e) {
+                e.preventDefault();
+                var id = $(e.target).closest('tr').data("id");
+                var model = new currentModel({ validate: false });
+                model.urlRoot = '/JobPositions/form';
+                model.fetch({
+                    data: { id: id },
+                    success: function (model) {
+						new editView({ model: model });
+                    },
+                    error: function () { alert('Please refresh browser'); }
+                });
             },
-
+  
             createItem: function () {
                 //create editView in dialog here
                 new createView();

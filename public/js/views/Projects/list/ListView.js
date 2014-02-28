@@ -356,7 +356,7 @@ define([
                         $("#top-bar-deleteBtn").hide();
                 });
                 this.bind('incomingStages', this.pushStages, this);
-                common.populateWorkflowsList("Projects", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
+                common.populateWorkflowsList("Projects", ".filter-check-list", "", "/Workflows", null, function (stages) {
                     self.stages = stages;
                     var stage = (self.filter) ? self.filter.workflow : null;
                     if (stage) {

@@ -88,9 +88,11 @@ define([
                     var dataResponse = {
                         login: response.login,
                         email: response.email,
-                        RelatedEmployee: response.RelatedEmployee
+                        RelatedEmployee: response.RelatedEmployee,
+                        profile: response.profile._id
                     };
                     context.UsersModel = new UsersModel(dataResponse);
+					console.log(dataResponse);
                     context.UsersModel.urlRoot = '/currentUser';
                     var self = this;
                     var mid = 39;

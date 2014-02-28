@@ -546,7 +546,7 @@ define([
 
             deleteItems: function () {
                 var mid = 39;
-                   
+                this.formModel.urlRoot="/Companies";
                 this.formModel.destroy({
                     headers: {
                         mid: mid

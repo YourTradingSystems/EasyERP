@@ -234,7 +234,7 @@ define([
                     self.hideItemsNumber(e);
                 });
 
-                common.populateWorkflowsList("Opportunities", ".filter-check-list", ".filter-check-list", "/Workflows", null, function(stages) {
+                common.populateWorkflowsList("Opportunities", ".filter-check-list", "", "/Workflows", null, function(stages) {
                     self.stages = stages;
                     var stage = (self.filter) ? self.filter.workflow : null;
                     if (stage) {

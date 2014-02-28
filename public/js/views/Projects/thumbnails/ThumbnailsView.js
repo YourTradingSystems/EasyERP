@@ -176,7 +176,7 @@ function (thumbnailsItemTemplate, stagesTamplate, editView, createView, dataServ
             } else {
                 currentEl.html('<h2>No projects found</h2>');
             }
-            common.populateWorkflowsList("Projects", ".filter-check-list", ".filter-check-list", "/Workflows", null, function (stages) {
+            common.populateWorkflowsList("Projects", ".filter-check-list", "", "/Workflows", null, function (stages) {
                 self.stages = stages;
                                     var stage = (self.filter) ? self.filter.workflow : null;
                                     if (stage) {

@@ -511,6 +511,7 @@ define([
 
             deleteItems: function () {
                 var mid = 39;
+				this.formModel.urlRoot="/Persons";
                 this.formModel.destroy({
                     headers: {
                         mid: mid

@@ -20,6 +20,7 @@
                 this.workflowsCollection = new WorkflowsCollection({id:'Applications'});
                 this.employeesCollection = options.collection;
                 this.currentModel = (options.model) ? options.model : options.collection.getElement();
+				this.currentModel.urlRoot = "/Applications";
                 this.page = 1;
                 this.pageG = 1;
 				this.responseObj = {};
