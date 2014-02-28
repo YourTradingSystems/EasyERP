@@ -63,7 +63,7 @@ function (common, Validation) {
 
         defaults: {
             id: null,
-            imageSrc: null,
+            imageSrc: '',
             type: 'Person',
             name: {
                 first: "",

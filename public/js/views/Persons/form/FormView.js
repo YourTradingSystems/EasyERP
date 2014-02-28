@@ -358,13 +358,13 @@ define([
                 }
             },
 
-
             addAttach: function (event) {
                 event.preventDefault();
                 var currentModel = this.formModel;
                 var currentModelId = currentModel["id"];
                 var addFrmAttach = $("#addAttachments");
                 var addInptAttach = $("#inputAttach")[0].files[0];
+
                 if (!this.fileSizeIsAcceptable(addInptAttach)) {
                     alert('File you are trying to attach is too big. MaxFileSize: ' + App.File.MaxFileSizeDisplay);
                     return;
@@ -435,7 +435,8 @@ define([
                             return attach;
                         }
                     });
-                    currentModel.save({ 'attachments': newAttachments },
+                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                    currentModel.save({ 'attachments': newAttachments , fileName: fileName},
                         {
                             headers: {
                                 mid: 39

@@ -1,4 +1,4 @@
-﻿var Customers = function (logWriter, mongoose, models, department) {
+﻿var Customers = function (logWriter, mongoose, models, department, fs) {
     var ObjectId = mongoose.Schema.Types.ObjectId;
     var newObjectId = mongoose.Types.ObjectId;
     var customerSchema = mongoose.Schema({
@@ -1162,6 +1162,8 @@
 
 		updateOnlySelectedFields:function(req, _id, data, res) {
 			delete data._id;
+            var fileName = data.fileName;
+            delete data.fileName;
 			if (data.notes && data.notes.length != 0) {
 				var obj = data.notes[data.notes.length - 1];
                 if (!obj._id)
@@ -1178,7 +1180,42 @@
 					logWriter.log("Customer.js update customer.update " + err);
 					res.send(500, { error: "Can't update Customer" });
 				} else {
-					res.send(200,{ success: 'Customer update', notes: result.notes } );
+                    if (fileName) {
+                        var newDirname = __dirname.replace("\\Modules","");
+                        var os = require("os");
+                        var osType = (os.type().split('_')[0]);
+                        var path;
+                        var dir;
+                        switch (osType) {
+                            case "Windows":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                                break;
+                            case "Linux":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                        }
+
+                        logWriter.fs.unlink(path,function(){
+                            logWriter.fs.readdir(dir, function(err, files){
+                                if (files.length === 0) {
+                                    logWriter.fs.rmdir(dir,function(){});
+                                }
+                            });
+                        });
+
+                    }
+				    res.send(200,{ success: 'Customer update', notes: result.notes } );
 				}
 			});
 		},

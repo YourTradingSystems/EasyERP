@@ -187,18 +187,18 @@ define([
                            Backbone.history.navigate("#easyErp/Tasks/kanban/" + model.attributes.project, { trigger: true });
                        },
 
-                    error: function (model, xhr) {
-                        self.hideDialog();
-						if (xhr && (xhr.status === 401||xhr.status === 403)) {
-							if (xhr.status === 401){
-								Backbone.history.navigate("login", { trigger: true });
-							}else{
-								alert("You do not have permission to perform this action");								
-							}
-                        } else {
-                            Backbone.history.navigate("home", { trigger: true });
-                        }
-                    }
+                       error: function (model, xhr) {
+                           self.hideDialog();
+                           if (xhr && (xhr.status === 401 || xhr.status === 403)) {
+                               if (xhr.status === 401) {
+                                   Backbone.history.navigate("login", { trigger: true });
+                               } else {
+                                   alert("You do not have permission to perform this action");
+                               }
+                           } else {
+                               Backbone.history.navigate("home", { trigger: true });
+                           }
+                       }
 
                    });
                },
@@ -225,7 +225,7 @@ define([
                        return false;
                    return true;
                },
-               preventPaste:function(e){
+               preventPaste: function (e) {
                    //prevent paste event in #estimate and logged fields
                    e.preventDefault();
                },
@@ -234,7 +234,7 @@ define([
                    var formString = this.template();
                    var self = this;
                    this.$el = $(formString).dialog({
-					   closeOnEscape: false,
+                       closeOnEscape: false,
                        dialogClass: "edit-dialog task-edit-dialog",
                        width: 500,
                        title: "Create Task",
@@ -267,11 +267,11 @@ define([
                    // for input type number
                    this.$el.find("#logged").spinner({
                        min: 0,
-                       max:1000
+                       max: 1000
                    });
                    this.$el.find("#estimated").spinner({
                        min: 0,
-                       max:1000
+                       max: 1000
                    });
                    //$('#deadline').datepicker({
                    //    dateFormat: "d M, yy",

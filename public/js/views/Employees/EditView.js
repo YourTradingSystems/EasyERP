@@ -53,7 +53,7 @@ define([
                 "click .newSelectList li.miniStylePagination": "notHide",
                 "click .newSelectList li.miniStylePagination .next:not(.disabled)": "nextSelect",
                 "click .newSelectList li.miniStylePagination .prev:not(.disabled)": "prevSelect",
-                "click": "hideNewSelect",
+                "click": "hideNewSelect"
             },
 
             notHide: function () {
@@ -157,31 +157,33 @@ define([
 				addFrmAttach.submit();
 				addFrmAttach.off('submit');
 			},
- 				deleteAttach: function (e) {
-					if ($(e.target).closest("li").hasClass("attachFile")){
-						$(e.target).closest(".attachFile").remove();
-					}
-					else{
-						var id = e.target.id;
-						var currentModel = this.currentModel;
-						var attachments = currentModel.get('attachments');
-						var new_attachments = _.filter(attachments, function (attach) {
-							if (attach._id != id) {
-								return attach;
-							}
-						});
-						currentModel.save({'attachments': new_attachments},
-										  {
-											  headers: {
-												  mid: 39
-											  },
-											  patch:true,
-											  success: function (model, response, options) {
-												  $('.attachFile_' + id).remove();
-											  }
-										  });
-					}
-				},
+
+            deleteAttach: function (e) {
+                if ($(e.target).closest("li").hasClass("attachFile")){
+                    $(e.target).closest(".attachFile").remove();
+                }
+                else{
+                    var id = e.target.id;
+                    var currentModel = this.currentModel;
+                    var attachments = currentModel.get('attachments');
+                    var new_attachments = _.filter(attachments, function (attach) {
+                        if (attach._id != id) {
+                            return attach;
+                        }
+                    });
+                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                    currentModel.save({'attachments': new_attachments, fileName: fileName},
+                                      {
+                                          headers: {
+                                              mid: 39
+                                          },
+                                          patch:true,
+                                          success: function (model, response, options) {
+                                              $('.attachFile_' + id).remove();
+                                          }
+                                      });
+                }
+            },
 
             changeTab:function(e){
                 var holder = $(e.target);

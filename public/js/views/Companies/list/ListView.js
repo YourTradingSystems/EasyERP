@@ -71,6 +71,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 var currentEl = this.$el;
                 var tBody = currentEl.find('#listTable');
                 tBody.empty();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 var itemView = new listItemView({ collection: this.collection, page :this.page, itemsNumber: this.collection.namberToShow });
 
                 tBody.append(itemView.render());
@@ -126,6 +128,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 this.filter = this.filter || {};
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
                 this.getTotalLength(null, itemsNumber, this.filter);
@@ -194,10 +198,12 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
         //modified for filter Vasya
         previousPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.prevP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection,
-                    parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Companies', {
                     filter: this.filter,
@@ -210,10 +216,12 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
         //modified for filter Vasya
         nextPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.nextP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection,
-                    parrentContentId: this.parrentContentId
                 });
                 dataService.getData('/totalCollectionLength/Companies', {
                     filter: this.filter,
@@ -227,11 +235,15 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             //first last page in paginations
             firstPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.firstP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
                 dataService.getData('/totalCollectionLength/Companies', {
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 }, function (response, context) {
@@ -241,7 +253,10 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
 
             lastPage: function (event) {
                 event.preventDefault();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.lastP({
+                    sort: this.sort,
                     filter: this.filter,
                     newCollection: this.newCollection
                 });
@@ -258,6 +273,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 event.preventDefault();
                 this.startTime = new Date();
                 var itemsNumber = event.target.textContent;
+                this.defaultItemsNumber = itemsNumber;
                 this.getTotalLength(null, itemsNumber, this.filter);
                 this.collection.showMore({
                     count: itemsNumber,
@@ -266,6 +282,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                     newCollection: this.newCollection
                 });
                 this.page = 1;
+                $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
         },
@@ -282,6 +299,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 this.filter = this.filter || {};
                 this.filter['letter'] = selectedLetter;
                 var itemsNumber = $("#itemsNumber").text();
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 this.changeLocationHash(1, itemsNumber, this.filter);
                 this.collection.showMore({ count: itemsNumber, page: 1, filter: this.filter});
                 this.getTotalLength(null, itemsNumber, this.filter);
@@ -289,7 +308,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
 
         showPage: function (event) {
                 event.preventDefault();
-                this.showP(event,{filter: this.filter, newCollection: this.newCollection});
+                this.showP(event,{filter: this.filter, newCollection: this.newCollection,sort: this.sort});
         },
         //modified for filter Vasya
         //added parmeters page and itemsNumber to listItemView by Andrew
@@ -305,6 +324,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 } else {
                     pagenation.hide();
                 }
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
                 holder.find('#timeRecivingDataFromServer').remove();
                 holder.append("<div id='timeRecivingDataFromServer'>Created in " + (new Date() - this.startTime) + " ms</div>");
         },
@@ -318,7 +339,8 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
             content.remove();
 
             holder.append(this.template({ collection: newModels.toJSON() }));
-
+                $("#top-bar-deleteBtn").hide();
+                $('#check_all').prop('checked', false);
             this.getTotalLength(null, itemsNumber, this.filter);
             created.text("Created in " + (new Date() - this.startTime) + " ms");
             holder.prepend(alphaBet);
@@ -339,8 +361,13 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
 
         checked: function () {
             if (this.collection.length > 0) {
-                if ($("input.checkbox:checked").length > 0)
+                var checkLength = $("input.checkbox:checked").length;
+                if ($("input.checkbox:checked").length > 0) {
                     $("#top-bar-deleteBtn").show();
+                        if (checkLength == this.collection.length) {
+                                $('#check_all').prop('checked', true);
+                        }
+                }
                 else {
                     $("#top-bar-deleteBtn").hide();
                     $('#check_all').prop('checked', false);
@@ -363,7 +390,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
                 if (deleteCounter !== this.collectionLength) {
                     var holder = this.$el;
                     var created = holder.find('#timeRecivingDataFromServer');
-                    created.before(new listItemView({ collection: this.collection,  page: this.page, itemsNumber: holder.find("span#itemsNumber").text() }).render());
+                    created.before(new listItemView({ collection: this.collection, page: holder.find("#currentShowPage").val(), itemsNumber: holder.find("span#itemsNumber").text() }).render());
                 }
         },
         deleteItems: function () {
@@ -387,7 +414,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 						},
@@ -400,7 +427,7 @@ function (listTemplate, createView, listItemView, aphabeticTemplate, contentColl
 							if (index==count-1){
 								that.deleteCounter =localCounter;
 								that.deletePage = $("#currentShowPage").val();
-								that.deleteItemsRender(this.deleteCounter, this.deletePage);
+								that.deleteItemsRender(that.deleteCounter, that.deletePage);
 								
 							}
 

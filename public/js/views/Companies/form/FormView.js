@@ -500,7 +500,8 @@ define([
                             return attach;
                         }
                     });
-                    currentModel.save({ 'attachments': newAttachments },
+                    var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                    currentModel.save({ 'attachments': newAttachments, fileName: fileName },
                         {
                             headers: {
                                 mid: 39

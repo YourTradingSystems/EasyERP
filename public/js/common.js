@@ -89,7 +89,7 @@
                         onChange: imgSelect,
                         boxWidth: 650,
                         boxHeight: 650,
-                        minSize: [10, 10],
+                        minSize: [10, 10]
                     	//maxSize: [140, 140]
                     });
 

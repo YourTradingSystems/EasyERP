@@ -10,7 +10,7 @@
 	           stages: null,
 	           initialize: function (options) {
                    this.collection = options.collection;
-	               this.startNumber = options.startNumber;//added start number and passing it to template Andrew
+	               this.startNumber = (options.page - 1 ) * options.itemsNumber;//Counting the start index of list items
                },
 	           events: {
 	               "click .stageSelect": "showNewSelect",

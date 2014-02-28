@@ -274,7 +274,8 @@
                               return attach;
                           }
                       });
-                      currentModel.save({ 'attachments': new_attachments },
+                      var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
+                      currentModel.save({ 'attachments': new_attachments, fileName: fileName },
                                         {
                                             headers: {
                                                 mid: 39
