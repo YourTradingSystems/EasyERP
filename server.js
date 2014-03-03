@@ -70,7 +70,7 @@ var allowCrossDomain = function (req, res, next) {
         'localhost:8088',
         '192.168.88.13:8088'
     ];
-    if (allowedHost.indexOf(req.headers.host) !== -1) {
+    //if (allowedHost.indexOf(req.headers.host) !== -1) {
         var browser = req.headers['user-agent'];
         if (/Trident/.test(browser))
             res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -85,9 +85,9 @@ var allowCrossDomain = function (req, res, next) {
         //res.header("Access-Control-Request-Headers", "*");
         //res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
         next();
-    } else {
-        res.send(401);
-    }
+   // } else {
+        //res.send(401);
+   // }
 };
 app.configure(function () {
     app.set('view engine', 'jade');
