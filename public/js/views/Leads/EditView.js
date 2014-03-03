@@ -494,7 +494,7 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 				populate.getPriority("#priorityDd",this);
-				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Leads"},"name",this);			
+				populate.getWorkflow("#workflowsDd","","/WorkflowsForDd",{id:"Leads"},"name",this);			
 				populate.get2name("#customerDd", "/Customer",{},this);	
 				populate.get2name("#salesPerson", "/getForDdByRelatedUser",{},this);	
 				populate.get("#campaignDd", "/Campaigns",{},"name",this);	

@@ -703,7 +703,17 @@
 									});
                                     kanban_holder.find(".inner").attr("data-sequence", result.sequence);
 								}
-                                $(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
+								if (data.workflow){
+									$(".column[data-id='" + data.workflow+"']").find(".columnNameDiv").after(kanban_holder);
+ 									var counter = $(".column[data-id='" + data.workflow+"']").closest(".column").find(".totalCount");
+									counter.html(parseInt(counter.html())+1);
+ 									counter = $(".column[data-id='" + data.workflowStart+"']").closest(".column").find(".totalCount");
+									counter.html(parseInt(counter.html())-1);
+									
+								}
+
+//								self.trigger("recalc",$(".column[data-id='" + data.workflow+"']"),true);
+//								self.trigger("recalc",kanban_holder,false);
 
                             }
 							break;

@@ -161,6 +161,7 @@ var Workflow = function (logWriter, mongoose, models) {
             //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             var query = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ wId: data.type.id });
             query.select('name wName');
+            query.sort({ 'sequence': -1,"editedBy.date":-1 });
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -183,7 +184,7 @@ var Workflow = function (logWriter, mongoose, models) {
                     var query = (data.id) ? { wId: data.id } : {};
                     if (data.name) query['name'] = data.name
                     var query2 = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find(query);
-                    query2.sort({ 'sequence': -1 });
+                    query2.sort({ 'sequence': -1,"editedBy.date":-1 });
                     query2.exec(query, function (err, result) {
                         if (err) {
                             console.log(err);

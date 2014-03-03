@@ -80,7 +80,6 @@ define([
                 "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
                 "click .miniPagination .first:not(.not-active)": "firstMiniPage",
                 "click .miniPagination .last:not(.not-active)": "lastMiniPage",
-
                 "click .miniPaginationPersons .nextPersons:not(.not-active)": "nextMiniPagePersons",
                 "click .miniPaginationPersons .prevPersons:not(.not-active)": "prevMiniPagePersons",
                 "click .miniPaginationPersons .firstPersons:not(.not-active)": "firstMiniPagePersons",
@@ -231,12 +230,10 @@ define([
 
             editClick: function (e) {
                 e.preventDefault();
-
                 $('.quickEdit #editInput').remove();
                 $('.quickEdit #cancelSpan').remove();
                 $('.quickEdit #saveSpan').remove();
                 $('.quickEdit').text(this.text).removeClass('quickEdit');
-
                 var parent = $(e.target).parent().parent();
                 $("#" + parent[0].id).addClass('quickEdit');
                 $('#editSpan').remove();
@@ -274,12 +271,11 @@ define([
                       var param = currentModel.get(objIndex[0]) || {};
                       param[objIndex[1]] = $('#editInput').val();
                       newModel = currentModel.set(objIndex[0], param);
-
                   } else {
                       newModel = currentModel.set(objIndex[0], $('#editInput').val());
-
                   }
-                 this.formModel.save(newModel, {
+
+                this.formModel.save(newModel, {
                       headers: {
                           mid: 39
                       },
