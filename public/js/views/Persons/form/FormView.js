@@ -215,36 +215,25 @@ define([
 
                 if (objIndex.length > 1) {
                     var param = currentModel.get(objIndex[0]) || {};
-                    param[objIndex[1]] = $.trim($('#editInput').val());
-                    newModel = currentModel.set(objIndex[0], param);
-
+                    param[objIndex[1]] = $('#editInput').val();
+                    newModel[objIndex[0]] = param;
                 } else {
-                    newModel = currentModel.set(objIndex[0], $.trim($('#editInput').val()));
-
+                    newModel[objIndex[0]] = $('#editInput').val();
                 }
-                this.formModel.urlRoot = '/Persons/';
                 this.formModel.save(newModel, {
                     headers: {
                         mid: 39
                     },
-                    wait: true,
-
+                    patch: true,
                     success: function (model) {
                         Backbone.history.fragment = "";
                         Backbone.history.navigate("#easyErp/Persons/form/" + model.id, { trigger: true });
-                    }
-
+                    },
+                    error: function (model, response) {
+                    if (response)
+                        alert(response.error);
+                }
                 });
-                Backbone.history.fragment = "";
-                Backbone.history.navigate("#easyErp/Persons/form/" + this.formModel.id, { trigger: true });
-                /*  if ($("#" + parent[0].id).hasClass('with-checkbox')) {
-                 $("#" + parent[0].id + " input").prop('disabled', true);
-                 } else if (parent[0].id == 'email') {
-                 $("#" + parent[0].id).append('<a href="mailto:' + this.text + '" class="no-long">' + this.text + '</a>');
-                 } else {
-                 $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
-                 }*/
-
             },
 
 

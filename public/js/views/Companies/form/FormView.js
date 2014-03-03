@@ -75,7 +75,6 @@ define([
                 "click #saveSpan": "saveClick",
                 "click .btnHolder .add.opportunities": "addOpportunities",
                 "click .btnHolder .add.persons": "addPersons",
-                "change .customer-info.company.long input": "saveCheckboxChange",
                 "click .miniPagination .next:not(.not-active)": "nextMiniPage",
                 "click .miniPagination .prev:not(.not-active)": "prevMiniPage",
                 "click .miniPagination .first:not(.not-active)": "firstMiniPage",
@@ -158,17 +157,8 @@ define([
             render: function () {
                 var formModel = this.formModel.toJSON();
                 this.$el.html(_.template(CompaniesFormTemplate, formModel));
-                //				this.$el.find('.formRightColumn').empty();
                 this.renderMiniOpp();
                 this.renderMiniPersons();
-                /*                this.$el.find('.formRightColumn').append(
-                                                new opportunitiesCompactContentView({
-                                                    collection: this.opportunitiesCollection,
-                                                    companiesCollection: this.collection,
-                                                    personsCollection: this.personsCollection,
-                                                    model: this.formModel
-                                                }).render().el,
-                                            );*/
                 this.$el.find('.formLeftColumn').append(
                         new noteView({
                             model: this.formModel
@@ -183,7 +173,6 @@ define([
             },
 
             quickEdit: function (e) {
-                // alert(e.target.id);
                 var trId = $(e.target).closest("dd");
                 if ($("#" + trId.attr("id")).find("#editSpan").length === 0) {
                     $("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">e</a></span>');
@@ -213,20 +202,8 @@ define([
 
             cancelClick: function (e) {
                 e.preventDefault();
-
                 Backbone.history.fragment = "";
                 Backbone.history.navigate("#easyErp/Companies/form/" + this.formModel.id, { trigger: true });
-                /*
-                var parent = $(e.target).parent().parent();
-                $("#" + parent[0].id).removeClass('quickEdit');
-//                $("#" + parent[0].id).text(this.text);
-                $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
-				$("#" + parent[0].id).find(".no-long").css({width:"100%"});
-                $('#editInput').remove();
-                $('#cancelSpan').remove();
-                $('#saveSpan').remove();
-                var currentModel = this.model;
-                Backbone.history.navigate("#easyErp/Companies/form/" + currentModel.id, { trigger: true });*/
             },
 
             editClick: function (e) {
@@ -249,70 +226,36 @@ define([
                 $("#" + parent[0].id).append('<span id="cancelSpan"><a href="#">x</a></span>');
                 $("#" + parent[0].id).find("#editInput").width($("#" + parent[0].id).find("#editInput").width() - 40);
             },
-            saveCheckboxChange: function (e) {
-                var parent = $(e.target).parent();
-                var objIndex = parent[0].id.replace('_', '.');
-                var obj = {};
-                var currentModel = this.model;
-                obj[objIndex] = ($("#" + parent[0].id + " input").prop("checked"));
-                this.formModel.save(obj, {
-                    headers: {
-                        mid: 39
-                    },
-                    patch: true
-                });
-            },
 
             saveClick: function (e) {
                 e.preventDefault();
                 var parent = $(e.target).parent().parent();
                 var objIndex = parent[0].id.split('_'); //replace change to split;
-                var currentModel = this.model;
+                var currentModel = this.formModel;
                 var newModel = {};
 
                 if (objIndex.length > 1) {
                     var param = currentModel.get(objIndex[0]) || {};
                     param[objIndex[1]] = $('#editInput').val();
-                    newModel = currentModel.set(objIndex[0], param);
-
+                    newModel[objIndex[0]] = param;
                 } else {
-                    newModel = currentModel.set(objIndex[0], $('#editInput').val());
-
+                    newModel[objIndex[0]] = $('#editInput').val();
                 }
-                this.formModel.urlRoot = '/Companies/';
                 this.formModel.save(newModel, {
                     headers: {
                         mid: 39
                     },
-                    wait: true,
-
+                    patch: true,
                     success: function (model) {
                         Backbone.history.fragment = "";
                         Backbone.history.navigate("#easyErp/Companies/form/" + model.id, { trigger: true });
+                    },
+                    error: function (model, response) {
+                        if (response)
+                            alert(response.error);
                     }
 
                 });
-                Backbone.history.fragment = "";
-                Backbone.history.navigate("#easyErp/Companies/form/" + this.formModel.id, { trigger: true });
-                /*e.preventDefault();
-                var parent = $(event.target).parent().parent();
-                var objIndex = parent[0].id.replace('_','.');
-                var obj = {};
-                var currentModel = this.model;
-                obj[objIndex] = $('#editInput').val();
-
-                this.text = $('#editInput').val();
-                $("#" + parent[0].id).prepend("<span class='no-long'>"+this.text+"</span>");
-                $("#" + parent[0].id).removeClass('quickEdit');
-                $('#editInput').remove();
-                $('#cancelSpan').remove();
-                $('#saveSpan').remove();
-                this.formModel.save(obj, {
-                    headers: {
-                        mid: 39
-                    },
-					patch:true
-                });*/
             },
 
 
@@ -409,14 +352,7 @@ define([
 	                                success: function (models, data) {
 	                                    $('#noteBody').empty();
 	                                    data.notes.forEach(function (item) {
-	                                        /*   var key = notes.length - 1;
-	                                           var notes_data = response.notes;
-	                                           var date = common.utcDateToLocaleDate(response.notes[key].date);
-	                                           var author = currentModel.get('name').first;
-	                                           var id = response.notes[key]._id;
-	                                           $('#noteBody').prepend(_.template(addNoteTemplate, { val: val, title: title, author: author, data: notes_data, date: date, id: id }));*/
 	                                        var date = common.utcDateToLocaleDate(item.date);
-	                                        //notes.push(item);
 	                                        $('#noteBody').prepend(_.template(addNoteTemplate, { id: item._id, title: item.title, val: item.note, author: item.author, date: date }));
 	                                    });
 	                                }
