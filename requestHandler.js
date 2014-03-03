@@ -478,12 +478,11 @@ var requestHandler = function (fs, mongoose, event, dbsArray) {
         if (req.session && req.session.loggedIn && req.session.lastDb) {
             access.getEditWritAccess(req, req.session.uId, 49, function (access) {
                 if (access) {
-                    models.get(req.session.lastDb - 1, "Customers", customer.schema).update({ _id: id }, { $push: { attachments: file } }, function (err, response) {
+                    models.get(req.session.lastDb - 1, "Customers", customer.schema).findByIdAndUpdate(id, { $push: { attachments: { $each: file } } }, function (err, response) {
                         if (err) {
                             res.send(401);
-                        }
-                        else {
-                            res.send(200, file);
+                        } else {
+                            res.send(200, { success: 'Customers updated success', data: response });
                         }
                     });
                     //customer.update(req, id, remove, data.person, res);

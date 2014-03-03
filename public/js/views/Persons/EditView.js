@@ -326,7 +326,7 @@ define([
                     headers: {
                         mid: mid
                     },
-                    wait: true,
+                    //wait: true,
                     success: function (model) {
                         self.hideDialog();
                         Backbone.history.fragment = "";
@@ -423,15 +423,6 @@ define([
                 common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
                 common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
 				populate.getCompanies("#companiesDd", "/CompaniesForDd",{},this,false,true);
-//				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,false,true);
-/*
-                common.populateCompanies(App.ID.companiesDd, "/CompaniesForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.companiesDd); });
-                common.populateDepartments(App.ID.departmentDd, "/DepartmentsForDd", this.currentModel.toJSON(), function () { self.styleSelect(App.ID.departmentDd); });
-                this.styleSelect(App.ID.titleDd);
-                this.styleSelect(App.ID.tagsDd);
-*/
-                //                this.populateDropDown("company", App.ID.companiesDd, "/Companies");
-                //this.populateDropDown("person", App.ID.assignedToDd, "/getPersonsForDd");
                 this.delegateEvents(this.events);
 
                 common.canvasDraw({ model: this.currentModel.toJSON() }, this);

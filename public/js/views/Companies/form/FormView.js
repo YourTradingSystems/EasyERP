@@ -466,10 +466,13 @@ define([
                          
                         success: function (data) {
                             var attachments = currentModel.get('attachments');
-                            var date = common.utcDateToLocaleDate(data.uploadDate);
-                            attachments.push(data);
-                            $('.attachContainer').prepend(_.template(addAttachTemplate, { data: data, date: date }));
-                            console.log('Attach file');
+                            attachments.length = 0;
+                            $('.attachContainer').empty();
+                            data.data.attachments.forEach(function (item) {
+                                var date = common.utcDateToLocaleDate(item.uploadDate);
+                                attachments.push(item);
+                                $('.attachContainer').prepend(_.template(addAttachTemplate, { data: item, date: date }));
+                            });
                             addFrmAttach[0].reset();
                             status.hide();
                         },
