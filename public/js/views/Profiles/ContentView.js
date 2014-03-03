@@ -208,7 +208,7 @@ define([
                         },
 						wait:true,
 						   success: function () {
-							   this.collection.trigger('reset');
+							   self.profilesCollection.trigger('reset');
 							   Backbone.history.fragment = "";
 							   Backbone.history.navigate("#easyErp/Profiles", { trigger: true });
 						   },

@@ -201,7 +201,8 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 
         editItem: function () {
             //create editView in dialog here
-            new EditView({ collection: this.collection });
+            var edit = new EditView({ collection: this.collection });
+			edit.bind('recalc', this.updateCounter, this);
         },
 
         createItem: function () {
@@ -240,7 +241,12 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 
 			}
 		},
-        
+        updateCounter:function(el,inc){
+			var i = inc?1:-1;
+			console.log(i);
+			var counter = el.closest(".column").find(".totalCount");
+			counter.html(parseInt(counter.html())+i);
+		},
         render: function () {
 			var self = this;
 			
@@ -266,9 +272,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
                 helper: 'clone',
 
                 start: function (event, ui) {
-                    var column = ui.item.closest(".column");
-                    column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
-                    column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) - 1);
+					self.updateCounter(ui.item,false);
                 },
 
                 stop: function (event, ui) {
@@ -291,8 +295,7 @@ function (WorkflowsTemplate, kanbanSettingsTemplate, WorkflowsCollection, Kanban
 								collection.add(model2,{merge:true});
 							}
 						});
-                        column.find(".counter").html(parseInt(column.find(".counter").html()) + 1);
-                        column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) + 1);
+						self.updateCounter(column,true);
                     }
                 }
             }).disableSelection();
