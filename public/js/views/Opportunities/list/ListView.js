@@ -164,7 +164,7 @@ define([
                     } else {
                         workflowIdArray.push($(this).val());
                     }
-                })
+                });
 
                 this.filter['isConverted'] = isConverted;
                 this.filter['workflow'] = workflowIdArray;
