@@ -471,7 +471,6 @@
                        addFrmAttach.ajaxSubmit({
                            url: formURL,
                            type: "POST",
-                           //processData: false,
                            contentType: false,
                            data: [addInptAttach],
 
@@ -569,20 +568,12 @@
 
                    var nextActionDate = $.trim(this.$el.find("#nextActionDate").val());
                    var nextActionDescription = $.trim(this.$el.find("#nextActionDescription").val());
-                   /*var nextActionDate = "";
-                     if (nextActionSt) {
-                     nextActionDate = $.trim($("#nextActionDate").val());
-                     };*/
                    var nextAction = {
                        date: nextActionDate,
                        desc: nextActionDescription
                    };
 
                    var expectedClosing = $.trim(this.$el.find("#expectedClosing").val());
-                   //var expectedClosing = "";
-                   /*if (expectedClosingSt){
-                     expectedClosing = $.trim($("#expectedClosing").val());
-                     };*/
 
                    var priority = $("#priorityDd").text();
 
@@ -678,14 +669,19 @@
                         case 'list':
                             {
 								var tr_holder = $("tr[data-id='" + model._id + "'] td");
+								tr_holder.parent().attr("class","stage-"+self.$("#workflowDd").text().toLowerCase())
                                 tr_holder.eq(3).text(name);
                                 tr_holder.eq(4).text(expectedRevenueValue);
                                 tr_holder.eq(5).text(self.$("#customerDd option:selected").text());
                                 tr_holder.eq(6).text(nextAction.date);
                                 tr_holder.eq(7).text(nextAction.desc);
                                 tr_holder.eq(8).find("a").text(self.$("#workflowDd").text());
-                                tr_holder.eq(9).text(self.$("#salesPersonDd").text());
-
+								if (salesPersonId)
+									tr_holder.eq(9).text(self.$("#salesPersonDd").text());
+								if (data.workflow){
+									Backbone.history.fragment = "";
+									Backbone.history.navigate(window.location.hash.replace("#",""), { trigger: true });
+								}
 								
                             }
                             break;
@@ -779,7 +775,6 @@
 							   case 'kanban':
 								   {
 									   $("#" + model._id).remove();
-									   //count kanban
 									   var wId = model.workflow._id;
 									   var newTotal = ($("td[data-id='" + wId + "'] .totalCount").html()-1);
 									   $("td[data-id='" + wId + "'] .totalCount").html(newTotal);
@@ -838,15 +833,6 @@
 				   populate.get2name("#salesPersonDd", "/getForDdByRelatedUser",{},this,false,true);
 				   populate.getWorkflow("#workflowDd","#workflowNamesDd","/WorkflowsForDd",{id:"Opportunities"},"name",this);
 				   populate.get("#salesTeamDd", "/DepartmentsForDd",{},"departmentName",this,false,true);
-
-
-/*                   common.populateCustomers("#customerDd", "/Customer", model);
-                   //common.populateEmployeesDd("#salesPerson"Dd, "/getSalesPerson", model);
-                   common.populateEmployeesDd("#salesPersonDd", "/getForDdByRelatedUser", model);
-                   common.populateDepartments("#salesTeamDd", "/DepartmentsForDd", model);
-                   common.populatePriority("#priorityDd", "/Priority", model);
-                   common.populateWorkflows('Opportunities', '#workflowDd', "#workflowNamesDd", '/Workflows', model);*/
-
                    if (model.groups)
                        if (model.groups.users.length>0||model.groups.group.length){
                            $(".groupsAndUser").show();

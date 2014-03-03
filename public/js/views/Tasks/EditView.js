@@ -397,6 +397,10 @@
                                       tr_holder.eq(7).text(editHolder.find("#estimated").val() || 0);
                                       tr_holder.eq(8).text(editHolder.find("#logged").val() || 0);
                                       tr_holder.eq(9).find('a').text(editHolder.find("#type").text());
+									  if (data.workflow){
+										  Backbone.history.fragment = "";
+										  Backbone.history.navigate(window.location.hash.replace("#",""), { trigger: true });
+									  }
                                   }
                                   break;
                               case 'kanban':

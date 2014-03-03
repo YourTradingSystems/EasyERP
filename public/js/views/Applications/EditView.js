@@ -519,6 +519,11 @@
                                 tr_holder.eq(5).text(self.$el.find("#jobPositionDd").text());
                                 tr_holder.eq(6).find("a").text(self.$el.find("#workflowsDd").text());
                                 tr_holder.eq(7).text(data.jobType);
+								if (data.workflow){
+									Backbone.history.fragment = "";
+									Backbone.history.navigate(window.location.hash.replace("#",""), { trigger: true });
+								}
+
                             }
                             break;
                         case 'kanban':
