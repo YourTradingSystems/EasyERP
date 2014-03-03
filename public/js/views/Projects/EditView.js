@@ -575,6 +575,7 @@ define([
                     StartDate: startDate,
                     TargetEndDate: TargetEndDate
                 };
+				var workflowStart = this.currentModel.get('workflow');
                 this.currentModel.save(data, {
                     headers: {
                         mid: mid
@@ -600,6 +601,11 @@ define([
                             tr_holder.eq(8).find(".stageSelect").text(self.$el.find("#workflowsDd").text());
                             tr_holder.eq(9).find(".health-container a").attr("class", "health" + health).attr("data-value", health);
                             tr_holder.eq(11).text(model.toJSON().editedBy.date + " (" + model.toJSON().editedBy.user.login + ")");
+							if (data.workflow!=workflowStart){
+								Backbone.history.fragment = "";
+								Backbone.history.navigate(window.location.hash.replace("#",""), { trigger: true });
+
+							}
                         } else {
                             var currentModel_holder = $("#" + self.currentModel.toJSON()._id);
                             currentModel_holder.find(".project-text span").eq(0).text(projectName);
