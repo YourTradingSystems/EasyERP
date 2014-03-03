@@ -1,5 +1,6 @@
 define([
     'text!templates/Leads/list/ListHeader.html',
+    'text!templates/stages.html',
     'views/Leads/CreateView',
     'views/Leads/list/ListItemView',
     'views/Leads/EditView',
@@ -9,7 +10,7 @@ define([
     'dataService'
 ],
 
-    function (listTemplate, createView, listItemView, editView, currentModel,contentCollection, common, dataService) {
+    function (listTemplate, stagesTamplate, createView, listItemView, editView, currentModel,contentCollection, common, dataService) {
         var LeadsListView = Backbone.View.extend({
             el: '#content-holder',
             defaultItemsNumber: null,

@@ -17,8 +17,6 @@ define([
             initialize: function () {
                 _.bindAll(this, "saveItem", "render");
                 this.model = new CompanyModel();
-                this.page=1;
-                this.pageG=1;
 				this.responseObj = {};
                 this.render();
             },
@@ -312,10 +310,8 @@ define([
                 var internalNotes = $.trim(this.$el.find("#internalNotes").val());
 
                 var salesPerson = this.$("#employeesDd").data("id");
-                //var salesPerson = common.toObject(salesPersonId, this.employeesCollection);
 
                 var salesTeam = this.$("#departmentDd").data("id");
-                //var salesTeam = common.toObject(salesTeamId, this.departmentsCollection);
 
                 var reference = $.trim(this.$el.find("#reference").val());
 
@@ -415,9 +411,9 @@ define([
 						}]
 
                 });
-                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,this.page);
+                common.populateUsersForGroups('#sourceUsers','#targetUsers',null,1);
                 common.populateUsers("#allUsers", "/UsersForDd",null,null,true);
-                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,this.pageG);
+                common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",null,1);
 
 				populate.get("#departmentDd", "/DepartmentsForDd",{},"departmentName",this,true,true);
 				populate.get("#language", "/Languages",{},"name",this,true,false);

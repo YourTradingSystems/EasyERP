@@ -1,11 +1,3 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Ivan
- * Date: 04.12.13
- * Time: 10:59
- * To change this template use File | Settings | File Templates.
- */
-
 define([
     'text!templates/Applications/form/FormTemplate.html',
     'views/Applications/EditView',
@@ -38,6 +30,7 @@ define([
                 var mid = 39;
                 var model;
                 var name = '', status = '';
+				var id;
                 if ($(e.target).hasClass("applicationWorkflowLabel")) {
                     var breadcrumb = $(e.target).closest('li');
                     var a = breadcrumb.siblings().find("a");
@@ -55,7 +48,7 @@ define([
                         throw new Error('Workflow "Refused" not found');
                         return;
                     }
-                    var id = workflow.get('_id');
+                    id = workflow.get('_id');
                 }
 
                 this.formModel.save({
@@ -76,7 +69,7 @@ define([
             },
 
             isEmployee: function (e) {
-            	this.model.save({
+				this.model.save({
                     isEmployee: true
                 },{
                     headers: {

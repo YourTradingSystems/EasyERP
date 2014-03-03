@@ -361,7 +361,6 @@ define([
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
                 this.model.save({
                     isEmployee: isEmployee,
-                    //subject: subject,
                     imageSrc: this.imageSrc,
                     name: name,
                     personalEmail: pemail,
@@ -475,7 +474,7 @@ define([
 			},
             showNewSelect:function(e,prev,next){
                 populate.showSelect(e,prev,next,this);
-                return false;	
+                return false;
             },
 
 			chooseOption:function(e){

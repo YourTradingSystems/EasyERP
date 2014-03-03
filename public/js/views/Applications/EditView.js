@@ -3,11 +3,10 @@
     'text!templates/Notes/AddAttachments.html',
     'collections/Workflows/WorkflowsCollection',
     "common",
-    "custom",
 	"populate",
 	"custom"
 ],
-    function (EditTemplate, addAttachTemplate, WorkflowsCollection, common, Custom, populate, custom) {
+    function (EditTemplate, addAttachTemplate, WorkflowsCollection, common, populate, custom) {
 
         var EditView = Backbone.View.extend({
             el: "#content-holder",
@@ -646,9 +645,9 @@
                         }
                     }
                 });
-                common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), this.page);
+                common.populateUsersForGroups('#sourceUsers', '#targetUsers', this.currentModel.toJSON(), 1);
                 common.populateUsers("#allUsers", "/UsersForDd", this.currentModel.toJSON(), null, true);
-                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), this.pageG);
+                common.populateDepartmentsList("#sourceGroups", "#targetGroups", "/DepartmentsForDd", this.currentModel.toJSON(), 1);
 				populate.getWorkflow("#workflowsDd","#workflowNamesDd","/WorkflowsForDd",{id:"Applications"},"name",this);
 				populate.get("#departmentDd","/DepartmentsForDd",{},"departmentName",this);
 				populate.get("#jobPositionDd","/JobPositionForDd",{},"name",this);

@@ -34,8 +34,7 @@
 				if (this.foldWorkflows.length===0){
 					this.foldWorkflows =["Empty"];
 				}
-				dataService.postData('/currentUser', { 'kanbanSettings.applications.foldWorkflows': this.foldWorkflows }, function (seccess, error) {
-				});
+				dataService.postData('/currentUser', { 'kanbanSettings.applications.foldWorkflows': this.foldWorkflows }, function (seccess, error) {});
 			},
 
 		foldUnfoldKanban:function(e,id){
@@ -268,7 +267,6 @@
 
                     start: function (event, ui) {
                         var column = ui.item.closest(".column");
-                        //column.find(".counter").html(parseInt(column.find(".counter").html()) - 1);
                         column.find(".totalCount").html(parseInt(column.find(".totalCount").html()) - 1);
                     },
 

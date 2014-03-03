@@ -751,18 +751,9 @@
                 }
                 selectList.append(options);
                 if (response.data.length >= 20) {
-                    if (page == 1) {
-                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (response.data.length) + "</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
-                    } else {
-                        selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * page) + " of " + (response.data.length) + "</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
-                    }
+                    selectList.after("<div class='userPagination'><span class='text'>1-20 of " + (response.data.length) + "</span><a class='nextUserList' href='javascript:;'>next »</a></div>");
                 } else {
-                    if (page == 1) {
-                        selectList.after("<div class='userPagination'><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
-                    }
-                    else {
-                        selectList.after("<div class='userPagination'><a class='prevUserList' href='javascript:;'>« prev</a><span class='text'>" + ((20 * (page - 1)) + 1) + "-" + (20 * (page - 1) + response.data.length) + " of " + (20 * (page - 1) + response.data.length) + "</span></div>");
-                    }
+                    selectList.after("<div class='userPagination'><span class='text'> 1-" + response.data.length + " of " + response.data.length + "</span></div>");
                 }
 				selectList.attr("data-page",1);
 				targetList.attr("data-page",1);

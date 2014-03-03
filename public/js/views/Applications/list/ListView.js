@@ -160,8 +160,8 @@ define([
                 this.filter = this.filter || {};
                 $('.filter-check-list input:checked').each(function () {
                         workflowIdArray.push($(this).val());
-                })
-                this.filter['workflow'] = workflowIdArray;
+                });
+                this.filter.workflow = workflowIdArray;
                 var itemsNumber = $("#itemsNumber").text();
                 $("#top-bar-deleteBtn").hide();
                 $('#check_all').prop('checked', false);

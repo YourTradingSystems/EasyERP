@@ -8,8 +8,8 @@ define([
             template: _.template(ContentTopBarTemplate),
             
             initialize: function(options){
-            	this.collection = options.collection;
-                this.render();
+				this.collection = options.collection;
+				this.render();
             },
 
             render: function(){
