@@ -29,9 +29,9 @@ define([
                         $(".miniPagination .next").addClass("not-active");
                         $(".miniPagination .last").addClass("not-active");
                     }
-					if (self.allPages===1){
-						$(".miniPagination").hide();
-					}
+                    if (self.allPages === 1) {
+                        $(".miniPagination").hide();
+                    }
                 });
 
             },
@@ -106,15 +106,15 @@ define([
                 var trId = $(e.target).closest("dd");
                 if ($("#" + trId.attr("id")).find("#editSpan").length === 0) {
                     $("#" + trId.attr("id")).append('<span id="editSpan" class=""><a href="#">e</a></span>');
-					if ($("#" + trId.attr("id")).width()-30<$("#" + trId.attr("id")).find(".no-long").width()){
-						$("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 30);
-					}
+                    if ($("#" + trId.attr("id")).width() - 30 < $("#" + trId.attr("id")).find(".no-long").width()) {
+                        $("#" + trId.attr("id")).find(".no-long").width($("#" + trId.attr("id")).width() - 30);
+                    }
                 }
             },
 
             removeEdit: function (e) {
                 $('#editSpan').remove();
-                $("dd .no-long").css({width: "auto"});
+                $("dd .no-long").css({ width: "auto" });
             },
 
             cancelClick: function (e) {
@@ -154,7 +154,7 @@ define([
                             $("#" + this.prevQuickEdit.id).append('<a href="mailto:' + this.text + '">' + this.text + '</a>');
                             $('.quickEdit').removeClass('quickEdit');
                         } else {
-                            $('.quickEdit').text(this.text?this.text:"").removeClass('quickEdit');
+                            $('.quickEdit').text(this.text ? this.text : "").removeClass('quickEdit');
                         }
                     }
                 }
@@ -215,14 +215,15 @@ define([
 
                 if (objIndex.length > 1) {
                     var param = currentModel.get(objIndex[0]) || {};
-                    param[objIndex[1]] =  $.trim($('#editInput').val());
+                    param[objIndex[1]] = $.trim($('#editInput').val());
                     newModel = currentModel.set(objIndex[0], param);
 
                 } else {
                     newModel = currentModel.set(objIndex[0], $.trim($('#editInput').val()));
 
                 }
-               this.formModel.save(newModel, {
+                this.formModel.urlRoot = '/Persons/';
+                this.formModel.save(newModel, {
                     headers: {
                         mid: 39
                     },
@@ -263,34 +264,34 @@ define([
 
                 switch (type) {
                     case "edit":
-                    {
-                        $('#noteArea').val($('#' + id_int).find('.noteText').text());
-                        $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
-                        $('#getNoteKey').attr("value", id_int);
-                        break;
-                    }
+                        {
+                            $('#noteArea').val($('#' + id_int).find('.noteText').text());
+                            $('#noteTitleArea').val($('#' + id_int).find('.noteTitle').text());
+                            $('#getNoteKey').attr("value", id_int);
+                            break;
+                        }
                     case "del":
-                    {
+                        {
 
-                        var newNotes = _.filter(notes, function (note) {
-                            if (note._id != id_int) {
-                                return note;
-                            }
-                        });
-                        if(confirm("You realy want to remove note? ")){
-                        currentModel.save({ 'notes': newNotes },
-                            {
-                                headers: {
-                                    mid: 39
-                                },
-                                patch: true,
-                                success: function () {
-                                    $('#' + id_int).remove();
+                            var newNotes = _.filter(notes, function (note) {
+                                if (note._id != id_int) {
+                                    return note;
                                 }
                             });
+                            if (confirm("You realy want to remove note? ")) {
+                                currentModel.save({ 'notes': newNotes },
+                                    {
+                                        headers: {
+                                            mid: 39
+                                        },
+                                        patch: true,
+                                        success: function () {
+                                            $('#' + id_int).remove();
+                                        }
+                                    });
+                            }
+                            break;
                         }
-                        break;
-                    }
                 }
             },
 
@@ -439,7 +440,7 @@ define([
                         }
                     });
                     var fileName = $('.attachFile_' + id + ' a')[0].innerHTML;
-                    currentModel.save({ 'attachments': newAttachments , fileName: fileName},
+                    currentModel.save({ 'attachments': newAttachments, fileName: fileName },
                         {
                             headers: {
                                 mid: 39
@@ -515,7 +516,7 @@ define([
 
             deleteItems: function () {
                 var mid = 39;
-				this.formModel.urlRoot="/Persons";
+                this.formModel.urlRoot = "/Persons";
                 this.formModel.destroy({
                     headers: {
                         mid: mid
@@ -523,11 +524,11 @@ define([
                     success: function () {
                         Backbone.history.navigate("#easyErp/Persons/thumbnails", { trigger: true });
                     },
-					error:function(model,err){
-						if (err.status===403){
-							alert("You do not have permission to perform this action");
-						}
-					}
+                    error: function (model, err) {
+                        if (err.status === 403) {
+                            alert("You do not have permission to perform this action");
+                        }
+                    }
                 });
 
             }

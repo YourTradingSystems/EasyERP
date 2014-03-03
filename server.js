@@ -163,12 +163,23 @@ app.post('/uploadFiles', function (req, res, next) {
                 });
             });
         } else {
-            uploadFileArray(req, res, function (files) {
-                requestHandler.uploadFile(req, res, req.headers.id, files);
+            dir += req.headers.id;
+            fs.readdir(dir, function (err, files) {
+                if (err) {
+                    fs.mkdir(dir, function (errr) {
+                        if (!errr)
+                            uploadFileArray(req, res, function (files) {
+                                requestHandler.uploadFile(req, res, req.headers.id, files);
+                            });
+                    });
+                } else {
+                    uploadFileArray(req, res, function (files) {
+                        requestHandler.uploadFile(req, res, req.headers.id, files);
+                    });
+                }
             });
         }
     });
-
 });
 
 app.get('/download/:name', function (req, res) {
@@ -277,29 +288,44 @@ app.post('/uploadApplicationFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads\\" + req.headers.id;
+                dir = __dirname + "\\uploads\\";
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads\/" + req.headers.id;
+                dir = __dirname + "\/uploads\/";
             }
     }
     fs.readdir(dir, function (err, files) {
         if (err) {
             fs.mkdir(dir, function (errr) {
-                uploadFileArray(req, res, function (files) {
-                    requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                if (!errr)
+                    dir += req.headers.id;
+                fs.mkdir(dir, function (errr) {
+                    if (!errr)
+                        uploadFileArray(req, res, function (files) {
+                            requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                        });
                 });
-
             });
         } else {
-            uploadFileArray(req, res, function (files) {
-                requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+            dir += req.headers.id;
+            fs.readdir(dir, function (err, files) {
+                if (err) {
+                    fs.mkdir(dir, function (errr) {
+                        if (!errr)
+                            uploadFileArray(req, res, function (files) {
+                                requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                            });
+                    });
+                } else {
+                    uploadFileArray(req, res, function (files) {
+                        requestHandler.uploadApplicationFile(req, res, req.headers.id, files);
+                    });
+                }
             });
         }
     });
-
 });
 
 app.post('/uploadEmployeesFiles', function (req, res, next) {
@@ -330,12 +356,23 @@ app.post('/uploadEmployeesFiles', function (req, res, next) {
                 });
             });
         } else {
-            uploadFileArray(req, res, function (files) {
-                requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+            dir += req.headers.id;
+            fs.readdir(dir, function (err, files) {
+                if (err) {
+                    fs.mkdir(dir, function (errr) {
+                        if (!errr)
+                            uploadFileArray(req, res, function (files) {
+                                requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+                            });
+                    });
+                } else {
+                    uploadFileArray(req, res, function (files) {
+                        requestHandler.uploadEmployeesFile(req, res, req.headers.id, files);
+                    });
+                }
             });
         }
     });
-
 });
 
 app.post('/uploadProjectsFiles', function (req, res, next) {
@@ -345,25 +382,41 @@ app.post('/uploadProjectsFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads\\" + req.headers.id;
+                dir = __dirname + "\\uploads\\";
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads\/" + req.headers.id;
+                dir = __dirname + "\/uploads\/";
             }
     }
     fs.readdir(dir, function (err, files) {
         if (err) {
             fs.mkdir(dir, function (errr) {
-                uploadFileArray(req, res, function (files) {
-                    requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
+                if (!errr)
+                    dir += req.headers.id;
+                fs.mkdir(dir, function (errr) {
+                    if (!errr)
+                        uploadFileArray(req, res, function (files) {
+                            requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
+                        });
                 });
-
             });
         } else {
-            uploadFileArray(req, res, function (files) {
-                requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
+            dir += req.headers.id;
+            fs.readdir(dir, function (err, files) {
+                if (err) {
+                    fs.mkdir(dir, function (errr) {
+                        if (!errr)
+                            uploadFileArray(req, res, function (files) {
+                                requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
+                            });
+                    });
+                } else {
+                    uploadFileArray(req, res, function (files) {
+                        requestHandler.uploadProjectsFiles(req, res, req.headers.id, files);
+                    });
+                }
             });
         }
     });
@@ -376,25 +429,41 @@ app.post('/uploadTasksFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads\\" + req.headers.id;
+                dir = __dirname + "\\uploads\\";
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads\/" + req.headers.id;
+                dir = __dirname + "\/uploads\/";
             }
     }
     fs.readdir(dir, function (err, files) {
         if (err) {
             fs.mkdir(dir, function (errr) {
-                uploadFileArray(req, res, function (files) {
-                    requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
+                if (!errr)
+                    dir += req.headers.id;
+                fs.mkdir(dir, function (errr) {
+                    if (!errr)
+                        uploadFileArray(req, res, function (files) {
+                            requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
+                        });
                 });
-
             });
         } else {
-            uploadFileArray(req, res, function (files) {
-                requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
+            dir += req.headers.id;
+            fs.readdir(dir, function (err, files) {
+                if (err) {
+                    fs.mkdir(dir, function (errr) {
+                        if (!errr)
+                            uploadFileArray(req, res, function (files) {
+                                requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
+                            });
+                    });
+                } else {
+                    uploadFileArray(req, res, function (files) {
+                        requestHandler.uploadTasksFiles(req, res, req.headers.id, files);
+                    });
+                }
             });
         }
     });
@@ -407,30 +476,46 @@ app.post('/uploadOpportunitiesFiles', function (req, res, next) {
     switch (osType) {
         case "Windows":
             {
-                dir = __dirname + "\\uploads\\" + req.headers.id;
+                dir = __dirname + "\\uploads\\";
             }
             break;
         case "Linux":
             {
-                dir = __dirname + "\/uploads\/" + req.headers.id;
+                dir = __dirname + "\/uploads\/";
             }
     }
+    
     fs.readdir(dir, function (err, files) {
         if (err) {
             fs.mkdir(dir, function (errr) {
-                uploadFileArray(req, res, function (files) {
-                    requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+                if (!errr)
+                    dir += req.headers.id;
+                fs.mkdir(dir, function (errr) {
+                    if (!errr)
+                        uploadFileArray(req, res, function (files) {
+                            requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+                        });
                 });
-
             });
         } else {
-            uploadFileArray(req, res, function (files) {
-                requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+            dir += req.headers.id;
+            fs.readdir(dir, function (err, files) {
+                if (err) {
+                    fs.mkdir(dir, function (errr) {
+                        if (!errr)
+                            uploadFileArray(req, res, function (files) {
+                                requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+                            });
+                    });
+                } else {
+                    uploadFileArray(req, res, function (files) {
+                        requestHandler.uploadOpportunitiesFiles(req, res, req.headers.id, files);
+                    });
+                }
             });
         }
     });
 });
-
 
 app.get('/logout', function (req, res, next) {
     if (req.session) {
