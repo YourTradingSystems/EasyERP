@@ -70,20 +70,24 @@ var allowCrossDomain = function (req, res, next) {
         'localhost:8088',
         '192.168.88.13:8088'
     ];
-    if (allowedHost.indexOf(req.headers.host) !== -1) {
-        //res.setHeader('Content-Type', 'text/html');
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header('Access-Control-Allow-Origin', req.headers.origin);
-        res.header('Access-Control-Allow-Origin', req.headers.origin);
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Allow Cross Site Origin", "*");
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header("Access-Control-Request-Headers", "*");
-        res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
+    //if (allowedHost.indexOf(req.headers.host) !== -1) {
+        var browser = req.headers['user-agent'];
+        if (/Trident/.test(browser))
+            res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        ////res.setHeader('Content-Type', 'text/html');
+        ////res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        //res.header('Access-Control-Allow-Credentials', true);
+        //res.header('Access-Control-Allow-Origin', req.headers.origin);
+        //res.header('Access-Control-Allow-Origin', req.headers.origin);
+        //res.header("Access-Control-Allow-Origin", "*");
+        //res.header("Allow Cross Site Origin", "*");
+        //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        //res.header("Access-Control-Request-Headers", "*");
+        //res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-HTTP-Method-Override, uid, hash, mid');
         next();
-    } else {
-        res.send(401);
-    }
+   // } else {
+        //res.send(401);
+   // }
 };
 app.configure(function () {
     app.set('view engine', 'jade');
@@ -91,7 +95,7 @@ app.configure(function () {
     app.use(express.compress());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    //app.use(allowCrossDomain);
+    app.use(allowCrossDomain);
     app.use(express.cookieParser("CRMkey"));
     app.use(express.session({
         key: 'crm',
@@ -134,16 +138,16 @@ app.get('/getModules', function (req, res) {
 app.post('/uploadFiles', function (req, res, next) {
     var file = {};
     var localPath = __dirname + "\\uploads\\" + req.headers.id;
-    fs.readdir(localPath, function(err, files){
+    fs.readdir(localPath, function (err, files) {
         if (!err) {
             var k = '';
             var maxK = 0;
             var checkIs = false;
-            var attachfileName = req.files.attachfile.name.slice(0,req.files.attachfile.name.lastIndexOf('.'));
-            files.forEach(function(fileName){
+            var attachfileName = req.files.attachfile.name.slice(0, req.files.attachfile.name.lastIndexOf('.'));
+            files.forEach(function (fileName) {
                 if (fileName == req.files.attachfile.name) {
-                   k = 1;
-                   checkIs = true;
+                    k = 1;
+                    checkIs = true;
                 } else {
                     if ((fileName.indexOf(attachfileName) === 0) &&
                         (fileName.lastIndexOf(attachfileName) === 0) &&
@@ -151,7 +155,7 @@ app.post('/uploadFiles', function (req, res, next) {
                         (fileName.lastIndexOf('(') !== -1) &&
                         (fileName.lastIndexOf('(') < fileName.lastIndexOf(').')) &&
                         (attachfileName.length == fileName.lastIndexOf('('))) {
-                        var intVal = fileName.slice(fileName.lastIndexOf('(')+1,fileName.lastIndexOf(').'));
+                        var intVal = fileName.slice(fileName.lastIndexOf('(') + 1, fileName.lastIndexOf(').'));
                         k = parseInt(intVal) + 1;
                     }
                 }
@@ -179,7 +183,7 @@ app.post('/uploadFiles', function (req, res, next) {
                 break;
             case "Linux":
                 {
-                    path = __dirname + "\/uploads\/" + req.headers.id +"\/" + req.files.attachfile.name;
+                    path = __dirname + "\/uploads\/" + req.headers.id + "\/" + req.files.attachfile.name;
                     dir = __dirname + "\/uploads\/" + req.headers.id;
                 }
         }
@@ -189,7 +193,7 @@ app.post('/uploadFiles', function (req, res, next) {
                 file._id = mongoose.Types.ObjectId();
                 file.name = req.files.attachfile.name;
                 file.path = path;
-                file.size = Math.round(req.files.attachfile.size / 1024 / 2024 * 100 ) / 100;
+                file.size = Math.round(req.files.attachfile.size / 1024 / 2024 * 100) / 100;
                 file.uploadDate = new Date();
                 file.uploaderName = req.session.uName;
                 requestHandler.uploadFile(req, res, req.headers.id, file);
@@ -205,7 +209,7 @@ app.post('/uploadFiles', function (req, res, next) {
                                     file._id = mongoose.Types.ObjectId();
                                     file.name = req.files.attachfile.name;
                                     file.path = path;
-                                    file.size = Math.round(req.files.attachfile.size / 1024 / 2024 * 100 ) / 100;
+                                    file.size = Math.round(req.files.attachfile.size / 1024 / 2024 * 100) / 100;
                                     file.uploadDate = new Date();
                                     file.uploaderName = req.session.uName;
                                     requestHandler.uploadFile(req, res, req.headers.id, file);
@@ -244,22 +248,22 @@ function uploadFileArray(req, res, callback) {
         var localPath;
         switch (osType) {
             case "Windows":
-            {
-                localPath = __dirname + "\\uploads\\" + req.headers.id;
-            }
+                {
+                    localPath = __dirname + "\\uploads\\" + req.headers.id;
+                }
                 break;
             case "Linux":
-            {
-                localPath = __dirname + "\/uploads\/" + req.headers.id;
-            }
+                {
+                    localPath = __dirname + "\/uploads\/" + req.headers.id;
+                }
         }
-        fs.readdir(localPath, function(err, files){
+        fs.readdir(localPath, function (err, files) {
             if (!err) {
                 var k = '';
                 var maxK = 0;
                 var checkIs = false;
-                var attachfileName = item.name.slice(0,item.name.lastIndexOf('.'));
-                files.forEach(function(fileName){
+                var attachfileName = item.name.slice(0, item.name.lastIndexOf('.'));
+                files.forEach(function (fileName) {
                     if (fileName == item.name) {
                         k = 1;
                         checkIs = true;
@@ -270,7 +274,7 @@ function uploadFileArray(req, res, callback) {
                             (fileName.lastIndexOf('(') !== -1) &&
                             (fileName.lastIndexOf('(') < fileName.lastIndexOf(').')) &&
                             (attachfileName.length == fileName.lastIndexOf('('))) {
-                            var intVal = fileName.slice(fileName.lastIndexOf('(')+1,fileName.lastIndexOf(').'));
+                            var intVal = fileName.slice(fileName.lastIndexOf('(') + 1, fileName.lastIndexOf(').'));
                             k = parseInt(intVal) + 1;
                         }
                     }
@@ -287,16 +291,16 @@ function uploadFileArray(req, res, callback) {
         fs.readFile(item.path, function (err, data) {
             switch (osType) {
                 case "Windows":
-                {
-                    path = __dirname + "\\uploads\\" + req.headers.id + "\\" + item.name;
-                    dir = __dirname + "\\uploads\\" + req.headers.id;
-                }
+                    {
+                        path = __dirname + "\\uploads\\" + req.headers.id + "\\" + item.name;
+                        dir = __dirname + "\\uploads\\" + req.headers.id;
+                    }
                     break;
                 case "Linux":
-                {
-                    path = __dirname + "\/uploads\/" + req.headers.id +"\/" + item.name;
-                    dir = __dirname + "\/uploads\/" + req.headers.id;
-                }
+                    {
+                        path = __dirname + "\/uploads\/" + req.headers.id + "\/" + item.name;
+                        dir = __dirname + "\/uploads\/" + req.headers.id;
+                    }
             }
             fs.writeFile(path, data, function (err) {
                 if (!err) {
@@ -304,7 +308,7 @@ function uploadFileArray(req, res, callback) {
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
                     file.path = path;
-                    file.size = Math.round(item.size / 1024 / 2024 * 100 ) / 100;
+                    file.size = Math.round(item.size / 1024 / 2024 * 100) / 100;
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;
                     files.push(file);
@@ -877,7 +881,7 @@ app.patch('/Workflows/:_id', function (req, res) {
     console.log('Request for update Workflow');
     var data = {};
     var _id = req.param('_id');
-	for (var i in req.body) {
+    for (var i in req.body) {
         data[i] = req.body[i];
     }
     requestHandler.updateWorkflowOnlySelectedField(req, res, _id, data);
