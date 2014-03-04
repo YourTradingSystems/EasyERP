@@ -189,7 +189,7 @@ app.post('/uploadFiles', function (req, res, next) {
 
 app.get('/download/:path', function (req, res) {
     var path = req.param('path');
-    res.download(path);
+    res.download(__dirname + path);
 });
 
 function uploadFileArray(req, res, callback) {
@@ -246,17 +246,18 @@ function uploadFileArray(req, res, callback) {
         });
 
         fs.readFile(item.path, function (err, data) {
+            var shortPas;
             switch (osType) {
                 case "Windows":
                     {
                         path = __dirname + "\\uploads\\" + req.headers.id + "\\" + item.name;
-                        dir = __dirname + "\\uploads\\" + req.headers.id;
+                        shortPas = "\\uploads\\" + req.headers.id + "\\" + item.name;
                     }
                     break;
                 case "Linux":
                     {
                         path = __dirname + "\/uploads\/" + req.headers.id + "\/" + item.name;
-                        dir = __dirname + "\/uploads\/" + req.headers.id;
+                        shortPas = "\/uploads\/" + req.headers.id + "\/" + item.name;
                     }
             }
             fs.writeFile(path, data, function (err) {
@@ -264,7 +265,7 @@ function uploadFileArray(req, res, callback) {
                     var file = {};
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
-                    file.path = path;
+                    file.path = encodeURIComponent(shortPas);
                     file.size = Math.round(item.size / 1024 / 2024 * 100) / 100;
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;
