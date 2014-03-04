@@ -63,33 +63,40 @@ var Workflow = function (logWriter, mongoose, models) {
         create: function (req, data, result) {
             try {
                 if (data) {
-                    
-                    models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id }, { wName: data.wName }] }, function (err, workflows) {
+                    models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ $and: [{ wId: data._id },{name: data.value[0].name}] }, function (err, workflows) {
                         if (err) {
                             console.log(err);
                             logWriter.log('WorkFlow.js create workflow.find ' + err);
                             result.send(400, { error: 'WorkFlow.js create workflow Incorrect Incoming Data' });
                             return;
                         } else {
-                            for (var i = 0; i < data.value.length; i++) {
-								var _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
-                                _workflow.wId = data._id;
-                                _workflow.wName = data.wName;
-                                _workflow.name = data.value[i].name;
-                                _workflow.status = data.value[i].status;
-								updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", 0, 0, data._id, true, false, function(sequence){
-                                    _workflow.sequence = sequence;
+                               //add vasya no not create workflow with the same name
+                               if (workflows.length > 0) {//add vasya no not create workflow with the same name
+                                     if (workflows[0].name === data.value[0].name) {//add vasya no not create workflow with the same name
+                                            result.send(400, { error: 'An Workflows with the same Name already exists' });//add vasya no not create workflow with the same name
+                                     }
+                               }
+                               else if(workflows.length === 0) {
 
-                                _workflow.save(function (err, workfloww) {
-                                    if (err) {
-                                        console.log(err);
-                                        logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
-                                        result.send(500, { error: 'WorkFlow.js create save error' });
-                                    } else {
-                                        result.send(201, { success: 'A new WorkFlow crate success', id: workfloww._id });
-                                    }
-                                });
-								});
+                               for (var i = 0; i < data.value.length; i++) {
+                                    var _workflow = new models.get(req.session.lastDb - 1, "workflows", workflowSchema)();
+                                    _workflow.wId = data._id;
+                                    _workflow.wName = data.wName;
+                                    _workflow.name = data.value[i].name;
+                                    _workflow.status = data.value[i].status;
+                                    updateSequence(models.get(req.session.lastDb - 1, "workflows", workflowSchema), "sequence", 0, 0, data._id, true, false, function(sequence){
+                                        _workflow.sequence = sequence;
+                                    _workflow.save(function (err, workfloww) {
+                                        if (err) {
+                                            console.log(err);
+                                            logWriter.log('WorkFlow.js create workflow.find _workflow.save ' + err);
+                                            result.send(500, { error: 'WorkFlow.js create save error' });
+                                        } else {
+                                            result.send(201, { success: 'A new WorkFlow crate success', id: workfloww._id });
+                                        }
+                                    });
+                                    });
+							    }
 							}
 						}
                     });
@@ -106,7 +113,6 @@ var Workflow = function (logWriter, mongoose, models) {
             try {
                 if (data) {
                     delete data._id;
-
                     models.get(req.session.lastDb - 1, "workflows", workflowSchema).update({ _id: _id }, data, function (err, res) {
                         if (err) {
                             console.log(err);
@@ -114,8 +120,9 @@ var Workflow = function (logWriter, mongoose, models) {
                             result.send(400, { error: 'WorkFlow.js update workflow error ' });
                             return;
                         } else {
-                                result.send(200, { success: 'WorkFlow update success' });
-                            }
+                            
+                            result.send(200, { success: 'WorkFlow update success' });
+                        }
                     });
                 }
             }
@@ -153,6 +160,7 @@ var Workflow = function (logWriter, mongoose, models) {
             //var query = workflow.find({ $and: [{ wId: data.type.id }, { name: data.type.name }] });
             var query = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find({ wId: data.type.id });
             query.select('name wName');
+            query.sort({ 'sequence': -1,"editedBy.date":-1 });
             query.exec(function (err, result) {
                 if (err) {
                     console.log(err);
@@ -175,7 +183,7 @@ var Workflow = function (logWriter, mongoose, models) {
                     var query = (data.id) ? { wId: data.id } : {};
                     if (data.name) query['name'] = data.name
                     var query2 = models.get(req.session.lastDb - 1, "workflows", workflowSchema).find(query);
-                    query2.sort({ 'sequence': -1 });
+                    query2.sort({ 'sequence': -1,"editedBy.date":-1 });
                     query2.exec(query, function (err, result) {
                         if (err) {
                             console.log(err);

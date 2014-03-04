@@ -40,7 +40,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         },
         health: { type: Number, default: 1 }
     }, { collection: 'Project' });
@@ -79,7 +79,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         }],
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         }
     }, { collection: 'Tasks' });
 
@@ -331,6 +331,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _project.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _project.editedBy.user = data.uId;
                     }
 
                     if (data.task) {
@@ -390,7 +392,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 logWriter.log("Project.js saveProjectToDb _project.save" + err);
                                 res.send(500, { error: 'Project.save BD error' });
                             } else {
-                                res.send(201, { success: 'A new Project crate success', id: result._id });
+                                res.send(201, { success: 'A new Project crate success', result: result, id: result._id });
                             }
                         }
                         catch (error) {
@@ -435,7 +437,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                     $match: {
                                         $and: [
                                             { workflow: newObjectId(res._id.toString()) },
-
                                             {
                                                 $or: [
                                                     {
@@ -730,6 +731,9 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
                                 }
+                                if (data.sort) {
+                                    query.sort(data.sort);
+                                }
                                 query.select("_id createdBy editedBy workflow projectName health customer progress StartDate EndDate TargetEndDate").
                                     populate('createdBy.user', 'login').
                                     populate('editedBy.user', 'login').
@@ -758,7 +762,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
             });
     }
 
-    function getProjectByEndDateForDashboard(req, data, response) {
+    function getProjectByEndDateForDashboard(req, response) {
         var res = {};
         res['data'] = [];
         var startDate = new Date();
@@ -827,8 +831,6 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                         function (err, result) {
                             if (!err) {
                                 var query = models.get(req.session.lastDb - 1, "Project", ProjectSchema).find().where('_id').in(result);
-                                if (data && data.status && data.status.length > 0)
-                                    query.where('workflow').in(data.status);
                                 query.select("_id TargetEndDate projectmanager projectName health").
                                     populate('projectmanager', 'name _id').
                                 exec(function (error, _res) {
@@ -1258,6 +1260,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
 
     function updateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
+        var fileName = data.fileName;
+        delete data.fileName;
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
             obj._id = mongoose.Types.ObjectId();
@@ -1271,6 +1275,41 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                 logWriter.log("Project.js update project.update " + err);
                 res.send(500, { error: "Can't update Project" });
             } else {
+                if (fileName) {
+                    var newDirname = __dirname.replace("\\Modules","");
+                    var os = require("os");
+                    var osType = (os.type().split('_')[0]);
+                    var path;
+                    var dir;
+                    switch (osType) {
+                        case "Windows":
+                        {
+                            while (newDirname.indexOf("\\") !== -1) {
+                                newDirname = newDirname.replace("\\","\/");
+                            }
+                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                            dir = newDirname + "\/uploads\/" + _id;
+                        }
+                            break;
+                        case "Linux":
+                        {
+                            while (newDirname.indexOf("\\") !== -1) {
+                                newDirname = newDirname.replace("\\","\/");
+                            }
+                            path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                            dir = newDirname + "\/uploads\/" + _id;
+                        }
+                    }
+
+                    logWriter.fs.unlink(path,function(){
+                        logWriter.fs.readdir(dir, function(err, files){
+                            if (files.length === 0) {
+                                logWriter.fs.rmdir(dir,function(){});
+                            }
+                        });
+                    });
+
+                }
                 res.send(200, projects);
             }
         });
@@ -1279,11 +1318,15 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
     function taskUpdateOnlySelectedFields(req, _id, data, res) {
         delete data._id;
         delete data.createdBy;
+        var fileName = data.fileName;
+        delete data.fileName;
         if (data.notes && data.notes.length != 0) {
             var obj = data.notes[data.notes.length - 1];
-            obj._id = mongoose.Types.ObjectId();
+            if (!obj._id)
+                obj._id = mongoose.Types.ObjectId();
             obj.date = new Date();
-            obj.author = req.session.uName;
+            if (!obj.author)
+                obj.author = req.session.uName;
             data.notes[data.notes.length - 1] = obj;
         }
         if (data.estimated && data.logged)
@@ -1336,6 +1379,41 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
         function updateTask() {
             models.get(req.session.lastDb - 1, 'Tasks', TasksSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
+                    if (fileName) {
+                        var newDirname = __dirname.replace("\\Modules","");
+                        var os = require("os");
+                        var osType = (os.type().split('_')[0]);
+                        var path;
+                        var dir;
+                        switch (osType) {
+                            case "Windows":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                                break;
+                            case "Linux":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                        }
+
+                        logWriter.fs.unlink(path,function(){
+                            logWriter.fs.readdir(dir, function(err, files){
+                                if (files.length === 0) {
+                                    logWriter.fs.rmdir(dir,function(){});
+                                }
+                            });
+                        });
+
+                    }
                     res.send(200, { success: 'Tasks updated', notes: result.notes, sequence: result.sequence });
                 } else {
                     res.send(500, { error: "Can't update Tasks" });
@@ -1437,6 +1515,8 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                     }
                     if (data.uId) {
                         _task.createdBy.user = data.uId;
+                        //uId for edited by field on creation
+                        _task.editedBy.user = data.uId;
                     }
                     if (data.logged) {
                         _task.logged = data.logged;
@@ -1485,7 +1565,7 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 res.send(500, { error: 'Task.save BD error' });
                             } else {
                                 event.emit('updateContent', req, res, _task.project, 'create', _task);
-                                res.send(201, { success: 'An new Task crate success', id: _task._id });
+                                res.send(201, { success: 'An new Task crate success', task: _task });
                             }
                         });
                     });
@@ -1750,14 +1830,17 @@ var Project = function (logWriter, mongoose, department, models, workflow, event
                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                     query.where('workflow').in([]);
                                 }
-                                console.log(data);
+                                if (data.sort) {
+                                    query.sort(data.sort);
+                                }else{
+									query.sort({ 'editedBy.date': -1 });
+								}
                                 query.select("-attachments -notes").
                                     populate('project', 'projectShortDesc projectName').
                                     populate('assignedTo', 'name').
                                     populate('editedBy.user', 'login').
                                     populate('createdBy.user', 'login').
                                     populate('workflow', 'name _id').
-                                    sort({ 'editedBy.date': -1 }).
                                     skip((data.page - 1) * data.count).
                                     limit(data.count).
                                     exec(function (err, result) {

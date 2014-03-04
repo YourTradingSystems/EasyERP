@@ -70,7 +70,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         },
         editedBy: {
             user: { type: ObjectId, ref: 'Users', default: null },
-            date: { type: Date }
+            date: { type: Date, default: Date.now }
         },
         attachments: [{
             id: { type: Number, default: '' },
@@ -253,8 +253,9 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             function savetoDb(data) {
                 _employee = new models.get(req.session.lastDb - 1, "Employees", employeeSchema)();
                 if (data.uId) {
-
                     _employee.createdBy.user = data.uId;
+                    //uId for edited by field on creation
+                    _employee.editedBy.user = data.uId;
                 }
                 if (data.isEmployee) {
                     _employee.isEmployee = data.isEmployee;
@@ -419,7 +420,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                             logWriter.log("Employees.js create savetoBd _employee.save " + err);
                             res.send(500, { error: 'Employees.save BD error' });
                         } else {
-                            res.send(201, { success: 'A new Employees create success', id: result._id });
+                            res.send(201, { success: 'A new Employees create success', result: result, id: result._id });
                             event.emit('recalculate', req);
                         }
                     });
@@ -564,11 +565,11 @@ var Employee = function (logWriter, mongoose, event, department, models) {
         res['data'] = [];
         var optionsObject = {};
 
-        if (data.filter.letter)
-            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
         switch (contentType) {
             case ('Employees'): {
                 optionsObject['isEmployee'] = true;
+                        if (data.filter.letter)
+                            optionsObject['name.last'] = new RegExp('^[' + data.filter.letter.toLowerCase() + data.filter.letter.toUpperCase() + '].*');
             }
                 break;
             case ('Applications'): {
@@ -638,6 +639,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                     case ('Employees'):
                                         switch (viewType) {
                                             case ('list'): {
+												if (data.sort) {
+													query.sort(data.sort);
+												}
+
                                                 query.select('_id name createdBy editedBy department jobPosition manager dateBirth skype workEmail workPhones jobType').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
@@ -664,6 +669,10 @@ var Employee = function (logWriter, mongoose, event, department, models) {
                                                 } else if (data && (!data.newCollection || data.newCollection === 'false')) {
                                                       query.where('workflow').in([]);
                                                 }
+
+                                                 if (data.sort) {
+                                                     query.sort(data.sort);
+                                                 }
                                                 query.select('_id name createdBy editedBy jobPosition manager workEmail workPhones creationDate workflow personalEmail department jobType sequence').
                                                     populate('manager', 'name').
                                                     populate('jobPosition', 'name').
@@ -895,6 +904,8 @@ var Employee = function (logWriter, mongoose, event, department, models) {
     }
 
     function updateOnlySelectedFields(req, _id, data, res) {
+        var fileName = data.fileName;
+        delete data.fileName;
 		if (data.workflow&&data.sequenceStart&&data.workflowStart){
 			if (data.sequence == -1) {
 				event.emit('updateSequence', models.get(req.session.lastDb - 1, 'Employees', employeeSchema), "sequence", data.sequenceStart, data.sequence, data.workflowStart, data.workflowStart, false, true, function (sequence) {
@@ -928,9 +939,44 @@ var Employee = function (logWriter, mongoose, event, department, models) {
 					});
 				});
 			}
-		}else{
+		} else {
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
+                    if (fileName) {
+                        var newDirname = __dirname.replace("\\Modules","");
+                        var os = require("os");
+                        var osType = (os.type().split('_')[0]);
+                        var path;
+                        var dir;
+                        switch (osType) {
+                            case "Windows":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                                break;
+                            case "Linux":
+                            {
+                                while (newDirname.indexOf("\\") !== -1) {
+                                    newDirname = newDirname.replace("\\","\/");
+                                }
+                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                dir = newDirname + "\/uploads\/" + _id;
+                            }
+                        }
+
+                        logWriter.fs.unlink(path,function(){
+                            logWriter.fs.readdir(dir, function(err, files){
+                                if (files.length === 0) {
+                                    logWriter.fs.rmdir(dir,function(){});
+                                }
+                            });
+                        });
+
+                    }
                     res.send(200, { success: 'Employees updated', result:result });
                 } else {
                     res.send(500, { error: "Can't update Employees" });
