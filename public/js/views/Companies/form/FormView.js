@@ -208,7 +208,7 @@ define([
 
             editClick: function (e) {
                 e.preventDefault();
-
+				var maxlength=$("#" + $(e.target).parent().parent()[0].id).find(".no-long").attr("data-maxlength")||32;
                 $('.quickEdit #editInput').remove();
                 $('.quickEdit #cancelSpan').remove();
                 $('.quickEdit #saveSpan').remove();
@@ -219,7 +219,7 @@ define([
                 $('#editSpan').remove();
                 this.text = $('#' + parent[0].id).text();
                 $("#" + parent[0].id).text('');
-                $("#" + parent[0].id).append('<input id="editInput" maxlength="48" type="text" class="left"/>');
+                $("#" + parent[0].id).append('<input id="editInput" maxlength="'+maxlength+'" type="text" class="left"/>');
                 $('#editInput').val(this.text);
                 $("#" + parent[0].id).append('<span id="saveSpan"><a href="#">c</a></span>');
 
@@ -493,7 +493,7 @@ define([
                         mid: mid
                     },
                     success: function () {
-                        Backbone.history.navigate("#easyErp/Companies/list", { trigger: true });
+                        Backbone.history.navigate("#easyErp/Companies/thumbnails", { trigger: true });
                     },
                     error: function (model, err) {
                         if (err.status === 403) {

@@ -19,9 +19,6 @@
             	   _.bindAll(this, "render", "saveItem", "deleteItem");
                    this.currentModel = options.model;
 				   this.currentModel.urlRoot = "/Opportunities";
-				   
-                   this.page=1;
-                   this.pageG=1;
 				   this.responseObj = {};
                    this.render();
                },
@@ -671,8 +668,8 @@
 								var tr_holder = $("tr[data-id='" + model._id + "'] td");
 								tr_holder.parent().attr("class","stage-"+self.$("#workflowDd").text().toLowerCase())
                                 tr_holder.eq(3).text(name);
-                                tr_holder.eq(4).text(expectedRevenueValue);
-                                tr_holder.eq(5).text(self.$("#customerDd option:selected").text());
+                                tr_holder.eq(4).text(parseInt(expectedRevenueValue));
+                                tr_holder.eq(5).text(self.$("#customerDd").text());
                                 tr_holder.eq(6).text(nextAction.date);
                                 tr_holder.eq(7).text(nextAction.desc);
                                 tr_holder.eq(8).find("a").text(self.$("#workflowDd").text());
@@ -689,10 +686,10 @@
                             {
                                 var kanban_holder = $("#" + model._id);
                                 kanban_holder.find(".opportunity-header h4").text(name);
-                                kanban_holder.find(".opportunity-header h3").text("$"+expectedRevenueValue);
+                                kanban_holder.find(".opportunity-header h3").text("$"+parseInt(expectedRevenueValue));
                                 kanban_holder.find(".opportunity-content p.right").text(nextAction.date);
-                                kanban_holder.find(".opportunity-content p.left").eq(0).text(self.$("#customerDd option:selected").text());
-                                kanban_holder.find(".opportunity-content p.left").eq(1).text(self.$("#salesPersonDd option:selected").text());
+                                kanban_holder.find(".opportunity-content p.left").eq(0).text(self.$("#customerDd").text());
+                                kanban_holder.find(".opportunity-content p.left").eq(1).text(self.$("#salesPersonDd").text());
 
                                 if (result && result.sequence){
 									$("#" + data.workflowStart).find(".item").each(function () {
@@ -834,9 +831,9 @@
                    $('#expectedClosing').datepicker({ dateFormat: "d M, yy", minDate: new Date() });
                    var model = this.currentModel.toJSON();
 
-                   common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),this.page);
+                   common.populateUsersForGroups('#sourceUsers','#targetUsers',this.currentModel.toJSON(),1);
                    common.populateUsers("#allUsers", "/UsersForDd",this.currentModel.toJSON(),null,true);
-                   common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),this.pageG);
+                   common.populateDepartmentsList("#sourceGroups","#targetGroups", "/DepartmentsForDd",this.currentModel.toJSON(),1);
 
 				   populate.getPriority("#priorityDd",this);
 				   populate.get2name("#customerDd", "/Customer",{},this,false,true);

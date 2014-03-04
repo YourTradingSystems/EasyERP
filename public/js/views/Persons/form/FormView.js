@@ -141,6 +141,8 @@ define([
             },
 
             editClick: function (e) {
+				var maxlength=$("#" + $(e.target).parent().parent()[0].id).find(".no-long").attr("data-maxlength")||32;
+				
                 e.preventDefault();
                 $('.quickEdit #editInput').remove();
                 $('.quickEdit #cancelSpan').remove();
@@ -186,7 +188,8 @@ define([
                     $("#" + parent[0].id + " input").removeAttr('disabled');
                 } else {
                     $("#" + parent[0].id).text('');
-                    $("#" + parent[0].id).append('<input id="editInput" maxlength="48" type="text" class="left"/>');
+					console.log(maxlength);
+                    $("#" + parent[0].id).append('<input id="editInput" maxlength="'+maxlength+'" type="text" class="left"/>');
                 }
                 $('#editInput').val(this.text);
                 this.prevQuickEdit = parent[0];
