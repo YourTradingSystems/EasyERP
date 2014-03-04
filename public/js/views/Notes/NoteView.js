@@ -6,10 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 define([
-    'text!templates/Notes/NoteTemplate.html',
-    'custom'
+    'text!templates/Notes/NoteTemplate.html'
 
-], function (NoteTemplate, Custom) {
+], function (NoteTemplate) {
     var NoteView = Backbone.View.extend({
 
         initialize: function() {

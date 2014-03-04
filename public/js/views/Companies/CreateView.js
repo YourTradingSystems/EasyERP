@@ -305,8 +305,8 @@ define([
 
                 var fax = $.trim(this.$el.find("#fax").val());
 
-                var website = $.trim(this.$el.find("#website").val());
-
+                var website = $.trim(this.$el.find("#website").val().replace('http://', ''));
+                
                 var internalNotes = $.trim(this.$el.find("#internalNotes").val());
 
                 var salesPerson = this.$("#employeesDd").data("id");

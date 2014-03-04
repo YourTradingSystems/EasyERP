@@ -72,14 +72,7 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             user: { type: ObjectId, ref: 'Users', default: null },
             date: { type: Date, default: Date.now }
         },
-        attachments: [{
-            id: { type: Number, default: '' },
-            name: { type: String, default: '' },
-            path: { type: String, default: '' },
-            size: Number,
-            uploaderName: { type: String, default: '' },
-            uploadDate: { type: Date, default: Date.now }
-        }],
+        attachments: { type: Array, default: [] },
         contractEnd: {
             reason: { type: String, default: '' },
             date: { type: Date, default: Date.now }
@@ -943,35 +936,37 @@ var Employee = function (logWriter, mongoose, event, department, models) {
             models.get(req.session.lastDb - 1, 'Employees', employeeSchema).findByIdAndUpdate(_id, { $set: data }, function (err, result) {
                 if (!err) {
                     if (fileName) {
-                        var newDirname = __dirname.replace("\\Modules","");
                         var os = require("os");
                         var osType = (os.type().split('_')[0]);
                         var path;
                         var dir;
                         switch (osType) {
                             case "Windows":
-                            {
-                                while (newDirname.indexOf("\\") !== -1) {
-                                    newDirname = newDirname.replace("\\","\/");
+                                {
+                                    var newDirname = __dirname.replace("\\Modules", "");
+                                    while (newDirname.indexOf("\\") !== -1) {
+                                        newDirname = newDirname.replace("\\", "\/");
+                                    }
+                                    path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                    dir = newDirname + "\/uploads\/" + _id;
                                 }
-                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
-                                dir = newDirname + "\/uploads\/" + _id;
-                            }
                                 break;
                             case "Linux":
-                            {
-                                while (newDirname.indexOf("\\") !== -1) {
-                                    newDirname = newDirname.replace("\\","\/");
+                                {
+                                    var newDirname = __dirname.replace("/Modules", "");
+                                    while (newDirname.indexOf("\\") !== -1) {
+                                        newDirname = newDirname.replace("\\", "\/");
+                                    }
+                                    path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
+                                    dir = newDirname + "\/uploads\/" + _id;
                                 }
-                                path = newDirname + "\/uploads\/" + _id + "\/" + fileName;
-                                dir = newDirname + "\/uploads\/" + _id;
-                            }
                         }
 
-                        logWriter.fs.unlink(path,function(){
-                            logWriter.fs.readdir(dir, function(err, files){
+                        logWriter.fs.unlink(path, function (err) {
+                            console.log(err);
+                            logWriter.fs.readdir(dir, function (err, files) {
                                 if (files.length === 0) {
-                                    logWriter.fs.rmdir(dir,function(){});
+                                    logWriter.fs.rmdir(dir, function () { });
                                 }
                             });
                         });

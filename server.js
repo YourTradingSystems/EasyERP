@@ -198,7 +198,6 @@ function uploadFileArray(req, res, callback) {
         req.files.attachfile = [req.files.attachfile];
     }
     var path;
-    var dir;
     var os = require("os");
     var osType = (os.type().split('_')[0]);
     req.files.attachfile.forEach(function (item) {

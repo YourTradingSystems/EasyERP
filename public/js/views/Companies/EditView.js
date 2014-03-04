@@ -256,7 +256,8 @@ define([
 
                 });
                 var whoCanRW = this.$el.find("[name='whoCanRW']:checked").val();
-
+                var website = this.$el.find('#website').val();
+                website.replace('http://','');
                 var data = {
                     name: {
                         first: this.$el.find("#name").val(),
