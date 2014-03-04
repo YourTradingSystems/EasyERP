@@ -114,6 +114,7 @@ var Workflow = function (logWriter, mongoose, models) {
             try {
                 if (data) {
                     delete data._id;
+
                     models.get(req.session.lastDb - 1, "workflows", workflowSchema).update({ _id: _id }, data, function (err, res) {
                         if (err) {
                             console.log(err);
@@ -121,9 +122,8 @@ var Workflow = function (logWriter, mongoose, models) {
                             result.send(400, { error: 'WorkFlow.js update workflow error ' });
                             return;
                         } else {
-                            
-                            result.send(200, { success: 'WorkFlow update success' });
-                        }
+                                result.send(200, { success: 'WorkFlow update success' });
+                            }
                     });
                 }
             }
