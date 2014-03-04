@@ -265,7 +265,7 @@ function uploadFileArray(req, res, callback) {
                     var file = {};
                     file._id = mongoose.Types.ObjectId();
                     file.name = item.name;
-                    file.path = encodeURIComponent(shortPas);
+                    file.shortPas = encodeURIComponent(shortPas);
                     file.size = Math.round(item.size / 1024 / 2024 * 100) / 100;
                     file.uploadDate = new Date();
                     file.uploaderName = req.session.uName;

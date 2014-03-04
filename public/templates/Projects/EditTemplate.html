@@ -143,7 +143,7 @@
                                 <% model.attachments.reverse();
                    _.each(model.attachments, function(data,key){ %>
                                 <li class="attachFile_<%=data['_id'] %>">
-                                    <a href="download/<%=data['path']%>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
+                                    <a href="download/<%=data['shortPas']%>"><%=data['name'] %></a> (<%=data['size'] %>&nbsp;Mb) <%=data['uploaderName'] %>  <%=data['uploadDate'] %>
                   <a id="<%=data['_id'] %>" href="javascript:;" class="deleteAttach">Delete</a>
                 </li>
                 <% }); model.attachments.reverse(); %>
